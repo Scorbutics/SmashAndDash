@@ -1,0 +1,11 @@
+Erreur lors du chargement de l'image "./Sprites/Icones/5.png" : Couldn't open ./Sprites/Icones/5.png
+Erreur lors du chargement de l'image "./Sprites/Particles/5.png" : Couldn't open ./Sprites/Particles/5.png
+Erreur lors du chargement de l'image "./Sprites/Fight/5.png" : Couldn't open ./Sprites/Fight/5.png
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée

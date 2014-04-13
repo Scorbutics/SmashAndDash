@@ -1,0 +1,12 @@
+si {2} == true
+message f Vous dicernez une sorte de créature fossile à coquille ovale.¤Celui-ci a l'air plutôt aggressif !
+choix [1] f Voulez-vous prendre cette créature ?
+si [1] == 1
+affecter 1 [1]
+message f Vous obtenez un Kabuto ! Enfin, c'est ce qui est marqué sur la relique !
+ajouter_pokemon 140
+tuer -11 1
+script .\Levels\cramoisile_labo\dr_takes_pkmn.txt
+finsi
+finsi
+attendre 100

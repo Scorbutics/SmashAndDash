@@ -1,0 +1,28 @@
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Fight/3.png" : Couldn't open ./Sprites/Fight/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur (classe EntityManager) : Id numéro 0 réservée
+Erreur lors du chargement de l'image "./Sprites/Icones/3.png" : Couldn't open ./Sprites/Icones/3.png
+Erreur (classe Pokeball) : Impossible de diviser par 0

@@ -1,0 +1,6 @@
+
+12:5 -1 1 0 3 none Bonjour !
+8:4 -2 0 0 1 script .\Levels\cramoisile_labo\starter_choice.txt
+11:17 ! 0 1 3 script .\Levels\cramoisile_labo\teleport_cramoisile.txt
+7:4 -11 0 0 1 script .\Levels\cramoisile_labo\starter_2.txt
+7:3 -11 0 0 1 script .\Levels\cramoisile_labo\starter_1.txt

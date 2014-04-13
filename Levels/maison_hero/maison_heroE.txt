@@ -1,0 +1,2 @@
+x:y ID_SPRITE(!:no sprite) solide?(0||1) declenchement(0:presser espace||1:sous le hero||2:automatique au chargement de la map) path(0: mouvements aléatoires||1: fixe|| {h,b,g,d}:prédéfini) action parametresSupplementaires
+14:5 ! 0 1 3 script .\Levels\maison_hero\start_script.txt

@@ -1,0 +1,16 @@
+Ouverture du fichier monde ".\Levels\foret\foret.bmp": OK
+Fermeture du fichier.
+
+Ouverture du fichier monde ".\Levels\foret\foretM.bmp": OK
+Fermeture du fichier.
+
+Ouverture du fichier monde ".\Levels\foret\foretT.bmp": OK
+Fermeture du fichier.
+
+Chargement du chipset.
+Entrée dans la partie du code 'gestion de l'ecran monde' 
+.\Levels\foret.bmp\foret.bmp.ini
+Monde chargé
+Flip fait !
+
+

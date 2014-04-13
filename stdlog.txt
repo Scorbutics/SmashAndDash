@@ -1,0 +1,14 @@
+Zone de combat installées
+Chargement des entités terminé
+Le temps est inexistant sur cette map
+Le brouillard est inexistant sur cette map
+Il n'y a pas de musique de fond sur cette map
+La pluie est inexistante sur cette map
+Paramètres concernant le monde chargés
+
+Zone de combat installées
+Chargement des entités terminé
+Le temps est inexistant sur cette map
+La pluie est inexistante sur cette map
+Paramètres concernant le monde chargés
+

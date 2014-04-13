@@ -1,0 +1,4 @@
+eboulement 10000
+attendre 10000
+message f Ouf! C'est fini.
+stop

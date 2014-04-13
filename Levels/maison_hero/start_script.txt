@@ -1,0 +1,2 @@
+teleporter 0 0 maison_hero_rdc.bmp/maison_hero_rdcD.bmp/maison_hero_rdcE.txt/13:6
+direction 0 0 0

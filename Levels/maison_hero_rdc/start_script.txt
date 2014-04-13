@@ -1,0 +1,2 @@
+teleporter 0 0 greencity.bmp/greencityD.bmp/greencityE.txt/17:17
+direction 0 0 0

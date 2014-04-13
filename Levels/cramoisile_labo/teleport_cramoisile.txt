@@ -1,0 +1,10 @@
+si {1} == false
+teleporter 0 0 cramoisile.bmp/cramoisileD.bmp/cramoisileE.txt/19:10
+sinon
+si {2} == true
+bouger 0 0 2 3
+message f Ne pars pas ! J'ai quelque chose à te montrer.
+sinon
+teleporter 0 0 cramoisile.bmp/cramoisileD.bmp/cramoisileE.txt/19:10
+finsi
+finsi

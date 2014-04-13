@@ -1,0 +1,12 @@
+si {2} == true
+message f Vous dicernez une sorte de créature fossile à coquille en forme de spirale.¤Celui-ci a l'air plutôt résistant !
+choix [1] f Voulez-vous prendre cette créature ?
+si [1] == 1
+affecter 0 [1]
+message f Vous obtenez un Amonita ! Enfin, c'est ce qui est marqué sur la relique !
+ajouter_pokemon 138
+tuer -11 0
+script .\Levels\cramoisile_labo\dr_takes_pkmn.txt
+finsi
+finsi
+attendre 100

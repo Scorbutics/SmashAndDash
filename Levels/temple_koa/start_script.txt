@@ -1,0 +1,54 @@
+cacher_interface 1
+cacher_perso 0 0 1
+bloquer_perso 0 0 1
+cinematique 1 400 1 4 0 0 Bienvenue dans le monde de Pokémon !
+cinematique 2 400 1 4 0 0 Je suis le Professeur Coss, nom de code Coss222.¤Ma profression est l'étude des Pokémon.¤Un Pokémon est une créature domesticable vivant en compagnie de l'homme. Voici par exemple un Nidoran mâle.
+cinematique 2 400 1 4 0 0 Pour connaître l'origine et la provenance de ces créatures, il faut remonter légèrement le temps !¤Trève de bavardages, et sans plus attendre, revis l'expérience avec moi !
+direction -3 0 3
+direction -2 0 1
+eboulement 3000
+tremblement 3000 20
+attendre 500
+direction -3 0 0
+direction -2 0 2
+attendre 500
+direction -3 0 1
+direction -2 0 3
+attendre 500
+direction -3 0 3
+direction -2 0 1
+attendre 500
+direction -3 0 2
+direction -2 0 0
+attendre 2000
+message -3 Ouf! *Tousse* kof kof... professeur vous ¤n'avez rien ?! Ce n'est pas normal....
+bouger -2 0 0 3
+bouger -2 0 0 3
+bouger -2 0 0 3
+bouger -2 0 0 3
+bouger -2 0 1 3
+bouger -2 0 1 3
+bouger -2 0 1 3
+bouger -2 0 1 3
+bouger -2 0 2 3
+bouger -2 0 2 3
+message -2 Aïe ! Ca peut aller. Que se passe t-il Noémie ?¤ On aurait dit des secousses sismiques... C'est étrange, ¤nous ne sommes pourtant pas dans une zone à risque.
+message -3 Vous deviez avoir raison à propos de votre théorie...
+message -2 A quoi pensez-vous ?
+tremblement 1000 20
+attendre 1000
+direction -3 0 2
+direction -2 0 2
+message -3 Ohh non ! Comment a-t-il pu survivre ? ¤S'il nous trouve nous sommes perdus !
+animation -2 0 2
+attendre 500
+message -2 Noémie !!! Attention !!
+direction -3 0 1
+tremblement 1000 20
+attendre 1000
+message -3 ?! AHH ! ...
+bloquer_perso 0 0 0
+cacher_interface 0
+cacher_perso 0 0 0
+teleporter 0 0 cramoisile.bmp/cramoisileD.bmp/cramoisileE.txt/11:20
+#teleporter 0 0 maison_hero.bmp/maison_heroD.bmp/maison_heroE.txt/7:5

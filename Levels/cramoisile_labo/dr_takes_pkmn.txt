@@ -1,0 +1,14 @@
+si [1] == 1
+tuer -11 0
+sinon
+bouger -2 0 2 3
+tuer -11 1
+finsi
+direction -2 0 3
+message f Je prends donc celui-ci !
+direction -2 0 0
+sortir_pokemon 0
+message f OHHH ! OUAAHH ! Une créature ! Mais mais... c'est un monstre... tout petit,¤ il rentrerait dans une poche...¤On pourrait appeler ça un Pocket Monster non ? ... ¤Euuh... Bah, quelle idée débile HIN HIN HIN laisse tomber !
+message f Bon, les choses prennent une tournure inquiétante. ¤Je dois aussi avoir un de ces monstre dans ma ball.
+message f Bref, allons-y, partons dès maintenant ! Un bateau nous attend, ¤il va nous emmener à Greencity.¤C'est la première étape de notre périple. Un ami à moi habite là-bas.¤ Je vais lui montrer notre découverte.
+teleporter 0 0 greencity.bmp/greencityD.bmp/greencityE.txt/20:10

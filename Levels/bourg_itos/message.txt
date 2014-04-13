@@ -1,0 +1,4 @@
+si {5} == true
+message f Bravo ! La condition est vérifiée.
+finsi
+stop
