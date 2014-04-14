@@ -10,6 +10,7 @@ class Player :
 	public:
 		Player(int id);
 		virtual void update(Observable* obs, EventArg* e);
+		virtual void refresh();
 		virtual ~Player();
 };
 

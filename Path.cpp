@@ -78,7 +78,10 @@ int Path::getNextPathDirection()
     else if(m_pathDirections[m_pos] == 'g')
         buf = 3;
     else
+	{
         buf = -1;
+		m_type = P_FIXED;
+	}
 
     m_pos++;
 
@@ -88,10 +91,7 @@ int Path::getNextPathDirection()
 
 bool Path::isMotionless()
 {
-    if(m_type == P_FIXED)
-        return true;
-    else
-        return false;
+	return (m_type == P_FIXED);
 }
 
 bool Path::isRandom()
@@ -112,8 +112,11 @@ bool Path::isPredefined()
 
 void Path::setPathString(string path)
 {
-    if(atoi(path.c_str()) == P_FIXED)
+    if(atoi(path.c_str()) == P_FIXED || path.empty())
+	{
         m_type = P_FIXED;
+		m_pathDirections = "";
+	}
     else if(atoi(path.c_str()) == P_RANDOM)
         m_type = P_RANDOM;
     else
@@ -241,11 +244,12 @@ void Path::findPath(SDL_Rect from, SDL_Rect to) //Pathfinding A*
             lastNode = lastNode->getParent(graphe);
       }
 
+	  //m_pathDirections = finalPath;
 
-    for(unsigned int i = 0; i < finalPath.size(); i++)
-        m_pathDirections += finalPath[finalPath.size()-1-i];
+		for(unsigned int i = 0; i < finalPath.size(); i++)
+			m_pathDirections += finalPath[finalPath.size()-1-i];
 
-    m_type = P_DEFINED;
+		m_type = P_DEFINED;
 
 }
 

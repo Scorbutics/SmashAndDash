@@ -129,34 +129,39 @@ void Character::refresh()
 	}
 	
 
-
-	//Pathfinding
-	if (!m_path.getPathString().empty()) 
+	//Mouvements programmés
+	if (!m_path.isMotionless())
 	{
+		m_compteurDeplacement--;
 
-		string path;
-		setCountD(wScreen.getHero()->getCountD() - 1);
-		path = m_path.getPathString();
-		if (getCountD() <= 0)
+		int direction = m_direction;
+		if (m_compteurDeplacement <= 0)
 		{
 
-			setDirection(GetDirectionFromChar(path[0]));
-			adaptPositionToBlock();
-
-			if (!path.empty())
+			if (m_path.isRandom())
 			{
-				m_path.setPathString(path.substr(1, path.size()));
-				setCountD(TAILLEBLOC / (getSpeedLimit() / 3 + 1));
-				path = m_path.getPathString();
+				m_direction = rand() % (20 - 0) + 0; //chiffre aléatoire entre 0 et 19
+				m_compteurDeplacement = 30;
+			}
+			else if (m_path.isPredefined())
+			{
+				m_direction = m_path.getNextPathDirection();
+				m_compteurDeplacement = 15;
 			}
 
+
+			direction = m_direction;
+			
+
+			
+			applyForce(direction, (float)(m_speedLimit * 5 * 8));
 		}
-		else if (!path.empty())
-		{
-			reset();
-			applyForce(GetDirectionFromChar(path[0]), (float)getSpeedLimit()*5 * 10);
-		}
+			
+
+		
+
 	}
+
 
 	PhysicObject::refresh();
 }
@@ -202,7 +207,7 @@ void Character::playAnimation(unsigned int characterAnim, bool waitFinish)
 	}
 }
 
-void Character::display(int part)
+void Character::display(int part, bool shadow)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	SDL_Rect origineRelative = wScreen.getORel(), ofHeroA, buf = m_rect;
@@ -213,15 +218,15 @@ void Character::display(int part)
 	//par défaut, dès qu'une animation est finie on retourne à celle de base (celle qui permet de bouger)
 	playAnimation(CHARACTER_ANIMATION_MOVE, true);
 	
-	ofHeroA = GetCurrentSpritePosOfHero(this, true/*((m_speedx*m_speedx + m_speedy*m_speedy) >= 1*/);
+	ofHeroA = GetCurrentSpritePosOfHero(this, (m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz) >= 1);
 
 	if (part == 1)
 	{
 		buf.y += ofHeroA.h / 2;
 		ofHeroA.y += ofHeroA.h / 2;
 		ofHeroA.h = ofHeroA.h / 2;
-		displayShadow();
-
+		if (shadow)
+			displayShadow();
 	}
 	else if (part == 2)
 	{
@@ -233,11 +238,6 @@ void Character::display(int part)
 	buf.x += origineRelative.x;
 	buf.y += origineRelative.y;
 	m_sprite.render(buf.x, buf.y - m_jumpHeight, &ofHeroA);
-
-    /*SDL_Rect hitbox = this->getHitbox();
-    hitbox.x += origineRelative.x;
-    hitbox.y += origineRelative.y;
-    SDL_FillRect(screen, &hitbox, 0);*/
 
 }
 
@@ -337,9 +337,8 @@ void Character::displaySpeed()
     //5 est une valeur arbitraire
     if(this->getSpeed() >= 5)
     {
-
         SDL_Rect rect = getHitbox();
-        rect.y += rect.h*3/4;
+        rect.y += rect.h*0.5;
         rect.h /= 4;
         wScreen.getParticleManager().playEffect(2, 0.5, 1.5, 0, rect);
     }

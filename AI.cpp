@@ -12,7 +12,8 @@ AI::AI()
     m_context = AI_BALANCED; //macro désignant une intelligence artificielle équilibrée
 	m_pMove = (float)0.8;
 	m_pAttack = (float)0.1;
-
+	m_trainerTimer = 3000;
+	m_trainerT0 = SDL_GetTicks();
 }
 
 
@@ -68,27 +69,49 @@ void AI::act(Fight& fight)
             if((*vSkill)[i]->getContext() == AI_BALANCED && (*vSkill)[i]->cooldownOK())
                 fight.getOpponent()->launchSkill(i, pkmnPos);	//lancer l'attaque numéro i dans la direction courante du pokémon
 
-    //clog << intToStr(GetDirectionFromPos(&((*m_fight.getOpponent())->getCenterPos()), &((*m_fight.getPokemon())->getCenterPos()))) << endl;
 
+	//Mouvements du Pokémon adverse en combat
     if((((float)randBuf)/10) <= m_pMove*10)
         switch(pathProbInt)
         {
             case 0:
-            pathChar[0] = GetCharFromDirection(GetDirectionFromPos(&opponentPos, &pkmnPos)%4);
-            fight.getOpponent()->getPath()->setPathString(pathChar);
+				pathChar[0] = GetCharFromDirection(GetDirectionFromPos(&opponentPos, &pkmnPos)%4);
+				fight.getOpponent()->getPath()->setPathString(pathChar);
             break;
 
             case 1:
-				fight.getOpponent()->getPath()->setPathString(""/*+GetCharFromDirection(rand() % 8)*/);
+				pathChar[0] = GetCharFromDirection(rand() % 8);
+				fight.getOpponent()->getPath()->setPathString(pathChar);
             break;
 
             default:
-            //m_fight.getOpponent()->getPath()->set
-            //m_fight.getOpponent()->getPath()->setPathString("");
             break;
         }
-   //else
-    //    m_fight.getOpponent()->getPath()->setPathString("");
+
+
+	Character* trainer = wScreen.getEntityFactory().getTrainer();
+	//mouvements aléatoires du dresseur durant un combat
+	if (SDL_GetTicks() - m_trainerT0 >= m_trainerTimer)
+	{
+		int direction, r = rand() % 4;
+		SDL_Rect posTrainer = trainer->getPos(), posPkmn = wScreen.getFight().getPokemon()->getPos();
+
+		if (r == 0)
+			direction = GetDirectionFromPos(&posPkmn, &posTrainer) + 1;
+		else if (r == 1)
+			direction = GetDirectionFromPos(&posPkmn, &posTrainer) - 1;
+		else
+			trainer->getPath()->setPathString("");
+		
+
+		if (r == 0 || r == 1)
+		{
+			pathChar[0] = GetCharFromDirection(direction % 4);
+			trainer->getPath()->setPathString(pathChar);			
+		}
+		m_trainerT0 = SDL_GetTicks();
+	}
+
 
     SDL_Rect screenRect, centerPos = wScreen.getFight().getPokemon()->getHitboxCenterPos();
     screenRect.x = screenRect.y = 0;

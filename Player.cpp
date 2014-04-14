@@ -9,6 +9,7 @@ int GetSkillCursorFromKey(KeyEvent* ke);
 
 Player::Player(int id) : Character(id)
 {
+	m_path.setPathString("");
 }
 
 void Player::update(Observable* obs, EventArg* event)
@@ -207,6 +208,37 @@ void Player::update(Observable* obs, EventArg* event)
 			wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);
 		}
 	}
+}
+
+void Player::refresh()
+{
+	if (!(m_id == 0 && WGameCore::getInstance().getFight().isFighting()) && !m_path.getPathString().empty())
+	{
+		string path;
+		setCountD(getCountD() - 1);
+		path = m_path.getPathString();
+		if (getCountD() <= 0)
+		{
+
+			setDirection(GetDirectionFromChar(path[0]));
+			adaptPositionToBlock();
+
+			if (!path.empty())
+			{
+				m_path.setPathString(path.substr(1, path.size()));
+
+				setCountD(TAILLEBLOC / (getSpeedLimit() / 3 + 1));
+				path = m_path.getPathString();
+			}
+
+		}
+		else if (!path.empty())
+		{
+			reset();
+			applyForce(GetDirectionFromChar(path[0]), (float)getSpeedLimit() * 5 * 10);
+		}
+	}
+	Character::refresh();
 }
 
 Player::~Player()

@@ -94,10 +94,8 @@ void PokemonManager::add(int id)
         if(*iterEnd == NULL)
             cerr << "Erreur (classe PokemonManager) : Impossible d'ajouter un Pokémon à l'équipe" << endl;
 
-        (*iterEnd)->setEntityNumber(INT16_MAX-1);
-        stringstream ss;
-        ss << P_RANDOM;
-        (*iterEnd)->getPath()->setPathString(ss.str().c_str());
+        (*iterEnd)->setEntityNumber(ID_CURRENT_POKEMON);
+        (*iterEnd)->getPath()->setPathString("");
 
     }
     else
@@ -112,10 +110,11 @@ void PokemonManager::add(Character* pkmn)
 	{
 		m_team.push_back(unique_ptr<Player>(new Player(pkmn->getID())));
 		Player* lastPkmn = getLastPokemon();
+		lastPkmn->getPath()->setPathString("");
 		lastPkmn->setHP(pkmn->getHp());
 		lastPkmn->setSpeedLimit(pkmn->getSpeedLimit());
 		lastPkmn->setDirection(pkmn->getDirection());
-		lastPkmn->setEntityNumber(INT16_MAX-1);
+		lastPkmn->setEntityNumber(ID_CURRENT_POKEMON);
 		lastPkmn->getStatistics()->setExperience(pkmn->getStatistics()->getExperience());
 	}
 

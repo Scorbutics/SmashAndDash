@@ -479,6 +479,7 @@ vector<SDL_Rect> PhysicObject::move()
 	//(y(t) - y(t-1))/(t - (t-1)) = dy/dt (t) = vy(t)
 	m_rect.x += (int)(m_speedx + 0.5);
     ids = this->collisionNPC();
+
 	//si jamais on entre en contact avec un objet non traversable du monde...
 	bool colWorld = this->collisionWorld();
 	if(!m_ghost && (colWorld || (!ids.empty() && !isDodging()) ))

@@ -69,7 +69,7 @@ class Character : public PhysicSprite
 	void decrease(int stat, int value);
 	void refreshStats(bool refreshHp = false);
 	void refreshSkills();
-	void display(int part);
+	void display(int part, bool shadow = true);
 	void run(bool b);
 	bool addExperience(int exp);
     ~Character();

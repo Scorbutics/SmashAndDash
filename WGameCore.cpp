@@ -67,7 +67,7 @@ WGameCore::WGameCore():
 
 void WGameCore::resize(unsigned int w, unsigned int h)
 {
-	SDL_RenderSetLogicalSize(m_renderer, w, h);
+	//SDL_RenderSetLogicalSize(m_renderer, w, h);
 	m_laFenetre = w;
 	m_loFenetre = h;
 }
@@ -207,10 +207,8 @@ ParticleManager& WGameCore::getParticleManager()
 //Boucle principale gérant évènements et affichages du monde.
 bool WGameCore::refresh()
 {
-	//PortableThread* eventThread, *graphicThread;
-    int t = 0, t0 = 0; //t et t0 sont les temps pour la gestion de la durée (SDL_PollEvent).
-	//eventThread = PortableThreadCreate();
-	//graphicThread = PortableThreadCreate();
+	//t et t0 sont les temps pour la gestion des fps
+    long t = 0, t0 = 0; 
 
     m_continue = false;
     m_ecritureLog = false;
@@ -244,8 +242,6 @@ bool WGameCore::refresh()
 
 
     this->quitter(m_continue);
-	//PortableThreadFree(eventThread);
-	//PortableThreadFree(graphicThread);
 
     return m_continue;
 
@@ -257,57 +253,38 @@ bool WGameCore::refresh()
 //gros bordel !
 void* WGameCore::graphicUpdate(void)
 {
-    //Affiche les 2 layers composant la fenêtre monde ainsi que le layer des entités (personnages & mobs)
+    //Affiche les couches de blocs et les personnages
     m_world.displayLayers();
 
     //Affiche la pokeball si active
     m_pokeball.refresh();
 
-
-    //Affichage des Skills
-    if(m_fight.isFighting())
-    {
-        if(m_phero != NULL)
-            m_phero->displaySkills();
-		if(m_fight.getOpponent() != NULL)
-			m_fight.getOpponent()->displaySkills();
-    }
-
-	m_spriteAnimManager.refresh();
-
+	//Affiche l'UI des combats et les attaques
 	m_fight.display();
 
+	//Affiche les animations jouées
+	m_spriteAnimManager.refresh();
+
+	//Affiche les événements météorologiques
 	m_particleManager.display(PARTICLE_MANAGER_CRUMBLING);
 	m_particleManager.display(PARTICLE_MANAGER_RAIN);
     m_particleManager.displayRainFog();
 
-
-    //Affiche la météo si active
+    //Affiche la météo
     if(m_world.getFog()->isActive() && *m_settings.getFogActive())
         m_world.getFog()->display();
     if(m_world.getWeather()->isActive() && *m_settings.getWeatherActive())
         m_world.getWeather()->display();
 
-
-    /*//Affiche / Actualise les dialogues et fenetres
-    if(m_gui.getRefreshPNJWindowCount() <= 0)
-    {
-        if(m_gui.getInfoPokemonWindow()->isVisible())
-            m_gui.resetInfoPokemonWindow(m_phero);
-        m_gui.setRefreshPNJWindowCount(REFRESH_PNJWINDOW_COUNT);
-    }
-    else
-        m_gui.setRefreshPNJWindowCount(m_gui.getRefreshPNJWindowCount()-1);*/
-
+	//Affiche la GUI
     m_gui.dialogDisplay();
     if(m_gui.isVisible())
         m_gui.display();
-
-    
-
+	
+	//Euh...
     m_world.setBgmVolume(*m_settings.getSoundVolume());
 
-
+	//Affiche le Pokémon ou l'objet sur le curseur de la souris
     m_mouseCursor.displaySelectedPokemon();
     m_mouseCursor.displaySelectedObject();
 
@@ -347,22 +324,12 @@ void WGameCore::eventUpdate(bool d)
 	WGameCore& wScreen = WGameCore::getInstance();
 
     m_world.refreshEntities();
-	
-	//Gestion de l'intelligence artificielle en combat
-    if(m_fight.isFighting())
-        m_ai.act(m_fight);
-
-	if(m_fight.isFighting())
-	{
-		if(m_phero != NULL)
-			m_phero->refreshSkills();
-		if(m_fight.isFighting() && m_fight.getOpponent() != NULL)
-			m_fight.getOpponent()->refreshSkills();
-	}
 
 	m_particleManager.refresh(PARTICLE_MANAGER_EFFECT);
 
-    //Gère les évènements extérieurs (input)
+
+    //Gère les évènements extérieurs de la GUI (input)
+	//GUI A PASSER EN TANT QU'OBSERVATEUR
     if(!m_kdListener.refresh(stuck))
     {
         m_gui.getDialog()->hide(true);
@@ -374,17 +341,17 @@ void WGameCore::eventUpdate(bool d)
 	if(m_gui.isVisible())
 		m_gui.refresh();
 
-    //gere les evenements (notamment aidé par le systeme de scripts)
+
+
+    //gere les evenements (notamment le systeme de scripts)
     GestionEvents();
 
+	//événements combat
 	m_fight.refresh();
 
 	//gère l'apparition aléatoire de Pokémon
 	if(!m_fight.isFighting())
 		m_mobSpawner.refresh();
-
-    //gere le mouvement aléatoire des mobs
-    MobMovements();
 
 	m_particleManager.refresh(PARTICLE_MANAGER_CRUMBLING);
 	m_particleManager.refresh(PARTICLE_MANAGER_RAIN);
@@ -397,10 +364,6 @@ void WGameCore::eventUpdate(bool d)
 void WGameCore::initNewWorld()
 {
     ofstream clog("stdlog.txt", ios::app);
-
-    // 1) Charge en mémoire le chipset du monde courant à afficher à l'écran
-    //m_sBank.setChipset(m_world->getChipsetName(), true);
-    //clog << "Chipset chargé" << endl;
 
     // 2) Récupère les zones de combat situées dans le fichier evenement du monde
     m_fight.setAreasFromLayerEvent();
@@ -442,8 +405,6 @@ void WGameCore::waitQuit(DialogMenu* window)
             //Gère les évènements extérieurs (input)
             m_kdListener.updateEvents();
 
-            //gere le mouvement aléatoire des mobs
-            MobMovements();
             flip();
 
             t0 = t; // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
@@ -460,7 +421,7 @@ vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box)
 {
     SDL_Rect posEvent;
     vector<SDL_Rect> id;
-	list<Character*>& currentEntityList = m_EntityFactory.getNPCList();
+	list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
 
 	for (Character* entity : currentEntityList)
 	{
@@ -476,53 +437,6 @@ vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box)
 			id.push_back(pos);
 		}
     }
-
-
-	posEvent = m_EntityFactory.getTrainer()->getHitbox();
-	if (CollisionBoxABoxB(box, posEvent))
-	{
-		SDL_Rect pos;
-		pos.x = 0;
-		pos.y = 0;
-		pos.w = 0;
-		pos.h = 0;
-		id.push_back(pos);
-	}
-
-
-    if(m_fight.isFighting()) //Si on est en combat il faut aussi vérifier qu'on n'entre pas en collision avec le pokemon adverse ou que le pokémon adverse n'entre pas en collision avec nous
-    {
-        posEvent = m_fight.getOpponent()->getHitbox();
-
-        if(CollisionBoxABoxB(box, posEvent))
-        {
-			SDL_Rect pos;
-			pos.x = (Sint16)m_fight.getOpponent()->getID();
-			pos.y = INT16_MAX;
-			pos.w = 0;
-			pos.h = 0;
-
-            //ID de l'opposant en combat
-            id.push_back(pos);
-        }
-
-		if(m_fight.getPokemon() != NULL)
-		{ 
-			posEvent = m_fight.getPokemon()->getHitbox();
-
-			if(CollisionBoxABoxB(box, posEvent))
-			{
-				SDL_Rect pos;
-				pos.x = (Sint16)m_fight.getPokemon()->getID();
-				pos.y = INT16_MAX-1;
-				pos.w = 0;
-				pos.h = 0;
-				//ID du Pokémon en combat
-				id.push_back(pos);
-			}
-		}
-    }
-
 
     return id;
 

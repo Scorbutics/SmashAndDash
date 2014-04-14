@@ -7,7 +7,7 @@
 using namespace std;
 
 SpriteAnimation::SpriteAnimation(int type, int id, SDL_Rect pos, unsigned int framesNumber, unsigned int delay, int alpha): m_anim(delay, framesNumber, false),
-m_sprite(SpritePath::getInstance().getPath(type, m_id), T_RED, T_GREEN, T_BLUE, alpha)
+m_sprite(SpritePath::getInstance().getPath(type, id), T_RED, T_GREEN, T_BLUE, alpha)
 {
 	m_type = type;
 	m_id = id;

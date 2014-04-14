@@ -15,7 +15,7 @@
 #define NOSUCHFILE "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"nosuchfile.png"
 #define COMBAT_COUNT 160
 
-#define P_DEFINED 2 //Path d'un pnj défini
+#define P_DEFINED 2 //Path défini
 #define P_RANDOM 3//ou aléatoire
 #define P_FIXED 1 //ou encore fixe
 

@@ -23,9 +23,41 @@ void EntityFactory::createTrainer()
     m_trainer->setOffset(3, 20);
 	wScreen.getInputListener().addObserver(&(*m_trainer));
 
+	m_currentEntities.push_front(&(*m_trainer));
 	
 }
 
+void EntityFactory::setPokemon(Character* pkmn)
+{
+	removePokemon();
+	m_pkmn = Character_ptr(pkmn);
+	std::list<Character*>::iterator iter = std::find(m_currentEntities.begin(), m_currentEntities.end(), &(*m_pkmn));
+
+	if (iter == m_currentEntities.end())
+		m_currentEntities.push_front(pkmn);
+	
+}
+
+void EntityFactory::removePokemon()
+{
+	std::list<Character*>::iterator iter = std::find(m_currentEntities.begin(), m_currentEntities.end(), &(*m_pkmn));
+
+	if (iter != m_currentEntities.end())
+		m_currentEntities.remove(&(*m_pkmn));
+	m_pkmn.release();
+}
+
+Character* EntityFactory::setOpponent(Character* opponent)
+{
+	removeOpponent();
+	m_opponent = Character_ptr(opponent);
+	std::list<Character*>::iterator iter = std::find(m_currentEntities.begin(), m_currentEntities.end(), &(*m_opponent));
+
+	if (iter == m_currentEntities.end())
+		m_currentEntities.push_front(opponent);
+
+	return opponent;
+}
 
 Character* EntityFactory::createOpponent(IniReader* dataMob)
 {
@@ -36,7 +68,7 @@ Character* EntityFactory::createOpponent(IniReader* dataMob)
         cerr << "Erreur (classe PokemonManager) : Impossible de générer un adversaire de combat" << endl;
 
     stringstream ss;
-    m_opponent->setEntityNumber(INT16_MAX);
+    m_opponent->setEntityNumber(ID_CURRENT_OPPONENT);
     m_opponent->teleport(m_trainer->getPos().x+ TAILLEBLOC, m_trainer->getPos().y);
 	m_opponent->setSpeedLimit(6);
 
@@ -47,8 +79,20 @@ Character* EntityFactory::createOpponent(IniReader* dataMob)
     m_opponent->setOffset(2, 37);
     m_opponent->setOffset(3, 20);
 
+	m_currentEntities.push_front(&(*m_opponent));
+
 	return &(*m_opponent);
 
+}
+
+void EntityFactory::removeOpponent()
+{
+	std::list<Character*>::iterator iter = std::find(m_currentEntities.begin(), m_currentEntities.end(), &(*m_opponent));
+
+	if (iter != m_currentEntities.end())
+		m_currentEntities.remove(&(*m_opponent));
+	m_opponent.release();
+	m_opponent = NULL;
 }
 
 Character* EntityFactory::getOpponent()
@@ -146,7 +190,7 @@ void EntityFactory::addNPC(int id, SDL_Rect posEntity, string pathStringEntity)
 
 }
 
-list<Character*>& EntityFactory::getNPCList()
+list<Character*>& EntityFactory::getCharacterList()
 {
 	return m_currentEntities;
 }
@@ -158,9 +202,9 @@ Character* EntityFactory::getNPC(int id, unsigned int number)
 
     if(id == 0)
         return &(*m_trainer);
-    else if(number == INT16_MAX)
+    else if(number == ID_CURRENT_OPPONENT)
         return wScreen.getFight().getOpponent();
-    else if(number == INT16_MAX-1)
+    else if(number == ID_CURRENT_POKEMON)
 		return wScreen.getFight().getPokemon();
      
 
@@ -220,7 +264,11 @@ void EntityFactory::deleteAll()
     for(unsigned int i = 0; i < m_characters.size(); i++)
         m_characters[i].clear();
 
+	m_opponent.release();
+	m_opponent = NULL;
+
 	m_currentEntities.clear();
+	m_currentEntities.push_front(&(*m_trainer));
 }
 
 EntityFactory::~EntityFactory()
@@ -242,8 +290,17 @@ void EntityFactory::remove(int id, unsigned number)
 		return;
 	}
 
-	if(number == INT16_MAX || number == INT16_MAX-1)
+	if (number == ID_CURRENT_POKEMON)
+	{
+		removePokemon();
 		return;
+	}
+
+	if (number == ID_CURRENT_OPPONENT)
+	{
+		removeOpponent();
+		return;
+	}
 
 	if(id > 0)
 	{

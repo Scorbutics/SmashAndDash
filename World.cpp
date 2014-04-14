@@ -46,7 +46,9 @@ void World::displayLayers()
 {
 	SDL_Rect rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
 	WGameCore& wScreen = WGameCore::getInstance();
-	list<Character*>& currentEntityList = wScreen.getEntityFactory().getNPCList();
+
+	//Liste de tous les personnages sur le monde courant
+	list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
 
 	//Première couche
 	m_lBot->display(rectAnimBlocks);
@@ -54,6 +56,7 @@ void World::displayLayers()
 	//Deuxième couche
 	m_lMid->display(rectAnimBlocks);
 
+	//Affichage des effets
 	wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
 
 	//Curseur souris sur la map
@@ -61,103 +64,59 @@ void World::displayLayers()
 		wScreen.getMouseCursor().displayCursor();
 
 
-	//Première partie des mobs
+	//Première partie des personnages
 	for (Character* npc : currentEntityList)
 	{
 		if(npc != NULL && npc->isVisible())
 			npc->display(1);
 	}
 
-	Fight& fight = wScreen.getFight();
 
-	//Première partie des mobs en combat
-	if(fight.isFighting() == true)
-	{
-		if(fight.getOpponent()->isAlive() && fight.getOpponent()->isVisible())
-			fight.getOpponent()->refresh();
+	//Ajouter un layer ici serait sympa ! (layer entre mid et top, qui cache le bas des persos mais pas le haut)
 
-		if(fight.getTrainer() != NULL && fight.getTrainer()->isVisible())
-		{
-			if(fight.getTrainer()->getSpeed() == 0)
-			{
-				SDL_Rect trainerPos = fight.getTrainer()->getCenterPos(), posHeroCenter = wScreen.getHero()->getCenterPos();
-				fight.getTrainer()->setDirection(GetDirectionFromPos(&trainerPos, &posHeroCenter));
-			}
-
-			fight.getTrainer()->display(1);
-		}
-
-	}
-
-
-	//Première partie du héros
-	wScreen.getHero()->display(1);
-	
-
-//Ajouter un layer ici serait sympa ! (layer entre mid et top, qui cache le bas des persos mais pas le haut)
-
-	//Deuxième partie des mobs
+	//Deuxième partie des personnages (ceux au sol)
 	for (Character* npc : currentEntityList)
 	{
-		if (npc != NULL && npc->isVisible())
+		if (npc != NULL && npc->isVisible() && npc->getJumpHeight() < TAILLEBLOC)
 			npc->display(2);
 	}
 
+	//Troisième couche
+	m_lTop->display(rectAnimBlocks);
 
-	//Deuxième partie des mobs en combat
-	if(fight.isFighting() == true)
+	//Affichage des personnages (ceux en l'air)
+	for (Character* npc : currentEntityList)
 	{
-		if(fight.getOpponent()->isAlive() && fight.getOpponent()->isVisible())
-			fight.getOpponent()->display(2);
-
-		if(fight.getTrainer() != NULL && fight.getTrainer()->isVisible())
-			fight.getTrainer()->display(2);
-
+		if (npc != NULL && npc->isVisible() && npc->getJumpHeight() >= TAILLEBLOC)
+		{
+			npc->display(1, false);
+			npc->display(2);
+		}
 	}
 
-	//Deuxième partie du héros
-
-	wScreen.getHero()->display(2);
-
-	//Dernière couche
-	m_lTop->display(rectAnimBlocks);
 }
+
 
 
 void World::refreshEntities()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	list<Character*>& currentListEntities = wScreen.getEntityFactory().getNPCList();
 
-	wScreen.getHero()->refresh();
 
-    for(Character* npc : currentListEntities)
+	//On refresh tous les personnages
+	auto it = wScreen.getEntityFactory().getCharacterList().begin();
+	while (it != wScreen.getEntityFactory().getCharacterList().end())
 	{
-		if(npc != NULL && npc->isVisible())
+		Character* npc = (*it);
+		if (npc != NULL && npc->isVisible() && npc->isAlive())
 			npc->refresh();
-    }
-
-	Fight& fight = wScreen.getFight();
-
-    if(fight.isFighting())
-    {
-        if(fight.getOpponent()->isAlive() && fight.getOpponent()->isVisible())
-            fight.getOpponent()->refresh();
-
-        if(fight.getTrainer() != NULL && fight.getTrainer()->isVisible())
-        {
-            if(fight.getTrainer()->getSpeed() == 0)
-            {
-                SDL_Rect trainerPos = fight.getTrainer()->getCenterPos(), posHeroCenter = wScreen.getHero()->getCenterPos();
-                fight.getTrainer()->setDirection(GetDirectionFromPos(&trainerPos, &posHeroCenter));
-            }
-
-            fight.getTrainer()->refresh();
-        }
-
-    }
-
-    
+			
+		//Si jamais un personnage n'est plus vivant, on le supprime
+		if (npc->isAlive())
+			it++;
+		else
+			it = wScreen.getEntityFactory().getCharacterList().erase(it);
+    }    
 
 
 }
@@ -173,7 +132,7 @@ bool World::getCollision(const int i, const int j)
 		return false;
 
     if(m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&        //Si on ne peut pas marcher sur le bot
-        (m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO))     //(ou inexistant)
+        (m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO))			//(ou inexistant)
         return true;
 
     if(m_lMid->getBlockCollision(i, j) == BLOCK_COL_YES)
@@ -207,13 +166,6 @@ bool World::canMoveToPos(SDL_Rect pos, PhysicObject* entityToMove)
     for(size_t i = 0; i < size; i++)
         if(!wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y)->getGhost() && (ids[i].x != id || ids[i].y != entityNumber)) //afin de ne pas tester la collision d'une entité avec elle-même...
         {
-            /*int speedDiff = entityToMove->getSpeed() - wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y)->getSpeed();
-            float coeff = 0.5*30;
-            Force f({0,0,0,0}, coeff*speedDiff, entityToMove->getAngle());
-            Force f2({0,0,0,0}, coeff*speedDiff, entityToMove->getAngle()-3.14);
-            wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y)->applyForce(f);
-            entityToMove->applyForce(f2);*/
-
             ok = false;                                 // il suffit qu'il y ait au moins une entité sur le passage
         }
     
@@ -328,6 +280,8 @@ int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, float di
 	}
 }
 */
+
+//Fonction d'apparition d'un mob à une position pos
 int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn)
 {
 	if(nbrSpawns == 0)

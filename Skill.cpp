@@ -436,7 +436,10 @@ void Projectile::collision()
 
 						//Si le pokémon adverse est K.O., le combat est fini
 						if (!opponent->isAlive())
+						{
 							wScreen.getFight().end(true);
+							return;
+						}
 					}
 					
 				}
@@ -470,7 +473,15 @@ void Projectile::collision()
 							pkmn->setCountD(10);
 
 							if (!pkmn->isAlive())
-								wScreen.getPokemonManager().useFirstUsablePokemon();
+							{
+								/*if (wScreen.getPokemonManager().getFirstUsablePokemon() != NULL)
+									wScreen.getPokemonManager().useFirstUsablePokemon();
+								else
+								{*/
+									wScreen.getFight().end(true);
+									return;
+								//}
+							}
 						}
 							
 					}
