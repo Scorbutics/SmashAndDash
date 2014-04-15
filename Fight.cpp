@@ -110,13 +110,13 @@ void Fight::start(Character* opponent)
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 	int time;
-	m_isFighting = true;
-
-
+	
     m_pkmn = wScreen.getPokemonManager().getFirstUsablePokemon();
 
 	if (m_pkmn == NULL || opponent == NULL)
 		return;
+
+	m_isFighting = true;
 
 	//Enregistrement dans les entités courantes du monde de l'apparition du Pokémon et de son opposant
 	wScreen.getEntityFactory().setPokemon(&(*m_pkmn));
@@ -236,6 +236,8 @@ void Fight::end(bool win)
         return;
     }
 
+	
+
 	wScreen.getHero()->refreshStats();
 	m_opponent->refreshStats();
 
@@ -253,7 +255,6 @@ void Fight::end(bool win)
     while(SDL_GetTicks() - t0 < duree)
     {
         wScreen.graphicUpdate();
-        //MobMovements();
         wScreen.flip();
         SDL_Delay(20);
     }
@@ -262,6 +263,7 @@ void Fight::end(bool win)
 
     //remettre le dresseur de pokémon en tant que héro principal
     wScreen.setHero(m_trainer);
+	
 	m_trainer->getPath()->setPathString("");
 
     wScreen.getGUI().getInfoPNJWindow()->hide(true);
@@ -273,7 +275,7 @@ void Fight::end(bool win)
 	m_opponentID.x = 0;
 	m_opponentID.y = 0;
 
-    m_isFighting = false;
+	m_isFighting = false;
 
 	if(!win)
 	{

@@ -184,7 +184,7 @@ void Player::update(Observable* obs, EventArg* event)
 
 				if (w.getLayerEvent()->getAction(i) == "script")
 					ScriptRead(w.getLayerEvent()->getParam(i));
-				else
+				else if (id < 0)
 				{
 					wScreen.getGUI().getDialog()->modifyText(w.getLayerEvent()->getParam(i));
 					wScreen.getGUI().getDialog()->hide(false);
@@ -238,6 +238,7 @@ void Player::refresh()
 			applyForce(GetDirectionFromChar(path[0]), (float)getSpeedLimit() * 5 * 10);
 		}
 	}
+
 	Character::refresh();
 }
 

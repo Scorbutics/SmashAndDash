@@ -232,7 +232,8 @@ void Character::display(int part, bool shadow)
 	{
 		ofHeroA.h -= ofHeroA.h / 2;
 		displaySpeed();
-		displayGrassWalk();
+		if (shadow)
+			displayGrassWalk();
 	}
     
 	buf.x += origineRelative.x;
@@ -421,7 +422,6 @@ bool Character::launchSkill(unsigned int skillNumber, SDL_Rect dest)
     if(m_entityNumber == ID_CURRENT_POKEMON)
     {
         wScreen.getFight().getDialog()->modifyText(m_descriptor.getName() + " lance " + m_skill[skillNumber]->getName() + " !");
-		//wScreen.getFight().getDialog()->resize(wScreen.getFight().getDialog()->getWLine(0)+((TAILLEBLOCFENETRE*3)/2), wScreen.getFight().getDialog()->getPos()->h);
         wScreen.getFight().showDialog(2000);
     }
     return true;

@@ -67,7 +67,7 @@ void World::displayLayers()
 	//Première partie des personnages
 	for (Character* npc : currentEntityList)
 	{
-		if(npc != NULL && npc->isVisible())
+		if (npc->isVisible())
 			npc->display(1);
 	}
 
@@ -77,21 +77,18 @@ void World::displayLayers()
 	//Deuxième partie des personnages (ceux au sol)
 	for (Character* npc : currentEntityList)
 	{
-		if (npc != NULL && npc->isVisible() && npc->getJumpHeight() < TAILLEBLOC)
+		if (npc->isVisible() && npc->getJumpHeight() < TAILLEBLOC)
 			npc->display(2);
 	}
 
 	//Troisième couche
 	m_lTop->display(rectAnimBlocks);
 
-	//Affichage des personnages (ceux en l'air)
+	//Deuxième partie des personnages (ceux en l'air)
 	for (Character* npc : currentEntityList)
 	{
-		if (npc != NULL && npc->isVisible() && npc->getJumpHeight() >= TAILLEBLOC)
-		{
-			npc->display(1, false);
-			npc->display(2);
-		}
+		if (npc->isVisible() && npc->getJumpHeight() >= TAILLEBLOC)
+			npc->display(2, false);
 	}
 
 }
@@ -108,11 +105,11 @@ void World::refreshEntities()
 	while (it != wScreen.getEntityFactory().getCharacterList().end())
 	{
 		Character* npc = (*it);
-		if (npc != NULL && npc->isVisible() && npc->isAlive())
+		if (npc->isVisible() && npc->isAlive())
 			npc->refresh();
 			
-		//Si jamais un personnage n'est plus vivant, on le supprime
-		if (npc->isAlive())
+		//Si jamais un personnage n'est plus vivant ou est notre Pokémon en combat alors que le combat est terminé, on le supprime
+		if (!(npc->getEntityNumber() == ID_CURRENT_POKEMON && !wScreen.getFight().isFighting()))
 			it++;
 		else
 			it = wScreen.getEntityFactory().getCharacterList().erase(it);
@@ -131,7 +128,7 @@ bool World::getCollision(const int i, const int j)
 	if (m_lBot == NULL)
 		return false;
 
-    if(m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&        //Si on ne peut pas marcher sur le bot
+    if(m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&			//Si on ne peut pas marcher sur le bot
         (m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO))			//(ou inexistant)
         return true;
 
@@ -230,8 +227,8 @@ void World::changeLevel(string fileName, string chipsetname)
     m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
     m_eventLayerName = m_genericName + "E.txt";
 
-    //ScriptsActiver(m_genericName); //Réactualisation des scripts
-	wScreen.getParticleManager().removeAll(); //Suppression des particules
+    //ScriptsActiver(m_genericName);									//Réactualisation des scripts
+	wScreen.getParticleManager().removeAll();							//Suppression des particules
 
     m_lBot->reset(m_botLayerName, chipsetname);
     m_lTop->reset(m_topLayerName, chipsetname);
@@ -336,7 +333,6 @@ int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned
 			if(spawnAllowed)
 			{
 
-				
 				int level = rand()%(dataSpawn->getInt("Data level_min") + dataSpawn->getInt("Data level_max") +1) + dataSpawn->getInt("Data level_min");
 				mob->getPath()->setPathString(dataSpawn->getString("Data path_type"));
 				mob->setID(idMob);
