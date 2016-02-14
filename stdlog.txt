@@ -1,5 +1,6 @@
 Zone de combat installées
 Chargement des entités terminé
 Le temps est inexistant sur cette map
+La pluie est inexistante sur cette map
 Paramètres concernant le monde chargés
 

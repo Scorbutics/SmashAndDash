@@ -1,4 +1,4 @@
 x:y ID_SPRITE(!:no sprite) solide?(0||1) declenchement(0:presser espace||1:sous le hero||2:automatique au chargement de la map) path(0: mouvements aléatoires||1: fixe|| {h,b,g,d}:prédéfini) action parametresSupplementaires
 13:5 -2 1 1 1 none Bonjour!
 15:5 -3 1 1 1 none Bonjour!
-14:1 ! 0 1 3 script .\Levels\temple_koa\start_script.txt
+14:1 ! 1 1 1 script .\Levels\temple_koa\start_script.txt

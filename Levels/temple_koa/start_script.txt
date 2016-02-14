@@ -1,9 +1,9 @@
 cacher_interface 1
 cacher_perso 0 0 1
 bloquer_perso 0 0 1
-cinematique 1 400 1 4 0 0 Bienvenue dans le monde de Pokémon !
-cinematique 2 400 1 4 0 0 Je suis le Professeur Coss, nom de code Coss222.¤Ma profression est l'étude des Pokémon.¤Un Pokémon est une créature domesticable vivant en compagnie de l'homme. Voici par exemple un Nidoran mâle.
-cinematique 2 400 1 4 0 0 Pour connaître l'origine et la provenance de ces créatures, il faut remonter légèrement le temps !¤Trève de bavardages, et sans plus attendre, revis l'expérience avec moi !
+cinematique 17 400 1 4 -1 -1 Bienvenue dans le monde de Pokémon !
+cinematique 17 400 1 4 -1 -1 Je suis le Professeur Coss, nom de code Coss222.¤Ma profression est l'étude des Pokémon.¤Un Pokémon est une créature domesticable vivant en compagnie de l'homme. Voici par exemple un Nidoran mâle.
+cinematique 17 400 1 4 -1 -1 Pour connaître l'origine et la provenance de ces créatures, il faut remonter légèrement le temps !¤Trève de bavardages, et sans plus attendre, revis l'expérience avec moi !
 direction -3 0 3
 direction -2 0 1
 eboulement 3000

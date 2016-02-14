@@ -1,1 +1,1 @@
-message f Rouuuu ! Ce message est écrit par script !
+message f, Rouuuu ! Ce message est écrit par script !
