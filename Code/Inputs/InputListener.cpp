@@ -1,7 +1,7 @@
 #include "InputListener.h"
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 #include "EventArg.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 
 int GetSkillCursorFromKey(Input *in);
 

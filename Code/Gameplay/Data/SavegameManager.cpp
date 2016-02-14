@@ -1,12 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
-#include "Utils\IDs.h"
-#include "Utils\ChargementImages.h"
+#include "../../Utils\IDs.h"
+#include "../../Utils\ChargementImages.h"
 #include "..\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\StringUtils.h"
 #include "..\Character.h"
-#include "Gameplay\Data\Statistics.h"
+#include "../../Gameplay\Data\Statistics.h"
 
 using namespace std;
 

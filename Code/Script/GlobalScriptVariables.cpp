@@ -2,9 +2,9 @@
 
 
 #include <map>
-#include "Gameplay/WGameCore.h"
-#include "Gameplay/Data/Statistics.h"
-#include "Utils/StringUtils.h"
+#include "../Gameplay/WGameCore.h"
+#include "../Gameplay/Data/Statistics.h"
+#include "../Utils/StringUtils.h"
 
 using namespace std;
 

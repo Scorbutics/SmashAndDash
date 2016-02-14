@@ -8,8 +8,8 @@
 #include <memory>
 
 #include "DialogMenu.h"
-#include "Utils/ChargementImages.h"
-#include "Gameplay/WGameCore.h"
+#include "../../Utils/ChargementImages.h"
+#include "../../Gameplay/WGameCore.h"
 #include "Button_Quit.h"
 #include "Scroll_Text.h"
 #include "Button.h"

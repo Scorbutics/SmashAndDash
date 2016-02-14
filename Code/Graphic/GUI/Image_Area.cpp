@@ -3,7 +3,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include "Image_Area.h"
 #include "DialogMenu.h"
 

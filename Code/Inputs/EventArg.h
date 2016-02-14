@@ -2,7 +2,7 @@
 #define DEF_EVENTARG
 
 #include <string>
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 
 class EventArg
 {

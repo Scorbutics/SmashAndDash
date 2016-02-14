@@ -2,8 +2,8 @@
 
 #include <math.h>
 #include "GravityParticle.h"
-#include "Gameplay\WGameCore.h"
-#include "Gameplay\World\Layer.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Gameplay\World\Layer.h"
 
 using namespace std;
 

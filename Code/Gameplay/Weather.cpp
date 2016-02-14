@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <math.h>
 #include "Weather.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 
 using namespace std;
 

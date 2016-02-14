@@ -1,9 +1,9 @@
 #include <string>
 #include "CommandMessage.h"
 #include <SDL2\SDL.h>
-#include "Utils\IDs.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\IDs.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 
 using namespace std;

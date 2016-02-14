@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include "PhysicObject.h"
-#include "Graphic/Animation.h"
-#include "Graphic/Texture.h"
+#include "../Graphic/Animation.h"
+#include "../Graphic/Texture.h"
 
 class WGameCore;
 

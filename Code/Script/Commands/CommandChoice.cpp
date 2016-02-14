@@ -1,9 +1,9 @@
 #include "CommandChoice.h"
 #include <SDL2/SDL.h>
 #include <string>
-#include "Gameplay/WGameCore.h"
-#include "Utils/StringUtils.h"
-#include "Utils/ScriptUtils.h"
+#include "../../Gameplay/WGameCore.h"
+#include "../../Utils/StringUtils.h"
+#include "../../Utils/ScriptUtils.h"
 
 using namespace std;
 

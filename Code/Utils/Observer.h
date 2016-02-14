@@ -3,7 +3,7 @@
 
 #include <string>
 #include <SDL2/SDL.h>
-#include "Inputs/EventArg.h"
+#include "../Inputs/EventArg.h"
 
 
 class Observable;

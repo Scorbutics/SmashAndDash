@@ -5,7 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include "Text_Area.h"
-#include "Utils/IDs.h"
+#include "../../Utils/IDs.h"
 using namespace std;
 
 Text_Area::Text_Area(DialogMenu *parent, string text, int fontSize, SDL_Rect relativePos): Window_Area(parent)

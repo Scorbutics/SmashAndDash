@@ -1,4 +1,4 @@
-#include "Utils\Observer.h"
+#include "../Utils\Observer.h"
 #include "Character.h"
 #ifndef DEF_PLAYER
 #define DEF_PLAYER

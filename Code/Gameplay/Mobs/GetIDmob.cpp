@@ -1,6 +1,6 @@
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include "GetIDmob.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 
 using namespace std;
 

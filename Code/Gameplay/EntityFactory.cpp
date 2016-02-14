@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 #include "EntityFactory.h"
-#include "Utils\StringUtils.h"
+#include "../Utils\StringUtils.h"
 
 using namespace std;
 

@@ -6,8 +6,8 @@
 #include <SDL2/SDL.h>
 #include "EndFightReasonEnum.h"
 #include "../Player.h"
-#include "Graphic/Animation.h"
-#include "Graphic/Texture.h"
+#include "../../Graphic/Animation.h"
+#include "../../Graphic/Texture.h"
 
 class World;
 class DialogMenu;

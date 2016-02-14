@@ -1,8 +1,8 @@
 #include "KeyInput.h"
 #include "MouseInput.h"
-#include "Utils\Observable.h"
-#include "Gameplay\World\World.h"
-#include "Gameplay\Character.h"
+#include "../Utils\Observable.h"
+#include "../Gameplay\World\World.h"
+#include "../Gameplay\Character.h"
 #ifndef DEF_KEYBOARD_LISTENER
 #define DEF_KEYBOARD_LISTENER
 

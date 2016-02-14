@@ -5,7 +5,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include "DynamicWindowArea.h"
-#include "Gameplay/Inventory/Inventory.h"
+#include "../../Gameplay/Inventory/Inventory.h"
 
 using namespace std;
 

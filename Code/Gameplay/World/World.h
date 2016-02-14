@@ -8,9 +8,9 @@
 #include <SDL2/SDL.h>
 #include <windows.h>
 #include <fmodex/fmod.h>
-#include "Inputs/Readers/IniReader.h"
-#include "Graphic/Texture.h"
-#include "Graphic/Animation.h"
+#include "../../Inputs/Readers/IniReader.h"
+#include "../../Graphic/Texture.h"
+#include "../../Graphic/Animation.h"
 
 
 class Layer;

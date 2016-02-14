@@ -2,7 +2,7 @@
 #define DEF_WINDOW_SHOP
 
 #include "MovableWindow.h"
-#include "Gameplay\Inventory\Inventory.h"
+#include "../../Gameplay\Inventory\Inventory.h"
 class WGameCore;
 
 class WindowShop

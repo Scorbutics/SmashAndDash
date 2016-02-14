@@ -1,8 +1,8 @@
 #include "CommandTranslationCamera.h"
 #include <SDL2\SDL_rect.h>
 #include <SDL2\SDL_timer.h>
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandTranslationCamera::CommandTranslationCamera()
 {

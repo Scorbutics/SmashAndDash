@@ -3,7 +3,7 @@
 
 
 #include "SDLFont.h"
-#include "Utils\ResourceTemplate.h"
+#include "../Utils\ResourceTemplate.h"
 
 class Font : public ResourceTemplate<SDLFont, UInteger>
 {

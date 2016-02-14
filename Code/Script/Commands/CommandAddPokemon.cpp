@@ -1,6 +1,6 @@
 #include "CommandAddPokemon.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandAddPokemon::CommandAddPokemon()
 {

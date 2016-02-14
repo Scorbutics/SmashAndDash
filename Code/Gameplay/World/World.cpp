@@ -3,8 +3,8 @@
 #include "World.h"
 #include "..\WGameCore.h"
 #include "Layer.h"
-#include "Utils\StringUtils.h"
-#include "Utils\ChargementImages.h"
+#include "../../Utils\StringUtils.h"
+#include "../../Utils\ChargementImages.h"
 #include "LayerE.h"
 
 

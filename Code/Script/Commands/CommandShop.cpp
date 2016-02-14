@@ -1,5 +1,5 @@
 #include "CommandShop.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 
 
 CommandShop::CommandShop()

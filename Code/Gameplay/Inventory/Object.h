@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "Graphic/Texture.h"
-#include "Graphic/Animation.h"
+#include "../../Graphic/Texture.h"
+#include "../../Graphic/Animation.h"
 
 class Object
 {

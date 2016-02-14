@@ -8,12 +8,12 @@
 #include <math.h>
 
 #include "Skill.h"
-#include "Physic/LinearParticle.h"
+#include "../../Physic/LinearParticle.h"
 #include "../WGameCore.h"
-#include "Utils/ChargementImages.h"
-#include "Graphic/SpritePath.h"
-#include "Gameplay/Data/Statistics.h"
-#include "Utils/StringUtils.h"
+#include "../../Utils/ChargementImages.h"
+#include "../../Graphic/SpritePath.h"
+#include "../../Gameplay/Data/Statistics.h"
+#include "../../Utils/StringUtils.h"
 
 const unsigned int Skill::m_fontSize = 30;
 

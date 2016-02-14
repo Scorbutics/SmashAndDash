@@ -1,7 +1,7 @@
 #include "CommandCalculate.h"
-#include "Utils\StringUtils.h"
-#include "Utils\ScriptUtils.h"
-#include "Utils\FormalCalculation\FormalCalculator.h"
+#include "../../Utils\StringUtils.h"
+#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\FormalCalculation\FormalCalculator.h"
 
 using namespace std;
 

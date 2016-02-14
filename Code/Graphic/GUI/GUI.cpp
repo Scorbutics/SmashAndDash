@@ -6,17 +6,17 @@
 #include <SDL2/SDL_image.h>
 #include <math.h>
 
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include "GUI.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #define SCROLL_BUTTON_SPEED 3
 #include "Window_Area.h"
 #include "Inventory_Area.h"
 #include "MouseCursor.h"
-#include "Utils/ChargementImages.h"
-#include "Utils/StringUtils.h"
-#include "Gameplay/Data/Statistics.h"
-#include "Gameplay/Fight/Skill.h"
+#include "../../Utils/ChargementImages.h"
+#include "../../Utils/StringUtils.h"
+#include "../../Gameplay/Data/Statistics.h"
+#include "../../Gameplay/Fight/Skill.h"
 
 GUI::GUI()
 {

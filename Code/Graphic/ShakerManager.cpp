@@ -1,6 +1,6 @@
 #include "ShakerManager.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\Singleton_template.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Utils\Singleton_template.h"
 
 
 ShakerManager::ShakerManager()

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDLTexture.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 #include "Font.h"
 
 using namespace std;

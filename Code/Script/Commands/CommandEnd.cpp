@@ -1,9 +1,9 @@
 #include "CommandEnd.h"
-#include "Utils\ScriptUtils.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 #include <iosfwd>
-#include "Utils\IDs.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Utils\IDs.h"
+#include "../../Gameplay\WGameCore.h"
 
 using namespace std;
 

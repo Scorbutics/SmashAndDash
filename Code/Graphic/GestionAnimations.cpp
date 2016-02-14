@@ -1,7 +1,7 @@
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 #include "GestionAnimations.h"
-#include "Gameplay\WGameCore.h"
-#include "Gameplay\World\Layer.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Gameplay\World\Layer.h"
 
 #define COMPTEUR_ANIM 26
 

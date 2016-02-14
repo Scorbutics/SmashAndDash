@@ -1,5 +1,5 @@
 #include "TextureData.h"
-#include "Utils\StringUtils.h"
+#include "../Utils\StringUtils.h"
 
 TextureData::TextureData(std::string texturePath, SDL_Color col)
 {

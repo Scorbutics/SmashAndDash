@@ -1,9 +1,9 @@
 #include "CommandTeleport.h"
 #include <string>
 #include <map>
-#include "Gameplay\WGameCore.h"
-#include "Utils\IDs.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\IDs.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 

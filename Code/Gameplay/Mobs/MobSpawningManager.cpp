@@ -1,9 +1,9 @@
 #include <math.h>
 #include "MobSpawningManager.h"
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include <SDL2\SDL_timer.h>
 #include "..\WGameCore.h"
-#include "Utils\ChargementImages.h"
+#include "../../Utils\ChargementImages.h"
 
 using namespace std;
 

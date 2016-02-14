@@ -1,7 +1,7 @@
 #include "Object.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #include <fstream>
-#include "Utils\StringUtils.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 

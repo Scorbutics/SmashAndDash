@@ -1,6 +1,6 @@
 #include "CommandFollow.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandFollow::CommandFollow()
 {

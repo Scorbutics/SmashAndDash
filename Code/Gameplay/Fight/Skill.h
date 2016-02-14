@@ -6,9 +6,9 @@
 #include <vector>
 #include <memory>
 #include "..\Character.h"
-#include "Inputs\Readers\IniReader.h"
-#include "Graphic\Texture.h"
-#include "Physic\Particle.h"
+#include "../../Inputs\Readers\IniReader.h"
+#include "../../Graphic\Texture.h"
+#include "../../Physic\Particle.h"
 
 using namespace std;
 

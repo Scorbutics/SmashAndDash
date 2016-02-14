@@ -2,10 +2,10 @@
 #include <string>
 
 #include "Script.h"
-#include "Utils\ScriptUtils.h"
-#include "Exceptions\ScriptNotActivatedException.h"
+#include "../Utils\ScriptUtils.h"
+#include "../Exceptions\ScriptNotActivatedException.h"
 #include "ScriptDispatcher.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 
 #define TRIGGER_AUTO_PERIODIC 0
 #define TRIGGER_PRESS_KEY 1

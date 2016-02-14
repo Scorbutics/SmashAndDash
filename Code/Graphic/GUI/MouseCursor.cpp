@@ -3,10 +3,10 @@
 #include <SDL2/SDL.h>
 
 #include "MouseCursor.h"
-#include "Gameplay/WGameCore.h"
+#include "../../Gameplay/WGameCore.h"
 #include "../SpritePath.h"
-#include "Gameplay/Data/Statistics.h"
-#include "Utils/StringUtils.h"
+#include "../../Gameplay/Data/Statistics.h"
+#include "../../Utils/StringUtils.h"
 
 MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
 {

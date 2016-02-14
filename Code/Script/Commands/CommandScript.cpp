@@ -1,7 +1,7 @@
 #include "CommandScript.h"
 #include <string>
 #include "..\ScriptDispatcher.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 

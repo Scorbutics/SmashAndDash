@@ -10,16 +10,16 @@
 #include <math.h>
 #include <vector>
 #include <sstream>
-#include "Utils/IDs.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils/Chargemententitees.h"
-#include "Utils/Observable.h"
-#include "Utils/ChargementImages.h"
-#include "Graphic/Scrolling.h"
+#include "../Utils/IDs.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Utils/Chargemententitees.h"
+#include "../Utils/Observable.h"
+#include "../Utils/ChargementImages.h"
+#include "../Graphic/Scrolling.h"
 #include "GestionEvents.h"
-#include "Gameplay/World/World.h"
-#include "Gameplay/Weather.h"
-#include "Script/ScriptDispatcher.h"
+#include "../Gameplay/World/World.h"
+#include "../Gameplay/Weather.h"
+#include "../Script/ScriptDispatcher.h"
 using namespace std;
 
 

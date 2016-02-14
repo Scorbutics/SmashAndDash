@@ -5,7 +5,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <memory>
-#include "Gameplay/Inventory/Object.h"
+#include "../../Gameplay/Inventory/Object.h"
 #include "GUI.h"
 
 class MouseInput;

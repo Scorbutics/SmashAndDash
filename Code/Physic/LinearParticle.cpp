@@ -1,7 +1,7 @@
 #include <math.h>
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 #include "LinearParticle.h"
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 
 using namespace std;
 

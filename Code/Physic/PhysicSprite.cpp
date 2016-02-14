@@ -1,6 +1,6 @@
 #include "PhysicSprite.h"
-#include "Gameplay\WGameCore.h"
-#include "Graphic\SpritePath.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Graphic\SpritePath.h"
 
 using namespace std;
 

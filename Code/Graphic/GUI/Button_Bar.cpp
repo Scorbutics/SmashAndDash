@@ -1,6 +1,6 @@
 #include "Button_Bar.h"
-#include "Utils\ChargementImages.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Utils\ChargementImages.h"
+#include "../../Gameplay\WGameCore.h"
 
 using namespace std;
 

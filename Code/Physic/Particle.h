@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <vector>
-#include "Graphic/Texture.h"
-#include "Graphic/Animation.h"
+#include "../Graphic/Texture.h"
+#include "../Graphic/Animation.h"
 
 class Particle
 {

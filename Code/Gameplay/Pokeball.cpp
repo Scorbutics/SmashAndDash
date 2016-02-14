@@ -6,8 +6,8 @@
 #define OPEN_DELAY 50 //durée 50 frames
 
 #include "Pokeball.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\ChargementImages.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Utils\ChargementImages.h"
 #include "Data\Statistics.h"
 #include "Weather.h"
 

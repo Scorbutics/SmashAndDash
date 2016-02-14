@@ -1,6 +1,6 @@
 #include "CommandHideGUI.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandHideGUI::CommandHideGUI()
 {

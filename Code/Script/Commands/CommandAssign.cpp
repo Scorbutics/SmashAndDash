@@ -1,6 +1,6 @@
 #include "CommandAssign.h"
 #include <map>
-#include "Utils\ScriptUtils.h"
+#include "../../Utils\ScriptUtils.h"
 
 using namespace std;
 

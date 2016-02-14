@@ -1,5 +1,5 @@
 #include "WindowSettings.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #include <math.h>
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 #include "GravityParticle.h"
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 
 GravityParticle::GravityParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative):
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)

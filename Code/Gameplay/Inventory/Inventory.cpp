@@ -1,8 +1,8 @@
 #include <fstream>
 #include "Inventory.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
-#include "Utils\ChargementImages.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
+#include "../../Utils\ChargementImages.h"
 
 unsigned int Inventory::m_fontSize = 12;
 

@@ -3,11 +3,11 @@
 #include <string>
 #include <SDL2/SDL.h>
 
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include "Inventory_Area.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #include "MouseCursor.h"
-#include "Utils/ChargementImages.h"
+#include "../../Utils/ChargementImages.h"
 
 using namespace std;
 

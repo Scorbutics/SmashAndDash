@@ -1,6 +1,6 @@
 #include "SpriteAnimation.h"
 #include "SpritePath.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 
 using namespace std;
 

@@ -3,10 +3,10 @@
 
 #include <map>
 #include <memory>
-#include "Utils\ResourceTemplate.h"
+#include "../Utils\ResourceTemplate.h"
 #include "SDLTexture.h"
 #include "TextureData.h"
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 
 //opérateur < pour SDL_Color nécessaire pour le stockage dans la map
 inline bool operator<(const SDL_Color &a, const SDL_Color &b)

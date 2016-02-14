@@ -1,7 +1,7 @@
 #include "ToolBar.h"
-#include "Gameplay\WGameCore.h"
-#include "Gameplay\Inventory\Inventory.h"
-#include "Graphic\GUI\Inventory_Area.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Gameplay\Inventory\Inventory.h"
+#include "../../Graphic\GUI\Inventory_Area.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "CommandKillEntity.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 #include <string>
 
 using namespace std;

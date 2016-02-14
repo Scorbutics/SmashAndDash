@@ -5,11 +5,11 @@
 #include <sstream>
 #include <vector>
 
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 #include "WGameCore.h"
-#include "Script/Commands/CommandTeleport.h"
+#include "../Script/Commands/CommandTeleport.h"
 #include "World/LayerE.h"
-#include "Script/ScriptDispatcher.h"
+#include "../Script/ScriptDispatcher.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #include "CommandIf.h"
 #include <string>
 #include <algorithm>
-#include "Utils\ScriptUtils.h"
+#include "../../Utils\ScriptUtils.h"
 
 using namespace std;
 

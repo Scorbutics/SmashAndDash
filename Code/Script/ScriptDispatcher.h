@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <map>
 #include "Commands\Command.h"
-#include "Utils\Singleton_template.h"
+#include "../Utils\Singleton_template.h"
 
 class ScriptDispatcher : public Singleton<ScriptDispatcher>{
 	friend class Singleton<ScriptDispatcher>;

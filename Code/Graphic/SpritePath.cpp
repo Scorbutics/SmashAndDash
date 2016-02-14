@@ -2,8 +2,8 @@
 #include <sstream>
 
 #include "SpritePath.h"
-#include "Utils\IDs.h"
-#include "Utils\StringUtils.h"
+#include "../Utils\IDs.h"
+#include "../Utils\StringUtils.h"
 
 using namespace std;
 

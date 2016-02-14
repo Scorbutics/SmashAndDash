@@ -6,25 +6,25 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include "Graphic\GUI\Window.h"
+#include "../Graphic\GUI\Window.h"
 #include "Player.h"
-#include "Graphic\Animation.h"
+#include "../Graphic\Animation.h"
 #include "Fight\Fight.h"
 #include "Pokeball.h"
 #include "AI\AI.h"
-#include "Physic\ParticleManager.h"
+#include "../Physic\ParticleManager.h"
 #include "Data\Settings.h"
 #include "PokemonManager.h"
 #include "EntityFactory.h"
-#include "Graphic\SpriteAnimationManager.h"
-#include "Graphic\GUI\MouseCursor.h"
-#include "Inputs\InputListener.h"
-#include "Graphic\GUI\TrainerCard.h"
-#include "Graphic\ShakerManager.h"
+#include "../Graphic\SpriteAnimationManager.h"
+#include "../Graphic\GUI\MouseCursor.h"
+#include "../Inputs\InputListener.h"
+#include "../Graphic\GUI\TrainerCard.h"
+#include "../Graphic\ShakerManager.h"
 #include "Mobs\MobSpawningManager.h"
 #include "Data\SavegameManager.h"
 #include "World\World.h"
-#include "Utils\Singleton_template.h"
+#include "../Utils\Singleton_template.h"
 
 
 class LayerE;

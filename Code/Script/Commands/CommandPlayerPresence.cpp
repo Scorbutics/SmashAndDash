@@ -1,6 +1,6 @@
 #include "CommandPlayerPresence.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\ScriptUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\ScriptUtils.h"
 
 using namespace std;
 

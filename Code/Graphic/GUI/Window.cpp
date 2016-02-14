@@ -4,7 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <fstream>
-#include "Utils/IDs.h"
+#include "../../Utils/IDs.h"
 #include "Window.h"
 
 using namespace std;

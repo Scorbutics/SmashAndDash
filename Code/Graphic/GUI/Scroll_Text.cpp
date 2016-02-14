@@ -3,10 +3,10 @@
 
 
 #include "Scroll_Text.h"
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include "DialogMenu.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\ChargementImages.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\ChargementImages.h"
 
 
 using namespace std;

@@ -6,10 +6,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <memory>
-#include "Physic/PhysicSprite.h"
+#include "../Physic/PhysicSprite.h"
 #include "Data/PokemonDescriptor.h"
-#include "Graphic/SpriteAnimation.h"
-#include "Graphic/GUI/Bar.h"
+#include "../Graphic/SpriteAnimation.h"
+#include "../Graphic/GUI/Bar.h"
 #include "AI/Path.h"
 
 class Statistics;

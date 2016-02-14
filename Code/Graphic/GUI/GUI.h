@@ -9,8 +9,8 @@
 #include "WindowBag.h"
 #include "ToolBar.h"
 #include "WindowShop.h"
-#include "Utils/Observer.h"
-#include "Utils/Observable.h"
+#include "../../Utils/Observer.h"
+#include "../../Utils/Observable.h"
 
 using namespace std;
 

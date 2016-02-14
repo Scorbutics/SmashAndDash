@@ -1,10 +1,10 @@
 
 #include "AI.h"
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include <SDL2\SDL_timer.h>
 #include "..\WGameCore.h"
-#include "Utils\ChargementImages.h"
-#include "Gameplay/Fight/Skill.h"
+#include "../../Utils\ChargementImages.h"
+#include "../../Gameplay/Fight/Skill.h"
 using namespace std;
 
 AI::AI()

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDLFont.h"
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 
 SDLFont::SDLFont()
 {

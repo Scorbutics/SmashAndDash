@@ -1,7 +1,7 @@
 #include "CommandCinematic.h"
 #include <SDL2\SDL_rect.h>
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandCinematic::CommandCinematic()
 {

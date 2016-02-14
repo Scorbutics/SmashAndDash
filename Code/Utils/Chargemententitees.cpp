@@ -5,10 +5,10 @@
 #include <SDL2/SDL.h>
 #include <fstream>
 
-#include "Utils\IDs.h"
+#include "../Utils\IDs.h"
 #include "Chargemententitees.h"
-#include "Gameplay/WGameCore.h"
-#include "Gameplay/World/LayerE.h"
+#include "../Gameplay/WGameCore.h"
+#include "../Gameplay/World/LayerE.h"
 
 
 using namespace std;

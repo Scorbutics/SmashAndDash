@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "Utils\Singleton_template.h"
+#include "../Utils\Singleton_template.h"
 
 class GlobalScriptVariables : public Singleton<GlobalScriptVariables>
 {

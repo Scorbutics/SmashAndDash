@@ -1,8 +1,8 @@
 #include <string>
 #include "CommandMove.h"
-#include "Utils\IDs.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\IDs.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 using namespace std;
 
 CommandMove::CommandMove()

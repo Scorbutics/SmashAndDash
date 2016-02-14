@@ -3,7 +3,7 @@
 
 #include <string>
 #include <SDL2/SDL.h>
-#include "Utils/IStringAble.h"
+#include "../Utils/IStringAble.h"
 
 class TextureData : public IStringAble
 {

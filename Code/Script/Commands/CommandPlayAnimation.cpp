@@ -1,9 +1,9 @@
 #include "CommandPlayAnimation.h"
-#include "Utils\IDs.h"
+#include "../../Utils\IDs.h"
 #include <SDL2\SDL_rect.h>
-#include "Gameplay\WGameCore.h"
-#include "Utils\ScriptUtils.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 
 CommandPlayAnimation::CommandPlayAnimation()
 {

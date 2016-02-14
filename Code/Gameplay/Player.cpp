@@ -1,10 +1,10 @@
 #include "Player.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\ChargementImages.h"
+#include "../Gameplay\WGameCore.h"
+#include "../Utils\ChargementImages.h"
 #include "Mobs\GetIDmob.h"
 #include "World\LayerE.h"
-#include "Script\ScriptDispatcher.h"
-#include "Utils\StringUtils.h"
+#include "../Script\ScriptDispatcher.h"
+#include "../Utils\StringUtils.h"
 
 int GetSkillCursorFromKey(KeyEvent* ke);
 

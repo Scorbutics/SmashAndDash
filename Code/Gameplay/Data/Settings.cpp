@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Settings.h"
-#include "Inputs\Readers\IniReader.h"
+#include "../../Inputs\Readers\IniReader.h"
 
 
 using namespace std;

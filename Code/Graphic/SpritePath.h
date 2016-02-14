@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "Utils/Singleton_template.h"
+#include "../Utils/Singleton_template.h"
 
 
 class SpritePath : public Singleton<SpritePath>

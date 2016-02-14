@@ -6,8 +6,8 @@
 #include <SDL2/SDL_image.h>
 
 #include "ChargementImages.h"
-#include "Gameplay/World/World.h"
-#include "Gameplay/Character.h"
+#include "../Gameplay/World/World.h"
+#include "../Gameplay/Character.h"
 
 using namespace std;
 

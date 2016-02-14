@@ -5,13 +5,13 @@
 #include <algorithm>
 #include <cmath>
 #include "Character.h"
-#include "Inputs/Readers/IniReader.h"
+#include "../Inputs/Readers/IniReader.h"
 #include "WGameCore.h"
 #include "Data/Statistics.h"
 #include "Fight/Skill.h"
-#include "Graphic/SpritePath.h"
-#include "Utils/ChargementImages.h"
-#include "Utils/StringUtils.h"
+#include "../Graphic/SpritePath.h"
+#include "../Utils/ChargementImages.h"
+#include "../Utils/StringUtils.h"
 #include "World/Layer.h"
 
 using namespace std;

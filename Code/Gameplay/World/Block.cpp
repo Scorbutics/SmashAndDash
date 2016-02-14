@@ -1,5 +1,5 @@
 #include "Block.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 
 using namespace std;
 

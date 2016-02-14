@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include <memory>
-#include "Graphic/Animation.h"
+#include "../../Graphic/Animation.h"
 
 
 class WGameCore;

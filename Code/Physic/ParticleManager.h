@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 #include "Particle.h"
-#include "Graphic\Texture.h"
+#include "../Graphic\Texture.h"
 
 class ParticleManager
 {

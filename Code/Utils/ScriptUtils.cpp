@@ -1,10 +1,10 @@
 #include "ScriptUtils.h"
-#include "Gameplay\WGameCore.h"
+#include "../Gameplay\WGameCore.h"
 #include "FormalCalculation\FormalCalculator.h"
-#include "Script\ScriptSymbolsConstants.h"
+#include "../Script\ScriptSymbolsConstants.h"
 #include "StringUtils.h"
-#include "Script\GlobalScriptVariables.h"
-#include "Script\ScriptDispatcher.h"
+#include "../Script\GlobalScriptVariables.h"
+#include "../Script\ScriptDispatcher.h"
 
 using namespace std;
 

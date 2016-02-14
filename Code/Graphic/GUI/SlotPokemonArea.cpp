@@ -1,11 +1,11 @@
 
 #include "SlotPokemonArea.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #include "..\SpritePath.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\StringUtils.h"
 #include "Button.h"
-#include "Gameplay/Character.h"
-#include "Gameplay/Data/Statistics.h"
+#include "../../Gameplay/Character.h"
+#include "../../Gameplay/Data/Statistics.h"
 
 
 using namespace std;

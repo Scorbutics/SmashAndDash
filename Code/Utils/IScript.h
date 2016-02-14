@@ -2,7 +2,7 @@
 #include <SDL2\SDL_stdinc.h>
 #include <unordered_map>
 #include <string>
-#include "Script\ScriptState.h"
+#include "../Script\ScriptState.h"
 
 class IScript
 {

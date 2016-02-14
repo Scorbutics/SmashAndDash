@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "Path.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #include "Node.h"
 
 

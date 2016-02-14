@@ -1,5 +1,5 @@
 #include "WindowBag.h"
-#include "Gameplay\WGameCore.h"
+#include "../../Gameplay\WGameCore.h"
 #include "Inventory_Area.h"
 
 

@@ -9,7 +9,7 @@
 #include <sstream>
 
 #include "Layer.h"
-#include "Gameplay\WGameCore.h"
+#include "../WGameCore.h"
 
 using namespace std;
 

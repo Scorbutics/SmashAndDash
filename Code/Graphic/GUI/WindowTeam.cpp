@@ -1,9 +1,9 @@
 #include "WindowTeam.h"
 #include <stdint.h>
-#include "Gameplay\WGameCore.h"
-#include "Gameplay\PokemonManager.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Gameplay\PokemonManager.h"
 #include "Inventory_Area.h"
-#include "Utils\ChargementImages.h"
+#include "../../Utils\ChargementImages.h"
 
 using namespace std;
 

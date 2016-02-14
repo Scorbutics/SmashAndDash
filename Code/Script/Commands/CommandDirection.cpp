@@ -1,6 +1,6 @@
 #include "CommandDirection.h"
-#include "Gameplay\WGameCore.h"
-#include "Utils\ScriptUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\ScriptUtils.h"
 
 
 CommandDirection::CommandDirection()

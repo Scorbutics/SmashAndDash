@@ -6,8 +6,8 @@
 #include <memory>
 #include <SDL2/SDL.h>
 #include "PokeballLaunchReasonEnum.h"
-#include "Graphic/Animation.h"
-#include "Graphic/Texture.h"
+#include "../Graphic/Animation.h"
+#include "../Graphic/Texture.h"
 
 class Character;
 class WGameCore;

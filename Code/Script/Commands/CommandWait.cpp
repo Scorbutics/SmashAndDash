@@ -1,8 +1,8 @@
 #include "CommandWait.h"
 #include <map>
 #include <SDL2\SDL_timer.h>
-#include "Gameplay\WGameCore.h"
-#include "Utils\StringUtils.h"
+#include "../../Gameplay\WGameCore.h"
+#include "../../Utils\StringUtils.h"
 
 CommandWait::CommandWait()
 {

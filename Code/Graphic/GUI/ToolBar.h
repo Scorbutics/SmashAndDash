@@ -2,7 +2,7 @@
 #define DEF_TOOLBAR
 
 #include <iostream>
-#include "Gameplay\Inventory\Inventory.h"
+#include "../../Gameplay\Inventory\Inventory.h"
 #include "MovableWindow.h"
 
 

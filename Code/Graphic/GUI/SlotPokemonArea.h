@@ -1,5 +1,5 @@
 #include "DynamicWindowArea.h"
-#include "Gameplay\Character.h"
+#include "../../Gameplay\Character.h"
 #include "..\Texture.h"
 #include "Image_Area.h"
 #include "Text_Area.h"

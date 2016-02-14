@@ -1,6 +1,6 @@
 #include "CommandRandom.h"
-#include "Utils\ScriptUtils.h"
-#include "Utils\StringUtils.h"
+#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 

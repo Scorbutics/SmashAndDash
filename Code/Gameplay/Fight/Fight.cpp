@@ -9,7 +9,7 @@
 #include "..\WGameCore.h"
 #include "..\GestionEvents.h"
 #include "..\World\LayerE.h"
-#include "Utils\ChargementImages.h"
+#include "../../Utils\ChargementImages.h"
 #include "..\Data\Statistics.h"
 
 Fight::Fight(): m_animGrass(1, 3, false)

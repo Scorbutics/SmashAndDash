@@ -1,6 +1,6 @@
 #include "Particle.h"
-#include "Graphic\SpritePath.h"
-#include "Gameplay\WGameCore.h"
+#include "../Graphic\SpritePath.h"
+#include "../Gameplay\WGameCore.h"
 
 Particle::Particle(int idSprite, unsigned int weight, SDL_Rect pos, double lifetime, double splashTime, bool loop, bool relative): m_anim(300, 2, false),
 m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED, T_GREEN, T_BLUE)
