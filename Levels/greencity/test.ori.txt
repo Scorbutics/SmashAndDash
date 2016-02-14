@@ -1,0 +1,28 @@
+affecter [_input.mouse.pos.x_] [|mouse_pos_x|]
+affecter [_input.mouse.pos.y_] [|mouse_pos_y|]
+lancer_pokeball 0 0 [|mouse_pos_x|] [|mouse_pos_y|]
+attendre 3000
+
+affecter %calculer (3 * [_combat.ennemi.pvsmax_]) / ([_combat.ennemi.pvs_] + 1)% [|chance_capture_brute|]
+affecter %random 100% [|chance_capture_alea|]
+affecter %calculer [|chance_capture_brute|] * [|chance_capture_alea|]% [|chance_capture|]
+si [|chance_capture|] > 40
+    message f OK 1
+    affecter %random 100% [|chance_capture|]
+    animation 0 32766 15
+    attendre 2000
+    animation 0 32766 15
+    attendre 2000
+    animation 0 32766 15
+    attendre 2000
+    si [|chance_capture|] > 40
+        message f OK 2
+        affecter %random 100% [|chance_capture|]
+        si [|chance_capture|] > 40
+            message f Capture !
+        finsi
+    finsi
+finsi
+
+message f Fin script
+fin
