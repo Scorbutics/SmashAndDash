@@ -182,7 +182,7 @@ bool ScriptDispatcher::commandInterpreter(const std::string& extendedName, const
 	}
 
 	if (commands.find(cmdName) != commands.end()) {
-		return commands[cmdName]->execute(extendedName, streamCmd, scriptList, varMap, fscript, active, result);
+		return commands[cmdName]->process(extendedName, streamCmd, scriptList, varMap, fscript, active, result);
 	} else {
 		throw ScriptUnknownCommandException("Script " + extendedName + " : Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}

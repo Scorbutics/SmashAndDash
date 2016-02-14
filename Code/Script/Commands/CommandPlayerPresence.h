@@ -1,7 +1,7 @@
 #pragma once
-#include "AbstractCommand.h"
+#include "AbstractFunctionCommand.h"
 
-class CommandPlayerPresence : public AbstractCommand
+class CommandPlayerPresence : public AbstractFunctionCommand
 {
 public:
 	CommandPlayerPresence() { }

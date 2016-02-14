@@ -1,8 +1,8 @@
 #pragma once
-#include "AbstractCommand.h"
+#include "AbstractFunctionCommand.h"
 #include <map>
 class CommandHeal :
-	public AbstractCommand
+	public AbstractFunctionCommand
 {
 public:
 	CommandHeal();

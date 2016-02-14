@@ -1,1 +1,2 @@
+affecter %random %random 200%%, [|test_var|]
 message f, Rouuuu ! Ce message est écrit par script !

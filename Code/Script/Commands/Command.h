@@ -10,8 +10,7 @@ public:
 	static char ARGUMENT_SEPARATOR;
 
 	Command(){}
-	virtual int argumentsNumber() = 0;
-	virtual bool execute(const std::string& extendedName, std::stringstream& streamCmd, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) = 0;
+	virtual bool process(const std::string& extendedName, std::stringstream& streamCmd, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) = 0;
 	virtual ~Command(){}
 
 

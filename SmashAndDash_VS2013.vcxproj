@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\Script\Commands\AbstractCommand.h" />
     <ClInclude Include="Code\Exceptions\InputException.h" />
     <ClInclude Include="Code\Exceptions\InvalidPathException.h" />
@@ -237,6 +238,8 @@
     <ClInclude Include="Code\Graphic\Scrolling.h" />
     <ClInclude Include="Code\Graphic\GUI\Scroll_Text.h" />
     <ClInclude Include="Code\Graphic\SDLTexture.h" />
+    <ClInclude Include="Code\Script\Commands\ControlStatement.h" />
+    <ClInclude Include="Code\Exceptions\ScriptSyntaxError.h" />
     <ClInclude Include="SDLWindowRendererWrappers.h" />
     <ClInclude Include="Code\Gameplay\Data\Settings.h" />
     <ClInclude Include="Code\Graphic\ShakerManager.h" />
@@ -265,6 +268,7 @@
     <ClInclude Include="Code\Gameplay\World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Script\Commands\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractCommand.cpp" />
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
     <ClCompile Include="Code\Graphic\Animation.cpp" />
@@ -384,6 +388,7 @@
     <ClCompile Include="Code\Graphic\GUI\Window_Area.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Window_Choice.cpp" />
     <ClCompile Include="Code\Gameplay\World\World.cpp" />
+    <ClCompile Include="Code\Script\Commands\ControlStatement.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

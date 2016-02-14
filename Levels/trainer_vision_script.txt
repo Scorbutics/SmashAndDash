@@ -1,22 +1,22 @@
-affecter %obtenir [_personnage.pos.y #arg0# #arg1#_]% [|pos_perso.y|]
-affecter %obtenir [_personnage.pos.x #arg0# #arg1#_]% [|pos_perso.x|]
-affecter %obtenir [_personnage.direction #arg0# #arg1#_]% [|direction_perso|]
+affecter %obtenir [_personnage.pos.y #arg0# #arg1#_]%, [|pos_perso.y|]
+affecter %obtenir [_personnage.pos.x #arg0# #arg1#_]%, [|pos_perso.x|]
+affecter %obtenir [_personnage.direction #arg0# #arg1#_]%, [|direction_perso|]
 
 si [|direction_perso|] == 0
-    affecter %calculer [|pos_perso.y|] + #arg2#% [|pos_check.y|]
-    affecter %obtenir [|pos_perso.x|]% [|pos_check.x|]
+    affecter %calculer [|pos_perso.y|] + #arg2#%, [|pos_check.y|]
+    affecter %obtenir [|pos_perso.x|]%, [|pos_check.x|]
 sinon
 si [|direction_perso|] == 1
-    affecter %calculer [|pos_perso.x|] + #arg2#% [|pos_check.x|]
-    affecter %obtenir [|pos_perso.y|]% [|pos_check.y|]
+    affecter %calculer [|pos_perso.x|] + #arg2#%, [|pos_check.x|]
+    affecter %obtenir [|pos_perso.y|]%, [|pos_check.y|]
 sinon
 si [|direction_perso|] == 2
-    affecter %calculer [|pos_perso.y|] - #arg2#% [|pos_check.y|]
-    affecter %obtenir [|pos_perso.x|]% [|pos_check.x|]
+    affecter %calculer [|pos_perso.y|] - #arg2#%, [|pos_check.y|]
+    affecter %obtenir [|pos_perso.x|]%, [|pos_check.x|]
 sinon
 si [|direction_perso|] == 3
-    affecter %calculer [|pos_perso.x|] - #arg2#% [|pos_check.x|]
-    affecter %obtenir [|pos_perso.y|]% [|pos_check.y|]
+    affecter %calculer [|pos_perso.x|] - #arg2#%, [|pos_check.x|]
+    affecter %obtenir [|pos_perso.y|]%, [|pos_check.y|]
 finsi
 
 affecter %presence_joueur [|pos_perso.x|] [|pos_perso.y|] [|pos_check.x|] [|pos_check.y|]% [|pres_joueur|]

@@ -1,9 +1,9 @@
 #pragma once
 #include <iosfwd>
 #include <map>
-#include "AbstractCommand.h"
+#include "AbstractFunctionCommand.h"
 
-class CommandEnd : public AbstractCommand
+class CommandEnd : public AbstractFunctionCommand
 {
 public:
 	CommandEnd();

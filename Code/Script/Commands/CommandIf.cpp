@@ -14,18 +14,16 @@ CommandIf::~CommandIf()
 {
 }
 
-int CommandIf::argumentsNumber() {
-	return 3;
-}
-
-bool CommandIf::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+bool CommandIf::analyzeLine(const std::string& extendedName, std::string& lineArg, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
+	stringstream ss;
+	ss << line;
 
-	varNumber = args[0];
-	op = args[1];
-	valeur = args[2];
+	ss >> varNumber;
+	ss >> op;
+	ss >> valeur;
 
 	num1 = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, varNumber, varMap);
 	num2 = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, valeur, varMap);

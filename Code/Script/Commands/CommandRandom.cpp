@@ -23,7 +23,6 @@ bool CommandRandom::execute(const std::string& extendedName, std::vector<std::st
 	int valueInt, resultInt;
 
 	value = args[0];
-	value = value.substr(1, value.size() - 1);
 	valueInt = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, value, varMap);
 
 	if (valueInt == -1)

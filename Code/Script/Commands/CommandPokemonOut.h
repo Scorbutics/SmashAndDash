@@ -1,7 +1,7 @@
 #pragma once
-#include "AbstractCommand.h"
+#include "AbstractFunctionCommand.h"
 class CommandPokemonOut :
-	public AbstractCommand
+	public AbstractFunctionCommand
 {
 public:
 	CommandPokemonOut();
