@@ -30,7 +30,7 @@ bool CommandGet::execute(const std::string& extendedName, std::vector<std::strin
 
 		if (result != NULL) {
 			string& interpretedVar = ScriptUtils::interpretVarName(extendedName, varNumber, varMap);
-			*result = StringUtils::intToStr(ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, interpretedVar.empty() ? line : interpretedVar, varMap));
+			*result = StringUtils::intToStr(ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, interpretedVar == varNumber ? line : interpretedVar, varMap));
 		}
 	}
 	return true;

@@ -24,10 +24,9 @@ bool CommandAssign::execute(const std::string& extendedName, std::vector<std::st
 
 	valeur = args[0];
 	varNumber = args[1];
-	valeur = ScriptUtils::getFirstExpressionFromLine(valeur, extendedName, varMap, fscript, active, result, &commandCallSize);
-	varNumber = ScriptUtils::getFirstExpressionFromLine(varNumber, extendedName, varMap, fscript, active, result, &commandCallSize);
+	/*valeur = ScriptUtils::getFirstExpressionFromLine(valeur, extendedName, varMap, fscript, active, result, &commandCallSize);
+	varNumber = ScriptUtils::getFirstExpressionFromLine(varNumber, extendedName, varMap, fscript, active, result, &commandCallSize);*/
 
-	string& interpretedVar = ScriptUtils::interpretVarName(extendedName, valeur, varMap);
-	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, varNumber, interpretedVar.empty() ? valeur : interpretedVar, varMap);
+	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, varNumber, valeur, varMap);
 	return true;
 }

@@ -222,7 +222,7 @@ std::string ScriptUtils::interpretVarName(const std::string& scriptExtendedName,
 		return GlobalScriptVariables::getInstance().returnValue(cmds[0], getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[1], varMap), getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[2], varMap));
 	} 
 
-	return "";
+	return v;
 }
 
 bool ScriptUtils::isScriptActivated(const string& scriptName)
