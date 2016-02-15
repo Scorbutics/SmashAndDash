@@ -443,7 +443,6 @@ void World::getFogFromData(string stringDataFile)
 	int number, xintensity, yintensity;
 	bool transparency;
     int alpha;
-    ofstream clog("stdlog.txt", ios::app);
 
 	IniReader reader(stringDataFile);
 
@@ -476,7 +475,6 @@ void World::getFogFromData(string stringDataFile)
 void World::getRainFromData(string stringDataFile)
 {
     int idsprite, acceleration, density;
-    ofstream clog("stdlog.txt", ios::app);
 	WGameCore& wScreen = WGameCore::getInstance();
 	IniReader reader(stringDataFile);
 
@@ -525,7 +523,6 @@ void World::getWeatherFromData(string stringDataFile)
     }
     else
     {
-        ofstream clog("stdlog.txt", ios::app);
         clog << "Le temps est inexistant sur cette map" << endl;
         m_temps->hide(true);
     }
@@ -550,7 +547,6 @@ void World::getBgmFromData(string stringDataFile)
     }
     else
     {
-        ofstream clog("stdlog.txt", ios::app);
         clog << "Il n'y a pas de musique de fond sur cette map" << endl;
     }
 

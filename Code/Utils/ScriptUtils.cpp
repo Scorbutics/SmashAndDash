@@ -13,17 +13,18 @@ ScriptUtils::ScriptUtils()
 }
 
 /* Récupère la valeur une variable LOCALE (dans varMap) */
-int ScriptUtils::getValueFromVarOrSwitchNumber(const string& scriptExtendedName, string varNumber, std::unordered_map<std::string, std::string>& varMap)
+string ScriptUtils::getValueFromVarOrSwitchNumber(const string& scriptExtendedName, string varNumber, std::unordered_map<std::string, std::string>& varMap)
 {
 	int num = -1;
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}')
 	{
-		if (wScreen.getSavegameManager().getGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1))
-			num = 1;
-		else
-			num = 0;
+		if (wScreen.getSavegameManager().getGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1)) {
+			return "1";
+		} else {
+			return "0";
+		}
 	}
 	else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']')
 	{
@@ -31,29 +32,33 @@ int ScriptUtils::getValueFromVarOrSwitchNumber(const string& scriptExtendedName,
 		string key = getVariableKey(v);
 		if (!key.empty())
 		{
-			if (varMap.find(key) != varMap.end())
-				num = atoi(varMap[key].c_str());
-			else
-				num = -1;
+			if (varMap.find(key) != varMap.end()) {
+				return varMap[key];
+			} else {
+				return "";
+			}
+				
 		}
-		else
-			num = wScreen.getSavegameManager().getGameVariable(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1);
-	}
-	else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {
+		else {
+			return StringUtils::intToStr(wScreen.getSavegameManager().getGameVariable(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1));
+		}
+			
+	} else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {
 		const std::string& key = varNumber + scriptExtendedName;
-		if (varMap.find(key) != varMap.end())
-			num = atoi(varMap[key].c_str());
-		else
-			num = -1;
+		if (varMap.find(key) != varMap.end()) {
+			return varMap[key];
+		}
+		else {
+			return "";
+		}
 	}
-	else if (varNumber == "true")
-		num = 1;
-	else if (varNumber == "false")
-		num = 0;
-	else
-		num = StringUtils::strToInt(varNumber);
-
-	return num;
+	else if (varNumber == "true") {
+		return "1";
+	} else if (varNumber == "false") {
+		return "0";
+	}
+	
+	return varNumber;
 }
 
 string ScriptUtils::replaceVariablesByNumerics(const std::string& scriptExtendedName, const string& line, unordered_map<string, string>& varMap, char varStartSymbol, char varEndSymbol)
@@ -68,7 +73,7 @@ string ScriptUtils::replaceVariablesByNumerics(const std::string& scriptExtended
 			posRight += posLeft + 1;
 
 			string var = it.substr(posLeft, posRight - posLeft + 1);
-			string varValue = StringUtils::intToStr(ScriptUtils::getValueFromVarOrSwitchNumber(scriptExtendedName, var, varMap));
+			string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(scriptExtendedName, var, varMap);
 
 			it = it.substr(0, posLeft) + varValue + it.substr(posRight + 1, it.size());
 		}
@@ -219,10 +224,14 @@ std::string ScriptUtils::interpretVarName(const std::string& scriptExtendedName,
 			ss >> cmds[i];
 		}
 
-		return GlobalScriptVariables::getInstance().returnValue(cmds[0], getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[1], varMap), getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[2], varMap));
+		int cmdInt[2];
+		cmdInt[0] = StringUtils::strToInt(getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[1], varMap));
+		cmdInt[1] = StringUtils::strToInt(getValueFromVarOrSwitchNumber(scriptExtendedName, cmds[2], varMap));
+
+		return GlobalScriptVariables::getInstance().returnValue(cmds[0], cmdInt[0], cmdInt[1]);
 	} 
 
-	return v;
+	return getValueFromVarOrSwitchNumber(scriptExtendedName, v, varMap);
 }
 
 bool ScriptUtils::isScriptActivated(const string& scriptName)

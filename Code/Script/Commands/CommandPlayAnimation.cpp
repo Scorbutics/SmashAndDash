@@ -30,8 +30,8 @@ bool CommandPlayAnimation::execute(const std::string& extendedName, std::vector<
 	id = args[1];
 	id_anim = StringUtils::strToInt(args[2]);
 
-	idTypeInt = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, idType, varMap);
-	idInt = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, id, varMap);
+	idTypeInt = StringUtils::strToInt(idType);
+	idInt = StringUtils::strToInt(id);
 	Character* c = wScreen.getEntityFactory().getNPC(idTypeInt, idInt);
 	if (c != NULL)
 	{

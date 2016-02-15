@@ -1,4 +1,5 @@
 #include "StringUtils.h"
+#include "../Exceptions/NumberFormatException.h"
 #include <string>
 #include <sstream>
 
@@ -26,8 +27,18 @@ string StringUtils::intToStr(int x)
 	return buf;
 }
 
+bool StringUtils::isInt(const std::string& s, int base) {
+	if (s.empty() || std::isspace(s[0])) return false;
+	char * p;
+	strtol(s.c_str(), &p, base);
+	return (*p == 0);
+}
+
 int StringUtils::strToInt(const std::string& str) {
-	return atoi(str.c_str());
+	if (!isInt(str, 10)) {
+		throw NumberFormatException(str);
+	}
+	atoi(str.c_str());
 }
 
 string StringUtils::uintToStr(unsigned int x)

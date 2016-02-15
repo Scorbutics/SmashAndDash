@@ -30,10 +30,7 @@ bool CommandEnd::execute(const std::string& extendedName, std::vector<std::strin
 		scriptList.close();
 	}
 
-	std::string returnValue;
-	returnValue = args[0];
-
-	*result = StringUtils::intToStr(ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, returnValue, varMap));
+	*result = args[0];
 
 	return false;
 }

@@ -23,14 +23,17 @@ int main (int argc, char *argv[])
 {
     argc = argc;
     argv = argv;
-	
-	//freopen("stderr.txt", "w", stderr);
+
 
     int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
     string startMapName, startMapChipsetName;
 
-    ofstream flux("stdlog.txt", ios::trunc); //Reset du fichier "stdlog.txt"
-    flux.close();
+	ofstream logFile("stdlog.txt", ios::trunc);
+	clog.rdbuf(logFile.rdbuf());
+
+	ofstream errFile("stderr.txt", ios::trunc);
+	cerr.rdbuf(errFile.rdbuf());
+
     srand((unsigned int)time(NULL));
 
     // Chargement de la vidéo, de l'audio et du texte
@@ -40,11 +43,8 @@ int main (int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-
 	if( !( IMG_Init( IMG_INIT_PNG ) & IMG_INIT_PNG ) )
 		cerr <<  "Impossible d'initialiser SDL_image : " << IMG_GetError() << endl;
-
-	
 
     if(TTF_Init() == -1)
     {

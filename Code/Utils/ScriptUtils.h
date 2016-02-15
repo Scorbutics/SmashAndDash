@@ -5,7 +5,7 @@ class ScriptUtils
 {
 public:
 	ScriptUtils();
-	static int getValueFromVarOrSwitchNumber(const std::string& scriptExtendedName, std::string varNumber, std::unordered_map<std::string, std::string>& varMap);
+	static std::string getValueFromVarOrSwitchNumber(const std::string& scriptExtendedName, std::string varNumber, std::unordered_map<std::string, std::string>& varMap);
 	static std::string replaceVariablesByNumerics(const std::string& scriptExtendedName, const std::string& line, std::unordered_map<std::string, std::string>& varMap);
 	static std::string replaceVariablesByNumerics(const std::string& scriptExtendedName, const std::string& line, std::unordered_map<std::string, std::string>& varMap, char varStartSymbol, char varEndSymbol);
 	static std::string getFirstExpressionFromLine(const std::string& line, const std::string& extendedName, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result, size_t* outputCommandSize);

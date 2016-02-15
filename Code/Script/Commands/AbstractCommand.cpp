@@ -43,7 +43,7 @@ void AbstractCommand::parseArgument(std::string& arg, const string& extendedName
 		outputCommandSize += offset;
 	} while (offset != 0 && outputCommandSize < arg.size());
 	arg = StringUtils::rtrim(parsedArg);
-	arg = ScriptUtils::interpretVarName(extendedName, arg, varMap);
+	arg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, arg, varMap);
 }
 
 AbstractCommand::~AbstractCommand()

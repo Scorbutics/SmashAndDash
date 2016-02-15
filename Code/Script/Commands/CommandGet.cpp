@@ -19,7 +19,7 @@ int CommandGet::argumentsNumber() {
 
 bool CommandGet::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
 {
-	string varNumber, line, commandCall;
+	/*string varNumber, line, commandCall;
 	size_t commandCallSize;
 
 	line = args[0];
@@ -32,6 +32,6 @@ bool CommandGet::execute(const std::string& extendedName, std::vector<std::strin
 			string& interpretedVar = ScriptUtils::interpretVarName(extendedName, varNumber, varMap);
 			*result = StringUtils::intToStr(ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, interpretedVar == varNumber ? line : interpretedVar, varMap));
 		}
-	}
+	}*/
 	return true;
 }

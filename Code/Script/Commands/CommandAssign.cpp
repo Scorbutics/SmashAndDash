@@ -1,6 +1,7 @@
 #include "CommandAssign.h"
 #include <map>
 #include "../../Utils\ScriptUtils.h"
+#include "../ScriptSymbolsConstants.h"
 
 using namespace std;
 
@@ -24,9 +25,7 @@ bool CommandAssign::execute(const std::string& extendedName, std::vector<std::st
 
 	valeur = args[0];
 	varNumber = args[1];
-	/*valeur = ScriptUtils::getFirstExpressionFromLine(valeur, extendedName, varMap, fscript, active, result, &commandCallSize);
-	varNumber = ScriptUtils::getFirstExpressionFromLine(varNumber, extendedName, varMap, fscript, active, result, &commandCallSize);*/
 
-	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, varNumber, valeur, varMap);
+	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, ScriptSymbolsConstants::VARIABLE_LEFT + varNumber + ScriptSymbolsConstants::VARIABLE_RIGHT, valeur, varMap);
 	return true;
 }

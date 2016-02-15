@@ -239,7 +239,6 @@ void Layer::reset(string pathFile, string chipsetName)
 
 void Layer::printCollisionProfile()
 {
-    ofstream clog("stdlog.txt", ios::app);
     clog << m_name << endl;
     for(int y = 0; y < m_nbrBlocY; y++)
     {

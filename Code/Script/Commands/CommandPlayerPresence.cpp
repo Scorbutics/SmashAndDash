@@ -1,6 +1,6 @@
 #include "CommandPlayerPresence.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 
@@ -31,10 +31,10 @@ bool CommandPlayerPresence::execute(const std::string& extendedName, std::vector
 
 	SDL_Rect pos1, pos2;
 	
-	pos1.x = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, posFromX, varMap)*TAILLEBLOC;
-	pos1.y = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, posFromY, varMap)*TAILLEBLOC;
-	pos2.x = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, posToX, varMap)*TAILLEBLOC;
-	pos2.y = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, posToY, varMap)*TAILLEBLOC;
+	pos1.x = StringUtils::strToInt(posFromX)*TAILLEBLOC;
+	pos1.y = StringUtils::strToInt(posFromY)*TAILLEBLOC;
+	pos2.x = StringUtils::strToInt(posToX)*TAILLEBLOC;
+	pos2.y = StringUtils::strToInt(posToY)*TAILLEBLOC;
 	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
 	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
 	collisionRect.w = abs(pos1.x - pos2.x) + TAILLEBLOC - 1;

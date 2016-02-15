@@ -350,7 +350,6 @@ void WGameCore::eventUpdate(bool movingDisallowed)
 
 void WGameCore::initNewWorld()
 {
-    ofstream clog("stdlog.txt", ios::app);
 
     // 2) Récupère les zones de combat situées dans le fichier evenement du monde
     m_fight.setAreasFromLayerEvent();

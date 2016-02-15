@@ -4,3 +4,11 @@ Le temps est inexistant sur cette map
 La pluie est inexistante sur cette map
 Paramètres concernant le monde chargés
 
+30
+|test_var|
+46
+|test_var|
+37
+|test_var|
+56
+|test_var|

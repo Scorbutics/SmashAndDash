@@ -1,7 +1,7 @@
 #include "CommandIf.h"
 #include <string>
 #include <algorithm>
-#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 
 using namespace std;
 
@@ -25,9 +25,8 @@ bool CommandIf::analyzeLine(const std::string& extendedName, std::string& lineAr
 	ss >> op;
 	ss >> valeur;
 
-	num1 = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, varNumber, varMap);
-	num2 = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, valeur, varMap);
-
+	num1 = StringUtils::strToInt(varNumber);
+	num2 = StringUtils::strToInt(valeur);
 
 	if (!((op == "==" && num1 == num2) || (op == "<" && num1 < num2) || (op == ">" && num1 > num2) || (op == "<=" && num1 <= num2) || (op == ">=" && num1 >= num2)))
 	{

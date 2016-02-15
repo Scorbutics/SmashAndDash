@@ -240,6 +240,8 @@
     <ClInclude Include="Code\Graphic\SDLTexture.h" />
     <ClInclude Include="Code\Script\Commands\ControlStatement.h" />
     <ClInclude Include="Code\Exceptions\ScriptSyntaxError.h" />
+    <ClInclude Include="Code\Script\Commands\CommandLog.h" />
+    <ClInclude Include="Code\Exceptions\NumberFormatException.h" />
     <ClInclude Include="SDLWindowRendererWrappers.h" />
     <ClInclude Include="Code\Gameplay\Data\Settings.h" />
     <ClInclude Include="Code\Graphic\ShakerManager.h" />
@@ -389,6 +391,7 @@
     <ClCompile Include="Code\Graphic\GUI\Window_Choice.cpp" />
     <ClCompile Include="Code\Gameplay\World\World.cpp" />
     <ClCompile Include="Code\Script\Commands\ControlStatement.cpp" />
+    <ClCompile Include="Code\Script\Commands\CommandLog.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

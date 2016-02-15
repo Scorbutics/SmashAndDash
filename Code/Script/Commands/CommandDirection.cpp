@@ -1,6 +1,6 @@
 #include "CommandDirection.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\ScriptUtils.h"
+#include "../../Utils\StringUtils.h"
 
 
 CommandDirection::CommandDirection()
@@ -26,9 +26,9 @@ bool CommandDirection::execute(const std::string& extendedName, std::vector<std:
 	idStr = args[1];
 	dirStr = args[2];
 
-	idType = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, idTypeStr, varMap);
-	id = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, idStr, varMap);
-	dir = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, dirStr, varMap);
+	idType = StringUtils::strToInt(idTypeStr);
+	id = StringUtils::strToInt(idStr);
+	dir = StringUtils::strToInt(dirStr);
 
 	wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
 	return true;
