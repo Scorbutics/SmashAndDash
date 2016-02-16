@@ -1,7 +1,6 @@
-
-cacher_perso 0 32767 0
-animation 0 32767 15
-affecter %random 100% [|chance_capture|]
-si [|chance_capture|] => 90
-	message -1 Message 1 chance sur 10
-finsi
+hide_char 0, 32767, 0
+animation 0, 32767, 15
+assign %random 100%, |chance_capture|
+if [|chance_capture|] => 90
+	message -1, Message 1 chance sur 10
+endif

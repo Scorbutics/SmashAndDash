@@ -6,7 +6,7 @@ class ScriptNotActivatedException :
 {
 public:
 
-	ScriptNotActivatedException(std::string message) : ScriptException(message) {
+	ScriptNotActivatedException(std::string message) : ScriptException(message, "ScriptNotActivatedException") {
 	}
 
 	virtual ~ScriptNotActivatedException() {

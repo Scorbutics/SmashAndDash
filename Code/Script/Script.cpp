@@ -115,6 +115,10 @@ ScriptState Script::getCurrentState() {
 	return m_state;
 }
 
+unsigned int Script::getCurrentLine() {
+	return m_commandsPlayed + 1;
+}
+
 std::string& Script::getFullPath() {
 	return m_fullPath;
 }

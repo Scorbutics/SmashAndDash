@@ -30,7 +30,7 @@ bool CommandScript::execute(const std::string& extendedName, std::vector<std::st
 
 	active = false;
 
-	ScriptDispatcher::getInstance().addRunningScript(scriptName, extraArgs.substr(1, extraArgs.length()), 0, &period);
+	ScriptDispatcher::getInstance().addRunningScript(scriptName, extraArgs, 0, &period);
 
 	active = true;
 	return true;

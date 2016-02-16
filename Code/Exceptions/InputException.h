@@ -5,7 +5,10 @@ class InputException :
 {
 public:
 
-	InputException(std::string message) : GenericException(message) {
+	InputException(std::string message) : GenericException(message, "InputException") {
+	}
+
+	InputException(std::string message, const std::string& type) : GenericException(message, type) {
 	}
 
 	virtual ~InputException() {

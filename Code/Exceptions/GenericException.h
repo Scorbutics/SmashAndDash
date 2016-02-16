@@ -5,11 +5,11 @@
 class GenericException : public std::exception
 {
 public:
-	GenericException(std::string message) throw();
+	GenericException(std::string message, std::string type) throw();
 	const char* what() const throw();
-	~GenericException() throw();
+	virtual ~GenericException() throw();
 
 private:
-	std::string m_message;
+	std::string m_message, m_typedMessage;
 };
 

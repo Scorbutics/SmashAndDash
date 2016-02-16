@@ -49,38 +49,37 @@ using namespace std;
 unordered_map<string, unique_ptr<Command>> create_map()
 {
 	unordered_map<string, unique_ptr<Command>> c;
-	c["bouger"] = move(Command_ptr(new CommandMove()));
+	c["move"] = move(Command_ptr(new CommandMove()));
 	c["message"] = move(Command_ptr(new CommandMessage()));
-	c["choix"] = move(Command_ptr(new CommandChoice()));
-	c["fin"] = move(Command_ptr(new CommandEnd()));
-	c["calculer"] = move(Command_ptr(new CommandCalculate()));
-	c["soigner"] = move(Command_ptr(new CommandHeal()));
+	c["choice"] = move(Command_ptr(new CommandChoice()));
+	c["end"] = move(Command_ptr(new CommandEnd()));
+	c["calculate"] = move(Command_ptr(new CommandCalculate()));
+	c["heal"] = move(Command_ptr(new CommandHeal()));
 	c["stop"] = move(Command_ptr(new CommandStop()));
-	c["si"] = move(Command_ptr(new CommandIf()));
-	c["sinon"] = move(Command_ptr(new CommandElse()));
-	c["finsi"] = move(Command_ptr(new CommandElseEnd()));
-	c["affecter"] = move(Command_ptr(new CommandAssign()));
+	c["if"] = move(Command_ptr(new CommandIf()));
+	c["else"] = move(Command_ptr(new CommandElse()));
+	c["endif"] = move(Command_ptr(new CommandElseEnd()));
+	c["assign"] = move(Command_ptr(new CommandAssign()));
 	c["random"] = move(Command_ptr(new CommandRandom()));
-	c["obtenir"] = move(Command_ptr(new CommandGet()));
 	c["direction"] = move(Command_ptr(new CommandDirection()));
 	c["animation"] = move(Command_ptr(new CommandPlayAnimation()));
-	c["eboulement"] = move(Command_ptr(new CommandPlayCrumbling()));
-	c["tremblement"] = move(Command_ptr(new CommandPlayShaking()));
-	c["translation_camera"] = move(Command_ptr(new CommandTranslationCamera()));
-	c["attendre"] = move(Command_ptr(new  CommandWait()));
-	c["bloquer_perso"] = move(Command_ptr(new CommandStuckCharacter()));
-	c["cacher_perso"] = move(Command_ptr(new CommandHideCharacter()));
-	c["suivre_perso"] = move(Command_ptr(new CommandFollow()));
+	c["crumbling"] = move(Command_ptr(new CommandPlayCrumbling()));
+	c["shaking"] = move(Command_ptr(new CommandPlayShaking()));
+	c["camera_translation"] = move(Command_ptr(new CommandTranslationCamera()));
+	c["wait"] = move(Command_ptr(new  CommandWait()));
+	c["stuck_char"] = move(Command_ptr(new CommandStuckCharacter()));
+	c["hide_char"] = move(Command_ptr(new CommandHideCharacter()));
+	c["follow_char"] = move(Command_ptr(new CommandFollow()));
 	c["shop"] = move(Command_ptr(new CommandShop()));
-	c["cacher_interface"] = move(Command_ptr(new CommandHideGUI()));
-	c["teleporter"] = move(Command_ptr(new CommandTeleport()));
+	c["hide_gui"] = move(Command_ptr(new CommandHideGUI()));
+	c["teleport"] = move(Command_ptr(new CommandTeleport()));
 	c["script"] = move(Command_ptr(new CommandScript()));
-	c["cinematique"] = move(Command_ptr(new CommandCinematic()));
-	c["lancer_pokeball"] = move(Command_ptr(new CommandThrowPokebal()));
-	c["tuer"] = move(Command_ptr(new CommandKillEntity()));
-	c["ajouter_pokemon"] = move(Command_ptr(new CommandAddPokemon()));
-	c["sortir_pokemon"] = move(Command_ptr(new CommandPokemonOut()));
-	c["presence_joueur"] = move(Command_ptr(new CommandPlayerPresence()));
+	c["cinematic"] = move(Command_ptr(new CommandCinematic()));
+	c["pokeball"] = move(Command_ptr(new CommandThrowPokebal()));
+	c["kill"] = move(Command_ptr(new CommandKillEntity()));
+	c["add_pokemon"] = move(Command_ptr(new CommandAddPokemon()));
+	c["throw_pokemon"] = move(Command_ptr(new CommandPokemonOut()));
+	c["player_presence"] = move(Command_ptr(new CommandPlayerPresence()));
 	c["log"] = move(Command_ptr(new CommandLog()));
 	return c;
 }
@@ -159,7 +158,7 @@ void ScriptDispatcher::refresh()
 		nextScript->play();
 	}
 	catch (ScriptException e) {
-		cerr << "Erreur survenue lors de l'execution du script : " << e.what() << endl;
+		cerr << "ERREUR SCRIPT (l." << nextScript->getCurrentLine() << ") " << e.what() << endl;
 	}
 
 }
@@ -188,10 +187,10 @@ bool ScriptDispatcher::commandInterpreter(const std::string& extendedName, const
 		try {
 			return commands[cmdName]->process(extendedName, streamCmd, scriptList, varMap, fscript, active, result);
 		} catch (NumberFormatException nfe) {
-			throw ScriptException("Script " + extendedName + " : Une erreur est survenue à l'exécution de la commande " + cmdName + " dans le moteur de scripts : " + nfe.what());
+			throw ScriptException("[" + extendedName + "] Commande " + cmdName + " : " + std::string(nfe.what()));
 		}
 	} else {
-		throw ScriptUnknownCommandException("Script " + extendedName + " : Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
+		throw ScriptUnknownCommandException("[" + extendedName + "] Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}
 
 }

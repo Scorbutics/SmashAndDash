@@ -1,7 +1,7 @@
-affecter %obtenir [_personnage.direction #arg0# #arg1#_]% [|direction_perso|]
-affecter %calculer [|direction_perso|] + 1% [|direction_perso|]
-si [|direction_perso|] >= 4
-affecter 0 [|direction_perso|]
-finsi
-direction #arg0# #arg1# [|direction_perso|]
-attendre 500
+assign [_personnage.direction #arg0# #arg1#_], |direction_perso|
+assign %calculate [|direction_perso|] + 1%, |direction_perso|
+if [|direction_perso|] >= 4
+assign 0, |direction_perso|
+endif
+direction #arg0#, #arg1#, [|direction_perso|]
+wait 500

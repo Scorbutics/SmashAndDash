@@ -18,6 +18,7 @@ bool AbstractCommand::process(const string& extendedName, stringstream& streamCm
 		return false;
 	}
 
+	line = StringUtils::trim(line);
 	vector<string>& args = StringUtils::split(line, getSeparator());
 
 	/* Pour chaque argument, effectue toutes les opérations de calcul nécessaires et explicite les valeurs des variables */

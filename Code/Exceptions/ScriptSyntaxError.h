@@ -5,7 +5,7 @@ class ScriptSyntaxError :
 {
 public:
 
-	ScriptSyntaxError(std::string message) : ScriptException(message)
+	ScriptSyntaxError(std::string message) : ScriptException(message, "ScriptSyntaxError")
 	{
 	}
 

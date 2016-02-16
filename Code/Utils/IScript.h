@@ -12,6 +12,7 @@ public:
 	virtual float getPriority(Uint32 currentTimeMillis) = 0;
 	virtual ScriptState getCurrentState() = 0;
 	virtual std::unordered_map<std::string, std::string>& getVarMap() = 0;
+	virtual unsigned int getCurrentLine() = 0;
 	~IScript(){}
 	
 

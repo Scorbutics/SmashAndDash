@@ -4,7 +4,7 @@ class NumberFormatException :
 	public GenericException
 {
 public:
-	NumberFormatException(std::string message) : GenericException(message) {
+	NumberFormatException(std::string message) : GenericException(message, "NumberFormatException") {
 	}
 
 	virtual ~NumberFormatException() {

@@ -6,7 +6,7 @@ class InvalidPathException :
 {
 public:
 
-	InvalidPathException(std::string message) : InputException(message) {
+	InvalidPathException(std::string message) : InputException(message, "InvalidPathException") {
 	}
 
 	virtual ~InvalidPathException() {

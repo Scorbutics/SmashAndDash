@@ -5,6 +5,7 @@
 #include "StringUtils.h"
 #include "../Script\GlobalScriptVariables.h"
 #include "../Script\ScriptDispatcher.h"
+#include "../Exceptions/NumberFormatException.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ string ScriptUtils::getValueFromVarOrSwitchNumber(const string& scriptExtendedNa
 
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}')
 	{
-		if (wScreen.getSavegameManager().getGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1)) {
+		if (wScreen.getSavegameManager().getGameSwitch(StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)) - 1)) {
 			return "1";
 		} else {
 			return "0";
@@ -40,7 +41,14 @@ string ScriptUtils::getValueFromVarOrSwitchNumber(const string& scriptExtendedNa
 				
 		}
 		else {
-			return StringUtils::intToStr(wScreen.getSavegameManager().getGameVariable(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1));
+			unsigned int varNum;
+			try {
+				varNum = StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2));
+			} catch (NumberFormatException nfe) {
+				return interpretVarName(scriptExtendedName, varNumber.substr(1, varNumber.size() - 2), varMap);
+			}
+
+			return StringUtils::intToStr(wScreen.getSavegameManager().getGameVariable(varNum - 1));
 		}
 			
 	} else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {

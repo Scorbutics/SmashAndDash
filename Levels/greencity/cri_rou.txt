@@ -1,4 +1,4 @@
-affecter %random %random 200%%, |test_var|
+assign %random %random 200%%, |test_var|
 log [|test_var|]
 log |test_var|
 message f, Rouuuu ! Ce message est écrit par script !

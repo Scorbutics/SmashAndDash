@@ -14,6 +14,7 @@ public:
 	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, std::string& extraArgs);
 	virtual bool play();
 	ScriptState getCurrentState();
+	virtual unsigned int getCurrentLine();
 	std::string& getFullPath();
 	bool canBePlayed();
 	virtual float getPriority(Uint32 currentTimeMillis);

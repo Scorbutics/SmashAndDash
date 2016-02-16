@@ -37,17 +37,16 @@ int main (int argc, char *argv[])
     srand((unsigned int)time(NULL));
 
     // Chargement de la vidéo, de l'audio et du texte
-    if ( SDL_Init(SDL_INIT_VIDEO) < 0 )
-    {
+    if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
         cerr << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << endl;
         exit(EXIT_FAILURE);
     }
 
-	if( !( IMG_Init( IMG_INIT_PNG ) & IMG_INIT_PNG ) )
-		cerr <<  "Impossible d'initialiser SDL_image : " << IMG_GetError() << endl;
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		cerr << "Impossible d'initialiser SDL_image : " << IMG_GetError() << endl;
+	}
 
-    if(TTF_Init() == -1)
-    {
+    if(TTF_Init() == -1) {
         cerr << "Erreur d'initialisation de TTF_Init : " << TTF_GetError() << endl;
         exit(EXIT_FAILURE);
     }

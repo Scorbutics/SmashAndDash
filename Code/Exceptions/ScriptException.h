@@ -5,7 +5,10 @@ class ScriptException :
 {
 public:
 
-	ScriptException(std::string message) : GenericException(message) {
+	ScriptException(std::string message) : GenericException(message, "ScriptException") {
+	}
+
+	ScriptException(std::string message, const std::string& type) : GenericException(message, type) {
 	}
 
 	virtual ~ScriptException() {

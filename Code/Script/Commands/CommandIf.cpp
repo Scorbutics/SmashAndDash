@@ -14,16 +14,15 @@ CommandIf::~CommandIf()
 {
 }
 
-bool CommandIf::analyzeLine(const std::string& extendedName, std::string& lineArg, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+bool CommandIf::analyzeLine(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
 	stringstream ss;
-	ss << line;
 
-	ss >> varNumber;
-	ss >> op;
-	ss >> valeur;
+	varNumber = args[0];
+	op = args[1];
+	valeur = args[2];
 
 	num1 = StringUtils::strToInt(varNumber);
 	num2 = StringUtils::strToInt(valeur);

@@ -1,4 +1,4 @@
-eboulement 10000
-attendre 10000
-message f Ouf! C'est fini.
+crumbling 10000
+wait 10000
+message f, Ouf! C'est fini.
 stop

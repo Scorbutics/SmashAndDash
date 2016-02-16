@@ -6,7 +6,7 @@ class ScriptUnknownCommandException :
 {
 public:
 
-	ScriptUnknownCommandException(std::string message) : ScriptException(message) {
+	ScriptUnknownCommandException(std::string message) : ScriptException(message, "ScriptUnknownCommandException") {
 	}
 
 	virtual ~ScriptUnknownCommandException() {
