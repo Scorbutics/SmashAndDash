@@ -4,3 +4,350 @@ Le temps est inexistant sur cette map
 La pluie est inexistante sur cette map
 Paramètres concernant le monde chargés
 
+0
+position 0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+1
+1
+0
+position 1
+0
+1
+position 1
+0
+Changement de direction du perso :
+2
+1
+position 1
+0
+Changement de direction du perso :
+2
+2
+position 2
+0
+2
+position 2
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+3
+position 3
+0
+3
+position 3
+0
+Changement de direction du perso :
+0
+0
+position 0
+0
+Changement de direction du perso :
+0
+0
+position 0
+0
+Changement de direction du perso :
+1
+1
+position 1
+0
+0
+position 0
+0
+Changement de direction du perso :
+1
+1
+position 1
+0
+Changement de direction du perso :
+2
+1
+position 1
+0
+Changement de direction du perso :
+2
+2
+position 2
+0
+2
+position 2
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+3
+position 3
+0
+3
+position 3
+0
+Changement de direction du perso :
+0
+0
+position 0
+0
+Changement de direction du perso :
+0
+0
+position 0
+0
+Changement de direction du perso :
+1
+1
+position 1
+0
+Changement de direction du perso :
+1
+1
+position 1
+0
+1
+position 1
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+2
+2
+position 2
+0
+2
+position 2
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+3
+position 3
+0
+3
+position 3
+0
+Changement de direction du perso :
+0
+Changement de direction du perso :
+0
+0
+position 0
+0
+0
+position 0
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+1
+1
+position 1
+0
+1
+position 1
+0
+Changement de direction du perso :
+2
+1
+position 1
+0
+2
+position 2
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+3
+2
+position 2
+0
+3
+position 3
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+0
+3
+position 3
+0
+0
+position 0
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+1
+position 1
+0
+0
+position 0
+1
+Changement de direction du perso :
+2
+2
+position 2
+0
+Changement de direction du perso :
+1
+2
+position 2
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2
+3
+position 3
+0
+Changement de direction du perso :
+0
+0
+position 0
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2
+Changement de direction du perso :
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+2
+Changement de direction du perso :
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2
+Changement de direction du perso :
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+2
+Changement de direction du perso :
+2
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+Changement de direction du perso :
+0
+Changement de direction du perso :
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+1
+Changement de direction du perso :
+2
+Changement de direction du perso :
+2
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+Changement de direction du perso :
+0
+Changement de direction du perso :
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+1
+Changement de direction du perso :
+2
+Changement de direction du perso :
+2
+Changement de direction du perso :
+3
+Changement de direction du perso :
+3
+Changement de direction du perso :
+0
+Changement de direction du perso :
+0
+Changement de direction du perso :
+1
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2
+Changement de direction du perso :
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2
+Changement de direction du perso :
+0
+Changement de direction du perso :
+3
+Changement de direction du perso :
+1
+Changement de direction du perso :
+0
+Changement de direction du perso :
+2
+Changement de direction du perso :
+1
+Changement de direction du perso :
+3
+Changement de direction du perso :
+2

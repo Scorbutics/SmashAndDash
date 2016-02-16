@@ -17,6 +17,7 @@
 #include "Commands\CommandPlayCrumbling.h"
 #include "Commands\CommandPlayShaking.h"
 #include "Commands\CommandTranslationCamera.h"
+#include "Commands\CommandElsif.h"
 #include "Commands\CommandWait.h"
 #include "Commands\CommandStuckCharacter.h"
 #include "Commands\CommandHideCharacter.h"
@@ -56,9 +57,6 @@ unordered_map<string, unique_ptr<Command>> create_map()
 	c["calculate"] = move(Command_ptr(new CommandCalculate()));
 	c["heal"] = move(Command_ptr(new CommandHeal()));
 	c["stop"] = move(Command_ptr(new CommandStop()));
-	c["if"] = move(Command_ptr(new CommandIf()));
-	c["else"] = move(Command_ptr(new CommandElse()));
-	c["endif"] = move(Command_ptr(new CommandElseEnd()));
 	c["assign"] = move(Command_ptr(new CommandAssign()));
 	c["random"] = move(Command_ptr(new CommandRandom()));
 	c["direction"] = move(Command_ptr(new CommandDirection()));
@@ -81,6 +79,11 @@ unordered_map<string, unique_ptr<Command>> create_map()
 	c["throw_pokemon"] = move(Command_ptr(new CommandPokemonOut()));
 	c["player_presence"] = move(Command_ptr(new CommandPlayerPresence()));
 	c["log"] = move(Command_ptr(new CommandLog()));
+
+	c[ControlStatement::getCommandIf()] = move(Command_ptr(new CommandIf()));
+	c[ControlStatement::getCommandElse()] = move(Command_ptr(new CommandElse()));
+	c[ControlStatement::getCommandElsif()] = move(Command_ptr(new CommandElsif()));
+	c[ControlStatement::getCommandEndIf()] = move(Command_ptr(new CommandElseEnd()));
 	return c;
 }
 
@@ -180,7 +183,7 @@ bool ScriptDispatcher::commandInterpreter(const std::string& extendedName, const
 	std::remove(cmdName.begin(), cmdName.end(), '\t');
 
 	if (cmdName.empty()) {
-		return false;
+		return !streamCmd.eof();
 	}
 
 	if (commands.find(cmdName) != commands.end()) {

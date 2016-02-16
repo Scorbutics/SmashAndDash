@@ -35,6 +35,7 @@ private:
 	/* Manage states in order to dispatch all different scripts */
 	ScriptState m_state;
 	unsigned int m_commandsPlayed;
+	unsigned int m_currentLine;
 	
 	std::unordered_map<std::string, std::string> m_varMap;
 	std::string m_fullPath;

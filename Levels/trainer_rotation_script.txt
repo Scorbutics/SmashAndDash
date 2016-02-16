@@ -1,7 +1,9 @@
 assign [_personnage.direction #arg0# #arg1#_], |direction_perso|
 assign %calculate [|direction_perso|] + 1%, |direction_perso|
 if [|direction_perso|] >= 4
-assign 0, |direction_perso|
+	assign 0, |direction_perso|
 endif
 direction #arg0#, #arg1#, [|direction_perso|]
+log Changement de direction du perso :
+log [|direction_perso|]
 wait 500

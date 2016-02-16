@@ -21,6 +21,7 @@ void Script::commonPartConstructor(Uint32 scriptPeriod, int triggeringType) {
 	m_state = EnumScriptState::STOPPED;
 	m_triggeringType = triggeringType;
 	m_lastTimeDelayed = 0;
+	m_currentLine = 0;
 }
 
 std::unordered_map<std::string, std::string>& Script::getVarMap()
@@ -70,6 +71,7 @@ bool Script::play()
 			}
 			m_commandsPlayed++;
 		}
+		m_currentLine++;
 	}
 
 	/*  If loop is exited with having a running script, it means that it's terminated.
@@ -83,6 +85,7 @@ bool Script::play()
 			m_fscript.seekg(0, std::ios::beg);
 		}
 		m_commandsPlayed = 0;
+		m_currentLine = 0;
 	}
 
 	return true;
@@ -116,7 +119,7 @@ ScriptState Script::getCurrentState() {
 }
 
 unsigned int Script::getCurrentLine() {
-	return m_commandsPlayed + 1;
+	return m_currentLine + 1;
 }
 
 std::string& Script::getFullPath() {

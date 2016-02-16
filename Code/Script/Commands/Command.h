@@ -7,7 +7,6 @@
 class Command
 {
 public:
-	static char ARGUMENT_SEPARATOR;
 
 	Command(){}
 	virtual bool process(const std::string& extendedName, std::stringstream& streamCmd, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) = 0;

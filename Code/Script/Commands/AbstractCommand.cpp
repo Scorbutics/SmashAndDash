@@ -2,10 +2,9 @@
 #include "AbstractCommand.h"
 #include "..\..\Utils\StringUtils.h"
 #include "..\..\Utils\ScriptUtils.h"
+#include "../ScriptSymbolsConstants.h"
 
 using namespace std;
-
-char Command::ARGUMENT_SEPARATOR = ',';
 
 AbstractCommand::AbstractCommand()
 {
@@ -14,37 +13,48 @@ AbstractCommand::AbstractCommand()
 bool AbstractCommand::process(const string& extendedName, stringstream& streamCmd, ofstream& scriptList, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
 
 	string line;
-	if (!getline(streamCmd, line)) {
-		return false;
-	}
+	getline(streamCmd, line);
 
 	line = StringUtils::trim(line);
-	vector<string>& args = StringUtils::split(line, getSeparator());
 
-	/* Pour chaque argument, effectue toutes les opérations de calcul nécessaires et explicite les valeurs des variables */
+	/* Avant tout traitement, effectue toutes les exécutions des sous-commandes possibles */
+	interpretSubCommands(line, extendedName, varMap, fscript, active, result);
+
+	vector<string>& args = StringUtils::split(line, getSeparator());
+	
 	for (string& arg : args) {
 		arg = StringUtils::trim(arg);
-		parseArgument(arg, extendedName, varMap, fscript, active, result);
+		/* Pour chaque argument, explicite les valeurs des variables */
+		arg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, arg, varMap);
 	}
 	
 
-	return process(extendedName, args, scriptList, varMap, fscript, active, result);
+	return process(extendedName, streamCmd, args, scriptList, varMap, fscript, active, result);
 }
 
-
-void AbstractCommand::parseArgument(std::string& arg, const string& extendedName, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
+void AbstractCommand::interpretSubCommands(string& line, const string& extendedName, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
 	size_t outputCommandSize = 0;
 	size_t offset;
 	string parsedArg;
+	
+	/* Conservation de tout ce qui se trouve sur la ligne avant l'appel à la sous-commande */
+	size_t offsetLineCmd = line.find_first_of(ScriptSymbolsConstants::METHOD);
+	string firstLinePart = (offsetLineCmd == std::string::npos ? "" : line.substr(0, offsetLineCmd));
+	parsedArg += firstLinePart;
+
 	do {
-		string expression = arg.substr(outputCommandSize);
+		string expression = line.substr(outputCommandSize);
 
 		parsedArg += ScriptUtils::getFirstExpressionFromLine(expression, extendedName, varMap, fscript, active, result, &offset);
 		parsedArg += " ";
 		outputCommandSize += offset;
-	} while (offset != 0 && outputCommandSize < arg.size());
-	arg = StringUtils::rtrim(parsedArg);
-	arg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, arg, varMap);
+	} while (offset != 0 && outputCommandSize < line.size());
+	line = StringUtils::rtrim(parsedArg);
+}
+
+void AbstractCommand::parseArgument(std::string& arg, const string& extendedName, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
+
+	
 }
 
 AbstractCommand::~AbstractCommand()

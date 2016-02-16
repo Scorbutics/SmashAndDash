@@ -14,7 +14,11 @@ CommandIf::~CommandIf()
 {
 }
 
-bool CommandIf::analyzeLine(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+const string& CommandIf::getCmdName() {
+	return ControlStatement::getCommandIf();
+}
+
+bool CommandIf::analyzeLine(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
@@ -30,18 +34,20 @@ bool CommandIf::analyzeLine(const std::string& extendedName, std::vector<std::st
 	if (!((op == "==" && num1 == num2) || (op == "<" && num1 < num2) || (op == ">" && num1 > num2) || (op == "<=" && num1 <= num2) || (op == ">=" && num1 >= num2)))
 	{
 
-		while (ifEnd > 0 && getline(fscript, line))
+		while (ifEnd > 0 && !fscript.eof())
 		{
+			getline(fscript, line);
 			stringstream ss;
 			ss << line;
 			ss >> line;
-			line.erase(std::remove(line.begin(), line.end(), '\t'), line.end());
+			StringUtils::trim(line);
 
-			if (line == "si")
+			if (line == ControlStatement::getCommandIf())
 				ifEnd++;
-			else if (line == "finsi" || line == "sinon")
+			else if (line == ControlStatement::getCommandEndIf() || line == ControlStatement::getCommandElse() || line == ControlStatement::getCommandElsif())
 				ifEnd--;
 		}
+
 
 	}
 	return true;

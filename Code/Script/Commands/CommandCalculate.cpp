@@ -21,7 +21,8 @@ int CommandCalculate::argumentsNumber() {
 bool CommandCalculate::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
 {
 	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(extendedName, args[0], varMap));
-	if (result != NULL)
+	if (result != NULL) {
 		*result = StringUtils::intToStr((int)f);
+	}
 	return true;
 }

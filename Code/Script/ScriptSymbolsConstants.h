@@ -10,6 +10,7 @@ namespace ScriptSymbolsConstants
 	static const char SWITCH_LEFT			= '{';
 	static const char SWITCH_RIGHT			= '}';
 	static const char ARG					= '#';
+	static const char ARGUMENT_SEPARATOR	= ',';
 }
 
 #endif
