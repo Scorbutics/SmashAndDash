@@ -2,6 +2,7 @@
 #include "CommandIf.h"
 #include "CommandElseEnd.h"
 #include "../../Utils/StringUtils.h"
+#include "../../Exceptions/ScriptSyntaxError.h"
 #include <string>
 #include <map>
 
@@ -35,5 +36,9 @@ bool CommandElse::analyzeLine(const std::string& extendedName, std::stringstream
 		else if (lineBuf == ControlStatement::getCommandEndIf())
 			ifEnd--;
 	}
+	if (fscript.eof()) {
+		throw ScriptSyntaxError("[" + extendedName + "] Un endif est manquant");
+	}
+
 	return true;
 }

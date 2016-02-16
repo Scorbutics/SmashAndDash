@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include "../../Utils\StringUtils.h"
+#include "../../Exceptions/ScriptSyntaxError.h"
 
 using namespace std;
 
@@ -48,7 +49,11 @@ bool CommandIf::analyzeLine(const std::string& extendedName, std::stringstream& 
 				ifEnd--;
 		}
 
+		if (fscript.eof()) {
+			throw ScriptSyntaxError("[" + extendedName +"] Un endif est manquant");
+		}
 
 	}
+
 	return true;
 }

@@ -24,6 +24,7 @@ private:
 	static unsigned int MAX_CONSECUTIVE_COMMANDS_PLAYED;
 
 	ScriptState manageCurrentState();
+	bool transferActiveToDelay();
 	void commonPartConstructor(Uint32 scriptPeriod, int triggeringType);
 
 	virtual std::unordered_map<std::string, std::string>& getVarMap() override;

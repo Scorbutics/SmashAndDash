@@ -2,6 +2,7 @@
 #include "FormalCalculator.h"
 #include <iostream>
 #include "CalculOperators.h"
+#include "..\..\Exceptions\ScriptSyntaxError.h"
 
 using namespace std;
 
@@ -146,7 +147,7 @@ int FormalCalculator::positionOfAnyFirstOperator(const string& s)
 
 void FormalCalculator::calculSyntaxError(const string& s)
 {
-	cerr << "Erreur (Fonction InterpretFormalCalculation) : La ligne suivante est impossible à traduire en calcul formel : \"" + s + "\"" << endl;
+	throw ScriptSyntaxError("La ligne suivante est impossible à traduire en calcul formel : \"" + s + "\"");
 }
 
 FormalCalculator::~FormalCalculator()

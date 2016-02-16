@@ -2,24 +2,21 @@ assign [_personnage.pos.y #arg0# #arg1#_], |pos_perso.y|
 assign [_personnage.pos.x #arg0# #arg1#_], |pos_perso.x|
 assign [_personnage.direction #arg0# #arg1#_], |direction_perso|
 
+log Direction actuelle du perso
 log [|direction_perso|]
 if [|direction_perso|] == 0
-    log position 0
     assign %calculate [|pos_perso.y|] + #arg2#%, |pos_check.y|
     assign [|pos_perso.x|], |pos_check.x|
 else
 	if [|direction_perso|] == 1
-		log position 1
 		assign %calculate [|pos_perso.x|] + #arg2#%, |pos_check.x|
 		assign [|pos_perso.y|], |pos_check.y|
 	else
 		if [|direction_perso|] == 2
-			log position 2
 			assign %calculate [|pos_perso.y|] - #arg2#%, |pos_check.y|
 			assign [|pos_perso.x|], |pos_check.x|
 		else
 			if [|direction_perso|] == 3
-				log position 3
 				assign %calculate [|pos_perso.x|] - #arg2#%, |pos_check.x|
 				assign [|pos_perso.y|], |pos_check.y|
 			endif
@@ -28,12 +25,11 @@ else
 endif
 
 assign %player_presence [|pos_perso.x|], [|pos_perso.y|], [|pos_check.x|], [|pos_check.y|]%, |pres_joueur|
-log [|pres_joueur|]
 if [|pres_joueur|] == 1
+	log joueur detecte !
     animation #arg0#, #arg1#, 2
 	wait 2500
 	battle #arg0#, #arg1#
 	end 1
 endif
-
 wait 350

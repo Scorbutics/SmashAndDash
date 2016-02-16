@@ -52,7 +52,7 @@ bool Script::play()
 	m_lastTimeStarted = SDL_GetTicks();
 	//}
 	
-	/* Update status */
+	/* Update status once */
 	if (manageCurrentState() == EnumScriptState::PAUSED) {
 		return false;
 	}
@@ -61,9 +61,11 @@ bool Script::play()
 	while (getline(m_fscript, cmd)) {
 		if (cmd != "") {
 			bool scriptStop = false;
+			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
 			if ((scriptStop = !ScriptDispatcher::commandInterpreter(m_extendedName, cmd, m_fscript, m_varMap, m_active, &result)) || manageCurrentState() == EnumScriptState::PAUSED) {
-				/* kind of delete the script */
+				
 				if (scriptStop) {
+					/* kind of delete the script */
 					m_state = EnumScriptState::STOPPED;
 					m_triggeringType = 2;
 				}
@@ -73,6 +75,7 @@ bool Script::play()
 		}
 		m_currentLine++;
 	}
+
 
 	/*  If loop is exited with having a running script, it means that it's terminated.
 		That's why we rewind m_fscript.
@@ -91,6 +94,18 @@ bool Script::play()
 	return true;
 }
 
+/* When possible, transfers the value of m_active containing a time to wait to m_delay */
+bool Script::transferActiveToDelay() {
+	if (m_active > 1 && m_delay == 0) {
+		m_state = EnumScriptState::PAUSED;
+		m_delay = m_active;
+		m_lastTimeDelayed = SDL_GetTicks();
+		m_active = 0;
+		return true;
+	}
+	return false;
+}
+
 ScriptState Script::manageCurrentState() {
 	/* If too many commands have been played or if the script has been paused (m_active > 1), 
 	   update the script status to PAUSED.
@@ -98,17 +113,11 @@ ScriptState Script::manageCurrentState() {
 	if (m_commandsPlayed == MAX_CONSECUTIVE_COMMANDS_PLAYED) {
 		m_state = EnumScriptState::PAUSED;
 		m_commandsPlayed = 0;
-	} else if (m_active > 1 && m_delay == 0) {
-		m_state = EnumScriptState::PAUSED;
-		m_delay = m_active;
-		m_lastTimeDelayed = SDL_GetTicks();
-		m_active = 0;
-	}
-	else if (m_state == EnumScriptState::PAUSED && SDL_GetTicks() - m_lastTimeDelayed  > m_delay) {
+	} else if (transferActiveToDelay()) {
+	} else if (m_state == EnumScriptState::PAUSED && SDL_GetTicks() - m_lastTimeDelayed  > m_delay) {
 		m_state = EnumScriptState::RUNNING;
 		m_delay = 0;
-	} 
-	else {
+	}  else {
 		m_state = EnumScriptState::RUNNING;
 	}
 	return m_state;
@@ -127,7 +136,9 @@ std::string& Script::getFullPath() {
 }
 
 bool Script::canBePlayed() {
-	return !(EnumScriptState::RUNNING == m_state || m_active > 0 || (SDL_GetTicks() - m_lastTimeDelayed) <= m_delay || !ScriptUtils::isScriptActivated(m_extendedName)
+	transferActiveToDelay();
+	return !(EnumScriptState::RUNNING == m_state || m_active > 0 || (SDL_GetTicks() - m_lastTimeDelayed) <= m_delay 
+		|| !ScriptUtils::isScriptActivated(m_extendedName)
 		&& (m_triggeringType == TRIGGER_AUTO_PERIODIC && m_state == EnumScriptState::STOPPED || m_state != EnumScriptState::STOPPED)
 		&& !m_fscript.eof());
 }
