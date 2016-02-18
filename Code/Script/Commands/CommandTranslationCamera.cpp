@@ -17,7 +17,7 @@ int CommandTranslationCamera::argumentsNumber() {
 	return 3;
 }
 
-bool CommandTranslationCamera::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandTranslationCamera::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;
@@ -48,5 +48,5 @@ bool CommandTranslationCamera::execute(const std::string& extendedName, std::vec
 	}
 
 	wScreen.activeScrolling(true);
-	return true;
+	return "";
 }

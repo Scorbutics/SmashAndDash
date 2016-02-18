@@ -15,7 +15,7 @@ int CommandHideGUI::argumentsNumber() {
 	return 1;
 }
 
-bool CommandHideGUI::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandHideGUI::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int b;
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -24,5 +24,5 @@ bool CommandHideGUI::execute(const std::string& extendedName, std::vector<std::s
 
 	wScreen.getGUI().getToolbar()->hide(b != 0);
 	wScreen.getGUI().hide(b != 0);
-	return true;
+	return "";
 }

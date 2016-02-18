@@ -15,7 +15,7 @@ int CommandHideCharacter::argumentsNumber() {
 	return 3;
 }
 
-bool CommandHideCharacter::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandHideCharacter::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, hiding;
@@ -25,5 +25,5 @@ bool CommandHideCharacter::execute(const std::string& extendedName, std::vector<
 	hiding = StringUtils::strToInt(args[2]);
 
 	wScreen.getEntityFactory().getNPC(id, number)->setVisible(!hiding);
-	return true;
+	return "";
 }

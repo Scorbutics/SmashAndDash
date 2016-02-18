@@ -60,15 +60,9 @@ bool Script::play()
 	/* Read commands */
 	while (getline(m_fscript, cmd)) {
 		if (cmd != "") {
-			bool scriptStop = false;
+			m_lastResult = ScriptDispatcher::commandInterpreter(this, cmd, m_fscript);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
-			if ((scriptStop = !ScriptDispatcher::commandInterpreter(m_extendedName, cmd, m_fscript, m_varMap, m_active, &result)) || manageCurrentState() == EnumScriptState::PAUSED) {
-				
-				if (scriptStop) {
-					/* kind of delete the script */
-					m_state = EnumScriptState::STOPPED;
-					m_triggeringType = 2;
-				}
+			if (m_state == EnumScriptState::STOPPED || manageCurrentState() == EnumScriptState::PAUSED) {
 				break;
 			}
 			m_commandsPlayed++;
@@ -92,6 +86,24 @@ bool Script::play()
 	}
 
 	return true;
+}
+
+std::string& Script::getExtendedName() {
+	return m_extendedName;
+}
+
+std::string Script::getLastResult() {
+	return m_lastResult;
+}
+
+void Script::delay(int d) {
+	m_active = d;
+}
+
+void Script::stop() {
+	/* kind of delete the script */
+	m_state = EnumScriptState::STOPPED;
+	m_triggeringType = 2;
 }
 
 /* When possible, transfers the value of m_active containing a time to wait to m_delay */

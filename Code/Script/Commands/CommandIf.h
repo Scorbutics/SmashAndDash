@@ -7,7 +7,7 @@ public:
 	CommandIf();
 	virtual ~CommandIf();
 
-	virtual bool analyzeLine(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) override;
+	virtual std::string analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) override;
 	virtual const std::string& getCmdName() override;
 };
 

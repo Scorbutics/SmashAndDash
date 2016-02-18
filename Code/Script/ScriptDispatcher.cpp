@@ -10,6 +10,7 @@
 #include "Commands\CommandStop.h"
 #include "Commands\CommandIf.h"
 #include "Commands\CommandElse.h"
+#include "Commands\CommandEndScript.h"
 #include "Commands\CommandAssign.h"
 #include "Commands\CommandRandom.h"
 #include "Commands\CommandDirection.h"
@@ -54,6 +55,7 @@ unordered_map<string, unique_ptr<Command>> create_map()
 	c["message"] = move(Command_ptr(new CommandMessage()));
 	c["choice"] = move(Command_ptr(new CommandChoice()));
 	c["end"] = move(Command_ptr(new CommandEnd()));
+	c["end_script"] = move(Command_ptr(new CommandEndScript()));
 	c["calculate"] = move(Command_ptr(new CommandCalculate()));
 	c["heal"] = move(Command_ptr(new CommandHeal()));
 	c["stop"] = move(Command_ptr(new CommandStop()));
@@ -82,18 +84,18 @@ unordered_map<string, unique_ptr<Command>> create_map()
 
 	c[ControlStatement::getCommandIf()] = move(Command_ptr(new CommandIf()));
 	c[ControlStatement::getCommandElse()] = move(Command_ptr(new CommandElse()));
-	c[ControlStatement::getCommandElsif()] = move(Command_ptr(new CommandElsif()));
+	//c[ControlStatement::getCommandElsif()] = move(Command_ptr(new CommandElsif()));
 	c[ControlStatement::getCommandEndIf()] = move(Command_ptr(new CommandElseEnd()));
 	return c;
 }
 
-unordered_map<string, unique_ptr<Command>> ScriptDispatcher::commands = create_map();
+unordered_map<string, unique_ptr<Command>> ScriptDispatcher::m_commands = create_map();
 
 ScriptDispatcher::ScriptDispatcher()
 {
 }
 
-int ScriptDispatcher::addRunningScript(string name, string args, int triggeringType, Uint32* period)
+int ScriptDispatcher::addRunningScript(IScript* parent, string name, string args, int triggeringType, Uint32* period)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
@@ -145,6 +147,7 @@ void ScriptDispatcher::setupScriptArgs(IScript* script, const string& extendedNa
 	string curArg;
 	ss << args;
 	while (ss >> curArg) {
+		curArg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, curArg, script->getVarMap());
 		ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, "#arg" + StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
 		i++;
 	}
@@ -166,16 +169,12 @@ void ScriptDispatcher::refresh()
 
 }
 
-bool ScriptDispatcher::commandInterpreter(const std::string& extendedName, const std::string& cmd, std::ifstream& fscript, std::unordered_map<std::string, std::string>& varMap, int& active, std::string* result)
+std::string ScriptDispatcher::commandInterpreter(IScript* script, const std::string& cmd, std::ifstream& fscript)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ofstream scriptList;
 	string cmdName;
 	stringstream streamCmd;
-
-	if (result != NULL) {
-		*result = "";
-	}
 
 	streamCmd << cmd;
 	streamCmd >> cmdName;
@@ -183,19 +182,23 @@ bool ScriptDispatcher::commandInterpreter(const std::string& extendedName, const
 	std::remove(cmdName.begin(), cmdName.end(), '\t');
 
 	if (cmdName.empty()) {
-		return !streamCmd.eof();
+		if (streamCmd.eof()) {
+			script->stop();
+		}
+		return "";
 	}
 
-	if (commands.find(cmdName) != commands.end()) {
+	if (m_commands.find(cmdName) != m_commands.end()) {
+		std::unordered_map<std::string, std::string>& varMap = script->getVarMap();
 		try {
-			return commands[cmdName]->process(extendedName, streamCmd, scriptList, varMap, fscript, active, result);
+			return m_commands[cmdName]->process(script, streamCmd, scriptList, fscript);
 		} catch (NumberFormatException nfe) {
-			throw ScriptException("[" + extendedName + "] Commande " + cmdName + " : " + std::string(nfe.what()));
+			throw ScriptException("[" + script->getExtendedName() + "] Commande " + cmdName + " : " + std::string(nfe.what()));
 		}
 	} else {
-		throw ScriptUnknownCommandException("[" + extendedName + "] Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
+		throw ScriptUnknownCommandException("[" + script->getExtendedName() + "] Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}
-
+	return "";
 }
 
 void ScriptDispatcher::clear() {

@@ -7,13 +7,13 @@ CommandLog::CommandLog()
 {
 }
 
-bool CommandLog::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) {
+std::string CommandLog::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) {
 
 	string& message = args[0];
 
 	clog << message << endl;
 
-	return true;
+	return "";
 }
 
 int CommandLog::argumentsNumber() {

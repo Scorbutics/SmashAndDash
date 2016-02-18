@@ -11,8 +11,8 @@ ControlStatement::ControlStatement()
 {
 }
 
-bool ControlStatement::process(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) {
-	return analyzeLine(extendedName, streamCmd, args, scriptList, varMap, fscript, active, result);
+std::string ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) {
+	return analyzeLine(script, streamCmd, args, scriptList, fscript);
 }
 
 char ControlStatement::getSeparator() {

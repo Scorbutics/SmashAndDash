@@ -16,7 +16,7 @@ int CommandCinematic::argumentsNumber() {
 	return 7;
 }
 
-bool CommandCinematic::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandCinematic::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int frameNumber, delay, id_anim, duration;
@@ -67,5 +67,5 @@ bool CommandCinematic::execute(const std::string& extendedName, std::vector<std:
 	}
 	in->resetAll();
 	wScreen.getSpriteAnimationManager().reset();
-	return true;
+	return "";
 }

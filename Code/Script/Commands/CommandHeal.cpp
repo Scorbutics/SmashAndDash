@@ -15,7 +15,7 @@ int CommandHeal::argumentsNumber() {
 	return 2;
 }
 
-bool CommandHeal::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandHeal::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int value;
@@ -27,5 +27,5 @@ bool CommandHeal::execute(const std::string& extendedName, std::vector<std::stri
 	if (index >= 0 && index < wScreen.getPokemonManager().getPokemonTeamSize()) {
 		wScreen.getPokemonManager().getPokemon(index)->setHP(wScreen.getPokemonManager().getPokemon(index)->getHp() + value);
 	}
-	return true;
+	return "";
 }

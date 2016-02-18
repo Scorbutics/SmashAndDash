@@ -20,7 +20,7 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-bool CommandChoice::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandChoice::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string fname, texte, buf, var;
@@ -87,7 +87,7 @@ bool CommandChoice::execute(const std::string& extendedName, std::vector<std::st
 
 	} while (!wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) && !wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_ESCAPE));
 
-	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, var, wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) ? "1" : "0", varMap);
+	ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), var, wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) ? "1" : "0", script->getVarMap());
 	wScreen.getInputListener().getKeyInput()->resetAll();
-	return true;
+	return "";
 }

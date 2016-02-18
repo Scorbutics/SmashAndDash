@@ -1,11 +1,11 @@
 #pragma once
-#include "AbstractFunctionCommand.h"
-class CommandPlayCrumbling :
-	public AbstractFunctionCommand
+#include "CommandEnd.h"
+class CommandEndScript :
+	public CommandEnd
 {
 public:
-	CommandPlayCrumbling();
-	virtual ~CommandPlayCrumbling();
+	CommandEndScript();
+	virtual ~CommandEndScript();
 
 	virtual std::string execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) override;
 	virtual int argumentsNumber();

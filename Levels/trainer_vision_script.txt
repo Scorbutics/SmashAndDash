@@ -28,6 +28,7 @@ assign %player_presence [|pos_perso.x|], [|pos_perso.y|], [|pos_check.x|], [|pos
 if [|pres_joueur|] == 1
 	log joueur detecte !
     animation #arg0#, #arg1#, 2
+	end_script 0 #arg3#
 	wait 2500
 	battle #arg0#, #arg1#
 	end 1

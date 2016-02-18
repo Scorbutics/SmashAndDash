@@ -9,18 +9,18 @@ AbstractFunctionCommand::AbstractFunctionCommand()
 {
 }
 
-bool AbstractFunctionCommand::process(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) {
+std::string AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) {
 	int argNumber = argumentsNumber();
-	if (argNumber != args.size()) {
+	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */
-		std::string syntaxErrorMsg("[" + extendedName + "] Syntax error with parameters : ");
+		std::string syntaxErrorMsg("[" + script->getExtendedName() + "] Syntax error with parameters : ");
 		for (std::string& arg : args) {
 			syntaxErrorMsg += arg + " ";
 		}
 		throw ScriptSyntaxError(syntaxErrorMsg);
 	}
 
-	return execute(extendedName, args, scriptList, varMap, fscript, active, result);
+	return execute(script, args, scriptList);
 }
 
 char AbstractFunctionCommand::getSeparator() {

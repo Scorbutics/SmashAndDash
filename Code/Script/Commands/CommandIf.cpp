@@ -19,7 +19,7 @@ const string& CommandIf::getCmdName() {
 	return ControlStatement::getCommandIf();
 }
 
-bool CommandIf::analyzeLine(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
@@ -50,10 +50,10 @@ bool CommandIf::analyzeLine(const std::string& extendedName, std::stringstream& 
 		}
 
 		if (fscript.eof()) {
-			throw ScriptSyntaxError("[" + extendedName +"] Un endif est manquant");
+			throw ScriptSyntaxError("[" + script->getExtendedName() +"] Un endif est manquant");
 		}
 
 	}
 
-	return true;
+	return "";
 }

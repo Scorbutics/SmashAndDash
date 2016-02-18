@@ -13,7 +13,7 @@ int CommandPlayerPresence::argumentsNumber() {
 	return 4;
 }
 
-bool CommandPlayerPresence::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string posFromX, posFromY, posToX, posToY;
@@ -43,9 +43,8 @@ bool CommandPlayerPresence::execute(const std::string& extendedName, std::vector
 	vector<SDL_Rect>& ids = wScreen.detectEntity(collisionRect);
 	if (!ids.empty() && find(ids.begin(), ids.end(), idPlayer) != ids.end())
 	{
-		*result = "1";
+		return "1";
 	} else {
-		*result = "0";
+		return "0";
 	}
-	return true;
 }

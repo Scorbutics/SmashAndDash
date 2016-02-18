@@ -15,7 +15,7 @@ int CommandStuckCharacter::argumentsNumber() {
 	return 3;
 }
 
-bool CommandStuckCharacter::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandStuckCharacter::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, moving;
@@ -25,5 +25,5 @@ bool CommandStuckCharacter::execute(const std::string& extendedName, std::vector
 	moving = StringUtils::strToInt(args[2]);
 
 	wScreen.getEntityFactory().getNPC(id, number)->setMoving(!moving);
-	return true;
+	return "";
 }

@@ -184,7 +184,7 @@
     <ClInclude Include="Code\Utils\FormalCalculation\FormalCalculator.h" />
     <ClInclude Include="Code\Exceptions\GenericException.h" />
     <ClInclude Include="Code\Script\GlobalScriptVariables.h" />
-    <ClInclude Include="Code\Utils\IScript.h" />
+    <ClInclude Include="Code\Script\IScript.h" />
     <ClInclude Include="Code\Script\Script.h" />
     <ClInclude Include="Code\Script\ScriptDispatcher.h" />
     <ClInclude Include="Code\Exceptions\ScriptException.h" />
@@ -243,6 +243,7 @@
     <ClInclude Include="Code\Script\Commands\CommandLog.h" />
     <ClInclude Include="Code\Exceptions\NumberFormatException.h" />
     <ClInclude Include="Code\Script\Commands\CommandElsif.h" />
+    <ClInclude Include="Code\Script\Commands\CommandEndScript.h" />
     <ClInclude Include="SDLWindowRendererWrappers.h" />
     <ClInclude Include="Code\Gameplay\Data\Settings.h" />
     <ClInclude Include="Code\Graphic\ShakerManager.h" />
@@ -394,6 +395,7 @@
     <ClCompile Include="Code\Script\Commands\ControlStatement.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandLog.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandElsif.cpp" />
+    <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

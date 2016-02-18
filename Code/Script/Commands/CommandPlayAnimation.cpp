@@ -18,7 +18,7 @@ int CommandPlayAnimation::argumentsNumber() {
 	return 3;
 }
 
-bool CommandPlayAnimation::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandPlayAnimation::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idType, id;
@@ -40,5 +40,5 @@ bool CommandPlayAnimation::execute(const std::string& extendedName, std::vector<
 		posAnim.x -= TAILLEBLOC / 2;
 		wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, posAnim, 2, 200);
 	}
-	return true;
+	return "";
 }

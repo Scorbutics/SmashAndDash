@@ -16,7 +16,7 @@ int CommandDirection::argumentsNumber() {
 	return 3;
 }
 
-bool CommandDirection::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandDirection::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idTypeStr, idStr, dirStr;
@@ -31,5 +31,5 @@ bool CommandDirection::execute(const std::string& extendedName, std::vector<std:
 	dir = StringUtils::strToInt(dirStr);
 
 	wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
-	return true;
+	return "";
 }

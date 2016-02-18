@@ -18,7 +18,7 @@ int CommandScript::argumentsNumber() {
 	return 3;
 }
 
-bool CommandScript::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandScript::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	string scriptName;
 	string extraArgs;
@@ -28,10 +28,8 @@ bool CommandScript::execute(const std::string& extendedName, std::vector<std::st
 	Uint32 period = StringUtils::strToInt(args[1]);
 	extraArgs = args[2];
 
-	active = false;
+	ScriptDispatcher::getInstance().addRunningScript(script, scriptName, extraArgs, 0, &period);
 
-	ScriptDispatcher::getInstance().addRunningScript(scriptName, extraArgs, 0, &period);
+	return scriptName;
 
-	active = true;
-	return true;
 }

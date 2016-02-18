@@ -9,9 +9,9 @@ public:
 
 protected:
 	virtual int argumentsNumber() = 0;
-	virtual bool execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) = 0;
+	virtual std::string execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) = 0;
 
-	virtual bool process(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) override;
+	std::string process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) override;
 	virtual char getSeparator() override;
 };
 

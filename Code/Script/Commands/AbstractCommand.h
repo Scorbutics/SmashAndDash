@@ -7,16 +7,15 @@
 class AbstractCommand : public Command
 {
 private:
-	void parseArgument(std::string& arg, const std::string& extendedName, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result);
-	void interpretSubCommands(std::string& line, const std::string& extendedName, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result);
+	std::string interpretSubCommands(std::string& line, IScript* script, std::ifstream& fscript);
 
 public:
 	AbstractCommand();
-	bool process(const std::string& extendedName, std::stringstream& streamCmd, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result);
+	std::string process(IScript* script, std::stringstream& streamCmd, std::ofstream& scriptList, std::ifstream& fscript);
 	virtual ~AbstractCommand();
 
 protected:
-	virtual bool process(const std::string& extendedName, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result) = 0;
+	virtual std::string process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) = 0;
 	virtual char getSeparator() = 0;
 };
 

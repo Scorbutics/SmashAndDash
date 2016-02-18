@@ -60,7 +60,7 @@ int GestionEvents()
                     fwriteScript.close();
                 }
 				Uint32 scriptPeriod = 1000;
-				ScriptDispatcher::getInstance().addRunningScript(w.getLayerEvent()->getParam(i), "", 2, &scriptPeriod);
+				ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), "", 2, &scriptPeriod);
             }
         }
 

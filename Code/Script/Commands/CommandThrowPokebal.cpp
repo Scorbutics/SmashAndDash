@@ -16,7 +16,7 @@ int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-bool CommandThrowPokebal::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandThrowPokebal::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	SDL_Rect srcId, dst;
@@ -32,5 +32,5 @@ bool CommandThrowPokebal::execute(const std::string& extendedName, std::vector<s
 	launchReason = StringUtils::strToInt(args[4]);
 
 	wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));
-	return true;
+	return "";
 }

@@ -15,7 +15,7 @@ int CommandAddPokemon::argumentsNumber() {
 	return 1;
 }
 
-bool CommandAddPokemon::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandAddPokemon::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int id;
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -23,5 +23,5 @@ bool CommandAddPokemon::execute(const std::string& extendedName, std::vector<std
 	id = StringUtils::strToInt(args[0]);
 
 	wScreen.getPokemonManager().add(id);
-	return true;
+	return "";
 }

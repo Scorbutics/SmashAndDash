@@ -18,7 +18,7 @@ int CommandAssign::argumentsNumber() {
 	return 2;
 }
 
-bool CommandAssign::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandAssign::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	string valeur, varNumber, line, commandCall;
 	size_t commandCallSize;
@@ -26,6 +26,6 @@ bool CommandAssign::execute(const std::string& extendedName, std::vector<std::st
 	valeur = args[0];
 	varNumber = args[1];
 
-	ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, ScriptSymbolsConstants::VARIABLE_LEFT + varNumber + ScriptSymbolsConstants::VARIABLE_RIGHT, valeur, varMap);
-	return true;
+	ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), ScriptSymbolsConstants::VARIABLE_LEFT + varNumber + ScriptSymbolsConstants::VARIABLE_RIGHT, valeur, script->getVarMap());
+	return "";
 }

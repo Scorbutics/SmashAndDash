@@ -252,9 +252,6 @@
     <ClInclude Include="Code\Utils\IDs.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\IScript.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\IStringAble.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -539,6 +536,12 @@
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandElsif.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Script\Commands\CommandEndScript.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Script\IScript.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -909,6 +912,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandElsif.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

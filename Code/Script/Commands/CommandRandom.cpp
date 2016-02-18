@@ -17,7 +17,7 @@ int CommandRandom::argumentsNumber() {
 	return 1;
 }
 
-bool CommandRandom::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandRandom::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	string s, value, commandCall;
 	int valueInt, resultInt;
@@ -28,8 +28,7 @@ bool CommandRandom::execute(const std::string& extendedName, std::vector<std::st
 	if (valueInt > 0)
 	{
 		resultInt = rand() % valueInt;
-		if (result != NULL)
-			*result = StringUtils::intToStr(resultInt);
+		return StringUtils::intToStr(resultInt);
 	}
-	return true;
+	return "";
 }

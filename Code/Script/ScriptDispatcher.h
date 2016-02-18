@@ -10,16 +10,16 @@ class ScriptDispatcher : public Singleton<ScriptDispatcher>{
 	friend class Singleton<ScriptDispatcher>;
 public:
 	ScriptDispatcher();
-	int addRunningScript(std::string name, std::string args, int triggeringType, Uint32* period = NULL);
+	int addRunningScript(IScript* parent, std::string name, std::string args, int triggeringType, Uint32* period = NULL);
 	void setupScriptArgs(IScript* script, const std::string& extendedName, std::string& args);
 	void refresh();
 	~ScriptDispatcher();
-	static bool commandInterpreter(const std::string& extendedName, const std::string& cmd, std::ifstream& fscript, std::unordered_map<std::string, std::string>& varMap, int& active, std::string* result);
+	static std::string commandInterpreter(IScript* script, const std::string& cmd, std::ifstream& fscript);
 
 	void clear();
 private:
 	IScript* getHighestPriorityScript();
-	static std::unordered_map<std::string, Command_ptr> commands;
+	static std::unordered_map<std::string, Command_ptr> m_commands;
 	std::unordered_map<std::string, IScript_ptr> m_scripts;
 };
 

@@ -2,7 +2,7 @@
 #include <string>
 #include <memory>
 #include <fstream>
-#include "../Utils\IScript.h"
+#include "IScript.h"
 #include <unordered_map>
 
 
@@ -16,7 +16,11 @@ public:
 	ScriptState getCurrentState();
 	virtual unsigned int getCurrentLine();
 	std::string& getFullPath();
+	std::string& getExtendedName();
 	bool canBePlayed();
+	void delay(int d);
+	void stop();
+	std::string getLastResult();
 	virtual float getPriority(Uint32 currentTimeMillis);
 	virtual ~Script();
 	
@@ -42,6 +46,7 @@ private:
 	std::string m_fullPath;
 	std::string m_extendedName;
 	std::string m_extraArgs;
+	std::string m_lastResult;
 	std::ifstream m_fscript;
 	int m_triggeringType;
 	int m_delay;

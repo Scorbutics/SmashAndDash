@@ -17,7 +17,7 @@ int CommandPokemonOut::argumentsNumber() {
 	return 1;
 }
 
-bool CommandPokemonOut::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandPokemonOut::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int index;
 	unsigned int duree = 2000, t0 = 0;
@@ -42,5 +42,5 @@ bool CommandPokemonOut::execute(const std::string& extendedName, std::vector<std
 
 	}
 	wScreen.getEntityFactory().addNPC(wScreen.getPokemonManager().getPokemon(index)->getID(), launchPos, "1");
-	return true;
+	return "";
 }

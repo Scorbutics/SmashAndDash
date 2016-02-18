@@ -10,7 +10,7 @@ AbstractCommand::AbstractCommand()
 {
 }
 
-bool AbstractCommand::process(const string& extendedName, stringstream& streamCmd, ofstream& scriptList, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
+std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, ofstream& scriptList, ifstream& fscript) {
 
 	string line;
 	getline(streamCmd, line);
@@ -18,21 +18,21 @@ bool AbstractCommand::process(const string& extendedName, stringstream& streamCm
 	line = StringUtils::trim(line);
 
 	/* Avant tout traitement, effectue toutes les exécutions des sous-commandes possibles */
-	interpretSubCommands(line, extendedName, varMap, fscript, active, result);
+	interpretSubCommands(line, script, fscript);
 
 	vector<string>& args = StringUtils::split(line, getSeparator());
 	
 	for (string& arg : args) {
 		arg = StringUtils::trim(arg);
 		/* Pour chaque argument, explicite les valeurs des variables */
-		arg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, arg, varMap);
+		arg = ScriptUtils::getValueFromVarOrSwitchNumber(script->getExtendedName(), arg, script->getVarMap());
 	}
 	
 
-	return process(extendedName, streamCmd, args, scriptList, varMap, fscript, active, result);
+	return process(script, streamCmd, args, scriptList, fscript);
 }
 
-void AbstractCommand::interpretSubCommands(string& line, const string& extendedName, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
+std::string AbstractCommand::interpretSubCommands(string& line, IScript* script, ifstream& fscript) {
 	size_t outputCommandSize = 0;
 	size_t offset;
 	string parsedArg;
@@ -45,16 +45,12 @@ void AbstractCommand::interpretSubCommands(string& line, const string& extendedN
 	do {
 		string expression = line.substr(outputCommandSize);
 
-		parsedArg += ScriptUtils::getFirstExpressionFromLine(expression, extendedName, varMap, fscript, active, result, &offset);
+		parsedArg += ScriptUtils::getFirstExpressionFromLine(expression, script, fscript, &offset);
 		parsedArg += " ";
 		outputCommandSize += offset;
 	} while (offset != 0 && outputCommandSize < line.size());
 	line = StringUtils::rtrim(parsedArg);
-}
-
-void AbstractCommand::parseArgument(std::string& arg, const string& extendedName, unordered_map<string, string>& varMap, ifstream& fscript, int& active, string* result) {
-
-	
+	return "";
 }
 
 AbstractCommand::~AbstractCommand()

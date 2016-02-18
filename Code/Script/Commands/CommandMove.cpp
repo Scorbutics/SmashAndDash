@@ -13,7 +13,7 @@ int CommandMove::argumentsNumber() {
 	return 4;
 }
 
-bool CommandMove::execute(const std::string& extendedName, std::vector<std::string>& args, std::ofstream& scriptList, std::unordered_map<std::string, std::string>& varMap, std::ifstream& fscript, int& active, std::string* result)
+std::string CommandMove::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int idtype, id, speed;
 	string dir;
@@ -38,7 +38,7 @@ bool CommandMove::execute(const std::string& extendedName, std::vector<std::stri
 			SDL_Delay(30);
 		}
 	}
-	return true;
+	return "";
 }
 
 CommandMove::~CommandMove()
