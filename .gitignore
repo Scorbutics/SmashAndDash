@@ -1,4 +1,28 @@
 #################
+## SmashAndDash Libraries binaries
+#################
+
+SDL2.dll
+SDL2_image.dll
+SDL2_ttf.dll
+fmodex.dll
+fmodex64.dll
+libfreetype-6.dll
+libjpeg-9.dll
+libpng16-16.dll
+libtiff-5.dll
+libwebp-4.dll
+msvcr71.dll
+zlib1.dll
+
+#################
+## SmashAndDash
+#################
+
+SmashAndDash.rc
+stdlog.txt
+
+#################
 ## Eclipse
 #################
 
