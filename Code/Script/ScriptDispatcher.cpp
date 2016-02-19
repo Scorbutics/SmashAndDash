@@ -37,7 +37,6 @@
 #include "../Exceptions\InvalidPathException.h"
 #include "../Exceptions/NumberFormatException.h"
 #include "../Utils\StringUtils.h"
-#include "Commands\CommandGet.h"
 #include "Commands\CommandElseEnd.h"
 #include "Commands\CommandPlayerPresence.h"
 #include "Commands\CommandLog.h"
@@ -54,7 +53,7 @@ unordered_map<string, unique_ptr<Command>> create_map()
 	c["move"] = move(Command_ptr(new CommandMove()));
 	c["message"] = move(Command_ptr(new CommandMessage()));
 	c["choice"] = move(Command_ptr(new CommandChoice()));
-	c["end"] = move(Command_ptr(new CommandEnd()));
+	c[CommandEnd::getCmdName()] = move(Command_ptr(new CommandEnd()));
 	c["end_script"] = move(Command_ptr(new CommandEndScript()));
 	c["calculate"] = move(Command_ptr(new CommandCalculate()));
 	c["heal"] = move(Command_ptr(new CommandHeal()));
@@ -95,15 +94,25 @@ ScriptDispatcher::ScriptDispatcher()
 {
 }
 
-int ScriptDispatcher::addRunningScript(IScript* parent, string name, string args, int triggeringType, Uint32* period)
+IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string args, int triggeringType, Uint32* period)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 	string extendedName;
 	ifstream fscript(name.c_str());
+	
+	stringstream ss;
+	string curArg;
+	ss << args;
+	args = "";
+	while (ss >> curArg) {
+		curArg = ScriptUtils::getValueFromVarOrSwitchNumber(parent->getExtendedName(), curArg, parent->getVarMap());
+		args += (curArg + " ");
+	}
+	StringUtils::rtrim(args);
+
 	const string& keyScript = name + "/\\" + args;
 	extendedName = keyScript + "_" + wScreen.getWorld().getName();
-	
 
 	std::string validPath;
 	if (fscript.fail())
@@ -113,9 +122,7 @@ int ScriptDispatcher::addRunningScript(IScript* parent, string name, string args
 		validPath = (string(NPath) + "\\" + name);
 		fscript.open(validPath.c_str());
 		if (fscript.fail()) {
-			cerr << "ERREUR : Impossible d'ouvrir " + string(NPath) + "\\" + name << endl;
-			fscript.close();
-			return 1;
+			throw InvalidPathException("Impossible d'ouvrir le fichier script " + string(NPath) + "\\" + name);
 		}
 
 	}
@@ -127,28 +134,35 @@ int ScriptDispatcher::addRunningScript(IScript* parent, string name, string args
 
 	if (m_scripts.find(keyScript) == m_scripts.end() || m_scripts[keyScript]->getCurrentState() == EnumScriptState::STOPPED) {
 		if (!validPath.empty()) {
-			m_scripts[keyScript] = (move(Script_ptr(new Script(triggeringType, period == NULL || *period == 0? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, args))));
-			ScriptDispatcher::setupScriptArgs(m_scripts[keyScript].get(), extendedName, args);
+			m_scripts[keyScript] = (move(Script_ptr(new Script(triggeringType, period == NULL || *period == 0? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, keyScript, args))));
+			ScriptDispatcher::setupScriptArgs(parent, m_scripts[keyScript].get(), args);
 		}
 		else {
 			throw InvalidPathException("Le script de nom " + name + " est introuvable");
 		}
-		return 0;
+		return m_scripts[keyScript].get();
 	} else {
-		return 1;
+		return NULL;
 	}
 	
 	
 }
 
-void ScriptDispatcher::setupScriptArgs(IScript* script, const string& extendedName, string& args) {
+void ScriptDispatcher::kill(const std::string& keyScript) {
+	if (m_scripts.find(keyScript) != m_scripts.end() && m_scripts[keyScript]->getCurrentState() != EnumScriptState::STOPPED) {
+		commandInterpreter(m_scripts[keyScript].get(), CommandEnd::getCmdName());
+	} else {
+		throw InvalidPathException("Le script de clé " + keyScript + " est introuvable");
+	}
+}
+
+void ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, string& args) {
 	unsigned int i = 0;
 	stringstream ss;
 	string curArg;
 	ss << args;
 	while (ss >> curArg) {
-		curArg = ScriptUtils::getValueFromVarOrSwitchNumber(extendedName, curArg, script->getVarMap());
-		ScriptUtils::setValueFromVarOrSwitchNumber(extendedName, "#arg" + StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
+		ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), "#arg" + StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
 		i++;
 	}
 }
@@ -169,7 +183,7 @@ void ScriptDispatcher::refresh()
 
 }
 
-std::string ScriptDispatcher::commandInterpreter(IScript* script, const std::string& cmd, std::ifstream& fscript)
+std::string ScriptDispatcher::commandInterpreter(IScript* script, const std::string& cmd)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ofstream scriptList;
@@ -191,7 +205,7 @@ std::string ScriptDispatcher::commandInterpreter(IScript* script, const std::str
 	if (m_commands.find(cmdName) != m_commands.end()) {
 		std::unordered_map<std::string, std::string>& varMap = script->getVarMap();
 		try {
-			return m_commands[cmdName]->process(script, streamCmd, scriptList, fscript);
+			return m_commands[cmdName]->process(script, streamCmd, scriptList);
 		} catch (NumberFormatException nfe) {
 			throw ScriptException("[" + script->getExtendedName() + "] Commande " + cmdName + " : " + std::string(nfe.what()));
 		}

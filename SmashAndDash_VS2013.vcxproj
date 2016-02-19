@@ -137,7 +137,6 @@
     <ClInclude Include="Code\Graphic\GUI\Button_Bar.h" />
     <ClInclude Include="Code\Graphic\GUI\Button_Quit.h" />
     <ClInclude Include="Code\Script\Commands\CommandPlayerPresence.h" />
-    <ClInclude Include="Code\Script\Commands\CommandGet.h" />
     <ClInclude Include="Code\Script\Commands\CommandElseEnd.h" />
     <ClInclude Include="Code\Script\ScriptState.h" />
     <ClInclude Include="Code\Utils\FormalCalculation\CalculOperators.h" />
@@ -244,7 +243,6 @@
     <ClInclude Include="Code\Exceptions\NumberFormatException.h" />
     <ClInclude Include="Code\Script\Commands\CommandElsif.h" />
     <ClInclude Include="Code\Script\Commands\CommandEndScript.h" />
-    <ClInclude Include="SDLWindowRendererWrappers.h" />
     <ClInclude Include="Code\Gameplay\Data\Settings.h" />
     <ClInclude Include="Code\Graphic\ShakerManager.h" />
     <ClInclude Include="Code\Utils\Singleton_template.h" />
@@ -282,7 +280,6 @@
     <ClCompile Include="Code\Graphic\GUI\Button_Bar.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp" />
     <ClCompile Include="Code\Gameplay\Character.cpp" />
-    <ClCompile Include="Code\Script\Commands\CommandGet.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
     <ClCompile Include="Code\Utils\ChargementDonneesMonde.cpp" />
     <ClCompile Include="Code\Utils\Chargemententitees.cpp" />

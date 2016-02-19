@@ -19,7 +19,7 @@ const string& CommandIf::getCmdName() {
 	return ControlStatement::getCommandIf();
 }
 
-std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript)
+std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
@@ -35,9 +35,9 @@ std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd
 	if (!((op == "==" && num1 == num2) || (op == "<" && num1 < num2) || (op == ">" && num1 > num2) || (op == "<=" && num1 <= num2) || (op == ">=" && num1 >= num2)))
 	{
 
-		while (ifEnd > 0 && !fscript.eof())
+		while (ifEnd > 0 && !script->eof())
 		{
-			getline(fscript, line);
+			line = script->nextLine();
 			stringstream ss;
 			ss << line;
 			ss >> line;
@@ -49,7 +49,7 @@ std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd
 				ifEnd--;
 		}
 
-		if (fscript.eof()) {
+		if (script->eof()) {
 			throw ScriptSyntaxError("[" + script->getExtendedName() +"] Un endif est manquant");
 		}
 

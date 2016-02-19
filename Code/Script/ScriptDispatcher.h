@@ -10,11 +10,12 @@ class ScriptDispatcher : public Singleton<ScriptDispatcher>{
 	friend class Singleton<ScriptDispatcher>;
 public:
 	ScriptDispatcher();
-	int addRunningScript(IScript* parent, std::string name, std::string args, int triggeringType, Uint32* period = NULL);
-	void setupScriptArgs(IScript* script, const std::string& extendedName, std::string& args);
+	IScript* addRunningScript(IScript* parent, std::string name, std::string args, int triggeringType, Uint32* period = NULL);
+	void setupScriptArgs(IScript* parent, IScript* script, std::string& args);
+	void kill(const std::string& keyScript);
 	void refresh();
 	~ScriptDispatcher();
-	static std::string commandInterpreter(IScript* script, const std::string& cmd, std::ifstream& fscript);
+	static std::string commandInterpreter(IScript* script, const std::string& cmd);
 
 	void clear();
 private:

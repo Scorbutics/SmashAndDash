@@ -105,9 +105,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SDLWindowRendererWrappers.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\AI\AI.h">
       <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
     </ClInclude>
@@ -507,9 +504,6 @@
     <ClInclude Include="Code\Script\ScriptState.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandGet.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandElseEnd.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -891,9 +885,6 @@
       <Filter>Fichiers sources\Gameplay\World</Filter>
     </ClCompile>
     <ClCompile Include="Code\main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandGet.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp">

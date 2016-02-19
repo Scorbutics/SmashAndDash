@@ -17,6 +17,9 @@ public:
 	virtual void delay(int d) = 0;
 	virtual void stop() = 0;
 	virtual std::string getLastResult() = 0;
+	virtual std::string& getKey() = 0;
+	virtual std::string nextLine() = 0;
+	virtual bool eof() = 0;
 	~IScript(){}
 	
 

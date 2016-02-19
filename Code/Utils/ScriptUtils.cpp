@@ -108,7 +108,7 @@ Retourne la première expression sur "line" après calculs et formattage
 Ex : si line = " [|bidule|] %random 100% [|chance|] %truc 200% " , la fonction va calculer "random 100" et renvoyer le résultat de ce calcul.
 Ex : si line = " [|bidule|] %random %truc 200%% [|chance|]" , la fonction va calculer "random %truc 200%", lui-même va rappeler cette fonction et renvoyer le résultat de ce calcul total.
 */
-std::string ScriptUtils::getFirstExpressionFromLine(const std::string& line, IScript* script, std::ifstream& fscript, size_t* outputCommandSize)
+std::string ScriptUtils::getFirstExpressionFromLine(const std::string& line, IScript* script, size_t* outputCommandSize)
 {
 	size_t indexFirstChar;
 	for (indexFirstChar = 0; line[indexFirstChar] != ScriptSymbolsConstants::METHOD && line[indexFirstChar] != '\n' && indexFirstChar < line.size(); indexFirstChar++);
@@ -135,7 +135,7 @@ std::string ScriptUtils::getFirstExpressionFromLine(const std::string& line, ISc
 	}
 
 	if (!commandCall.empty()) {
-		std::string result = ScriptDispatcher::commandInterpreter(script, commandCall, fscript);
+		std::string result = ScriptDispatcher::commandInterpreter(script, commandCall);
 		if (!result.empty()) {
 			valeur = result;
 		} else {

@@ -20,6 +20,11 @@ int CommandEnd::argumentsNumber() {
 	return 1;
 }
 
+const std::string& CommandEnd::getCmdName() {
+	static const std::string cmdName = "end";
+	return cmdName;
+}
+
 std::string CommandEnd::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + wScreen.getSavegameManager().getSaveName() + FILE_SEPARATOR"tmpscripts.data");

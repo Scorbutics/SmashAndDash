@@ -9,7 +9,7 @@ AbstractFunctionCommand::AbstractFunctionCommand()
 {
 }
 
-std::string AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) {
+std::string AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) {
 	int argNumber = argumentsNumber();
 	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */

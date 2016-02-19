@@ -28,8 +28,8 @@ std::string CommandScript::execute(IScript* script, std::vector<std::string>& ar
 	Uint32 period = StringUtils::strToInt(args[1]);
 	extraArgs = args[2];
 
-	ScriptDispatcher::getInstance().addRunningScript(script, scriptName, extraArgs, 0, &period);
+	IScript* started = ScriptDispatcher::getInstance().addRunningScript(script, scriptName, extraArgs, 0, &period);
 
-	return scriptName;
+	return started == NULL ? "" : started->getKey();
 
 }

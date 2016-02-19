@@ -22,21 +22,21 @@ const std::string& CommandElse::getCmdName() {
 	return ControlStatement::getCommandElse();
 }
 
-std::string CommandElse::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript)
+std::string CommandElse::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	int ifEnd = 1;
 	string lineBuf;
 
-	while (ifEnd > 0 && !fscript.eof())
+	while (ifEnd > 0 && !script->eof())
 	{
-		getline(fscript, lineBuf);
+		lineBuf = script->nextLine();
 		StringUtils::ltrim(lineBuf);
 		if (lineBuf.find(ControlStatement::getCommandIf()) == 0)
 			ifEnd++;
 		else if (lineBuf == ControlStatement::getCommandEndIf())
 			ifEnd--;
 	}
-	if (fscript.eof()) {
+	if (script->eof()) {
 		throw ScriptSyntaxError("[" + script->getExtendedName() + "] Un endif est manquant");
 	}
 

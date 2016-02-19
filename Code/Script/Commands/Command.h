@@ -10,7 +10,7 @@ class Command
 public:
 
 	Command(){}
-	virtual std::string process(IScript* script, std::stringstream& streamCmd, std::ofstream& scriptList, std::ifstream& fscript) = 0;
+	virtual std::string process(IScript* script, std::stringstream& streamCmd, std::ofstream& scriptList) = 0;
 	virtual ~Command(){}
 
 };

@@ -11,8 +11,8 @@ ControlStatement::ControlStatement()
 {
 }
 
-std::string ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList, std::ifstream& fscript) {
-	return analyzeLine(script, streamCmd, args, scriptList, fscript);
+std::string ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) {
+	return analyzeLine(script, streamCmd, args, scriptList);
 }
 
 char ControlStatement::getSeparator() {

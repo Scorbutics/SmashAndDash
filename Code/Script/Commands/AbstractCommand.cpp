@@ -10,7 +10,7 @@ AbstractCommand::AbstractCommand()
 {
 }
 
-std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, ofstream& scriptList, ifstream& fscript) {
+std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, ofstream& scriptList) {
 
 	string line;
 	getline(streamCmd, line);
@@ -18,7 +18,7 @@ std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, o
 	line = StringUtils::trim(line);
 
 	/* Avant tout traitement, effectue toutes les exécutions des sous-commandes possibles */
-	interpretSubCommands(line, script, fscript);
+	interpretSubCommands(line, script);
 
 	vector<string>& args = StringUtils::split(line, getSeparator());
 	
@@ -29,10 +29,10 @@ std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, o
 	}
 	
 
-	return process(script, streamCmd, args, scriptList, fscript);
+	return process(script, streamCmd, args, scriptList);
 }
 
-std::string AbstractCommand::interpretSubCommands(string& line, IScript* script, ifstream& fscript) {
+std::string AbstractCommand::interpretSubCommands(string& line, IScript* script) {
 	size_t outputCommandSize = 0;
 	size_t offset;
 	string parsedArg;
@@ -45,7 +45,7 @@ std::string AbstractCommand::interpretSubCommands(string& line, IScript* script,
 	do {
 		string expression = line.substr(outputCommandSize);
 
-		parsedArg += ScriptUtils::getFirstExpressionFromLine(expression, script, fscript, &offset);
+		parsedArg += ScriptUtils::getFirstExpressionFromLine(expression, script, &offset);
 		parsedArg += " ";
 		outputCommandSize += offset;
 	} while (offset != 0 && outputCommandSize < line.size());

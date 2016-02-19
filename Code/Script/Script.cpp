@@ -29,12 +29,23 @@ std::unordered_map<std::string, std::string>& Script::getVarMap()
 	return m_varMap;
 }
 
-Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName) : m_extendedName(extendedName), m_fullPath(fullPath) {
+Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key) : m_extendedName(extendedName), m_fullPath(fullPath), m_key(key) {
 	commonPartConstructor(scriptPeriod, triggeringType);
 }
 
-Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, std::string& extraArgs) : m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs) {
+Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, std::string& extraArgs) : m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs), m_key(key) {
 	commonPartConstructor(scriptPeriod, triggeringType);
+}
+
+std::string Script::nextLine() {
+	std::string line;
+	getline(m_fscript, line);
+	m_currentLine++;
+	return line;
+}
+
+bool Script::eof() {
+	return m_fscript.eof();
 }
 
 bool Script::play()
@@ -58,16 +69,16 @@ bool Script::play()
 	}
 
 	/* Read commands */
-	while (getline(m_fscript, cmd)) {
+	while (!eof()) {
+		cmd = nextLine();
 		if (cmd != "") {
-			m_lastResult = ScriptDispatcher::commandInterpreter(this, cmd, m_fscript);
+			m_lastResult = ScriptDispatcher::commandInterpreter(this, cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
 			if (m_state == EnumScriptState::STOPPED || manageCurrentState() == EnumScriptState::PAUSED) {
 				break;
 			}
 			m_commandsPlayed++;
 		}
-		m_currentLine++;
 	}
 
 
@@ -86,6 +97,10 @@ bool Script::play()
 	}
 
 	return true;
+}
+
+std::string& Script::getKey() {
+	return m_key;
 }
 
 std::string& Script::getExtendedName() {

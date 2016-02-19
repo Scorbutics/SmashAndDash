@@ -10,18 +10,21 @@ class Script :
 	public IScript
 {
 public:
-	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName);
-	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, std::string& extraArgs);
-	virtual bool play();
+	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key);
+	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, std::string& extraArgs);
+	bool play();
 	ScriptState getCurrentState();
-	virtual unsigned int getCurrentLine();
+	unsigned int getCurrentLine();
 	std::string& getFullPath();
 	std::string& getExtendedName();
+	std::string& getKey();
 	bool canBePlayed();
 	void delay(int d);
 	void stop();
+	std::string nextLine();
 	std::string getLastResult();
-	virtual float getPriority(Uint32 currentTimeMillis);
+	float getPriority(Uint32 currentTimeMillis);
+	bool eof();
 	virtual ~Script();
 	
 private:
@@ -46,6 +49,7 @@ private:
 	std::string m_fullPath;
 	std::string m_extendedName;
 	std::string m_extraArgs;
+	std::string m_key;
 	std::string m_lastResult;
 	std::ifstream m_fscript;
 	int m_triggeringType;

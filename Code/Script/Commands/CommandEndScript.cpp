@@ -1,5 +1,5 @@
 #include "CommandEndScript.h"
-
+#include "../ScriptDispatcher.h"
 
 CommandEndScript::CommandEndScript() {
 }
@@ -9,10 +9,10 @@ CommandEndScript::~CommandEndScript() {
 }
 
 int CommandEndScript::argumentsNumber() {
-	return 2;
+	return 1;
 }
 
 std::string CommandEndScript::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) {
-	//return CommandEnd::execute(args[1], args, scriptList, varMap, fscript, active, result);
+	ScriptDispatcher::getInstance().kill(args[0]);
 	return "";
 }
