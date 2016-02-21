@@ -40,6 +40,7 @@
 #include "Commands\CommandElseEnd.h"
 #include "Commands\CommandPlayerPresence.h"
 #include "Commands\CommandLog.h"
+#include "ScriptSymbolsConstants.h"
 
 using namespace std;
 
@@ -101,22 +102,16 @@ IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string
 	string extendedName;
 	ifstream fscript(name.c_str());
 	
-	stringstream ss;
-	string curArg;
-	ss << args;
-	args = "";
-	while (ss >> curArg) {
-		curArg = ScriptUtils::getValueFromVarOrSwitchNumber(parent->getExtendedName(), curArg, parent->getVarMap());
-		args += (curArg + " ");
-	}
-	StringUtils::rtrim(args);
+	/* The key musn't be considered as several arguments when passed to a command.
+		Therefore, we need to replace each argument separator by something that's not part of the script syntax */
+	string keyArgs = args;
+	StringUtils::replaceAll(keyArgs, ScriptSymbolsConstants::ARGUMENT_SEPARATOR, ' ');
 
-	const string& keyScript = name + "/\\" + args;
+	const string& keyScript = name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + wScreen.getWorld().getName();
 
 	std::string validPath;
-	if (fscript.fail())
-	{
+	if (fscript.fail()) {
 		TCHAR NPath[MAX_PATH];
 		GetCurrentDirectory(MAX_PATH, NPath);
 		validPath = (string(NPath) + "\\" + name);
@@ -125,8 +120,7 @@ IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string
 			throw InvalidPathException("Impossible d'ouvrir le fichier script " + string(NPath) + "\\" + name);
 		}
 
-	}
-	else {
+	} else {
 		validPath = name;
 	}
 
@@ -136,8 +130,7 @@ IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string
 		if (!validPath.empty()) {
 			m_scripts[keyScript] = (move(Script_ptr(new Script(triggeringType, period == NULL || *period == 0? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, keyScript, args))));
 			ScriptDispatcher::setupScriptArgs(parent, m_scripts[keyScript].get(), args);
-		}
-		else {
+		} else {
 			throw InvalidPathException("Le script de nom " + name + " est introuvable");
 		}
 		return m_scripts[keyScript].get();
@@ -149,7 +142,7 @@ IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string
 }
 
 void ScriptDispatcher::kill(const std::string& keyScript) {
-	if (m_scripts.find(keyScript) != m_scripts.end() && m_scripts[keyScript]->getCurrentState() != EnumScriptState::STOPPED) {
+	if (m_scripts.find(keyScript) != m_scripts.end()) {
 		commandInterpreter(m_scripts[keyScript].get(), CommandEnd::getCmdName());
 	} else {
 		throw InvalidPathException("Le script de clé " + keyScript + " est introuvable");
@@ -158,10 +151,8 @@ void ScriptDispatcher::kill(const std::string& keyScript) {
 
 void ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, string& args) {
 	unsigned int i = 0;
-	stringstream ss;
-	string curArg;
-	ss << args;
-	while (ss >> curArg) {
+	vector<string> argsV = StringUtils::split(args, ScriptSymbolsConstants::ARGUMENT_SEPARATOR);
+	for (string& curArg : argsV) {
 		ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), "#arg" + StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
 		i++;
 	}
@@ -178,7 +169,7 @@ void ScriptDispatcher::refresh()
 		nextScript->play();
 	}
 	catch (ScriptException e) {
-		cerr << "ERREUR SCRIPT (l." << nextScript->getCurrentLine() << ") " << e.what() << endl;
+		cerr << "ERREUR SCRIPT [" << nextScript->getExtendedName() << "] (l." << nextScript->getCurrentLine() << ") " << e.what() << endl;
 	}
 
 }
@@ -207,10 +198,10 @@ std::string ScriptDispatcher::commandInterpreter(IScript* script, const std::str
 		try {
 			return m_commands[cmdName]->process(script, streamCmd, scriptList);
 		} catch (NumberFormatException nfe) {
-			throw ScriptException("[" + script->getExtendedName() + "] Commande " + cmdName + " : " + std::string(nfe.what()));
+			throw ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
 		}
 	} else {
-		throw ScriptUnknownCommandException("[" + script->getExtendedName() + "] Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
+		throw ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}
 	return "";
 }

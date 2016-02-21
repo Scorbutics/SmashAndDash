@@ -13,7 +13,7 @@ std::string AbstractFunctionCommand::process(IScript* script, std::stringstream&
 	int argNumber = argumentsNumber();
 	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */
-		std::string syntaxErrorMsg("[" + script->getExtendedName() + "] Syntax error with parameters : ");
+		std::string syntaxErrorMsg("Syntax error with parameters : ");
 		for (std::string& arg : args) {
 			syntaxErrorMsg += arg + " ";
 		}

@@ -50,7 +50,7 @@ std::string CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd
 		}
 
 		if (script->eof()) {
-			throw ScriptSyntaxError("[" + script->getExtendedName() +"] Un endif est manquant");
+			throw ScriptSyntaxError("Un " + ControlStatement::getCommandEndIf() + " est manquant");
 		}
 
 	}

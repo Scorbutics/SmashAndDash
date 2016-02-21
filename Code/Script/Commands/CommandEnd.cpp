@@ -17,7 +17,7 @@ CommandEnd::~CommandEnd()
 }
 
 int CommandEnd::argumentsNumber() {
-	return 1;
+	return 0;
 }
 
 const std::string& CommandEnd::getCmdName() {
@@ -35,5 +35,5 @@ std::string CommandEnd::execute(IScript* script, std::vector<std::string>& args,
 	}
 
 	script->stop();
-	return args[0];
+	return "";
 }

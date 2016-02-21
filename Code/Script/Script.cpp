@@ -155,7 +155,7 @@ ScriptState Script::getCurrentState() {
 }
 
 unsigned int Script::getCurrentLine() {
-	return m_currentLine + 1;
+	return m_currentLine;
 }
 
 std::string& Script::getFullPath() {

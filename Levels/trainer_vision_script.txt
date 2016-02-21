@@ -31,6 +31,6 @@ if [|pres_joueur|] == 1
 	end_script #arg3#
 	wait 2500
 	battle #arg0#, #arg1#
-	end 1
+	end
 endif
 wait 350
