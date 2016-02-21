@@ -116,6 +116,8 @@ void Fight::start(Character* opponent)
 
 	m_isFighting = true;
 
+	wScreen.switchScene(EnumScene::FIGHT);
+
 	//Enregistrement dans les entités courantes du monde de l'apparition du Pokémon et de son opposant
 	wScreen.getEntityFactory().setPokemon(&(*m_pkmn));
 	wScreen.getEntityFactory().setOpponent(opponent);
@@ -277,6 +279,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	m_opponentID.y = 0;
 
 	m_isFighting = false;
+	wScreen.switchScene(EnumScene::MAP);
 
 	if (endReason == EndFightReason::Lose)
 	{

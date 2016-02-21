@@ -28,6 +28,7 @@ if [|pres_joueur|] == 1
     animation #arg0#, #arg1#, 2
 	end_script #arg3#
 	wait 2500
+	move #arg0#, #arg1#, [|direction_perso|], 3
 	battle #arg0#, #arg1#
 	end
 endif

@@ -34,6 +34,9 @@ WGameCore::WGameCore():
 	m_OfChip.h = TAILLEBLOC;
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
+	/* Let's start on the map */
+	m_sceneCursor = &m_sceneMap;
+
 	m_origineRelative.x = 0;
 	m_origineRelative.y = 0;
 	m_origineRelative.w = m_laFenetre;
@@ -190,6 +193,18 @@ ParticleManager& WGameCore::getParticleManager()
     return m_particleManager;
 }
 
+void WGameCore::switchScene(EnumScene::Enum scene) {
+	switch (scene) {
+	case EnumScene::FIGHT:
+		m_sceneCursor = &m_sceneFight;
+		break;
+	case EnumScene::MAP:
+		m_sceneCursor = &m_sceneMap;
+		break;
+	}
+	
+}
+
 //Boucle principale gérant évènements et affichages du monde.
 bool WGameCore::refresh()
 {
@@ -237,46 +252,10 @@ bool WGameCore::refresh()
 
 //Gestion de l'ordre de l'affichage des éléments...
 //gros bordel !
-void* WGameCore::graphicUpdate(void)
+void WGameCore::graphicUpdate(void)
 {
-    //Affiche les couches de blocs et les personnages
-    m_world.displayLayers();
-
-    //Affiche la pokeball si active
-    m_pokeball.refresh();
-
-	//Affiche l'UI des combats et les attaques
-	m_fight.display();
-
-	//Affiche les animations jouées
-	m_spriteAnimManager.refresh();
-
-	//Affiche les événements météorologiques
-	m_particleManager.display(PARTICLE_MANAGER_CRUMBLING);
-	m_particleManager.display(PARTICLE_MANAGER_RAIN);
-    m_particleManager.displayRainFog();
-
-    //Affiche la météo
-    if(m_world.getFog()->isActive() && *m_settings.getFogActive())
-        m_world.getFog()->display();
-    if(m_world.getWeather()->isActive() && *m_settings.getWeatherActive())
-        m_world.getWeather()->display();
-
-	//Affiche la GUI
-    m_gui.dialogDisplay();
-    if(m_gui.isVisible())
-        m_gui.display();
+	m_sceneCursor->graphicUpdate();
 	
-	//Euh...
-    m_world.setBgmVolume(*m_settings.getSoundVolume());
-
-	//Affiche le Pokémon ou l'objet sur le curseur de la souris
-    m_mouseCursor.displaySelectedPokemon();
-    m_mouseCursor.displaySelectedObject();
-
-    Scrolling();
-	
-	return NULL;
 }
 
 bool WGameCore::isScrollingActive()
@@ -306,44 +285,7 @@ InputListener& WGameCore::getInputListener()
 
 void WGameCore::eventUpdate(bool movingDisallowed)
 {
-	bool stuck = movingDisallowed;
-	WGameCore& wScreen = WGameCore::getInstance();
-
-    m_world.refreshEntities();
-
-	m_particleManager.refresh(PARTICLE_MANAGER_EFFECT);
-
-
-    //Gère les évènements extérieurs de la GUI (input)
-	//GUI A PASSER EN TANT QU'OBSERVATEUR
-    if(!m_kdListener.refresh(stuck))
-    {
-        m_gui.getDialog()->hide(true);
-        m_gui.getImgDialog()->hide(true);
-        m_gui.hide(false);
-    }
-
-	m_gui.dialogRefresh();
-	if(m_gui.isVisible())
-		m_gui.refresh();
-
-
-
-    //gere les evenements (notamment le systeme de scripts)
-    GestionEvents();
-	ScriptDispatcher::getInstance().refresh();
-
-	//événements combat
-	m_fight.refresh();
-
-	//gère l'apparition aléatoire de Pokémon
-	if(!m_fight.isFighting())
-		m_mobSpawner.refresh();
-
-	m_particleManager.refresh(PARTICLE_MANAGER_CRUMBLING);
-	m_particleManager.refresh(PARTICLE_MANAGER_RAIN);
-
-	m_shaker.refresh();
+	m_sceneCursor->eventUpdate(movingDisallowed);
 
 }
 

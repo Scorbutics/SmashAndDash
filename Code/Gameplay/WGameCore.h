@@ -25,7 +25,9 @@
 #include "Data\SavegameManager.h"
 #include "World\World.h"
 #include "../Utils\Singleton_template.h"
-
+#include "SceneMap.h"
+#include "SceneFight.h"
+#include "EnumScene.h"
 
 class LayerE;
 class Layer;
@@ -37,11 +39,16 @@ class WGameCore : public Window, public Singleton<WGameCore>
 {
 	friend class Singleton<WGameCore>;
 
-    private:
+private:
     WGameCore();
 	~WGameCore();
 
-	public:
+	
+
+public:
+	void graphicUpdate(void);
+	void eventUpdate(bool movingDisallowed);
+
 	void resize(unsigned int w, unsigned int h);
 	bool refresh();
     void activeEcritureLog();
@@ -49,10 +56,11 @@ class WGameCore : public Window, public Singleton<WGameCore>
 	void activeScrolling(bool b);
 	void quitFlip();
 	void quitter(bool transition);
-	void* graphicUpdate(void);
+	
     std::vector<SDL_Rect> detectEntity(SDL_Rect box);
     std::vector<SDL_Rect> detectEntity(SDL_Rect box, int direction);
-	void eventUpdate(bool movingDisallowed);
+	
+	void switchScene(EnumScene::Enum scene);
 	void initNewWorld();
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
@@ -95,6 +103,10 @@ class WGameCore : public Window, public Singleton<WGameCore>
    
 
     protected:
+		IScene* m_sceneCursor;
+		SceneMap m_sceneMap;
+		SceneFight m_sceneFight;
+
 		Settings m_settings;
 		Inventory m_inv;
 		SDL_Rect m_OfChip, m_origineRelative;
