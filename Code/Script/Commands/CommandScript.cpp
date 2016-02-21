@@ -22,7 +22,7 @@ int CommandScript::argumentsNumber() {
 std::string CommandScript::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	string scriptName;
-	string extraArgs;
+	vector<string> extraArgs;
 	string periodStr;
 	
 	if (args.size() < 3) {
@@ -31,11 +31,10 @@ std::string CommandScript::execute(IScript* script, std::vector<std::string>& ar
 
 	scriptName = args[0];
 	Uint32 period = StringUtils::strToInt(args[1]);
-	extraArgs = args[2];
 
 	/* Rebuild an argument string to be read by the new running script */
-	for (unsigned int i = 3; i < args.size(); i++) {
-		extraArgs += getSeparator() + args[i];
+	for (unsigned int i = 2; i < args.size(); i++) {
+		extraArgs.push_back(args[i]);
 	}
 
 	IScript* started = ScriptDispatcher::getInstance().addRunningScript(script, scriptName, extraArgs, 0, &period);

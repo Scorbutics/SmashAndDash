@@ -95,17 +95,18 @@ ScriptDispatcher::ScriptDispatcher()
 {
 }
 
-IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, string args, int triggeringType, Uint32* period)
+IScript* ScriptDispatcher::addRunningScript(IScript* parent, string name, const vector<string>& args, int triggeringType, Uint32* period)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 	string extendedName;
 	ifstream fscript(name.c_str());
+	string keyArgs;
 	
-	/* The key musn't be considered as several arguments when passed to a command.
-		Therefore, we need to replace each argument separator by something that's not part of the script syntax */
-	string keyArgs = args;
-	StringUtils::replaceAll(keyArgs, ScriptSymbolsConstants::ARGUMENT_SEPARATOR, ' ');
+	for (const string& arg : args) {
+		keyArgs += arg + " ";
+	}
+	StringUtils::rtrim(keyArgs);
 
 	const string& keyScript = name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + wScreen.getWorld().getName();
@@ -149,10 +150,9 @@ void ScriptDispatcher::kill(const std::string& keyScript) {
 	}
 }
 
-void ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, string& args) {
+void ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, const vector<string>& args) {
 	unsigned int i = 0;
-	vector<string> argsV = StringUtils::split(args, ScriptSymbolsConstants::ARGUMENT_SEPARATOR);
-	for (string& curArg : argsV) {
+	for (const string& curArg : args) {
 		ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), "#arg" + StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
 		i++;
 	}

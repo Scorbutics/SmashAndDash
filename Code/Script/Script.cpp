@@ -33,7 +33,7 @@ Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, s
 	commonPartConstructor(scriptPeriod, triggeringType);
 }
 
-Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, std::string& extraArgs) : m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs), m_key(key) {
+Script::Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, const vector<string>& extraArgs) : m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs), m_key(key) {
 	commonPartConstructor(scriptPeriod, triggeringType);
 }
 

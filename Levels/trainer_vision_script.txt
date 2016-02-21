@@ -2,8 +2,6 @@ assign [_personnage.pos.y #arg0# #arg1#_], |pos_perso.y|
 assign [_personnage.pos.x #arg0# #arg1#_], |pos_perso.x|
 assign [_personnage.direction #arg0# #arg1#_], |direction_perso|
 
-log Direction actuelle du perso
-log [|direction_perso|]
 if [|direction_perso|] == 0
     assign %calculate [|pos_perso.y|] + #arg2#%, |pos_check.y|
     assign [|pos_perso.x|], |pos_check.x|

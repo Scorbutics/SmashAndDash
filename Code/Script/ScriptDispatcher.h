@@ -10,8 +10,8 @@ class ScriptDispatcher : public Singleton<ScriptDispatcher>{
 	friend class Singleton<ScriptDispatcher>;
 public:
 	ScriptDispatcher();
-	IScript* addRunningScript(IScript* parent, std::string name, std::string args, int triggeringType, Uint32* period = NULL);
-	void setupScriptArgs(IScript* parent, IScript* script, std::string& args);
+	IScript* addRunningScript(IScript* parent, std::string name, const std::vector<std::string>& args, int triggeringType, Uint32* period = NULL);
+	void setupScriptArgs(IScript* parent, IScript* script, const std::vector<std::string>& args);
 	void kill(const std::string& keyScript);
 	void refresh();
 	~ScriptDispatcher();

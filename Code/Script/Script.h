@@ -11,7 +11,7 @@ class Script :
 {
 public:
 	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key);
-	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, std::string& extraArgs);
+	Script(int triggeringType, Uint32 scriptPeriod, std::string& fullPath, std::string& extendedName, const std::string& key, const std::vector<std::string>& extraArgs);
 	bool play();
 	ScriptState getCurrentState();
 	unsigned int getCurrentLine();
@@ -48,7 +48,7 @@ private:
 	std::unordered_map<std::string, std::string> m_varMap;
 	std::string m_fullPath;
 	std::string m_extendedName;
-	std::string m_extraArgs;
+	std::vector<std::string> m_extraArgs;
 	std::string m_key;
 	std::string m_lastResult;
 	std::ifstream m_fscript;

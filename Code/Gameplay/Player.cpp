@@ -186,7 +186,7 @@ void Player::update(Observable* obs, EventArg* event)
 				}
 
 				if (w.getLayerEvent()->getAction(i) == "script") {
-					ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), "", 1);
+					ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 1);
 				} else if (id < 0) {
 					wScreen.getGUI().getDialog()->modifyText(w.getLayerEvent()->getParam(i));
 					wScreen.getGUI().getDialog()->hide(false);
