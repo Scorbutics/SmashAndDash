@@ -22,6 +22,7 @@ class Fight
 	void start(Character* opponent);
 	void showDialog(unsigned int duration);
     
+	void refreshFight();
     void refresh();
     void end(EndFightReason::Enum endReason);
     ~Fight();

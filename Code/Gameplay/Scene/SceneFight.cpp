@@ -25,8 +25,13 @@ void SceneFight::graphicUpdate(void) {
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {
+	WGameCore& core = WGameCore::getInstance();
+	Fight& fight = core.getFight();
+	
 	AbstractSceneMap::eventUpdate(movingDisallowed);
-
+	
+	//Evénements combat
+	fight.refreshFight();
 }
 
 SceneFight::~SceneFight()

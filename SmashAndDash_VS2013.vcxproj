@@ -124,6 +124,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h" />
+    <ClInclude Include="Code\Exceptions\IllegalArgumentException.h" />
+    <ClInclude Include="Code\Exceptions\IllegalStateException.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h" />
     <ClInclude Include="Code\Gameplay\EnumScene.h" />
     <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="Code\Gameplay\Scene\SceneFight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractCommand.cpp" />

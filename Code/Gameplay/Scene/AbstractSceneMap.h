@@ -1,12 +1,12 @@
 #pragma once
-#include "IScene.h"
+#include "AbstractNoGUISceneMap.h"
 class AbstractSceneMap :
-	public IScene
+	public AbstractNoGUISceneMap
 {
 public:
 	AbstractSceneMap();
 	virtual void graphicUpdate(void);
-	virtual void eventUpdate(bool movingDisallowed);
+	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~AbstractSceneMap();
 };
 

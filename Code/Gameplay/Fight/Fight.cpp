@@ -11,6 +11,7 @@
 #include "../../Utils\ChargementImages.h"
 #include "..\Data\Statistics.h"
 #include "../../Utils/StringUtils.h"
+#include "../../Exceptions/IllegalStateException.h"
 
 Fight::Fight(): m_animGrass(1, 3, false)
 {
@@ -333,55 +334,56 @@ void Fight::display()
 	this->displayDialog();
 }
 
+void Fight::refreshFight() {
+	WGameCore& wScreen = WGameCore::getInstance();
+	wScreen.getAI().act(*this);
+	if (wScreen.getHero() != NULL)
+		wScreen.getHero()->refreshSkills();
+	if (isFighting() && m_opponent != NULL)
+		m_opponent->refreshSkills();
+}
+
 void Fight::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	if (m_isFighting)
+	if (m_isFighting) {
+		throw IllegalStateException("Impossible de refresh un combat sans être dans la scène de combat");
+	}
+
+	if(m_trainer->getSpeed() > 0)
+		m_fightCount = rand()%(COMBAT_COUNT) + 1; //chiffre aléatoire entre 1 et COMBAT_COUNT (en fait, cela servira à déclencher aléatoirement les combats en hautes herbes)
+
+	//2 : chiffre au hasard entre 1 et COMBAT_COUNT
+	if(m_fightCount == 2 && isInFightArea(m_trainer)) //Si on se trouve en zone de combat potentiel
 	{
-		wScreen.getAI().act(*this);
-		if (wScreen.getHero() != NULL)
-			wScreen.getHero()->refreshSkills();
-		if (isFighting() && m_opponent != NULL)
-			m_opponent->refreshSkills();
+		m_fightCount = 0;
+		IniReader* reader = GetRandomMobSettings(&wScreen.getWorld());
+
+		if(reader != NULL)
+			start(wScreen.getEntityFactory().createOpponent(reader));
 		
 	}
-	else
+	else if(m_fightCount == 3)
 	{
+		m_fightCount = 0;
+		vector<SDL_Rect> ids;
+		SDL_Rect posTrainer = m_trainer->getPos();
+		posTrainer.x -= m_mobAggroRange;
+		posTrainer.y -= m_mobAggroRange;
+		posTrainer.w = 2*m_mobAggroRange;
+		posTrainer.h = 2*m_mobAggroRange;
+
+		ids = wScreen.detectEntity(posTrainer);
+		const size_t size = ids.size();
+		for(size_t i = 0; i < size; i++)
+			if(ids[i].x > 0 && (ids[i].x != m_trainer->getID() || ids[i].y != m_trainer->getEntityNumber()))  //Sinon si on est à proximité d'un Pokémon
+			{
+				start(wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y));
+				return;
+			}
+	}
 	
-		if(m_trainer->getSpeed() > 0)
-			m_fightCount = rand()%(COMBAT_COUNT) + 1; //chiffre aléatoire entre 1 et COMBAT_COUNT (en fait, cela servira à déclencher aléatoirement les combats en hautes herbes)
-
-		//2 : chiffre au hasard entre 1 et COMBAT_COUNT
-		if(m_fightCount == 2 && isInFightArea(m_trainer)) //Si on se trouve en zone de combat potentiel
-		{
-			m_fightCount = 0;
-			IniReader* reader = GetRandomMobSettings(&wScreen.getWorld());
-
-			if(reader != NULL)
-				start(wScreen.getEntityFactory().createOpponent(reader));
-		
-		}
-		else if(m_fightCount == 3)
-		{
-			m_fightCount = 0;
-			vector<SDL_Rect> ids;
-			SDL_Rect posTrainer = m_trainer->getPos();
-			posTrainer.x -= m_mobAggroRange;
-			posTrainer.y -= m_mobAggroRange;
-			posTrainer.w = 2*m_mobAggroRange;
-			posTrainer.h = 2*m_mobAggroRange;
-
-			ids = wScreen.detectEntity(posTrainer);
-			const size_t size = ids.size();
-			for(size_t i = 0; i < size; i++)
-				if(ids[i].x > 0 && (ids[i].x != m_trainer->getID() || ids[i].y != m_trainer->getEntityNumber()))  //Sinon si on est à proximité d'un Pokémon
-				{
-					start(wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y));
-					return;
-				}
-		}
-	}
 }
 
 void Fight::displayDialog()

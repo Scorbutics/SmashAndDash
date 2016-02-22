@@ -21,6 +21,8 @@ void AbstractSceneMap::graphicUpdate(void) {
 	GUI& gui = core.getGUI();
 	Settings& settings = core.getSettings();
 
+	AbstractNoGUISceneMap::graphicUpdate();
+
 	//Affiche les couches de blocs et les personnages
 	world.displayLayers();
 
@@ -56,16 +58,10 @@ void AbstractSceneMap::graphicUpdate(void) {
 
 void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
-	World& world = core.getWorld();
-	Fight& fight = core.getFight();
-	ParticleManager& particleManager = core.getParticleManager();
 	GUI& gui = core.getGUI();
-	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
-	ShakerManager& shaker = core.getShakerManager();
 	InputListener& kdListener = core.getInputListener();
-
-	world.refreshEntities();
-	particleManager.refresh(PARTICLE_MANAGER_EFFECT);
+	
+	AbstractNoGUISceneMap::eventUpdate(stuck);
 
 	//Gère les évènements extérieurs de la GUI (input)
 	//GUI A PASSER EN TANT QU'OBSERVATEUR
@@ -78,22 +74,6 @@ void AbstractSceneMap::eventUpdate(bool stuck) {
 	//GUI
 	gui.dialogRefresh();
 	gui.refresh();
-
-	//Système de scripts
-	//Détection
-	world.getLayerEvent()->refresh();
-	//Scripts en cours d'exécution
-	ScriptDispatcher::getInstance().refresh();
-
-	//Evénements combat ou de lancement de combat
-	fight.refresh();
-
-	//Particules de couches supérieures
-	particleManager.refresh(PARTICLE_MANAGER_CRUMBLING);
-	particleManager.refresh(PARTICLE_MANAGER_RAIN);
-
-	//Secoue l'écran
-	shaker.refresh();
 
 }
 

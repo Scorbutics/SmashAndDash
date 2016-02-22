@@ -57,35 +57,34 @@ void World::displayLayers()
 	wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
 
 	//Curseur souris sur la map
-	if(wScreen.getMouseCursor().isActiveCursor())
+	if (wScreen.getMouseCursor().isActiveCursor()) {
 		wScreen.getMouseCursor().displayCursor();
-
-
-	//Première partie des personnages
-	for (Character* npc : currentEntityList)
-	{
-		if (npc->isVisible())
-			npc->display(1);
 	}
 
+	//Première partie des personnages
+	for (Character* npc : currentEntityList) {
+		npc->display(1);	
+	}
 
 	//Ajouter un layer ici serait sympa ! (layer entre mid et top, qui cache le bas des persos mais pas le haut)
 
 	//Deuxième partie des personnages (ceux au sol)
 	for (Character* npc : currentEntityList)
 	{
-		if (npc->isVisible() && npc->getJumpHeight() < TAILLEBLOC)
+		if (npc->getJumpHeight() < TAILLEBLOC) {
 			npc->display(2);
+		}
+			
 	}
 
 	//Troisième couche
 	m_lTop->display(rectAnimBlocks);
 
 	//Deuxième partie des personnages (ceux en l'air)
-	for (Character* npc : currentEntityList)
-	{
-		if (npc->isVisible() && npc->getJumpHeight() >= TAILLEBLOC)
+	for (Character* npc : currentEntityList) {
+		if (npc->getJumpHeight() >= TAILLEBLOC) {
 			npc->display(2, false);
+		}
 	}
 
 }
@@ -102,14 +101,17 @@ void World::refreshEntities()
 	while (it != wScreen.getEntityFactory().getCharacterList().end())
 	{
 		Character* npc = (*it);
-		if (npc->isVisible() && npc->isAlive())
+		if (npc->isVisible() && npc->isAlive()) {
 			npc->refresh();
+		}
 			
 		//Si jamais un personnage n'est plus vivant ou est notre Pokémon en combat alors que le combat est terminé, on le supprime
-		if (!(npc->getEntityNumber() == ID_CURRENT_POKEMON && !wScreen.getFight().isFighting()))
+		if (!(npc->getEntityNumber() == ID_CURRENT_POKEMON && !wScreen.getFight().isFighting())) {
 			it++;
-		else
+		} else {
 			it = wScreen.getEntityFactory().getCharacterList().erase(it);
+		}
+			
     }    
 
 

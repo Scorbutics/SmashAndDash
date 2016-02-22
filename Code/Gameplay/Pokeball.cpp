@@ -307,8 +307,9 @@ void Pokeball::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 
-    if(!m_show)
-        return;
+	if (!m_show) {
+		return;
+	}    
 
     vector<SDL_Rect> ids;
     if((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1) ) //Si la Pokeball est en l'air

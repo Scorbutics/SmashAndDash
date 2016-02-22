@@ -233,8 +233,9 @@ void Character::display(int part, bool shadow)
 	WGameCore& wScreen = WGameCore::getInstance();
 	SDL_Rect origineRelative = wScreen.getORel(), ofHeroA, buf = m_rect;
 		
-	if (!m_visible)
+	if (!m_visible) {
 		return;
+	}	
 	
 	//par défaut, dès qu'une animation est finie on retourne à celle de base (celle qui permet de bouger)
 	playAnimation(CHARACTER_ANIMATION_MOVE, true);

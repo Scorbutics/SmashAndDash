@@ -4,6 +4,7 @@
 #include "../../Graphic/Scrolling.h"
 #include "../../Script/ScriptDispatcher.h"
 #include "SceneMap.h"
+#include "../World/LayerE.h"
 
 SceneMap::SceneMap()
 {
@@ -28,9 +29,17 @@ void SceneMap::eventUpdate(bool stuck) {
 
 	WGameCore& core = WGameCore::getInstance();
 	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
+	Fight& fight = core.getFight();
+
+	//Système de scripts
+	//Détection uniquement hors combats
+	core.getWorld().getLayerEvent()->refresh();
 
 	//gère l'apparition aléatoire de Pokémon	
 	mobSpawner.refresh();
+
+	//Evénements de lancement de combat	
+	fight.refresh();
 
 	/*WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
