@@ -1,11 +1,10 @@
-#include "WGameCore.h"
-#include "Weather.h"
-#include "./World/World.h"
-#include "GestionEvents.h"
-#include "../Graphic/Scrolling.h"
-#include "../Script/ScriptDispatcher.h"
+#include "../WGameCore.h"
+#include "../Weather.h"
+#include "../World/World.h"
+#include "../../Graphic/Scrolling.h"
+#include "../../Script/ScriptDispatcher.h"
+#include "../World/LayerE.h"
 #include "AbstractSceneMap.h"
-
 
 AbstractSceneMap::AbstractSceneMap()
 {
@@ -40,22 +39,12 @@ void AbstractSceneMap::graphicUpdate(void) {
 	particleManager.displayRainFog();
 
 	//Affiche la météo
-	if (world.getFog()->isActive() && *settings.getFogActive()) {
-		world.getFog()->display();
-	}
-
-	if (world.getWeather()->isActive() && *settings.getWeatherActive()) {
-		world.getWeather()->display();
-	}
+	world.getFog()->display();
+	world.getWeather()->display();
 
 	//Affiche la GUI
 	gui.dialogDisplay();
-	if (gui.isVisible()) {
-		gui.display();
-	}
-
-	//Euh...
-	world.setBgmVolume(*settings.getSoundVolume());
+	gui.display();
 
 	//Affiche le Pokémon ou l'objet sur le curseur de la souris
 	mouseCursor.displaySelectedPokemon();
@@ -68,20 +57,15 @@ void AbstractSceneMap::graphicUpdate(void) {
 void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
-
 	Fight& fight = core.getFight();
-
 	ParticleManager& particleManager = core.getParticleManager();
-
 	GUI& gui = core.getGUI();
 	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
 	ShakerManager& shaker = core.getShakerManager();
 	InputListener& kdListener = core.getInputListener();
 
 	world.refreshEntities();
-
 	particleManager.refresh(PARTICLE_MANAGER_EFFECT);
-
 
 	//Gère les évènements extérieurs de la GUI (input)
 	//GUI A PASSER EN TANT QU'OBSERVATEUR
@@ -91,21 +75,24 @@ void AbstractSceneMap::eventUpdate(bool stuck) {
 		gui.hide(false);
 	}
 
+	//GUI
 	gui.dialogRefresh();
-	if (gui.isVisible()) {
-		gui.refresh();
-	}
+	gui.refresh();
 
-	//gere les evenements (notamment le systeme de scripts)
-	GestionEvents();
+	//Système de scripts
+	//Détection
+	world.getLayerEvent()->refresh();
+	//Scripts en cours d'exécution
 	ScriptDispatcher::getInstance().refresh();
 
-	//événements combat
+	//Evénements combat ou de lancement de combat
 	fight.refresh();
 
+	//Particules de couches supérieures
 	particleManager.refresh(PARTICLE_MANAGER_CRUMBLING);
 	particleManager.refresh(PARTICLE_MANAGER_RAIN);
 
+	//Secoue l'écran
 	shaker.refresh();
 
 }

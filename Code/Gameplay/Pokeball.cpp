@@ -178,9 +178,9 @@ void Pokeball::capture(Character* pkmn)
 		wScreen.getParticleManager().displayRainFog();
 
 		//Affiche la météo
-		if(w.getFog()->isActive() && *wScreen.getSettings().getFogActive())
+		if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
-		if(w.getWeather()->isActive() && *wScreen.getSettings().getWeatherActive())
+		if(*wScreen.getSettings().getWeatherActive())
 			w.getWeather()->display();
 
 
@@ -220,9 +220,9 @@ void Pokeball::capture(Character* pkmn)
 		wScreen.getParticleManager().displayRainFog();
 
 		//Affiche la météo
-		if(w.getFog()->isActive() && *wScreen.getSettings().getFogActive())
+		if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
-		if(w.getWeather()->isActive() && *wScreen.getSettings().getWeatherActive())
+		if(*wScreen.getSettings().getWeatherActive())
 			w.getWeather()->display();
 
 		wScreen.flip();
@@ -268,9 +268,9 @@ void Pokeball::capture(Character* pkmn)
 			wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
 			wScreen.getParticleManager().displayRainFog();
 			//Affiche la météo
-			if(w.getFog()->isActive() && *wScreen.getSettings().getFogActive())
+			if(*wScreen.getSettings().getFogActive())
 				w.getFog()->display();
-			if(w.getWeather()->isActive() && *wScreen.getSettings().getWeatherActive())
+			if(*wScreen.getSettings().getWeatherActive())
 				w.getWeather()->display();
 
 

@@ -110,6 +110,10 @@ void Weather::display()
 	World& w = wScreen.getWorld();
 	SDL_Rect& oRel = wScreen.getORel();
 
+	if (!m_active) {
+		return;
+	}
+
     for(int i = 0; i < m_number; i++)
     {
 
@@ -162,11 +166,6 @@ void Weather::display()
 		else if (buf.x + m_weather->getWidth() >= 0 && buf.x <= w.getNbrBlocX()*TAILLEBLOC && buf.y + m_weather->getHeight() >= 0 && buf.y <= w.getNbrBlocY()*TAILLEBLOC)
 			m_weather->render(buf.x, buf.y);
     }
-}
-
-bool Weather::isActive()
-{
-    return m_active;
 }
 
 void Weather::setMX(float x, unsigned int i)

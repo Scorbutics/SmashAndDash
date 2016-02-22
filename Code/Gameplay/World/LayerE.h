@@ -8,6 +8,9 @@
 class LayerE
 {
     public:
+		void refresh();
+
+
     LayerE(std::string nomFichier);
     int getBlocX(int ligne);
     int getBlocY(int ligne);

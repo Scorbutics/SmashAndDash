@@ -2,7 +2,8 @@
 
 #include "Settings.h"
 #include "../../Inputs\Readers\IniReader.h"
-
+#include "../WGameCore.h"
+#include "../Weather.h"
 
 using namespace std;
 Settings::Settings(string file)
@@ -26,6 +27,20 @@ void Settings::setFileName(string fileName)
     m_fileName = fileName;
 }
 
+void Settings::update() {
+	WGameCore& core = WGameCore::getInstance();
+	Weather* fog = core.getWorld().getFog();
+	if (fog != NULL) {
+		fog->hide(!m_fogActive);
+	}
+	Weather* weather = core.getWorld().getWeather();
+	if (weather != NULL) {
+		weather->hide(!m_weatherActive);
+	}
+	core.getParticleManager().hide(!m_particles);
+	core.getWorld().setBgmVolume(m_soundVol);
+}
+
 void Settings::load()
 {
     IniReader reader(m_fileName);
@@ -34,7 +49,7 @@ void Settings::load()
 	m_weatherActive = reader.getInt("Settings weather_active");
 	m_guiTransparency = reader.getInt("Settings gui_transparency");
 	m_particles = reader.getInt("Settings particles_active");
-
+	update();
 }
 
 void Settings::save()

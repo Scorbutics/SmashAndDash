@@ -7,10 +7,10 @@
 
 #include "Fight.h"
 #include "..\WGameCore.h"
-#include "..\GestionEvents.h"
 #include "..\World\LayerE.h"
 #include "../../Utils\ChargementImages.h"
 #include "..\Data\Statistics.h"
+#include "../../Utils/StringUtils.h"
 
 Fight::Fight(): m_animGrass(1, 3, false)
 {
@@ -52,7 +52,7 @@ void Fight::setAreasFromLayerEvent()
 		if (w.getLayerEvent()->getAction(i) == "combat")
         {
             int width, height;
-			ExtractTo(0, w.getLayerEvent()->getParam(i), ':', &width);
+			StringUtils::extractTo(0, w.getLayerEvent()->getParam(i), ':', &width);
 			height = atoi(w.getLayerEvent()->getParam(i).substr(w.getLayerEvent()->getParam(i).find_last_of(':') + 1, w.getLayerEvent()->getParam(i).size()).c_str());
 
 			this->addArea(w.getLayerEvent()->getBlocX(i)*TAILLEBLOC, w.getLayerEvent()->getBlocY(i)*TAILLEBLOC, width*TAILLEBLOC, height*TAILLEBLOC);
@@ -232,6 +232,7 @@ void Fight::end(EndFightReason::Enum endReason)
     if(m_opponent == NULL || m_trainer == NULL)
     {
         m_isFighting = false;
+		wScreen.switchScene(EnumScene::MAP);
         cerr << "Erreur (classe Fight) : un ou plusieurs participant au combat n'existe plus" << endl;
         return;
     }
@@ -301,35 +302,33 @@ void Fight::showDialog(unsigned int duration)
 void Fight::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    if(m_isFighting)
+    if(m_pkmn != NULL)
+        m_pkmn->displaySkills();
+	if(m_opponent != NULL)
+		m_opponent->displaySkills();
+
+
+
+    //Refresh la barre de vie si active
+    if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible())
     {
-        if(m_pkmn != NULL)
-            m_pkmn->displaySkills();
-		if(m_opponent != NULL)
-			m_opponent->displaySkills();
-
-
-
-        //Refresh la barre de vie si active
-        if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible())
-        {
-            SDL_Rect pos = m_pkmn->getPos();
-            pos.y -= m_pkmn->getHPBar()->getPos().h + abs(wScreen.getORel().y);
-            pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
-            m_pkmn->getHPBar()->setPos(pos);
-            m_pkmn->getHPBar()->refresh();
-        }
-
-        if(m_opponent != NULL && m_opponent->getHPBar()->isVisible())
-        {
-            SDL_Rect pos = m_opponent->getPos();
-            pos.y -= m_opponent->getHPBar()->getPos().h + abs(wScreen.getORel().y);
-            pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
-            m_opponent->getHPBar()->setPos(pos);
-            m_opponent->getHPBar()->refresh();
-        }
-
+        SDL_Rect pos = m_pkmn->getPos();
+        pos.y -= m_pkmn->getHPBar()->getPos().h + abs(wScreen.getORel().y);
+        pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
+        m_pkmn->getHPBar()->setPos(pos);
+        m_pkmn->getHPBar()->refresh();
     }
+
+    if(m_opponent != NULL && m_opponent->getHPBar()->isVisible())
+    {
+        SDL_Rect pos = m_opponent->getPos();
+        pos.y -= m_opponent->getHPBar()->getPos().h + abs(wScreen.getORel().y);
+        pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
+        m_opponent->getHPBar()->setPos(pos);
+        m_opponent->getHPBar()->refresh();
+    }
+
+    
 
 	this->displayDialog();
 }

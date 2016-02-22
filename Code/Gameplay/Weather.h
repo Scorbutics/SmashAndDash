@@ -9,7 +9,6 @@
 
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage
- .isActive();                         //Renvoie si le temps courant est actif ou non
  .hide();                             //Permet de cacher/afficher le temps
  .modify(SDL_Surface* weatherSprite); //Modifie l'apparence du sprite
 
@@ -30,7 +29,6 @@ class Weather
      Weather(std::string wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
      ~Weather();
 	 void display();
-	 bool isActive();
      void hide(bool active);
      void resetRandomPos();
      void changeSprite(std::string spriteName);

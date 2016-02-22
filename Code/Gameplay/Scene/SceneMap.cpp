@@ -1,9 +1,8 @@
-#include "WGameCore.h"
-#include "Weather.h"
-#include "./World/World.h"
-#include "GestionEvents.h"
-#include "../Graphic/Scrolling.h"
-#include "../Script/ScriptDispatcher.h"
+#include "../WGameCore.h"
+#include "../Weather.h"
+#include "../World/World.h"
+#include "../../Graphic/Scrolling.h"
+#include "../../Script/ScriptDispatcher.h"
 #include "SceneMap.h"
 
 SceneMap::SceneMap()

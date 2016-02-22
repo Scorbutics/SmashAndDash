@@ -15,6 +15,7 @@ class Settings
     void setGuiTransparency(int b);
     void setFileName(std::string fileName);
 
+	void update();
     void load();
     void save();
 

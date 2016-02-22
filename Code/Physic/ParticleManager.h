@@ -21,6 +21,7 @@ class ParticleManager
     void removeAll();
     void removeAll(unsigned int particleType);
     void stop();
+	void hide(bool h);
     void stop(unsigned int particleType);
     void refresh();
     void refresh(unsigned int particleType);
@@ -44,7 +45,7 @@ class ParticleManager
     std::vector<SDL_Rect> m_origin;
     std::vector<bool> m_active;
     std::vector<unsigned int> m_duration, m_t0;
-
+	bool m_globalActive;
 };
 
 #endif

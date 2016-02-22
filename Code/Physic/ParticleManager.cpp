@@ -111,6 +111,10 @@ void ParticleManager::stop()
 		stop(i);
 }
 
+void ParticleManager::hide(bool h) {
+	m_globalActive = !h;
+}
+
 void ParticleManager::remove(unsigned int particleType, unsigned int index)
 {
     if(particleType >= m_particles.size())
@@ -140,8 +144,10 @@ void ParticleManager::display(unsigned int particleType)
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 
-	if(!wScreen.getSettings().getParticles())
+	if (!m_globalActive) {
 		return;
+	}
+		
 
 	if(particleType >= m_particles.size())
 	{
@@ -169,8 +175,9 @@ void ParticleManager::refresh(unsigned int particleType)
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 
-    if(!wScreen.getSettings().getParticles())
-        return;
+	if (!m_globalActive) {
+		return;
+	}
 
     if(particleType >= m_particles.size())
     {
@@ -288,8 +295,9 @@ void ParticleManager::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-    if(!wScreen.getSettings().getParticles())
-        return;
+	if (!m_globalActive) {
+		return;
+	}
 
     const size_t size = m_particles.size();
     for(size_t i = 0; i < size; i++)

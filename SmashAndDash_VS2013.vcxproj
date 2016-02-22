@@ -124,7 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Code\Gameplay\AbstractSceneMap.h" />
+    <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h" />
     <ClInclude Include="Code\Gameplay\EnumScene.h" />
     <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\Script\Commands\AbstractCommand.h" />
@@ -201,7 +201,6 @@
     <ClInclude Include="Code\Graphic\Font.h" />
     <ClInclude Include="Code\Physic\Force.h" />
     <ClInclude Include="Code\Graphic\GestionAnimations.h" />
-    <ClInclude Include="Code\Gameplay\GestionEvents.h" />
     <ClInclude Include="Code\Gameplay\Mobs\GetIDmob.h" />
     <ClInclude Include="Code\Physic\GravityParticle.h" />
     <ClInclude Include="Code\Graphic\GUI\GUI.h" />
@@ -270,12 +269,12 @@
     <ClInclude Include="Code\Graphic\GUI\Window_Area.h" />
     <ClInclude Include="Code\Graphic\GUI\Window_Choice.h" />
     <ClInclude Include="Code\Gameplay\World\World.h" />
-    <ClInclude Include="Code\Gameplay\IScene.h" />
-    <ClInclude Include="Code\Gameplay\SceneMap.h" />
-    <ClInclude Include="Code\Gameplay\SceneFight.h" />
+    <ClInclude Include="Code\Gameplay\Scene\IScene.h" />
+    <ClInclude Include="Code\Gameplay\Scene\SceneMap.h" />
+    <ClInclude Include="Code\Gameplay\Scene\SceneFight.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\Gameplay\AbstractSceneMap.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractCommand.cpp" />
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
@@ -335,7 +334,6 @@
     <ClCompile Include="Code\Graphic\GUI\Font.cpp" />
     <ClCompile Include="Code\Physic\Force.cpp" />
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp" />
-    <ClCompile Include="Code\Gameplay\GestionEvents.cpp" />
     <ClCompile Include="Code\Gameplay\Mobs\GetIDmob.cpp" />
     <ClCompile Include="Code\Physic\GravityParticle.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp" />
@@ -399,8 +397,8 @@
     <ClCompile Include="Code\Script\Commands\CommandLog.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandElsif.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp" />
-    <ClCompile Include="Code\Gameplay\SceneMap.cpp" />
-    <ClCompile Include="Code\Gameplay\SceneFight.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneMap.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

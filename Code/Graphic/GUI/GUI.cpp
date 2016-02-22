@@ -180,9 +180,16 @@ WindowShop* GUI::getWindowShop()
 
 void GUI::display()
 {
-	for(unsigned int i = 0; i < m_buttonList.size(); i++)
-		if(m_buttonList[i] != NULL)
+	if (m_hide) {
+		return;
+	}
+
+	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
+		if (m_buttonList[i] != NULL) {
 			m_buttonList[i]->display();
+		}
+	}
+		
 }
 
 void GUI::refresh()
@@ -194,6 +201,10 @@ void GUI::refresh()
     bufButtonPos.h = (TAILLEBLOCFENETRE)*2;
     bufButtonPos.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
     bufButtonPos.y = 0;
+
+	if (m_hide) {
+		return;
+	}
 
     for(unsigned int i = 0; i < m_buttonList.size(); i++)
     {

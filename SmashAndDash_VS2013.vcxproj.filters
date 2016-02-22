@@ -243,9 +243,6 @@
     <ClInclude Include="Code\Graphic\GestionAnimations.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\GestionEvents.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\IDs.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -537,19 +534,19 @@
     <ClInclude Include="Code\Script\IScript.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\IScene.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\SceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\SceneFight.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\AbstractSceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\EnumScene.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Scene\SceneMap.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Scene\SceneFight.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Scene\IScene.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -682,9 +679,6 @@
     </ClCompile>
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\GestionEvents.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\AI\Node.cpp">
       <Filter>Fichiers sources\Gameplay\AI</Filter>
@@ -923,13 +917,13 @@
     <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\SceneMap.cpp">
+    <ClCompile Include="Code\Gameplay\Scene\SceneMap.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\SceneFight.cpp">
+    <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\AbstractSceneMap.cpp">
+    <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

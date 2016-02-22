@@ -4,8 +4,12 @@
 #include <SDL2/SDL.h>
 #include <sstream>
 
+#include "../WGameCore.h"
+#include "../../Utils/StringUtils.h"
 #include "../../Utils\IDs.h"
 #include "LayerE.h"
+#include "../../Script/Commands/CommandTeleport.h"
+#include "../../Script/ScriptDispatcher.h"
 
 using namespace std;
 
@@ -23,7 +27,57 @@ LayerE::LayerE(string nomFichier) //Constructeur ouvrant un monde déjà créé
 }
 
 
+void LayerE::refresh() {
+	WGameCore& wScreen = WGameCore::getInstance();
+	World& w = wScreen.getWorld();
 
+	if (wScreen.getFight().isFighting()) {
+		return;
+	}
+		
+
+	SDL_Rect posCentre;
+	int i = 0;
+
+	posCentre.x = wScreen.getHero()->getHitboxCenterPos().x;
+	posCentre.y = wScreen.getHero()->getHitboxCenterPos().y;
+	posCentre.x /= TAILLEBLOC;
+	posCentre.y /= TAILLEBLOC;
+
+	for (i = i; i < w.getLayerEvent()->getNbrLignes(); i++)
+	{
+		if (w.getLayerEvent()->getBlocX(i) == posCentre.x && w.getLayerEvent()->getBlocY(i) == posCentre.y && (w.getLayerEvent()->getTrigger(i) == 1))
+		{
+
+			if (w.getLayerEvent()->getAction(i) == "teleport")
+			{
+				CommandTeleport::teleportHeroToMap(w.getLayerEvent()->getParam(i));
+			}
+			else if (w.getLayerEvent()->getAction(i) == "script")
+			{
+				ifstream fscript(w.getLayerEvent()->getParam(i).c_str());
+				char buf;
+				fscript.seekg(-1, ios::end);
+				fscript >> buf;
+				fscript.seekg(0, ios::beg);
+				fscript.close();
+
+				if (buf == '£')
+				{
+					ofstream fwriteScript(w.getLayerEvent()->getParam(i).c_str());
+					fwriteScript.seekp(-1, ios::end);
+					fwriteScript << "";
+					fwriteScript.close();
+				}
+				Uint32 scriptPeriod = 1000;
+				ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 2, &scriptPeriod);
+			}
+		}
+
+
+	}
+	
+}
 
 int LayerE::getBlocX(int ligne)
 {
@@ -118,11 +172,9 @@ void LayerE::changeLevel(string fichier)
 
 int LireFEvent(ifstream *flux, char jusquaCeCaractere)
 {
-
-    int i = 0;
     char a = 0;
-    char buffer[5] = {0}; //On fixe ainsi le maximum de la taille de la map, qui sera 10000x10000... Autant dire qu'on a de quoi faire !
-
+    /* char buffer[5] = {0}; //On fixe ainsi le maximum de la taille de la map, qui sera 10000x10000... Autant dire qu'on a de quoi faire ! */
+	string buffer; /*			^ N'importe quoi ce code et ce com' ! Utiliser une string à la place... */
 
     do
     {
@@ -131,7 +183,7 @@ int LireFEvent(ifstream *flux, char jusquaCeCaractere)
         if(a == jusquaCeCaractere)
         {
             if(buffer[0] != '!')
-                return atoi(buffer);
+                return StringUtils::strToInt(buffer);
             else
                 return -ENTITEMAX;
 
@@ -140,8 +192,7 @@ int LireFEvent(ifstream *flux, char jusquaCeCaractere)
             return -ENTITEMAX;
         else
         {
-            buffer[i] = a;
-            i++;
+            buffer += a;
         }
     }while(a != jusquaCeCaractere);
 

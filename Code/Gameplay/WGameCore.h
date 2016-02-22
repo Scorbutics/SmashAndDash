@@ -25,8 +25,8 @@
 #include "Data\SavegameManager.h"
 #include "World\World.h"
 #include "../Utils\Singleton_template.h"
-#include "SceneMap.h"
-#include "SceneFight.h"
+#include "./Scene/SceneMap.h"
+#include "./Scene/SceneFight.h"
 #include "EnumScene.h"
 
 class LayerE;
@@ -42,8 +42,6 @@ class WGameCore : public Window, public Singleton<WGameCore>
 private:
     WGameCore();
 	~WGameCore();
-
-	
 
 public:
 	void graphicUpdate(void);

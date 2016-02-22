@@ -16,7 +16,6 @@
 #include "../Utils/Observable.h"
 #include "../Utils/ChargementImages.h"
 #include "../Graphic/Scrolling.h"
-#include "GestionEvents.h"
 #include "../Gameplay/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../Script/ScriptDispatcher.h"

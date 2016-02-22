@@ -16,20 +16,6 @@ CommandTeleport::~CommandTeleport()
 {
 }
 
-string ExtractTo(int depart, std::string chaine, char jusquaCeCaractere, int *entier)
-{
-	size_t pos = chaine.substr(depart, chaine.size()).find_first_of(jusquaCeCaractere);
-	string result = "ERROR";
-	if (pos != string::npos)
-	{
-		result = chaine.substr(depart, pos);
-		if (entier != NULL)
-			*entier = atoi(result.c_str());
-	}
-
-	return result;
-}
-
 int CommandTeleport::argumentsNumber() {
 	return 3;
 }
@@ -68,10 +54,10 @@ void CommandTeleport::teleportHeroToMap(string param)
 	int x = 1, y;
 
 
-	fichier = ExtractTo(0, param, '/', NULL);
-	fichierD = ExtractTo((int)strlen(fichier.c_str()) + 1, param, '/', NULL);
-	fichier2 = ExtractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + 2, param, '/', NULL);
-	ExtractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + (int)strlen(fichier2.c_str()) + 3, param, ':', &x);
+	fichier = StringUtils::extractTo(0, param, '/', NULL);
+	fichierD = StringUtils::extractTo((int)strlen(fichier.c_str()) + 1, param, '/', NULL);
+	fichier2 = StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + 2, param, '/', NULL);
+	StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + (int)strlen(fichier2.c_str()) + 3, param, ':', &x);
 
 	// créer un flux de sortie
 	ostringstream oss;

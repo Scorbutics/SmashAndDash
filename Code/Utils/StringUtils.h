@@ -14,6 +14,9 @@ public:
 	static std::string &ltrim(std::string &s);
 	static std::string &rtrim(std::string &s);
 	static std::string &trim(std::string &s);
+
+	static std::string extractTo(int depart, std::string chaine, char jusquaCeCaractere, int *entier);
+
 	static void replaceAll(std::string& str, const std::string& from, const std::string& to);
 	static void replaceAll(std::string& str, const char from, const char to);
 	static bool isInt(const std::string& s, int base);

@@ -98,6 +98,20 @@ void StringUtils::replaceAll(std::string& str, const char from, const char to) {
 	replaceAll(str, string(1, from), string(1, to));
 }
 
+string StringUtils::extractTo(int depart, std::string chaine, char jusquaCeCaractere, int *entier)
+{
+	size_t pos = chaine.substr(depart, chaine.size()).find_first_of(jusquaCeCaractere);
+	string result = "ERROR";
+	if (pos != string::npos)
+	{
+		result = chaine.substr(depart, pos);
+		if (entier != NULL)
+			*entier = atoi(result.c_str());
+	}
+
+	return result;
+}
+
 StringUtils::~StringUtils()
 {
 }
