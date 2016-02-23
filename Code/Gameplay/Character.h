@@ -11,6 +11,8 @@
 #include "../Graphic/SpriteAnimation.h"
 #include "../Graphic/GUI/Bar.h"
 #include "AI/Path.h"
+#include "../Graphic/Drawable.h"
+#include "../Graphic/CharacterDrawable.h"
 
 class Statistics;
 class Path;
@@ -24,6 +26,7 @@ class SpriteBank;
 class World;
 
 typedef std::unique_ptr<Skill> Skill_ptr;
+
 
 class Character : public PhysicSprite
 {
@@ -54,6 +57,7 @@ class Character : public PhysicSprite
 		int getContext();
 		PokemonDescriptor* getDescriptor();
 		Statistics* getStatistics();
+		vector<unique_ptr<CharacterDrawable>>& getCharacterParts();
 
 		void setHP(int hp);
 		void setFaceset(SDL_Surface* faceset);
@@ -84,6 +88,7 @@ class Character : public PhysicSprite
 
 	protected:
 		unique_ptr<Statistics> m_stats;
+		vector<unique_ptr<CharacterDrawable>> m_characterParts;
 		PokemonDescriptor m_descriptor;
 
 		Texture m_faceset;

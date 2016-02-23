@@ -5,8 +5,8 @@ class SceneFight :
 {
 public:
 	SceneFight();
-	virtual void graphicUpdate(void);
-	virtual void eventUpdate(bool movingDisallowed);
+	virtual void graphicUpdate(std::priority_queue<Drawable*>& drawables) override;
+	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();
 };
 

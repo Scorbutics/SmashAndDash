@@ -3,7 +3,7 @@
 
 
 #include <windows.h>
-#include <fmodex/fmod.h>
+//#include <fmodex/fmod.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
@@ -14,7 +14,7 @@ class Window
     public:
     Window();
     void pause();
-    FMOD_SYSTEM* getMusicSystem();
+    //FMOD_SYSTEM* getMusicSystem();
 	SDL_Renderer* getRenderer();
     ~Window();
 	unsigned int getWidth();
@@ -29,7 +29,7 @@ protected:
 	bool m_flip;
 
     protected:
-    FMOD_SYSTEM *m_musicSystem;
+    //FMOD_SYSTEM *m_musicSystem;
 	SDL_Renderer *m_renderer;
 	SDL_Texture* m_texture;
     SDL_Surface *m_bmp;

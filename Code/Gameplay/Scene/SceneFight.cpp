@@ -10,7 +10,7 @@ SceneFight::SceneFight()
 {
 }
 
-void SceneFight::graphicUpdate(void) {
+void SceneFight::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 	/* WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
@@ -21,7 +21,7 @@ void SceneFight::graphicUpdate(void) {
 	GUI& gui = core.getGUI();
 	Settings& settings = core.getSettings();*/
 
-	AbstractSceneMap::graphicUpdate();
+	AbstractSceneMap::graphicUpdate(drawables);
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {

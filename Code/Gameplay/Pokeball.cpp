@@ -159,7 +159,8 @@ void Pokeball::capture(Character* pkmn)
     SDL_Rect& oRel = wScreen.getORel();
 
 
-
+	/* Oh mon dieu... */
+	
 	for(unsigned int i = 0; i < TAILLEBLOC; i++)
 	{
 		m_pokeballPos.x++;
@@ -169,7 +170,8 @@ void Pokeball::capture(Character* pkmn)
 		buf.x += oRel.x;
 		buf.y += oRel.y;
 
-		w.displayLayers();
+		std::priority_queue<Drawable*> drawables;
+		w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
 		wScreen.getParticleManager().refresh();
@@ -193,7 +195,6 @@ void Pokeball::capture(Character* pkmn)
 	unsigned int lastTime;
 	unsigned int randomChanceCapture = 1;
 
-
 	delay = 0;
 	lastTime = SDL_GetTicks();
 	while(delay <= 500)
@@ -203,7 +204,8 @@ void Pokeball::capture(Character* pkmn)
 		buf.y += oRel.y;
 		m_pokeballPos.y+=4;
 
-		w.displayLayers();
+		std::priority_queue<Drawable*> drawables;
+		w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 			
 
@@ -259,7 +261,8 @@ void Pokeball::capture(Character* pkmn)
 			else
 				animPos.x = 0;
 
-			w.displayLayers();
+			std::priority_queue<Drawable*> drawables;
+			w.graphicUpdate(drawables);
 			m_sprite.render(buf.x, buf.y, &animPos);
 
 
@@ -304,6 +307,10 @@ const SDL_Rect* Pokeball::getPos()
 
 void Pokeball::refresh()
 {
+	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes.
+	   Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
+	   qui refresh le bon état par polymorphisme. TODO ! */
+
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 
@@ -328,9 +335,6 @@ void Pokeball::refresh()
         buf.y += oRel.y;
 
 		m_sprite.render(buf.x, buf.y, &animPos);
-
-
-
     }
     else if(!m_isInactive) //sinon lorsqu'elle tombe par terre
         m_isOpenning = true;

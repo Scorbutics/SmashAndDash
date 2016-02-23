@@ -10,7 +10,7 @@ SceneMap::SceneMap()
 {
 }
 
-void SceneMap::graphicUpdate(void) {
+void SceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 	/*WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
@@ -21,7 +21,7 @@ void SceneMap::graphicUpdate(void) {
 	GUI& gui = core.getGUI();
 	Settings& settings = core.getSettings();*/
 
-	AbstractSceneMap::graphicUpdate();
+	AbstractSceneMap::graphicUpdate(drawables);
 }
 
 void SceneMap::eventUpdate(bool stuck) {

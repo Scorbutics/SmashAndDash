@@ -6,7 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <windows.h>
-#include <fmodex/fmod.h>
+//#include <fmodex/fmod.h>
 #include <math.h>
 #include <vector>
 #include <sstream>
@@ -19,6 +19,7 @@
 #include "../Gameplay/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../Script/ScriptDispatcher.h"
+#include "../Graphic/Drawable.h"
 using namespace std;
 
 
@@ -253,8 +254,14 @@ bool WGameCore::refresh()
 //gros bordel !
 void WGameCore::graphicUpdate(void)
 {
-	m_sceneCursor->graphicUpdate();
+	priority_queue<Drawable*> drawables;
+	m_sceneCursor->graphicUpdate(drawables);
 	
+	for (Drawable* d = drawables.top(); !drawables.empty(); drawables.pop()) {
+		if (d != NULL) {
+			d->display();
+		}
+	}
 }
 
 bool WGameCore::isScrollingActive()
@@ -294,18 +301,15 @@ void WGameCore::initNewWorld()
 
     // 2) Récupère les zones de combat situées dans le fichier evenement du monde
     m_fight.setAreasFromLayerEvent();
-    clog << "Zone de combat installées" << endl;
 
     // 3) Chargement des entités apparaissant à l'écran. Pour m_persoEntite on va créer un tableau bidimensionnel :
     //1ere dimension: le nombre de types différents de mobs sur la map et 2eme dimension: le nombre de mobs du même type.
     //Ainsi que récupération des positions des évenements/entités.
     LoadEntities();
     m_phero->setID(0);
-    clog << "Chargement des entités terminé" << endl;
 
     // 4) Rechargement des propriétés du monde (exemple : musique de fond, temps et brouillard, pluie, etc...)
     m_world.getData();
-    clog << "Paramètres concernant le monde chargés" << endl << endl;
 
 }
 

@@ -7,11 +7,11 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <windows.h>
-#include <fmodex/fmod.h>
+//#include <fmodex/fmod.h>
 #include "../../Inputs/Readers/IniReader.h"
 #include "../../Graphic/Texture.h"
 #include "../../Graphic/Animation.h"
-
+#include "../Scene/HasGraphic.h"
 
 class Layer;
 class LayerE;
@@ -20,12 +20,12 @@ class WGameCore;
 class PhysicObject;
 class Block;
 
-class World
+class World : public HasGraphic
 {
 	public:
 		World();
 		void load(std::string fileName, std::string chipsetName, int windowWidth, int windowHeight);
-		void displayLayers();
+		
 		Weather* getFog();
 		Weather* getWeather();
 		std::vector<IniReader>& getMobSettings();
@@ -53,8 +53,10 @@ class World
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 		void changeLevel(std::string fileName, std::string chipsetName);
 		int spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn);
-		//void spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, float distanceSpawns, unsigned int idMob);
+		
 		void refreshEntities();
+
+		void graphicUpdate(std::priority_queue<Drawable*>& drawables) override;
 
 		~World();
 	
@@ -67,9 +69,9 @@ class World
 	
 
 		Texture m_chipset;
-		FMOD_SOUND *m_bgm;
+		/*FMOD_SOUND *m_bgm;
 		FMOD_RESULT m_bgmResult;
-		FMOD_CHANNELGROUP *m_canal;
+		FMOD_CHANNELGROUP *m_canal;*/
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
 		std::unique_ptr<LayerE> m_lEvent;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;

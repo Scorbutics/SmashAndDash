@@ -5,7 +5,7 @@ class AbstractSceneMap :
 {
 public:
 	AbstractSceneMap();
-	virtual void graphicUpdate(void);
+	virtual void graphicUpdate(std::priority_queue<Drawable*>& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~AbstractSceneMap();
 };

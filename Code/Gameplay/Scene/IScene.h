@@ -1,10 +1,11 @@
 #pragma once
-class IScene
+#include "HasGraphic.h"
+#include "HasLogic.h"
+
+class IScene : public HasGraphic, public HasLogic
 {
 public:
 	IScene(){}
-	virtual void graphicUpdate(void) = 0;
-	virtual void eventUpdate(bool movingDisallowed) = 0;
 	virtual ~IScene() {}
 };
 

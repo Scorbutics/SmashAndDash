@@ -27,6 +27,7 @@ Layer::Layer(string pathFile, string chipsetName, int windowWidth, int windowHei
     m_windowWidth = windowWidth;
     m_windDirection = WIND_STOP;
 	m_block.reserve(20);
+	m_rectAnim = { 0 };
     this->reset(pathFile, chipsetName);
 }
 
@@ -70,7 +71,7 @@ Block* Layer::getBlock(const unsigned int i, const unsigned int j)
 
 }
 
-void Layer::display(SDL_Rect rectAnim)
+void Layer::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     SDL_Rect positionFond, origineRelative, ofChip;
@@ -95,19 +96,20 @@ void Layer::display(SDL_Rect rectAnim)
 						m_block[i][j]->refresh(positionFond);
 					}
 					else
-						m_block[i][j]->refresh(positionFond, &rectAnim);
+						m_block[i][j]->refresh(positionFond, &m_rectAnim);
                     
                 }
 
             }
-            /*else
-                SDL_FillRect(screen, &positionFond, 0);*/
 
         }
 
     }
 }
 
+void Layer::setRectAnim(SDL_Rect rectAnim) {
+	m_rectAnim = rectAnim;
+}
 
 int Layer::getNbrBlocX()
 {

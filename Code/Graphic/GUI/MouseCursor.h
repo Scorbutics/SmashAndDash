@@ -9,7 +9,7 @@
 #include "GUI.h"
 
 class MouseInput;
-class MouseCursor
+class MouseCursor : public Drawable
 {
     public:
     MouseCursor();
@@ -26,11 +26,12 @@ class MouseCursor
 	void setPokemon(Character* pkmn);
     void setCursorPos(SDL_Rect pos);
 
+	void display() override;
+
 	void removePokemon();
 	void removeObject();
 
     void modifyHint(string hint);
-	void displayCursor();
 	void displaySelectedPokemon();
     void displaySelectedObject();
     void displayHint();

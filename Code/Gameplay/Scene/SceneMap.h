@@ -5,7 +5,7 @@ class SceneMap :
 {
 public:
 	SceneMap();
-	virtual void graphicUpdate(void) override;
+	virtual void graphicUpdate(std::priority_queue<Drawable*>& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneMap();
 };

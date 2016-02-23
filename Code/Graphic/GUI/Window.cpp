@@ -21,8 +21,8 @@ Window::Window()
     m_positionFond.y = 0;
     m_bmp = NULL;
 
-    FMOD_System_Create(&m_musicSystem);
-    FMOD_System_Init(m_musicSystem, 2, FMOD_INIT_NORMAL, NULL);
+/*    FMOD_System_Create(&m_musicSystem);
+    FMOD_System_Init(m_musicSystem, 2, FMOD_INIT_NORMAL, NULL);*/
 
 	m_screen = SDL_CreateWindow("Pokemon Smash&Dash",
 		SDL_WINDOWPOS_UNDEFINED,
@@ -71,11 +71,11 @@ SDL_Renderer* Window::getRenderer()
 {
 	return m_renderer;
 }
-
+/*
 FMOD_SYSTEM* Window::getMusicSystem()
 {
     return m_musicSystem;
-}
+}*/
 
 void Window::flip()
 {

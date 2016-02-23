@@ -10,7 +10,7 @@ AbstractSceneMap::AbstractSceneMap()
 {
 }
 
-void AbstractSceneMap::graphicUpdate(void) {
+void AbstractSceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 	WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
@@ -21,10 +21,10 @@ void AbstractSceneMap::graphicUpdate(void) {
 	GUI& gui = core.getGUI();
 	Settings& settings = core.getSettings();
 
-	AbstractNoGUISceneMap::graphicUpdate();
+	AbstractNoGUISceneMap::graphicUpdate(drawables);
 
 	//Affiche les couches de blocs et les personnages
-	world.displayLayers();
+	world.graphicUpdate(drawables);
 
 	//Affiche la pokeball si active
 	pokeball.refresh();

@@ -10,7 +10,7 @@ AbstractNoGUISceneMap::AbstractNoGUISceneMap()
 {
 }
 
-void AbstractNoGUISceneMap::graphicUpdate(void) {
+void AbstractNoGUISceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 
 }
 

@@ -87,11 +87,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
-      <AdditionalIncludeDirectories>D:\Dev\Projects\SmashAndDash_VS2013\SmashAndDash_VS2013\Code;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;fmodex_vc.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -124,11 +124,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Graphic\CharacterDrawable.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h" />
     <ClInclude Include="Code\Exceptions\IllegalArgumentException.h" />
     <ClInclude Include="Code\Exceptions\IllegalStateException.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h" />
     <ClInclude Include="Code\Gameplay\EnumScene.h" />
+    <ClInclude Include="Code\Gameplay\Scene\HasGraphic.h" />
+    <ClInclude Include="Code\Gameplay\Scene\HasLogic.h" />
+    <ClInclude Include="Code\Graphic\Drawable.h" />
     <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\Script\Commands\AbstractCommand.h" />
     <ClInclude Include="Code\Exceptions\InputException.h" />
@@ -277,6 +281,7 @@
     <ClInclude Include="Code\Gameplay\Scene\SceneFight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\Script\Commands\AbstractFunctionCommand.cpp" />

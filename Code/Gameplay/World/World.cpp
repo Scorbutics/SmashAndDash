@@ -16,7 +16,7 @@ World::World() : m_animBlocks(375, 4, true, 0, 0, TAILLEBLOC, TAILLEBLOC)
 
 void World::load(string fileName, string chipsetName, int windowWidth, int windowHeight)
 {
-	m_bgm = NULL;
+	//m_bgm = NULL;
 	m_chipset.load(chipsetName, T_RED, T_GREEN, T_BLUE);
 	m_chipsetName = chipsetName;
 	m_fileName = fileName;
@@ -39,8 +39,7 @@ Texture* World::getChipset()
 	return &m_chipset;
 }
 
-void World::displayLayers()
-{
+void World::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 	SDL_Rect rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
 	WGameCore& wScreen = WGameCore::getInstance();
 
@@ -48,45 +47,36 @@ void World::displayLayers()
 	list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
 
 	//Première couche
-	m_lBot->display(rectAnimBlocks);
+	m_lBot->setPriority(0);
+	drawables.push(m_lBot.get());
 
 	//Deuxième couche
-	m_lMid->display(rectAnimBlocks);
+	m_lMid->setPriority(1);
+	drawables.push(m_lMid.get());
 
 	//Affichage des effets
 	wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
 
 	//Curseur souris sur la map
-	if (wScreen.getMouseCursor().isActiveCursor()) {
-		wScreen.getMouseCursor().displayCursor();
-	}
+	wScreen.getMouseCursor().setPriority(3);
+	drawables.push(&wScreen.getMouseCursor());
 
-	//Première partie des personnages
 	for (Character* npc : currentEntityList) {
-		npc->display(1);	
-	}
-
-	//Ajouter un layer ici serait sympa ! (layer entre mid et top, qui cache le bas des persos mais pas le haut)
-
-	//Deuxième partie des personnages (ceux au sol)
-	for (Character* npc : currentEntityList)
-	{
-		if (npc->getJumpHeight() < TAILLEBLOC) {
-			npc->display(2);
-		}
-			
+		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
+		
+		//Première partie des personnages
+		parts[0]->setPriority(4);
+		drawables.push(parts[0].get());
+		
+		//Deuxième partie des personnages (ceux au sol)
+		/* Ordre d'affichage conditionnel : soit dès la fin de la partie 1, soit après le layer top ! */
+		parts[1]->setPriority(npc->getJumpHeight() < TAILLEBLOC ? 6 : 8);
+		drawables.push(parts[1].get());
 	}
 
 	//Troisième couche
-	m_lTop->display(rectAnimBlocks);
-
-	//Deuxième partie des personnages (ceux en l'air)
-	for (Character* npc : currentEntityList) {
-		if (npc->getJumpHeight() >= TAILLEBLOC) {
-			npc->display(2, false);
-		}
-	}
-
+	m_lTop->setPriority(7);
+	drawables.push(m_lTop.get());
 }
 
 
@@ -378,7 +368,7 @@ void World::setBgm(string bgm)
     else
         return;
 
-    if(m_bgm != NULL)
+    /*if(m_bgm != NULL)
         FMOD_Sound_Release(m_bgm);
 
     m_bgmResult = FMOD_System_CreateSound(wScreen.getMusicSystem(), bgm.c_str(), FMOD_SOFTWARE | FMOD_2D | FMOD_CREATESTREAM | FMOD_LOOP_NORMAL, 0, &m_bgm);
@@ -391,15 +381,15 @@ void World::setBgm(string bgm)
         FMOD_System_PlaySound(wScreen.getMusicSystem(), FMOD_CHANNEL_FREE, m_bgm, 0, NULL);
         FMOD_System_GetMasterChannelGroup(wScreen.getMusicSystem(), &m_canal);
         FMOD_ChannelGroup_SetPaused(m_canal, 1);
-    }
+    }*/
 }
 
 void World::setBgmVolume(int volPercent)
 {
-    FMOD_SOUNDGROUP* sg;
+    /*FMOD_SOUNDGROUP* sg;
 	WGameCore& wScreen = WGameCore::getInstance();
     FMOD_System_GetMasterSoundGroup(wScreen.getMusicSystem(), &sg);
-    FMOD_SoundGroup_SetVolume(sg, (float)((volPercent*255)/100.));
+    FMOD_SoundGroup_SetVolume(sg, (float)((volPercent*255)/100.));*/
 }
 
 
@@ -407,24 +397,25 @@ void World::playBgm(bool x)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     //Gestion audio
-    FMOD_System_GetMasterChannelGroup(wScreen.getMusicSystem(), &m_canal);
+    /*FMOD_System_GetMasterChannelGroup(wScreen.getMusicSystem(), &m_canal);
 
     if(x && !this->isBgmPlaying())
         FMOD_ChannelGroup_SetPaused(m_canal, 0);
     else if(!x && this->isBgmPlaying())
-        FMOD_ChannelGroup_SetPaused(m_canal, 1);
+        FMOD_ChannelGroup_SetPaused(m_canal, 1);*/
 
 }
 
 bool World::isBgmPlaying()
 {
-    FMOD_BOOL etat;
+    /*FMOD_BOOL etat;
     FMOD_ChannelGroup_GetPaused(m_canal, &etat);
 
     if(etat == 1)
         return false;
     else
-        return true;
+        return true;*/
+	return false;
 }
 
 
@@ -605,7 +596,7 @@ Weather* World::getFog()
 World::~World()
 {
     //ScriptsActiver(m_genericName); //Réactualisation des scripts
-    FMOD_Sound_Release(m_bgm);
+    //FMOD_Sound_Release(m_bgm);
 }
 
 vector<IniReader>& World::getMobSettings()

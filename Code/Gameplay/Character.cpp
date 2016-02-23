@@ -57,6 +57,13 @@ Character::Character(int id):
 	m_hp = m_stats->getHpMax();
 	m_hpbar.setMaxValue(m_hp);
 	m_hpbar.setCurrentValue(m_hp);
+
+	m_characterParts.push_back(unique_ptr<CharacterDrawable>(new CharacterDrawable(this, 1)));
+	m_characterParts.push_back(unique_ptr<CharacterDrawable>(new CharacterDrawable(this, 2)));
+}
+
+vector<unique_ptr<CharacterDrawable>>& Character::getCharacterParts() {
+	return m_characterParts;
 }
 
 void Character::spritesReload()

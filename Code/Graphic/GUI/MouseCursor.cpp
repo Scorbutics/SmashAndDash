@@ -90,8 +90,12 @@ void MouseCursor::showCursorTime(unsigned int delay)
     m_hideC = false;
 }
 
-void MouseCursor::displayCursor()
+void MouseCursor::display()
 {
+	if (m_hideC) {
+		return;
+	}
+
 	WGameCore& wScreen = WGameCore::getInstance();
 
     if(SDL_GetTicks() - m_time < m_delay)
