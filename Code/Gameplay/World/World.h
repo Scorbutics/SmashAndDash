@@ -56,7 +56,7 @@ class World : public HasGraphic
 		
 		void refreshEntities();
 
-		void graphicUpdate(std::priority_queue<Drawable*>& drawables) override;
+		void graphicUpdate(DrawableContainer& drawables) override;
 
 		~World();
 	

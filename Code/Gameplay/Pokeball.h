@@ -8,12 +8,13 @@
 #include "PokeballLaunchReasonEnum.h"
 #include "../Graphic/Animation.h"
 #include "../Graphic/Texture.h"
+#include "../Graphic/Draw/DrawableFixedPriority.h"
 
 class Character;
 class WGameCore;
 typedef std::unique_ptr<Character> Character_ptr;
 
-class Pokeball
+class Pokeball : public DrawableFixedPriority
 {
 
     public:
@@ -28,7 +29,7 @@ class Pokeball
 
     void capture(Character* pkmn);
     void launch(Character* hero, SDL_Rect mousePos, PokeballLaunchReason::Enum launchReason);
-    void refresh();
+	void display() override;
     bool isVisible();
     void hide(bool b);
     ~Pokeball();

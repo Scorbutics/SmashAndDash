@@ -132,7 +132,8 @@
     <ClInclude Include="Code\Gameplay\EnumScene.h" />
     <ClInclude Include="Code\Gameplay\Scene\HasGraphic.h" />
     <ClInclude Include="Code\Gameplay\Scene\HasLogic.h" />
-    <ClInclude Include="Code\Graphic\Drawable.h" />
+    <ClInclude Include="Code\Graphic\Draw\Drawable.h" />
+    <ClInclude Include="Code\Graphic\Draw\DrawableFixedPriority.h" />
     <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\Script\Commands\AbstractCommand.h" />
     <ClInclude Include="Code\Exceptions\InputException.h" />
@@ -279,6 +280,9 @@
     <ClInclude Include="Code\Gameplay\Scene\IScene.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneMap.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneFight.h" />
+    <ClInclude Include="Code\Graphic\Draw\DrawableContainer.h" />
+    <ClInclude Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.h" />
+    <ClInclude Include="Code\Graphic\Draw\VectorDrawableContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
@@ -408,6 +412,8 @@
     <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp" />
+    <ClCompile Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
+    <ClCompile Include="Code\Graphic\Draw\VectorDrawableContainer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

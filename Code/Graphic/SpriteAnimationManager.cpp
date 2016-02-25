@@ -28,7 +28,7 @@ SpriteAnimation* SpriteAnimationManager::play(int type, int id, SDL_Rect pos, un
 	return &(*m_sprites[i]);
 }
 
-void SpriteAnimationManager::refresh()
+void SpriteAnimationManager::display()
 {
 	for(unsigned int i = 0; i < m_sprites.size(); i++)
 	{

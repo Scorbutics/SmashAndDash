@@ -20,15 +20,19 @@ SDL_Rect LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
 SDL_Color translate_color(Uint32 int_color);
 
 //Constructeur ouvrant un monde déjà créé
-Layer::Layer(string pathFile, string chipsetName, int windowWidth, int windowHeight)
-{
+Layer::Layer(string pathFile, string chipsetName, int windowWidth, int windowHeight, Layer* parent) {
 
     m_windowHeight = windowHeight;
     m_windowWidth = windowWidth;
     m_windDirection = WIND_STOP;
 	m_block.reserve(20);
 	m_rectAnim = { 0 };
+	m_parent = parent;
     this->reset(pathFile, chipsetName);
+}
+
+Layer* Layer::getParent() const {
+	return m_parent;
 }
 
 void Layer::clear()

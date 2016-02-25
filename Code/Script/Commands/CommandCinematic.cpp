@@ -16,6 +16,7 @@ int CommandCinematic::argumentsNumber() {
 	return 7;
 }
 
+/* TODO : faire une scène (héritant de la classe Scene) cinématique */
 std::string CommandCinematic::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -54,7 +55,7 @@ std::string CommandCinematic::execute(IScript* script, std::vector<std::string>&
 	while (continuer)
 	{
 		SDL_RenderClear(wScreen.getRenderer());
-		wScreen.getSpriteAnimationManager().refresh();
+		wScreen.getSpriteAnimationManager().display();
 		wScreen.getInputListener().refresh(true);
 		if (in->getKeyState(SDL_SCANCODE_SPACE) || in->getKeyState(SDL_SCANCODE_RETURN) || in->getKeyState(SDL_SCANCODE_ESCAPE)) {
 			continuer = false;

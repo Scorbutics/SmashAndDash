@@ -180,6 +180,9 @@ WindowShop* GUI::getWindowShop()
 
 void GUI::display()
 {
+
+	dialogDisplay();
+
 	if (m_hide) {
 		return;
 	}

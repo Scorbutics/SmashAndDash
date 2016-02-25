@@ -10,6 +10,7 @@
 #include "../Utils\ChargementImages.h"
 #include "Data\Statistics.h"
 #include "Weather.h"
+#include "../Graphic/Draw/VectorDrawableContainer.h"
 
 using namespace std;
 
@@ -170,7 +171,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.x += oRel.x;
 		buf.y += oRel.y;
 
-		std::priority_queue<Drawable*> drawables;
+		VectorDrawableContainer drawables;
 		w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
@@ -204,7 +205,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.y += oRel.y;
 		m_pokeballPos.y+=4;
 
-		std::priority_queue<Drawable*> drawables;
+		VectorDrawableContainer drawables;
 		w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 			
@@ -261,7 +262,7 @@ void Pokeball::capture(Character* pkmn)
 			else
 				animPos.x = 0;
 
-			std::priority_queue<Drawable*> drawables;
+			VectorDrawableContainer drawables;
 			w.graphicUpdate(drawables);
 			m_sprite.render(buf.x, buf.y, &animPos);
 
@@ -305,7 +306,7 @@ const SDL_Rect* Pokeball::getPos()
     return &m_pokeballPos;
 }
 
-void Pokeball::refresh()
+void Pokeball::display()
 {
 	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes.
 	   Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant

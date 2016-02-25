@@ -7,9 +7,10 @@
 #include <memory>
 #include "../../Gameplay/Inventory/Object.h"
 #include "GUI.h"
+#include "../Draw/DrawableFixedPriority.h"
 
 class MouseInput;
-class MouseCursor : public Drawable
+class MouseCursor : public DrawableFixedPriority
 {
     public:
     MouseCursor();

@@ -11,6 +11,7 @@
 #include "WindowShop.h"
 #include "../../Utils/Observer.h"
 #include "../../Utils/Observable.h"
+#include "../Draw/DrawableFixedPriority.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ class WGameCore;
 extern WGameCore* wScreen;
 
 
-class GUI : public Observer
+class GUI : public Observer, public DrawableFixedPriority
 {
     public:
     GUI();
@@ -67,7 +68,7 @@ class GUI : public Observer
     void setPNJ(Character_ptr *pnj);
     void setClickMenu();
 	void dialogDisplay();
-	void display();
+	void display() override;
 private:
     vector<unique_ptr<DialogMenu>> m_buttonList;
     unique_ptr<DialogMenu> m_dial, m_imgDial, m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;

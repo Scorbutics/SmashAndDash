@@ -11,7 +11,7 @@
 #include "../Graphic/SpriteAnimation.h"
 #include "../Graphic/GUI/Bar.h"
 #include "AI/Path.h"
-#include "../Graphic/Drawable.h"
+#include "../Graphic/Draw/Drawable.h"
 #include "../Graphic/CharacterDrawable.h"
 
 class Statistics;

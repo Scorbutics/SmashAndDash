@@ -10,7 +10,7 @@ SceneFight::SceneFight()
 {
 }
 
-void SceneFight::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
+void SceneFight::graphicUpdate(DrawableContainer& drawables) {
 	/* WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();

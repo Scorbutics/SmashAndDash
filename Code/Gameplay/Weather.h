@@ -6,7 +6,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "../Graphic/Texture.h"
-
+#include "../Graphic/Draw/DrawableFixedPriority.h"
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage
  .hide();                             //Permet de cacher/afficher le temps
@@ -22,13 +22,13 @@
 */
 class World;
 
-class Weather
+class Weather : public DrawableFixedPriority
 {
 
     public:
      Weather(std::string wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
      ~Weather();
-	 void display();
+	 void display() override;
      void hide(bool active);
      void resetRandomPos();
      void changeSprite(std::string spriteName);

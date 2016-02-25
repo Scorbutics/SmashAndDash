@@ -10,7 +10,7 @@ AbstractSceneMap::AbstractSceneMap()
 {
 }
 
-void AbstractSceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
+void AbstractSceneMap::graphicUpdate(DrawableContainer& drawables) {
 	WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
@@ -27,33 +27,30 @@ void AbstractSceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) 
 	world.graphicUpdate(drawables);
 
 	//Affiche la pokeball si active
-	pokeball.refresh();
+	drawables.addHead(pokeball);
 
 	//Affiche l'UI des combats et les attaques
-	fight.display();
+	drawables.addHead(fight);
 
 	//Affiche les animations jouées
-	spriteAnimManager.refresh();
+	drawables.addHead(spriteAnimManager);
 
 	//Affiche les événements météorologiques
-	particleManager.display(PARTICLE_MANAGER_CRUMBLING);
+	/*particleManager.display(PARTICLE_MANAGER_CRUMBLING);
 	particleManager.display(PARTICLE_MANAGER_RAIN);
-	particleManager.displayRainFog();
+	particleManager.displayRainFog();*/
 
 	//Affiche la météo
-	world.getFog()->display();
-	world.getWeather()->display();
+	drawables.addHead(*world.getFog());
+	drawables.addHead(*world.getWeather());
 
 	//Affiche la GUI
-	gui.dialogDisplay();
-	gui.display();
+	drawables.addHead(gui);
 
 	//Affiche le Pokémon ou l'objet sur le curseur de la souris
-	mouseCursor.displaySelectedPokemon();
-	mouseCursor.displaySelectedObject();
+	//mouseCursor.displaySelectedPokemon();
+	//mouseCursor.displaySelectedObject();
 
-	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
-	Scrolling();
 }
 
 void AbstractSceneMap::eventUpdate(bool stuck) {

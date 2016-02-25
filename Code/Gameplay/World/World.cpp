@@ -28,8 +28,8 @@ void World::load(string fileName, string chipsetName, int windowWidth, int windo
 	m_eventLayerName = fileName + "E.txt";
 
 	m_lBot = unique_ptr<Layer>(new Layer(m_botLayerName, chipsetName, windowWidth, windowHeight));
-	m_lMid = unique_ptr<Layer>(new Layer(m_midLayerName, chipsetName, windowWidth, windowHeight));
-	m_lTop = unique_ptr<Layer>(new Layer(m_topLayerName, chipsetName, windowWidth, windowHeight));
+	m_lMid = unique_ptr<Layer>(new Layer(m_midLayerName, chipsetName, windowWidth, windowHeight, m_lBot.get()));
+	m_lTop = unique_ptr<Layer>(new Layer(m_topLayerName, chipsetName, windowWidth, windowHeight, m_lMid.get()));
 
 	m_lEvent = unique_ptr<LayerE>(new LayerE(m_eventLayerName));
 }
@@ -39,7 +39,7 @@ Texture* World::getChipset()
 	return &m_chipset;
 }
 
-void World::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
+void World::graphicUpdate(DrawableContainer& drawables) {
 	SDL_Rect rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
 	WGameCore& wScreen = WGameCore::getInstance();
 
@@ -47,36 +47,29 @@ void World::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
 	list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
 
 	//Première couche
-	m_lBot->setPriority(0);
-	drawables.push(m_lBot.get());
+	drawables.addHead(*m_lBot);
 
 	//Deuxième couche
-	m_lMid->setPriority(1);
-	drawables.push(m_lMid.get());
+	drawables.addHead(*m_lMid);
 
 	//Affichage des effets
-	wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
+	/* TODO : plusieurs classes ParticleManager. Une pour la pluie, l'autre éboulements, l'autre diverses. */
+	//wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
 
 	//Curseur souris sur la map
-	wScreen.getMouseCursor().setPriority(3);
-	drawables.push(&wScreen.getMouseCursor());
+	drawables.addHead(wScreen.getMouseCursor());
 
 	for (Character* npc : currentEntityList) {
 		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
-		
-		//Première partie des personnages
-		parts[0]->setPriority(4);
-		drawables.push(parts[0].get());
+		//Première partie des personnages		
+		drawables.add(*parts[0]);
 		
 		//Deuxième partie des personnages (ceux au sol)
-		/* Ordre d'affichage conditionnel : soit dès la fin de la partie 1, soit après le layer top ! */
-		parts[1]->setPriority(npc->getJumpHeight() < TAILLEBLOC ? 6 : 8);
-		drawables.push(parts[1].get());
+		drawables.add(*parts[1]);
 	}
 
 	//Troisième couche
-	m_lTop->setPriority(7);
-	drawables.push(m_lTop.get());
+	drawables.addHead(*m_lTop);
 }
 
 

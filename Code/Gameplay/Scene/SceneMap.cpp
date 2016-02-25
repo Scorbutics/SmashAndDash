@@ -10,7 +10,7 @@ SceneMap::SceneMap()
 {
 }
 
-void SceneMap::graphicUpdate(std::priority_queue<Drawable*>& drawables) {
+void SceneMap::graphicUpdate(DrawableContainer& drawables) {
 	/*WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();

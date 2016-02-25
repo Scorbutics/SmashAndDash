@@ -19,7 +19,8 @@
 #include "../Gameplay/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../Script/ScriptDispatcher.h"
-#include "../Graphic/Drawable.h"
+#include "../Graphic/Draw/VectorDrawableContainer.h"
+
 using namespace std;
 
 
@@ -254,14 +255,12 @@ bool WGameCore::refresh()
 //gros bordel !
 void WGameCore::graphicUpdate(void)
 {
-	priority_queue<Drawable*> drawables;
+	VectorDrawableContainer drawables;
 	m_sceneCursor->graphicUpdate(drawables);
-	
-	for (Drawable* d = drawables.top(); !drawables.empty(); drawables.pop()) {
-		if (d != NULL) {
-			d->display();
-		}
-	}
+	drawables.draw();
+
+	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
+	Scrolling();
 }
 
 bool WGameCore::isScrollingActive()

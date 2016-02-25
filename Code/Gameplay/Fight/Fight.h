@@ -8,11 +8,12 @@
 #include "../Player.h"
 #include "../../Graphic/Animation.h"
 #include "../../Graphic/Texture.h"
+#include "../../Graphic/Draw/DrawableFixedPriority.h"
 
 class World;
 class DialogMenu;
 
-class Fight
+class Fight : public DrawableFixedPriority
 {
     public:
     Fight();
@@ -40,7 +41,7 @@ class Fight
     void addArea(int x, int y, int w, int h);
     void addArea(SDL_Rect area);
     void deleteAllAreas();
-	void display();
+	void display() override;
 	
     private:
     void displayDialog();

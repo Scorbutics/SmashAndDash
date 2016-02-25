@@ -32,6 +32,7 @@ class ParticleManager
     protected:
     void remove(unsigned int particleType, unsigned int index);
     void launch(unsigned int particleType, float angle, unsigned int power);
+	/* TODO : GravityParticle, CircleParticle, LinearParticle en tant que classes... */
     void addGravityParticle(unsigned int particleType, int idSprite, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
     void addGravityParticle(unsigned int particleType, int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
     void addCircleParticle(int idSprite, unsigned int weight);

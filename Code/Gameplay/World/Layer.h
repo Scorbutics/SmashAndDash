@@ -12,14 +12,14 @@
 
 #include <memory>
 #include "../Weather.h"
-#include "../../Graphic/Drawable.h"
+#include "../../Graphic/Draw/DrawableFixedPriority.h"
 
 class ParticleManager;
 
-class Layer : public Drawable
+class Layer : public DrawableFixedPriority
 {
     public:
-    Layer(std::string nomFichier, std::string chipsetName, int windowWidth, int windowHeight);
+    Layer(std::string nomFichier, std::string chipsetName, int windowWidth, int windowHeight, Layer* parent = NULL);
     ~Layer();
 
     /*void playBgm(bool x);
@@ -41,6 +41,7 @@ class Layer : public Drawable
     void getData();
     Weather* getWeather();
     Weather* getFog();
+	Layer* getParent() const;
 
 	void setRectAnim(SDL_Rect rectAnim);
 
@@ -53,8 +54,8 @@ class Layer : public Drawable
     void setBgmVolume(int volPercent);*/
     void setWind(int windDirection);
 
-    private:
-
+private:
+	Layer* m_parent;
     std::string m_name, m_nomFichier, m_chipsetname;
     std::vector<std::vector<Block_ptr>> m_block;
     std::unique_ptr<Weather> m_temps, m_brouillard;
