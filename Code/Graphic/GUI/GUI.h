@@ -31,7 +31,7 @@ class GUI : public Observer, public DrawableFixedPriority
     void refresh();
     int isPositionOnButton(SDL_Rect *pos);
     bool isMouseOnAWindow();
-    bool isVisible();
+    bool isVisible() const override;
     void initButtons();
     void hide(bool x);
     bool isMovingAWindow();

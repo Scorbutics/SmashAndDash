@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <cstdint>
 
 #include "World.h"
 #include "..\WGameCore.h"
@@ -26,10 +26,14 @@ void World::load(string fileName, string chipsetName, int windowWidth, int windo
 	m_midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR + fileName + FILE_SEPARATOR + fileName + "M.bmp";
 	m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR + fileName + FILE_SEPARATOR + fileName + "T.bmp";
 	m_eventLayerName = fileName + "E.txt";
+	m_windDirection = WIND_STOP;
 
-	m_lBot = unique_ptr<Layer>(new Layer(m_botLayerName, chipsetName, windowWidth, windowHeight));
-	m_lMid = unique_ptr<Layer>(new Layer(m_midLayerName, chipsetName, windowWidth, windowHeight, m_lBot.get()));
-	m_lTop = unique_ptr<Layer>(new Layer(m_topLayerName, chipsetName, windowWidth, windowHeight, m_lMid.get()));
+	m_nbrBlockX = 0;
+	m_nbrBlockY = 0;
+
+	m_lBot = unique_ptr<Layer>(new Layer(*this, m_botLayerName, chipsetName));
+	m_lMid = unique_ptr<Layer>(new Layer(*this, m_midLayerName, chipsetName, m_lBot.get()));
+	m_lTop = unique_ptr<Layer>(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
 
 	m_lEvent = unique_ptr<LayerE>(new LayerE(m_eventLayerName));
 }
@@ -37,6 +41,14 @@ void World::load(string fileName, string chipsetName, int windowWidth, int windo
 Texture* World::getChipset()
 {
 	return &m_chipset;
+}
+
+void World::setWind(int wind) {
+	m_windDirection = wind;
+}
+
+int World::getWind() const {
+	return m_windDirection;
 }
 
 void World::graphicUpdate(DrawableContainer& drawables) {
@@ -53,14 +65,15 @@ void World::graphicUpdate(DrawableContainer& drawables) {
 	drawables.addHead(*m_lMid);
 
 	//Affichage des effets
-	/* TODO : plusieurs classes ParticleManager. Une pour la pluie, l'autre éboulements, l'autre diverses. */
-	//wScreen.getParticleManager().display(PARTICLE_MANAGER_EFFECT);
+	ParticleManager& particleManager = wScreen.getParticleManager();
+	drawables.addHead(particleManager);
 
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());
 
 	for (Character* npc : currentEntityList) {
 		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
+
 		//Première partie des personnages		
 		drawables.add(*parts[0]);
 		
@@ -69,7 +82,7 @@ void World::graphicUpdate(DrawableContainer& drawables) {
 	}
 
 	//Troisième couche
-	drawables.addHead(*m_lTop);
+	drawables.addHead2D(*m_lTop);
 }
 
 
@@ -213,8 +226,9 @@ void World::changeLevel(string fileName, string chipsetname)
 	wScreen.getParticleManager().removeAll();							//Suppression des particules
 
     m_lBot->reset(m_botLayerName, chipsetname);
-    m_lTop->reset(m_topLayerName, chipsetname);
-    m_lMid->reset(m_midLayerName, chipsetname);
+	m_lMid->reset(m_midLayerName, chipsetname);
+	m_lTop->reset(m_topLayerName, chipsetname);
+    
 	m_lEvent->changeLevel(m_genericName + "E.txt");
 
     //m_lBot->printCollisionProfile();
@@ -414,14 +428,21 @@ bool World::isBgmPlaying()
 
 int World::getNbrBlocX()
 {
-    return m_lBot->getNbrBlocX();
+    return m_nbrBlockX;
 }
 
 int World::getNbrBlocY()
 {
-    return m_lBot->getNbrBlocY();
+	return m_nbrBlockY;
 }
 
+void World::setNbrBlocX(int nbrBlockX) {
+	m_nbrBlockX = nbrBlockX;
+}
+
+void World::setNbrBlocY(int nbrBlockY) {
+	m_nbrBlockY = nbrBlockY;
+}
 
 void World::getFogFromData(string stringDataFile)
 {
@@ -470,7 +491,7 @@ void World::getRainFromData(string stringDataFile)
 		acceleration = reader.getInt("Rain acceleration");
 		density = reader.getInt("Rain density");
 
-		wScreen.getParticleManager().playRain(idsprite, (float)acceleration, (float)(density / 100.), 0);
+		wScreen.getRainParticleManager().playRain(idsprite, (float)acceleration, (float)(density / 100.), 0);
     }
     else
     {

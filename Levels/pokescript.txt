@@ -1,9 +1,9 @@
-message -1 Bienvenue au centre Pokémon !
-message -1 Je vais soigner tes Pokémon.
-soigner 0 999
-soigner 1 999
-soigner 2 999
-soigner 3 999
-soigner 4 999
-soigner 5 999
-message -1 Tes Pokémon sont soignés. Merci de ton attente !
+message -1, Bienvenue au centre Pokémon !
+message -1, Je vais soigner tes Pokémon.
+heal 0, 999
+heal 1, 999
+heal 2, 999
+heal 3, 999
+heal 4, 999
+heal 5, 999
+message -1, Tes Pokémon sont soignés. Merci de ton attente !

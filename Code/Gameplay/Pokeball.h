@@ -30,7 +30,7 @@ class Pokeball : public DrawableFixedPriority
     void capture(Character* pkmn);
     void launch(Character* hero, SDL_Rect mousePos, PokeballLaunchReason::Enum launchReason);
 	void display() override;
-    bool isVisible();
+	bool isVisible() const override;
     void hide(bool b);
     ~Pokeball();
 

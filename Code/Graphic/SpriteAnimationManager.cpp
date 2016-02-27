@@ -44,6 +44,10 @@ void SpriteAnimationManager::display()
 	}
 }
 
+bool SpriteAnimationManager::isVisible() const {
+	return !m_sprites.empty();
+}
+
 void SpriteAnimationManager::reset()
 {
 	m_sprites.clear();

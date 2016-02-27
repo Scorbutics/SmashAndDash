@@ -18,7 +18,7 @@ void Player::update(Observable* obs, EventArg* event)
 	MouseEvent* me;
 	KeyEvent* ke;
 	WGameCore& wScreen = WGameCore::getInstance();
-	unsigned int power = getSpeedLimit() * 5;
+	unsigned int power = getSpeedLimit() * 12;
 
 	if (event->type() == EVENT_MOUSE)
 	{

@@ -7,46 +7,43 @@
 #include <vector>
 #include "Particle.h"
 #include "../Graphic\Texture.h"
+#include "../Graphic/Draw/DrawableFixedPriority.h"
 
-class ParticleManager
+class ParticleManager : public DrawableFixedPriority
 {
 
     public:
     ParticleManager();
-    ~ParticleManager();
+    virtual ~ParticleManager();
 
     void playCrumbling(int idSprite, float acceleration, float density, unsigned int duration);
-    void playRain(int idSprite, float acceleration, float density, unsigned int duration);
     void playEffect(int idSprite, float acceleration, float density, unsigned int duration, SDL_Rect rect);
     void removeAll();
-    void removeAll(unsigned int particleType);
     void stop();
 	void hide(bool h);
-    void stop(unsigned int particleType);
-    void refresh();
-    void refresh(unsigned int particleType);
-    int collisionNPC(unsigned int particleType);
-    void displayRainFog();
-	void display(unsigned int particleType);
+
+	virtual bool isVisible() const override;
+	virtual void display() override;
+
+	virtual void refresh();
+    int collisionNPC();
+    
+	
 
     protected:
-    void remove(unsigned int particleType, unsigned int index);
-    void launch(unsigned int particleType, float angle, unsigned int power);
+    void remove(unsigned int index);
+    void launch(float angle, unsigned int power);
 	/* TODO : GravityParticle, CircleParticle, LinearParticle en tant que classes... */
-    void addGravityParticle(unsigned int particleType, int idSprite, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
-    void addGravityParticle(unsigned int particleType, int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
+    //void addGravityParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
+	void addParticle(ParticlePtr& particle);
     void addCircleParticle(int idSprite, unsigned int weight);
     void addLinearParticle(int idSprite, unsigned int weight);
 	
-    std::vector<std::vector<std::unique_ptr<Particle>>> m_particles;
-    unsigned int m_wind, m_countWind;
+    std::vector<std::unique_ptr<Particle>> m_particles;
     Texture m_rainWeather;
-    double m_Twind;
     int m_sens;
-    std::vector<SDL_Rect> m_origin;
-    std::vector<bool> m_active;
-    std::vector<unsigned int> m_duration, m_t0;
-	bool m_globalActive;
+    bool m_active;
+    unsigned int m_duration, m_t0;
 };
 
 #endif

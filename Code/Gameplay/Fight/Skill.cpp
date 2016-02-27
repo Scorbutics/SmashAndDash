@@ -70,7 +70,7 @@ void Projectile::refresh()
         {
 			SDL_Rect particlePos, particleOrigin;
 			unsigned int distance;
-            m_particles[i]->refresh(0);
+            m_particles[i]->refresh();
             m_particles[i]->addSlopeNoise((float)((rand()%(m_slopeNoise + 1) - m_slopeNoise/2)/10.));
             m_particles[i]->setNoise((int)((m_noise*(cos(m_t+i*M_PI/m_nombre))/10.)));
 			

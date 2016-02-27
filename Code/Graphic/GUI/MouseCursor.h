@@ -28,6 +28,7 @@ class MouseCursor : public DrawableFixedPriority
     void setCursorPos(SDL_Rect pos);
 
 	void display() override;
+	bool isVisible() const override;
 
 	void removePokemon();
 	void removeObject();

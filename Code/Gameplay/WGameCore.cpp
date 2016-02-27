@@ -189,8 +189,7 @@ PokemonManager& WGameCore::getPokemonManager()
     return m_pkmnManager;
 }
 
-ParticleManager& WGameCore::getParticleManager()
-{
+ParticleManager& WGameCore::getParticleManager() {
     return m_particleManager;
 }
 
@@ -261,6 +260,10 @@ void WGameCore::graphicUpdate(void)
 
 	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
 	Scrolling();
+}
+
+RainParticleManager& WGameCore::getRainParticleManager() {
+	return m_rainParticleManager;
 }
 
 bool WGameCore::isScrollingActive()
@@ -448,12 +451,13 @@ void WGameCore::quitter(bool transition)
 		this->transition(0);
 	}*/
 
-
-	//Désallocation mémoire
+	m_rainParticleManager.stop();
 	m_particleManager.stop();
-	m_EntityFactory.deleteAll();
 	ScriptDispatcher::getInstance().clear();
 
+	//Désallocation mémoire
+	m_EntityFactory.deleteAll();
+	
 }
 
 GUI& WGameCore::getGUI()

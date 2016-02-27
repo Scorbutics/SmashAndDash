@@ -10,6 +10,7 @@
 
 #include "Layer.h"
 #include "../WGameCore.h"
+#include "../../Exceptions/CorruptedFileException.h"
 
 using namespace std;
 
@@ -20,19 +21,21 @@ SDL_Rect LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
 SDL_Color translate_color(Uint32 int_color);
 
 //Constructeur ouvrant un monde déjà créé
-Layer::Layer(string pathFile, string chipsetName, int windowWidth, int windowHeight, Layer* parent) {
-
-    m_windowHeight = windowHeight;
-    m_windowWidth = windowWidth;
-    m_windDirection = WIND_STOP;
+Layer::Layer(World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w) {
 	m_block.reserve(20);
 	m_rectAnim = { 0 };
 	m_parent = parent;
+	m_fileWidth = 0; 
+	m_fileHeight = 0;
     this->reset(pathFile, chipsetName);
 }
 
 Layer* Layer::getParent() const {
 	return m_parent;
+}
+
+bool Layer::isVisible() const {
+	return !m_block.empty();
 }
 
 void Layer::clear()
@@ -78,29 +81,40 @@ Block* Layer::getBlock(const unsigned int i, const unsigned int j)
 void Layer::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect positionFond, origineRelative, ofChip;
+	SDL_Rect absoluteCurrentPos, origineRelative, ofChip;
     origineRelative = wScreen.getORel();
     ofChip = wScreen.getOffsetChipset();
 
-    for(int i = abs(origineRelative.x)/TAILLEBLOC; i <= (abs(origineRelative.x)+ (int)wScreen.getWidth())/TAILLEBLOC; i++)
+	const unsigned int layerPixelsX = m_world.getNbrBlocX()*TAILLEBLOC;
+	const unsigned int layerPixelsY = m_world.getNbrBlocY()*TAILLEBLOC;
+	const unsigned int absORelX = abs(origineRelative.x);
+	const unsigned int absORelY = abs(origineRelative.y);
+	const unsigned int cameraPositionStartBlockX = absORelX / TAILLEBLOC;
+	const unsigned int cameraPositionStartBlockY = absORelY / TAILLEBLOC;
+	const unsigned int cameraPositionEndBlockX = (absORelX + wScreen.getWidth()) / TAILLEBLOC;
+	const unsigned int cameraPositionEndBlockY = (absORelY + wScreen.getHeight()) / TAILLEBLOC;
+	
+	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++)
     {
-        for(int j = abs(origineRelative.y)/TAILLEBLOC; j <= (abs(origineRelative.y)+(int)wScreen.getHeight())/TAILLEBLOC; j++)
+		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++)
         {
+			unsigned int currentXBlock = i*TAILLEBLOC;
+			unsigned int currentYBlock = j*TAILLEBLOC;
+			absoluteCurrentPos.x = currentXBlock - absORelX;
+			absoluteCurrentPos.y = currentYBlock - absORelY;
 
-            positionFond.x = i*TAILLEBLOC - abs(origineRelative.x);
-            positionFond.y = j*TAILLEBLOC - abs(origineRelative.y);
-
-            if(i*TAILLEBLOC < m_nbrBlocX*TAILLEBLOC && j*TAILLEBLOC < m_nbrBlocY*TAILLEBLOC)
+			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY)
             {
-                if(m_block[i][j]->getID() != BLOCK_ID_AIR)
+				Block_ptr& b = m_block[i][j];
+                if(b->getID() != BLOCK_ID_AIR)
                 {
-                    if(m_block[i][j]->getProperties() == BLOCK_PROP_WIND_SENSITIVITY)
+                    if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY)
 					{
-                        m_block[i][j]->setSpriteFrame(m_windDirection);
-						m_block[i][j]->refresh(positionFond);
+						b->setSpriteFrame(m_world.getWind());
+						b->refresh(absoluteCurrentPos);
 					}
 					else
-						m_block[i][j]->refresh(positionFond, &m_rectAnim);
+						b->refresh(absoluteCurrentPos, &m_rectAnim);
                     
                 }
 
@@ -113,16 +127,6 @@ void Layer::display()
 
 void Layer::setRectAnim(SDL_Rect rectAnim) {
 	m_rectAnim = rectAnim;
-}
-
-int Layer::getNbrBlocX()
-{
-    return m_nbrBlocX;
-}
-
-int Layer::getNbrBlocY()
-{
-    return m_nbrBlocY;
 }
 
 int Layer::getBlockCollision(const unsigned int i, const unsigned int j)
@@ -154,9 +158,6 @@ void Layer::reset(string pathFile, string chipsetName)
     string buf;
     ostringstream oss;
 
-    m_nbrBlocX = 0;
-    m_nbrBlocY = 0;
-
     fichierMCorr = LoadImage32("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png", 0);
     fichierMPng = LoadImage32((pathFile).c_str(), 0);
     fichierMCol = LoadImage32((m_chipsetname +".col").c_str(), 0);
@@ -168,16 +169,20 @@ void Layer::reset(string pathFile, string chipsetName)
     Uint16 lightColor = SDL_MapRGB(fichierMChipset->format, 170, 170, 170);
     Uint16 whiteColor =  SDL_MapRGB(fichierMChipset->format, 255, 255, 255);
 
-    m_nbrBlocX = fichierMPng->w;
-    m_nbrBlocY = fichierMPng->h;
+	m_fileHeight = fichierMPng->h;
+	m_fileWidth = fichierMPng->w;
+	/* Layer coherence check */
+	checkSize(m_fileWidth, m_fileHeight);
 
+	m_world.setNbrBlocX(m_fileWidth);
+	m_world.setNbrBlocY(m_fileHeight);
 
-    for(int i = 0; i < m_nbrBlocX; i++)
+	for (int i = 0; i < m_fileWidth; i++)
     {
         m_block.push_back(vector<Block_ptr>());
 		m_block[i].reserve(15);
 
-        for(int j = 0; j < m_nbrBlocY; j++)
+		for (int j = 0; j < m_fileHeight; j++)
         {
 
             pix = GetPixel32(fichierMPng,i,j);
@@ -243,12 +248,22 @@ void Layer::reset(string pathFile, string chipsetName)
 
 }
 
+void Layer::checkSize(int nbrBlocX, int nbrBlocY) {
+	if (m_fileWidth != nbrBlocX || m_fileHeight != nbrBlocY) {
+		throw CorruptedFileException("Layer " + m_name + " has a wrong size dimension in his file " + m_nomFichier);
+	}
+
+	if (m_parent != NULL) {
+		m_parent->checkSize(nbrBlocX, nbrBlocY);
+	}
+}
+
 void Layer::printCollisionProfile()
 {
     clog << m_name << endl;
-    for(int y = 0; y < m_nbrBlocY; y++)
+    for(int y = 0; y < m_world.getNbrBlocY(); y++)
     {
-        for(int x = 0; x < m_nbrBlocX; x++)
+		for (int x = 0; x < m_world.getNbrBlocX(); x++)
         {
             if(m_block[x][y]->getCollision() != BLOCK_COL_YES)
                 clog << " ";
@@ -263,12 +278,6 @@ void Layer::printCollisionProfile()
 
     clog << endl << endl;
 }
-
-void Layer::setWind(int windDirection)
-{
-    m_windDirection = windDirection;
-}
-
 
 SDL_Rect LocateColorInCorr(SDL_Surface* corr, SDL_Color c)
 {
@@ -301,33 +310,6 @@ Uint32 GetPixel32(SDL_Surface* image, int x, int y)
 		return 0;
 	return ((Uint32*)(image->pixels))[y*(image->pitch/4)+x];   // lecture directe des pixels
 }
-
-/*
-SDL_Surface* LoadImage32(const char *fichier_image, int vram)
-{
-	SDL_Surface *image_result, *image_ram;
-    image_ram = IMG_Load(fichier_image);
-
-	if (image_ram == NULL)
-	{
-	    cerr << "Erreur (fonction LoadImage32) : Impossible de charger le monde " << *fichier_image << endl;
-        cerr << "IMG_Load : " << IMG_GetError() << endl;
-        SDL_Quit();
-		exit(-1);
-	}
-
-	image_result = NULL;
-	if (vram)
-		image_result=SDL_CreateRGBSurface(SDL_HWSURFACE, image_ram->w, image_ram->h, 32, 0, 0, 0, 0);  // cree une imageen VRAM
-	if (image_result==NULL)
-		vram = 0;
-	if (!vram)
-		image_result=SDL_CreateRGBSurface(SDL_SWSURFACE, image_ram->w, image_ram->h, 32, 0, 0, 0, 0);  // cree une image en RAM
-	BlitSurface(image_ram,NULL,image_result,NULL);	// copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits
-	SDL_FreeSurface(image_ram);      // supprime la surface image_ram : inutile maintenant --> libere la mémoire
-	return image_result;
-}
-*/
 
 SDL_Surface* LoadImage32(const char *fichier_image, int vram)
 {

@@ -21,7 +21,6 @@ int CommandAssign::argumentsNumber() {
 std::string CommandAssign::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	string valeur, varNumber, line, commandCall;
-	size_t commandCallSize;
 
 	valeur = args[0];
 	varNumber = args[1];

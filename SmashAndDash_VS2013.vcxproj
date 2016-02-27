@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Code\Graphic\CharacterDrawable.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h" />
     <ClInclude Include="Code\Exceptions\IllegalArgumentException.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Code\Script\ScriptDispatcher.h" />
     <ClInclude Include="Code\Exceptions\ScriptException.h" />
     <ClInclude Include="Code\Exceptions\ScriptUnknownCommandException.h" />
+    <ClInclude Include="Code\Utils\MessageType.h" />
     <ClInclude Include="Code\Utils\ScriptUtils.h" />
     <ClInclude Include="Code\Utils\StringUtils.h" />
     <ClInclude Include="Code\Utils\UInteger.h" />
@@ -283,6 +285,10 @@
     <ClInclude Include="Code\Graphic\Draw\DrawableContainer.h" />
     <ClInclude Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.h" />
     <ClInclude Include="Code\Graphic\Draw\VectorDrawableContainer.h" />
+    <ClInclude Include="Code\Physic\RainParticleManager.h" />
+    <ClInclude Include="Code\Utils\MessagePopup.h" />
+    <ClInclude Include="Code\Physic\RainParticle.h" />
+    <ClInclude Include="Code\Utils\NumberUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
@@ -340,6 +346,7 @@
     <ClCompile Include="Code\Script\Script.cpp" />
     <ClCompile Include="Code\Script\ScriptDispatcher.cpp" />
     <ClCompile Include="Code\Exceptions\GenericException.cpp" />
+    <ClCompile Include="Code\Utils\NumberUtils.cpp" />
     <ClCompile Include="Code\Utils\ScriptUtils.cpp" />
     <ClCompile Include="Code\Utils\StringUtils.cpp" />
     <ClCompile Include="Code\Utils\UInteger.cpp" />
@@ -414,6 +421,9 @@
     <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp" />
     <ClCompile Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
     <ClCompile Include="Code\Graphic\Draw\VectorDrawableContainer.cpp" />
+    <ClCompile Include="Code\Physic\RainParticleManager.cpp" />
+    <ClCompile Include="Code\Utils\MessagePopup.cpp" />
+    <ClCompile Include="Code\Physic\RainParticle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

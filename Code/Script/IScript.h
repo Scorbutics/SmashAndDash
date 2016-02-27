@@ -14,7 +14,7 @@ public:
 	virtual std::unordered_map<std::string, std::string>& getVarMap() = 0;
 	virtual unsigned int getCurrentLine() = 0;
 	virtual std::string& getExtendedName() = 0;
-	virtual void delay(int d) = 0;
+	virtual void delay(unsigned int d) = 0;
 	virtual void stop() = 0;
 	virtual std::string getLastResult() = 0;
 	virtual std::string& getKey() = 0;

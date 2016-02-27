@@ -13,6 +13,7 @@
 #include "Pokeball.h"
 #include "AI\AI.h"
 #include "../Physic\ParticleManager.h"
+#include "../Physic/RainParticleManager.h"
 #include "Data\Settings.h"
 #include "PokemonManager.h"
 #include "EntityFactory.h"
@@ -74,7 +75,6 @@ public:
 	Fight& getFight();
 	Pokeball& getPokeball();
 	AI& getAI();
-	ParticleManager& getParticleManager();
 	Inventory& getInventory();
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
@@ -88,6 +88,9 @@ public:
 	World& getWorld();
 	MobSpawningManager& getMobSpawningManager();
 	SavegameManager& getSavegameManager();
+
+	ParticleManager& getParticleManager();
+	RainParticleManager& getRainParticleManager();
 
     void setEntite(unsigned int i, int value);
     void setOffsetChipset(int x, int y, int w, int h);
@@ -117,7 +120,6 @@ public:
 		vector<DialogMenu*> m_guiList;
 		Pokeball m_pokeball;
 		PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
-		ParticleManager m_particleManager;
 		TrainerCard m_trainerCard;
 		ShakerManager m_shaker;
 		SpriteAnimationManager m_spriteAnimManager;
@@ -129,6 +131,9 @@ public:
 		MobSpawningManager m_mobSpawner;
 		SavegameManager m_saveManager;
 		World m_world;
+
+		ParticleManager m_particleManager;
+		RainParticleManager m_rainParticleManager;
 };
 
 #endif

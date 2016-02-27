@@ -13,13 +13,13 @@ LinearParticle::LinearParticle(int idSprite, SDL_Rect pos, double lifetime, doub
     m_ax = m_bx = 0;
 }
 
-void LinearParticle::refresh(int offsetx)
+void LinearParticle::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	if(m_state == PARTICLE_STATE_LAUNCHED)
     {
-        m_pos.x = (int)(m_ax * (m_t/10.) + (float) m_bx + wScreen.getORel().x + offsetx);
+        m_pos.x = (int)(m_ax * (m_t/10.) + (float) m_bx + wScreen.getORel().x);
 		m_pos.y = (int)(m_ay * (m_t / 10.) + (float)m_by + wScreen.getORel().y);
     }
     else if (m_state == PARTICLE_STATE_SPLASH)
@@ -41,18 +41,10 @@ void LinearParticle::refresh(int offsetx)
     m_pos.x += (int)(m_noise*cos(angle + M_PI/2));
     m_pos.y += (int)(m_noise*sin(angle + M_PI/2));
 
-
-    /*if(!m_relative)
-    {
-        m_pos.x += m_origin.x;
-        m_pos.y += m_origin.y;
-    }*/
     m_t++;
 
 
 }
-
-
 
 
 void LinearParticle::addSlopeNoise(float x)

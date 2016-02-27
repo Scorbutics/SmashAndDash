@@ -29,7 +29,8 @@ class Weather : public DrawableFixedPriority
      Weather(std::string wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
      ~Weather();
 	 void display() override;
-     void hide(bool active);
+	 bool isVisible() const override;
+	 void hide(bool active);
      void resetRandomPos();
      void changeSprite(std::string spriteName);
 

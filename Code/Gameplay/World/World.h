@@ -36,13 +36,17 @@ class World : public HasGraphic
 		Layer* getLayerMid();
 		Layer* getLayerTop();
 		LayerE* getLayerEvent();
+		void setWind(int wind);
 		Texture* getChipset();
+		int getWind() const;
 		std::string getChipsetName();
 		std::string getName();
 		void getData();
 		bool getCollision(const int i, const int j);
 		bool isBlockDodgeable(const int i, const int j);
 
+		void setNbrBlocX(int nbrBlockX);
+		void setNbrBlocY(int nbrBlockY);
 		void setSpriteFrame(unsigned int x);
 		void setBgmVolume(int volPercent);
 		void playBgm(bool x);
@@ -67,6 +71,8 @@ class World : public HasGraphic
 		void getBgmFromData(std::string stringDataFile);
 		void getMobSettingsFromData();
 	
+		int m_windDirection;
+		int m_nbrBlockX, m_nbrBlockY;
 
 		Texture m_chipset;
 		/*FMOD_SOUND *m_bgm;

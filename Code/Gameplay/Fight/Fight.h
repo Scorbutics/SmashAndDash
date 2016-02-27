@@ -30,6 +30,7 @@ class Fight : public DrawableFixedPriority
     void setAreasFromLayerEvent();
     void setFightCount(int x);
     void setFight(bool x);
+	bool isVisible() const override;
 
     int getFightCount();
     Character* getOpponent();

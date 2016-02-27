@@ -31,7 +31,7 @@ class PhysicObject
         unsigned int getSpeedLimit();
         SDL_Rect getHitbox();
 		bool getGhost();
-		int getJumpHeight();
+		int getJumpHeight() const;
 
 		void setSpeedLimit(int speedLimit);
 		void setMoving(bool b);

@@ -14,6 +14,10 @@ public:
 	}
 	virtual ~Drawable() {}
 
-	virtual int getPriority() const = 0;
+	virtual int getPriority2D() const {
+		return getPriority();
+	}
 
+	virtual int getPriority() const = 0;
+	virtual bool isVisible() const = 0;
 };

@@ -17,6 +17,7 @@
 #include "../../Utils/StringUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Gameplay/Fight/Skill.h"
+#include "MouseCursor.h"
 
 GUI::GUI()
 {
@@ -192,6 +193,10 @@ void GUI::display()
 			m_buttonList[i]->display();
 		}
 	}
+
+	MouseCursor& mouseCursor = WGameCore::getInstance().getMouseCursor();
+	mouseCursor.displaySelectedPokemon();
+	mouseCursor.displaySelectedObject();
 		
 }
 
@@ -736,8 +741,7 @@ void GUI::hide(bool x)
     m_hide = x;
 }
 
-bool GUI::isVisible()
-{
+bool GUI::isVisible() const {
     return !m_hide;
 }
 

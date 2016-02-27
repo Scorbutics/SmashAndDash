@@ -13,36 +13,10 @@ AbstractSceneMap::AbstractSceneMap()
 void AbstractSceneMap::graphicUpdate(DrawableContainer& drawables) {
 	WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
-	Pokeball& pokeball = core.getPokeball();
-	Fight& fight = core.getFight();
-	SpriteAnimationManager& spriteAnimManager = core.getSpriteAnimationManager();
-	ParticleManager& particleManager = core.getParticleManager();
-	MouseCursor& mouseCursor = core.getMouseCursor();
 	GUI& gui = core.getGUI();
-	Settings& settings = core.getSettings();
+	
 
 	AbstractNoGUISceneMap::graphicUpdate(drawables);
-
-	//Affiche les couches de blocs et les personnages
-	world.graphicUpdate(drawables);
-
-	//Affiche la pokeball si active
-	drawables.addHead(pokeball);
-
-	//Affiche l'UI des combats et les attaques
-	drawables.addHead(fight);
-
-	//Affiche les animations jouées
-	drawables.addHead(spriteAnimManager);
-
-	//Affiche les événements météorologiques
-	/*particleManager.display(PARTICLE_MANAGER_CRUMBLING);
-	particleManager.display(PARTICLE_MANAGER_RAIN);
-	particleManager.displayRainFog();*/
-
-	//Affiche la météo
-	drawables.addHead(*world.getFog());
-	drawables.addHead(*world.getWeather());
 
 	//Affiche la GUI
 	drawables.addHead(gui);

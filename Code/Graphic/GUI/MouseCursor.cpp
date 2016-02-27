@@ -90,6 +90,10 @@ void MouseCursor::showCursorTime(unsigned int delay)
     m_hideC = false;
 }
 
+bool MouseCursor::isVisible() const {
+	return !m_hideC;
+}
+
 void MouseCursor::display()
 {
 	if (m_hideC) {

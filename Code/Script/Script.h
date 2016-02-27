@@ -19,7 +19,7 @@ public:
 	std::string& getExtendedName();
 	std::string& getKey();
 	bool canBePlayed();
-	void delay(int d);
+	void delay(unsigned int d);
 	void stop();
 	std::string nextLine();
 	std::string getLastResult();
@@ -53,7 +53,7 @@ private:
 	std::string m_lastResult;
 	std::ifstream m_fscript;
 	int m_triggeringType;
-	int m_delay;
+	unsigned int m_delay;
 	Uint32 m_lastTimeDelayed;
 };
 

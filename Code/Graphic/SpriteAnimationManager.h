@@ -15,6 +15,7 @@ class SpriteAnimationManager : public DrawableFixedPriority
 		void reset();
 		SpriteAnimation* play(int type, int id, SDL_Rect pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
 		~SpriteAnimationManager();
+		bool isVisible() const override;
 		void display() override;
 
 	private:

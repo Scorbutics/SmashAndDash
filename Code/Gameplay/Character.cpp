@@ -371,9 +371,9 @@ void Character::displaySpeed()
     if(this->getSpeed() >= 5)
     {
         SDL_Rect rect = getHitbox();
-        rect.y += (int)rect.h*0.5;
+        rect.y += rect.h/2;
         rect.h /= 4;
-        wScreen.getParticleManager().playEffect(2, 0.5, 1.5, 0, rect);
+		wScreen.getParticleManager().playEffect(2, 0.5, (float)0.35, 0, rect);
     }
 
 }

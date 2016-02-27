@@ -36,7 +36,7 @@ std::string CommandChoice::execute(IScript* script, std::vector<std::string>& ar
 
 	choicePos = menuPos;
 	choicePos.x += menuPos.w;
-	choicePos.w = (int)TAILLEBLOCFENETRE*(0.5);
+	choicePos.w = TAILLEBLOCFENETRE/2;
 	choicePos.h = TAILLEBLOCFENETRE * 3;
 	choicePos.y -= choicePos.h;
 

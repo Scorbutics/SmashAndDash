@@ -153,7 +153,7 @@ PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, floa
 	m_offset[3] = offset3;
 }
 
-int PhysicObject::getJumpHeight()
+int PhysicObject::getJumpHeight() const
 {
 	return m_jumpHeight;
 }

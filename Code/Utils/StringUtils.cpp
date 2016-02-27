@@ -38,7 +38,7 @@ int StringUtils::strToInt(const std::string& str) {
 	if (!isInt(str, 10)) {
 		throw NumberFormatException(str);
 	}
-	atoi(str.c_str());
+	return atoi(str.c_str());
 }
 
 string StringUtils::uintToStr(unsigned int x)

@@ -111,7 +111,7 @@ std::string Script::getLastResult() {
 	return m_lastResult;
 }
 
-void Script::delay(int d) {
+void Script::delay(unsigned int d) {
 	m_active = d;
 }
 

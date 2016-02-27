@@ -36,14 +36,12 @@ void GravityParticle::resetSlopeNoise()
     m_slopeNoise = 0;
 }
 
-void GravityParticle::refresh(int offsetx)
+void GravityParticle::refresh()
 {
-    //if(m_t - (m_lifetime + m_splashTime) >= 0)
-     //  return;
 
     if(m_state == PARTICLE_STATE_LAUNCHED)
     {
-        m_pos.x = (int)(m_ax * (m_t/10.) + (float) m_bx  + offsetx);
+        m_pos.x = (int)(m_ax * (m_t/10.) + (float) m_bx);
         m_pos.y = (int)(m_ay * (m_t/10.) * (m_t/10.) + m_by * (m_t/10.) + (float) m_cy);
     }
     else if (m_state == PARTICLE_STATE_SPLASH)
@@ -52,11 +50,6 @@ void GravityParticle::refresh(int offsetx)
 		m_pos.y = (int)(m_ay * (m_lifetime / 10.) * (m_lifetime / 10.) + m_by * (m_lifetime / 10.) + (float)m_cy);
     }
 
-    /*if(m_relative)
-    {
-        m_pos.x -= wm->getORel()->x;
-        m_pos.y -= wm->getORel()->y;
-    }*/
     m_t++;
 
 }

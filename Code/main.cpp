@@ -11,8 +11,8 @@
 #include <SDL2/SDL_image.h>
 #include "Gameplay/WGameCore.h"
 #include "./Utils/ChargementDonneesMonde.h"
-
-
+#include "./Exceptions/GenericException.h"
+#include "./Utils/MessagePopup.h"
 
 using namespace std;
 typedef unique_ptr<Character> Character_ptr;
@@ -53,13 +53,17 @@ int main (int argc, char *argv[])
 
     LoadGameCoreData(widthBlocks, heightBlocks);
 
-
-	//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
-    WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
-
-    while(wScreen.refresh()); //boucle principale
-    wScreen.quitter(false);
-
+	try {
+		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
+		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
+		while (wScreen.refresh()); //boucle principale
+		wScreen.quitter(false);
+	} catch (GenericException& e) {
+		/* Handles Generics Game exceptions */
+		cerr << e.what() << endl;
+		MessagePopup(MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
+	}
+    
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();

@@ -42,7 +42,9 @@ Weather::Weather(string wSprite, int number, int distance, int intensityX, int i
 
 }
 
-
+bool Weather::isVisible() const {
+	return m_active;
+}
 
 void Weather::setIntensity(int intensityX, int intensityY)
 {

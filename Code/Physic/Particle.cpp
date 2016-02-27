@@ -8,7 +8,7 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED
     m_slopeNoise = 0;
     m_skill = false;
     m_pos = pos;
-    m_origin = pos;
+	m_fixedOrigin = pos;
     m_relative = relative;
     m_weight = weight;
     m_type = PARTICLE;
@@ -38,7 +38,7 @@ SDL_Rect Particle::getPos()
 void Particle::launch(SDL_Rect origin, float angle, unsigned int power)
 {
     this->active();
-    m_origin = origin;
+	m_fixedOrigin = origin;
 	m_pos = origin;
     m_angle = angle;
     m_power = power;
@@ -46,9 +46,9 @@ void Particle::launch(SDL_Rect origin, float angle, unsigned int power)
     //m_sprite = NULL;
 }
 
-SDL_Rect Particle::getOrigin()
+SDL_Rect Particle::getOrigin() const
 {
-    return m_origin;
+	return m_fixedOrigin;
 }
 
 unsigned int Particle::getElapsedTime()
@@ -91,7 +91,8 @@ int Particle::getState()
 void Particle::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-
+	
+	/* Et encore une machine d'état un peu dégueu... */
     if(m_t - (m_lifetime + m_splashTime) >= 0)
     {
         m_state = PARTICLE_STATE_END;

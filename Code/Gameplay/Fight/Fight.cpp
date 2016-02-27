@@ -300,8 +300,16 @@ void Fight::showDialog(unsigned int duration)
 	m_dial->hide(false);
 }
 
+bool Fight::isVisible() const {
+	return m_isFighting;
+}
+
 void Fight::display()
 {
+	if (!isVisible()) {
+		return;
+	}
+
 	WGameCore& wScreen = WGameCore::getInstance();
     if(m_pkmn != NULL)
         m_pkmn->displaySkills();

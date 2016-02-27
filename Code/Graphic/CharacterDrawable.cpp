@@ -13,6 +13,14 @@ void CharacterDrawable::display() {
 }
 
 int CharacterDrawable::getPriority() const  {
+	return m_parent->getCenterPos().y + WGameCore::getInstance().getORel().y + m_parent->getJumpHeight();
+}
+
+bool CharacterDrawable::isVisible() const {
+	return m_parent->isVisible();
+}
+
+int CharacterDrawable::getPriority2D() const  {
 	return m_parent->getCenterPos().y + WGameCore::getInstance().getORel().y;
 }
 
