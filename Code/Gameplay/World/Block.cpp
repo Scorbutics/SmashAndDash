@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Block::Block(SDL_Rect corr, unsigned int idSprite, unsigned int properties, bool auto_animation, int col):m_anim(375, 4, true, 0, 0, TAILLEBLOC, TAILLEBLOC)
+Block::Block(ska::Rectangle corr, unsigned int idSprite, unsigned int properties, bool auto_animation, int col) :m_anim(375, 4, true, 0, 0, TAILLEBLOC, TAILLEBLOC)
 {
 	m_properties = properties;
 
@@ -22,7 +22,7 @@ Block::Block(SDL_Rect corr, unsigned int idSprite, unsigned int properties, bool
 
 }
 
-Block::Block(SDL_Rect corr, SDL_Rect posChipset, unsigned int properties, bool auto_animation, int col):m_anim(375, 4, true, 0, 0, TAILLEBLOC, TAILLEBLOC)
+Block::Block(ska::Rectangle corr, ska::Rectangle posChipset, unsigned int properties, bool auto_animation, int col) :m_anim(375, 4, true, 0, 0, TAILLEBLOC, TAILLEBLOC)
 {
 	m_properties = properties;
 
@@ -60,9 +60,9 @@ void Block::setSpriteFrame(unsigned int x)
 	m_anim.stop(true);
 }
 
-void Block::refresh(SDL_Rect pos, const SDL_Rect* rectAnim)
+void Block::refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim)
 {
-	SDL_Rect buf = m_spritePosInChipset, bufRectAnim;
+	ska::Rectangle buf = m_spritePosInChipset, bufRectAnim;
 	WGameCore& wScreen = WGameCore::getInstance();
 	if(rectAnim != NULL && m_auto_animation)
 	{

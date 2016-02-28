@@ -2,7 +2,7 @@
 #define DEF_WINDOWRENDERER
 
 #include <memory>
-#include <SDL2/SDL.h>
+#include "../Rectangle.h"
 #include "../../Utils/Singleton_template.h"
 
 class Texture;
@@ -16,7 +16,7 @@ class WindowRenderer : public Singleton<WindowRenderer>
 		~WindowRenderer() {}
 
 	public:		
-		int render(Window* win, Texture* tex, int x, int y, SDL_Rect* clip = NULL);
+		int render(Window* win, Texture* tex, int x, int y, ska::Rectangle* clip = NULL);
 		
 };
 

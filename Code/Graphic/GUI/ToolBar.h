@@ -12,7 +12,7 @@ class WGameCore;
 class ToolBar : public MovableWindow
 {
     public:
-    ToolBar(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, SDL_Rect posFond);
+		ToolBar(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond);
     void refresh();
     ~ToolBar();
 

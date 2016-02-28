@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Bar::Bar(string barStyleName, string barContentName, int maxValue, SDL_Rect pos) : m_barStyle(barStyleName, T_RED, T_GREEN, T_BLUE),
+Bar::Bar(string barStyleName, string barContentName, int maxValue, ska::Rectangle pos) : m_barStyle(barStyleName, T_RED, T_GREEN, T_BLUE),
 m_barContent(barContentName, T_RED, T_GREEN, T_BLUE)
 {
     m_maxValue = maxValue;
@@ -32,7 +32,7 @@ void Bar::refresh()
 	if(!m_visible)
 		return;
 
-    SDL_Rect rectSize;
+	ska::Rectangle rectSize;
     rectSize.w = m_barSize.w;
     rectSize.h = m_barSize.h;
     rectSize.x = 0;
@@ -44,7 +44,7 @@ void Bar::refresh()
 	
 }
 
-void Bar::setPos(SDL_Rect pos)
+void Bar::setPos(ska::Rectangle pos)
 {
     m_pos = pos;
 
@@ -100,7 +100,7 @@ int Bar::getCurrentValue()
     return m_curValue;
 }
 
-SDL_Rect Bar::getPos()
+ska::Rectangle Bar::getPos()
 {
     return m_pos;
 }

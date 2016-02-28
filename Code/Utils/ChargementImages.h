@@ -6,15 +6,16 @@
 #include <SDL2/SDL.h>
 #include <vector>
 #include "../Gameplay/Character.h"
+#include "../Graphic/Rectangle.h"
 
 class IniReader;
 
-unsigned int DistanceSquared(const SDL_Rect* pos1, const SDL_Rect* pos2);
-bool IsPositionInBox(const SDL_Rect *pos, const SDL_Rect *box);
-SDL_Rect PosToCenterPicture(const SDL_Rect *imageToCenter, const SDL_Rect *imageBackground);
-bool CollisionBoxABoxB(SDL_Rect rectA, SDL_Rect rectB);
-int GetDirectionFromPos(SDL_Rect *posHero, SDL_Rect *mousePos);
-SDL_Rect GetCurrentSpritePosOfHero(Character* hero, bool animation);
+unsigned int DistanceSquared(const ska::Rectangle* pos1, const ska::Rectangle* pos2);
+bool IsPositionInBox(const ska::Rectangle *pos, const ska::Rectangle *box);
+ska::Rectangle PosToCenterPicture(const ska::Rectangle *imageToCenter, const ska::Rectangle *imageBackground);
+bool CollisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB);
+int GetDirectionFromPos(ska::Rectangle *posHero, ska::Rectangle *mousePos);
+ska::Rectangle GetCurrentSpritePosOfHero(Character* hero, bool animation);
 int GetRandom(std::vector<int>& probs);
 IniReader* GetRandomMobSettings(World* w);
 unsigned int GetMax10Pow(int num);

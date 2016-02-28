@@ -1,7 +1,7 @@
 #ifndef DEF_SHAKERMANAGER
 #define DEF_SHAKERMANAGER
 
-#include <SDL2/SDL.h>
+#include "Rectangle.h"
 class WGameCore;
 class World;
 
@@ -15,7 +15,7 @@ class ShakerManager
 
 	private:
 	bool m_active;
-	SDL_Rect m_oRelBackup;
+	ska::Rectangle m_oRelBackup;
 	unsigned int m_duration, m_t0;
 	int m_intensity, m_sens;
 

@@ -6,7 +6,7 @@
 class WindowSettings: public MovableWindow
 {
     public:
-    WindowSettings(std::string fichierMenu, SDL_Rect posFond, int taillePolice);
+		WindowSettings(std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
     void reset();
     void refresh();
     ~WindowSettings();

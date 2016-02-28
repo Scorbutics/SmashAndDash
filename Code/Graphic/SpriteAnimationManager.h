@@ -5,6 +5,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include "./Draw/DrawableFixedPriority.h"
+#include "Rectangle.h"
 
 class SpriteAnimation;
 
@@ -13,7 +14,7 @@ class SpriteAnimationManager : public DrawableFixedPriority
 	public:
 		SpriteAnimationManager();
 		void reset();
-		SpriteAnimation* play(int type, int id, SDL_Rect pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
+		SpriteAnimation* play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
 		~SpriteAnimationManager();
 		bool isVisible() const override;
 		void display() override;

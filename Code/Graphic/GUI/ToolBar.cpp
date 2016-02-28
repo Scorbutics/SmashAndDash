@@ -5,9 +5,9 @@
 
 using namespace std;
 
-ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, string fichierMenu, SDL_Rect posFond): MovableWindow(fichierMenu, posFond, 22)
+ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, string fichierMenu, ska::Rectangle posFond) : MovableWindow(fichierMenu, posFond, 22)
 {
-	SDL_Rect pos;
+	ska::Rectangle pos;
 	pos.x = TAILLEBLOCFENETRE/2;
 	pos.y = TAILLEBLOCFENETRE/2;
 	pos.w = posFond.w;

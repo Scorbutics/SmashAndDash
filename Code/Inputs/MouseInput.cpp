@@ -16,7 +16,7 @@ MouseInput::~MouseInput()
 }
 
 
-SDL_Rect MouseInput::getMouseLastPos()
+ska::Rectangle MouseInput::getMouseLastPos()
 {
 	return m_mouseLastPos;
 }
@@ -71,9 +71,9 @@ void MouseInput::setMousePos(SDL_Event event)
 	//notifyObservers(&m_mouseEvent);
 }
 
-SDL_Rect MouseInput::getMousePos()
+ska::Rectangle MouseInput::getMousePos()
 {
-	SDL_Rect buf;
+	ska::Rectangle buf;
 
 	buf.x = m_mousex;
 	buf.y = m_mousey;
@@ -110,20 +110,20 @@ bool MouseInput::mouseClick(int touche)
 	return false;
 }
 
-SDL_Rect MouseInput::getMouseClickPos()
+ska::Rectangle MouseInput::getMouseClickPos()
 {
 	return m_clickPos;
 }
 
-SDL_Rect MouseInput::getMouseTranslation()
+ska::Rectangle MouseInput::getMouseTranslation()
 {
-	SDL_Rect mouseTrans;
+	ska::Rectangle mouseTrans;
 	mouseTrans.x = m_mousex - m_mouseLastPos.x;
 	mouseTrans.y = m_mousey - m_mouseLastPos.y;
 	return mouseTrans;
 }
 
-void MouseInput::setMouseLastPos(SDL_Rect mouselastpos)
+void MouseInput::setMouseLastPos(ska::Rectangle mouselastpos)
 {
 	m_mouseLastPos = mouselastpos;
 }

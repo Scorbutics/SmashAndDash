@@ -29,7 +29,7 @@ class GUI : public Observer, public DrawableFixedPriority
 
     void dialogRefresh();
     void refresh();
-    int isPositionOnButton(SDL_Rect *pos);
+	int isPositionOnButton(ska::Rectangle *pos);
     bool isMouseOnAWindow();
     bool isVisible() const override;
     void initButtons();
@@ -73,7 +73,7 @@ private:
     vector<unique_ptr<DialogMenu>> m_buttonList;
     unique_ptr<DialogMenu> m_dial, m_imgDial, m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
     vector<int> m_buttonScroll;
-    SDL_Rect m_lastMousePos, m_curObjectPos;
+	ska::Rectangle m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;
     bool m_hide, m_isMovingWindow;
     Character *m_pnj;

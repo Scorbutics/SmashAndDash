@@ -3,7 +3,7 @@
 
 using namespace std;
 
-WindowSettings::WindowSettings(string fichierMenu, SDL_Rect posFond, int taillePolice):MovableWindow(fichierMenu, posFond, taillePolice)
+WindowSettings::WindowSettings(string fichierMenu, ska::Rectangle posFond, int taillePolice) :MovableWindow(fichierMenu, posFond, taillePolice)
 {
     m_saveSettings = 0;
 	m_saveGame = 0;
@@ -15,7 +15,7 @@ void WindowSettings::reset()
 	WGameCore& wScreen = WGameCore::getInstance();
 	Settings& settings = wScreen.getSettings();
 
-    SDL_Rect buf;
+	ska::Rectangle buf;
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
     this->resize(this->getPos()->w, 10*TAILLEBLOCFENETRE);

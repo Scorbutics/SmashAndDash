@@ -11,8 +11,8 @@
 class Image_Area : public Window_Area
 {
     public:
-    Image_Area(DialogMenu* parent, SDL_Rect relativePos, SDL_Rect* rectSrcBuf, std::string name, bool alpha);
-	Image_Area(DialogMenu* parent, SDL_Rect relativePos, SDL_Rect* rectSrcBuf, Texture* tex, bool alpha);
+		Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, std::string name, bool alpha);
+		Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, Texture* tex, bool alpha);
 	virtual void display();
 	std::string getImageName() const;
     virtual std::string getKey(){return "";};
@@ -24,7 +24,7 @@ class Image_Area : public Window_Area
 	Texture m_image;
     std::string m_name;
 	bool m_alpha;
-    SDL_Rect m_rectSrc;
+	ska::Rectangle m_rectSrc;
 
 };
 

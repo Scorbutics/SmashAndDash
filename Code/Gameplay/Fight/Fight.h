@@ -37,10 +37,10 @@ class Fight : public DrawableFixedPriority
     Player* getPokemon();
     Player* getTrainer();
     DialogMenu* getDialog();
-    const SDL_Rect* getArea(int i);
+	const ska::Rectangle* getArea(int i);
 
     void addArea(int x, int y, int w, int h);
-    void addArea(SDL_Rect area);
+	void addArea(ska::Rectangle area);
     void deleteAllAreas();
 	void display() override;
 	
@@ -51,8 +51,8 @@ class Fight : public DrawableFixedPriority
     int m_fightCount;
     Character *m_opponent; 
 	Player* m_pkmn, *m_trainer;
-    std::vector<SDL_Rect> m_areaList;
-	SDL_Rect m_opponentID;
+	std::vector<ska::Rectangle> m_areaList;
+	ska::Rectangle m_opponentID;
     Animation m_animGrass;
     Texture m_grassSprite;
     std::unique_ptr<DialogMenu> m_dial;

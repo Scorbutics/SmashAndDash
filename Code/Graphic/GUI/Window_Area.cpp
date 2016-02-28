@@ -16,7 +16,7 @@ Window_Area::Window_Area(DialogMenu *parent)
     m_relativePos.y = 0;
 }
 
-SDL_Rect* Window_Area::getRelativePos()
+ska::Rectangle* Window_Area::getRelativePos()
 {
     return &m_relativePos;
 }
@@ -26,9 +26,9 @@ DialogMenu* Window_Area::getParent()
     return m_parent;
 }
 
-SDL_Rect Window_Area::getAbsolutePos()
+ska::Rectangle Window_Area::getAbsolutePos()
 {
-    SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
     return buf;
@@ -49,7 +49,7 @@ bool Window_Area::isA(int type)
     return (m_type == type);
 }
 
-void Window_Area::setRelativePos(SDL_Rect pos)
+void Window_Area::setRelativePos(ska::Rectangle pos)
 {
     m_relativePos.x = pos.x;
     m_relativePos.y = pos.y;

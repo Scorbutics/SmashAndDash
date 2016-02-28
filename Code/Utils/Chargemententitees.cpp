@@ -9,14 +9,14 @@
 #include "Chargemententitees.h"
 #include "../Gameplay/WGameCore.h"
 #include "../Gameplay/World/LayerE.h"
-
+#include "../Graphic/Rectangle.h"
 
 using namespace std;
 
 
 void LoadEntities()
 {
-    SDL_Rect posEntity;
+	ska::Rectangle posEntity;
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 

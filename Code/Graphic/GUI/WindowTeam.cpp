@@ -7,7 +7,7 @@
 
 using namespace std;
 
-WindowTeam::WindowTeam(string fichierMenu, SDL_Rect posFond, int taillePolice):MovableWindow(fichierMenu, posFond, taillePolice)
+WindowTeam::WindowTeam(string fichierMenu, ska::Rectangle posFond, int taillePolice) :MovableWindow(fichierMenu, posFond, taillePolice)
 {
     m_boolUseObjectSelectPkmn.push_back(0);
     m_boolUseObjectSelectPkmn.push_back(0);
@@ -21,7 +21,7 @@ WindowTeam::WindowTeam(string fichierMenu, SDL_Rect posFond, int taillePolice):M
 void WindowTeam::reset(string action)
 {
     this->deleteAll();
-    SDL_Rect buf;
+	ska::Rectangle buf;
 	WGameCore& wScreen = WGameCore::getInstance();
 	PokemonManager& pkmnMng = wScreen.getPokemonManager();
 
@@ -42,7 +42,7 @@ void WindowTeam::reset(string action)
     {
         if(pkmnMng.getPokemon(i) != NULL )
         {
-            SDL_Rect /*rectSrcBuf,*/ posSlot;
+			ska::Rectangle /*rectSrcBuf,*/ posSlot;
             /*rectSrcBuf.x = 0;
             rectSrcBuf.y = pkmnMng->getPokemon(i)->getHeight();
             rectSrcBuf.w = pkmnMng->getPokemon(i)->getWidth();
@@ -81,7 +81,7 @@ void WindowTeam::refresh()
     for(unsigned int i = 0; i < m_slotPkmn.size(); i++)
     {
  
-        SDL_Rect rectSlot = m_slotPkmn[i]->getRectSize(), mouseClickPos = in->getMouseClickPos();
+		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize(), mouseClickPos = in->getMouseClickPos();
         if(pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && IsPositionInBox(&mouseClickPos, &rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));

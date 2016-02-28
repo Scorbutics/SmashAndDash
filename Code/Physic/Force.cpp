@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Force::Force(SDL_Rect pos, float power, float angle)
+Force::Force(ska::Rectangle pos, float power, float angle)
 {
 	m_pos = pos;
 	m_power = power;
@@ -11,7 +11,7 @@ Force::Force(SDL_Rect pos, float power, float angle)
 
 Force::Force()
 {
-	SDL_Rect nullPos;
+	ska::Rectangle nullPos;
 	nullPos.x = 0;
 	nullPos.y = 0;
 	nullPos.w = 0;
@@ -21,7 +21,7 @@ Force::Force()
     m_angle = 0.;
 }
 
-SDL_Rect Force::getPos()
+ska::Rectangle Force::getPos()
 {
 	return m_pos;
 }
@@ -36,7 +36,7 @@ float Force::getAngle()
 	return m_angle;
 }
 
-void Force::setPos(SDL_Rect pos)
+void Force::setPos(ska::Rectangle pos)
 {
 	m_pos = pos;
 }

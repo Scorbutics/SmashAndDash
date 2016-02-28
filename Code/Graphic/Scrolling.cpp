@@ -14,7 +14,7 @@ void Scrolling()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
-    SDL_Rect origineRelative;
+	ska::Rectangle origineRelative;
 
     int x, y;
     x = wScreen.getEntityFactory().getTrainer()->getPos().x;

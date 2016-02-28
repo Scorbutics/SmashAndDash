@@ -32,7 +32,7 @@ PhysicObject::PhysicObject(int id, unsigned int entityNumber)
 }
 
 //Constructeur détaillé
-PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, SDL_Rect r, int offset[4])
+PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset[4])
 {
     m_id = id;
     m_weight = weight;
@@ -60,7 +60,7 @@ PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, floa
 }
 
 //Variante constructeur détaillé
-PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, SDL_Rect r)
+PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r)
 {
     m_id = id;
     m_weight = weight;
@@ -88,7 +88,7 @@ PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, floa
 		m_offset[i] = 0;
 }
 
-PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, SDL_Rect r, int offset0, int offset1, int offset2, int offset3)
+PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset0, int offset1, int offset2, int offset3)
 {
     m_id = id;
 
@@ -196,9 +196,9 @@ int PhysicObject::getID()
     return m_id;
 }
 
-SDL_Rect PhysicObject::getHitboxCenterPos() const
+ska::Rectangle PhysicObject::getHitboxCenterPos() const
 {
-    SDL_Rect buf;
+    ska::Rectangle buf;
 
     buf.x = m_rect.x + (m_rect.w - m_offset[1] + m_offset[3])/2;
     buf.y = m_rect.y + (m_rect.h - m_offset[0] + m_offset[2])/2;
@@ -266,11 +266,11 @@ void PhysicObject::teleport(int x, int y)
     m_rect.y = y;
 }
 
-void PhysicObject::applyForce(SDL_Rect dest, float power)
+void PhysicObject::applyForce(ska::Rectangle dest, float power)
 {
 	Force f;
 	float slope, angle;
-    SDL_Rect hitboxPos = this->getHitboxCenterPos();
+    ska::Rectangle hitboxPos = this->getHitboxCenterPos();
 
 	if(hitboxPos.x == dest.x)
 		angle = (float)M_PI / 2;
@@ -317,14 +317,14 @@ float PhysicObject::getSpeed()
     return (sqrtf(m_speedx*m_speedx + m_speedy*m_speedy));
 }
 
-SDL_Rect PhysicObject::getPos()
+ska::Rectangle PhysicObject::getPos()
 {
     return m_rect;
 }
 
-SDL_Rect PhysicObject::getCenterPos()
+ska::Rectangle PhysicObject::getCenterPos()
 {
-    SDL_Rect r = m_rect;
+    ska::Rectangle r = m_rect;
     r.x += r.w/2;
     r.y += r.h/2;
 
@@ -394,10 +394,10 @@ void PhysicObject::reset()
 }
 
 //bouge dans la direction déterminée par "dest" et à la vitesse "speed"
-void PhysicObject::move(SDL_Rect dest, float speed)
+void PhysicObject::move(ska::Rectangle dest, float speed)
 {
 	float slope, angle;
-    SDL_Rect hitboxPos = this->getHitboxCenterPos();
+    ska::Rectangle hitboxPos = this->getHitboxCenterPos();
 
 	if(hitboxPos.x == dest.x)
 	{
@@ -430,7 +430,7 @@ void PhysicObject::move(SDL_Rect dest, float speed)
 }
 
 //bouge dans une direction vers "dest", à la vitesse courante de l'objet
-void PhysicObject::move(SDL_Rect dest)
+void PhysicObject::move(ska::Rectangle dest)
 {
 	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
 		this->move(dest, sqrt(m_speedx*m_speedx + m_speedy*m_speedy));
@@ -445,12 +445,12 @@ void PhysicObject::jump(unsigned int power)
 }
 
 //bouge dans la direction courante à la vitesse courante
-vector<SDL_Rect> PhysicObject::move()
+vector<ska::Rectangle> PhysicObject::move()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    vector<SDL_Rect> ids, ids2, idsEnd;
-    SDL_Rect lastTheoricPos = m_rect;
-    SDL_Rect rectOrigin = m_rect;
+    vector<ska::Rectangle> ids, ids2, idsEnd;
+    ska::Rectangle lastTheoricPos = m_rect;
+    ska::Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
 
 
@@ -493,7 +493,7 @@ vector<SDL_Rect> PhysicObject::move()
 
 
 	//puis on recommence selon les y maintenant
-	SDL_Rect buf = m_rect;
+	ska::Rectangle buf = m_rect;
 	m_rect.y += (int)(m_speedy + 0.5);
     ids2 = this->collisionNPC();
 
@@ -518,7 +518,7 @@ vector<SDL_Rect> PhysicObject::move()
 		//Si après le saut on tombe sur un endroit non praticable
 		if (m_jumpStarted && this->collision())
 		{
-			SDL_Rect hitboxCenterPos, targetPos;					//position théorique d'atterissage
+			ska::Rectangle hitboxCenterPos, targetPos;					//position théorique d'atterissage
 			hitboxCenterPos = getHitboxCenterPos();
 			targetPos = getHitboxCenterPos();
 			targetPos.x += (hitboxCenterPos.x - m_lastGroundPos.x);
@@ -572,7 +572,7 @@ vector<SDL_Rect> PhysicObject::move()
 				int speedDiffx = (int)(m_speedx - mob->m_speedx);
 				int speedDiffy = (int)(m_speedy - mob->m_speedy);
 				float coeff = 0.5*30;
-				SDL_Rect nullPos;
+				ska::Rectangle nullPos;
 				nullPos.x = 0;
 				nullPos.y = 0;
 				nullPos.w = 0;
@@ -591,9 +591,9 @@ vector<SDL_Rect> PhysicObject::move()
     return idsEnd;
 }
 
-bool PhysicObject::collision(SDL_Rect targetPos)
+bool PhysicObject::collision(ska::Rectangle targetPos)
 {
-	SDL_Rect lastPos = m_rect;
+	ska::Rectangle lastPos = m_rect;
 	bool result;
 
 	m_rect = targetPos;
@@ -609,9 +609,9 @@ bool PhysicObject::collision(SDL_Rect targetPos)
 
 bool PhysicObject::collision()
 {
-	vector<SDL_Rect> ids, ids2;
-	SDL_Rect lastTheoricPos = m_rect;
-	SDL_Rect rectOrigin = m_rect;
+	vector<ska::Rectangle> ids, ids2;
+	ska::Rectangle lastTheoricPos = m_rect;
+	ska::Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
 
 	//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
@@ -625,7 +625,7 @@ bool PhysicObject::collision()
 		return true;       
 
 	//puis on recommence selon les y maintenant
-	SDL_Rect buf = m_rect;
+	ska::Rectangle buf = m_rect;
 	m_rect.y += (int)(m_speedy + 0.5);
 	ids2 = this->collisionNPC();
 
@@ -637,9 +637,9 @@ bool PhysicObject::collision()
 }
 
 //teste les collisions avec les NPC uniquement
-vector<SDL_Rect> PhysicObject::collisionNPC()
+vector<ska::Rectangle> PhysicObject::collisionNPC()
 {
-    vector<SDL_Rect> ids, buf;
+    vector<ska::Rectangle> ids, buf;
 	WGameCore& wScreen = WGameCore::getInstance();
 
     buf = wScreen.detectEntity(this->getHitbox());
@@ -662,9 +662,9 @@ unsigned int PhysicObject::getEntityNumber()
     return m_entityNumber;
 }
 
-SDL_Rect PhysicObject::getHitbox()
+ska::Rectangle PhysicObject::getHitbox()
 {
-    SDL_Rect hitbox;
+    ska::Rectangle hitbox;
     hitbox.x = m_rect.x + m_offset[3];
     hitbox.y = m_rect.y + m_offset[2];
     hitbox.w = m_rect.w - m_offset[3] - m_offset[1] -1;
@@ -678,7 +678,7 @@ bool PhysicObject::collisionWorld()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
-	SDL_Rect chd, chg, cbg;
+	ska::Rectangle chd, chg, cbg;
 
 
 	//position coin haut droit hitbox
@@ -760,7 +760,7 @@ PhysicObject::~PhysicObject(){}
 
 
 
-bool FindID(vector<SDL_Rect> &ids, SDL_Rect id)
+bool FindID(vector<ska::Rectangle> &ids, ska::Rectangle id)
 {
     const size_t idSize = ids.size();
     for(size_t i = 0; i < idSize; i++)

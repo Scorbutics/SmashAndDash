@@ -4,11 +4,11 @@
 
 using namespace std;
 
-SDL_Rect GetIDmob()
+ska::Rectangle GetIDmob()
 {
-    vector<SDL_Rect> ids;
+	vector<ska::Rectangle> ids;
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect hitbox = wScreen.getHero()->getHitbox();
+	ska::Rectangle hitbox = wScreen.getHero()->getHitbox();
     int direction = wScreen.getHero()->getDirection();
 
     ids = wScreen.detectEntity(hitbox, direction);
@@ -18,18 +18,18 @@ SDL_Rect GetIDmob()
 		//On vérifie que ce n'est pas le héros qui est détecté en premier
 		if (ids[0].x != 0)
 		{
-			SDL_Rect mobPos = wScreen.getEntityFactory().getNPC(ids[0].x, ids[0].y)->getPos();
-			SDL_Rect heroPos = wScreen.getHero()->getPos();
+			ska::Rectangle mobPos = wScreen.getEntityFactory().getNPC(ids[0].x, ids[0].y)->getPos();
+			ska::Rectangle heroPos = wScreen.getHero()->getPos();
 			return ids[0];
 		}
 		else if (ids.size() >= 2) //Si c'est le héros en premier, on prend le deuxième élément, qui n'est donc pas le héros
 		{
-			SDL_Rect mobPos = wScreen.getEntityFactory().getNPC(ids[1].x, ids[1].y)->getPos();
-			SDL_Rect heroPos = wScreen.getHero()->getPos();
+			ska::Rectangle mobPos = wScreen.getEntityFactory().getNPC(ids[1].x, ids[1].y)->getPos();
+			ska::Rectangle heroPos = wScreen.getHero()->getPos();
 			return ids[1];
 		}
     }
-	SDL_Rect idmob;
+	ska::Rectangle idmob;
 	idmob.x = -ENTITEMAX;
 	idmob.y = -ENTITEMAX;
 	idmob.w = 0;
@@ -37,7 +37,7 @@ SDL_Rect GetIDmob()
     return idmob;
 
 
-    /*SDL_Rect chd, chg, cbd, cbg, buf;
+    /*Rectangle chd, chg, cbd, cbg, buf;
 
     chd.x = wScreen.getHero()->getPos().x + wScreen.getHero()->getWidth()-1 - wScreen.getHero()->getOffset(1);
     chd.y = wScreen.getHero()->getPos().y + wScreen.getHero()->getOffset(2);

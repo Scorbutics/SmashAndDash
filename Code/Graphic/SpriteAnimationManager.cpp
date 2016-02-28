@@ -8,7 +8,7 @@ SpriteAnimationManager::SpriteAnimationManager()
 {
 }
 
-SpriteAnimation* SpriteAnimationManager::play(int type, int id, SDL_Rect pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
+SpriteAnimation* SpriteAnimationManager::play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
 {
 	const size_t size = m_sprites.size();
 	size_t i;

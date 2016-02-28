@@ -10,7 +10,7 @@
 
 using namespace std;
 
-SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, SDL_Rect relativePos, string styleName, string styleNamePressed, string action, int* boolUseObjectSelectPkmn, int key) :DynamicWindowArea(parent), m_image(styleName, T_RED, T_GREEN, T_BLUE), m_imagePressed(styleNamePressed, T_RED, T_GREEN, T_BLUE)
+SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, string styleName, string styleNamePressed, string action, int* boolUseObjectSelectPkmn, int key) :DynamicWindowArea(parent), m_image(styleName, T_RED, T_GREEN, T_BLUE), m_imagePressed(styleNamePressed, T_RED, T_GREEN, T_BLUE)
 {
     m_key = key;
     m_boolUseObjectSelectPkmn = boolUseObjectSelectPkmn;
@@ -26,7 +26,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 	WGameCore& wScreen = WGameCore::getInstance();
     m_index = index;
     m_pkmn = wScreen.getPokemonManager().getPokemon(index);
-    SDL_Rect rectSrcBuf, buf;
+	ska::Rectangle rectSrcBuf, buf;
     buf.x = m_relativePos.x;
     buf.y = m_relativePos.y;
     rectSrcBuf.x = 0;
@@ -71,7 +71,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 
 void SlotPokemon_Area::display()
 {
-    SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
     buf.x += m_parent->getPos()->x;
     buf.y += m_parent->getPos()->y;
 
@@ -101,9 +101,9 @@ void SlotPokemon_Area::refresh()
 		m_buttonArea->refresh();
 }
 
-SDL_Rect SlotPokemon_Area::getRectSize()
+ska::Rectangle SlotPokemon_Area::getRectSize()
 {
-    SDL_Rect rect = *m_parent->getPos();
+	ska::Rectangle rect = *m_parent->getPos();
     rect.x += m_relativePos.x;
     rect.y += m_relativePos.y;
     rect.w = m_pkmn->getWidth();

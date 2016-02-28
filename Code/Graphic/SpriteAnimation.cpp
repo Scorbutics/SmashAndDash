@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SpriteAnimation::SpriteAnimation(int type, int id, SDL_Rect pos, unsigned int framesNumber, unsigned int delay, int alpha): m_anim(delay, framesNumber, false),
+SpriteAnimation::SpriteAnimation(int type, int id, ska::Rectangle pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
 m_sprite(SpritePath::getInstance().getPath(type, id), T_RED, T_GREEN, T_BLUE, alpha)
 {
 	m_type = type;
@@ -17,7 +17,7 @@ m_sprite(SpritePath::getInstance().getPath(type, id), T_RED, T_GREEN, T_BLUE, al
 	m_offset.w = static_cast<Uint16>(m_sprite.getWidth()/m_anim.getNumberFrames());
 	m_offset.h = static_cast<Uint16>(m_sprite.getHeight());
 
-	SDL_Rect& oRel = WGameCore::getInstance().getORel();
+	ska::Rectangle& oRel = WGameCore::getInstance().getORel();
 
 	if (m_pos.x == -1)
 		m_pos.x = WGameCore::getInstance().getWidth() / 2 - m_offset.w / 2 - oRel.x;
@@ -56,7 +56,7 @@ void SpriteAnimation::refresh()
 }
 
 
-void SpriteAnimation::setPos(SDL_Rect pos)
+void SpriteAnimation::setPos(ska::Rectangle pos)
 {
     m_pos = pos;
 }
@@ -103,7 +103,7 @@ unsigned int SpriteAnimation::getWidth()
 void SpriteAnimation::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect pos = m_pos;
+	ska::Rectangle pos = m_pos;
     pos.x += wScreen.getORel().x;
     pos.y += wScreen.getORel().y;
 

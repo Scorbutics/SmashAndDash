@@ -7,12 +7,12 @@ class WGameCore;
 class WindowBag: public MovableWindow
 {
     public:
-    WindowBag(std::string fichierMenu, SDL_Rect posFond, int taillePolice);
+		WindowBag(std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
 
     int* getBoolUseObject();
     int* getBoolTrashObject();
     int* getBoolGiveObject();
-    SDL_Rect getCurObjectPos();
+	ska::Rectangle getCurObjectPos();
 
     void reset();
     void refresh();
@@ -20,7 +20,7 @@ class WindowBag: public MovableWindow
 
     private:
     int m_boolUseObject, m_boolGiveObject, m_boolTrashObject;
-    SDL_Rect m_curObjectPos;
+	ska::Rectangle m_curObjectPos;
 };
 
 #endif

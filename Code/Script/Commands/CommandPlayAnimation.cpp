@@ -1,9 +1,10 @@
 #include "CommandPlayAnimation.h"
 #include "../../Utils\IDs.h"
-#include <SDL2\SDL_rect.h>
+#include <SDL2\SDL.h>
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\ScriptUtils.h"
 #include "../../Utils\StringUtils.h"
+#include "../../Graphic/Rectangle.h"
 
 CommandPlayAnimation::CommandPlayAnimation()
 {
@@ -24,7 +25,7 @@ std::string CommandPlayAnimation::execute(IScript* script, std::vector<std::stri
 	string idType, id;
 	int id_anim;
 	int idTypeInt, idInt;
-	SDL_Rect posAnim;
+	ska::Rectangle posAnim;
 
 	idType = args[0];
 	id = args[1];

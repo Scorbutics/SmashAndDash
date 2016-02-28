@@ -40,7 +40,7 @@ class Layer : public DrawableFixedPriority
     void getData();
 	Layer* getParent() const;
 
-	void setRectAnim(SDL_Rect rectAnim);
+	void setRectAnim(ska::Rectangle rectAnim);
 
 private:
 	void checkSize(int nbrBlocX, int nbrBlocY);
@@ -49,7 +49,7 @@ private:
 	World& m_world;
     std::string m_name, m_nomFichier, m_chipsetname;
     std::vector<std::vector<Block_ptr>> m_block;
-	SDL_Rect m_rectAnim;
+	ska::Rectangle m_rectAnim;
     int m_seed, m_type;
 	int m_fileWidth, m_fileHeight;
 

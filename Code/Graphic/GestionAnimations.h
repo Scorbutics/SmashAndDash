@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <memory>
-#include <SDL2/SDL.h>
+#include "Rectangle.h"
 
 class Layer;
 
-SDL_Rect TileAnimationManagement(Layer *monde, SDL_Rect posMap, SDL_Rect& OfChip);
+ska::Rectangle TileAnimationManagement(Layer *monde, ska::Rectangle posMap, ska::Rectangle& OfChip);
 #endif

@@ -11,10 +11,10 @@ class WGameCore;
 class SlotPokemon_Area : DynamicWindowArea
 {
     public:
-    SlotPokemon_Area(DialogMenu* parent, SDL_Rect relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key);
+		SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key);
     void setPokemon(unsigned int index);
     virtual void display();
-    SDL_Rect getRectSize();
+	ska::Rectangle getRectSize();
     Character* getPokemon();
     virtual std::string getKey(){return "";};
     virtual void forceValue(unsigned int){};

@@ -5,10 +5,11 @@
 
 #include <memory>
 #include "..\Character.h"
+#include "../../Graphic/Rectangle.h"
 typedef std::unique_ptr<Character> Character_ptr;
 
 using namespace std;
 
-SDL_Rect GetIDmob();
+ska::Rectangle GetIDmob();
 
 #endif

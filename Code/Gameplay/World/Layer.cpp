@@ -14,10 +14,10 @@
 
 using namespace std;
 
-bool LireFichierMonde(string *name, int *m_nbrBlocX, int *m_nbrBlockY, vector< vector<SDL_Rect> > &m_block, std::vector<std::vector<Uint32> > &m_propblock, int windowWidth, int windowHeight, string chipsetName);
+bool LireFichierMonde(string *name, int *m_nbrBlocX, int *m_nbrBlockY, vector< vector<ska::Rectangle> > &m_block, std::vector<std::vector<Uint32> > &m_propblock, int windowWidth, int windowHeight, string chipsetName);
 Uint32 GetPixel32(SDL_Surface* image, int x, int y);
 SDL_Surface* LoadImage32(const char *fichier_image, int vram);
-SDL_Rect LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
+ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
 SDL_Color translate_color(Uint32 int_color);
 
 //Constructeur ouvrant un monde déjà créé
@@ -81,7 +81,7 @@ Block* Layer::getBlock(const unsigned int i, const unsigned int j)
 void Layer::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect absoluteCurrentPos, origineRelative, ofChip;
+	ska::Rectangle absoluteCurrentPos, origineRelative, ofChip;
     origineRelative = wScreen.getORel();
     ofChip = wScreen.getOffsetChipset();
 
@@ -125,7 +125,7 @@ void Layer::display()
     }
 }
 
-void Layer::setRectAnim(SDL_Rect rectAnim) {
+void Layer::setRectAnim(ska::Rectangle rectAnim) {
 	m_rectAnim = rectAnim;
 }
 
@@ -190,7 +190,7 @@ void Layer::reset(string pathFile, string chipsetName)
 
             if(c.r != 255 || c.g != 255 || c.b != 255)
             {
-                SDL_Rect buf_lcorr = LocateColorInCorr(fichierMCorr, c);
+				ska::Rectangle buf_lcorr = LocateColorInCorr(fichierMCorr, c);
                 if(buf_lcorr.x != -1 && buf_lcorr.y != -1)
                 {
                     Uint16 prop = GetPixel32(fichierMProp, buf_lcorr.x, buf_lcorr.y);
@@ -202,7 +202,7 @@ void Layer::reset(string pathFile, string chipsetName)
 
                     auto_anim = (col == darkcolor || col == lightColor);
 					
-					SDL_Rect rectCorr;
+					ska::Rectangle rectCorr;
 					rectCorr.x = 0;
 					rectCorr.y = 0;
 					rectCorr.w = fichierMCorr->w;
@@ -212,11 +212,11 @@ void Layer::reset(string pathFile, string chipsetName)
                 }
                 else
                 {
-                    SDL_Rect buf_rect;
+					ska::Rectangle buf_rect;
                     buf_rect.x = fichierMCorr->w + 1;
                     buf_rect.y = fichierMCorr->h + 1;
 
-					SDL_Rect rectCorr;
+					ska::Rectangle rectCorr;
 					rectCorr.x = 0;
 					rectCorr.y = 0;
 					rectCorr.w = fichierMCorr->w;
@@ -229,7 +229,7 @@ void Layer::reset(string pathFile, string chipsetName)
             }
             else
             {
-				SDL_Rect rectCorr;
+				ska::Rectangle rectCorr;
 				rectCorr.x = 0;
 				rectCorr.y = 0;
 				rectCorr.w = fichierMCorr->w;
@@ -279,9 +279,9 @@ void Layer::printCollisionProfile()
     clog << endl << endl;
 }
 
-SDL_Rect LocateColorInCorr(SDL_Surface* corr, SDL_Color c)
+ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c)
 {
-	SDL_Rect buf;
+	ska::Rectangle buf;
 	SDL_Color cCmp;
 
 	for(int x = 0; x < corr->w; x++)

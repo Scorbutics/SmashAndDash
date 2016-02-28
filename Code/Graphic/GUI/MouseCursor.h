@@ -25,7 +25,7 @@ class MouseCursor : public DrawableFixedPriority
     void setObjectAmount(unsigned int x);
 	void setObject(Object* object, unsigned int amount);
 	void setPokemon(Character* pkmn);
-    void setCursorPos(SDL_Rect pos);
+	void setCursorPos(ska::Rectangle pos);
 
 	void display() override;
 	bool isVisible() const override;
@@ -47,7 +47,7 @@ class MouseCursor : public DrawableFixedPriority
     MouseInput *m_in;
     Animation m_aniCursor;
     Texture m_sprite;
-    SDL_Rect m_cursorPos;
+	ska::Rectangle m_cursorPos;
     std::unique_ptr<DialogMenu> m_hintBox;
     bool m_hideC, m_hideH;
     Character_ptr m_stockPkmn;

@@ -2,7 +2,7 @@
 #define DEF_PATH
 
 #include <string>
-#include <SDL2/SDL.h>
+#include "../../Graphic//Rectangle.h"
 
 class World;
 
@@ -16,7 +16,7 @@ class Path
     bool isPredefined();
     bool isMotionless();
     bool isRandom();
-    void findPath(SDL_Rect from, SDL_Rect to);
+	void findPath(ska::Rectangle from, ska::Rectangle to);
 
     int getPathDirection(unsigned int number);
     string getPathString();

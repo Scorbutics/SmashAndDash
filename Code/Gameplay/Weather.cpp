@@ -110,7 +110,7 @@ void Weather::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
-	SDL_Rect& oRel = wScreen.getORel();
+	ska::Rectangle& oRel = wScreen.getORel();
 
 	if (!m_active) {
 		return;
@@ -119,7 +119,7 @@ void Weather::display()
     for(int i = 0; i < m_number; i++)
     {
 
-            SDL_Rect buf;
+		ska::Rectangle buf;
 			m_x[i] += (float)(m_intensityX / 5.);
 			m_y[i] += (float)(m_intensityY / 5.);
 

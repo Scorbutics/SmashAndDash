@@ -14,7 +14,7 @@ MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
     m_delay = 0;
     m_time = 0;
     m_in = WGameCore::getInstance().getInputListener().getMouseInput();
-    SDL_Rect buf = m_in->getMousePos();
+	ska::Rectangle buf = m_in->getMousePos();
     buf.w = 3*TAILLEBLOCFENETRE;
     buf.h = 2*TAILLEBLOCFENETRE;
     m_stockObject = NULL;
@@ -68,7 +68,7 @@ DialogMenu* MouseCursor::getHintBox()
 
 bool MouseCursor::isActiveHint(GUI *g)
 {
-    SDL_Rect mousePos = m_in->getMousePos();
+	ska::Rectangle mousePos = m_in->getMousePos();
     int ind = g->isPositionOnButton(&mousePos);
     if(ind != -1)
         m_hideH = false;
@@ -78,7 +78,7 @@ bool MouseCursor::isActiveHint(GUI *g)
     return !m_hideH;
 }
 
-void MouseCursor::setCursorPos(SDL_Rect pos)
+void MouseCursor::setCursorPos(ska::Rectangle pos)
 {
     m_cursorPos = pos;
 }
@@ -104,7 +104,7 @@ void MouseCursor::display()
 
     if(SDL_GetTicks() - m_time < m_delay)
     {
-        SDL_Rect buf = m_aniCursor.getRectOfCurrentFrame(), relativeMousePos = m_cursorPos;
+		ska::Rectangle buf = m_aniCursor.getRectOfCurrentFrame(), relativeMousePos = m_cursorPos;
         relativeMousePos.x += wScreen.getORel().x;
         relativeMousePos.y += wScreen.getORel().y;
 
@@ -117,7 +117,7 @@ void MouseCursor::display()
 
 void MouseCursor::displaySelectedPokemon()
 {
-    SDL_Rect rectPkmnSprite, mousePos = m_in->getMousePos();
+	ska::Rectangle rectPkmnSprite, mousePos = m_in->getMousePos();
     if(m_stockPkmn != NULL)
     {
 		Texture pkmn(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_stockPkmn->getID()), T_RED, T_GREEN, T_BLUE);
@@ -131,7 +131,7 @@ void MouseCursor::displaySelectedPokemon()
 
 void MouseCursor::displaySelectedObject()
 {
-    SDL_Rect mousePos = m_in->getMousePos();
+	ska::Rectangle mousePos = m_in->getMousePos();
     if(m_stockObject != NULL)
     {
         mousePos.x += 10;
@@ -145,7 +145,7 @@ void MouseCursor::displaySelectedObject()
 void MouseCursor::displayHint()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+	ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
     mousePos.y -= m_hintBox->getPos()->w/2;
     m_hintBox->setPos(mousePos);
     m_hintBox->display();

@@ -15,7 +15,7 @@
 
 Fight::Fight(): m_animGrass(1, 3, false)
 {
-	SDL_Rect buf;
+	ska::Rectangle buf;
 	WGameCore& wScreen = WGameCore::getInstance();
 	buf.x = 0;
 	buf.y = 0;
@@ -32,7 +32,7 @@ Fight::Fight(): m_animGrass(1, 3, false)
     m_t0 = 0;
     m_duration = 0;
 
-	SDL_Rect pos;
+	ska::Rectangle pos;
 	pos.x = 0;
 	pos.y = 0;
 	pos.w = 8*TAILLEBLOCFENETRE;
@@ -70,7 +70,7 @@ bool Fight::isInFightArea(Player* hero)
         return false;
     }
 
-    SDL_Rect absolutePos = hero->getHitboxCenterPos();
+	ska::Rectangle absolutePos = hero->getHitboxCenterPos();
 
     for(unsigned int i = 0; i < m_areaList.size(); i++)
         if(IsPositionInBox(&absolutePos, &(m_areaList[i])))
@@ -81,7 +81,7 @@ bool Fight::isInFightArea(Player* hero)
 
 void Fight::addArea(int x, int y, int w, int h)
 {
-    SDL_Rect buf;
+	ska::Rectangle buf;
     buf.x = x;
     buf.y = y;
     buf.w = w;
@@ -89,12 +89,12 @@ void Fight::addArea(int x, int y, int w, int h)
     m_areaList.push_back(buf);
 }
 
-void Fight::addArea(SDL_Rect area)
+void Fight::addArea(ska::Rectangle area)
 {
     m_areaList.push_back(area);
 }
 
-const SDL_Rect* Fight::getArea(int i)
+const ska::Rectangle* Fight::getArea(int i)
 {
     return &(m_areaList[i]);
 }
@@ -129,13 +129,13 @@ void Fight::start(Character* opponent)
 
 
     //Création de la barre de vie apparaissant en combat
-    SDL_Rect pos; //sa position  >!! relative !!<
+	ska::Rectangle pos; //sa position  >!! relative !!<
     pos.x = pos.y = 0;
 
 
 
 
-	SDL_Rect posAnim;
+	ska::Rectangle posAnim;
 	posAnim = m_opponent->getPos();
 	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 2, posAnim, 1, 200);
 
@@ -149,7 +149,7 @@ void Fight::start(Character* opponent)
 	}
 	
 	m_dial->modifyText("Un " + m_opponent->getDescriptor()->getName() + " sauvage veut se battre !");
-	SDL_Rect posDial = wScreen.getHero()->getPos();
+	ska::Rectangle posDial = wScreen.getHero()->getPos();
 	posDial.x += wScreen.getORel().x + posDial.w;
 	posDial.y -= m_dial->getPos()->h - wScreen.getORel().y;
 	m_dial->setPos(posDial);
@@ -171,7 +171,7 @@ void Fight::start(Character* opponent)
     wScreen.getGUI().resetAttackPokemonWindow(m_pkmn);
     wScreen.getGUI().resetAttackOpponentWindow(m_opponent);
 	
-	SDL_Rect randomPos, relativePos, boxScreen;
+	ska::Rectangle randomPos, relativePos, boxScreen;
 	randomPos.x = wScreen.getHero()->getPos().x;
 	randomPos.y = wScreen.getHero()->getPos().y;
 	randomPos.h = wScreen.getHero()->getHeight();
@@ -321,7 +321,7 @@ void Fight::display()
     //Refresh la barre de vie si active
     if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible())
     {
-        SDL_Rect pos = m_pkmn->getPos();
+		ska::Rectangle pos = m_pkmn->getPos();
         pos.y -= m_pkmn->getHPBar()->getPos().h + abs(wScreen.getORel().y);
         pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
         m_pkmn->getHPBar()->setPos(pos);
@@ -330,7 +330,7 @@ void Fight::display()
 
     if(m_opponent != NULL && m_opponent->getHPBar()->isVisible())
     {
-        SDL_Rect pos = m_opponent->getPos();
+		ska::Rectangle pos = m_opponent->getPos();
         pos.y -= m_opponent->getHPBar()->getPos().h + abs(wScreen.getORel().y);
         pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
         m_opponent->getHPBar()->setPos(pos);
@@ -375,8 +375,8 @@ void Fight::refresh()
 	else if(m_fightCount == 3)
 	{
 		m_fightCount = 0;
-		vector<SDL_Rect> ids;
-		SDL_Rect posTrainer = m_trainer->getPos();
+		vector<ska::Rectangle> ids;
+		ska::Rectangle posTrainer = m_trainer->getPos();
 		posTrainer.x -= m_mobAggroRange;
 		posTrainer.y -= m_mobAggroRange;
 		posTrainer.w = 2*m_mobAggroRange;
@@ -404,7 +404,7 @@ void Fight::displayDialog()
     if(m_dialogActive)
     {
 		
-        SDL_Rect pos = wScreen.getFight().getTrainer()->getPos();
+		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
         pos.x += wScreen.getORel().x + pos.w;
         pos.y -= m_dial->getPos()->h - wScreen.getORel().y;
 

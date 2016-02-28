@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Button::Button(DialogMenu* parent, SDL_Rect relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key, bool bstatic) : DynamicWindowArea(parent)
+Button::Button(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key, bool bstatic) : DynamicWindowArea(parent)
 {
     m_static = bstatic;
     m_index = 0;
@@ -48,7 +48,7 @@ void Button::display()
 
 	WGameCore& wScreen = WGameCore::getInstance();
     MouseInput *in = wScreen.getInputListener().getMouseInput();
-    SDL_Rect buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
     textPos.w = m_stext.getWidth();
@@ -72,7 +72,7 @@ void Button::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput *in = wScreen.getInputListener().getMouseInput();
-	SDL_Rect buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 	textPos.w = m_stext.getWidth();

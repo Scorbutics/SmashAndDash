@@ -8,7 +8,7 @@
 #include "../../Utils/IDs.h"
 using namespace std;
 
-Text_Area::Text_Area(DialogMenu *parent, string text, int fontSize, SDL_Rect relativePos): Window_Area(parent)
+Text_Area::Text_Area(DialogMenu *parent, string text, int fontSize, ska::Rectangle relativePos) : Window_Area(parent)
 {
     m_type = BUTTON_TEXT_AREA;
     m_text = text;
@@ -36,7 +36,7 @@ void Text_Area::display()
     else
         m_active = true;
 
-    SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 	

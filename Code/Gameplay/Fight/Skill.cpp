@@ -22,7 +22,7 @@ using namespace std;
 //Déroulement des combats :
 //Chargement d'un monde type "Arène" dépendant du lieu où se trouve le héro (même fonctionnement que l'affichage d'un monde mais
 //avec pour héro le pokemon qui combat, et pour seules entités : le héro, fixe, le pokémon adverse et notre pokémon).
-bool CollisionBoxABoxB(SDL_Rect rectA, SDL_Rect rectB);
+bool CollisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB);
 
 Projectile::Projectile(IniReader* data, Character* parent):
 	Skill(data, parent)
@@ -50,7 +50,7 @@ Projectile::Projectile(IniReader* data, Character* parent):
 
 	for(int i = 0; i < m_nombre; i++)
 	{
-		SDL_Rect nullPos;
+		ska::Rectangle nullPos;
 		nullPos.x = 0;
 		nullPos.y = 0;
 		nullPos.w = 0;
@@ -68,7 +68,7 @@ void Projectile::refresh()
     for(int i = 0; i < m_nombre; i++)
         if(m_particles[i] != NULL && m_particles[i]->isActive())
         {
-			SDL_Rect particlePos, particleOrigin;
+			ska::Rectangle particlePos, particleOrigin;
 			unsigned int distance;
             m_particles[i]->refresh();
             m_particles[i]->addSlopeNoise((float)((rand()%(m_slopeNoise + 1) - m_slopeNoise/2)/10.));
@@ -110,11 +110,11 @@ AOE::AOE(IniReader* data, Character* parent):
 	m_active = false;
 }
 
-void AOE::launch(SDL_Rect pos)
+void AOE::launch(ska::Rectangle pos)
 {
 	Texture text(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, m_range-1+3), T_RED, T_GREEN, T_BLUE, 128);
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect ppos = m_parent->getHitboxCenterPos();
+	ska::Rectangle ppos = m_parent->getHitboxCenterPos();
 	ppos.x -= text.getWidth()/4;
 	ppos.y -= text.getHeight()/2;
 	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, m_range-1+3, ppos, 1, 80, 2);
@@ -134,7 +134,7 @@ void AOE::refresh()
 
 	if (pkmn != NULL && opponent != NULL)
 	{
-		SDL_Rect pkmnPos = pkmn->getPos(), opponentPos = opponent->getPos();
+		ska::Rectangle pkmnPos = pkmn->getPos(), opponentPos = opponent->getPos();
 		if(DistanceSquared(&pkmnPos, &opponentPos) <= (m_range*m_range*TAILLEBLOC*TAILLEBLOC))
 		{
 			m_active = false;
@@ -198,11 +198,11 @@ AOE::~AOE()
 
 /*
 
-Melee::Melee(int id, string skill, string icone, SDL_Rect *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent): 
+Melee::Melee(int id, string skill, string icone, Rectangle *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent): 
 	Skill(id, skill, 1, TAILLEBLOC*2, icone, posIcone, degats, knockback, description, nom, type, cooldown, context, parent)
 {
     m_vitesse = 512;
-	SDL_Rect nullPos;
+	Rectangle nullPos;
 	nullPos.x = 0;
 	nullPos.y = 0;
 	nullPos.w = 0;
@@ -304,9 +304,9 @@ float Projectile::getSpeed()
 	return m_vitesse;
 }
 
-void Projectile::launch(SDL_Rect dest)
+void Projectile::launch(ska::Rectangle dest)
 {
-    SDL_Rect buf = m_parent->getCenterPos();
+	ska::Rectangle buf = m_parent->getCenterPos();
 	WGameCore& wScreen = WGameCore::getInstance();
 
     float angle = atan((dest.y - buf.y)/(float)(dest.x - buf.x));
@@ -361,10 +361,10 @@ Texture* Skill::getSpriteRemainingCD()
 
 void Projectile::collision()
 {
-    //SDL_Rect posHero = wScreen.getHero()->getPos();
-    vector<SDL_Rect> idChar;
+    //Rectangle posHero = wScreen.getHero()->getPos();
+	vector<ska::Rectangle> idChar;
 	WGameCore& wScreen = WGameCore::getInstance();
-    //SDL_Rect mousePos = wScreen.getInputListener().getInput()->getMousePos();
+    //Rectangle mousePos = wScreen.getInputListener().getInput()->getMousePos();
     //int speed;
 
     for(int i = 0; i < m_nombre; i++)
@@ -474,12 +474,12 @@ void Skill::setIcon(Texture *icone)
     m_icone = *icone;
 }
 
-SDL_Rect Skill::getPosIcon()
+ska::Rectangle Skill::getPosIcon()
 {
     return m_posIcone;
 }
 
-void Skill::setPosIcon(SDL_Rect posIcone)
+void Skill::setPosIcon(ska::Rectangle posIcone)
 {
     m_posIcone = posIcone;
 }

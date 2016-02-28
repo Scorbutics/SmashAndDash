@@ -8,7 +8,7 @@ class WGameCore;
 class WindowTeam: public MovableWindow
 {
     public:
-    WindowTeam(string fichierMenu, SDL_Rect posFond, int taillePolice);
+		WindowTeam(string fichierMenu, ska::Rectangle posFond, int taillePolice);
     void reset(std::string action);
     void refresh();
     ~WindowTeam();

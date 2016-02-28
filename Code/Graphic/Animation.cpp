@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, SDL_Rect offsetAndFrameSize)
+Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::Rectangle offsetAndFrameSize)
 {
     m_offset = offsetAndFrameSize;
     m_offsetBase = m_offset;
@@ -26,7 +26,7 @@ Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, SDL_R
 
 Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, int x, int y, unsigned int width, unsigned int height)
 {
-	SDL_Rect r;
+	ska::Rectangle r;
 	r.x = x;
 	r.y = y;
 	r.w = width;
@@ -97,7 +97,7 @@ unsigned int Animation::getCycles()
 	return m_cycles;
 }
 
-void Animation::setOffsetAndFrameSize(SDL_Rect s)
+void Animation::setOffsetAndFrameSize(ska::Rectangle s)
 {
     m_offsetBase = s;
     m_frameWidth = s.w;
@@ -110,12 +110,12 @@ void Animation::setOffsetAndFrameSize(SDL_Rect s)
         m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
 }
 
-SDL_Rect Animation::getOffsetBase()
+ska::Rectangle Animation::getOffsetBase()
 {
 	return m_offsetBase;
 }
 
-SDL_Rect Animation::getOffsetAndFrameSize()
+ska::Rectangle Animation::getOffsetAndFrameSize()
 {
     return m_offset;
 }
@@ -169,7 +169,7 @@ void Animation::resetCycles()
 	m_cycles = 0;
 }
 
-SDL_Rect Animation::getRectOfCurrentFrame()
+ska::Rectangle Animation::getRectOfCurrentFrame()
 {
 
     if(m_active == false)

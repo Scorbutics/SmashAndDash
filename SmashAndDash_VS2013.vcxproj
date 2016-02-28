@@ -135,6 +135,8 @@
     <ClInclude Include="Code\Gameplay\Scene\HasLogic.h" />
     <ClInclude Include="Code\Graphic\Draw\Drawable.h" />
     <ClInclude Include="Code\Graphic\Draw\DrawableFixedPriority.h" />
+    <ClInclude Include="Code\Graphic\Point.h" />
+    <ClInclude Include="Code\Graphic\Rectangle.h" />
     <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\Script\Commands\AbstractCommand.h" />
     <ClInclude Include="Code\Exceptions\InputException.h" />

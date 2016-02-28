@@ -3,7 +3,7 @@
 #include "GravityParticle.h"
 #include "../Utils\IDs.h"
 
-GravityParticle::GravityParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative):
+GravityParticle::GravityParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)
 {
     m_type = PARTICLE_GRAVITY;
@@ -13,7 +13,7 @@ GravityParticle::GravityParticle(int idSprite, SDL_Rect pos, double lifetime, do
     m_countWind = 0;
 }
 
-void GravityParticle::launch(SDL_Rect origin, float angle, unsigned int power)
+void GravityParticle::launch(ska::Rectangle origin, float angle, unsigned int power)
 {
     Particle::launch(origin, angle, power);
     m_by = power*sin(angle);

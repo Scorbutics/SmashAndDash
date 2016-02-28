@@ -30,7 +30,7 @@ GUI::GUI()
     m_isMovingWindow = m_hide = false;
 
 
-    SDL_Rect menuPos;
+	ska::Rectangle menuPos;
     menuPos.x = 0;
     menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE*4;
     menuPos.w = wScreen.getWidth()/2;
@@ -113,7 +113,7 @@ WindowBag* GUI::getWindowBag()
 void GUI::initButtons()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect buf;
+	ska::Rectangle buf;
     buf.w = (TAILLEBLOCFENETRE)*2;
     buf.h = (TAILLEBLOCFENETRE)*2;
     buf.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
@@ -204,7 +204,7 @@ void GUI::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     MouseInput *in = wScreen.getInputListener().getMouseInput();
-    SDL_Rect mousePos = in->getMousePos(), lastMousePos = in->getMouseLastPos(), bufButtonPos;
+	ska::Rectangle mousePos = in->getMousePos(), lastMousePos = in->getMouseLastPos(), bufButtonPos;
     bufButtonPos.w = (TAILLEBLOCFENETRE)*2;
     bufButtonPos.h = (TAILLEBLOCFENETRE)*2;
     bufButtonPos.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
@@ -219,7 +219,7 @@ void GUI::refresh()
         if(m_buttonList[i] != NULL)
         {
             m_buttonList[i]->refresh();
-            SDL_Rect buttonPos = *m_buttonList[i]->getPos();
+			ska::Rectangle buttonPos = *m_buttonList[i]->getPos();
             if(IsPositionInBox(&mousePos, &buttonPos))
             {
 
@@ -294,7 +294,7 @@ ToolBar* GUI::getToolbar()
 void GUI::setClickMenu()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos(), invAreaAbsolutePos, buttonPos;
+	ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos(), invAreaAbsolutePos, buttonPos;
 
     vector<int> vBool;
     vBool.push_back(0);
@@ -306,7 +306,7 @@ void GUI::setClickMenu()
         invAreaAbsolutePos = invArea->getAbsolutePos();
         if(IsPositionInBox(&mousePos, &invAreaAbsolutePos) && !IsPositionInBox(&mousePos, m_clickMenu->getPos()))
         {
-            SDL_Rect posClickMenu = mousePos;
+			ska::Rectangle posClickMenu = mousePos;
             posClickMenu.x -= 5;
             posClickMenu.y -= 5;
             m_clickMenu->setPos(posClickMenu);
@@ -365,7 +365,7 @@ void GUI::setClickMenu()
 void GUI::resetAttackPokemonWindow(Character* pokemon)
 {
     m_attackPokemon->deleteAll();
-    SDL_Rect buf, bufNULL;
+	ska::Rectangle buf, bufNULL;
     buf.x = TAILLEBLOCFENETRE/4;
     buf.y = 0;
     bufNULL.x = 0;
@@ -389,7 +389,7 @@ void GUI::resetAttackPokemonWindow(Character* pokemon)
 void GUI::resetAttackOpponentWindow(Character* op)
 {
     m_attackOpponent->deleteAll();
-    SDL_Rect buf, bufNULL;
+	ska::Rectangle buf, bufNULL;
     buf.x = TAILLEBLOCFENETRE/4;
     buf.y = 0;
     bufNULL.x = 0;
@@ -429,7 +429,7 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
     int id;
     stringstream ss;
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect buf, posHero, oRel = wScreen.getORel();
+	ska::Rectangle buf, posHero, oRel = wScreen.getORel();
 
     m_pokeInfoWindow->deleteAll();
     m_pnj = pokemon;
@@ -473,7 +473,7 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
 void GUI::resetInfoPNJWindow(Character* pnj)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect buf, posHero, oRel = wScreen.getORel();
+	ska::Rectangle buf, posHero, oRel = wScreen.getORel();
     stringstream ss;
     int id;
     m_pnjInfoWindow->deleteAll();
@@ -487,7 +487,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         buf.x = 4*TAILLEBLOCFENETRE+TAILLEBLOCFENETRE/2;
         buf.y = TAILLEBLOCFENETRE/2;
         m_pnjInfoWindow->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
-        SDL_Rect rectSrcBuf;
+		ska::Rectangle rectSrcBuf;
         rectSrcBuf.x = 0;
         rectSrcBuf.y = pnj->getSprite()->getHeight()*2 /8;
         rectSrcBuf.w = pnj->getSprite()->getWidth()/3;
@@ -552,7 +552,7 @@ void GUI::dialogDisplay()
     {
 		vector<Skill_ptr>* v = wScreen.getFight().getPokemon()->getSkills();
 		
-        SDL_Rect cooldownPos;
+		ska::Rectangle cooldownPos;
         cooldownPos.x = m_attackPokemon->getPos()->x + TAILLEBLOCFENETRE/4;
         cooldownPos.y = m_attackPokemon->getPos()->y;
 
@@ -589,12 +589,12 @@ void GUI::dialogDisplay()
 
     if(m_clickMenu->isVisible())
     {
-        SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
         if(IsPositionInBox(&mousePos , m_clickMenu->getPos()))
             m_clickMenu->display();
         else
         {
-			SDL_Rect nullPos;
+			ska::Rectangle nullPos;
 			nullPos.x = 0;
 			nullPos.y = 0;
 			nullPos.w = 0;
@@ -642,7 +642,7 @@ void GUI::dialogRefresh()
 	{
 		vector<Skill_ptr>* v = wScreen.getFight().getPokemon()->getSkills();
 
-		SDL_Rect cooldownPos;
+		ska::Rectangle cooldownPos;
 		cooldownPos.x = m_attackPokemon->getPos()->x + TAILLEBLOCFENETRE/4;
 		cooldownPos.y = m_attackPokemon->getPos()->y;
 
@@ -679,12 +679,12 @@ void GUI::dialogRefresh()
 
 	if(m_clickMenu->isVisible())
 	{
-		SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
 		if(IsPositionInBox(&mousePos , m_clickMenu->getPos()))
 			m_clickMenu->refresh();
 		else
 		{
-			SDL_Rect nullPos;
+			ska::Rectangle nullPos;
 			nullPos.x = 0;
 			nullPos.y = 0;
 			nullPos.w = 0;
@@ -728,7 +728,7 @@ DialogMenu* GUI::getInfoPokemonWindow()
 
 //GUI::isPositionOnButton renvoie l'indice du bouton où se situe "pos" dans m_buttonList
 //Renvoie -1 si pos n'est dans aucun bouton
-int GUI::isPositionOnButton(SDL_Rect *pos)
+int GUI::isPositionOnButton(ska::Rectangle *pos)
 {
     for(unsigned int i = 0; i < m_buttonList.size(); i++)
         if(IsPositionInBox(pos, m_buttonList[i]->getPos()))
@@ -761,8 +761,8 @@ bool GUI::isMovingAWindow()
 bool GUI::isMouseOnAWindow()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect r = wScreen.getInputListener().getMouseInput()->getMousePos();
-    const SDL_Rect* mousePos = &r;
+	ska::Rectangle r = wScreen.getInputListener().getMouseInput()->getMousePos();
+	const ska::Rectangle* mousePos = &r;
     //bool bagVisible = m_wBag->isVisible(), bagPos = IsPositionInBox(mousePos, m_wBag->getPos());
     return ((m_wBag->isVisible() && IsPositionInBox(mousePos, m_wBag->getPos())) || (m_wSettings->isVisible() && IsPositionInBox(mousePos, m_wSettings->getPos())) || (m_wTeam->isVisible() && IsPositionInBox(mousePos, m_wTeam->getPos())) || (m_toolBar->isVisible() && IsPositionInBox(mousePos, m_toolBar->getPos())) );
 }

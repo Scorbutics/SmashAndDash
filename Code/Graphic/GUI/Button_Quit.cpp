@@ -7,7 +7,7 @@
 
 using namespace std;
 
-Button_Quit::Button_Quit(DialogMenu *parent, string imgName, string secondImgName, SDL_Rect relativePos): DynamicWindowArea(parent)
+Button_Quit::Button_Quit(DialogMenu *parent, string imgName, string secondImgName, ska::Rectangle relativePos) : DynamicWindowArea(parent)
 {
     m_type = BUTTON_CLOSE;
     m_active = parent->isVisible();
@@ -29,7 +29,7 @@ void Button_Quit::display()
 	WGameCore& wScreen = WGameCore::getInstance();
     MouseInput * in = wScreen.getInputListener().getMouseInput();
 
-    SDL_Rect buf = m_relativePos, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 
@@ -51,7 +51,7 @@ void Button_Quit::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput * in = wScreen.getInputListener().getMouseInput();
 
-	SDL_Rect buf = m_relativePos, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 

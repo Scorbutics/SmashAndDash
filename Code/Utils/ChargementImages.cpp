@@ -12,17 +12,17 @@
 using namespace std;
 
 
-unsigned int DistanceSquared(const SDL_Rect* pos1, const SDL_Rect* pos2)
+unsigned int DistanceSquared(const ska::Rectangle* pos1, const ska::Rectangle* pos2)
 {
 	return (((pos1->x - pos2->x) * (pos1->x - pos2->x)) + ((pos1->y - pos2->y) * (pos1->y - pos2->y)));
 }
 
-bool IsPositionInBox(const SDL_Rect *pos, const SDL_Rect *box)
+bool IsPositionInBox(const ska::Rectangle *pos, const ska::Rectangle *box)
 {
     return((pos->x >= box->x) && (pos->x <= box->x + box->w) && (pos->y >= box->y) && (pos->y <= box->y + box->h));
 }
 
-bool CollisionBoxABoxB(SDL_Rect rectA, SDL_Rect rectB)
+bool CollisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB)
 {
 
     if(rectA.x > rectB.x + rectB.w || rectA.x + rectA.w < rectB.x)
@@ -35,10 +35,10 @@ bool CollisionBoxABoxB(SDL_Rect rectA, SDL_Rect rectB)
 }
 
 
-int GetDirectionFromPos(SDL_Rect *posHero, SDL_Rect *mousePos) //divise l'écran en 8 directions possibles en fonction de la position de la souris
+int GetDirectionFromPos(ska::Rectangle *posHero, ska::Rectangle *mousePos) //divise l'écran en 8 directions possibles en fonction de la position de la souris
 {
     double pente;
-    //SDL_Rect posH = *posHero, posM = *mousePos;
+    //Rectangle posH = *posHero, posM = *mousePos;
 
     if(mousePos->x != posHero->x)
         pente = (double)abs((mousePos->y - posHero->y)/((double)mousePos->x - posHero->x));
@@ -130,10 +130,10 @@ IniReader* GetRandomMobSettings(World* w)
 	return reader;
 }
 
-SDL_Rect GetCurrentSpritePosOfHero(Character* hero, bool animation)
+ska::Rectangle GetCurrentSpritePosOfHero(Character* hero, bool animation)
 {
     int direction = hero->getDirection();
-	SDL_Rect spritePos = hero->getAnimation()->getOffsetBase();
+	ska::Rectangle spritePos = hero->getAnimation()->getOffsetBase();
 
 
     switch(direction)
@@ -176,9 +176,9 @@ SDL_Rect GetCurrentSpritePosOfHero(Character* hero, bool animation)
     return spritePos;
 }
 
-SDL_Rect PosToCenterPicture(const SDL_Rect *imageToCenter, const SDL_Rect *imageBackground)
+ska::Rectangle PosToCenterPicture(const ska::Rectangle *imageToCenter, const ska::Rectangle *imageBackground)
 {
-    SDL_Rect posCenter;
+	ska::Rectangle posCenter;
 	if (imageToCenter == NULL || imageBackground == NULL)
 	{
 		posCenter.x = 0;

@@ -19,6 +19,7 @@
 #include "EntityFactory.h"
 #include "../Graphic\SpriteAnimationManager.h"
 #include "../Graphic\GUI\MouseCursor.h"
+#include "../Graphic\Rectangle.h"
 #include "../Inputs\InputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "../Graphic\ShakerManager.h"
@@ -56,18 +57,18 @@ public:
 	void quitFlip();
 	void quitter(bool transition);
 	
-    std::vector<SDL_Rect> detectEntity(SDL_Rect box);
-    std::vector<SDL_Rect> detectEntity(SDL_Rect box, int direction);
+	std::vector<ska::Rectangle> detectEntity(ska::Rectangle box);
+	std::vector<ska::Rectangle> detectEntity(ska::Rectangle box, int direction);
 	
 	void switchScene(EnumScene::Enum scene);
 	void initNewWorld();
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
 
-	SDL_Rect& getOffsetHero();
-	SDL_Rect& getOffsetChipset();
-	SDL_Rect& getOffsetActualHero();
-	SDL_Rect& getORel();
+	ska::Rectangle& getOffsetHero();
+	ska::Rectangle& getOffsetChipset();
+	ska::Rectangle& getOffsetActualHero();
+	ska::Rectangle& getORel();
 	Player* getHero();
 	float getSpeedInertie();
 	Animation& getChipsetAnimation();
@@ -95,7 +96,7 @@ public:
     void setEntite(unsigned int i, int value);
     void setOffsetChipset(int x, int y, int w, int h);
     void setORel(int x, int y);
-    void setORel(const SDL_Rect &oRel);
+	void setORel(const ska::Rectangle &oRel);
     void setSpeedInertie(float x);
     void setHero(Player* hero);
     void setChipset(SDL_Surface* chipset);
@@ -110,7 +111,7 @@ public:
 
 		Settings m_settings;
 		Inventory m_inv;
-		SDL_Rect m_OfChip, m_origineRelative;
+		ska::Rectangle m_OfChip, m_origineRelative;
 		bool m_quitFlip, m_ecritureLog, m_continue;
 		Player *m_phero; //Character héro courant
 		InputListener m_kdListener;

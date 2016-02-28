@@ -4,7 +4,7 @@
 
 using namespace std;
 
-MovableWindow::MovableWindow(string fichierMenu, SDL_Rect posFond, int taillePolice):DialogMenu("", "", fichierMenu, posFond, taillePolice, false)
+MovableWindow::MovableWindow(string fichierMenu, ska::Rectangle posFond, int taillePolice) :DialogMenu("", "", fichierMenu, posFond, taillePolice, false)
 {
     m_mouseLastPos.x = m_mouseLastPos.y = 0;
 }
@@ -14,7 +14,7 @@ void MovableWindow::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     MouseInput *in = wScreen.getInputListener().getMouseInput();
-    SDL_Rect mousePos = in->getMousePos(), movePos = m_posFond;
+	ska::Rectangle mousePos = in->getMousePos(), movePos = m_posFond;
     movePos.h = TAILLEBLOCFENETRE/2;
     if(in->mouseClick(SDL_BUTTON_LEFT) && IsPositionInBox(&mousePos, &movePos))
 	{

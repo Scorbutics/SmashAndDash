@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Image_Area::Image_Area(DialogMenu* parent, SDL_Rect relativePos, SDL_Rect* rectSrcBuf, string name, bool alpha) : Window_Area(parent), 
+Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, string name, bool alpha) : Window_Area(parent),
 m_image(name, T_RED, T_GREEN, T_BLUE, alpha ? 128 : -1)
 {
     m_type = BUTTON_IMAGE_AREA;
@@ -30,7 +30,7 @@ m_image(name, T_RED, T_GREEN, T_BLUE, alpha ? 128 : -1)
 	
 }
 
-Image_Area::Image_Area(DialogMenu* parent, SDL_Rect relativePos, SDL_Rect *rectSrcBuf, Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
+Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle *rectSrcBuf, Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
 {
 	m_type = BUTTON_IMAGE_AREA;
 	m_active = parent->isVisible();
@@ -67,7 +67,7 @@ void Image_Area::display()
     else
         m_active = true;
 
-    SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 

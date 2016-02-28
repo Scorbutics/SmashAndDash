@@ -62,7 +62,7 @@ void AI::act(Fight& fight)
     int pathProbInt = rand()%2, randBuf = rand()%100;
     char pathChar[2] = "";
     vector<Skill_ptr> *vSkill = fight.getOpponent()->getSkills();
-    SDL_Rect opponentPos = fight.getOpponent()->getHitboxCenterPos(), pkmnPos = fight.getPokemon()->getHitboxCenterPos();
+	ska::Rectangle opponentPos = fight.getOpponent()->getHitboxCenterPos(), pkmnPos = fight.getPokemon()->getHitboxCenterPos();
 
     if(((float)randBuf/10) <= m_pAttack*10)
         for(unsigned int i = 0; i < (*vSkill).size(); i++)
@@ -94,7 +94,7 @@ void AI::act(Fight& fight)
 	if ((long)(SDL_GetTicks() - m_trainerT0) >= m_trainerTimer)
 	{
 		int direction, r = rand() % 4;
-		SDL_Rect posTrainer = trainer->getPos(), posPkmn = wScreen.getFight().getPokemon()->getPos();
+		ska::Rectangle posTrainer = trainer->getPos(), posPkmn = wScreen.getFight().getPokemon()->getPos();
 
 		if (r == 0)
 			direction = GetDirectionFromPos(&posPkmn, &posTrainer) + 1;
@@ -113,7 +113,7 @@ void AI::act(Fight& fight)
 	}
 
 
-    SDL_Rect screenRect, centerPos = wScreen.getFight().getPokemon()->getHitboxCenterPos();
+	ska::Rectangle screenRect, centerPos = wScreen.getFight().getPokemon()->getHitboxCenterPos();
     screenRect.x = screenRect.y = 0;
     screenRect.w = wScreen.getWidth();
     screenRect.h = wScreen.getHeight();

@@ -4,13 +4,13 @@
 #include "RainParticle.h"
 #include "RainParticleManager.h"
 
-RainParticle::RainParticle(RainParticleManager& parent, int id, int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) : GravityParticle(idSprite, pos, lifetime, splashTime, acceleration, loop, relative), m_parent(parent), m_id(id)
+RainParticle::RainParticle(RainParticleManager& parent, int id, int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) : GravityParticle(idSprite, pos, lifetime, splashTime, acceleration, loop, relative), m_parent(parent), m_id(id)
 {
 }
 
-SDL_Rect RainParticle::getOrigin() const {
+ska::Rectangle RainParticle::getOrigin() const {
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect posBuf;
+	ska::Rectangle posBuf;
 	posBuf.y = -3 * TAILLEBLOC;
 
 	/* On "ajoute" quelques colonnes de blocs à ceux affichés à l'écran pour faire apparaître la pluie aux limites de l'écran */

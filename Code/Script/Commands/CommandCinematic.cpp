@@ -1,7 +1,7 @@
 #include "CommandCinematic.h"
-#include <SDL2\SDL_rect.h>
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\StringUtils.h"
+#include "../../Graphic/Rectangle.h"
 
 CommandCinematic::CommandCinematic()
 {
@@ -22,7 +22,7 @@ std::string CommandCinematic::execute(IScript* script, std::vector<std::string>&
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int frameNumber, delay, id_anim, duration;
 	bool continuer = true;
-	SDL_Rect pos, menuPos;
+	ska::Rectangle pos, menuPos;
 	string message;
 	SpriteAnimation* cinematic;
 	KeyInput* in = wScreen.getInputListener().getKeyInput();

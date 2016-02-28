@@ -131,7 +131,7 @@ void ParticleManager::refresh()
                         this->remove((unsigned int)j); //On la supprime
                     else//Sinon, on la replace à sa position d'origine
                     {
-                        SDL_Rect posBuf;
+						ska::Rectangle posBuf;
 						posBuf = m_particles[j]->getOrigin();
 
                         if(m_particles[j]->isRelative())
@@ -171,7 +171,7 @@ void ParticleManager::playCrumbling(int idSprite, float acceleration, float dens
     m_active = true;
     //this->removeAll();
 
-    SDL_Rect posBuf;
+	ska::Rectangle posBuf;
     for(int i = 0; i < wScreen.getWidth()* wScreen.getHeight()*density/(TAILLEBLOC*TAILLEBLOC); i++)
     {
 		posBuf.y = -TAILLEBLOC;
@@ -184,13 +184,13 @@ void ParticleManager::playCrumbling(int idSprite, float acceleration, float dens
     m_t0 = SDL_GetTicks();
 }
 
-void ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, SDL_Rect rect)
+void ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect)
 {
     m_duration = duration;
     m_active = true;
 	//removeAll();
 
-    SDL_Rect posBuf;
+	ska::Rectangle posBuf;
 	if (density < 1 && density > 0) {
 		/* Aucun affichage si on a une densité trop faible et pas de chance ;) */
 		if (density < NumberUtils::random()) {
@@ -232,7 +232,7 @@ int ParticleManager::collisionNPC()
 	WGameCore& wScreen = WGameCore::getInstance();
 
     const size_t size = m_particles.size();
-    vector<SDL_Rect> ids, buf;
+	vector<ska::Rectangle> ids, buf;
     size_t i;
 
     for(i = 0; i < size; i++)

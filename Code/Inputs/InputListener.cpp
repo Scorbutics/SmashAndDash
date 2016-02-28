@@ -40,7 +40,7 @@ bool InputListener::update()
 	WGameCore& wScreen = WGameCore::getInstance();
     bool dMenu = true;
 	unsigned int power = wScreen.getHero()->getSpeedLimit() * 5;
-	SDL_Rect mousePos = m_mouseIn.getMousePos(), posHeroCenter = wScreen.getHero()->getCenterPos();
+	ska::Rectangle mousePos = m_mouseIn.getMousePos(), posHeroCenter = wScreen.getHero()->getCenterPos();
     posHeroCenter.x += wScreen.getORel().x;
     posHeroCenter.y += wScreen.getORel().y;
 
@@ -193,7 +193,7 @@ bool InputListener::update()
     }
 	else if (m_mouseIn.getMouseState(SDL_BUTTON_LEFT)) /*&& mouseTranslation.x != 0 */
     {
-		SDL_Rect mousePos = m_mouseIn.getMousePos();
+		ska::Rectangle mousePos = m_mouseIn.getMousePos();
 		m_mouseEvent.setX(m_mouseIn.getMousePos().x);
 		m_mouseEvent.setY(m_mouseIn.getMousePos().y);
 		m_mouseEvent.setButton(SDL_BUTTON_LEFT);
@@ -314,9 +314,9 @@ int GetDirectionFromChar(char directionChar)
 
 }
 
-SDL_Rect MovementManagerSouris(MouseInput *in, Character_ptr& hero)
+ska::Rectangle MovementManagerSouris(MouseInput *in, Character_ptr& hero)
 {
-    SDL_Rect mousePos = in->getMousePos(), direction;
+	ska::Rectangle mousePos = in->getMousePos(), direction;
 
     if(in->getMouseState(SDL_BUTTON_LEFT) == 1)
     {

@@ -161,7 +161,7 @@ void EntityFactory::addNPC(Character* npc)
 	m_currentEntities.push_front(&(*(*target)[id][i]));
 }
 
-void EntityFactory::addNPC(int id, SDL_Rect posEntity, string pathStringEntity)
+void EntityFactory::addNPC(int id, ska::Rectangle posEntity, string pathStringEntity)
 {
 
 	unique_ptr<Character> npc = unique_ptr<Character>(new Character(id));

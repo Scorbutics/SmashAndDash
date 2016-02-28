@@ -219,12 +219,12 @@ void Inventory::remove(std::string name, unsigned int amount)
 
 }
 
-void Inventory::display(SDL_Rect rect)
+void Inventory::display(ska::Rectangle rect)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput *in = wScreen.getInputListener().getMouseInput();
     list<unique_ptr<Object>>::iterator iter;
-    SDL_Rect buf, bufcenter, mouseClickPos;
+	ska::Rectangle buf, bufcenter, mouseClickPos;
     int i;
 
     for(iter = m_objects.begin(), i = 0; iter != m_objects.end(); ++iter, i++)

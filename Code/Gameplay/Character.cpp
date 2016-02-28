@@ -68,7 +68,7 @@ vector<unique_ptr<CharacterDrawable>>& Character::getCharacterParts() {
 
 void Character::spritesReload()
 {
-	SDL_Rect ofHeroA;
+	ska::Rectangle ofHeroA;
 	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_id), T_RED, T_GREEN, T_BLUE);
 	m_faceset.load(SpritePath::getInstance().getPath(SPRITEBANK_FACESET, m_id), T_RED, T_GREEN, T_BLUE);
 	ofHeroA.x = 0;
@@ -83,9 +83,9 @@ void Character::spritesReload()
 }
 
 
-vector<SDL_Rect> Character::move()
+vector<ska::Rectangle> Character::move()
 {
-    vector<SDL_Rect> ids = PhysicObject::move();
+    vector<ska::Rectangle> ids = PhysicObject::move();
 	WGameCore& wScreen = WGameCore::getInstance();
 
     //Si on est en combat et qu'on va assez vite en percutant l'ennemi, on lui inflige des dégâts !
@@ -129,7 +129,7 @@ void Character::refresh()
 	//Suivre une entité
 	if (m_entityFollow != NULL)
 	{
-		SDL_Rect entityPos = m_entityFollow->getPos();
+		ska::Rectangle entityPos = m_entityFollow->getPos();
 		this->setSpeedLimit(m_entityFollow->getSpeedLimit());
  		if (DistanceSquared(&entityPos, &m_rect) > 2*2*TAILLEBLOC*TAILLEBLOC)
 		{
@@ -201,7 +201,7 @@ bool Character::addExperience(int exp)
 
 void Character::playAnimation(unsigned int characterAnim, bool waitFinish)
 {
-	SDL_Rect 
+	ska::Rectangle 
 			ofHeroA;			//Offset Héros actuel
 
 	if (!m_visible)
@@ -213,7 +213,7 @@ void Character::playAnimation(unsigned int characterAnim, bool waitFinish)
 		//On rejoue l'animation, mais de façon différente selon characterAnim
 		m_anim.resetCycles();
 		
-		//Rectangle base de l'animation
+		//ska::Rectangle base de l'animation
 		ofHeroA = m_anim.getOffsetBase();
 	
 		switch (characterAnim)
@@ -238,7 +238,7 @@ void Character::playAnimation(unsigned int characterAnim, bool waitFinish)
 void Character::display(int part, bool shadow)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect origineRelative = wScreen.getORel(), ofHeroA, buf = m_rect;
+	ska::Rectangle origineRelative = wScreen.getORel(), ofHeroA, buf = m_rect;
 		
 	if (!m_visible) {
 		return;
@@ -370,7 +370,7 @@ void Character::displaySpeed()
     //5 est une valeur arbitraire
     if(this->getSpeed() >= 5)
     {
-        SDL_Rect rect = getHitbox();
+        ska::Rectangle rect = getHitbox();
         rect.y += rect.h/2;
         rect.h /= 4;
 		wScreen.getParticleManager().playEffect(2, 0.5, (float)0.35, 0, rect);
@@ -381,7 +381,7 @@ void Character::displaySpeed()
 void Character::displayGrassWalk()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect hitCenterPos = getHitboxCenterPos();
+	ska::Rectangle hitCenterPos = getHitboxCenterPos();
 	if(hitCenterPos.x/TAILLEBLOC >= wScreen.getWorld().getNbrBlocX() || hitCenterPos.y/TAILLEBLOC >= wScreen.getWorld().getNbrBlocY())
 		return;
 
@@ -390,12 +390,12 @@ void Character::displayGrassWalk()
 
 	if(bBot != NULL && bMid != NULL && (bBot->getID() == BLOCK_ID_GRASS || bMid->getID() == BLOCK_ID_GRASS) && this->getSpeed() >= 1)
     {
-        SDL_Rect rect = this->getHitbox();
+		ska::Rectangle rect = this->getHitbox();
         rect.y += rect.h/4;
         rect.h /= 4;
         wScreen.getParticleManager().playEffect(3, (float)EARTH_GRAVITY, (float)1., 0, rect);
 
-        SDL_Rect pos = m_rect;
+        ska::Rectangle pos = m_rect;
         pos.y += m_rect.h - m_grassSprite.getHeight();
         pos.x += m_rect.w/2 - m_grassSprite.getWidth()/2;
         m_grassSprite.setPos(pos);
@@ -441,7 +441,7 @@ void Character::setHP(int hp)
     m_hpbar.setCurrentValue(m_hp);
 }
 
-bool Character::launchSkill(unsigned int skillNumber, SDL_Rect dest)
+bool Character::launchSkill(unsigned int skillNumber, ska::Rectangle dest)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     //Au cas où on essaie d'accéder à un skill inexistant
@@ -481,7 +481,7 @@ void Character::refreshSkills()
 	if (wScreen.getFight().isFighting() && m_autoAttack )
 	{
 		Character* pkmn = wScreen.getFight().getPokemon(), *opponent = wScreen.getFight().getOpponent();
-		SDL_Rect pkmnPos = pkmn->getHitboxCenterPos(), opponentPos = opponent->getHitboxCenterPos();
+		ska::Rectangle pkmnPos = pkmn->getHitboxCenterPos(), opponentPos = opponent->getHitboxCenterPos();
 
 		if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_POKEMON  && DistanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
 		{
@@ -547,9 +547,9 @@ Path* Character::getPath()
     return &m_path;
 }
 
-void Character::findPath(SDL_Rect dest)
+void Character::findPath(ska::Rectangle dest)
 {
-    SDL_Rect buf;
+    ska::Rectangle buf;
 
     buf.x = m_rect.x + m_offset[3] + m_anim.getRectOfCurrentFrame().w/2 - m_offset[1];
 	buf.y = m_rect.y + m_anim.getRectOfCurrentFrame().h / 2 - m_offset[0] + m_offset[2];
@@ -561,7 +561,7 @@ void Character::findPath(SDL_Rect dest)
 }
 
 
-void Character::setHPBar(string styleName, string contentName, SDL_Rect pos)
+void Character::setHPBar(string styleName, string contentName, ska::Rectangle pos)
 {
     m_hpbar.setBarContent(contentName);
     m_hpbar.setBarStyle(styleName);
@@ -570,7 +570,7 @@ void Character::setHPBar(string styleName, string contentName, SDL_Rect pos)
 
 void Character::setID(int id)
 {
-	SDL_Rect actualOffsetAnim;
+	ska::Rectangle actualOffsetAnim;
 
     PhysicSprite::setID(id);
     
@@ -598,7 +598,7 @@ void Character::run(bool b)
 
 bool Character::damage(Character* src, unsigned int damages)
 {
-	SDL_Rect animPos;
+	ska::Rectangle animPos;
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	if (wScreen.getPokemonManager().getFirstUsablePokemon() == NULL)

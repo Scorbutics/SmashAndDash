@@ -81,12 +81,12 @@ TrainerCard& WGameCore::getTrainerCard()
     return m_trainerCard;
 }
 
-SDL_Rect& WGameCore::getOffsetChipset()
+ska::Rectangle& WGameCore::getOffsetChipset()
 {
     return m_OfChip;
 }
 
-SDL_Rect& WGameCore::getORel()
+ska::Rectangle& WGameCore::getORel()
 {
     return m_origineRelative;
 }
@@ -122,7 +122,7 @@ ShakerManager& WGameCore::getShakerManager()
     return m_shaker;
 }
 
-void WGameCore::setORel(const SDL_Rect &oRel)
+void WGameCore::setORel(const ska::Rectangle &oRel)
 {
     m_origineRelative = oRel;
 }
@@ -154,7 +154,7 @@ void WGameCore::transition(int type) //type : 1 = entrant, 0 = sortant
     mosaicNumberX = wScreen.getWidth()/fondu.getWidth() + 1;
     mosaicNumberY = wScreen.getHeight()/fondu.getHeight() + 1;
 
-    SDL_Rect buf;
+	ska::Rectangle buf;
     for(unsigned int i = 0; i <= 255; i += 50)
     {
 		
@@ -350,10 +350,10 @@ void WGameCore::waitQuit(DialogMenu* window)
 //fonction qui renvoie un tableau d'ids d'entités entrant en contact avec une box donnée (il peut y avoir plusieurs entités superposées et donc le tableau sera de taille > 1)
 //dans chaque .x : id pokédex
 //dans chaque .y : numéro de l'entité
-vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box)
+vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
 {
-    SDL_Rect posEvent;
-    vector<SDL_Rect> id;
+	ska::Rectangle posEvent;
+	vector<ska::Rectangle> id;
 	list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
 
 	for (Character* entity : currentEntityList)
@@ -362,7 +362,7 @@ vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box)
 
 		if(CollisionBoxABoxB(box, posEvent))
 		{
-			SDL_Rect pos;
+			ska::Rectangle pos;
 			pos.x = (Sint16)entity->getID();
 			pos.y = (Sint16)entity->getEntityNumber();
 			pos.w = 0;
@@ -375,11 +375,11 @@ vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box)
 
 }
 
-vector<SDL_Rect> WGameCore::detectEntity(SDL_Rect box, int direction)
+vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box, int direction)
 {
 	static const int diagPitch = (int)(TAILLEBLOC / (2 * sqrt((float)2))) + 1;
 	static const int directPitch = TAILLEBLOC / 2 + 1;
-    SDL_Rect buf = box;
+	ska::Rectangle buf = box;
     switch(direction)
     {
         case 0:

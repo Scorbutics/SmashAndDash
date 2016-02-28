@@ -5,7 +5,7 @@
 
 using namespace std;
 
-WindowBag::WindowBag(string fichierMenu, SDL_Rect posFond, int taillePolice) : MovableWindow(fichierMenu, posFond, taillePolice)
+WindowBag::WindowBag(string fichierMenu, ska::Rectangle posFond, int taillePolice) : MovableWindow(fichierMenu, posFond, taillePolice)
 {
     m_boolUseObject = 0;
     m_boolGiveObject = 0;
@@ -13,7 +13,7 @@ WindowBag::WindowBag(string fichierMenu, SDL_Rect posFond, int taillePolice) : M
     m_curObjectPos.x = m_curObjectPos.y = 0;
 }
 
-SDL_Rect WindowBag::getCurObjectPos()
+ska::Rectangle WindowBag::getCurObjectPos()
 {
     return m_curObjectPos;
 }
@@ -21,7 +21,7 @@ SDL_Rect WindowBag::getCurObjectPos()
 void WindowBag::reset()
 {
     this->deleteAll();
-    SDL_Rect buf;
+	ska::Rectangle buf;
 	WGameCore& wScreen = WGameCore::getInstance();
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.x = 9*TAILLEBLOCFENETRE;
@@ -58,7 +58,7 @@ void WindowBag::refresh()
     if(m_boolUseObject != 0)
     {
         Inventory_Area* invArea = this->getInventoryArea(0);
-        SDL_Rect invAreaAbsolutePos = invArea->getAbsolutePos();
+		ska::Rectangle invAreaAbsolutePos = invArea->getAbsolutePos();
         gui.getClickMenu()->hide(true);
         m_boolUseObject = 0;
         m_curObjectPos = *gui.getClickMenu()->getPos();
@@ -66,7 +66,7 @@ void WindowBag::refresh()
         m_curObjectPos.y -= invAreaAbsolutePos.y;
         if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
         {
-			SDL_Rect nullPos;
+			ska::Rectangle nullPos;
 			nullPos.x = 0;
 			nullPos.y = 0;
 			nullPos.w = 0;

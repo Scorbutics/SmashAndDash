@@ -28,7 +28,7 @@ Object::Object(int id): m_animation(525, 2, false)
 
 void Object::display()
 {
-    SDL_Rect animOffset = m_animation.getRectOfCurrentFrame(); //récupération de la partie courante de l'image pour créer un effet d'animation
+	ska::Rectangle animOffset = m_animation.getRectOfCurrentFrame(); //récupération de la partie courante de l'image pour créer un effet d'animation
 	m_sprite.render(m_pos.x, m_pos.y, &animOffset);
 }
 
@@ -71,7 +71,7 @@ bool Object::use()
 		if(wScreen.getPokeball().isVisible() || wScreen.getPokemonManager().getPokemonTeamSize() >= POKEMON_TEAM_MAX_SIZE)
 			return false;
 
-		SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
 		mousePos.x -= wScreen.getORel().x;
 		mousePos.y -= wScreen.getORel().y;
 		wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), mousePos, PokeballLaunchReason::Capture);
@@ -101,13 +101,13 @@ bool Object::use(int i)
 	return true;
 }
 
-void Object::setPos(SDL_Rect pos)
+void Object::setPos(ska::Rectangle pos)
 {
     m_pos.x = pos.x;
     m_pos.y = pos.y;
 }
 
-const SDL_Rect* Object::getPos()
+const ska::Rectangle* Object::getPos()
 {
     return &m_pos;
 }

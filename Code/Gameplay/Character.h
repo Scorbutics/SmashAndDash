@@ -35,16 +35,16 @@ class Character : public PhysicSprite
 		Character(int id);
 
 		bool isAlive();
-		void findPath(SDL_Rect dest);
-		//void addSkill(int stype, int id, std::string skillSprite, int nombre, std::string icone, SDL_Rect *posIcone, int degats, int knockback, std::string description, std::string nom, std::string type, int deviation, int noise, int cooldown, int vitesse);
+		void findPath(ska::Rectangle dest);
+		//void addSkill(int stype, int id, std::string skillSprite, int nombre, std::string icone, Rectangle *posIcone, int degats, int knockback, std::string description, std::string nom, std::string type, int deviation, int noise, int cooldown, int vitesse);
 		void addSkill(const string& pathAttackName);
 		bool autoattack();
 		bool damage(Character* src, unsigned int damages);
-		bool launchSkill(unsigned int skillNumber, SDL_Rect dest);
+		bool launchSkill(unsigned int skillNumber, ska::Rectangle dest);
 		void displaySkills();
 		void followEntity(Character* entity);
 		virtual void refresh();
-		virtual vector<SDL_Rect> move();
+		virtual vector<ska::Rectangle> move();
 		void playAnimation(unsigned int characterAnim, bool waitFinish);
 		void spritesReload();
 
@@ -62,7 +62,7 @@ class Character : public PhysicSprite
 		void setHP(int hp);
 		void setFaceset(SDL_Surface* faceset);
 		void setID(int id);
-		bool setSkill(int i, std::string genre, std::string skill, int nombre, std::string icone, SDL_Rect *posIcone, int degats, int knockback, std::string description, std::string nom, std::string type, int deviation = 0);
+		bool setSkill(int i, std::string genre, std::string skill, int nombre, std::string icone, ska::Rectangle *posIcone, int degats, int knockback, std::string description, std::string nom, std::string type, int deviation = 0);
 		void setVisible(bool v);
 		void setCountD(float x);
 		void setAutoattack(bool b);
@@ -78,7 +78,7 @@ class Character : public PhysicSprite
 
 
     private:
-		void setHPBar(std::string styleName, std::string contentName, SDL_Rect pos);
+		void setHPBar(std::string styleName, std::string contentName, ska::Rectangle pos);
 		void displaySpeed();
 		void displayGrassWalk();
 		void loadData();

@@ -3,6 +3,7 @@
 #include "RainParticleManager.h"
 #include "../Gameplay/World/Layer.h"
 #include "RainParticle.h"
+#include "../Graphic/Rectangle.h"
 
 RainParticleManager::RainParticleManager()
 {
@@ -27,7 +28,7 @@ void RainParticleManager::displayRainFog()
 		mosaicNumberX = wScreen.getWidth() / m_rainWeather.getWidth() + 1;
 		mosaicNumberY = wScreen.getHeight() / m_rainWeather.getHeight() + 1;
 
-		SDL_Rect buf;
+		ska::Rectangle buf;
 		buf.x = buf.y = 0;
 		for (unsigned int j = 0; j < mosaicNumberX; j++) {
 			for (unsigned int k = 0; k < mosaicNumberY; k++) {
@@ -77,7 +78,7 @@ void RainParticleManager::playRain(int idSprite, float acceleration, float densi
 	m_active = true;
 	//this->removeAll(PARTICLE_MANAGER_RAIN);
 
-	SDL_Rect posBuf;
+	ska::Rectangle posBuf;
 	for (int i = 0; i < wScreen.getWidth()* wScreen.getHeight()*density / (TAILLEBLOC*TAILLEBLOC); i++)
 	{
 		posBuf.y = wScreen.getHeight() / 2;

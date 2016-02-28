@@ -131,7 +131,7 @@ void Path::setPathString(string path)
 //Code inspiré de celui page http://forums.mediabox.fr/wiki/tutoriaux/flashplatform/jeux/pathfinder_algorithme_astar_pratique
 //Merci à eux
 
-void Path::findPath(SDL_Rect from, SDL_Rect to) //Pathfinding A*
+void Path::findPath(ska::Rectangle from, ska::Rectangle to) //Pathfinding A*
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
@@ -297,7 +297,7 @@ Node SetDataToNodeAtPos(int col, int line)
     Node nodeBuf;
     nodeBuf.setCol(col);
     nodeBuf.setLine(line);
-    SDL_Rect buf = {static_cast<Sint16>(nodeBuf.getCol()*TAILLEBLOC), static_cast<Sint16>(nodeBuf.getLine()*TAILLEBLOC), 1, 1};
+    ska::Rectangle buf = {static_cast<Sint16>(nodeBuf.getCol()*TAILLEBLOC), static_cast<Sint16>(nodeBuf.getLine()*TAILLEBLOC), 1, 1};
     nodeBuf.setWalkable(w.canMoveToPos(buf, wScreen.getHero() ));
     nodeBuf.setParent(&nodeBuf);
     return nodeBuf;

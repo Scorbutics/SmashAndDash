@@ -5,7 +5,7 @@
 
 using namespace std;
 
-LinearParticle::LinearParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, bool loop, bool relative):
+LinearParticle::LinearParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)
 {
     m_type = PARTICLE_LINEAR;
@@ -62,7 +62,7 @@ void LinearParticle::resetSlopeNoise()
     m_slopeNoise = 0;
 }
 
-void LinearParticle::launch(SDL_Rect origin, float angle, unsigned int power)
+void LinearParticle::launch(ska::Rectangle origin, float angle, unsigned int power)
 {
 	Particle::launch(origin, angle, power);
 	m_ay = power*sin(angle);

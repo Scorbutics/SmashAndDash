@@ -8,7 +8,7 @@
 
 using namespace std;
 
-WindowShop::WindowShop(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, SDL_Rect posFond): m_dialog(fichierMenu, posFond, 22), m_userBar(fichierMenu, posFond, 22), m_shopBar(fichierMenu, posFond, 22)
+WindowShop::WindowShop(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : m_dialog(fichierMenu, posFond, 22), m_userBar(fichierMenu, posFond, 22), m_shopBar(fichierMenu, posFond, 22)
 {
 	m_shopInv.load(squareSpriteName, squareSpriteNameHighlight);
     m_pos = posFond;
@@ -74,7 +74,7 @@ void WindowShop::reset()
     vQuit.push_back("Quitter");
     vQuit.push_back("Quitter");
 
-    SDL_Rect buf;
+	ska::Rectangle buf;
     buf.y = (TAILLEBLOCFENETRE*3)/4;
     buf.x = m_shopBar.getPos()->w/2 - TAILLEBLOCFENETRE;
     m_shopBar.addTextArea("Shop", 20, buf);
@@ -107,7 +107,7 @@ void WindowShop::reset()
 void WindowShop::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    SDL_Rect mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+	ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 	MouseInput* in = wScreen.getInputListener().getMouseInput();
 

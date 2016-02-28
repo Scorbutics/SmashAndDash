@@ -8,6 +8,7 @@
 #include "Particle.h"
 #include "../Graphic\Texture.h"
 #include "../Graphic/Draw/DrawableFixedPriority.h"
+#include "../Graphic/Rectangle.h"
 
 class ParticleManager : public DrawableFixedPriority
 {
@@ -17,7 +18,7 @@ class ParticleManager : public DrawableFixedPriority
     virtual ~ParticleManager();
 
     void playCrumbling(int idSprite, float acceleration, float density, unsigned int duration);
-    void playEffect(int idSprite, float acceleration, float density, unsigned int duration, SDL_Rect rect);
+	void playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect);
     void removeAll();
     void stop();
 	void hide(bool h);
@@ -34,7 +35,7 @@ class ParticleManager : public DrawableFixedPriority
     void remove(unsigned int index);
     void launch(float angle, unsigned int power);
 	/* TODO : GravityParticle, CircleParticle, LinearParticle en tant que classes... */
-    //void addGravityParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
+    //void addGravityParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
 	void addParticle(ParticlePtr& particle);
     void addCircleParticle(int idSprite, unsigned int weight);
     void addLinearParticle(int idSprite, unsigned int weight);

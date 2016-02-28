@@ -28,7 +28,7 @@ void MobSpawningManager::spawnOnWorld(unsigned int spawnNumber)
 
 			if(reader != NULL)
 			{
-				SDL_Rect pos;
+				ska::Rectangle pos;
 				pos.x = w.getNbrBlocX()*TAILLEBLOC/2;
 				pos.y = w.getNbrBlocY()*TAILLEBLOC/2;
 
@@ -52,7 +52,7 @@ void MobSpawningManager::refresh()
 
 		if(reader != NULL)
 		{
-			SDL_Rect pos = wScreen.getORel();
+			ska::Rectangle pos = wScreen.getORel();
 			pos.x *= -1;
 			pos.y *= -1;
 			pos.x += wScreen.getWidth()/2;

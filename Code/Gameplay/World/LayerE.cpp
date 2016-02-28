@@ -36,7 +36,7 @@ void LayerE::refresh() {
 	}
 		
 
-	SDL_Rect posCentre;
+	ska::Rectangle posCentre;
 	int i = 0;
 
 	posCentre.x = wScreen.getHero()->getHitboxCenterPos().x;

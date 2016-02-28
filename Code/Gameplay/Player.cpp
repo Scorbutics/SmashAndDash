@@ -33,7 +33,7 @@ void Player::update(Observable* obs, EventArg* event)
 					//CREE LE PATH DU PATHFINDING//
 					///////////////////////////////
 
-					SDL_Rect dest;
+					ska::Rectangle dest;
 					dest.x = me->getX();
 					dest.y = me->getY();
 
@@ -62,7 +62,7 @@ void Player::update(Observable* obs, EventArg* event)
 					//VERIFIE S'IL EST POSSIBLE D'AUTOATTACK//
 					//////////////////////////////////////////
 
-					SDL_Rect opponentPos = wScreen.getFight().getOpponent()->getPos(), mouseRightClickPos;
+					ska::Rectangle opponentPos = wScreen.getFight().getOpponent()->getPos(), mouseRightClickPos;
 					mouseRightClickPos.x = me->getX();
 					mouseRightClickPos.y = me->getY();
 					
@@ -81,7 +81,7 @@ void Player::update(Observable* obs, EventArg* event)
 			//////////////////////////////////////////
 
 			m_path.setPathString("");
-			SDL_Rect buf;
+			ska::Rectangle buf;
 			buf.x = me->getX();
 			buf.y = me->getY();
 			buf.x -= wScreen.getORel().x;
@@ -158,7 +158,7 @@ void Player::update(Observable* obs, EventArg* event)
 			wScreen.getGUI().getDialog()->hide(true);
 			wScreen.getGUI().getImgDialog()->hide(true);
 
-			SDL_Rect buf;
+			ska::Rectangle buf;
 			buf = GetIDmob(); //Fonction qui renvoie l'ID du mob à la position du héro et entite[ID] respectivement dans buf.x et buf.y
 			
 
@@ -204,7 +204,7 @@ void Player::update(Observable* obs, EventArg* event)
 		int skillCursor = GetSkillCursorFromKey(ke);
 		if (skillCursor != -1)
 		{
-			SDL_Rect absoluteMousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+			ska::Rectangle absoluteMousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
 			absoluteMousePos.x -= wScreen.getORel().x;
 			absoluteMousePos.y -= wScreen.getORel().y;
 			wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);

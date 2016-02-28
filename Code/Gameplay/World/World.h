@@ -52,11 +52,11 @@ class World : public HasGraphic
 		void playBgm(bool x);
 		void setBgm(std::string bgm);
 		bool isBgmPlaying();
-		bool canMoveToPos(SDL_Rect pos, PhysicObject* entityToMove);
+		bool canMoveToPos(ska::Rectangle pos, PhysicObject* entityToMove);
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 		void changeLevel(std::string fileName, std::string chipsetName);
-		int spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn);
+		int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn);
 		
 		void refreshEntities();
 

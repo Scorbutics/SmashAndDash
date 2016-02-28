@@ -8,7 +8,7 @@
 using namespace std;
 
 
-SDL_Rect TileAnimationManagement(Layer *monde, SDL_Rect posMap, SDL_Rect &OfChip)
+ska::Rectangle TileAnimationManagement(Layer *monde, ska::Rectangle posMap, ska::Rectangle &OfChip)
 {
    //Uint32 /*brightColor = SDL_MapRGB(screen->format, 170, 170, 170),*/ darkColor = SDL_MapRGB(screen->format, 70, 70, 70);
 	WGameCore& wScreen = WGameCore::getInstance();

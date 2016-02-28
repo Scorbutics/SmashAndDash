@@ -15,9 +15,9 @@
 using namespace std;
 
 
-Pokeball::Pokeball(string spriteName, Character* hero, SDL_Rect destPos, SDL_Rect oRel) : m_gestionAnim(125, 4, false), m_gestionAnimVortex(175, 2, false)
+Pokeball::Pokeball(string spriteName, Character* hero, ska::Rectangle destPos, ska::Rectangle oRel) : m_gestionAnim(125, 4, false), m_gestionAnimVortex(175, 2, false)
 {
-    SDL_Rect animPos;
+	ska::Rectangle animPos;
     animPos.x = 0;
     animPos.y = 0;
     animPos.w = 16;
@@ -45,7 +45,7 @@ Pokeball::Pokeball(string spriteName, Character* hero, SDL_Rect destPos, SDL_Rec
 
 Pokeball::Pokeball() : m_gestionAnim(125, 4, false), m_gestionAnimVortex(175, 2, false)
 {
-    SDL_Rect animPos;
+	ska::Rectangle animPos;
     animPos.x = 0;
     animPos.y = 0;
     animPos.w = 16;
@@ -86,9 +86,9 @@ void Pokeball::setSprites(string spriteName, string spriteOpenPokeball, string s
 }
 
 
-void Pokeball::launch(Character* hero, SDL_Rect destPos, PokeballLaunchReason::Enum launchReason)
+void Pokeball::launch(Character* hero, ska::Rectangle destPos, PokeballLaunchReason::Enum launchReason)
 {
-    SDL_Rect heroPos = hero->getPos();
+	ska::Rectangle heroPos = hero->getPos();
 
 	m_capture = launchReason;
     hero->setDirection(GetDirectionFromPos(&heroPos, &destPos));
@@ -157,7 +157,7 @@ void Pokeball::capture(Character* pkmn)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
-    SDL_Rect& oRel = wScreen.getORel();
+	ska::Rectangle& oRel = wScreen.getORel();
 
 
 	/* Oh mon dieu... */
@@ -166,7 +166,7 @@ void Pokeball::capture(Character* pkmn)
 	{
 		m_pokeballPos.x++;
 		m_pokeballPos.y--;
-		SDL_Rect buf = m_pokeballPos, animPos = m_gestionAnim.getRectOfCurrentFrame();
+		ska::Rectangle buf = m_pokeballPos, animPos = m_gestionAnim.getRectOfCurrentFrame();
 
 		buf.x += oRel.x;
 		buf.y += oRel.y;
@@ -200,7 +200,7 @@ void Pokeball::capture(Character* pkmn)
 	lastTime = SDL_GetTicks();
 	while(delay <= 500)
 	{
-		SDL_Rect buf = m_pokeballPos, animPos = m_gestionAnim.getRectOfCurrentFrame();
+		ska::Rectangle buf = m_pokeballPos, animPos = m_gestionAnim.getRectOfCurrentFrame();
 		buf.x += oRel.x;
 		buf.y += oRel.y;
 		m_pokeballPos.y+=4;
@@ -213,7 +213,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.x -= m_vortex.getWidth()/4; //sur 4 parce que l'image est composée de 2 sous-images pour l'animation
 		buf.y -= m_vortex.getHeight()/4;
 
-		SDL_Rect animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame();
+		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame();
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
         
 
@@ -244,7 +244,7 @@ void Pokeball::capture(Character* pkmn)
 		randomChanceCapture = rand()%((int)((float)3*pkmn->getStatistics()->getHpMax()/pkmn->getHp()) - 0 + 1) + 0;
 		while(delay <= 3000)
 		{
-			SDL_Rect buf = m_pokeballPos, animPos;
+			ska::Rectangle buf = m_pokeballPos, animPos;
 			buf.x += oRel.x;
 			buf.y += oRel.y;
 
@@ -301,7 +301,7 @@ void Pokeball::setPos(int x, int y)
     m_pokeballPos.y = y;
 }
 
-const SDL_Rect* Pokeball::getPos()
+const ska::Rectangle* Pokeball::getPos()
 {
     return &m_pokeballPos;
 }
@@ -319,10 +319,10 @@ void Pokeball::display()
 		return;
 	}    
 
-    vector<SDL_Rect> ids;
+	vector<ska::Rectangle> ids;
     if((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1) ) //Si la Pokeball est en l'air
     {
-        SDL_Rect buf, animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = wScreen.getORel();
+		ska::Rectangle buf, animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = wScreen.getORel();
 
         if(m_pokeballPos.x < m_finalPos.x)
             m_pokeballPos.x += m_speed;
@@ -344,7 +344,7 @@ void Pokeball::display()
 
     if(m_isOpenning) //Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
     {
-        SDL_Rect animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame(), buf, oRel = wScreen.getORel();
+		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame(), buf, oRel = wScreen.getORel();
         buf = m_pokeballPos;
         buf.x += oRel.x;
         buf.y += oRel.y;
@@ -357,7 +357,7 @@ void Pokeball::display()
         
 		if(m_capture == PokeballLaunchReason::Capture)
 		{
-			SDL_Rect boxCapture = m_pokeballPos;
+			ska::Rectangle boxCapture = m_pokeballPos;
 			boxCapture.x -= TAILLEBLOC;
 			boxCapture.y -= TAILLEBLOC;
 			boxCapture.w = 2*TAILLEBLOC;
@@ -386,7 +386,7 @@ void Pokeball::display()
     }
     else if(m_isInactive) //Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
     {
-        SDL_Rect buf, oRel = wScreen.getORel();
+		ska::Rectangle buf, oRel = wScreen.getORel();
         buf = m_pokeballPos;
         buf.x += oRel.x;
         buf.y += oRel.y;

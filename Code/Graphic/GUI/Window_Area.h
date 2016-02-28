@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
+#include "../Rectangle.h"
 
 class DialogMenu;
 class WGameCore;
@@ -15,19 +15,19 @@ class Window_Area
     bool canBeClicked();
     bool isVisible();
     void hide(bool x);
-    SDL_Rect* getRelativePos();
-    void setRelativePos(SDL_Rect pos);
+	ska::Rectangle* getRelativePos();
+	void setRelativePos(ska::Rectangle pos);
     DialogMenu* getParent();
 	virtual void display() = 0;
     virtual std::string getKey() = 0;
     virtual void forceValue(unsigned int index) = 0;
     virtual ~Window_Area();
-    SDL_Rect getAbsolutePos();
+	ska::Rectangle getAbsolutePos();
     bool isA(int type);
 
     protected:
     DialogMenu* m_parent;
-    SDL_Rect m_relativePos;
+	ska::Rectangle m_relativePos;
     bool m_canBeClicked, m_active;
     int m_type;
 

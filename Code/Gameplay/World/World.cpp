@@ -52,7 +52,7 @@ int World::getWind() const {
 }
 
 void World::graphicUpdate(DrawableContainer& drawables) {
-	SDL_Rect rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
+	ska::Rectangle rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	//Liste de tous les personnages sur le monde courant
@@ -133,9 +133,9 @@ bool World::getCollision(const int i, const int j)
     return false;
 }
 
-bool World::canMoveToPos(SDL_Rect pos, PhysicObject* entityToMove)
+bool World::canMoveToPos(ska::Rectangle pos, PhysicObject* entityToMove)
 {
-    vector<SDL_Rect> ids;
+	vector<ska::Rectangle> ids;
     int id, entityNumber;
     bool ok = true;
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -241,7 +241,7 @@ void World::changeLevel(string fileName, string chipsetname)
 }
 
 /*
-int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, float distanceSpawns, unsigned int idMob)
+int World::spawnMob(Rectangle pos, unsigned int rmin, unsigned int rmax, float distanceSpawns, unsigned int idMob)
 {
 	if(distanceSpawns > 2*rmin)
 	{
@@ -260,7 +260,7 @@ int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, float di
 	while(angle < 360 && angle > -360)
 	{
 		radius = rmin + rand()%(rmax - rmin + 1);
-		SDL_Rect dest;
+		Rectangle dest;
 		dest.x = radius*cos(angle) + pos.x;
 		dest.y = radius*sin(angle) + pos.y;
 		dest.x = (dest.x/TAILLEBLOC) * TAILLEBLOC;
@@ -275,7 +275,7 @@ int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, float di
 */
 
 //Fonction d'apparition d'un mob à une position pos
-int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn)
+int World::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn)
 {
 	if(nbrSpawns == 0)
 		return 0;
@@ -300,13 +300,13 @@ int World::spawnMob(SDL_Rect pos, unsigned int rmin, unsigned int rmax, unsigned
 	{
 		radius = rmin + rand()%(rmax - rmin + 1);
 
-		SDL_Rect dest;
+		ska::Rectangle dest;
 		dest.x = (int)(radius*cos(angle) + pos.x);
 		dest.y = (int)(radius*sin(angle) + pos.y);
 		dest.x = (dest.x/TAILLEBLOC) * TAILLEBLOC;
 		dest.y = (dest.y/TAILLEBLOC) * TAILLEBLOC;
 
-		SDL_Rect boxWorld, boxDest;
+		ska::Rectangle boxWorld, boxDest;
 		boxWorld.x = 0;
 		boxWorld.y = 0;
 		boxWorld.w = getNbrBlocX()*TAILLEBLOC;

@@ -1,8 +1,8 @@
 #include "CommandPokemonOut.h"
-#include <SDL2\SDL_rect.h>
 #include <SDL2\SDL_timer.h>
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\StringUtils.h"
+#include "../../Graphic/Rectangle.h"
 
 CommandPokemonOut::CommandPokemonOut()
 {
@@ -24,7 +24,7 @@ std::string CommandPokemonOut::execute(IScript* script, std::vector<std::string>
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	index = StringUtils::strToInt(args[0]);
-	SDL_Rect launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
+	ska::Rectangle launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
 	launchPos.y += TAILLEBLOC;
 
 	wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), launchPos, PokeballLaunchReason::Throw);

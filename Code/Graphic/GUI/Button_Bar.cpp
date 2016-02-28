@@ -4,14 +4,14 @@
 
 using namespace std;
 
-Button_Bar::Button_Bar(DialogMenu* parent, SDL_Rect relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : DynamicWindowArea(parent)
+Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : DynamicWindowArea(parent)
 {
     m_buttonStyle.load(styleName, T_RED, T_GREEN, T_BLUE);
     m_leftArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_leftarrow.png", T_RED, T_GREEN, T_BLUE);
     m_rightArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_rightarrow.png", T_RED, T_GREEN, T_BLUE);
     m_cursor.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_cursor.png", T_RED, T_GREEN, T_BLUE);
 
-    SDL_Rect buf = relativePos;
+	ska::Rectangle buf = relativePos;
     buf.x -= m_cursor.getWidth()/2;
     buf.y += m_buttonStyle.getHeight();
     m_button = unique_ptr<Button>(new Button(parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
@@ -47,7 +47,7 @@ void Button_Bar::display()
     
 
 //Coordonnées relatives -> absolues
-    SDL_Rect buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
+	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
     absoluteLeftPos.x += (m_parent->getPos())->x;
@@ -72,7 +72,7 @@ void Button_Bar::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput* in = wScreen.getInputListener().getMouseInput();
 	//Coordonnées relatives -> absolues
-	SDL_Rect buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 	absoluteLeftPos.x += (m_parent->getPos())->x;

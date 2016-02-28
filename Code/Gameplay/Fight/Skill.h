@@ -24,12 +24,12 @@ class Skill
     Texture* getIcon();
     void setIcon(Texture* icon);
     string getName();
-    void setPosIcon(SDL_Rect posIcone);
-    SDL_Rect getPosIcon();
+	void setPosIcon(ska::Rectangle posIcone);
+	ska::Rectangle getPosIcon();
     void setName(string name);
     string getDescription();
     void setDescription(string description);
-	virtual void launch(SDL_Rect dest) = 0;
+	virtual void launch(ska::Rectangle dest) = 0;
     bool cooldownOK();
     Texture* getSpriteRemainingCD();
     string getType();
@@ -47,7 +47,7 @@ class Skill
     std::vector<unique_ptr<Particle>> m_particles;
     Character* m_parent;
     SDL_Color m_color;
-    SDL_Rect m_src, m_dst, m_anim;
+	ska::Rectangle m_src, m_dst, m_anim;
     vector<float> m_x, m_y; //m_x m_y seront des coordonnées précises (sans se limiter aux entiers pour les pixels)
     vector<bool> m_actif;
     Texture m_cooldownText;
@@ -56,7 +56,7 @@ class Skill
 	unsigned int m_range;
     Texture m_icone;
     string m_description, m_name, m_type, m_style1, m_style2;
-    SDL_Rect m_posIcone;
+	ska::Rectangle m_posIcone;
 	unique_ptr<Statistics> m_statsBuffAlly, m_statsBuffEnemy;
 	int m_statusAlterAlly, m_statusAlterEnemy;
 	static const unsigned int m_fontSize;
@@ -77,7 +77,7 @@ class Projectile : public Skill
 	float getSpeed();
 	virtual void display();
 	void collision();
-	void launch(SDL_Rect dest);
+	void launch(ska::Rectangle dest);
 private:
     unsigned int m_t;
 	int m_slopeNoise, m_noise, m_nombre;
@@ -90,7 +90,7 @@ class AOE : public Skill
 public:
 	AOE(IniReader* data, Character* parent);
 	virtual void refresh();
-	virtual void launch(SDL_Rect dest);
+	virtual void launch(ska::Rectangle dest);
 	virtual ~AOE();
 	virtual void display();
 private:
@@ -103,7 +103,7 @@ private:
 class Melee : public Skill
 {
     public:
-    Melee(int id, string skill, string icone, SDL_Rect *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent);
+    Melee(int id, string skill, string icone, Rectangle *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent);
     virtual void refresh();
     virtual ~Melee();
 

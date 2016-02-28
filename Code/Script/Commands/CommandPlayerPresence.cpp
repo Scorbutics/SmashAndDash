@@ -1,10 +1,11 @@
 #include "CommandPlayerPresence.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\StringUtils.h"
+#include "../../Graphic/Rectangle.h"
 
 using namespace std;
 
-bool operator==(const SDL_Rect& lhs, const SDL_Rect& rhs)
+bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs)
 {
 	return lhs.x == rhs.x && lhs.y == rhs.y;
 }
@@ -17,8 +18,8 @@ std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::str
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string posFromX, posFromY, posToX, posToY;
-	SDL_Rect collisionRect;
-	SDL_Rect idPlayer;
+	ska::Rectangle collisionRect;
+	ska::Rectangle idPlayer;
 	posFromX = args[0];
 	posFromY = args[1];
 	posToX = args[2];
@@ -29,7 +30,7 @@ std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::str
 	idPlayer.w = 0;
 	idPlayer.h = 0;
 
-	SDL_Rect pos1, pos2;
+	ska::Rectangle pos1, pos2;
 	
 	pos1.x = StringUtils::strToInt(posFromX)*TAILLEBLOC;
 	pos1.y = StringUtils::strToInt(posFromY)*TAILLEBLOC;
@@ -40,7 +41,7 @@ std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::str
 	collisionRect.w = abs(pos1.x - pos2.x) + TAILLEBLOC - 1;
 	collisionRect.h = abs(pos1.y - pos2.y) + TAILLEBLOC - 1;
 	
-	vector<SDL_Rect>& ids = wScreen.detectEntity(collisionRect);
+	vector<ska::Rectangle>& ids = wScreen.detectEntity(collisionRect);
 	if (!ids.empty() && find(ids.begin(), ids.end(), idPlayer) != ids.end())
 	{
 		return "1";

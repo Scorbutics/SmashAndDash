@@ -7,6 +7,7 @@
 #include "SDLTexture.h"
 #include "TextureData.h"
 #include "../Utils\IDs.h"
+#include "Rectangle.h"
 
 //opérateur < pour SDL_Color nécessaire pour le stockage dans la map
 inline bool operator<(const SDL_Color &a, const SDL_Color &b)
@@ -30,7 +31,7 @@ class Texture : public ResourceTemplate<SDLTexture, TextureData>
 		void setBlendMode( SDL_BlendMode blending );
 		Texture clone();
 		void setAlpha( Uint8 alpha );
-		int render( int x, int y, SDL_Rect* clip = NULL );
+		int render(int x, int y, ska::Rectangle* clip = NULL);
 		
 		int getWidth() const;
 		int getHeight() const;

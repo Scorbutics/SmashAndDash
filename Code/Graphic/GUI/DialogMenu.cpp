@@ -32,7 +32,7 @@ using namespace std;
 ///////////////////////////////////////////////
 
 
-DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, SDL_Rect posFond, int taillePolice, bool scroll)
+DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Rectangle posFond, int taillePolice, bool scroll)
 {
 	this->setMoving(false);
     m_show = false;
@@ -125,7 +125,7 @@ void DialogMenu::display()
         for(int j = m_posFond.y; j < (m_posFond.y+m_posFond.h); j+=TAILLEBLOCFENETRE)
         {
 
-            m_positionFond.x = i - m_posScrollFond.x + m_posFond.x; //m_positionFond est un buffer (SDL_Rect déclaré dans Window)
+            m_positionFond.x = i - m_posScrollFond.x + m_posFond.x; //m_positionFond est un buffer (Rectangle déclaré dans Window)
             m_positionFond.y = j;
 
             if(i == m_posFond.x && j == m_posFond.y)
@@ -187,7 +187,7 @@ void DialogMenu::display()
     if(!m_stexte.empty() /*&& !m_x.empty()*/)
         for(unsigned int i = 0; i <= m_ligne; i++)
         {
-            SDL_Rect buf;
+			ska::Rectangle buf;
 
             buf.x = 0;
             buf.y = 0;
@@ -390,12 +390,12 @@ void DialogMenu::hide(bool x)
     m_ligne = 0;
 }
 
-const SDL_Rect* DialogMenu::getPos()
+const ska::Rectangle* DialogMenu::getPos()
 {
     return &m_posFond;
 }
 
-const SDL_Rect* DialogMenu::getPosImg()
+const ska::Rectangle* DialogMenu::getPosImg()
 {
     return &m_posMessImage;
 }
@@ -432,7 +432,7 @@ bool DialogMenu::getAlphaImg()
     return m_alphaImg;
 }
 
-void DialogMenu::addButtonClose(string imgName, string secondImgName, SDL_Rect relativePos)
+void DialogMenu::addButtonClose(string imgName, string secondImgName, ska::Rectangle relativePos)
 {
     for(unsigned int i = 0; i < m_areaList.size(); i++)
         if((m_areaList[i])->isA(BUTTON_CLOSE))
@@ -441,32 +441,32 @@ void DialogMenu::addButtonClose(string imgName, string secondImgName, SDL_Rect r
     m_areaList.push_back(unique_ptr<Button_Quit>(new Button_Quit(this, imgName, secondImgName, relativePos)));
 }
 
-void DialogMenu::addTextArea(string text, int fontSize, SDL_Rect relativePos)
+void DialogMenu::addTextArea(string text, int fontSize, ska::Rectangle relativePos)
 {
     m_areaList.push_back(unique_ptr<Text_Area>(new Text_Area(this, text, fontSize, relativePos)));
 }
 
-void DialogMenu::addImageArea(string name, bool alpha, SDL_Rect relativePos, SDL_Rect* rectSrc)
+void DialogMenu::addImageArea(string name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc)
 {
     m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, name, alpha)));
 }
 
-void DialogMenu::addImageArea(Texture* tex, bool alpha, SDL_Rect relativePos, SDL_Rect* rectSrc)
+void DialogMenu::addImageArea(Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc)
 {
 	m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, tex, alpha)));
 }
 
-void DialogMenu::addScrollText(string buttonAspect, int height, int width, vector<string> text, int fontSize, SDL_Rect relativePos)
+void DialogMenu::addScrollText(string buttonAspect, int height, int width, vector<string> text, int fontSize, ska::Rectangle relativePos)
 {
     m_areaList.push_back(unique_ptr<Scroll_Text>(new Scroll_Text(this, buttonAspect, height, width, text, fontSize, relativePos)));
 }
 
-void DialogMenu::addButton(SDL_Rect relativePos, std::string styleName, std::string styleNamePressed, int* variable, vector<int> value, vector<string> displayedText, int fontSize, string key)
+void DialogMenu::addButton(ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, vector<int> value, vector<string> displayedText, int fontSize, string key)
 {
     m_areaList.push_back(unique_ptr<Button>(new Button(this, relativePos, styleName, styleNamePressed, variable, value, displayedText, fontSize, key, false)));
 }
 
-void DialogMenu::addButtonBar(SDL_Rect relativePos, std::string styleName, int* variable, std::vector<int> values, vector<string> displayedText, int fontSize, std::string key)
+void DialogMenu::addButtonBar(ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, vector<string> displayedText, int fontSize, std::string key)
 {
     m_areaList.push_back(unique_ptr<Button_Bar>(new Button_Bar(this, relativePos, styleName, variable, values, displayedText, fontSize, key)));
 }
@@ -481,9 +481,9 @@ Window_Area* DialogMenu::getButton(string key)
     return &(*(m_areaList[0]));
 }
 
-void DialogMenu::addInventory(Inventory& inv, SDL_Rect relativePos)
+void DialogMenu::addInventory(Inventory& inv, ska::Rectangle relativePos)
 {
-    SDL_Rect buf = relativePos;
+	ska::Rectangle buf = relativePos;
     buf.h = m_posFond.h - relativePos.x;
     buf.w = m_posFond.w - relativePos.y;
     m_areaList.push_back(unique_ptr<Inventory_Area>(new Inventory_Area(this, &inv, buf)));
@@ -528,7 +528,7 @@ void DialogMenu::setMoving(bool x)
     m_moving = x;
 }
 
-void DialogMenu::setPos(SDL_Rect pos)
+void DialogMenu::setPos(ska::Rectangle pos)
 {
     //m_moving = true;
     m_posFond.x = pos.x;
@@ -537,7 +537,7 @@ void DialogMenu::setPos(SDL_Rect pos)
     m_posScrollFond.y = pos.y;
 }
 
-void DialogMenu::move(SDL_Rect delta)
+void DialogMenu::move(ska::Rectangle delta)
 {
     m_moving = true;
     m_posFond.x += delta.x;

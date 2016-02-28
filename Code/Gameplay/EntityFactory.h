@@ -20,7 +20,7 @@ class EntityFactory
 	
 		void createTrainer();
 		Character* createOpponent(IniReader* dataMob);
-		void addNPC(int id, SDL_Rect posEntity, string pathStringEntity);
+		void addNPC(int id, ska::Rectangle posEntity, string pathStringEntity);
 		void addNPC(Character* npc);
 		void remove(int id, unsigned entityNumber);
 		void deleteAll();																//Détruit toutes les entités (à faire à chaque changement de monde (= téléportation))

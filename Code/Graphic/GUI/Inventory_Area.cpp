@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, SDL_Rect relativePos) : DynamicWindowArea(parent)
+Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Rectangle relativePos) : DynamicWindowArea(parent)
 {
     m_type = BUTTON_INVENTORY_AREA;
     m_inv = inv;
@@ -33,7 +33,7 @@ Inventory* Inventory_Area::getInventory()
     return m_inv;
 }
 
-Object* Inventory_Area::getObjectAtPos(SDL_Rect relativePos)
+Object* Inventory_Area::getObjectAtPos(ska::Rectangle relativePos)
 {
     unsigned int i = this->getIndexFromPos(relativePos);
     if(i < m_inv->getSize())
@@ -41,7 +41,7 @@ Object* Inventory_Area::getObjectAtPos(SDL_Rect relativePos)
     return NULL;
 }
 
-unsigned int Inventory_Area::getAmountAtPos(SDL_Rect relativePos)
+unsigned int Inventory_Area::getAmountAtPos(ska::Rectangle relativePos)
 {
     unsigned int i = this->getIndexFromPos(relativePos);
     if(i < m_inv->getSize())
@@ -49,19 +49,19 @@ unsigned int Inventory_Area::getAmountAtPos(SDL_Rect relativePos)
     return 0;
 }
 
-unsigned int Inventory_Area::getIndexFromPos(SDL_Rect relativePos)
+unsigned int Inventory_Area::getIndexFromPos(ska::Rectangle relativePos)
 {
     return (unsigned int) (relativePos.x/m_inv->getSquareSprite()->getWidth() + (relativePos.y/m_inv->getSquareSprite()->getHeight())*m_relativePos.w);
 }
 
-void Inventory_Area::useObjectAtPos(SDL_Rect objectPos)
+void Inventory_Area::useObjectAtPos(ska::Rectangle objectPos)
 {
     Object* object = this->getObjectAtPos(objectPos);
     if(object != NULL)
         m_inv->use(object->getID(), 1);
 }
 
-void Inventory_Area::useObjectAtPos(SDL_Rect objectPos, int i)
+void Inventory_Area::useObjectAtPos(ska::Rectangle objectPos, int i)
 {
     Object* object = this->getObjectAtPos(objectPos);
     if(object != NULL)
@@ -76,7 +76,7 @@ void Inventory_Area::display()
     else
         m_active = true;
 
-    SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 
@@ -87,18 +87,18 @@ void Inventory_Area::display()
 
 void Inventory_Area::refresh()
 {
-	SDL_Rect buf = m_relativePos;
+	ska::Rectangle buf = m_relativePos;
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput* in = wScreen.getInputListener().getMouseInput();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
-	SDL_Rect mousePos = in->getMousePos();
+	ska::Rectangle mousePos = in->getMousePos();
 
 	if(in->mouseClick(SDL_BUTTON_LEFT) && IsPositionInBox(&mousePos, &buf) && !IsPositionInBox(&mousePos, wScreen.getGUI().getClickMenu()->getPos()))
 	{
-		SDL_Rect invAreaAbsolutePos = this->getAbsolutePos();
+		ska::Rectangle invAreaAbsolutePos = this->getAbsolutePos();
 		wScreen.getGUI().getClickMenu()->hide(true);
 		m_curObjectPos = mousePos;
 		m_curObjectPos.x -= invAreaAbsolutePos.x;

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, int width, vector<string> text, int fontSize, SDL_Rect relativePos) : DynamicWindowArea(parent)
+Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, int width, vector<string> text, int fontSize, ska::Rectangle relativePos) : DynamicWindowArea(parent)
 {
 
     m_topArrow.load(buttonAspect + "toparrow.png", T_RED, T_GREEN, T_BLUE, 128);
@@ -75,7 +75,7 @@ void Scroll_Text::display()
         m_posCursor.y += m_topArrow.getHeight();
     }
 
-    SDL_Rect buf = m_relativePos, bufScrollBar;
+	ska::Rectangle buf = m_relativePos, bufScrollBar;
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 
@@ -108,7 +108,7 @@ void Scroll_Text::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	MouseInput *in = wScreen.getInputListener().getMouseInput();
-	SDL_Rect buf = m_relativePos, bufScrollBar, mousePos = in->getMousePos();
+	ska::Rectangle buf = m_relativePos, bufScrollBar, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 

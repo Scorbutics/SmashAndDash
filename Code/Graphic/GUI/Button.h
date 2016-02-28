@@ -12,7 +12,7 @@ class WGameCore;
 class Button : public DynamicWindowArea
 {
     public:
-    Button(DialogMenu* parent, SDL_Rect relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key, bool bstatic);
+		Button(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key, bool bstatic);
     void setVariable(int* variable);
     virtual void forceValue(unsigned int index);
     virtual void refresh();
@@ -28,7 +28,7 @@ class Button : public DynamicWindowArea
     int m_fontSize;
     unsigned int m_index;
     Texture m_stext, m_buttonStyle, m_buttonStylePressed;
-    SDL_Rect m_rectButton;
+	ska::Rectangle m_rectButton;
     int *m_variable;
     std::vector<int> m_values;
     std::vector<std::string> m_displayedText;

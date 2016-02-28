@@ -13,7 +13,7 @@ using namespace std;
 class Text_Area : public Window_Area
 {
     public:
-		Text_Area(DialogMenu *parent, string text, int fontSize, SDL_Rect relativePos);
+		Text_Area(DialogMenu *parent, string text, int fontSize, ska::Rectangle relativePos);
 		virtual std::string getKey(){return "";};
 		virtual void forceValue(unsigned int){};
 		virtual ~Text_Area();

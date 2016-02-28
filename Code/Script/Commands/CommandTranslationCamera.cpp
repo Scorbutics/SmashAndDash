@@ -1,6 +1,6 @@
 #include "CommandTranslationCamera.h"
-#include <SDL2\SDL_rect.h>
 #include <SDL2\SDL_timer.h>
+#include "../../Graphic/Rectangle.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\StringUtils.h"
 
@@ -22,7 +22,7 @@ std::string CommandTranslationCamera::execute(IScript* script, std::vector<std::
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;
 	int speedx, speedy;
-	SDL_Rect tmpRelativeOrigin;
+	ska::Rectangle tmpRelativeOrigin;
 
 	duree = StringUtils::strToInt(args[0]);
 	speedx = StringUtils::strToInt(args[1]);

@@ -7,9 +7,9 @@ class GravityParticle : public Particle
 {
 
     public:
-    GravityParticle(int idSprite, SDL_Rect pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
+		GravityParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
     virtual void refresh();
-    virtual void launch(SDL_Rect origin, float angle, unsigned int power);
+	virtual void launch(ska::Rectangle origin, float angle, unsigned int power);
     void addSlopeNoise(float x);
     void resetSlopeNoise();
     virtual ~GravityParticle();

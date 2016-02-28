@@ -3,6 +3,8 @@
 #include "../Utils\Observable.h"
 #include "../Gameplay\World\World.h"
 #include "../Gameplay\Character.h"
+#include "../Graphic/Rectangle.h"
+
 #ifndef DEF_KEYBOARD_LISTENER
 #define DEF_KEYBOARD_LISTENER
 
@@ -11,8 +13,8 @@ class Layer;
 class LayerE;
 
 bool Inertie(WGameCore *wScreen, World* w, int type = 1);
-SDL_Rect MovementManagerSouris(MouseInput *in, std::unique_ptr<Character>& hero);
-SDL_Rect GetCurrentSpritePosOfHero(std::unique_ptr<Character>& hero);
+ska::Rectangle MovementManagerSouris(MouseInput *in, std::unique_ptr<Character>& hero);
+ska::Rectangle GetCurrentSpritePosOfHero(std::unique_ptr<Character>& hero);
 int GetDirectionFromChar(char directionChar);
 char GetCharFromDirection(int dir);
 

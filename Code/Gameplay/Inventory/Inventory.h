@@ -30,7 +30,7 @@ class Inventory
 		int search(int id);
 		int search(std::string name);
 		void clear();
-		void display(SDL_Rect relativePos);
+		void display(ska::Rectangle relativePos);
 
 		void load(std::string squareSpriteName, std::string squareSpriteNameHighlight);
 
@@ -46,7 +46,7 @@ class Inventory
 		std::list<Texture> m_amountSurface;
 		static unsigned int m_fontSize;
 		SDL_Color m_color;
-		SDL_Rect m_rectPos; //Position et dimensions de l'inventaire
+		ska::Rectangle m_rectPos; //Position et dimensions de l'inventaire
 		Texture m_squareSprite, m_squareSpriteHighlight; //apparence des cases où seront affichés les objets
 };
 

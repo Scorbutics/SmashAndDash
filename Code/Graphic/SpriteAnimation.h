@@ -3,18 +3,18 @@
 
 #include "Animation.h"
 #include "Texture.h"
-
+#include "Rectangle.h"
 class WGameCore;
 
 class SpriteAnimation
 {
 	public:
 	SpriteAnimation(int type, int id, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
-	SpriteAnimation(int type, int id, SDL_Rect pos, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
-	//SpriteAnimation(int type, int id, SDL_Rect pos, unsigned int framesNumber, unsigned int delay, int alpha);
+	SpriteAnimation(int type, int id, ska::Rectangle pos, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
+	//SpriteAnimation(int type, int id, Rectangle pos, unsigned int framesNumber, unsigned int delay, int alpha);
 	void refresh();
 
-    void setPos(SDL_Rect pos);
+	void setPos(ska::Rectangle pos);
     void setID(int id);
     void setType(int type);
 
@@ -28,7 +28,7 @@ class SpriteAnimation
 	Animation m_anim;
 	Texture m_sprite;
 	int m_type, m_id;
-	SDL_Rect m_pos, m_offset;
+	ska::Rectangle m_pos, m_offset;
 };
 
 #endif

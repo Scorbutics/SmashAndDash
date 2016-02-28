@@ -56,13 +56,13 @@ void Texture::setAlpha( Uint8 alpha )
 	}
 }
 
-int Texture::render( int x, int y, SDL_Rect* clip )
+int Texture::render(int x, int y, ska::Rectangle* clip)
 {
 	if (m_value == NULL)
 		return -1;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	SDL_Rect destBuf = { x, y, m_value->m_w, m_value->m_h };
+	ska::Rectangle destBuf = { x, y, m_value->m_w, m_value->m_h };
 
 	if( clip != NULL )
 	{

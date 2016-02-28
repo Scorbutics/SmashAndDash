@@ -17,9 +17,9 @@ class Object
     void display();
 
     void setPos(int x, int y);
-    void setPos(SDL_Rect pos);
+	void setPos(ska::Rectangle pos);
 
-    const SDL_Rect* getPos();
+	const ska::Rectangle* getPos();
     Texture* getSprite();
     Animation* getAnimation();
     std::string getDescription();
@@ -36,7 +36,7 @@ class Object
     private:
     Texture m_sprite;
     Animation m_animation;
-    SDL_Rect m_pos;
+	ska::Rectangle m_pos;
     std::string m_description, m_name, m_effect, m_action, m_spriteName;
     int m_id;
 

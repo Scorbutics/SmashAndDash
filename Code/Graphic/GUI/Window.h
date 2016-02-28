@@ -3,11 +3,10 @@
 
 
 #include <windows.h>
-//#include <fmodex/fmod.h>
-#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <string>
+#include "../Rectangle.h"
 
 class Window
 {
@@ -34,7 +33,7 @@ protected:
 	SDL_Texture* m_texture;
     SDL_Surface *m_bmp;
 	SDL_Window *m_screen;
-    SDL_Rect m_positionFond;
+	ska::Rectangle m_positionFond;
 
 };
 

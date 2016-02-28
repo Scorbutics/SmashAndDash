@@ -2,7 +2,7 @@
 #include "../Graphic\SpritePath.h"
 #include "../Gameplay\WGameCore.h"
 
-Particle::Particle(int idSprite, unsigned int weight, SDL_Rect pos, double lifetime, double splashTime, bool loop, bool relative): m_anim(300, 2, false),
+Particle::Particle(int idSprite, unsigned int weight, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) : m_anim(300, 2, false),
 m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED, T_GREEN, T_BLUE)
 {
     m_slopeNoise = 0;
@@ -30,12 +30,12 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED
 
 }
 
-SDL_Rect Particle::getPos()
+ska::Rectangle Particle::getPos()
 {
     return m_pos;
 }
 
-void Particle::launch(SDL_Rect origin, float angle, unsigned int power)
+void Particle::launch(ska::Rectangle origin, float angle, unsigned int power)
 {
     this->active();
 	m_fixedOrigin = origin;
@@ -46,7 +46,7 @@ void Particle::launch(SDL_Rect origin, float angle, unsigned int power)
     //m_sprite = NULL;
 }
 
-SDL_Rect Particle::getOrigin() const
+ska::Rectangle Particle::getOrigin() const
 {
 	return m_fixedOrigin;
 }
@@ -102,7 +102,7 @@ void Particle::display()
         m_state = PARTICLE_STATE_SPLASH;
 
 
-    SDL_Rect animRect = {0, 0, m_spriteSize.w, m_spriteSize.h}, relativePos = m_pos;
+	ska::Rectangle animRect = { 0, 0, m_spriteSize.w, m_spriteSize.h }, relativePos = m_pos;
     relativePos.x += wScreen.getORel().x;
     relativePos.y += wScreen.getORel().y;
 
@@ -156,11 +156,11 @@ void Particle::setPos(int x, int y)
     m_pos.y = y;
 }
 
-vector<SDL_Rect> Particle::collisionNPC()
+vector<ska::Rectangle> Particle::collisionNPC()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-    SDL_Rect rect = m_pos;
+	ska::Rectangle rect = m_pos;
     rect.w = m_spriteSize.w;
     rect.h = m_spriteSize.h;
 

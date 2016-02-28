@@ -2,9 +2,9 @@
 #include "..\Texture.h"
 
 
-int WindowRenderer::render(Window* win, Texture* tex, int x, int y, SDL_Rect* clip)
+int WindowRenderer::render(Window* win, Texture* tex, int x, int y, ska::Rectangle* clip)
 {
-	SDL_Rect destBuf = { x, y, tex->getWidth(), tex->getHeight() };
+	ska::Rectangle destBuf = { x, y, tex->getWidth(), tex->getHeight() };
 
 	if (clip != NULL)
 	{

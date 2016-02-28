@@ -4,6 +4,7 @@
 #include "../../Gameplay/WGameCore.h"
 #include "../../Utils/StringUtils.h"
 #include "../../Utils/ScriptUtils.h"
+#include "../../Graphic/Rectangle.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ std::string CommandChoice::execute(IScript* script, std::vector<std::string>& ar
 	var = args[0];
 	fname = args[1];
 	texte = args[2];
-	SDL_Rect menuPos, choicePos;
+	ska::Rectangle menuPos, choicePos;
 
 	menuPos.x = 0;
 	menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE * 4;

@@ -6,13 +6,14 @@
 
 #include "DynamicWindowArea.h"
 #include "..\Texture.h"
+#include "../Rectangle.h"
 
 using namespace std;
 
 class Button_Quit : public DynamicWindowArea
 {
     public:
-    Button_Quit(DialogMenu *parent, string imgName, string secondImgName, SDL_Rect relativePos);
+		Button_Quit(DialogMenu *parent, string imgName, string secondImgName, ska::Rectangle relativePos);
     string getAction();
     void setAction(string action);
     virtual void refresh();
