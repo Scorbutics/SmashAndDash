@@ -29,10 +29,10 @@ std::string CommandPlayAnimation::execute(IScript* script, std::vector<std::stri
 
 	idType = args[0];
 	id = args[1];
-	id_anim = StringUtils::strToInt(args[2]);
+	id_anim = ska::StringUtils::strToInt(args[2]);
 
-	idTypeInt = StringUtils::strToInt(idType);
-	idInt = StringUtils::strToInt(id);
+	idTypeInt = ska::StringUtils::strToInt(idType);
+	idInt = ska::StringUtils::strToInt(id);
 	Character* c = wScreen.getEntityFactory().getNPC(idTypeInt, idInt);
 	if (c != NULL)
 	{

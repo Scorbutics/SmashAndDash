@@ -25,11 +25,11 @@ std::string CommandThrowPokebal::execute(IScript* script, std::vector<std::strin
 	//1 : Recall
 	//2 : Throw
 
-	srcId.x = StringUtils::strToInt(args[0]);
-	srcId.y = StringUtils::strToInt(args[1]);
-	dst.x = StringUtils::strToInt(args[2]);
-	dst.y = StringUtils::strToInt(args[3]);
-	launchReason = StringUtils::strToInt(args[4]);
+	srcId.x = ska::StringUtils::strToInt(args[0]);
+	srcId.y = ska::StringUtils::strToInt(args[1]);
+	dst.x = ska::StringUtils::strToInt(args[2]);
+	dst.y = ska::StringUtils::strToInt(args[3]);
+	launchReason = ska::StringUtils::strToInt(args[4]);
 
 	wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));
 	return "";

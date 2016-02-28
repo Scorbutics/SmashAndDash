@@ -26,9 +26,9 @@ std::string CommandDirection::execute(IScript* script, std::vector<std::string>&
 	idStr = args[1];
 	dirStr = args[2];
 
-	idType = StringUtils::strToInt(idTypeStr);
-	id = StringUtils::strToInt(idStr);
-	dir = StringUtils::strToInt(dirStr);
+	idType = ska::StringUtils::strToInt(idTypeStr);
+	id = ska::StringUtils::strToInt(idStr);
+	dir = ska::StringUtils::strToInt(dirStr);
 
 	wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
 	return "";

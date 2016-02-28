@@ -21,8 +21,8 @@ std::string CommandHeal::execute(IScript* script, std::vector<std::string>& args
 	int value;
 	unsigned int index;
 	
-	index = StringUtils::strToInt(args[0]);
-	value = StringUtils::strToInt(args[1]);
+	index = ska::StringUtils::strToInt(args[0]);
+	value = ska::StringUtils::strToInt(args[1]);
 	
 	if (index >= 0 && index < wScreen.getPokemonManager().getPokemonTeamSize()) {
 		wScreen.getPokemonManager().getPokemon(index)->setHP(wScreen.getPokemonManager().getPokemon(index)->getHp() + value);

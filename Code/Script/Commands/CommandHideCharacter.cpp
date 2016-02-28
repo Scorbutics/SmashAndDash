@@ -20,9 +20,9 @@ std::string CommandHideCharacter::execute(IScript* script, std::vector<std::stri
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, hiding;
 
-	id = StringUtils::strToInt(args[0]);
-	number = StringUtils::strToInt(args[1]);
-	hiding = StringUtils::strToInt(args[2]);
+	id = ska::StringUtils::strToInt(args[0]);
+	number = ska::StringUtils::strToInt(args[1]);
+	hiding = ska::StringUtils::strToInt(args[2]);
 
 	wScreen.getEntityFactory().getNPC(id, number)->setVisible(!hiding);
 	return "";

@@ -23,12 +23,12 @@ std::string CommandRandom::execute(IScript* script, std::vector<std::string>& ar
 	int valueInt, resultInt;
 
 	value = args[0];
-	valueInt = StringUtils::strToInt(value);
+	valueInt = ska::StringUtils::strToInt(value);
 
 	if (valueInt > 0)
 	{
 		resultInt = rand() % valueInt;
-		return StringUtils::intToStr(resultInt);
+		return ska::StringUtils::intToStr(resultInt);
 	}
 	return "";
 }

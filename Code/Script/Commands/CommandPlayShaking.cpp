@@ -20,8 +20,8 @@ std::string CommandPlayShaking::execute(IScript* script, std::vector<std::string
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned intensity, duration;
 
-	duration = StringUtils::strToInt(args[0]);
-	intensity = StringUtils::strToInt(args[1]);
+	duration = ska::StringUtils::strToInt(args[0]);
+	intensity = ska::StringUtils::strToInt(args[1]);
 
 	wScreen.getShakerManager().shake(intensity, duration);
 	return "";

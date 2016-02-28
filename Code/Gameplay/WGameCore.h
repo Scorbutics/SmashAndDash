@@ -6,9 +6,9 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include "../Graphic\GUI\Window.h"
+#include "../ska/Graphic\GUI\Window.h"
 #include "Player.h"
-#include "../Graphic\Animation.h"
+#include "../ska/Graphic\Animation.h"
 #include "Fight\Fight.h"
 #include "Pokeball.h"
 #include "AI\AI.h"
@@ -17,16 +17,16 @@
 #include "Data\Settings.h"
 #include "PokemonManager.h"
 #include "EntityFactory.h"
-#include "../Graphic\SpriteAnimationManager.h"
+#include "../ska/Graphic\SpriteAnimationManager.h"
 #include "../Graphic\GUI\MouseCursor.h"
-#include "../Graphic\Rectangle.h"
-#include "../Inputs\InputListener.h"
+#include "../ska/Graphic\Rectangle.h"
+#include "../ska/Inputs/InputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "../Graphic\ShakerManager.h"
 #include "Mobs\MobSpawningManager.h"
 #include "Data\SavegameManager.h"
-#include "World\World.h"
-#include "../Utils\Singleton_template.h"
+#include "../ska/World/World.h"
+#include "../ska/Utils\Singleton_template.h"
 #include "./Scene/SceneMap.h"
 #include "./Scene/SceneFight.h"
 #include "EnumScene.h"
@@ -37,7 +37,7 @@ class Character;
 
 typedef std::unique_ptr<Character> Character_ptr;
 
-class WGameCore : public Window, public Singleton<WGameCore>
+class WGameCore : public Window, public ska::Singleton<WGameCore>
 {
 	friend class Singleton<WGameCore>;
 
@@ -71,7 +71,7 @@ public:
 	ska::Rectangle& getORel();
 	Player* getHero();
 	float getSpeedInertie();
-	Animation& getChipsetAnimation();
+	ska::Animation& getChipsetAnimation();
 	GUI& getGUI();
 	Fight& getFight();
 	Pokeball& getPokeball();
@@ -80,10 +80,10 @@ public:
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
 	EntityFactory& getEntityFactory();
-	SpriteAnimationManager& getSpriteAnimationManager();
+	ska::SpriteAnimationManager& getSpriteAnimationManager();
     MouseCursor& getMouseCursor();
 	bool getContinue();
-	InputListener& getInputListener();
+	ska::InputListener& getInputListener();
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
 	World& getWorld();
@@ -105,7 +105,7 @@ public:
    
 
     protected:
-		IScene* m_sceneCursor;
+		ska::IScene* m_sceneCursor;
 		SceneMap m_sceneMap;
 		SceneFight m_sceneFight;
 
@@ -114,16 +114,16 @@ public:
 		ska::Rectangle m_OfChip, m_origineRelative;
 		bool m_quitFlip, m_ecritureLog, m_continue;
 		Player *m_phero; //Character héro courant
-		InputListener m_kdListener;
+		ska::InputListener m_kdListener;
 		float m_speedInertie;
-		Animation m_chipsetAni;
+		ska::Animation m_chipsetAni;
 		AI m_ai;
 		vector<DialogMenu*> m_guiList;
 		Pokeball m_pokeball;
 		PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 		TrainerCard m_trainerCard;
 		ShakerManager m_shaker;
-		SpriteAnimationManager m_spriteAnimManager;
+		ska::SpriteAnimationManager m_spriteAnimManager;
 		bool m_scrolling;
 		EntityFactory m_EntityFactory; //Une instance de gestion des personnages à l'écran (hors combat)
 		Fight m_fight;

@@ -111,9 +111,6 @@
     <ClInclude Include="Code\Graphic\GUI\Bar.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Animation.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Button.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
@@ -122,12 +119,6 @@
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Button_Quit.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\FormalCalculation\CalculOperators.h">
-      <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\World\Block.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Character.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
@@ -156,44 +147,11 @@
     <ClInclude Include="Code\Gameplay\EntityFactory.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Inputs\EventArg.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\Font.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\GenericException.h">
-      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\GUI.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Physic\GravityParticle.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\Force.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\LinearParticle.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\PhysicObject.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\PhysicSprite.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\FormalCalculation\FormalCalculator.h">
-      <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Image_Area.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\World\Layer.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\World\LayerE.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Inventory_Area.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
@@ -214,9 +172,6 @@
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\TrainerCard.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Window.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Window_Area.h">
@@ -246,40 +201,10 @@
     <ClInclude Include="Code\Utils\IDs.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\IStringAble.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\AI\Node.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\AI\Path.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Inputs\KeyInput.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Inputs\InputListener.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Inputs\MouseInput.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Inputs\Readers\IniReader.h">
-      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Inventory\Inventory.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Script.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\ScriptDispatcher.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\GlobalScriptVariables.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\Command.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h">
@@ -300,12 +225,6 @@
     <ClInclude Include="Code\Script\Commands\CommandDirection.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandElse.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandEnd.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandFollow.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
@@ -316,9 +235,6 @@
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandHideGUI.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandIf.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandKillEntity.h">
@@ -384,35 +300,11 @@
     <ClInclude Include="Code\Gameplay\Inventory\Object.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\Observable.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\Observer.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Inputs\Readers\Readinifile.h">
-      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\ScriptUtils.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\ShakerManager.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\SDLTexture.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\SDLFont.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\Scrolling.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\Particle.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\ParticleManager.h">
-      <Filter>Fichiers d%27en-tête\Physic</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Data\Settings.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Data</Filter>
@@ -423,31 +315,7 @@
     <ClInclude Include="Code\Gameplay\Data\PokemonDescriptor.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Texture.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\TextureData.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\SpritePath.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\SpriteAnimationManager.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\SpriteAnimation.h">
-      <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\StringUtils.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\UInteger.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\Singleton_template.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\ResourceTemplate.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\Skill.h">
@@ -474,55 +342,13 @@
     <ClInclude Include="Code\Gameplay\Data\Statistics.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\ScriptSymbolsConstants.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\World\World.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\ScriptUnknownCommandException.h">
-      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\resource.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\ScriptNotActivatedException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\InvalidPathException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\InputException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\ScriptException.h">
-      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\ScriptState.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandElseEnd.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandPlayerPresence.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\AbstractCommand.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\ControlStatement.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\AbstractFunctionCommand.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\ScriptSyntaxError.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandLog.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\NumberFormatException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandElsif.h">
@@ -530,9 +356,6 @@
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandEndScript.h">
       <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\IScript.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\EnumScene.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -543,67 +366,271 @@
     <ClInclude Include="Code\Gameplay\Scene\SceneFight.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Scene\IScene.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\IllegalArgumentException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\IllegalStateException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Scene\HasGraphic.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\Scene\HasLogic.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\CharacterDrawable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Draw\Drawable.h">
+    <ClInclude Include="Code\ska\Exceptions\CorruptedFileException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Draw\DrawableContainer.h">
+    <ClInclude Include="Code\ska\Exceptions\GenericException.h">
+      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\IllegalArgumentException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Draw\DrawableFixedPriority.h">
+    <ClInclude Include="Code\ska\Exceptions\IllegalStateException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.h">
+    <ClInclude Include="Code\ska\Exceptions\IndexOutOfBoundsException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Draw\VectorDrawableContainer.h">
+    <ClInclude Include="Code\ska\Exceptions\InputException.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\InvalidPathException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\NumberFormatException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\ScriptException.h">
+      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\ScriptNotActivatedException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\ScriptSyntaxError.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\ScriptUnknownCommandException.h">
+      <Filter>Fichiers d%27en-tête\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\Node.h">
+      <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\Path.h">
+      <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Data\Savegame.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\HasGraphic.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\HasLogic.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\IScene.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\UInteger.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h">
+      <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\FormalCalculation\FormalCalculator.h">
+      <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\IStringAble.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\MessagePopup.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\MessageType.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\NumberUtils.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Observable.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Observer.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\ResourceTemplate.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\ScriptUtils.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Singleton_template.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\SkaConstants.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\StringUtils.h">
+      <Filter>Fichiers d%27en-tête\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\TimeUtils.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\World\Block.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\World\Layer.h">
+      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\World\LayerE.h">
+      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\World\World.h">
+      <Filter>Fichiers d%27en-tête\Gameplay\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Draw\Drawable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Draw\DrawableContainer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Draw\DrawableFixedPriority.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Draw\PriorityQueueDrawableContainer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Draw\VectorDrawableContainer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Window.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Animation.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Font.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Point.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Rectangle.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\SDLFont.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\SDLTexture.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\SpriteAnimationManager.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\SpritePath.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\Texture.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\TextureData.h">
+      <Filter>Fichiers d%27en-tête\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\IScript.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Script.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\ScriptDispatcher.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\ScriptState.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\ScriptSymbolsConstants.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h">
+      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h">
+      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\EventArg.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputListener.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyInput.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\MouseInput.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\Force.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\GravityParticle.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\LinearParticle.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\Particle.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\ParticleManager.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\PhysicObject.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\PhysicSprite.h">
+      <Filter>Fichiers d%27en-tête\Physic</Filter>
     </ClInclude>
     <ClInclude Include="Code\Physic\RainParticleManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Exceptions\CorruptedFileException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\MessageType.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Utils\MessagePopup.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Physic\RainParticle.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\NumberUtils.h">
+    <ClInclude Include="Code\ska\Utils\RectangleUtils.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Point.h">
+    <ClInclude Include="Code\ska\Script\Command\ControlStatement.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\Rectangle.h">
+    <ClInclude Include="Code\ska\Script\Command\AbstractCommand.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\AbstractFunctionCommand.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\Command.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandElse.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandElseEnd.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandIf.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\Refreshable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\FileException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\FileUtils.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandEnd.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\ScriptDiedException.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -614,9 +641,6 @@
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\Animation.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Button.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
@@ -625,9 +649,6 @@
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\World\Block.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Character.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
@@ -656,38 +677,11 @@
     <ClCompile Include="Code\Graphic\GUI\Font.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Exceptions\GenericException.cpp">
-      <Filter>Fichiers sources\Exceptions</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Physic\GravityParticle.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\Force.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\LinearParticle.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\PhysicObject.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\PhysicSprite.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\FormalCalculation\FormalCalculator.cpp">
-      <Filter>Fichiers sources\Utils\FormalCalculation</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Image_Area.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\World\Layer.cpp">
-      <Filter>Fichiers sources\Gameplay\World</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\World\LayerE.cpp">
-      <Filter>Fichiers sources\Gameplay\World</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Inventory_Area.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
@@ -708,9 +702,6 @@
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\TrainerCard.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Window.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Window_Area.cpp">
@@ -737,32 +728,8 @@
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\AI\Node.cpp">
-      <Filter>Fichiers sources\Gameplay\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\AI\Path.cpp">
-      <Filter>Fichiers sources\Gameplay\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Inputs\KeyInput.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Inputs\InputListener.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Inputs\MouseInput.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Inputs\Readers\IniReader.cpp">
-      <Filter>Fichiers sources\Inputs\Readers</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\Inventory\Inventory.cpp">
       <Filter>Fichiers sources\Gameplay\Inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Script.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\ScriptDispatcher.cpp">
-      <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\GlobalScriptVariables.cpp">
       <Filter>Fichiers sources\Script</Filter>
@@ -785,12 +752,6 @@
     <ClCompile Include="Code\Script\Commands\CommandDirection.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandElse.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandEnd.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandFollow.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
@@ -801,9 +762,6 @@
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandHideGUI.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandIf.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandKillEntity.cpp">
@@ -869,32 +827,11 @@
     <ClCompile Include="Code\Gameplay\Inventory\Object.cpp">
       <Filter>Fichiers sources\Gameplay\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Utils\Observable.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Inputs\Readers\Readinifile.cpp">
-      <Filter>Fichiers sources\Inputs\Readers</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\ScriptUtils.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\ShakerManager.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\SDLTexture.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\SDLFont.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\Scrolling.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\Particle.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\ParticleManager.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Data\Settings.cpp">
       <Filter>Fichiers sources\Gameplay\Data</Filter>
@@ -905,26 +842,8 @@
     <ClCompile Include="Code\Gameplay\Data\PokemonDescriptor.cpp">
       <Filter>Fichiers sources\Gameplay\Data</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\Texture.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\TextureData.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\SpritePath.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\SpriteAnimationManager.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\SpriteAnimation.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\StringUtils.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\UInteger.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Fight\Skill.cpp">
       <Filter>Fichiers sources\Gameplay\Fight</Filter>
@@ -947,22 +866,10 @@
     <ClCompile Include="Code\Gameplay\Data\Statistics.cpp">
       <Filter>Fichiers sources\Gameplay\Data</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\World\World.cpp">
-      <Filter>Fichiers sources\Gameplay\World</Filter>
-    </ClCompile>
     <ClCompile Include="Code\main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\AbstractCommand.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\ControlStatement.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\AbstractFunctionCommand.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandLog.cpp">
@@ -989,23 +896,152 @@
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\Draw\PriorityQueueDrawableContainer.cpp">
+    <ClCompile Include="Code\ska\Exceptions\GenericException.cpp">
+      <Filter>Fichiers sources\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\AI\Node.cpp">
+      <Filter>Fichiers sources\Gameplay\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\AI\Path.cpp">
+      <Filter>Fichiers sources\Gameplay\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\FormalCalculation\FormalCalculator.cpp">
+      <Filter>Fichiers sources\Utils\FormalCalculation</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\MessagePopup.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\Draw\VectorDrawableContainer.cpp">
+    <ClCompile Include="Code\ska\Utils\NumberUtils.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\Observable.cpp">
+      <Filter>Fichiers sources\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\ScriptUtils.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\StringUtils.cpp">
+      <Filter>Fichiers sources\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\TimeUtils.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\UInteger.cpp">
+      <Filter>Fichiers sources\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\Block.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\Layer.cpp">
+      <Filter>Fichiers sources\Gameplay\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\LayerE.cpp">
+      <Filter>Fichiers sources\Gameplay\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\World.cpp">
+      <Filter>Fichiers sources\Gameplay\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\Draw\PriorityQueueDrawableContainer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Window.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\Animation.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\SDLFont.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\SDLTexture.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\SpriteAnimationManager.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\SpritePath.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\Texture.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\TextureData.cpp">
+      <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Script.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\ScriptDispatcher.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\Readers\IniReader.cpp">
+      <Filter>Fichiers sources\Inputs\Readers</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp">
+      <Filter>Fichiers sources\Inputs\Readers</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\InputListener.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyInput.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\MouseInput.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\Force.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\GravityParticle.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\LinearParticle.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\Particle.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\ParticleManager.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\PhysicObject.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\PhysicSprite.cpp">
+      <Filter>Fichiers sources\Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Physic\RainParticle.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Physic\RainParticleManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Utils\MessagePopup.cpp">
+    <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Physic\RainParticle.cpp">
+    <ClCompile Include="Code\ska\Script\Command\AbstractCommand.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Utils\NumberUtils.cpp">
+    <ClCompile Include="Code\ska\Script\Command\AbstractFunctionCommand.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandElse.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandIf.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\ControlStatement.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\FileUtils.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandEnd.cpp">
+      <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

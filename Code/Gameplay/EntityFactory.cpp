@@ -149,9 +149,9 @@ void EntityFactory::addNPC(Character* npc)
 	(*target)[id][i]->teleport(npc->getPos().x, npc->getPos().y);
 
 	if(npc->getPath()->isMotionless())
-		(*target)[id][i]->getPath()->setPathString(StringUtils::intToStr(P_FIXED));
+		(*target)[id][i]->getPath()->setPathString(ska::StringUtils::intToStr(P_FIXED));
 	else if((npc->getPath()->isRandom()))
-		(*target)[id][i]->getPath()->setPathString(StringUtils::intToStr(P_RANDOM));
+		(*target)[id][i]->getPath()->setPathString(ska::StringUtils::intToStr(P_RANDOM));
 	else
 		(*target)[id][i]->getPath()->setPathString(npc->getPath()->getPathString());
 

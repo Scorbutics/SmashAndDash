@@ -181,9 +181,9 @@ void MouseCursor::setPokemon(Character* pkmn)
 	m_stockPkmn->getStatistics()->setExperience(pkmn->getStatistics()->getExperience());
 
 	if(pkmn->getPath()->isMotionless())
-		m_stockPkmn->getPath()->setPathString(StringUtils::intToStr(P_FIXED));
+		m_stockPkmn->getPath()->setPathString(ska::StringUtils::intToStr(P_FIXED));
 	else if((pkmn->getPath()->isRandom()))
-		m_stockPkmn->getPath()->setPathString(StringUtils::intToStr(P_RANDOM));
+		m_stockPkmn->getPath()->setPathString(ska::StringUtils::intToStr(P_RANDOM));
 	else
 		m_stockPkmn->getPath()->setPathString(pkmn->getPath()->getPathString());
 

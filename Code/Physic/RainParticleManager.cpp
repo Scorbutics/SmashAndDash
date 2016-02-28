@@ -1,9 +1,9 @@
 #include <math.h>
 #include "../Gameplay/WGameCore.h"
 #include "RainParticleManager.h"
-#include "../Gameplay/World/Layer.h"
+#include "../ska/Gameplay/World/Layer.h"
 #include "RainParticle.h"
-#include "../Graphic/Rectangle.h"
+#include "../ska/Graphic/Rectangle.h"
 
 RainParticleManager::RainParticleManager()
 {

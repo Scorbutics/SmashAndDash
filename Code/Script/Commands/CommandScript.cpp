@@ -26,11 +26,11 @@ std::string CommandScript::execute(IScript* script, std::vector<std::string>& ar
 	string periodStr;
 	
 	if (args.size() < 3) {
-		throw ScriptSyntaxError("Syntax error with command \"script\" : this command needs at least 3 parameters.");
+		throw ska::ScriptSyntaxError("Syntax error with command \"script\" : this command needs at least 3 parameters.");
 	}
 
 	scriptName = args[0];
-	Uint32 period = StringUtils::strToInt(args[1]);
+	Uint32 period = ska::StringUtils::strToInt(args[1]);
 
 	/* Rebuild an argument string to be read by the new running script */
 	for (unsigned int i = 2; i < args.size(); i++) {

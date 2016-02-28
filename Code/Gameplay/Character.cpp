@@ -273,7 +273,7 @@ void Character::display(int part, bool shadow)
 
 void Character::loadData()
 {
-	IniReader data("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + StringUtils::intToStr(m_id) + ".ini");
+	IniReader data("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini");
 
 	m_descriptor.load(&data, "Description");
 	m_stats = unique_ptr<Statistics>(new Statistics(&data, "BaseStats"));
@@ -282,10 +282,10 @@ void Character::loadData()
 
 	refreshStats(true);
 
-	for (int i = 0; data.get("Skills " + StringUtils::intToStr(i)); i++)
+	for (int i = 0; data.get("Skills " + ska::StringUtils::intToStr(i)); i++)
 	{
-		if (data.getInt("Skills " + StringUtils::intToStr(i) + "_level") <= m_stats->getLevel())
-			addSkill(data.getString("Skills " + StringUtils::intToStr(i)));
+		if (data.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_stats->getLevel())
+			addSkill(data.getString("Skills " + ska::StringUtils::intToStr(i)));
 	}
 
 	m_evolutionNextLevel = data.getInt("Evolution level");
@@ -557,7 +557,7 @@ void Character::findPath(ska::Rectangle dest)
     buf.x = (buf.x/TAILLEBLOC) * TAILLEBLOC;
     buf.y = (buf.y/TAILLEBLOC) * TAILLEBLOC;
 
-    m_path.findPath(buf, dest);
+	m_path.findPath(buf, dest, TAILLEBLOC);
 }
 
 
@@ -619,7 +619,7 @@ bool Character::damage(Character* src, unsigned int damages)
 			{
 				if (src->addExperience(this->getStatistics()->getDroppedExperience()))
 				{
-					wScreen.getFight().getDialog()->modifyText(src->getDescriptor()->getName() + " monte au niveau " + StringUtils::intToStr(src->getStatistics()->getLevel()) + " !");
+					wScreen.getFight().getDialog()->modifyText(src->getDescriptor()->getName() + " monte au niveau " + ska::StringUtils::intToStr(src->getStatistics()->getLevel()) + " !");
 					wScreen.getFight().showDialog(2000);
 				}
 				
@@ -628,7 +628,7 @@ bool Character::damage(Character* src, unsigned int damages)
 			{
 				if (this->addExperience(src->getStatistics()->getDroppedExperience()))
 				{
-					wScreen.getFight().getDialog()->modifyText(getDescriptor()->getName() + " monte au niveau " + StringUtils::intToStr(src->getStatistics()->getLevel()) + " !");
+					wScreen.getFight().getDialog()->modifyText(getDescriptor()->getName() + " monte au niveau " + ska::StringUtils::intToStr(src->getStatistics()->getLevel()) + " !");
 					wScreen.getFight().showDialog(2000);
 				}
 			}

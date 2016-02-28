@@ -1,10 +1,10 @@
 #pragma once
-#include "GravityParticle.h"
-#include "../Graphic/Rectangle.h"
+#include "../ska/Physic/GravityParticle.h"
+#include "../ska/Graphic/Rectangle.h"
 
 class RainParticleManager;
 class RainParticle :
-	public GravityParticle
+	public ska::GravityParticle
 {
 public:
 	RainParticle(RainParticleManager& parent, int id, int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);

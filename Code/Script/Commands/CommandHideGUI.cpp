@@ -20,7 +20,7 @@ std::string CommandHideGUI::execute(IScript* script, std::vector<std::string>& a
 	int b;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	b = StringUtils::strToInt(args[0]);
+	b = ska::StringUtils::strToInt(args[0]);
 
 	wScreen.getGUI().getToolbar()->hide(b != 0);
 	wScreen.getGUI().hide(b != 0);

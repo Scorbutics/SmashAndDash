@@ -32,10 +32,10 @@ std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::str
 
 	ska::Rectangle pos1, pos2;
 	
-	pos1.x = StringUtils::strToInt(posFromX)*TAILLEBLOC;
-	pos1.y = StringUtils::strToInt(posFromY)*TAILLEBLOC;
-	pos2.x = StringUtils::strToInt(posToX)*TAILLEBLOC;
-	pos2.y = StringUtils::strToInt(posToY)*TAILLEBLOC;
+	pos1.x = ska::StringUtils::strToInt(posFromX)*TAILLEBLOC;
+	pos1.y = ska::StringUtils::strToInt(posFromY)*TAILLEBLOC;
+	pos2.x = ska::StringUtils::strToInt(posToX)*TAILLEBLOC;
+	pos2.y = ska::StringUtils::strToInt(posToY)*TAILLEBLOC;
 	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
 	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
 	collisionRect.w = abs(pos1.x - pos2.x) + TAILLEBLOC - 1;

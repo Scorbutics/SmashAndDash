@@ -166,9 +166,9 @@ void Player::update(Observable* obs, EventArg* event)
 			{
 				int id = wScreen.getEntityFactory().getNPC(buf.x, buf.y)->getID();
 				if (id >= 0){
-					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + StringUtils::intToStr(id) + ".png");
+					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + ska::StringUtils::intToStr(id) + ".png");
 				} else {
-					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"pnj" + StringUtils::intToStr(-id) + ".png");
+					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"pnj" + ska::StringUtils::intToStr(-id) + ".png");
 				}
 					
 

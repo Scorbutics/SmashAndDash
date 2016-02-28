@@ -4,8 +4,9 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "./ska/Savegame.h"
 
-class SavegameManager
+class SavegameManager : public ska::Savegame
 {
 	public:
 		SavegameManager(std::string filename);
@@ -13,11 +14,13 @@ class SavegameManager
 		void loadGame(std::string filename);
 		void saveGame(std::string filename);
 		
-		std::string getSaveName();
-		int getGameVariable(unsigned int x);
-		bool getGameSwitch(unsigned int x);
-		void setGameVariable(unsigned int x, int value);
-		void setGameSwitch(unsigned int x, bool value);
+		virtual std::string getSaveName() const override;
+		virtual int getGameVariable(const unsigned int x) const override;
+		virtual bool getGameSwitch(const unsigned int x) const override;
+
+		virtual void setGameVariable(const unsigned int x, const int value) override;
+		virtual void setGameSwitch(const unsigned int x, const bool value) override;
+
 		std::string getStartChipsetName();
 		std::string getStartMapName();
 		~SavegameManager();

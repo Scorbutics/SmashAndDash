@@ -162,7 +162,7 @@ void Inventory::add(int id, unsigned int amount)
             m_objects.push_back(unique_ptr<Object>(new Object(id)));
             m_amount.push_back(amount);
 			Texture buf;
-			buf.loadFromText(m_fontSize, StringUtils::intToStr(amount), m_color);
+			buf.loadFromText(m_fontSize, ska::StringUtils::intToStr(amount), m_color);
             m_amountSurface.push_back(buf);
         }
 
@@ -171,7 +171,7 @@ void Inventory::add(int id, unsigned int amount)
     else
     {
         *(this->getIteratorAmountFromIndex(index)) += amount;
-		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
+		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, ska::StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
     }
 
 }
@@ -194,7 +194,7 @@ void Inventory::remove(int id, unsigned int amount)
     else
     {
         *(this->getIteratorAmountFromIndex(index)) -= amount;
-		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
+		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, ska::StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
     }
 
 }
@@ -214,7 +214,7 @@ void Inventory::remove(std::string name, unsigned int amount)
     else
     {
         *(this->getIteratorAmountFromIndex(index)) -= amount;
-		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
+		(*(this->getIteratorAmountSurfaceFromIndex(index))).loadFromText(m_fontSize, ska::StringUtils::intToStr(*(this->getIteratorAmountFromIndex(index))), m_color);
     }
 
 }

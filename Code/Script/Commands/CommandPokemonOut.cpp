@@ -23,7 +23,7 @@ std::string CommandPokemonOut::execute(IScript* script, std::vector<std::string>
 	unsigned int duree = 2000, t0 = 0;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	index = StringUtils::strToInt(args[0]);
+	index = ska::StringUtils::strToInt(args[0]);
 	ska::Rectangle launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
 	launchPos.y += TAILLEBLOC;
 

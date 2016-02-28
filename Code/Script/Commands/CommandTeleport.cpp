@@ -26,8 +26,8 @@ std::string CommandTeleport::execute(IScript* script, std::vector<std::string>& 
 	int id, number;
 	string param;
 
-	id = StringUtils::strToInt(args[0]);
-	number = StringUtils::strToInt(args[1]);
+	id = ska::StringUtils::strToInt(args[0]);
+	number = ska::StringUtils::strToInt(args[1]);
 	param = args[2];
 
 	if (id != 0)
@@ -54,10 +54,10 @@ void CommandTeleport::teleportHeroToMap(string param)
 	int x = 1, y;
 
 
-	fichier = StringUtils::extractTo(0, param, '/', NULL);
-	fichierD = StringUtils::extractTo((int)strlen(fichier.c_str()) + 1, param, '/', NULL);
-	fichier2 = StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + 2, param, '/', NULL);
-	StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + (int)strlen(fichier2.c_str()) + 3, param, ':', &x);
+	fichier = ska::StringUtils::extractTo(0, param, '/', NULL);
+	fichierD = ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + 1, param, '/', NULL);
+	fichier2 = ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + 2, param, '/', NULL);
+	ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + (int)strlen(fichier2.c_str()) + 3, param, ':', &x);
 
 	// créer un flux de sortie
 	ostringstream oss;

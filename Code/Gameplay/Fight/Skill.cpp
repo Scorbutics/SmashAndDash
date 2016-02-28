@@ -256,7 +256,7 @@ Skill::Skill(IniReader* data, Character* parent)
 	m_type = data->getString("Description type");
 	m_context = data->getInt("Description context");
 	m_id = data->getInt("Description id");
-	m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + StringUtils::intToStr(m_id) + ".png", T_RED, T_GREEN, T_BLUE);
+	m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", T_RED, T_GREEN, T_BLUE);
 
 	m_cooldown = data->getInt("Stats cooldown");
 	m_range = data->getInt("Stats blocks_range");
@@ -335,7 +335,7 @@ bool Skill::cooldownOK()
         c.g = 0;
         c.b = 0;
 		c.a = 255;
-		string s = StringUtils::intToStr((m_cooldown - (m_timeCD - m_lastTimeCD)) / 1000);
+		string s = ska::StringUtils::intToStr((m_cooldown - (m_timeCD - m_lastTimeCD)) / 1000);
         m_cooldownText.loadFromText(m_fontSize, s, c);
     }
     return (m_timeCD - m_lastTimeCD >= m_cooldown);

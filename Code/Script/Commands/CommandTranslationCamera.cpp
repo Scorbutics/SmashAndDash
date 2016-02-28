@@ -24,9 +24,9 @@ std::string CommandTranslationCamera::execute(IScript* script, std::vector<std::
 	int speedx, speedy;
 	ska::Rectangle tmpRelativeOrigin;
 
-	duree = StringUtils::strToInt(args[0]);
-	speedx = StringUtils::strToInt(args[1]);
-	speedy = StringUtils::strToInt(args[2]);
+	duree = ska::StringUtils::strToInt(args[0]);
+	speedx = ska::StringUtils::strToInt(args[1]);
+	speedy = ska::StringUtils::strToInt(args[2]);
 
 	tmpRelativeOrigin = wScreen.getORel();
 	wScreen.activeScrolling(false);

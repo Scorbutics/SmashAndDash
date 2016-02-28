@@ -21,7 +21,7 @@ std::string CommandWait::execute(IScript* script, std::vector<std::string>& args
 {
 	unsigned int duree = 0, t0 = 0;
 	WGameCore& wScreen = WGameCore::getInstance();
-	duree = StringUtils::strToInt(args[0]);
+	duree = ska::StringUtils::strToInt(args[0]);
 
 	/* Delay the script : assign an uint value > 1 */
 	script->delay(duree);

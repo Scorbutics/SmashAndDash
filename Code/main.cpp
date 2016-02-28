@@ -58,7 +58,7 @@ int main (int argc, char *argv[])
 		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
 		while (wScreen.refresh()); //boucle principale
 		wScreen.quitter(false);
-	} catch (GenericException& e) {
+	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
 		cerr << e.what() << endl;
 		MessagePopup(MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);

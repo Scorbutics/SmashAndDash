@@ -19,10 +19,10 @@ std::string CommandMove::execute(IScript* script, std::vector<std::string>& args
 	string dir;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	idtype = StringUtils::strToInt(args[0]);
-	id = StringUtils::strToInt(args[1]);
+	idtype = ska::StringUtils::strToInt(args[0]);
+	id = ska::StringUtils::strToInt(args[1]);
 	dir = args[2];
-	speed = StringUtils::strToInt(args[3]);
+	speed = ska::StringUtils::strToInt(args[3]);
 
 	for (unsigned int j = 0; j < dir.size(); j++)
 	{

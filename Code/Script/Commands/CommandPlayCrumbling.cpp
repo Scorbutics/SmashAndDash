@@ -20,7 +20,7 @@ std::string CommandPlayCrumbling::execute(IScript* script, std::vector<std::stri
 	WGameCore& wScreen = WGameCore::getInstance();
 	int duree = 0;
 
-	duree = StringUtils::strToInt(args[0]);
+	duree = ska::StringUtils::strToInt(args[0]);
 
 	wScreen.getParticleManager().playCrumbling(1, 30, 0.25, duree);
 	return "";

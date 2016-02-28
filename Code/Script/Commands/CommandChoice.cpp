@@ -57,7 +57,7 @@ std::string CommandChoice::execute(IScript* script, std::vector<std::string>& ar
 		if (atoi(fname.c_str()) >= 0)
 			buf = fname;
 		else
-			buf = "pnj" + StringUtils::intToStr(abs(atoi(fname.c_str())));
+			buf = "pnj" + ska::StringUtils::intToStr(abs(atoi(fname.c_str())));
 	}
 
 	DialogMenu imgDial("", (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22);

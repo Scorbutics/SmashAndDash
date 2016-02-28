@@ -32,12 +32,12 @@ std::string CommandCinematic::execute(IScript* script, std::vector<std::string>&
 	menuPos.w = wScreen.getWidth();
 	menuPos.h = TAILLEBLOCFENETRE * 4;
 
-	id_anim = StringUtils::strToInt(args[0]);
-	delay = StringUtils::strToInt(args[1]);
-	duration = StringUtils::strToInt(args[2]);
-	frameNumber = StringUtils::strToInt(args[3]);
-	pos.x = StringUtils::strToInt(args[4]);
-	pos.y = StringUtils::strToInt(args[5]);
+	id_anim = ska::StringUtils::strToInt(args[0]);
+	delay = ska::StringUtils::strToInt(args[1]);
+	duration = ska::StringUtils::strToInt(args[2]);
+	frameNumber = ska::StringUtils::strToInt(args[3]);
+	pos.x = ska::StringUtils::strToInt(args[4]);
+	pos.y = ska::StringUtils::strToInt(args[5]);
 	message = args[6];	
 
 	if (pos.x != -1)

@@ -451,11 +451,11 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
         buf.y = TAILLEBLOCFENETRE/2 + 20;
         m_pokeInfoWindow->addTextArea("Nom : " + pokemon->getDescriptor()->getName(), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 60;
-        m_pokeInfoWindow->addTextArea("Level : " + StringUtils::intToStr(pokemon->getStatistics()->getLevel()), 20, buf);
+        m_pokeInfoWindow->addTextArea("Level : " + ska::StringUtils::intToStr(pokemon->getStatistics()->getLevel()), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 80;
-		m_pokeInfoWindow->addTextArea("HP : " + StringUtils::intToStr(pokemon->getHp()), 20, buf);
+		m_pokeInfoWindow->addTextArea("HP : " + ska::StringUtils::intToStr(pokemon->getHp()), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 100;
-		m_pokeInfoWindow->addTextArea("Position : " + StringUtils::intToStr(posHero.x) + ":" + StringUtils::intToStr(posHero.y), 20, buf);
+		m_pokeInfoWindow->addTextArea("Position : " + ska::StringUtils::intToStr(posHero.x) + ":" + ska::StringUtils::intToStr(posHero.y), 20, buf);
 
         m_facesetPkmn->deleteAll();
         id = pokemon->getID();
@@ -502,11 +502,11 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         buf.y = TAILLEBLOCFENETRE/2 + 20;*/
         m_pnjInfoWindow->addTextArea(pnj->getDescriptor()->getName(), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 20;
-		m_pnjInfoWindow->addTextArea("Level : " + StringUtils::intToStr(pnj->getStatistics()->getLevel()), 20, buf);
+		m_pnjInfoWindow->addTextArea("Level : " + ska::StringUtils::intToStr(pnj->getStatistics()->getLevel()), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 40;
-		m_pnjInfoWindow->addTextArea("HP : " + StringUtils::intToStr(pnj->getHp()) + "/" + StringUtils::intToStr(pnj->getStatistics()->getHpMax()), 20, buf);
+		m_pnjInfoWindow->addTextArea("HP : " + ska::StringUtils::intToStr(pnj->getHp()) + "/" + ska::StringUtils::intToStr(pnj->getStatistics()->getHpMax()), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 60;
-		m_pnjInfoWindow->addTextArea("Position : " + StringUtils::intToStr(posHero.x) + ":" + StringUtils::intToStr(posHero.y), 20, buf);
+		m_pnjInfoWindow->addTextArea("Position : " + ska::StringUtils::intToStr(posHero.x) + ":" + ska::StringUtils::intToStr(posHero.y), 20, buf);
 
         m_facesetOpponent->deleteAll();
         id = pnj->getID();

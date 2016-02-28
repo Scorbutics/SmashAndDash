@@ -8,7 +8,7 @@ using namespace std;
 Object::Object(int id): m_animation(525, 2, false)
 {
 	m_id = id;
-	const std::string& strId = StringUtils::intToStr(m_id);
+	const std::string& strId = ska::StringUtils::intToStr(m_id);
 	IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Items"FILE_SEPARATOR + strId  + ".ini");
     m_name = reader.getString("Description name");
 	m_description = reader.getString("Description description");

@@ -38,7 +38,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 	buf.y += 6;
     m_nameArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "Nom : " + m_pkmn->getDescriptor()->getName(), 20, buf));
     buf.x += 4*TAILLEBLOCFENETRE;
-	m_levelArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "Niveau : " + StringUtils::intToStr(m_pkmn->getStatistics()->getLevel()), 20, buf));
+	m_levelArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "Niveau : " + ska::StringUtils::intToStr(m_pkmn->getStatistics()->getLevel()), 20, buf));
     buf.x -= 4*TAILLEBLOCFENETRE;
     buf.y += 21;
     m_type1Area = unique_ptr<Text_Area>(new Text_Area(m_parent, "Type 1 : " + m_pkmn->getDescriptor()->getType(1), 20, buf));
@@ -46,7 +46,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
     m_type2Area = unique_ptr<Text_Area>(new Text_Area(m_parent, "Type 2 : " + m_pkmn->getDescriptor()->getType(2), 20, buf));
     buf.x -= 4*TAILLEBLOCFENETRE;
     buf.y += 21;
-	m_pvArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "PVs : " + StringUtils::uintToStr(m_pkmn->getHp()) + "/" + StringUtils::uintToStr(m_pkmn->getStatistics()->getHpMax()), 20, buf));
+	m_pvArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "PVs : " + ska::StringUtils::uintToStr(m_pkmn->getHp()) + "/" + ska::StringUtils::uintToStr(m_pkmn->getStatistics()->getHpMax()), 20, buf));
     if(m_action == "use_object")
     {
         vector<string> vUse;
@@ -56,7 +56,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
         vUse.push_back("Utiliser");
         vUse.push_back("Ok !");
         buf.x += 5*TAILLEBLOCFENETRE;
-		m_buttonArea = unique_ptr<Button>(new Button(m_parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", m_boolUseObjectSelectPkmn, vBool, vUse, 20, "team_use_object_" + StringUtils::intToStr(m_key), false));
+		m_buttonArea = unique_ptr<Button>(new Button(m_parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", m_boolUseObjectSelectPkmn, vBool, vUse, 20, "team_use_object_" + ska::StringUtils::intToStr(m_key), false));
         buf.x -= 5*TAILLEBLOCFENETRE;
     }
     else

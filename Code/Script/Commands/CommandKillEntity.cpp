@@ -24,8 +24,8 @@ std::string CommandKillEntity::execute(IScript* script, std::vector<std::string>
 	int id, number;
 	string param;
 
-	id = StringUtils::strToInt(args[0]);
-	number = StringUtils::strToInt(args[1]);
+	id = ska::StringUtils::strToInt(args[0]);
+	number = ska::StringUtils::strToInt(args[1]);
 
 	wScreen.getEntityFactory().remove(id, number);
 	return "";

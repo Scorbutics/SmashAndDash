@@ -21,5 +21,5 @@ int CommandCalculate::argumentsNumber() {
 std::string CommandCalculate::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
 {
 	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script->getExtendedName(), args[0], script->getVarMap()));
-	return StringUtils::intToStr((int)f);
+	return ska::StringUtils::intToStr((int)f);
 }

@@ -1,5 +1,5 @@
 #include "../Utils/IDs.h"
-#include "../Utils/NumberUtils.h"
+#include "../ska/Utils/NumberUtils.h"
 #include "../Gameplay/WGameCore.h"
 #include "RainParticle.h"
 #include "RainParticleManager.h"
@@ -21,7 +21,7 @@ ska::Rectangle RainParticle::getOrigin() const {
 	et le nombre de colonnes de blocs affichées car le modulo permet de normaliser le chiffre. */
 	const int max = ((m_id % nbrDisplayedBlocksX) - variant/2)*TAILLEBLOC;
 	const int min = (((m_id - 1) % nbrDisplayedBlocksX) - variant / 2)*TAILLEBLOC;
-	posBuf.x = NumberUtils::random(min, max);
+	posBuf.x = ska::NumberUtils::random(min, max);
 	return posBuf;
 }
 

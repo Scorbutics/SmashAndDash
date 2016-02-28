@@ -53,7 +53,7 @@ void Fight::setAreasFromLayerEvent()
 		if (w.getLayerEvent()->getAction(i) == "combat")
         {
             int width, height;
-			StringUtils::extractTo(0, w.getLayerEvent()->getParam(i), ':', &width);
+			ska::StringUtils::extractTo(0, w.getLayerEvent()->getParam(i), ':', &width);
 			height = atoi(w.getLayerEvent()->getParam(i).substr(w.getLayerEvent()->getParam(i).find_last_of(':') + 1, w.getLayerEvent()->getParam(i).size()).c_str());
 
 			this->addArea(w.getLayerEvent()->getBlocX(i)*TAILLEBLOC, w.getLayerEvent()->getBlocY(i)*TAILLEBLOC, width*TAILLEBLOC, height*TAILLEBLOC);
@@ -356,7 +356,7 @@ void Fight::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	if (m_isFighting) {
-		throw IllegalStateException("Impossible de refresh un combat sans être dans la scène de combat");
+		throw ska::IllegalStateException("Impossible de refresh un combat sans être dans la scène de combat");
 	}
 
 	if(m_trainer->getSpeed() > 0)

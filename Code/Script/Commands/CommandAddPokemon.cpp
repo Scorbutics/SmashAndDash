@@ -20,7 +20,7 @@ std::string CommandAddPokemon::execute(IScript* script, std::vector<std::string>
 	int id;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	id = StringUtils::strToInt(args[0]);
+	id = ska::StringUtils::strToInt(args[0]);
 
 	wScreen.getPokemonManager().add(id);
 	return "";
