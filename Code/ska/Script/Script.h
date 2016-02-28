@@ -2,8 +2,9 @@
 #include <string>
 #include <memory>
 #include <fstream>
-#include "IScript.h"
 #include <unordered_map>
+#include "IScript.h"
+#include "Command\Command.h"
 
 namespace ska {
 	class Script :
@@ -14,7 +15,8 @@ namespace ska {
 		Script(const int triggeringType, const unsigned int scriptPeriod, const std::string& fullPath, const std::string& extendedName, const std::string& key, const std::vector<std::string>& extraArgs);
 		virtual ~Script();
 		
-		bool play(ScriptDispatcher& parent) override;
+		
+		bool play() override;
 		ScriptState getCurrentState() const override;
 		unsigned int getCurrentLine() const override;
 		std::string getExtendedName() const override;
@@ -25,14 +27,16 @@ namespace ska {
 		std::string getLastResult() const override;
 		float getPriority(const unsigned int currentTimeMillis) override;
 		bool eof() const override;
-		void kill(const ska::Savegame& savegame) override;
+		void killAndSave(const ska::Savegame& savegame) override;
+		std::string interpret(const std::string& cmd) override;
 
 		std::string getFullPath() const;
 		bool canBePlayed();
+		static void addCommand(const std::string& key, CommandPtr& cmd);
 
 	private:
 		static unsigned int MAX_CONSECUTIVE_COMMANDS_PLAYED;
-
+		static std::unordered_map<std::string, CommandPtr> m_commands;
 		ScriptState manageCurrentState();
 		bool transferActiveToDelay();
 		void commonPartConstructor(const unsigned int scriptPeriod, const int triggeringType);

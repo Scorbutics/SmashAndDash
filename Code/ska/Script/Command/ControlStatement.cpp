@@ -7,8 +7,8 @@ ska::ControlStatement::ControlStatement()
 {
 }
 
-std::string ska::ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) {
-	return analyzeLine(script, streamCmd, args, scriptList);
+std::string ska::ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+	return analyzeLine(script, streamCmd, args);
 }
 
 char ska::ControlStatement::getSeparator() {
@@ -23,11 +23,6 @@ const std::string& ska::ControlStatement::getCommandEndIf() {
 const std::string& ska::ControlStatement::getCommandElse() {
 	static const std::string COMMAND_ELSE = "else";
 	return COMMAND_ELSE;
-}
-
-const std::string& ska::ControlStatement::getCommandElsif() {
-	static const std::string COMMAND_ELSIF = "elsif";
-	return COMMAND_ELSIF;
 }
 
 const std::string& ska::ControlStatement::getCommandIf() {

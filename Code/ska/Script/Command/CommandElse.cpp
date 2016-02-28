@@ -1,10 +1,11 @@
+#include <string>
 #include "CommandElse.h"
 #include "CommandIf.h"
 #include "CommandElseEnd.h"
 #include "../../Utils/StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-#include <string>
-#include <map>
+#include "../IScript.h"
+
 
 using namespace std;
 
@@ -22,7 +23,7 @@ const std::string& ska::CommandElse::getCmdName() {
 	return ControlStatement::getCommandElse();
 }
 
-std::string ska::CommandElse::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string ska::CommandElse::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args)
 {
 	int ifEnd = 1;
 	string lineBuf;

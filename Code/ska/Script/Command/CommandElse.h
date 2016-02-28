@@ -8,7 +8,7 @@ namespace ska {
 		CommandElse();
 		virtual ~CommandElse();
 
-		virtual std::string analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) override;
+		virtual std::string analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) override;
 		virtual const std::string& getCmdName() override;
 	};
 }

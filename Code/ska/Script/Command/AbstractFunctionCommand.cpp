@@ -2,6 +2,7 @@
 #include "..\..\Utils\StringUtils.h"
 #include "..\..\Exceptions\ScriptSyntaxError.h"
 #include "../ScriptSymbolsConstants.h"
+#include "../IScript.h"
 
 using namespace std;
 

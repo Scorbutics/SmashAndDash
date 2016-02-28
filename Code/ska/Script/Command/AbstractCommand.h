@@ -11,11 +11,11 @@ namespace ska {
 
 	public:
 		AbstractCommand();
-		std::string process(IScript* script, std::stringstream& streamCmd, std::ofstream& scriptList) override;
+		std::string process(IScript* script, std::stringstream& streamCmd) override;
 		virtual ~AbstractCommand();
 
 	protected:
-		virtual std::string process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) = 0;
+		virtual std::string process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) = 0;
 		virtual char getSeparator() = 0;
 	};
 }

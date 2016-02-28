@@ -67,7 +67,7 @@ void ska::LayerE::refresh() {
 					fwriteScript << "";
 					fwriteScript.close();
 				}
-				Uint32 scriptPeriod = 1000;
+				unsigned int scriptPeriod = 1000;
 				ScriptDispatcher::getInstance().addRunningScript(NULL, getParam(i), m_world.getName(), vector<string>(), 2, &scriptPeriod);
 			}
 		}

@@ -3,14 +3,15 @@
 #include "..\..\Utils\StringUtils.h"
 #include "..\..\Utils\ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
+#include "../IScript.h"
 
 using namespace std;
 
-AbstractCommand::AbstractCommand()
+ska::AbstractCommand::AbstractCommand()
 {
 }
 
-std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, ofstream& scriptList) {
+std::string ska::AbstractCommand::process(IScript* script, stringstream& streamCmd, ofstream& scriptList) {
 
 	string line;
 	getline(streamCmd, line);
@@ -32,13 +33,13 @@ std::string AbstractCommand::process(IScript* script, stringstream& streamCmd, o
 	return process(script, streamCmd, args, scriptList);
 }
 
-std::string AbstractCommand::interpretSubCommands(string& line, IScript* script) {
+std::string ska::AbstractCommand::interpretSubCommands(string& line, IScript* script) {
 	size_t outputCommandSize = 0;
 	size_t offset;
 	string parsedArg;
 	
 	/* Conservation de tout ce qui se trouve sur la ligne avant l'appel à la sous-commande */
-	size_t offsetLineCmd = line.find_first_of(ScriptSymbolsConstants::METHOD);
+	size_t offsetLineCmd = line.find_first_of(ska::ScriptSymbolsConstants::METHOD);
 	string firstLinePart = (offsetLineCmd == std::string::npos ? "" : line.substr(0, offsetLineCmd));
 	parsedArg += firstLinePart;
 
@@ -53,6 +54,6 @@ std::string AbstractCommand::interpretSubCommands(string& line, IScript* script)
 	return "";
 }
 
-AbstractCommand::~AbstractCommand()
+ska::AbstractCommand::~AbstractCommand()
 {
 }

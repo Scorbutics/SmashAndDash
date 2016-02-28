@@ -2,9 +2,7 @@
 #include <iostream>
 #include "ScriptDispatcher.h"
 
-#include "Command\CommandIf.h"
-#include "Command\CommandElse.h"
-#include "Command\CommandElseEnd.h"
+
 #include "../Exceptions/ScriptDiedException.h"
 /*
 #include "../Gameplay\WGameCore.h"
@@ -55,8 +53,7 @@ using namespace std;
 #define SCRIPT_DEFAULT_PERIOD 1
 
 
-/*unordered_map<string, unique_ptr<ska::Command>> create_map()
-{
+/*unordered_map<string, unique_ptr<ska::Command>> create_map() {
 	unordered_map<string, unique_ptr<ska::Command>> c;
 	c["move"] = move(ska::CommandPtr(new CommandMove()));
 	c["message"] = move(ska::CommandPtr(new CommandMessage()));
@@ -88,16 +85,14 @@ using namespace std;
 	c["throw_pokemon"] = move(ska::CommandPtr(new CommandPokemonOut()));
 	c["player_presence"] = move(ska::CommandPtr(new CommandPlayerPresence()));
 	c["log"] = move(ska::CommandPtr(new CommandLog()));
-	
-
 	return c;
 }*/
 
 ska::ScriptDispatcher::ScriptDispatcher(ska::Savegame& saveGame) : m_saveGame(saveGame){
-	m_commands[ska::ControlStatement::getCommandIf()] = move(ska::CommandPtr(new CommandIf()));
-	m_commands[ska::ControlStatement::getCommandElse()] = move(ska::CommandPtr(new CommandElse()));
-	m_commands[ska::ControlStatement::getCommandEndIf()] = move(ska::CommandPtr(new CommandElseEnd()));
+
 }
+
+
 
 ska::IScript* ska::ScriptDispatcher::addRunningScript(IScript* parent, const string& name, const string& context, const vector<string>& args, const int triggeringType, const unsigned int* period) {
 	string extendedName;
@@ -142,10 +137,6 @@ ska::IScript* ska::ScriptDispatcher::addRunningScript(IScript* parent, const str
 	
 }
 
-void ska::ScriptDispatcher::addCommand(const std::string& key, ska::CommandPtr& cmd) {
-	m_commands[key] = move(cmd);
-}
-
 void ska::ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, const vector<string>& args) {
 	unsigned int i = 0;
 	for (const string& curArg : args) {
@@ -163,6 +154,8 @@ void ska::ScriptDispatcher::refresh()
 
 	try {
 		nextScript->play();
+	} catch (ska::ScriptDiedException sde) {
+		nextScript->killAndSave(m_saveGame);
 	} catch (ska::ScriptException e) {
 		cerr << "ERREUR SCRIPT [" << nextScript->getExtendedName() << "] (l." << nextScript->getCurrentLine() << ") " << e.what() << endl;
 	}
@@ -170,35 +163,7 @@ void ska::ScriptDispatcher::refresh()
 }
 
 std::string ska::ScriptDispatcher::commandInterpreter(IScript* script, const std::string& cmd) {
-	ofstream scriptList;
-	string cmdName;
-	stringstream streamCmd;
 
-	streamCmd << cmd;
-	streamCmd >> cmdName;
-	/* No tabulation */
-	std::remove(cmdName.begin(), cmdName.end(), '\t');
-
-	if (cmdName.empty()) {
-		if (streamCmd.eof()) {
-			script->stop();
-		}
-		return "";
-	}
-
-	if (m_commands.find(cmdName) != m_commands.end()) {
-		std::unordered_map<std::string, std::string>& varMap = script->getVarMap();
-		try {
-			return m_commands[cmdName]->process(script, streamCmd, scriptList);
-		}
-		catch (ska::ScriptDiedException sde) {
-			script->kill(m_saveGame);
-		} catch (ska::NumberFormatException nfe) {
-			throw ska::ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
-		}
-	} else {
-		throw ska::ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
-	}
 	return "";
 }
 

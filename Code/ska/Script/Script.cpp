@@ -1,18 +1,35 @@
 #include <limits>
+#include <algorithm>
+#include <sstream>
 #include <string>
 
 #include "Script.h"
 #include "../Utils\ScriptUtils.h"
 #include "../Exceptions\ScriptNotActivatedException.h"
+#include "../Exceptions/NumberFormatException.h"
+#include "../Exceptions/ScriptDiedException.h"
+#include "../Exceptions/ScriptUnknownCommandException.h"
 #include "ScriptDispatcher.h"
 #include "../Utils/TimeUtils.h"
 #include "../Utils/SkaConstants.h"
+#include "Command\CommandIf.h"
+#include "Command\CommandElse.h"
+#include "Command\CommandElseEnd.h"
 
 #define TRIGGER_AUTO_PERIODIC 0
 #define TRIGGER_PRESS_KEY 1
 
 using namespace std;
 
+unordered_map<string, ska::CommandPtr> createCmdMap() {
+	unordered_map<string, ska::CommandPtr> c;
+	c[ska::ControlStatement::getCommandIf()] = move(ska::CommandPtr(new ska::CommandIf()));
+	c[ska::ControlStatement::getCommandElse()] = move(ska::CommandPtr(new ska::CommandElse()));
+	c[ska::ControlStatement::getCommandEndIf()] = move(ska::CommandPtr(new ska::CommandElseEnd()));
+	return c;
+}
+
+unordered_map<string, ska::CommandPtr> ska::Script::m_commands = createCmdMap();
 unsigned int ska::Script::MAX_CONSECUTIVE_COMMANDS_PLAYED = 5;
 
 void ska::Script::commonPartConstructor(const unsigned int scriptPeriod, const int triggeringType) {
@@ -49,7 +66,41 @@ bool ska::Script::eof() const {
 	return m_fscript.eof();
 }
 
-bool ska::Script::play(ScriptDispatcher& parent) {
+void ska::Script::addCommand(const std::string& key, ska::CommandPtr& cmd) {
+	m_commands[key] = move(cmd);
+
+}
+
+std::string ska::Script::interpret(const std::string& cmd) {
+	string cmdName;
+	stringstream streamCmd;
+
+	streamCmd << cmd;
+	streamCmd >> cmdName;
+	/* No tabulation */
+	std::remove(cmdName.begin(), cmdName.end(), '\t');
+
+	if (cmdName.empty()) {
+		if (streamCmd.eof()) {
+			stop();
+		}
+		return "";
+	}
+
+	if (m_commands.find(cmdName) != m_commands.end()) {
+		std::unordered_map<std::string, std::string>& varMap = m_varMap;
+		try {
+			return m_commands[cmdName]->process(this, streamCmd);
+		} catch (ska::NumberFormatException nfe) {
+			throw ska::ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
+		}
+	}
+	else {
+		throw ska::ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
+	}
+}
+
+bool ska::Script::play() {
 	string cmd;
 	string result;
 	
@@ -69,7 +120,7 @@ bool ska::Script::play(ScriptDispatcher& parent) {
 	while (!eof()) {
 		cmd = nextLine();
 		if (cmd != "") {
-			m_lastResult = parent.commandInterpreter(this, cmd);
+			m_lastResult = interpret(cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
 			if (m_state == EnumScriptState::STOPPED || manageCurrentState() == EnumScriptState::PAUSED) {
 				break;
@@ -95,10 +146,6 @@ bool ska::Script::play(ScriptDispatcher& parent) {
 
 	return true;
 }
-
-/*std::string ska::Script::getContext() const {
-	return m_context;
-}*/
 
 std::string ska::Script::getKey() const {
 	return m_key;
@@ -163,7 +210,7 @@ std::string ska::Script::getFullPath() const {
 	return m_fullPath;
 }
 
-void ska::Script::kill(const ska::Savegame& savegame) {
+void ska::Script::killAndSave(const ska::Savegame& savegame) {
 	string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
 	std::ofstream scriptList;
 	scriptList.open(tmpScritFileName.c_str(), ios::app);

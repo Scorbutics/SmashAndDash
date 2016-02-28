@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "../../Utils\StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-
+#include "../IScript.h"
 using namespace std;
 
 ska::CommandIf::CommandIf()
@@ -19,7 +19,7 @@ const string& ska::CommandIf::getCmdName() {
 	return ControlStatement::getCommandIf();
 }
 
-std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;

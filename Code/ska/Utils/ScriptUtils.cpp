@@ -136,7 +136,7 @@ std::string ska::ScriptUtils::getFirstExpressionFromLine(const std::string& line
 	}
 
 	if (!commandCall.empty()) {
-		std::string result = ScriptDispatcher::commandInterpreter(script, commandCall);
+		std::string result = script->interpret(commandCall);
 		if (!result.empty()) {
 			valeur = result;
 		} else {

@@ -3,7 +3,7 @@
 #include "../../Utils\StringUtils.h"
 #include <iosfwd>
 #include "../../Utils\SkaConstants.h"
-#include "../Exceptions/ScriptDiedException.h"
+#include "../../Exceptions/ScriptDiedException.h"
 
 using namespace std;
 
@@ -25,6 +25,6 @@ const std::string& ska::CommandEnd::getCmdName() {
 	return cmdName;
 }
 
-std::string ska::CommandEnd::execute(ska::IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) {
-	throw ska::ScriptDiedException();
+std::string ska::CommandEnd::execute(ska::IScript* script, std::vector<std::string>& args) {
+	throw ska::ScriptDiedException("end cmd");
 }
