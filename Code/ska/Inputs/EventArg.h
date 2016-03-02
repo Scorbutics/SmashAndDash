@@ -2,19 +2,19 @@
 #define DEF_EVENTARG
 
 #include <string>
-#include "../Utils\IDs.h"
+#include "../Utils\SkaConstants.h"
 
-class EventArg
-{
+
+namespace ska {
+	class EventArg
+	{
 	public:
 		EventArg(){}
 		virtual int type() = 0;
 		virtual ~EventArg(){}
 
-};
+	};
 
-
-namespace ska {
 	class MouseEvent : public EventArg
 	{
 	public:

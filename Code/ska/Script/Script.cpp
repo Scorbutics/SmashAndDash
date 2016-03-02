@@ -71,7 +71,7 @@ void ska::Script::addCommand(const std::string& key, ska::CommandPtr& cmd) {
 
 }
 
-std::string ska::Script::interpret(const std::string& cmd) {
+std::string ska::Script::interpret(Savegame& savegame, const std::string& cmd) {
 	string cmdName;
 	stringstream streamCmd;
 
@@ -90,7 +90,7 @@ std::string ska::Script::interpret(const std::string& cmd) {
 	if (m_commands.find(cmdName) != m_commands.end()) {
 		std::unordered_map<std::string, std::string>& varMap = m_varMap;
 		try {
-			return m_commands[cmdName]->process(this, streamCmd);
+			return m_commands[cmdName]->process(savegame, this, streamCmd);
 		} catch (ska::NumberFormatException nfe) {
 			throw ska::ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
 		}
@@ -100,7 +100,7 @@ std::string ska::Script::interpret(const std::string& cmd) {
 	}
 }
 
-bool ska::Script::play() {
+bool ska::Script::play(Savegame& savegame) {
 	string cmd;
 	string result;
 	
@@ -120,7 +120,7 @@ bool ska::Script::play() {
 	while (!eof()) {
 		cmd = nextLine();
 		if (cmd != "") {
-			m_lastResult = interpret(cmd);
+			m_lastResult = interpret(savegame, cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
 			if (m_state == EnumScriptState::STOPPED || manageCurrentState() == EnumScriptState::PAUSED) {
 				break;

@@ -60,3 +60,10 @@
 #define WIND_LEFT 1
 #define WIND_RIGHT 2
 #define WIND_NEUTRAL 3
+
+#define EVENT_MOUSE 0
+#define EVENT_KEYBOARD 1
+
+#define SPRITE_ID_SHADOW 13
+
+#define DEFAULT_FONT_FILE "."FILE_SEPARATOR"Polices"FILE_SEPARATOR"pkmndp.ttf"

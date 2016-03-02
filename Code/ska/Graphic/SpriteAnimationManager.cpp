@@ -4,11 +4,11 @@
 
 using namespace std;
 
-SpriteAnimationManager::SpriteAnimationManager()
+ska::SpriteAnimationManager::SpriteAnimationManager()
 {
 }
 
-SpriteAnimation* SpriteAnimationManager::play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
+ska::SpriteAnimation* ska::SpriteAnimationManager::play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
 {
 	const size_t size = m_sprites.size();
 	size_t i;
@@ -16,19 +16,19 @@ SpriteAnimation* SpriteAnimationManager::play(int type, int id, ska::Rectangle p
 	
 	if(i != size)
 	{
-		m_sprites[i] = unique_ptr<SpriteAnimation>(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha));
+		m_sprites[i] = move(SpriteAnimationPtr(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha)));
 		m_cycles[i] = cycles;
 	}
 	else
 	{
-		m_sprites.push_back(unique_ptr<SpriteAnimation>(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha)));
+		m_sprites.push_back(SpriteAnimationPtr(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha)));
 		m_cycles.push_back(cycles);
 	}
 
 	return &(*m_sprites[i]);
 }
 
-void SpriteAnimationManager::display()
+void ska::SpriteAnimationManager::display()
 {
 	for(unsigned int i = 0; i < m_sprites.size(); i++)
 	{
@@ -44,16 +44,16 @@ void SpriteAnimationManager::display()
 	}
 }
 
-bool SpriteAnimationManager::isVisible() const {
+bool ska::SpriteAnimationManager::isVisible() const {
 	return !m_sprites.empty();
 }
 
-void SpriteAnimationManager::reset()
+void ska::SpriteAnimationManager::reset()
 {
 	m_sprites.clear();
 	m_cycles.clear();
 }
 
-SpriteAnimationManager::~SpriteAnimationManager()
+ska::SpriteAnimationManager::~SpriteAnimationManager()
 {
 }

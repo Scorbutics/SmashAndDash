@@ -1,35 +1,35 @@
 #include <iostream>
 #include "SDLFont.h"
-#include "../Utils\IDs.h"
+#include "../Utils\SkaConstants.h"
 
-SDLFont::SDLFont()
+ska::SDLFont::SDLFont()
 {
 	m_fontC = NULL;
-	open(12);
+	open(DEFAULT_FONT_FILE, 12);
 }
 
-SDLFont::SDLFont(UInteger fontSize)
+ska::SDLFont::SDLFont(UInteger fontSize)
 {
 	m_fontC = NULL;
-	open(fontSize.getData());
+	open(DEFAULT_FONT_FILE, fontSize.getData());
 }
 
-void SDLFont::open(unsigned int fontSize)
+void ska::SDLFont::open(const std::string& fontFile, unsigned int fontSize)
 {
 	TTF_CloseFont(m_fontC);
-	m_fontC = TTF_OpenFont(FILE_FONT, fontSize);
+	m_fontC = TTF_OpenFont(fontFile.c_str(), fontSize);
 	if (m_fontC == NULL)
 		std::cerr << "Erreur lors de l'ouverture de la police : " << TTF_GetError() << std::endl;
 }
 
 
 
-TTF_Font* SDLFont::getInstance()
+TTF_Font* ska::SDLFont::getInstance()
 {
 	return m_fontC;
 }
 
-SDLFont::~SDLFont()
+ska::SDLFont::~SDLFont()
 {
 	TTF_CloseFont(m_fontC);
 }

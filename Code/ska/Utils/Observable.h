@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-class Input;
-class Observer;
-class EventArg;
 namespace ska {
+	class Input;
+	class Observer;
+	class EventArg;
 	class Observable
 	{
 	public:

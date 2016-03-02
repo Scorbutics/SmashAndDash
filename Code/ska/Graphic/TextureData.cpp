@@ -1,12 +1,21 @@
 #include "TextureData.h"
 #include "../Utils\StringUtils.h"
 
-ska::TextureData::TextureData(std::string texturePath, SDL_Color col) {
+ska::TextureData::TextureData(Window& window, std::string texturePath, SDL_Color col) : m_window(&window){
 	m_data = std::make_pair(texturePath, col);
 }
 
 ska::TextureData::TextureData() {
 	m_data = std::make_pair("-1", SDL_Color());
+}
+
+void ska::TextureData::operator=(ska::TextureData& t2) {
+	m_data = t2.m_data;
+	m_window = t2.m_window;
+}
+
+ska::Window& ska::TextureData::getWindow() {
+	return *m_window;
 }
 
 std::string ska::TextureData::toString() const {

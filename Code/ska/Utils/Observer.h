@@ -2,7 +2,7 @@
 #define DEF_OBSERVER
 
 #include <string>
-#include "../Inputs/ska/EventArg.h"
+#include "../Inputs/EventArg.h"
 
 namespace ska {
 	class Observable;

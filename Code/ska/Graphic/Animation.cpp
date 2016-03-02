@@ -1,12 +1,11 @@
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
 
 #include "Animation.h"
 
 using namespace std;
 
-Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::Rectangle offsetAndFrameSize)
+ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::Rectangle offsetAndFrameSize)
 {
     m_offset = offsetAndFrameSize;
     m_offsetBase = m_offset;
@@ -24,7 +23,7 @@ Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::
 	m_cycles = 0;
 }
 
-Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, int x, int y, unsigned int width, unsigned int height)
+ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, int x, int y, unsigned int width, unsigned int height)
 {
 	ska::Rectangle r;
 	r.x = x;
@@ -47,57 +46,57 @@ Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, int x
 	m_cycles = 0;
 }
 
-unsigned int Animation::getNumberFrames()
+unsigned int ska::Animation::getNumberFrames()
 {
 	return m_frameNumber;
 }
 
-unsigned int Animation::getDelay()
+unsigned int ska::Animation::getDelay()
 {
 	return m_countMAX;
 }
 
-void Animation::stop(bool x)
+void ska::Animation::stop(bool x)
 {
     m_active = !x;
 }
 
-int Animation::getPosition()
+int ska::Animation::getPosition()
 {
 	return m_position;
 }
 
-int Animation::getMaxPosition()
+int ska::Animation::getMaxPosition()
 {
 	return m_frameNumber - 1;
 }
 
-unsigned int Animation::getCount()
+unsigned int ska::Animation::getCount()
 {
     return m_count;
 }
 
-void Animation::setCount(unsigned int x)
+void ska::Animation::setCount(unsigned int x)
 {
     m_count = SDL_GetTicks() + x;
 }
 
-void Animation::setDelay(unsigned int x)
+void ska::Animation::setDelay(unsigned int x)
 {
     m_countMAX = x;
 }
 
-void Animation::resetCount()
+void ska::Animation::resetCount()
 {
     m_count = SDL_GetTicks();
 }
 
-unsigned int Animation::getCycles()
+unsigned int ska::Animation::getCycles()
 {
 	return m_cycles;
 }
 
-void Animation::setOffsetAndFrameSize(ska::Rectangle s)
+void ska::Animation::setOffsetAndFrameSize(ska::Rectangle s)
 {
     m_offsetBase = s;
     m_frameWidth = s.w;
@@ -110,17 +109,17 @@ void Animation::setOffsetAndFrameSize(ska::Rectangle s)
         m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
 }
 
-ska::Rectangle Animation::getOffsetBase()
+ska::Rectangle ska::Animation::getOffsetBase()
 {
 	return m_offsetBase;
 }
 
-ska::Rectangle Animation::getOffsetAndFrameSize()
+ska::Rectangle ska::Animation::getOffsetAndFrameSize()
 {
     return m_offset;
 }
 
-void Animation::setNumberFrames(unsigned int x)
+void ska::Animation::setNumberFrames(unsigned int x)
 {
     m_position = x;
 
@@ -142,7 +141,7 @@ void Animation::setNumberFrames(unsigned int x)
 
 }
 
-void Animation::nextFrame()
+void ska::Animation::nextFrame()
 {
     m_position += m_sensAni;
 
@@ -164,12 +163,12 @@ void Animation::nextFrame()
 
 }
 
-void Animation::resetCycles()
+void ska::Animation::resetCycles()
 {
 	m_cycles = 0;
 }
 
-ska::Rectangle Animation::getRectOfCurrentFrame()
+ska::Rectangle ska::Animation::getRectOfCurrentFrame()
 {
 
     if(m_active == false)

@@ -1,6 +1,6 @@
 #include "MouseInput.h"
 
-MouseInput::MouseInput()
+ska::MouseInput::MouseInput()
 {
 	m_mousex = 0;
 	m_mousey = 0;
@@ -11,19 +11,19 @@ MouseInput::MouseInput()
 }
 
 
-MouseInput::~MouseInput()
+ska::MouseInput::~MouseInput()
 {
 }
 
 
-ska::Rectangle MouseInput::getMouseLastPos()
+ska::Rectangle ska::MouseInput::getMouseLastPos()
 {
 	return m_mouseLastPos;
 }
 
 
 
-void MouseInput::setMouseState(int touche, int state)
+void ska::MouseInput::setMouseState(int touche, int state)
 {
 	
 	m_mousebutton[touche] = state;
@@ -41,24 +41,24 @@ void MouseInput::setMouseState(int touche, int state)
 	//notifyObservers(&m_mouseEvent);
 }
 
-void MouseInput::setMouseLastState(int touche, int x)
+void ska::MouseInput::setMouseLastState(int touche, int x)
 {
 	m_mouseLastState[touche] = x;
 }
 
 
-int MouseInput::getMouseState(int touche)
+int ska::MouseInput::getMouseState(int touche)
 {
 	return m_mousebutton[touche];
 }
 
-int MouseInput::getMouseLastState(int touche)
+int ska::MouseInput::getMouseLastState(int touche)
 {
 	return m_mouseLastState[touche];
 }
 
 
-void MouseInput::setMousePos(SDL_Event event)
+void ska::MouseInput::setMousePos(SDL_Event event)
 {
 	m_mousex = event.motion.x;
 	m_mousey = event.motion.y;
@@ -71,7 +71,7 @@ void MouseInput::setMousePos(SDL_Event event)
 	//notifyObservers(&m_mouseEvent);
 }
 
-ska::Rectangle MouseInput::getMousePos()
+ska::Rectangle ska::MouseInput::getMousePos()
 {
 	ska::Rectangle buf;
 
@@ -83,7 +83,7 @@ ska::Rectangle MouseInput::getMousePos()
 	return buf;
 }
 
-void MouseInput::resetAll()
+void ska::MouseInput::resetAll()
 {
 	if (m_mousebutton[SDL_BUTTON_RIGHT] != 0)
 		m_mousebutton[SDL_BUTTON_RIGHT] = 0;
@@ -97,7 +97,7 @@ void MouseInput::resetAll()
 }
 
 
-bool MouseInput::mouseClick(int touche)
+bool ska::MouseInput::mouseClick(int touche)
 {
 	if(m_mousebutton[touche] == 1 && m_mouseLastState[touche] == 0)
 	{
@@ -110,12 +110,12 @@ bool MouseInput::mouseClick(int touche)
 	return false;
 }
 
-ska::Rectangle MouseInput::getMouseClickPos()
+ska::Rectangle ska::MouseInput::getMouseClickPos()
 {
 	return m_clickPos;
 }
 
-ska::Rectangle MouseInput::getMouseTranslation()
+ska::Rectangle ska::MouseInput::getMouseTranslation()
 {
 	ska::Rectangle mouseTrans;
 	mouseTrans.x = m_mousex - m_mouseLastPos.x;
@@ -123,7 +123,7 @@ ska::Rectangle MouseInput::getMouseTranslation()
 	return mouseTrans;
 }
 
-void MouseInput::setMouseLastPos(ska::Rectangle mouselastpos)
+void ska::MouseInput::setMouseLastPos(ska::Rectangle mouselastpos)
 {
 	m_mouseLastPos = mouselastpos;
 }

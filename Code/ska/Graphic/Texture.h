@@ -40,6 +40,7 @@ namespace ska {
 		int getHeight() const;
 
 	private:
+		static void checkWindow();
 		static ska::Window* m_window;
 	};
 }

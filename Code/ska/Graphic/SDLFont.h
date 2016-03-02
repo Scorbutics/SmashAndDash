@@ -17,7 +17,7 @@ namespace ska {
 		TTF_Font* getInstance();
 
 	private:
-		void open(unsigned int fontSize);
+		void open(const std::string& fontFile, unsigned int fontSize);
 		TTF_Font* m_fontC;
 
 

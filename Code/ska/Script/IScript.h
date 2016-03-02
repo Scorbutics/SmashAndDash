@@ -9,7 +9,7 @@ namespace ska {
 	{
 	public:
 		IScript(){}
-		virtual bool play() = 0;
+		virtual bool play(Savegame& savegame) = 0;
 		virtual float getPriority(const unsigned int currentTimeMillis) = 0;
 		virtual ScriptState getCurrentState() const = 0;
 		virtual std::unordered_map<std::string, std::string>& getVarMap() = 0;
@@ -21,7 +21,7 @@ namespace ska {
 		virtual std::string getLastResult() const = 0;
 		virtual std::string getKey() const = 0;
 		virtual std::string nextLine() = 0;
-		virtual std::string interpret(const std::string& cmd) = 0;
+		virtual std::string interpret(Savegame& savegame, const std::string& cmd) = 0;
 		virtual bool eof() const = 0;
 		~IScript(){}
 	};

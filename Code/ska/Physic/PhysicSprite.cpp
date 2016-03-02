@@ -1,13 +1,12 @@
 #include "PhysicSprite.h"
-#include "../Gameplay\WGameCore.h"
 #include "../Graphic\SpritePath.h"
 #include "../Graphic/Rectangle.h"
 using namespace std;
 
-PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset0, int offset1, int offset2, int offset3) :
+ska::PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset0, int offset1, int offset2, int offset3) :
 	PhysicObject(id, entityNumber, weight, frictionCoeff, speedLimit, r, offset0, offset1, offset2, offset3), m_anim(150, 3, false),
-	m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), T_RED, T_GREEN, T_BLUE, 128),
-	m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREEN, T_BLUE)
+	m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128),
+	m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
 
 	m_visible = true;
@@ -23,10 +22,10 @@ PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, floa
 	
 }
 
-PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset[4]) :
+ska::PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset[4]) :
 PhysicObject(id, entityNumber, weight, frictionCoeff, speedLimit, r, offset), m_anim(150, 3, false),
-m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), T_RED, T_GREEN, T_BLUE, 128),
-m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREEN, T_BLUE)
+m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128),
+m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
 
 	m_visible = true;
@@ -40,10 +39,10 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREE
 	m_rect.h = actualOffsetAnim.h;
 }
 
-PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, int x, int y, unsigned int w, unsigned int h, int offset0, int offset1, int offset2, int offset3):
+ska::PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, int x, int y, unsigned int w, unsigned int h, int offset0, int offset1, int offset2, int offset3) :
 PhysicObject(id, entityNumber, weight, frictionCoeff, speedLimit, x, y, w, h, offset0, offset1, offset2, offset3), m_anim(150, 3, false),
-m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), T_RED, T_GREEN, T_BLUE, 128),
-m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREEN, T_BLUE)
+m_shadow(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, SPRITE_ID_SHADOW), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128),
+m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
 
 	m_visible = true;
@@ -57,30 +56,30 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREE
 	m_rect.h = actualOffsetAnim.h;
 }
 
-void PhysicSprite::displayShadow()
+void ska::PhysicSprite::displayShadow()
 {
 	ska::Rectangle anim;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	
 
 	anim.x = anim.y = 0;
 	anim.w = m_shadow.getWidth()/2;
 	anim.h = m_shadow.getHeight();
 
-	m_shadow.render(getHitbox().x + wScreen.getORel().x, m_rect.y + m_rect.h + wScreen.getORel().y - anim.h, &anim);
+	m_shadow.render(getHitbox().x /*+ wScreen.getORel().x*/, m_rect.y + m_rect.h /*+ wScreen.getORel().y*/ - anim.h, &anim);
 }
 
-void PhysicSprite::display()
+void ska::PhysicSprite::display()
 {
 	ska::Rectangle buf, actualOffsetAnim;
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();*/
 
 	if(!m_visible)
 		return;
 
 	buf = m_rect;
-	buf.x += wScreen.getORel().x;
-	buf.y += wScreen.getORel().y;
+	/*buf.x += wScreen.getORel().x;
+	buf.y += wScreen.getORel().y;*/
 
 	actualOffsetAnim = m_anim.getRectOfCurrentFrame();
 	this->displayShadow();
@@ -89,75 +88,75 @@ void PhysicSprite::display()
 }
 
 
-Texture* PhysicSprite::getSprite()
+ska::Texture* ska::PhysicSprite::getSprite()
 {
 	return &m_sprite;
 }
 
-void PhysicSprite::teleport(int x, int y)
+void ska::PhysicSprite::teleport(int x, int y)
 {
 	PhysicObject::teleport(x, y);
 	adaptPositionToBlock();
 }
 
-void PhysicSprite::show(bool x)
+void ska::PhysicSprite::show(bool x)
 {
 	m_visible = x;
 }
 
-bool PhysicSprite::isVisible()
+bool ska::PhysicSprite::isVisible()
 {
 	return m_visible;
 }
 
-Animation* PhysicSprite::getAnimation()
+ska::Animation* ska::PhysicSprite::getAnimation()
 {
 	return &m_anim;
 }
 
-void PhysicSprite::setID(int id)
+void ska::PhysicSprite::setID(int id)
 {
 	m_id = id;
-	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), T_RED, T_GREEN, T_BLUE);
+	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_PHYSIC, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 }
 
-void PhysicSprite::setOffsetAndFrameSize(ska::Rectangle sprite)
+void ska::PhysicSprite::setOffsetAndFrameSize(ska::Rectangle sprite)
 {
 	m_anim.setOffsetAndFrameSize(sprite);
 	m_rect.w = sprite.w;
 	m_rect.h = sprite.h;
 }
 
-ska::Rectangle PhysicSprite::getOffsetAndFrameSize()
+ska::Rectangle ska::PhysicSprite::getOffsetAndFrameSize()
 {
 	return m_anim.getOffsetAndFrameSize();
 }
 
-int PhysicSprite::getWidth()
+int ska::PhysicSprite::getWidth()
 {
 	return m_anim.getOffsetAndFrameSize().w;
 }
 
-int PhysicSprite::getHeight()
+int ska::PhysicSprite::getHeight()
 {
 	return m_anim.getOffsetAndFrameSize().h;
 }
 
 
 //Sert à centrer la hitbox du personnage sur un bloc
-void PhysicSprite::adaptPositionToBlock()
+void ska::PhysicSprite::adaptPositionToBlock()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	ska::Rectangle bufLastRect = m_rect;
-	m_rect.x = (((this->getHitboxCenterPos().x) / TAILLEBLOC)) *TAILLEBLOC;
+	/*m_rect.x = (((this->getHitboxCenterPos().x) / TAILLEBLOC)) *TAILLEBLOC;
 	m_rect.y = (((this->getHitboxCenterPos().y) / TAILLEBLOC)) *TAILLEBLOC;
 	m_rect.x -= m_offset[3];
 	m_rect.y -= m_offset[2];
 	
 	
 	if (collisionWorld() || !collisionNPC().empty())
-		m_rect = bufLastRect;
+		m_rect = bufLastRect;*/
 
 	/*
 	m_rect.x = ((this->getHitboxCenterPos().x/TAILLEBLOC)) *TAILLEBLOC;
@@ -166,5 +165,5 @@ void PhysicSprite::adaptPositionToBlock()
 	m_rect.y -= m_offset[2];*/
 }
 
-PhysicSprite::~PhysicSprite(){}
+ska::PhysicSprite::~PhysicSprite(){}
 

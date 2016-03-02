@@ -2,14 +2,14 @@
 
 using namespace std;
 
-Force::Force(ska::Rectangle pos, float power, float angle)
+ska::Force::Force(ska::Rectangle pos, float power, float angle)
 {
 	m_pos = pos;
 	m_power = power;
 	m_angle = angle;
 }
 
-Force::Force()
+ska::Force::Force()
 {
 	ska::Rectangle nullPos;
 	nullPos.x = 0;
@@ -21,35 +21,35 @@ Force::Force()
     m_angle = 0.;
 }
 
-ska::Rectangle Force::getPos()
+ska::Rectangle ska::Force::getPos()
 {
 	return m_pos;
 }
 
-float Force::getPower()
+float ska::Force::getPower()
 {
 	return m_power;
 }
 
-float Force::getAngle()
+float ska::Force::getAngle()
 {
 	return m_angle;
 }
 
-void Force::setPos(ska::Rectangle pos)
+void ska::Force::setPos(ska::Rectangle pos)
 {
 	m_pos = pos;
 }
 
-void Force::setPower(float power)
+void ska::Force::setPower(float power)
 {
 	m_power = power;
 }
 
-void Force::setAngle(float angle)
+void ska::Force::setAngle(float angle)
 {
 	m_angle = angle;
 }
 
-Force::~Force(){}
+ska::Force::~Force(){}
 

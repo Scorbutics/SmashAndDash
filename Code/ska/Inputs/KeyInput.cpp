@@ -7,17 +7,17 @@
 using namespace std;
 
 
-KeyInput::KeyInput()
+ska::KeyInput::KeyInput()
 {
 	m_quit = 0;
 	this->resetAll();
 }
 
-KeyInput::~KeyInput()
+ska::KeyInput::~KeyInput()
 {
 }
 
-void KeyInput::setKeyState(int touche, int x)
+void ska::KeyInput::setKeyState(int touche, int x)
 {
 	if (touche < SDL_NUM_SCANCODES)
 	{
@@ -27,7 +27,7 @@ void KeyInput::setKeyState(int touche, int x)
 		cerr << "Erreur (classe Input) : Impossible d'accéder à l'appuie de la touche " << touche << endl;
 }
 
-char KeyInput::getKeyState(int touche)
+char ska::KeyInput::getKeyState(int touche)
 {
 	if(touche < SDL_NUM_SCANCODES)
 		return m_key[touche];
@@ -38,14 +38,14 @@ char KeyInput::getKeyState(int touche)
 }
 
 
-void KeyInput::setQuit(int x)
+void ska::KeyInput::setQuit(int x)
 {
     m_quit = x;
 }
 
 
 
-void KeyInput::resetDirectionStates()
+void ska::KeyInput::resetDirectionStates()
 {
     m_key[SDL_SCANCODE_UP] = 0;
     m_key[SDL_SCANCODE_DOWN] = 0;
@@ -56,7 +56,7 @@ void KeyInput::resetDirectionStates()
 
 
 
-void KeyInput::resetAll()
+void ska::KeyInput::resetAll()
 {
     m_key[SDL_SCANCODE_UP] = 0;
     m_key[SDL_SCANCODE_DOWN] = 0;
@@ -84,7 +84,7 @@ void KeyInput::resetAll()
     m_key[SDL_SCANCODE_4] = 0;
 }
 
-int KeyInput::getQuit()
+int ska::KeyInput::getQuit()
 {
     return m_quit;
 }

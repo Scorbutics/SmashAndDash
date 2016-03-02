@@ -10,7 +10,7 @@ ska::AbstractFunctionCommand::AbstractFunctionCommand()
 {
 }
 
-std::string ska::AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args, std::ofstream& scriptList) {
+std::string ska::AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) {
 	int argNumber = argumentsNumber();
 	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */
@@ -21,7 +21,7 @@ std::string ska::AbstractFunctionCommand::process(IScript* script, std::stringst
 		throw ska::ScriptSyntaxError(syntaxErrorMsg);
 	}
 
-	return execute(script, args, scriptList);
+	return execute(script, args);
 }
 
 char ska::AbstractFunctionCommand::getSeparator() {

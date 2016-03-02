@@ -6,7 +6,7 @@
 
 #include "Path.h"
 #include "Node.h"
-#include "../../Utils/ska/SkaConstants.h"
+#include "../Utils/SkaConstants.h"
 
 #define DOWN 0
 #define RIGHT 1
@@ -274,7 +274,8 @@ vector<Node*> GetNeighbours(Node *n, vector<vector<Node>> &graphe)
     currentPos[UP] = n->getLine() - 1;
     currentPos[LEFT] = n->getCol() - 1;
 
-    if(currentPos[UP] >= 0)
+	/*
+	if(currentPos[UP] >= 0)
         neighbours.push_back(&(graphe[n->getCol()][currentPos[UP]]));
 
     if(currentPos[DOWN] < w.getNbrBlocY())
@@ -285,7 +286,7 @@ vector<Node*> GetNeighbours(Node *n, vector<vector<Node>> &graphe)
 
     if(currentPos[LEFT] >= 0)
         neighbours.push_back(&(graphe[currentPos[LEFT]][n->getLine()]));
-
+		*/
     return neighbours;
 
 }
@@ -295,8 +296,8 @@ Node SetDataToNodeAtPos(int col, int line)
     Node nodeBuf;
     nodeBuf.setCol(col);
     nodeBuf.setLine(line);
-    ska::Rectangle buf = {static_cast<Sint16>(nodeBuf.getCol()*TAILLEBLOC), static_cast<Sint16>(nodeBuf.getLine()*TAILLEBLOC), 1, 1};
-    nodeBuf.setWalkable(w.canMoveToPos(buf, wScreen.getHero() ));
+    /*ska::Rectangle buf = {static_cast<Sint16>(nodeBuf.getCol()*TAILLEBLOC), static_cast<Sint16>(nodeBuf.getLine()*TAILLEBLOC), 1, 1};*/
+    nodeBuf.setWalkable(/*w.canMoveToPos(buf, wScreen.getHero() )*/ true);
     nodeBuf.setParent(&nodeBuf);
     return nodeBuf;
 }
@@ -326,7 +327,7 @@ void RemoveFromList(vector<Node*> *list, Node* n)
 
 void ska::Path::createGraphe(vector<vector<Node>> *graphe)
 {
-    for(int i = 0; i < w.getNbrBlocX(); i++)
+    /*for(int i = 0; i < w.getNbrBlocX(); i++)
     {
         vector<Node> tmp;
         for(int j = 0; j < w.getNbrBlocY(); j++)
@@ -337,7 +338,7 @@ void ska::Path::createGraphe(vector<vector<Node>> *graphe)
         }
 
         graphe->push_back(tmp);
-    }
+    }*/
 
 }
 

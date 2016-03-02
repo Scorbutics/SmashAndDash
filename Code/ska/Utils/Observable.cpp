@@ -2,14 +2,14 @@
 #include "Observer.h"
 using namespace std;
 
-void ska::Observable::addObserver(Observer* obs) {
+void ska::Observable::addObserver(ska::Observer* obs) {
 	vector<Observer*>::iterator temp = find(m_observerList.begin(), m_observerList.end(), obs);
 	if (temp == m_observerList.end()) {
 		m_observerList.push_back(obs);
 	}
 }
 
-void ska::Observable::removeObserver(Observer* obs) {
+void ska::Observable::removeObserver(ska::Observer* obs) {
 	vector<Observer*>::iterator temp = find(m_observerList.begin(), m_observerList.end(), obs);
 	if (temp != m_observerList.end()) {
 		m_observerList.erase(temp);

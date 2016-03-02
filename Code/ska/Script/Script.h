@@ -16,7 +16,7 @@ namespace ska {
 		virtual ~Script();
 		
 		
-		bool play() override;
+		bool play(Savegame& savegame) override;
 		ScriptState getCurrentState() const override;
 		unsigned int getCurrentLine() const override;
 		std::string getExtendedName() const override;
@@ -28,7 +28,7 @@ namespace ska {
 		float getPriority(const unsigned int currentTimeMillis) override;
 		bool eof() const override;
 		void killAndSave(const ska::Savegame& savegame) override;
-		std::string interpret(const std::string& cmd) override;
+		std::string interpret(Savegame& savegame, const std::string& cmd) override;
 
 		std::string getFullPath() const;
 		bool canBePlayed();

@@ -153,7 +153,7 @@ void ska::ScriptDispatcher::refresh()
 	}
 
 	try {
-		nextScript->play();
+		nextScript->play(m_saveGame);
 	} catch (ska::ScriptDiedException sde) {
 		nextScript->killAndSave(m_saveGame);
 	} catch (ska::ScriptException e) {

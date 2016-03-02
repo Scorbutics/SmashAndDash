@@ -10,15 +10,16 @@
 namespace ska {
 	class Texture;
 	class TextureData;
+	class Window;
 	class SDLTexture
 	{
 		friend class Texture;
 
 	public:
 		SDLTexture();
-		SDLTexture(ska::TextureData p);
-		void load(std::string id, int r = -1, int g = -1, int b = -1, int a = -1);
-		void loadFromText(unsigned int fontSize, std::string text, SDL_Color c);
+		SDLTexture(TextureData p);
+		void load(Window& w, std::string id, int r = -1, int g = -1, int b = -1, int a = -1);
+		void loadFromText(Window& w, unsigned int fontSize, std::string text, SDL_Color c);
 		void free();
 		~SDLTexture();
 

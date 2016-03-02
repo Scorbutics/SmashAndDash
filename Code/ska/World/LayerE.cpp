@@ -26,6 +26,9 @@ ska::LayerE::LayerE(ska::World& world, string nomFichier) : m_world(world) //Con
 
 
 void ska::LayerE::refresh() {
+
+	/*TODO*/
+
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();
 
@@ -68,7 +71,7 @@ void ska::LayerE::refresh() {
 					fwriteScript.close();
 				}
 				unsigned int scriptPeriod = 1000;
-				ScriptDispatcher::getInstance().addRunningScript(NULL, getParam(i), m_world.getName(), vector<string>(), 2, &scriptPeriod);
+				/*ScriptDispatcher::getInstance().addRunningScript(NULL, getParam(i), m_world.getName(), vector<string>(), 2, &scriptPeriod);*/
 			}
 		}
 

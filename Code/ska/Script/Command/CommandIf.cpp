@@ -45,7 +45,7 @@ std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& stre
 
 			if (line == ControlStatement::getCommandIf())
 				ifEnd++;
-			else if (line == ControlStatement::getCommandEndIf() || line == ControlStatement::getCommandElse() || line == ControlStatement::getCommandElsif())
+			else if (line == ControlStatement::getCommandEndIf() || line == ControlStatement::getCommandElse())
 				ifEnd--;
 		}
 

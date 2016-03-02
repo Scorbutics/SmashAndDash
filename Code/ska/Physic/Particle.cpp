@@ -1,9 +1,9 @@
 #include "Particle.h"
 #include "../Graphic\SpritePath.h"
-#include "../Gameplay\WGameCore.h"
+//#include "../Gameplay\WGameCore.h"
 
-Particle::Particle(int idSprite, unsigned int weight, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) : m_anim(300, 2, false),
-m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED, T_GREEN, T_BLUE)
+ska::Particle::Particle(int idSprite, unsigned int weight, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) : m_anim(300, 2, false),
+m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
     m_slopeNoise = 0;
     m_skill = false;
@@ -30,12 +30,12 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), T_RED
 
 }
 
-ska::Rectangle Particle::getPos()
+ska::Rectangle ska::Particle::getPos()
 {
     return m_pos;
 }
 
-void Particle::launch(ska::Rectangle origin, float angle, unsigned int power)
+void ska::Particle::launch(ska::Rectangle origin, float angle, unsigned int power)
 {
     this->active();
 	m_fixedOrigin = origin;
@@ -46,51 +46,51 @@ void Particle::launch(ska::Rectangle origin, float angle, unsigned int power)
     //m_sprite = NULL;
 }
 
-ska::Rectangle Particle::getOrigin() const
+ska::Rectangle ska::Particle::getOrigin() const
 {
 	return m_fixedOrigin;
 }
 
-unsigned int Particle::getElapsedTime()
+unsigned int ska::Particle::getElapsedTime()
 {
     return (unsigned int)m_t;
 }
 
-void Particle::setElapsedTime(unsigned int t)
+void ska::Particle::setElapsedTime(unsigned int t)
 {
     m_t = t;
 }
 
 
-void Particle::active()
+void ska::Particle::active()
 {
     m_active = true;
     m_t = 0;
    // m_splashTime = 0;
 }
 
-void Particle::destroy()
+void ska::Particle::destroy()
 {
     m_active = false;
 }
 
-void Particle::toSkillParticle()
+void ska::Particle::toSkillParticle()
 {
     m_skill = true;
-	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_SKILL, m_idSprite), T_RED, T_GREEN, T_BLUE);
+	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_SKILL, m_idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 	m_spriteSize.w = m_sprite.getWidth()/2;
 	m_spriteSize.h = m_sprite.getHeight()/2;
 	m_anim.setOffsetAndFrameSize(m_spriteSize);
 }
 
-int Particle::getState()
+int ska::Particle::getState()
 {
     return m_state;
 }
 
-void Particle::display()
+void ska::Particle::display()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	
 	/* Et encore une machine d'état un peu dégueu... */
     if(m_t - (m_lifetime + m_splashTime) >= 0)
@@ -103,8 +103,8 @@ void Particle::display()
 
 
 	ska::Rectangle animRect = { 0, 0, m_spriteSize.w, m_spriteSize.h }, relativePos = m_pos;
-    relativePos.x += wScreen.getORel().x;
-    relativePos.y += wScreen.getORel().y;
+    /*relativePos.x += wScreen.getORel().x;
+    relativePos.y += wScreen.getORel().y;*/
 
 
     animRect = m_anim.getRectOfCurrentFrame();
@@ -115,59 +115,59 @@ void Particle::display()
 
 }
 
-void Particle::setLoop(bool loop)
+void ska::Particle::setLoop(bool loop)
 {
 	m_loop = loop;
 }
 
-bool Particle::isActive()
+bool ska::Particle::isActive()
 {
     return m_active;
 }
 
-void Particle::setNoise(int x)
+void ska::Particle::setNoise(int x)
 {
     m_noise = x;
 }
 
-bool Particle::isRelative()
+bool ska::Particle::isRelative()
 {
     return m_relative;
 }
 
-bool Particle::loop()
+bool ska::Particle::loop()
 {
     return m_loop;
 }
 
-float Particle::getAngle()
+float ska::Particle::getAngle()
 {
     return m_angle;
 }
 
-unsigned int Particle::getPower()
+unsigned int ska::Particle::getPower()
 {
     return m_power;
 }
 
-void Particle::setPos(int x, int y)
+void ska::Particle::setPos(int x, int y)
 {
     m_pos.x = x;
     m_pos.y = y;
 }
 
-vector<ska::Rectangle> Particle::collisionNPC()
+std::vector<ska::Rectangle> ska::Particle::collisionNPC()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	ska::Rectangle rect = m_pos;
     rect.w = m_spriteSize.w;
     rect.h = m_spriteSize.h;
 
-    return wScreen.detectEntity(rect);
+	return std::vector<Rectangle>();//wScreen.detectEntity(rect);
 }
 
-Particle::~Particle()
+ska::Particle::~Particle()
 {
 
 }

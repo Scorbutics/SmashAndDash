@@ -2,7 +2,7 @@
 #define DEF_PATH
 
 #include <string>
-#include "../../Graphic/ska/Rectangle.h"
+#include "../Graphic/Rectangle.h"
 #include "Node.h"
 
 class World;

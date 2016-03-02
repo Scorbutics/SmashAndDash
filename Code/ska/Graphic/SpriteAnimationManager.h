@@ -3,13 +3,12 @@
 
 #include <memory>
 #include <vector>
-#include <SDL2/SDL.h>
 #include "./Draw/DrawableFixedPriority.h"
 #include "Rectangle.h"
 
-class SpriteAnimation;
 
 namespace ska {
+	class SpriteAnimation;
 	class SpriteAnimationManager : public DrawableFixedPriority
 	{
 	public:

@@ -1,29 +1,29 @@
 #include "InputListener.h"
-#include "../Utils\IDs.h"
+#include "../Utils\SkaConstants.h"
 #include "EventArg.h"
-#include "../Gameplay\WGameCore.h"
+//#include "../Gameplay\WGameCore.h"
 
-int GetSkillCursorFromKey(Input *in);
+int GetSkillCursorFromKey(ska::Input *in);
 
-InputListener::InputListener()
+ska::InputListener::InputListener()
 {
 }
 
 
 
-KeyInput* InputListener::getKeyInput()
+ska::KeyInput* ska::InputListener::getKeyInput()
 {
     return &m_keyIn;
 }
 
-MouseInput* InputListener::getMouseInput()
+ska::MouseInput* ska::InputListener::getMouseInput()
 {
 	return &m_mouseIn;
 }
 
-bool InputListener::refresh(bool stuck)
+bool ska::InputListener::refresh(bool stuck)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
     this->updateEvents();
 	if (stuck && m_keyIn.getQuit())
@@ -35,19 +35,19 @@ bool InputListener::refresh(bool stuck)
 }
 
 
-bool InputListener::update()
+bool ska::InputListener::update()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
     bool dMenu = true;
-	unsigned int power = wScreen.getHero()->getSpeedLimit() * 5;
+	/*unsigned int power = wScreen.getHero()->getSpeedLimit() * 5;
 	ska::Rectangle mousePos = m_mouseIn.getMousePos(), posHeroCenter = wScreen.getHero()->getCenterPos();
     posHeroCenter.x += wScreen.getORel().x;
-    posHeroCenter.y += wScreen.getORel().y;
+    posHeroCenter.y += wScreen.getORel().y;*/
 
 	if (m_keyIn.getQuit())
 	{
-		wScreen.setContinue(false);
-		wScreen.quitFlip();
+		/*wScreen.setContinue(false);
+		wScreen.quitFlip();*/
 	}
 
 	if (m_keyIn.getKeyState(SDL_SCANCODE_LSHIFT))
@@ -184,10 +184,10 @@ bool InputListener::update()
 		m_mouseEvent.setClicked(true);
 
 		//Si c'est un clic hors des fenêtres, on notifie le héro
-		if (!wScreen.getGUI().isMouseOnAWindow())
+		/*if (!wScreen.getGUI().isMouseOnAWindow())
 			notifyObserver(wScreen.getHero(), &m_mouseEvent);
 		else //sinon il notifie la GUI
-			notifyObserver(&wScreen.getGUI(), &m_mouseEvent);
+			notifyObserver(&wScreen.getGUI(), &m_mouseEvent);*/
 		
 		
     }
@@ -199,10 +199,10 @@ bool InputListener::update()
 		m_mouseEvent.setButton(SDL_BUTTON_LEFT);
 		m_mouseEvent.setState(1);
 		
-		if (!wScreen.getGUI().isMovingAWindow() && !wScreen.getGUI().isMouseOnAWindow() && wScreen.getGUI().isPositionOnButton(&mousePos) == -1)
+		/*if (!wScreen.getGUI().isMovingAWindow() && !wScreen.getGUI().isMouseOnAWindow() && wScreen.getGUI().isPositionOnButton(&mousePos) == -1)
 			notifyObserver(wScreen.getHero(), &m_mouseEvent);
 		else
-			notifyObserver(&wScreen.getGUI(), &m_mouseEvent);
+			notifyObserver(&wScreen.getGUI(), &m_mouseEvent);*/
 
     }
    
@@ -212,10 +212,10 @@ bool InputListener::update()
 }
 
 
-void InputListener::updateEvents()
+void ska::InputListener::updateEvents()
 {
     SDL_Event event;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	m_mouseIn.setMouseLastState(SDL_BUTTON_LEFT, m_mouseIn.getMouseState(SDL_BUTTON_LEFT));
 	m_mouseIn.setMouseLastState(SDL_BUTTON_RIGHT, m_mouseIn.getMouseState(SDL_BUTTON_RIGHT));
 	m_mouseIn.setMouseLastPos(m_mouseIn.getMousePos());
@@ -253,14 +253,14 @@ void InputListener::updateEvents()
 			{
 				
 				case SDL_WINDOWEVENT_RESIZED:
-					wScreen.resize(event.window.data1, event.window.data2);
-					wScreen.flip();
+					/*wScreen.resize(event.window.data1, event.window.data2);
+					wScreen.flip();*/
 						break;
 
 				case SDL_WINDOWEVENT_EXPOSED:
 						break;
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					wScreen.flip();
+					//wScreen.flip();
 					//int width, height;
 					/*
 					if(event.resize.w > -abs(wScreen.getORel().x) + w->getNbrBlocX()*TAILLEBLOC)
@@ -293,7 +293,7 @@ void InputListener::updateEvents()
 
 }
 
-InputListener::~InputListener(){}
+ska::InputListener::~InputListener(){}
 
 
 
@@ -314,7 +314,7 @@ int GetDirectionFromChar(char directionChar)
 
 }
 
-ska::Rectangle MovementManagerSouris(MouseInput *in, Character_ptr& hero)
+/*ska::Rectangle MovementManagerSouris(ska::MouseInput *in, Character_ptr& hero)
 {
 	ska::Rectangle mousePos = in->getMousePos(), direction;
 
@@ -338,7 +338,7 @@ ska::Rectangle MovementManagerSouris(MouseInput *in, Character_ptr& hero)
 
     return direction;
 
-}
+}*/
 
 char GetCharFromDirection(int dir)
 {

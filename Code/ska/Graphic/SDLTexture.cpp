@@ -1,8 +1,9 @@
 #include <iostream>
+#include "../Utils/SkaConstants.h"
 #include "SDLTexture.h"
-#include "../Gameplay\WGameCore.h"
 #include "Font.h"
-
+#include "TextureData.h"
+#include "../Graphic/GUI/Window.h"
 using namespace std;
 
 ska::SDLTexture::SDLTexture()
@@ -12,12 +13,12 @@ ska::SDLTexture::SDLTexture()
 ska::SDLTexture::SDLTexture(ska::TextureData p)
 {
 	std::pair<string, SDL_Color> key = p.getData();
-	load(key.first, key.second.r, key.second.g, key.second.b, key.second.a);
+	load(p.getWindow(), key.first, key.second.r, key.second.g, key.second.b, key.second.a);
 }
 
-void ska::SDLTexture::load(std::string fileName, int r, int g, int b, int a)
+void ska::SDLTexture::load(Window& window, std::string fileName, int r, int g, int b, int a)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	SDL_Surface *sprite;
 	m_texture = NULL;
 	m_fileName = fileName;
@@ -57,16 +58,16 @@ void ska::SDLTexture::load(std::string fileName, int r, int g, int b, int a)
 	
 	free();
 	m_fileName = fileName;
-	m_texture = SDL_CreateTextureFromSurface(wScreen.getRenderer(), sprite);
+	m_texture = SDL_CreateTextureFromSurface(window.getRenderer(), sprite);
 	m_w = sprite->w;
 	m_h = sprite->h;
 
 	SDL_FreeSurface(sprite);
 }
 
-void ska::SDLTexture::loadFromText(unsigned int fontSize, string text, SDL_Color c)
+void ska::SDLTexture::loadFromText(Window& window, unsigned int fontSize, string text, SDL_Color c)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	SDL_Surface* buffer;
 	Font f(fontSize);
 
@@ -80,7 +81,7 @@ void ska::SDLTexture::loadFromText(unsigned int fontSize, string text, SDL_Color
 
 	free();
 	m_fileName = text;
-	m_texture = SDL_CreateTextureFromSurface(wScreen.getRenderer(), buffer);
+	m_texture = SDL_CreateTextureFromSurface(window.getRenderer(), buffer);
 	m_h = buffer->h;
 	m_w = buffer->w;
 	m_alpha = c.a;

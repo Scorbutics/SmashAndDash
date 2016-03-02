@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "SpritePath.h"
-#include "../Utils\IDs.h"
+#include "../Utils\SkaConstants.h"
 #include "../Utils\StringUtils.h"
 
 using namespace std;

@@ -267,7 +267,7 @@
     <ClInclude Include="Code\ska\Utils\Singleton_template.h" />
     <ClInclude Include="Code\Gameplay\Fight\Skill.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemonArea.h" />
-    <ClInclude Include="Code\Graphic\SpriteAnimation.h" />
+    <ClInclude Include="Code\ska\Graphic\SpriteAnimation.h" />
     <ClInclude Include="Code\ska\Graphic\SpriteAnimationManager.h" />
     <ClInclude Include="Code\ska\Graphic\SpritePath.h" />
     <ClInclude Include="Code\Gameplay\Data\Statistics.h" />
@@ -406,7 +406,7 @@
     <ClCompile Include="Code\Graphic\ShakerManager.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\Skill.cpp" />
     <ClCompile Include="Code\Graphic\GUI\SlotPokemonArea.cpp" />
-    <ClCompile Include="Code\Graphic\SpriteAnimation.cpp" />
+    <ClCompile Include="Code\ska\Graphic\SpriteAnimation.cpp" />
     <ClCompile Include="Code\ska\Graphic\SpriteAnimationManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\SpritePath.cpp" />
     <ClCompile Include="Code\Gameplay\Data\Statistics.cpp" />

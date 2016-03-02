@@ -8,7 +8,7 @@
 #include "../Data/Savegame.h"
 
 namespace ska {
-	class ScriptDispatcher {;
+	class ScriptDispatcher {
 	public:
 		ScriptDispatcher(ska::Savegame& saveGame);
 		IScript* addRunningScript(IScript* parent, const std::string& name, const std::string& context, const std::vector<std::string>& args, const int triggeringType, const unsigned int* period = NULL);

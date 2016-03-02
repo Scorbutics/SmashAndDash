@@ -4,13 +4,17 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include <fstream>
-#include "../../Utils/ska/SkaConstants.h"
+#include "../../Utils/SkaConstants.h"
 #include "Window.h"
 
 using namespace std;
 
+#define TAILLEBLOCFENETRE 32
+#define TAILLEECRANMINX TAILLEBLOCFENETRE*15
+#define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
-Window::Window()
+
+ska::Window::Window()
 {
 	m_flip = true;
     m_laFenetre = TAILLEECRANMINX*2;
@@ -42,22 +46,22 @@ Window::Window()
 
 }
 
-unsigned int Window::getWidth()
+unsigned int ska::Window::getWidth()
 {
 	return m_laFenetre;
 }
 
-unsigned int Window::getHeight()
+unsigned int ska::Window::getHeight()
 {
 	return m_loFenetre;
 }
 
-SDL_Renderer* Window::getRenderer()
+SDL_Renderer* ska::Window::getRenderer()
 {
 	return m_renderer;
 }
 
-void Window::flip()
+void ska::Window::flip()
 {
 	if(m_flip)
 		SDL_RenderPresent(m_renderer);
@@ -65,18 +69,18 @@ void Window::flip()
 		m_flip = true;
 }
 
-void Window::setNextFrameFlip( bool b )
+void ska::Window::setNextFrameFlip(bool b)
 {
 	m_flip = b;
 }
 
-SDL_Window* Window::getHandle()
+SDL_Window* ska::Window::getHandle()
 {
 	return m_screen;
 }
 
 
-Window::~Window()
+ska::Window::~Window()
 {
     SDL_FreeSurface(m_bmp);
 	SDL_DestroyRenderer(m_renderer);

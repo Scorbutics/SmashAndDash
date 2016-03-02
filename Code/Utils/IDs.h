@@ -1,5 +1,4 @@
 #include "../ska/Utils/SkaConstants.h"
-#define FILE_FONT "."FILE_SEPARATOR"Polices"FILE_SEPARATOR"pkmndp.ttf"
 
 #define ENTITEMAX 151 //Nombre d'entités TOTALES dans le jeu ENTIER
 
@@ -21,9 +20,6 @@
 #define SKILL_PROJECTILE 0
 #define SKILL_MELEE 1
 
-
-
-#define SPRITE_ID_SHADOW 13
 
 #define CHARACTER_ANIMATION_MOVE 0
 #define CHARACTER_ANIMATION_ATTACK 1

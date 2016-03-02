@@ -1,19 +1,19 @@
 #include "ParticleManager.h"
 
 #include "GravityParticle.h"
-#include "../Gameplay\WGameCore.h"
-#include "../Gameplay\World\Layer.h"
+//#include "../Gameplay\WGameCore.h"
+#include "../World/Layer.h"
 #include "../Utils/NumberUtils.h"
 
 using namespace std;
 
-ParticleManager::ParticleManager()
+ska::ParticleManager::ParticleManager()
 {
     m_sens = 1;
 	m_active = false;
 }
 
-void ParticleManager::addParticle(ParticlePtr& particle) {
+void ska::ParticleManager::addParticle(ParticlePtr& particle) {
 	/* Mon dieu quelle horreur en terme de performances...
 	   TODO un Set */
 	const size_t size = m_particles.size();
@@ -31,7 +31,7 @@ void ParticleManager::addParticle(ParticlePtr& particle) {
 //void ParticleManager::addCircleParticle(int idSprite, unsigned int weight){}
 //void ParticleManager::addLinearParticle(int idSprite, unsigned int weight){}
 
-void ParticleManager::removeAll()
+void ska::ParticleManager::removeAll()
 {
     const size_t size = m_particles.size();
     for(size_t i = 0; i < size; i++)
@@ -45,7 +45,7 @@ void ParticleManager::removeAll()
 }
 
 
-void ParticleManager::stop()
+void ska::ParticleManager::stop()
 {
 	for (unique_ptr<Particle>& gp : m_particles)
 	{
@@ -57,15 +57,15 @@ void ParticleManager::stop()
    
 }
 
-void ParticleManager::hide(bool h) {
+void ska::ParticleManager::hide(bool h) {
 	m_active = !h;
 }
 
-bool ParticleManager::isVisible() const {
+bool ska::ParticleManager::isVisible() const {
 	return m_active;
 }
 
-void ParticleManager::remove(unsigned int index)
+void ska::ParticleManager::remove(unsigned int index)
 {
 
     if(index < m_particles.size())
@@ -83,10 +83,10 @@ void ParticleManager::remove(unsigned int index)
 	}
 }
 
-void ParticleManager::display()
+void ska::ParticleManager::display()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	//WGameCore& wScreen = WGameCore::getInstance();
+	//World& w = wScreen.getWorld();
 		
 	if(m_active)
 	{
@@ -103,10 +103,10 @@ void ParticleManager::display()
 	}
 }
 
-void ParticleManager::refresh()
+void ska::ParticleManager::refresh()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	//WGameCore& wScreen = WGameCore::getInstance();
+	//World& w = wScreen.getWorld();
 
 	if (!m_active) {
 		return;
@@ -136,8 +136,8 @@ void ParticleManager::refresh()
 
                         if(m_particles[j]->isRelative())
                         {
-                            posBuf.y -= wScreen.getORel().y;
-                            posBuf.x -= wScreen.getORel().x;
+                            //posBuf.y -= wScreen.getORel().y;
+                            //posBuf.x -= wScreen.getORel().x;
                         }
 
                         m_particles[j]->launch(posBuf, m_particles[j]->getAngle(), m_particles[j]->getPower());
@@ -163,11 +163,11 @@ void ParticleManager::refresh()
 }
 
 //Effondrement
-void ParticleManager::playCrumbling(int idSprite, float acceleration, float density, unsigned int duration)
+void ska::ParticleManager::playCrumbling(int idSprite, float acceleration, float density, unsigned int duration)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
-    m_duration = duration;
+	/*m_duration = duration;
     m_active = true;
     //this->removeAll();
 
@@ -179,12 +179,12 @@ void ParticleManager::playCrumbling(int idSprite, float acceleration, float dens
 
 		this->addParticle(ParticlePtr(new GravityParticle(idSprite, posBuf, rand() % ((int)(90 - acceleration + 1)) + acceleration, acceleration, acceleration, true, false)));
         //ajoute une particule gravitationnelle d'id 0
-    }
+    }*/
 
     m_t0 = SDL_GetTicks();
 }
 
-void ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect)
+void ska::ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect)
 {
     m_duration = duration;
     m_active = true;
@@ -212,7 +212,7 @@ void ParticleManager::playEffect(int idSprite, float acceleration, float density
 
 
 
-void ParticleManager::launch(float angle, unsigned int power)
+void ska::ParticleManager::launch(float angle, unsigned int power)
 {
     const size_t size = m_particles.size();
     for(size_t i = 0; i < size; i++)
@@ -227,9 +227,9 @@ void ParticleManager::launch(float angle, unsigned int power)
     }
 }
 
-int ParticleManager::collisionNPC()
+int ska::ParticleManager::collisionNPC()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
     const size_t size = m_particles.size();
 	vector<ska::Rectangle> ids, buf;
@@ -237,7 +237,7 @@ int ParticleManager::collisionNPC()
 
     for(i = 0; i < size; i++)
     {
-        buf = wScreen.detectEntity(m_particles[i]->getPos());
+        //buf = wScreen.detectEntity(m_particles[i]->getPos());
         const size_t numberEntities = buf.size();
         for(unsigned int j = 0; j < numberEntities; j++)
             ids.push_back(buf[j]);
@@ -247,4 +247,4 @@ int ParticleManager::collisionNPC()
 }
 
 
-ParticleManager::~ParticleManager(){this->removeAll();}
+ska::ParticleManager::~ParticleManager(){ this->removeAll(); }
