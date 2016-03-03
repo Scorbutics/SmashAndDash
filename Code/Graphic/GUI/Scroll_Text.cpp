@@ -7,17 +7,17 @@
 #include "DialogMenu.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
-
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
 Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, int width, vector<string> text, int fontSize, ska::Rectangle relativePos) : DynamicWindowArea(parent)
 {
 
-    m_topArrow.load(buttonAspect + "toparrow.png", T_RED, T_GREEN, T_BLUE, 128);
-    m_botArrow.load(buttonAspect + "botarrow.png", T_RED, T_GREEN, T_BLUE, 128);
-    m_scrollBar.load(buttonAspect + "scrollbar.png", T_RED, T_GREEN, T_BLUE, 128); //L'idéal est que cette image fasse "fontSize" de hauteur.
-    m_cursor.load(buttonAspect + "cursor.png", T_RED, T_GREEN, T_BLUE, 128);
+	m_topArrow.load(buttonAspect + "toparrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
+	m_botArrow.load(buttonAspect + "botarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
+	m_scrollBar.load(buttonAspect + "scrollbar.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128); //L'idéal est que cette image fasse "fontSize" de hauteur.
+	m_cursor.load(buttonAspect + "cursor.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
 
     m_color.r = 0;
     m_color.g = 0;
@@ -107,7 +107,7 @@ void Scroll_Text::display()
 void Scroll_Text::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput *in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
 	ska::Rectangle buf = m_relativePos, bufScrollBar, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
@@ -117,7 +117,7 @@ void Scroll_Text::refresh()
 	bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
 	bufScrollBar.w = m_scrollBar.getWidth();
 
-	if(IsPositionInBox(&mousePos, &m_posTopArrow))
+	if(ska::RectangleUtils::isPositionInBox(&mousePos, &m_posTopArrow))
 	{
 		if(m_lastMouseState == 1 && !in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la fleche du haut
 		{
@@ -126,7 +126,7 @@ void Scroll_Text::refresh()
 				m_start = 0;
 		}
 	}
-	else if(IsPositionInBox(&mousePos, &m_posBotArrow))
+	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &m_posBotArrow))
 	{
 		if(m_lastMouseState == 1 && !in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la fleche du bas
 		{
@@ -135,7 +135,7 @@ void Scroll_Text::refresh()
 				m_start = m_linesNumber;
 		}
 	}
-	else if(IsPositionInBox(&mousePos, &bufScrollBar))
+	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &bufScrollBar))
 	{
 		if(in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la barre du curseur
 		{

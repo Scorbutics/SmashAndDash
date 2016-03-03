@@ -1,6 +1,6 @@
 #include "DynamicWindowArea.h"
 #include "../../Gameplay\Character.h"
-#include "..\Texture.h"
+#include "../../ska/Graphic/Texture.h"
 #include "Image_Area.h"
 #include "Text_Area.h"
 #ifndef DEF_SLOT_POKEMON_AREA
@@ -25,7 +25,7 @@ class SlotPokemon_Area : DynamicWindowArea
     int m_key, m_index;
     int* m_boolUseObjectSelectPkmn;
     Character* m_pkmn;
-	Texture m_image, m_imagePressed;
+	ska::Texture m_image, m_imagePressed;
 	std::string m_action, m_style, m_stylePressed;;
     std::unique_ptr<Image_Area> m_spriteArea;
     std::unique_ptr<Text_Area> m_pvArea, m_type1Area, m_type2Area, m_nameArea, m_levelArea;

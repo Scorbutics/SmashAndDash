@@ -5,8 +5,8 @@
 #include <string>
 
 #include "DynamicWindowArea.h"
-#include "..\Texture.h"
-#include "../Rectangle.h"
+#include "../../ska/Graphic/Texture.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ class Button_Quit : public DynamicWindowArea
     virtual ~Button_Quit();
 
     private:
-    Texture m_sprite, m_spriteActive;
+    ska::Texture m_sprite, m_spriteActive;
     int m_lastMouseState;
 };
 

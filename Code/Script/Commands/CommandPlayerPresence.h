@@ -1,14 +1,14 @@
 #pragma once
-#include "AbstractFunctionCommand.h"
+#include "../../ska/Script/Command/AbstractFunctionCommand.h"
 
-class CommandPlayerPresence : public AbstractFunctionCommand
+class CommandPlayerPresence : public ska::AbstractFunctionCommand
 {
 public:
 	CommandPlayerPresence() { }
 
 	virtual ~CommandPlayerPresence() { }
 
-	virtual std::string execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) override;
+	virtual std::string execute(ska::IScript* script, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

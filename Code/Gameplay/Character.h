@@ -6,29 +6,26 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <memory>
-#include "../Physic/PhysicSprite.h"
+#include "../ska/Physic/PhysicSprite.h"
 #include "Data/PokemonDescriptor.h"
-#include "../Graphic/SpriteAnimation.h"
+#include "../ska/Graphic/SpriteAnimation.h"
 #include "../Graphic/GUI/Bar.h"
-#include "AI/Path.h"
-#include "../Graphic/Draw/Drawable.h"
+#include "../ska/AI/Path.h"
+#include "../ska/Graphic/Draw/Drawable.h"
 #include "../Graphic/CharacterDrawable.h"
 
 class Statistics;
-class Path;
 class Skill;
 class Missile;
 class Projectile;
 class Melee;
 class WGameCore;
-class Layer;
 class SpriteBank;
-class World;
 
 typedef std::unique_ptr<Skill> Skill_ptr;
 
 
-class Character : public PhysicSprite
+class Character : public ska::PhysicSprite
 {
 
     public:
@@ -50,9 +47,9 @@ class Character : public PhysicSprite
 
 		std::vector<Skill_ptr> *getSkills();
 		Bar* getHPBar();
-		Texture* getFaceset();
+		ska::Texture* getFaceset();
 		float getCountD();
-		Path* getPath();
+		ska::Path* getPath();
 		unsigned int getHp();
 		int getContext();
 		PokemonDescriptor* getDescriptor();
@@ -91,14 +88,14 @@ class Character : public PhysicSprite
 		vector<unique_ptr<CharacterDrawable>> m_characterParts;
 		PokemonDescriptor m_descriptor;
 
-		Texture m_faceset;
+		ska::Texture m_faceset;
 		unsigned int m_hp, m_attack, m_defense, m_spe_attack, m_spe_defense, m_evolutionNextLevel, m_evolutionId;
 		int m_debuffSpeed, m_followCount;
 		float m_compteurDeplacement;
 		Bar m_hpbar;
-		Path m_path;
+		ska::Path m_path;
 		bool m_alive, m_autoAttack;
-		SpriteAnimation m_grassSprite;
+		ska::SpriteAnimation m_grassSprite;
 		std::vector<Skill_ptr> m_skill;
 		Skill_ptr m_skillAutoAttack;
 		Character* m_entityFollow;

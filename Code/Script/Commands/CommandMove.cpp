@@ -2,7 +2,7 @@
 #include "CommandMove.h"
 #include "../../Utils\IDs.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 using namespace std;
 
 CommandMove::CommandMove()
@@ -13,7 +13,7 @@ int CommandMove::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandMove::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandMove::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	int idtype, id, speed;
 	string dir;

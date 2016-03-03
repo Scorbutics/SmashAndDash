@@ -2,12 +2,11 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 
 #include "ChargementImages.h"
-#include "../Gameplay/World/World.h"
+#include "../ska/World/World.h"
 #include "../Gameplay/Character.h"
+#include "../ska/Utils/NumberUtils.h"
 
 using namespace std;
 
@@ -37,9 +36,9 @@ int GetRandom(vector<int>& probs)
 	return newProbs[rand()%newSize];
 }
 
-IniReader* GetRandomMobSettings(World* w)
+ska::IniReader* GetRandomMobSettings(ska::World* w)
 {
-	IniReader* reader = NULL;
+	ska::IniReader* reader = NULL;
 	vector<int> probs;
 	const size_t totMobs = w->getMobSettings().size();
 
@@ -102,7 +101,7 @@ ska::Rectangle GetCurrentSpritePosOfHero(Character* hero, bool animation)
 
 void VariablesAcquisition(vector<int> &vect, std::string filename)
 {
-	IniReader reader(filename);
+	ska::IniReader reader(filename);
 	int var_number = reader.getInt("Game var_number");
 	stringstream ss;
 
@@ -111,7 +110,7 @@ void VariablesAcquisition(vector<int> &vect, std::string filename)
 		{
 			ss << "%";
 
-			for(int j = 4-GetMax10Pow(i); j >= 0; j--)
+			for(int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 				ss << "0";
 
 			ss << i;
@@ -124,7 +123,7 @@ void VariablesAcquisition(vector<int> &vect, std::string filename)
 
 void SwitchesAcquisition(vector<bool> &vect, std::string filename)
 {
-	IniReader reader(filename);
+	ska::IniReader reader(filename);
 	int switch_number = reader.getInt("Game switch_number");
 	stringstream ss;
 
@@ -133,7 +132,7 @@ void SwitchesAcquisition(vector<bool> &vect, std::string filename)
 		{
 			ss << "%";
 
-			for(int j = 4-GetMax10Pow(i); j >= 0; j--)
+			for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 				ss << "0";
 
 			ss << i;
@@ -146,7 +145,7 @@ void SwitchesAcquisition(vector<bool> &vect, std::string filename)
 
 void VariablesWriting(vector<int> &vect, std::string filename)
 {
-	IniReader reader(filename);
+	ska::IniReader reader(filename);
 	reader.set("Game var_number", vect.size());
 	stringstream ss;
 
@@ -154,7 +153,7 @@ void VariablesWriting(vector<int> &vect, std::string filename)
 	{
 		ss << "%";
 
-		for(int j = 4-GetMax10Pow(i); j >= 0; j--)
+		for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 			ss << "0";
 
 		ss << i;
@@ -167,7 +166,7 @@ void VariablesWriting(vector<int> &vect, std::string filename)
 
 void SwitchesWriting(vector<bool> &vect, std::string filename)
 {
-	IniReader reader(filename);
+	ska::IniReader reader(filename);
 	reader.set("Game switch_number", vect.size());
 	stringstream ss;
 
@@ -175,7 +174,7 @@ void SwitchesWriting(vector<bool> &vect, std::string filename)
 	{
 		ss << "%";
 
-		for(int j = 4-GetMax10Pow(i); j >= 0; j--)
+		for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 			ss << "0";
 
 		ss << i;

@@ -37,7 +37,7 @@ void ska::LayerE::refresh() {
 	}*/
 		
 
-	ska::Rectangle posCentre;
+	ska::Rectangle posCentre = { 0 };
 	int i = 0;
 
 	/*posCentre.x = wScreen.getHero()->getHitboxCenterPos().x;

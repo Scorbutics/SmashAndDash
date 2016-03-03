@@ -4,21 +4,20 @@
 
 using namespace std;
 
-CommandRandom::CommandRandom()
+ska::CommandRandom::CommandRandom()
 {
 }
 
 
-CommandRandom::~CommandRandom()
+ska::CommandRandom::~CommandRandom()
 {
 }
 
-int CommandRandom::argumentsNumber() {
+int ska::CommandRandom::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandRandom::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
-{
+std::string ska::CommandRandom::execute(IScript* script, std::vector<std::string>& args) {
 	string s, value, commandCall;
 	int valueInt, resultInt;
 

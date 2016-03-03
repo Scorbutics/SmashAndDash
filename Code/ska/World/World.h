@@ -18,7 +18,7 @@ namespace ska {
 	class PhysicObject;
 	class Block;
 
-	class World : public IScene
+	class World 
 	{
 	public:
 		World(const unsigned int tailleBloc);

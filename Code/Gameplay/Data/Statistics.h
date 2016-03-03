@@ -1,14 +1,14 @@
 #ifndef DEF_STATISTICS
 #define DEF_STATISTICS
 #include <string>
+#include "../../ska/Inputs/Readers/IniReader.h"
 
-class IniReader;
 
 class Statistics
 {
 
 	public:
-	Statistics(IniReader* data, std::string block);
+	Statistics(ska::IniReader* data, std::string block);
 	Statistics(int hp, int attack, int defense, int spe_attack, int spe_defense, int speed);
 	void nextLevel();
 	void setLevel(unsigned int level);

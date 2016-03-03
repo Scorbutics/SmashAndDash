@@ -2,7 +2,6 @@
 #define DEF_SETTINGS
 
 #include <fstream>
-#include <windows.h>
 
 class Settings
 {

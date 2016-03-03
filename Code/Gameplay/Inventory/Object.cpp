@@ -1,7 +1,8 @@
 #include "Object.h"
 #include "../../Gameplay\WGameCore.h"
 #include <fstream>
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../Utils/IDs.h"
 
 using namespace std;
 
@@ -9,13 +10,13 @@ Object::Object(int id): m_animation(525, 2, false)
 {
 	m_id = id;
 	const std::string& strId = ska::StringUtils::intToStr(m_id);
-	IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Items"FILE_SEPARATOR + strId  + ".ini");
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Items"FILE_SEPARATOR + strId  + ".ini");
     m_name = reader.getString("Description name");
 	m_description = reader.getString("Description description");
 	m_effect = reader.getString("Effect target");
 	m_action = reader.getString("Effect action");
 	m_spriteName = "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Inventory"FILE_SEPARATOR + strId + ".png";
-	m_sprite.load(m_spriteName , T_RED, T_GREEN, T_BLUE);
+	m_sprite.load(m_spriteName , DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     
     m_pos.x = m_pos.y = 0;
     m_pos.w = m_sprite.getWidth()/2; //2 : nombre d'animations dans une seule image
@@ -112,12 +113,12 @@ const ska::Rectangle* Object::getPos()
     return &m_pos;
 }
 
-Texture* Object::getSprite()
+ska::Texture* Object::getSprite()
 {
     return &m_sprite;
 }
 
-Animation* Object::getAnimation()
+ska::Animation* Object::getAnimation()
 {
     return &m_animation;
 }

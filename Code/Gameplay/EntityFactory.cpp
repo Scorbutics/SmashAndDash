@@ -1,7 +1,7 @@
-#include <stdint.h>
 #include "../Gameplay\WGameCore.h"
 #include "EntityFactory.h"
-#include "../Utils\StringUtils.h"
+#include "../ska/Utils/StringUtils.h"
+#include "../Utils/IDs.h"
 
 using namespace std;
 
@@ -60,7 +60,7 @@ Character* EntityFactory::setOpponent(Character* opponent)
 	return opponent;
 }
 
-Character* EntityFactory::createOpponent(IniReader* dataMob)
+Character* EntityFactory::createOpponent(ska::IniReader* dataMob)
 {
 
     m_opponent = Character_ptr(new Character(dataMob->getInt("Data id")));

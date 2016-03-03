@@ -1,9 +1,10 @@
 #include <math.h>
 #include "../Gameplay/WGameCore.h"
 #include "RainParticleManager.h"
-#include "../ska/Gameplay/World/Layer.h"
+#include "../ska/World/Layer.h"
 #include "RainParticle.h"
 #include "../ska/Graphic/Rectangle.h"
+#include "../Utils/IDs.h"
 
 RainParticleManager::RainParticleManager()
 {
@@ -60,7 +61,7 @@ void RainParticleManager::refresh() {
 	ParticleManager::refresh();
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	const double windX = cos(m_Twind);
 	if (windX > 0)
 	{
@@ -83,7 +84,7 @@ void RainParticleManager::playRain(int idSprite, float acceleration, float densi
 	{
 		posBuf.y = wScreen.getHeight() / 2;
 		posBuf.x = wScreen.getWidth() / 2;
-		this->addParticle(ParticlePtr(new RainParticle(*this, i, idSprite, posBuf, rand() % ((int)(90 - acceleration + 1)) + acceleration, acceleration, acceleration, true, true)));
+		this->addParticle(ska::ParticlePtr(new RainParticle(*this, i, idSprite, posBuf, rand() % ((int)(90 - acceleration + 1)) + acceleration, acceleration, acceleration, true, true)));
 		//ajoute une particule gravitationnelle d'id 0
 	}
 

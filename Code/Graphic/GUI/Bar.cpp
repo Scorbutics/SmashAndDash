@@ -6,8 +6,8 @@
 
 using namespace std;
 
-Bar::Bar(string barStyleName, string barContentName, int maxValue, ska::Rectangle pos) : m_barStyle(barStyleName, T_RED, T_GREEN, T_BLUE),
-m_barContent(barContentName, T_RED, T_GREEN, T_BLUE)
+Bar::Bar(string barStyleName, string barContentName, int maxValue, ska::Rectangle pos) : m_barStyle(barStyleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE),
+m_barContent(barContentName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
     m_maxValue = maxValue;
     m_pos = pos;
@@ -74,7 +74,7 @@ void Bar::setCurrentValue(int v)
 void Bar::setBarStyle(string name)
 {
    
-    m_barStyle.load(name, T_RED, T_GREEN, T_BLUE);
+	m_barStyle.load(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
     m_barSize.w = (int)((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
     m_barSize.h = (int)(((m_barStyle.getHeight() * 3) /6));
@@ -82,7 +82,7 @@ void Bar::setBarStyle(string name)
 
 void Bar::setBarContent(string name)
 {
-	m_barContent.load(name, T_RED, T_GREEN, T_BLUE);
+	m_barContent.load(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 }
 
 bool Bar::isVisible()

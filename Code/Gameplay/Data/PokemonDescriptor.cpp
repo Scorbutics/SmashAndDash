@@ -1,5 +1,5 @@
 #include "PokemonDescriptor.h"
-#include "../../Inputs\Readers\IniReader.h"
+#include "../../ska/Inputs\Readers\IniReader.h"
 
 using namespace std;
 
@@ -69,7 +69,7 @@ std::string PokemonDescriptor::getClass()
 	return m_class;
 }
 
-bool PokemonDescriptor::load(IniReader* data, std::string block)
+bool PokemonDescriptor::load(ska::IniReader* data, std::string block)
 {
 	if(data != NULL && data->isLoaded())
 	{

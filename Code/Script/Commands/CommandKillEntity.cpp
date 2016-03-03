@@ -1,6 +1,6 @@
 #include "CommandKillEntity.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 #include <string>
 
 using namespace std;
@@ -18,7 +18,7 @@ int CommandKillEntity::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandKillEntity::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandKillEntity::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number;

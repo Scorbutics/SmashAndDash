@@ -2,9 +2,9 @@
 #include "../../Utils\IDs.h"
 #include <SDL2\SDL.h>
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\ScriptUtils.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\ScriptUtils.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 CommandPlayAnimation::CommandPlayAnimation()
 {
@@ -19,7 +19,7 @@ int CommandPlayAnimation::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandPlayAnimation::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandPlayAnimation::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idType, id;

@@ -1,8 +1,8 @@
 #include "CommandPokemonOut.h"
-#include <SDL2\SDL_timer.h>
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
+#include "../../Utils/IDs.h"
 
 CommandPokemonOut::CommandPokemonOut()
 {
@@ -17,7 +17,7 @@ int CommandPokemonOut::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPokemonOut::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandPokemonOut::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	int index;
 	unsigned int duree = 2000, t0 = 0;

@@ -1,10 +1,7 @@
 #ifndef DEF_TEXT_AREA
 #define DEF_TEXT_AREA
 
-#include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include "Window_Area.h"
 #include "DialogMenu.h"
 
@@ -22,7 +19,7 @@ class Text_Area : public Window_Area
 	private:
 		string m_text;
 		unsigned int m_fontSize;
-		Texture m_stext;
+		ska::Texture m_stext;
 		SDL_Color m_color;
 };
 

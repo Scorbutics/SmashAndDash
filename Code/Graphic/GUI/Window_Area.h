@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "../Rectangle.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 class DialogMenu;
 class WGameCore;

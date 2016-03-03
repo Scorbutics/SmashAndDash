@@ -9,23 +9,20 @@
 #include "WindowBag.h"
 #include "ToolBar.h"
 #include "WindowShop.h"
-#include "../../Utils/Observer.h"
-#include "../../Utils/Observable.h"
-#include "../Draw/DrawableFixedPriority.h"
+#include "../../ska/Utils/Observer.h"
+#include "../../ska/Utils/Observable.h"
+#include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 
 using namespace std;
 
 class WGameCore;
 
-extern WGameCore* wScreen;
-
-
-class GUI : public Observer, public DrawableFixedPriority
+class GUI : public ska::Observer, public DrawableFixedPriority
 {
     public:
     GUI();
 
-	virtual void update(Observable* obs, EventArg* e);
+	virtual void update(ska::Observable* obs, ska::EventArg* e);
 
     void dialogRefresh();
     void refresh();

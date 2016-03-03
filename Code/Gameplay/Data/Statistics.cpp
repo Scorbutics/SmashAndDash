@@ -1,6 +1,6 @@
 #include "Statistics.h"
 #include "../../Utils\IDs.h"
-#include "../../Inputs\Readers\IniReader.h"
+#include "../../ska/Inputs\Readers\IniReader.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ Statistics::Statistics(int hp, int attack, int defense, int spe_attack, int spe_
 	m_level = 1;
 }
 
-Statistics::Statistics(IniReader* data, string block)
+Statistics::Statistics(ska::IniReader* data, string block)
 {
 
 	m_hp = data->getInt(block + " hp");

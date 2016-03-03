@@ -1,7 +1,7 @@
 #ifndef DEF_SHAKERMANAGER
 #define DEF_SHAKERMANAGER
 
-#include "Rectangle.h"
+#include "../ska/Graphic/Rectangle.h"
 class WGameCore;
 class World;
 

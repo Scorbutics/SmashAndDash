@@ -12,7 +12,7 @@
 #include "Fight\Fight.h"
 #include "Pokeball.h"
 #include "AI\AI.h"
-#include "../Physic\ParticleManager.h"
+#include "../ska/Physic\ParticleManager.h"
 #include "../Physic/RainParticleManager.h"
 #include "Data\Settings.h"
 #include "PokemonManager.h"
@@ -37,9 +37,9 @@ class Character;
 
 typedef std::unique_ptr<Character> Character_ptr;
 
-class WGameCore : public Window, public ska::Singleton<WGameCore>
+class WGameCore : public ska::Window, public ska::Singleton<WGameCore>
 {
-	friend class Singleton<WGameCore>;
+	friend class ska::Singleton<WGameCore>;
 
 private:
     WGameCore();
@@ -86,11 +86,11 @@ public:
 	ska::InputListener& getInputListener();
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
-	World& getWorld();
+	ska::World& getWorld();
 	MobSpawningManager& getMobSpawningManager();
 	SavegameManager& getSavegameManager();
 
-	ParticleManager& getParticleManager();
+	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();
 
     void setEntite(unsigned int i, int value);
@@ -131,9 +131,9 @@ public:
 		GUI m_gui;
 		MobSpawningManager m_mobSpawner;
 		SavegameManager m_saveManager;
-		World m_world;
+		ska::World m_world;
 
-		ParticleManager m_particleManager;
+		ska::ParticleManager m_particleManager;
 		RainParticleManager m_rainParticleManager;
 };
 

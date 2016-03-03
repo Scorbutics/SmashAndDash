@@ -1,7 +1,7 @@
 #include "WindowBag.h"
 #include "../../Gameplay\WGameCore.h"
 #include "Inventory_Area.h"
-
+#include "../../Utils/IDs.h"
 
 using namespace std;
 

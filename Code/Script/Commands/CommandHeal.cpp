@@ -1,6 +1,6 @@
 #include "CommandHeal.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandHeal::CommandHeal()
 {
@@ -15,7 +15,7 @@ int CommandHeal::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandHeal::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandHeal::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int value;

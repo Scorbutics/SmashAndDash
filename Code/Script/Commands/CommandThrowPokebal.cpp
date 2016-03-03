@@ -1,7 +1,7 @@
 #include "CommandThrowPokebal.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 CommandThrowPokebal::CommandThrowPokebal()
 {
@@ -16,7 +16,7 @@ int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandThrowPokebal::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandThrowPokebal::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::Rectangle srcId, dst;

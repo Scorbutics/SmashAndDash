@@ -1,6 +1,6 @@
 #include "CommandDirection.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 
 CommandDirection::CommandDirection()
@@ -16,7 +16,7 @@ int CommandDirection::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandDirection::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandDirection::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idTypeStr, idStr, dirStr;

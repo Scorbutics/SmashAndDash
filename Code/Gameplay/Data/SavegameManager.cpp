@@ -4,7 +4,7 @@
 #include "../../Utils\IDs.h"
 #include "../../Utils\ChargementImages.h"
 #include "..\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 #include "..\Character.h"
 #include "../../Gameplay\Data\Statistics.h"
 
@@ -86,7 +86,7 @@ void SavegameManager::loadGame( std::string pathname )
 
 void SavegameManager::savePokemonTeam()
 {
-	IniReader reader;
+	ska::IniReader reader;
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	for (unsigned int i = 0; i < 6; i++) {
@@ -114,7 +114,7 @@ void SavegameManager::savePokemonTeam()
 
 void SavegameManager::loadPokemonTeam()
 {
-	IniReader reader;
+	ska::IniReader reader;
 	unsigned int index = 0;
 	WGameCore& wScreen = WGameCore::getInstance();
 
@@ -157,7 +157,7 @@ void SavegameManager::saveTrainer()
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}
 	of.close();
-	IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 
 	hero = wScreen.getEntityFactory().getTrainer();
 	reader.set("Trainer start_posx", hero->getHitboxCenterPos().x/TAILLEBLOC);
@@ -170,7 +170,7 @@ void SavegameManager::saveTrainer()
 
 void SavegameManager::saveItems()
 {
-	IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	WGameCore& wScreen = WGameCore::getInstance();
 	for(unsigned int i = 0; i < wScreen.getInventory().getSize(); i++)
 	{
@@ -185,7 +185,7 @@ void SavegameManager::loadTrainer()
 {
 	Character* hero;
 	unsigned int startPosx, startPosy;
-	IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	startPosx = reader.getInt("Trainer start_posx");
@@ -198,7 +198,7 @@ void SavegameManager::loadTrainer()
 	buf += m_startMapName;
 	buf += ".ini";
 
-	IniReader mapReader(buf);
+	ska::IniReader mapReader(buf);
 	m_startMapChipsetName = mapReader.getString("Chipset file");
 
 	if(m_startMapChipsetName == "STRINGNOTFOUND")

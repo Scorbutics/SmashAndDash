@@ -7,7 +7,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <vector>
 #include <memory>
-#include "../Texture.h"
+#include "../../ska/Graphic/Texture.h"
 
 
 class World;
@@ -59,7 +59,7 @@ class DialogMenu
 	void addButtonClose(std::string imgName, std::string secondImgName, ska::Rectangle pos);
 	void addTextArea(std::string text, int fontSize, ska::Rectangle relativePos);
 	void addImageArea(std::string name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
-	void addImageArea(Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
+	void addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
 	void addInventory(Inventory& inv, ska::Rectangle relativePos);
 	void addButton(ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> value, std::vector<std::string> displayedText, int fontSize, std::string key);
 	void addButtonBar(ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key);
@@ -68,8 +68,8 @@ class DialogMenu
 	void refresh();
 
     protected:
-    Texture m_fond, m_messImage;
-    std::vector< Texture > m_stexte;
+    ska::Texture m_fond, m_messImage;
+    std::vector< ska::Texture > m_stexte;
 	ska::Rectangle m_posFond, m_posTexte, m_posMessImage, m_posLFond, m_posScrollFond, m_positionFond; //m_posScrollFond sert à faire scroll (défiler) la fenêtre lors de l'affichage d'un message
     std::vector<std::string> m_texte;
     std::string m_actionClic;                                       //m_posLFond, quant à lui, est utilisé pour parcourir le "menu.png" (l'image constructive du menu). c'est en quelque sorte un curseur.

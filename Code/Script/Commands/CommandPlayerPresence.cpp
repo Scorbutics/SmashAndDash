@@ -1,7 +1,8 @@
 #include "CommandPlayerPresence.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
+#include "../../Utils/IDs.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int CommandPlayerPresence::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandPlayerPresence::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandPlayerPresence::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string posFromX, posFromY, posToX, posToY;

@@ -2,13 +2,13 @@
 #include <windows.h>
 #include <fstream>
 #include <sstream>
-#include "../Inputs\Readers\IniReader.h"
+#include "../ska/Inputs\Readers\IniReader.h"
 
 using namespace std;
 
 void LoadGameCoreData(int& widthBlocks, int& heightBlocks)
 {
-	IniReader reader("gamesettings.ini");
+	ska::IniReader reader("gamesettings.ini");
 
 
 	widthBlocks = reader.getInt("Settings window_width_blocks");

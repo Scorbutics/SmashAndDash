@@ -3,7 +3,7 @@
 #include <map>
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\IDs.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ int CommandTeleport::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandTeleport::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandTeleport::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number;
@@ -47,7 +47,7 @@ std::string CommandTeleport::execute(IScript* script, std::vector<std::string>& 
 void CommandTeleport::teleportHeroToMap(string param)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	Character* hero = wScreen.getHero();
 
 	string fichier, fichier2, fichierD;
@@ -75,7 +75,7 @@ void CommandTeleport::teleportHeroToMap(string param)
 		+ fichier.substr(0, fichier.find_last_of("."))
 		+ ".ini";
 
-	IniReader mapReader(buf);
+	ska::IniReader mapReader(buf);
 
 	string chipsetName = mapReader.getString("Chipset file");
 

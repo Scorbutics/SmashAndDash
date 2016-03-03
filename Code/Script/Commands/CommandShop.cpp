@@ -15,7 +15,7 @@ int CommandShop::argumentsNumber() {
 	return 0;
 }
 
-std::string CommandShop::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandShop::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	wScreen.getGUI().getWindowShop()->reset();

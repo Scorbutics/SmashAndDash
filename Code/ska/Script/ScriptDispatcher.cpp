@@ -124,7 +124,7 @@ ska::IScript* ska::ScriptDispatcher::addRunningScript(IScript* parent, const str
 
 	if (m_scripts.find(keyScript) == m_scripts.end() || m_scripts[keyScript]->getCurrentState() == EnumScriptState::STOPPED) {
 		if (!validPath.empty()) {
-			m_scripts[keyScript] = (move(ScriptPtr(new Script(triggeringType, period == NULL || *period == 0? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, keyScript, args))));
+			m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args))));
 			ska::ScriptDispatcher::setupScriptArgs(parent, m_scripts[keyScript].get(), args);
 		} else {
 			throw ska::InvalidPathException("Le script de nom " + name + " est introuvable");
@@ -135,6 +135,10 @@ ska::IScript* ska::ScriptDispatcher::addRunningScript(IScript* parent, const str
 	}
 	
 	
+}
+
+ska::Savegame& ska::ScriptDispatcher::getSavegame() {
+	return m_saveGame;
 }
 
 void ska::ScriptDispatcher::setupScriptArgs(IScript* parent, IScript* script, const vector<string>& args) {
@@ -155,7 +159,17 @@ void ska::ScriptDispatcher::refresh()
 	try {
 		nextScript->play(m_saveGame);
 	} catch (ska::ScriptDiedException sde) {
-		nextScript->killAndSave(m_saveGame);
+		const std::string& scriptName = sde.getScript();
+		if (scriptName.empty()) {
+			nextScript->killAndSave(m_saveGame);
+		} else {
+			if (m_scripts.find(scriptName) == m_scripts.end()) {
+				cerr << "ERREUR SCRIPT [" << nextScript->getExtendedName() << "] (l." << nextScript->getCurrentLine() << ") " << sde.what() << " Script not found : " << scriptName << endl;
+			} else {
+				m_scripts[scriptName]->killAndSave(m_saveGame);
+			}
+		}
+		
 	} catch (ska::ScriptException e) {
 		cerr << "ERREUR SCRIPT [" << nextScript->getExtendedName() << "] (l." << nextScript->getCurrentLine() << ") " << e.what() << endl;
 	}

@@ -1,5 +1,5 @@
 #pragma once
-#include "./Draw/Drawable.h"
+#include "../ska/Graphic/Draw/Drawable.h"
 
 class Character;
 

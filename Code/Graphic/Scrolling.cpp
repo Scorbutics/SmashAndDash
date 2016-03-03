@@ -1,19 +1,15 @@
 #include <iostream>
-#include <string>
-#include <SDL2/SDL.h>
-#include <memory>
-
 
 #include "Scrolling.h"
 #include "../Gameplay/WGameCore.h"
-
+#include "../Utils/IDs.h"
 
 using namespace std;
 
 void Scrolling()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	ska::Rectangle origineRelative;
 
     int x, y;

@@ -2,15 +2,15 @@
 #define DEF_POKEMONDESCRIPTOR
 
 #include <iostream>
+#include "../../ska/Inputs/Readers/IniReader.h"
 
-class IniReader;
 
 class PokemonDescriptor
 {
 	public:
 	PokemonDescriptor();
 	
-	bool load(IniReader* data, std::string block);
+	bool load(ska::IniReader* data, std::string block);
 
 	std::string getName();
 	std::string getType(unsigned int number);

@@ -210,12 +210,6 @@
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandAssign.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandCalculate.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandChoice.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
@@ -258,12 +252,6 @@
     <ClInclude Include="Code\Script\Commands\CommandPokemonOut.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandRandom.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandScript.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandShop.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
@@ -282,16 +270,10 @@
     <ClInclude Include="Code\Script\Commands\CommandTranslationCamera.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandWait.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Mobs\GetIDmob.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawningManager.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\Mobs\MouvementsMob.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\MouseCursor.h">
@@ -343,15 +325,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandPlayerPresence.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandLog.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandElsif.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Script\Commands\CommandEndScript.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\EnumScene.h">
@@ -636,6 +609,27 @@
     <ClInclude Include="Code\ska\Graphic\SpriteAnimation.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandEndScript.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandScript.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandLog.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandAssign.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandCalculate.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandRandom.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandWait.h">
+      <Filter>Fichiers d%27en-tête\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -676,9 +670,6 @@
     </ClCompile>
     <ClCompile Include="Code\Gameplay\EntityFactory.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Font.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
@@ -740,12 +731,6 @@
     <ClCompile Include="Code\Script\Commands\CommandAddPokemon.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandAssign.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandCalculate.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandChoice.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
@@ -788,12 +773,6 @@
     <ClCompile Include="Code\Script\Commands\CommandPokemonOut.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandRandom.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandScript.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandShop.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
@@ -812,16 +791,10 @@
     <ClCompile Include="Code\Script\Commands\CommandTranslationCamera.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandWait.cpp">
-      <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\Mobs\GetIDmob.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Mobs\MobSpawningManager.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\Mobs\MouvementsMob.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp">
@@ -870,15 +843,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandLog.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandElsif.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Script\Commands\CommandEndScript.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Scene\SceneMap.cpp">
@@ -1048,6 +1012,30 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\SpriteAnimation.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandEndScript.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandScript.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandLog.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandAssign.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandCalculate.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandRandom.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandWait.cpp">
+      <Filter>Fichiers sources\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\Font.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

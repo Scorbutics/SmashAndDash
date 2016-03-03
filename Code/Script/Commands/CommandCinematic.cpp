@@ -1,7 +1,8 @@
 #include "CommandCinematic.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
+#include "../../Utils/IDs.h"
 
 CommandCinematic::CommandCinematic()
 {
@@ -17,15 +18,15 @@ int CommandCinematic::argumentsNumber() {
 }
 
 /* TODO : faire une scène (héritant de la classe Scene) cinématique */
-std::string CommandCinematic::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandCinematic::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int frameNumber, delay, id_anim, duration;
 	bool continuer = true;
 	ska::Rectangle pos, menuPos;
 	string message;
-	SpriteAnimation* cinematic;
-	KeyInput* in = wScreen.getInputListener().getKeyInput();
+	ska::SpriteAnimation* cinematic;
+	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
 	menuPos.x = 0;
 	menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE * 4;

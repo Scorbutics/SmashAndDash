@@ -1,15 +1,16 @@
 #include "Button_Bar.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../Gameplay\WGameCore.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
 Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : DynamicWindowArea(parent)
 {
-    m_buttonStyle.load(styleName, T_RED, T_GREEN, T_BLUE);
-    m_leftArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_leftarrow.png", T_RED, T_GREEN, T_BLUE);
-    m_rightArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_rightarrow.png", T_RED, T_GREEN, T_BLUE);
-    m_cursor.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_cursor.png", T_RED, T_GREEN, T_BLUE);
+	m_buttonStyle.load(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_leftArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_leftarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_rightArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_rightarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_cursor.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_cursor.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	ska::Rectangle buf = relativePos;
     buf.x -= m_cursor.getWidth()/2;
@@ -70,7 +71,7 @@ void Button_Bar::display()
 void Button_Bar::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput* in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 	//Coordonnées relatives -> absolues
 	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
@@ -84,14 +85,14 @@ void Button_Bar::refresh()
 
 
 	//Si on clique sur la flèche gauche
-	if(IsPositionInBox(&mousePos, &absoluteLeftPos) && in->mouseClick(SDL_BUTTON_LEFT))
+	if (ska::RectangleUtils::isPositionInBox(&mousePos, &absoluteLeftPos) && in->mouseClick(SDL_BUTTON_LEFT))
 	{
 		m_index--;
 		m_cursorPos.x = (int)(m_relativePos.x + m_index%(m_values.size()) * (((2*m_buttonStyle.getWidth())-m_cursor.getWidth()) / (float) m_values.size()+1));
 		*m_variable = m_values[m_index%(m_values.size())];
 	}
 	//Sinon si on clique sur la flèche droite
-	else if(IsPositionInBox(&mousePos, &absoluteRightPos) && in->mouseClick(SDL_BUTTON_LEFT))
+	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &absoluteRightPos) && in->mouseClick(SDL_BUTTON_LEFT))
 	{
 		m_index++;
 		m_cursorPos.x = (int)(m_relativePos.x + m_index%(m_values.size()) * (((2 * m_buttonStyle.getWidth())-m_cursor.getWidth()) / (float) m_values.size()+1));

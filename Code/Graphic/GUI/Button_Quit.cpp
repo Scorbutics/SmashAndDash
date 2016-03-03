@@ -3,7 +3,8 @@
 #include "Button_Quit.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
-
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -13,8 +14,8 @@ Button_Quit::Button_Quit(DialogMenu *parent, string imgName, string secondImgNam
     m_active = parent->isVisible();
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
-    m_sprite.load(imgName, T_RED, T_GREEN, T_BLUE, 128);
-    m_spriteActive.load(secondImgName, T_RED, T_GREEN, T_BLUE, 128);
+    m_sprite.load(imgName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
+    m_spriteActive.load(secondImgName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
     m_relativePos.w = m_sprite.getWidth();
     m_relativePos.h = m_sprite.getHeight();
 }
@@ -27,13 +28,13 @@ void Button_Quit::display()
         m_active = true;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    MouseInput * in = wScreen.getInputListener().getMouseInput();
+    ska::MouseInput * in = wScreen.getInputListener().getMouseInput();
 
 	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
 
-    if(IsPositionInBox(&mousePos, &buf))
+	if (ska::RectangleUtils::isPositionInBox(&mousePos, &buf))
 		m_spriteActive.render(buf.x, buf.y);
     else
         m_sprite.render(buf.x, buf.y);
@@ -49,13 +50,13 @@ void Button_Quit::refresh()
 		m_active = true;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput * in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput * in = wScreen.getInputListener().getMouseInput();
 
 	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 
-	if(IsPositionInBox(&mousePos, &buf))
+	if (ska::RectangleUtils::isPositionInBox(&mousePos, &buf))
 	{
 		if(in->mouseClick(SDL_BUTTON_LEFT))
 		{

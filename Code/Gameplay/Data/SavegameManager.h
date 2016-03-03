@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include "./ska/Savegame.h"
+#include "../../ska/Data/Savegame.h"
 
 class SavegameManager : public ska::Savegame
 {

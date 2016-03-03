@@ -1,8 +1,7 @@
 #include "CommandTranslationCamera.h"
-#include <SDL2\SDL_timer.h>
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Graphic/Rectangle.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandTranslationCamera::CommandTranslationCamera()
 {
@@ -17,7 +16,7 @@ int CommandTranslationCamera::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandTranslationCamera::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandTranslationCamera::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;

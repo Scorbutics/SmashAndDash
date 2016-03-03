@@ -1,11 +1,4 @@
-#include <iostream>
-#include <string>
-#include <SDL2/SDL.h>
-#include <fstream>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
 #include <math.h>
-#include <memory>
 
 #include "DialogMenu.h"
 #include "../../Utils/ChargementImages.h"
@@ -15,6 +8,8 @@
 #include "Button.h"
 #include "Button_Bar.h"
 #include "Inventory_Area.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 #define RECT_OFFSET 12
 #define F_IN 1
@@ -55,15 +50,15 @@ DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Re
     m_posScrollFond.x = m_posFond.w;
     m_posScrollFond.y = posFond.y;
 
-    m_fond.load(fichierMenu, T_RED, T_GREEN, T_BLUE);
+	m_fond.load(fichierMenu, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	if(messImg != "")
-		m_messImage.load(messImg, T_RED, T_GREEN, T_BLUE);
+		m_messImage.load(messImg, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	m_posMessImage.w = m_messImage.getWidth();
 	m_posMessImage.h = m_messImage.getHeight();
-    m_posMessImage.x = PosToCenterPicture(&m_posMessImage, &m_posFond).x ;
-    m_posMessImage.y = PosToCenterPicture(&m_posMessImage, &m_posFond).y;
+	m_posMessImage.x = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).x;
+	m_posMessImage.y = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).y;
 
     m_couleur.r = 0;
     m_couleur.g = 0;
@@ -82,7 +77,7 @@ DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Re
 
 void DialogMenu::setMessImg(string img)
 {
-	m_messImage.load(img, T_RED, T_GREEN, T_BLUE);
+	m_messImage.load(img, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 }
 
 int DialogMenu::getLines()
@@ -101,7 +96,7 @@ void DialogMenu::pause()
 {
     int continuer = 1;
 	WGameCore& wScreen = WGameCore::getInstance();
-	KeyInput* in = wScreen.getInputListener().getKeyInput();
+	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
 	in->resetAll();
     while(continuer == 1)
@@ -180,7 +175,7 @@ void DialogMenu::display()
 
     m_posTexte.x = RECT_OFFSET + m_posFond.x - m_posScrollFond.x + m_posFond.x;
 	m_posTexte.y = RECT_OFFSET + m_posFond.y - m_posScrollFond.y + m_posFond.y + m_fontSize / 2;
-    m_posMessImage.x = PosToCenterPicture(&m_posMessImage, &m_posFond).x - m_posScrollFond.x + m_posFond.x;
+	m_posMessImage.x = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).x - m_posScrollFond.x + m_posFond.x;
 
 	m_messImage.render(m_posMessImage.x, m_posMessImage.y);
 
@@ -335,7 +330,7 @@ void DialogMenu::modifyText(string texte)
             if(i == 0 || texte[i] == '¤')
             {
                 m_texte.push_back(string());
-                m_stexte.push_back(Texture());
+                m_stexte.push_back(ska::Texture());
                 m_x.push_back(0);
                 j++;
             }
@@ -418,7 +413,7 @@ void DialogMenu::setPos(int x, int y)
     m_posFond.y = y;
     //m_posScrollFond.x = x;
     m_posScrollFond.y = y;
-    m_posMessImage = PosToCenterPicture(&m_posMessImage, &m_posFond);
+	m_posMessImage = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond);
 }
 
 void DialogMenu::setAlpha(bool x)
@@ -451,7 +446,7 @@ void DialogMenu::addImageArea(string name, bool alpha, ska::Rectangle relativePo
     m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, name, alpha)));
 }
 
-void DialogMenu::addImageArea(Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc)
+void DialogMenu::addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc)
 {
 	m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, tex, alpha)));
 }

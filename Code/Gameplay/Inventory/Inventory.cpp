@@ -1,8 +1,9 @@
 #include <fstream>
 #include "Inventory.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 #include "../../Utils\ChargementImages.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 unsigned int Inventory::m_fontSize = 12;
 
@@ -17,8 +18,8 @@ Inventory::Inventory()
 
 void Inventory::load(string squareSpriteName, string squareSpriteNameHighlight)
 {
-	m_squareSprite.load(squareSpriteName, T_RED, T_GREEN, T_BLUE);
-	m_squareSpriteHighlight.load(squareSpriteNameHighlight, T_RED, T_GREEN, T_BLUE);
+	m_squareSprite.load(squareSpriteName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_squareSpriteHighlight.load(squareSpriteNameHighlight, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 }
 
 int Inventory::search(string name)
@@ -36,7 +37,7 @@ void Inventory::swap(unsigned int index1, unsigned int index2)
 {
     list<unique_ptr<Object>>::iterator iter1 = m_objects.begin(), iter2 = m_objects.begin();
     list<unsigned int>::iterator iterAmount1 = m_amount.begin(), iterAmount2 = m_amount.begin();
-    list<Texture>::iterator iterAmountS1 = m_amountSurface.begin(), iterAmountS2 = m_amountSurface.begin();
+    list<ska::Texture>::iterator iterAmountS1 = m_amountSurface.begin(), iterAmountS2 = m_amountSurface.begin();
     for(unsigned int i = 0; i < index1 && iter1 != m_objects.end(); iter1++, i++);
     for(unsigned int i = 0; i < index2 && iter2 != m_objects.end(); iter2++, i++);
     for(unsigned int i = 0; i < index1 && iterAmount1 != m_amount.end(); iterAmount1++, i++);
@@ -75,7 +76,7 @@ void Inventory::clear()
 {
     m_objects.clear();
     m_amount.clear();
-    list<Texture>::iterator iterAmountS;
+    list<ska::Texture>::iterator iterAmountS;
     for(iterAmountS = m_amountSurface.begin(); iterAmountS != m_amountSurface.end(); ++iterAmountS)
         (*iterAmountS).free();
     m_amountSurface.clear();
@@ -130,17 +131,17 @@ unsigned int Inventory::getAmountFromIndex(int index)
     return *iter;
 }
 
-Texture* Inventory::getAmountSurfaceFromIndex(int index)
+ska::Texture* Inventory::getAmountSurfaceFromIndex(int index)
 {
-    list<Texture>::iterator iter;
+    list<ska::Texture>::iterator iter;
     int i = 0;
     for(iter = m_amountSurface.begin(); iter != m_amountSurface.end() && i != index; i++ ,++iter);
-    return (Texture*) &(*iter);
+    return (ska::Texture*) &(*iter);
 }
 
-list<Texture>::iterator Inventory::getIteratorAmountSurfaceFromIndex(int index)
+list<ska::Texture>::iterator Inventory::getIteratorAmountSurfaceFromIndex(int index)
 {
-    list<Texture>::iterator iter;
+    list<ska::Texture>::iterator iter;
     int i = 0;
     for(iter = m_amountSurface.begin(); iter != m_amountSurface.end() && i != index; i++ ,++iter);
     return iter;
@@ -161,7 +162,7 @@ void Inventory::add(int id, unsigned int amount)
         {
             m_objects.push_back(unique_ptr<Object>(new Object(id)));
             m_amount.push_back(amount);
-			Texture buf;
+			ska::Texture buf;
 			buf.loadFromText(m_fontSize, ska::StringUtils::intToStr(amount), m_color);
             m_amountSurface.push_back(buf);
         }
@@ -222,7 +223,7 @@ void Inventory::remove(std::string name, unsigned int amount)
 void Inventory::display(ska::Rectangle rect)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput *in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
     list<unique_ptr<Object>>::iterator iter;
 	ska::Rectangle buf, bufcenter, mouseClickPos;
     int i;
@@ -238,12 +239,12 @@ void Inventory::display(ska::Rectangle rect)
             buf.h = m_squareSprite.getHeight();
             bufcenter.w = (*iter)->getSprite()->getWidth()/2;
             bufcenter.h = (*iter)->getSprite()->getHeight();
-            bufcenter = PosToCenterPicture(&bufcenter, &buf);
+			bufcenter = ska::RectangleUtils::posToCenterPicture(&bufcenter, &buf);
             bufcenter.x -= bufcenter.w/4;
             bufcenter.y += bufcenter.h/4;
             (*iter)->setPos(bufcenter.x, bufcenter.y);
             mouseClickPos = in->getMouseClickPos();
-            if(IsPositionInBox(&mouseClickPos, &buf))
+			if (ska::RectangleUtils::isPositionInBox(&mouseClickPos, &buf))
                 m_squareSpriteHighlight.render(buf.x, buf.y);
             else
                 m_squareSprite.render(buf.x, buf.y);
@@ -258,7 +259,7 @@ void Inventory::display(ska::Rectangle rect)
 
 }
 
-Texture* Inventory::getSquareSprite()
+ska::Texture* Inventory::getSquareSprite()
 {
     return &m_squareSprite;
 }

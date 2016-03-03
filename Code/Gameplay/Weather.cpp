@@ -1,18 +1,17 @@
-#include <SDL2/SDL.h>
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <SDL2/SDL_image.h>
 #include <math.h>
 #include "Weather.h"
 #include "../Gameplay\WGameCore.h"
+#include "../Utils/IDs.h"
 
 using namespace std;
 
 Weather::Weather(string wSprite, int number, int distance, int intensityX, int intensityY, int alpha)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
     m_intensityX = intensityX;
     m_intensityY = intensityY;
@@ -21,7 +20,7 @@ Weather::Weather(string wSprite, int number, int distance, int intensityX, int i
     m_mosaic = false;
 
 	if(wSprite != "")
-		m_weather = unique_ptr<Texture>(new Texture(wSprite, T_RED, T_GREEN, T_BLUE, alpha));
+		m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha));
 
 
     for(int i = 0; i < m_number; i++)
@@ -54,7 +53,7 @@ void Weather::setIntensity(int intensityX, int intensityY)
 
 void Weather::changeSprite(string wSprite)
 {
-    m_weather = unique_ptr<Texture>(new Texture(wSprite, T_RED, T_GREEN, T_BLUE, 128));
+    m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128));
 }
 
 void Weather::setNumber(int number)
@@ -92,7 +91,7 @@ void Weather::resetPos()
 void Weather::resetRandomPos()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
     for(int i = 0; i < m_number; i++)
     {
@@ -109,7 +108,7 @@ void Weather::resetRandomPos()
 void Weather::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	ska::Rectangle& oRel = wScreen.getORel();
 
 	if (!m_active) {

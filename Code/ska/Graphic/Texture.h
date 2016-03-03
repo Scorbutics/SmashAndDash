@@ -43,6 +43,7 @@ namespace ska {
 		static void checkWindow();
 		static ska::Window* m_window;
 	};
+	typedef std::unique_ptr<Texture> TexturePtr;
 }
 
 

@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <vector>
-#include <SDL2/SDL.h>
 #include "Force.h"
 
 class World;

@@ -1,16 +1,16 @@
 
 #include "SlotPokemonArea.h"
 #include "../../Gameplay\WGameCore.h"
-#include "..\SpritePath.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Graphic/SpritePath.h"
+#include "../../ska/Utils\StringUtils.h"
 #include "Button.h"
 #include "../../Gameplay/Character.h"
 #include "../../Gameplay/Data/Statistics.h"
-
+#include "../../Utils/IDs.h"
 
 using namespace std;
 
-SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, string styleName, string styleNamePressed, string action, int* boolUseObjectSelectPkmn, int key) :DynamicWindowArea(parent), m_image(styleName, T_RED, T_GREEN, T_BLUE), m_imagePressed(styleNamePressed, T_RED, T_GREEN, T_BLUE)
+SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, string styleName, string styleNamePressed, string action, int* boolUseObjectSelectPkmn, int key) :DynamicWindowArea(parent), m_image(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE), m_imagePressed(styleNamePressed, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
 {
     m_key = key;
     m_boolUseObjectSelectPkmn = boolUseObjectSelectPkmn;
@@ -33,7 +33,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
     rectSrcBuf.y = m_pkmn->getHeight();
     rectSrcBuf.w = m_pkmn->getWidth();
     rectSrcBuf.h = m_pkmn->getHeight();
-	m_spriteArea = unique_ptr<Image_Area>(new Image_Area(m_parent, buf, &rectSrcBuf, SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_pkmn->getID()), false));
+	m_spriteArea = unique_ptr<Image_Area>(new Image_Area(m_parent, buf, &rectSrcBuf, ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_pkmn->getID()), false));
     buf.x += rectSrcBuf.w + 4;
 	buf.y += 6;
     m_nameArea = unique_ptr<Text_Area>(new Text_Area(m_parent, "Nom : " + m_pkmn->getDescriptor()->getName(), 20, buf));
@@ -76,7 +76,7 @@ void SlotPokemon_Area::display()
     buf.y += m_parent->getPos()->y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    MouseInput* in = wScreen.getInputListener().getMouseInput();
+    ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 
     if(in->getMouseState(SDL_BUTTON_LEFT))
         m_imagePressed.render(buf.x, buf.y);

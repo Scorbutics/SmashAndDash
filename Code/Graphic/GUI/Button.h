@@ -2,9 +2,8 @@
 #define DEF_BUTTON
 
 #include <sstream>
-#include <SDL2/SDL_ttf.h>
-#include "../Texture.h"
 #include <vector>
+#include "../../ska/Graphic/Texture.h"
 #include "DynamicWindowArea.h"
 
 class WGameCore;
@@ -27,7 +26,7 @@ class Button : public DynamicWindowArea
     std::string m_text, m_key;
     int m_fontSize;
     unsigned int m_index;
-    Texture m_stext, m_buttonStyle, m_buttonStylePressed;
+    ska::Texture m_stext, m_buttonStyle, m_buttonStylePressed;
 	ska::Rectangle m_rectButton;
     int *m_variable;
     std::vector<int> m_values;

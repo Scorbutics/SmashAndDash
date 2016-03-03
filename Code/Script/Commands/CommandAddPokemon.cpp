@@ -1,6 +1,6 @@
 #include "CommandAddPokemon.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandAddPokemon::CommandAddPokemon()
 {
@@ -15,8 +15,7 @@ int CommandAddPokemon::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandAddPokemon::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
-{
+std::string CommandAddPokemon::execute(ska::IScript* script, std::vector<std::string>& args) {
 	int id;
 	WGameCore& wScreen = WGameCore::getInstance();
 

@@ -1,7 +1,5 @@
-#include <math.h>
 #include "MobSpawningManager.h"
 #include "../../Utils\IDs.h"
-#include <SDL2\SDL_timer.h>
 #include "..\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
 
@@ -19,12 +17,12 @@ MobSpawningManager::MobSpawningManager(unsigned int delay)
 void MobSpawningManager::spawnOnWorld(unsigned int spawnNumber)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	const unsigned int range = (w.getNbrBlocX() > w.getNbrBlocY() ? w.getNbrBlocX()*TAILLEBLOC: w.getNbrBlocY()*TAILLEBLOC);
 
 	for(unsigned int i = 0; i < spawnNumber; i++)
 	{
-			IniReader* reader = GetRandomMobSettings(&w);
+			ska::IniReader* reader = GetRandomMobSettings(&w);
 
 			if(reader != NULL)
 			{
@@ -46,9 +44,9 @@ void MobSpawningManager::refresh()
 
 	if(SDL_GetTicks() - m_t0 >= m_duration)
 	{
-		World& w = wScreen.getWorld();
+		ska::World& w = wScreen.getWorld();
 
-		IniReader* reader = GetRandomMobSettings(&w);
+		ska::IniReader* reader = GetRandomMobSettings(&w);
 
 		if(reader != NULL)
 		{

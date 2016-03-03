@@ -1,22 +1,21 @@
 #ifndef DEF_WINDOWRENDERER
 #define DEF_WINDOWRENDERER
 
-#include <memory>
-#include "../Rectangle.h"
-#include "../../Utils/Singleton_template.h"
+#include "../../ska/Graphic/Rectangle.h"
+#include "../../ska/Utils/Singleton_template.h"
+#include "../../ska/Graphic/GUI/Window.h"
+#include "../../ska/Graphic/Texture.h"
 
-class Texture;
-class Window;
-class WindowRenderer : public Singleton<WindowRenderer>
+class WindowRenderer : public ska::Singleton<WindowRenderer>
 {
-	friend class Singleton<WindowRenderer>;
+	friend class ska::Singleton<WindowRenderer>;
 
 	private:
 		WindowRenderer() {}
 		~WindowRenderer() {}
 
 	public:		
-		int render(Window* win, Texture* tex, int x, int y, ska::Rectangle* clip = NULL);
+		int render(ska::Window* win, ska::Texture* tex, int x, int y, ska::Rectangle* clip = NULL);
 		
 };
 

@@ -2,27 +2,29 @@
 #include "../Gameplay\WGameCore.h"
 #include "../Utils\ChargementImages.h"
 #include "Mobs\GetIDmob.h"
-#include "World\LayerE.h"
-#include "../Script\ScriptDispatcher.h"
-#include "../Utils\StringUtils.h"
+#include "../ska/World\LayerE.h"
+#include "../ska/Script\ScriptDispatcher.h"
+#include "../ska/Utils\StringUtils.h"
+#include "../Utils/IDs.h"
+#include "../ska/Utils/RectangleUtils.h"
 
-int GetSkillCursorFromKey(KeyEvent* ke);
+int GetSkillCursorFromKey(ska::KeyEvent* ke);
 
 Player::Player(int id) : Character(id)
 {
 	m_path.setPathString("");
 }
 
-void Player::update(Observable* obs, EventArg* event)
+void Player::update(ska::Observable* obs, ska::EventArg* event)
 {
-	MouseEvent* me;
-	KeyEvent* ke;
+	ska::MouseEvent* me;
+	ska::KeyEvent* ke;
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int power = getSpeedLimit() * 12;
 
 	if (event->type() == EVENT_MOUSE)
 	{
-		me = static_cast<MouseEvent*>(event);
+		me = static_cast<ska::MouseEvent*>(event);
 		if (me->getButton() == SDL_BUTTON_RIGHT)
 		{
 			if (me->clicked())
@@ -68,7 +70,7 @@ void Player::update(Observable* obs, EventArg* event)
 					
 					opponentPos.x += wScreen.getORel().x;
 					opponentPos.y += wScreen.getORel().y;
-					wScreen.getFight().getPokemon()->setAutoattack(IsPositionInBox(&mouseRightClickPos, &opponentPos));
+					wScreen.getFight().getPokemon()->setAutoattack(ska::RectangleUtils::isPositionInBox(&mouseRightClickPos, &opponentPos));
 				}
 
 			}
@@ -94,7 +96,7 @@ void Player::update(Observable* obs, EventArg* event)
 	{
 		//m_path.setPathString("");
 
-		ke = static_cast<KeyEvent*>(event);
+		ke = static_cast<ska::KeyEvent*>(event);
 		int direction = -1;
 
 		if (ke->getScancode() == SDL_SCANCODE_W && ke->getSecondScancode() == SDL_SCANCODE_A)
@@ -154,7 +156,7 @@ void Player::update(Observable* obs, EventArg* event)
 
 		if (ke->getScancode() == SDL_SCANCODE_RETURN && !wScreen.getFight().isFighting())
 		{
-			World& w = wScreen.getWorld();
+			ska::World& w = wScreen.getWorld();
 			wScreen.getGUI().getDialog()->hide(true);
 			wScreen.getGUI().getImgDialog()->hide(true);
 
@@ -186,7 +188,8 @@ void Player::update(Observable* obs, EventArg* event)
 				}
 
 				if (w.getLayerEvent()->getAction(i) == "script") {
-					ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 1);
+					/* TODO : passer par "World" pour atteindre le ScriptDispatcher */
+					/*ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 1);*/
 				} else if (id < 0) {
 					wScreen.getGUI().getDialog()->modifyText(w.getLayerEvent()->getParam(i));
 					wScreen.getGUI().getDialog()->hide(false);
@@ -248,7 +251,7 @@ Player::~Player()
 {
 }
 
-int GetSkillCursorFromKey(KeyEvent* ke)
+int GetSkillCursorFromKey(ska::KeyEvent* ke)
 {
 	int ret = -1;
 	if (ke != NULL)
@@ -277,3 +280,4 @@ int GetSkillCursorFromKey(KeyEvent* ke)
 
 	return ret;
 }
+

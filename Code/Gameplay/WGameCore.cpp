@@ -1,32 +1,21 @@
-#include <stdint.h>
-#include <iostream>
-#include <string>
-#include <SDL2/SDL.h>
-#include <fstream>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
-#include <windows.h>
-//#include <fmodex/fmod.h>
-#include <math.h>
 #include <vector>
-#include <sstream>
 #include "../Utils/IDs.h"
 #include "../Gameplay\WGameCore.h"
 #include "../Utils/Chargemententitees.h"
-#include "../Utils/Observable.h"
+#include "../ska/Utils/Observable.h"
 #include "../Utils/ChargementImages.h"
 #include "../Graphic/Scrolling.h"
-#include "../Gameplay/World/World.h"
+#include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
-#include "../Script/ScriptDispatcher.h"
-#include "../Graphic/Draw/VectorDrawableContainer.h"
+#include "../ska/Script/ScriptDispatcher.h"
+#include "../ska/Graphic/Draw/VectorDrawableContainer.h"
+#include "../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
 
 WGameCore::WGameCore():
-    Window(), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1")
-{
+    Window(), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC) {
 	m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -71,7 +60,7 @@ Pokeball& WGameCore::getPokeball()
     return m_pokeball;
 }
 
-Animation& WGameCore::getChipsetAnimation()
+ska::Animation& WGameCore::getChipsetAnimation()
 {
     return m_chipsetAni;
 }
@@ -146,7 +135,7 @@ void WGameCore::setSpeedInertie(float x)
 
 void WGameCore::transition(int type) //type : 1 = entrant, 0 = sortant
 {
-	Texture fondu("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"fondu.png");
+	ska::Texture fondu("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"fondu.png");
 	WGameCore& wScreen = WGameCore::getInstance();
     unsigned int mosaicNumberX, mosaicNumberY;
 	fondu.setBlendMode(SDL_BLENDMODE_BLEND);
@@ -189,7 +178,7 @@ PokemonManager& WGameCore::getPokemonManager()
     return m_pkmnManager;
 }
 
-ParticleManager& WGameCore::getParticleManager() {
+ska::ParticleManager& WGameCore::getParticleManager() {
     return m_particleManager;
 }
 
@@ -286,7 +275,7 @@ bool WGameCore::getContinue()
     return m_continue;
 }
 
-InputListener& WGameCore::getInputListener()
+ska::InputListener& WGameCore::getInputListener()
 {
     return m_kdListener;
 }
@@ -360,7 +349,7 @@ vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
 	{
 		posEvent = entity->getHitbox();
 
-		if(CollisionBoxABoxB(box, posEvent))
+		if(ska::RectangleUtils::collisionBoxABoxB(box, posEvent))
 		{
 			ska::Rectangle pos;
 			pos.x = (Sint16)entity->getID();
@@ -435,7 +424,7 @@ Inventory& WGameCore::getInventory()
     return m_inv;
 }
 
-SpriteAnimationManager& WGameCore::getSpriteAnimationManager()
+ska::SpriteAnimationManager& WGameCore::getSpriteAnimationManager()
 {
 	return m_spriteAnimManager;
 }
@@ -453,7 +442,6 @@ void WGameCore::quitter(bool transition)
 
 	m_rainParticleManager.stop();
 	m_particleManager.stop();
-	ScriptDispatcher::getInstance().clear();
 
 	//Désallocation mémoire
 	m_EntityFactory.deleteAll();
@@ -465,7 +453,7 @@ GUI& WGameCore::getGUI()
     return m_gui;
 }
 
-World& WGameCore::getWorld()
+ska::World& WGameCore::getWorld()
 {
 	return m_world;
 }

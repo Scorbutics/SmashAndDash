@@ -2,21 +2,19 @@
 #define DEF_MOUSECURSOR
 
 #include <string>
-#include <vector>
-#include <SDL2/SDL.h>
 #include <memory>
 #include "../../Gameplay/Inventory/Object.h"
 #include "GUI.h"
-#include "../Draw/DrawableFixedPriority.h"
+#include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
+#include "../../ska/Inputs/MouseInput.h"
 
-class MouseInput;
 class MouseCursor : public DrawableFixedPriority
 {
     public:
     MouseCursor();
     ~MouseCursor();
 
-    Animation* getAnimation();
+    ska::Animation* getAnimation();
     DialogMenu* getHintBox();
     Object* getObject();
     unsigned int getObjectAmount();
@@ -44,9 +42,9 @@ class MouseCursor : public DrawableFixedPriority
     void showCursorTime(unsigned int delay);
 
     private:
-    MouseInput *m_in;
-    Animation m_aniCursor;
-    Texture m_sprite;
+    ska::MouseInput *m_in;
+    ska::Animation m_aniCursor;
+    ska::Texture m_sprite;
 	ska::Rectangle m_cursorPos;
     std::unique_ptr<DialogMenu> m_hintBox;
     bool m_hideC, m_hideH;

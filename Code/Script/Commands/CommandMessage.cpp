@@ -3,8 +3,8 @@
 #include <SDL2\SDL.h>
 #include "../../Utils\IDs.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 
 using namespace std;
@@ -17,7 +17,7 @@ int CommandMessage::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandMessage::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandMessage::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string fname, texte, buf;
@@ -47,7 +47,7 @@ std::string CommandMessage::execute(IScript* script, std::vector<std::string>& a
 	}
 
 	DialogMenu imgDial("", (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22);
-	KeyInput* in = wScreen.getInputListener().getKeyInput();
+	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
 	while (menu.getX(menu.getLines() - 1) < menu.getWLine(menu.getLines() - 1))
 	{

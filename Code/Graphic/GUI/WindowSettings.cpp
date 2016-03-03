@@ -1,5 +1,6 @@
 #include "WindowSettings.h"
 #include "../../Gameplay\WGameCore.h"
+#include "../../Utils/IDs.h"
 
 using namespace std;
 

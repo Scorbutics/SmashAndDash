@@ -2,6 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../Gameplay\Inventory\Inventory.h"
 #include "../../Graphic\GUI\Inventory_Area.h"
+#include "../../Utils/IDs.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, stri
 void ToolBar::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	KeyInput* in = wScreen.getInputListener().getKeyInput();
+	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
     MovableWindow::refresh();
     if(m_invArea != NULL)

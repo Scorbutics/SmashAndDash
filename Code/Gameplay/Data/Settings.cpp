@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Settings.h"
-#include "../../Inputs\Readers\IniReader.h"
+#include "../../ska/Inputs\Readers\IniReader.h"
 #include "../WGameCore.h"
 #include "../Weather.h"
 
@@ -29,21 +29,21 @@ void Settings::setFileName(string fileName)
 
 void Settings::update() {
 	WGameCore& core = WGameCore::getInstance();
-	Weather* fog = core.getWorld().getFog();
+	/*Weather* fog = core.getWorld().getFog();
 	if (fog != NULL) {
 		fog->hide(!m_fogActive);
 	}
 	Weather* weather = core.getWorld().getWeather();
 	if (weather != NULL) {
 		weather->hide(!m_weatherActive);
-	}
+	}*/
 	core.getParticleManager().hide(!m_particles);
 	core.getWorld().setBgmVolume(m_soundVol);
 }
 
 void Settings::load()
 {
-    IniReader reader(m_fileName);
+    ska::IniReader reader(m_fileName);
 	m_soundVol = reader.getInt("Settings sound_volume");
 	m_fogActive = reader.getInt("Settings fog_active");
 	m_weatherActive = reader.getInt("Settings weather_active");
@@ -54,7 +54,7 @@ void Settings::load()
 
 void Settings::save()
 {
-	IniReader reader(m_fileName);
+	ska::IniReader reader(m_fileName);
 	reader.set("Settings sound_volume", m_soundVol);
 	reader.set("Settings fog_active", m_fogActive);
 	reader.set("Settings weather_active", m_weatherActive);

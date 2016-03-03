@@ -1,10 +1,12 @@
-#include "CommandChoice.h"
-#include <SDL2/SDL.h>
 #include <string>
+#include "CommandChoice.h"
 #include "../../Gameplay/WGameCore.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Graphic/Rectangle.h"
+#include "../../ska/Utils/StringUtils.h"
+#include "../../ska/Utils/ScriptUtils.h"
+#include "../../ska/Graphic/Rectangle.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Script/IScript.h"
+#include "../../ska/Script/ScriptDispatcher.h"
 
 using namespace std;
 
@@ -21,7 +23,7 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandChoice::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandChoice::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string fname, texte, buf, var;
@@ -88,7 +90,7 @@ std::string CommandChoice::execute(IScript* script, std::vector<std::string>& ar
 
 	} while (!wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) && !wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_ESCAPE));
 
-	ScriptUtils::setValueFromVarOrSwitchNumber(script->getExtendedName(), var, wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) ? "1" : "0", script->getVarMap());
+	ska::ScriptUtils::setValueFromVarOrSwitchNumber(script->getParent().getSavegame(), script->getExtendedName(), var, wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) ? "1" : "0", script->getVarMap());
 	wScreen.getInputListener().getKeyInput()->resetAll();
 	return "";
 }

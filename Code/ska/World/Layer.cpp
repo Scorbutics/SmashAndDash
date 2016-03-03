@@ -13,6 +13,7 @@
 #include "../Exceptions/CorruptedFileException.h"
 #include "../Exceptions/IndexOutOfBoundsException.h"
 #include "../Utils/StringUtils.h"
+#include "../Utils/NumberUtils.h"
 #include "../Exceptions/FileException.h"
 
 using namespace std;
@@ -76,14 +77,14 @@ ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 void ska::Layer::display()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle absoluteCurrentPos, origineRelative, ofChip;
+	ska::Rectangle absoluteCurrentPos, origineRelative = { 0 }, ofChip;
     //origineRelative = wScreen.getORel();
     //ofChip = wScreen.getOffsetChipset();
 
 	const unsigned int layerPixelsX = m_world.getPixelWidth();
 	const unsigned int layerPixelsY = m_world.getPixelHeight();
-	const unsigned int absORelX = abs(origineRelative.x);
-	const unsigned int absORelY = abs(origineRelative.y);
+	const unsigned int absORelX = NumberUtils::absolute(origineRelative.x);
+	const unsigned int absORelY = NumberUtils::absolute(origineRelative.y);
 	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
 	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
 	const unsigned int cameraPositionEndBlockX = (absORelX /*+ wScreen.getWidth()*/) / m_world.getBlockSize();

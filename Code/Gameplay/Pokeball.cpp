@@ -1,16 +1,17 @@
-#include <stdint.h>
 #include <math.h>
 #include <fstream>
 #include <limits.h>
 
 #define OPEN_DELAY 50 //durée 50 frames
 
+#include "../Utils/IDs.h"
 #include "Pokeball.h"
 #include "../Gameplay\WGameCore.h"
 #include "../Utils\ChargementImages.h"
 #include "Data\Statistics.h"
 #include "Weather.h"
-#include "../Graphic/Draw/VectorDrawableContainer.h"
+#include "../ska/Graphic/Draw/VectorDrawableContainer.h"
+#include "../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ Pokeball::Pokeball(string spriteName, Character* hero, ska::Rectangle destPos, s
     m_gestionAnimVortex.setOffsetAndFrameSize(animPos);
     m_countOpenned = m_countOpenning = OPEN_DELAY;
 
-    m_sprite.load(spriteName, T_RED, T_GREEN, T_BLUE);
+    m_sprite.load(spriteName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     m_pokeballPos.x = hero->getCenterPos().x ;
     m_pokeballPos.y = hero->getPos().y ;
     m_finalPos.x = destPos.x + abs(oRel.x);
@@ -73,15 +74,15 @@ Pokeball::Pokeball() : m_gestionAnim(125, 4, false), m_gestionAnimVortex(175, 2,
 void Pokeball::setSprites(string spriteName, string spriteOpenPokeball, string spritePokeballAura)
 {
     if(spriteName.size() != 0)
-        m_sprite.load(spriteName, T_RED, T_GREEN, T_BLUE);
+        m_sprite.load(spriteName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     
 
     if(spriteOpenPokeball.size() != 0)
-        m_openPokeball.load(spriteOpenPokeball, T_RED, T_GREEN, T_BLUE);
+        m_openPokeball.load(spriteOpenPokeball, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     
 
     if(spritePokeballAura.size() != 0)
-        m_vortex.load(spritePokeballAura, T_RED, T_GREEN, T_BLUE, 128);
+        m_vortex.load(spritePokeballAura, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
     
 }
 
@@ -91,7 +92,7 @@ void Pokeball::launch(Character* hero, ska::Rectangle destPos, PokeballLaunchRea
 	ska::Rectangle heroPos = hero->getPos();
 
 	m_capture = launchReason;
-    hero->setDirection(GetDirectionFromPos(&heroPos, &destPos));
+    hero->setDirection(ska::RectangleUtils::getDirectionFromPos(&heroPos, &destPos));
 
     if(m_show)
         return;
@@ -156,7 +157,7 @@ void Pokeball::launch(Character* hero, ska::Rectangle destPos, PokeballLaunchRea
 void Pokeball::capture(Character* pkmn)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	ska::Rectangle& oRel = wScreen.getORel();
 
 
@@ -172,7 +173,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.y += oRel.y;
 
 		VectorDrawableContainer drawables;
-		w.graphicUpdate(drawables);
+		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
 		wScreen.getParticleManager().refresh();
@@ -181,10 +182,10 @@ void Pokeball::capture(Character* pkmn)
 		wScreen.getParticleManager().displayRainFog();*/
 
 		//Affiche la météo
-		if(*wScreen.getSettings().getFogActive())
+		/*if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
 		if(*wScreen.getSettings().getWeatherActive())
-			w.getWeather()->display();
+			w.getWeather()->display();*/
 
 
 		wScreen.flip();
@@ -206,7 +207,7 @@ void Pokeball::capture(Character* pkmn)
 		m_pokeballPos.y+=4;
 
 		VectorDrawableContainer drawables;
-		w.graphicUpdate(drawables);
+		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 			
 
@@ -223,10 +224,10 @@ void Pokeball::capture(Character* pkmn)
 		wScreen.getParticleManager().displayRainFog();*/
 
 		//Affiche la météo
-		if(*wScreen.getSettings().getFogActive())
+		/*if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
 		if(*wScreen.getSettings().getWeatherActive())
-			w.getWeather()->display();
+			w.getWeather()->display();*/
 
 		wScreen.flip();
 		SDL_Delay(30);
@@ -263,7 +264,7 @@ void Pokeball::capture(Character* pkmn)
 				animPos.x = 0;
 
 			VectorDrawableContainer drawables;
-			w.graphicUpdate(drawables);
+			//w.graphicUpdate(drawables);
 			m_sprite.render(buf.x, buf.y, &animPos);
 
 
@@ -272,10 +273,10 @@ void Pokeball::capture(Character* pkmn)
 			wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
 			wScreen.getParticleManager().displayRainFog();*/
 			//Affiche la météo
-			if(*wScreen.getSettings().getFogActive())
+			/*if(*wScreen.getSettings().getFogActive())
 				w.getFog()->display();
 			if(*wScreen.getSettings().getWeatherActive())
-				w.getWeather()->display();
+				w.getWeather()->display();*/
 
 
 
@@ -313,7 +314,7 @@ void Pokeball::display()
 	   qui refresh le bon état par polymorphisme. TODO ! */
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
 	if (!m_show) {
 		return;

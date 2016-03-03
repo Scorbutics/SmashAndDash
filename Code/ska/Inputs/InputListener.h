@@ -13,8 +13,8 @@ class LayerE;
 //bool Inertie(WGameCore *wScreen, World* w, int type = 1);
 //ska::Rectangle MovementManagerSouris(MouseInput *in, std::unique_ptr<Character>& hero);
 //ska::Rectangle GetCurrentSpritePosOfHero(std::unique_ptr<Character>& hero);
-//int GetDirectionFromChar(char directionChar);
-//char GetCharFromDirection(int dir);
+int GetDirectionFromChar(char directionChar);
+char GetCharFromDirection(int dir);
 
 namespace ska {
 	class InputListener : public Observable

@@ -6,9 +6,9 @@
 #include <SDL2/SDL.h>
 #include "EndFightReasonEnum.h"
 #include "../Player.h"
-#include "../../Graphic/Animation.h"
-#include "../../Graphic/Texture.h"
-#include "../../Graphic/Draw/DrawableFixedPriority.h"
+#include "../../ska/Graphic/Animation.h"
+#include "../../ska/Graphic/Texture.h"
+#include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 
 class World;
 class DialogMenu;
@@ -53,8 +53,8 @@ class Fight : public DrawableFixedPriority
 	Player* m_pkmn, *m_trainer;
 	std::vector<ska::Rectangle> m_areaList;
 	ska::Rectangle m_opponentID;
-    Animation m_animGrass;
-    Texture m_grassSprite;
+    ska::Animation m_animGrass;
+    ska::Texture m_grassSprite;
     std::unique_ptr<DialogMenu> m_dial;
 
 };

@@ -1,13 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <SDL2/SDL.h>
 
 #include "../../Utils\IDs.h"
 #include "Inventory_Area.h"
 #include "../../Gameplay\WGameCore.h"
 #include "MouseCursor.h"
 #include "../../Utils/ChargementImages.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -92,11 +92,11 @@ void Inventory_Area::refresh()
 	buf.y += (m_parent->getPos())->y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput* in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 	ska::Rectangle mousePos = in->getMousePos();
 
-	if(in->mouseClick(SDL_BUTTON_LEFT) && IsPositionInBox(&mousePos, &buf) && !IsPositionInBox(&mousePos, wScreen.getGUI().getClickMenu()->getPos()))
+	if (in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, &buf) && !ska::RectangleUtils::isPositionInBox(&mousePos, wScreen.getGUI().getClickMenu()->getPos()))
 	{
 		ska::Rectangle invAreaAbsolutePos = this->getAbsolutePos();
 		wScreen.getGUI().getClickMenu()->hide(true);

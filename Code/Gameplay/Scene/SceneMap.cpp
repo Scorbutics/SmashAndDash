@@ -1,10 +1,10 @@
 #include "../WGameCore.h"
 #include "../Weather.h"
-#include "../World/World.h"
+#include "../../ska/World/World.h"
 #include "../../Graphic/Scrolling.h"
-#include "../../Script/ScriptDispatcher.h"
+#include "../../ska/Script/ScriptDispatcher.h"
 #include "SceneMap.h"
-#include "../World/LayerE.h"
+#include "../../ska/World/LayerE.h"
 
 SceneMap::SceneMap()
 {

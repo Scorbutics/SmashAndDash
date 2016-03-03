@@ -1,6 +1,6 @@
 #include "CommandPlayShaking.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandPlayShaking::CommandPlayShaking()
 {
@@ -15,7 +15,7 @@ int CommandPlayShaking::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayShaking::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandPlayShaking::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned intensity, duration;

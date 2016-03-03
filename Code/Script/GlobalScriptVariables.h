@@ -1,11 +1,11 @@
 #pragma once
 
 #include <unordered_map>
-#include "../Utils\Singleton_template.h"
+#include "../ska/Utils\Singleton_template.h"
 
-class GlobalScriptVariables : public Singleton<GlobalScriptVariables>
+class GlobalScriptVariables : public ska::Singleton<GlobalScriptVariables>
 {
-	friend class Singleton<GlobalScriptVariables>;
+	friend class ska::Singleton<GlobalScriptVariables>;
 
 	typedef std::string (GlobalScriptVariables::*script_method_t)(int, int); // function pointer type
 

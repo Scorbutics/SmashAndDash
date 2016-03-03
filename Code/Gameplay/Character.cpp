@@ -1,18 +1,18 @@
-#include <stdint.h>
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
 #include <algorithm>
-#include <cmath>
+
 #include "Character.h"
-#include "../Inputs/Readers/IniReader.h"
+#include "../ska/Inputs/Readers/IniReader.h"
 #include "WGameCore.h"
 #include "Data/Statistics.h"
 #include "Fight/Skill.h"
-#include "../Graphic/SpritePath.h"
+#include "../ska/Graphic/SpritePath.h"
 #include "../Utils/ChargementImages.h"
-#include "../Utils/StringUtils.h"
-#include "World/Layer.h"
+#include "../ska/Utils/StringUtils.h"
+#include "../ska/World/Layer.h"
+#include "../Utils/IDs.h"
+#include "../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ Character::Character(int id):
     PhysicSprite(0, 0, 75., 6.5, 6, 6*TAILLEBLOC, 10*TAILLEBLOC, 0, 0, 3, 3, 3, 3),
     m_grassSprite(SPRITEBANK_ANIMATION, 1)
 {
-	IniReader readerAutoAttack("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Skills"FILE_SEPARATOR"autoattack.ini");
+	ska::IniReader readerAutoAttack("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Skills"FILE_SEPARATOR"autoattack.ini");
 	
 	spritesReload();
 
@@ -69,8 +69,8 @@ vector<unique_ptr<CharacterDrawable>>& Character::getCharacterParts() {
 void Character::spritesReload()
 {
 	ska::Rectangle ofHeroA;
-	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_id), T_RED, T_GREEN, T_BLUE);
-	m_faceset.load(SpritePath::getInstance().getPath(SPRITEBANK_FACESET, m_id), T_RED, T_GREEN, T_BLUE);
+	m_sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_faceset.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_FACESET, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 	ofHeroA.x = 0;
 	ofHeroA.y = 0;
 	ofHeroA.w = static_cast<Uint16> (m_sprite.getWidth() / HORIZONTAL_SPRITE_NUMBER_PER_CHAR_SHEET);
@@ -131,7 +131,7 @@ void Character::refresh()
 	{
 		ska::Rectangle entityPos = m_entityFollow->getPos();
 		this->setSpeedLimit(m_entityFollow->getSpeedLimit());
- 		if (DistanceSquared(&entityPos, &m_rect) > 2*2*TAILLEBLOC*TAILLEBLOC)
+ 		if (ska::RectangleUtils::distanceSquared(&entityPos, &m_rect) > 2*2*TAILLEBLOC*TAILLEBLOC)
 		{
 			//entityPos.x += wScreen.getORel().x;
 			//entityPos.y += wScreen.getORel().y;
@@ -273,7 +273,7 @@ void Character::display(int part, bool shadow)
 
 void Character::loadData()
 {
-	IniReader data("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini");
+	ska::IniReader data("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini");
 
 	m_descriptor.load(&data, "Description");
 	m_stats = unique_ptr<Statistics>(new Statistics(&data, "BaseStats"));
@@ -385,8 +385,8 @@ void Character::displayGrassWalk()
 	if(hitCenterPos.x/TAILLEBLOC >= wScreen.getWorld().getNbrBlocX() || hitCenterPos.y/TAILLEBLOC >= wScreen.getWorld().getNbrBlocY())
 		return;
 
-	Block* bBot = wScreen.getWorld().getLayerBot()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
-	Block* bMid = wScreen.getWorld().getLayerMid()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
+	ska::Block* bBot = wScreen.getWorld().getLayerBot()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
+	ska::Block* bMid = wScreen.getWorld().getLayerMid()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
 
 	if(bBot != NULL && bMid != NULL && (bBot->getID() == BLOCK_ID_GRASS || bMid->getID() == BLOCK_ID_GRASS) && this->getSpeed() >= 1)
     {
@@ -411,7 +411,7 @@ vector<Skill_ptr> *Character::getSkills()
 
 void Character::addSkill(const string& pathAttackName)
 {
-	IniReader skillData(pathAttackName);
+	ska::IniReader skillData(pathAttackName);
 	string type1, type2;
 
 	type1 = skillData.getString("Description style_1");
@@ -483,16 +483,16 @@ void Character::refreshSkills()
 		Character* pkmn = wScreen.getFight().getPokemon(), *opponent = wScreen.getFight().getOpponent();
 		ska::Rectangle pkmnPos = pkmn->getHitboxCenterPos(), opponentPos = opponent->getHitboxCenterPos();
 
-		if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_POKEMON  && DistanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
+		if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_POKEMON  && ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
 		{
 			//pkmn->playAnimation(CHARACTER_ANIMATION_ATTACK, false);
-			pkmn->setDirection(GetDirectionFromPos(&pkmnPos, &opponentPos));
+			pkmn->setDirection(ska::RectangleUtils::getDirectionFromPos(&pkmnPos, &opponentPos));
 			m_skillAutoAttack->launch(opponentPos);
 		}
-		else if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_OPPONENT && DistanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
+		else if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_OPPONENT && ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
 		{
 			//opponent->playAnimation(CHARACTER_ANIMATION_ATTACK, false);
-			opponent->setDirection(GetDirectionFromPos(&opponentPos, &pkmnPos));
+			opponent->setDirection(ska::RectangleUtils::getDirectionFromPos(&opponentPos, &pkmnPos));
 			m_skillAutoAttack->launch(pkmnPos);
 		}
 		
@@ -500,7 +500,7 @@ void Character::refreshSkills()
 	}
 }
 
-Texture* Character::getFaceset()
+ska::Texture* Character::getFaceset()
 {
     return &m_faceset;
 }
@@ -542,7 +542,7 @@ bool Character::isAlive()
 
 
 
-Path* Character::getPath()
+ska::Path* Character::getPath()
 {
     return &m_path;
 }
@@ -574,8 +574,8 @@ void Character::setID(int id)
 
     PhysicSprite::setID(id);
     
-	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), T_RED, T_GREEN, T_BLUE);
-	m_faceset.load(SpritePath::getInstance().getPath(SPRITEBANK_FACESET, id), T_RED, T_GREEN, T_BLUE);
+	m_sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_faceset.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_FACESET, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	actualOffsetAnim.x = 0;
 	actualOffsetAnim.y = 0;
@@ -641,7 +641,7 @@ bool Character::damage(Character* src, unsigned int damages)
 	
 	animPos.w = 48;
 	animPos.h = 48;
-	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, PosToCenterPicture(&animPos, &m_rect), 1, -1, 3, 150);
+	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, ska::RectangleUtils::posToCenterPicture(&animPos, &m_rect), 1, -1, 3, 150);
     m_hpbar.setCurrentValue(m_hp);
 	return m_alive;
 }

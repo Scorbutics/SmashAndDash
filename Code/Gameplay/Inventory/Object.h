@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <SDL2/SDL.h>
-#include "../../Graphic/Texture.h"
-#include "../../Graphic/Animation.h"
+#include "../../ska/Graphic/Texture.h"
+#include "../../ska/Graphic/Animation.h"
 
 class Object
 {
@@ -20,8 +20,8 @@ class Object
 	void setPos(ska::Rectangle pos);
 
 	const ska::Rectangle* getPos();
-    Texture* getSprite();
-    Animation* getAnimation();
+	ska::Texture* getSprite();
+	ska::Animation* getAnimation();
     std::string getDescription();
     std::string getName();
     std::string getEffect();
@@ -34,8 +34,8 @@ class Object
     ~Object();
 
     private:
-    Texture m_sprite;
-    Animation m_animation;
+		ska::Texture m_sprite;
+		ska::Animation m_animation;
 	ska::Rectangle m_pos;
     std::string m_description, m_name, m_effect, m_action, m_spriteName;
     int m_id;

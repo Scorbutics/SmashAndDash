@@ -1,6 +1,6 @@
 #include "CommandPlayCrumbling.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandPlayCrumbling::CommandPlayCrumbling()
 {
@@ -15,7 +15,7 @@ int CommandPlayCrumbling::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPlayCrumbling::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandPlayCrumbling::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int duree = 0;

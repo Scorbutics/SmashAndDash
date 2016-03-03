@@ -1,6 +1,6 @@
 #include "CommandStuckCharacter.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandStuckCharacter::CommandStuckCharacter()
 {
@@ -15,7 +15,7 @@ int CommandStuckCharacter::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandStuckCharacter::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandStuckCharacter::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, moving;

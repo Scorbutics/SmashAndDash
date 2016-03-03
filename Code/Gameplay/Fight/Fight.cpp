@@ -1,17 +1,13 @@
-#include <iostream>
-#include <cstdlib>
-#include <string>
-#include <vector>
-#include <sstream>
-#include <stdint.h>
 
 #include "Fight.h"
 #include "..\WGameCore.h"
-#include "..\World\LayerE.h"
+#include "../../ska/World\LayerE.h"
 #include "../../Utils\ChargementImages.h"
 #include "..\Data\Statistics.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Exceptions/IllegalStateException.h"
+#include "../../ska/Utils/StringUtils.h"
+#include "../../ska/Exceptions/IllegalStateException.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 Fight::Fight(): m_animGrass(1, 3, false)
 {
@@ -23,7 +19,7 @@ Fight::Fight(): m_animGrass(1, 3, false)
 	buf.h = 16;
 	m_animGrass.setOffsetAndFrameSize(buf);
 
-    m_grassSprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"grass.png", T_RED, T_GREEN, T_BLUE);
+    m_grassSprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"grass.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     m_pkmn = NULL;
     m_trainer = wScreen.getEntityFactory().getTrainer();
     m_opponent = NULL;
@@ -45,7 +41,7 @@ Fight::Fight(): m_animGrass(1, 3, false)
 void Fight::setAreasFromLayerEvent()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
     this->deleteAllAreas();
     for(int i = 0; i < w.getLayerEvent()->getNbrLignes(); i++)
@@ -73,7 +69,7 @@ bool Fight::isInFightArea(Player* hero)
 	ska::Rectangle absolutePos = hero->getHitboxCenterPos();
 
     for(unsigned int i = 0; i < m_areaList.size(); i++)
-        if(IsPositionInBox(&absolutePos, &(m_areaList[i])))
+        if(ska::RectangleUtils::isPositionInBox(&absolutePos, &(m_areaList[i])))
             return true;
 
     return false;
@@ -107,7 +103,7 @@ void Fight::deleteAllAreas()
 void Fight::start(Character* opponent)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 	int time;
 	
     m_pkmn = wScreen.getPokemonManager().getFirstUsablePokemon();
@@ -194,7 +190,7 @@ void Fight::start(Character* opponent)
 			
 			relativePos.x = randomPos.x + wScreen.getORel().x;
 			relativePos.y = randomPos.y + wScreen.getORel().y;
-		} while (!IsPositionInBox(&relativePos, &boxScreen));
+		} while (!ska::RectangleUtils::isPositionInBox(&relativePos, &boxScreen));
 
 	}while(wScreen.getWorld().getCollision(randomPos.x/TAILLEBLOC, randomPos.y/TAILLEBLOC) || !wScreen.detectEntity(randomPos).empty()); 
 	
@@ -366,7 +362,7 @@ void Fight::refresh()
 	if(m_fightCount == 2 && isInFightArea(m_trainer)) //Si on se trouve en zone de combat potentiel
 	{
 		m_fightCount = 0;
-		IniReader* reader = GetRandomMobSettings(&wScreen.getWorld());
+		ska::IniReader* reader = GetRandomMobSettings(&wScreen.getWorld());
 
 		if(reader != NULL)
 			start(wScreen.getEntityFactory().createOpponent(reader));

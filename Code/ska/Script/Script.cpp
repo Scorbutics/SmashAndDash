@@ -15,6 +15,7 @@
 #include "Command\CommandIf.h"
 #include "Command\CommandElse.h"
 #include "Command\CommandElseEnd.h"
+#include "ScriptDispatcher.h"
 
 #define TRIGGER_AUTO_PERIODIC 0
 #define TRIGGER_PRESS_KEY 1
@@ -32,10 +33,11 @@ unordered_map<string, ska::CommandPtr> createCmdMap() {
 unordered_map<string, ska::CommandPtr> ska::Script::m_commands = createCmdMap();
 unsigned int ska::Script::MAX_CONSECUTIVE_COMMANDS_PLAYED = 5;
 
-void ska::Script::commonPartConstructor(const unsigned int scriptPeriod, const int triggeringType) {
+void ska::Script::commonPartConstructor(const unsigned int scriptPeriod, const int triggeringType, const std::string& context) {
 	m_fscript.open(m_fullPath.c_str());
 	m_scriptPeriod = scriptPeriod;
 	m_commandsPlayed = 0;
+	m_context = context;
 	m_state = EnumScriptState::STOPPED;
 	m_triggeringType = triggeringType;
 	m_lastTimeDelayed = 0;
@@ -47,12 +49,20 @@ std::unordered_map<std::string, std::string>& ska::Script::getVarMap()
 	return m_varMap;
 }
 
-ska::Script::Script(const int triggeringType, const unsigned int scriptPeriod, const std::string& fullPath, const std::string& extendedName, const std::string& key) : m_extendedName(extendedName), m_fullPath(fullPath), m_key(key) {
-	commonPartConstructor(scriptPeriod, triggeringType);
+ska::Script::Script(ScriptDispatcher& parent, const int triggeringType, const unsigned int scriptPeriod, const std::string& fullPath, const std::string& extendedName, const std::string& context, const std::string& key) : m_parent(parent), m_extendedName(extendedName), m_fullPath(fullPath), m_key(key) {
+	commonPartConstructor(scriptPeriod, triggeringType, context);
 }
 
-ska::Script::Script(const int triggeringType, const unsigned int scriptPeriod, const std::string& fullPath, const std::string& extendedName, const std::string& key, const vector<string>& extraArgs) : m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs), m_key(key) {
-	commonPartConstructor(scriptPeriod, triggeringType);
+ska::ScriptDispatcher& ska::Script::getParent() {
+	return m_parent;
+}
+
+std::string ska::Script::getContext() const {
+	return m_context;
+}
+
+ska::Script::Script(ScriptDispatcher& parent, const int triggeringType, const unsigned int scriptPeriod, const std::string& fullPath, const std::string& extendedName, const std::string& context, const std::string& key, const vector<string>& extraArgs) : m_parent(parent), m_extendedName(extendedName), m_fullPath(fullPath), m_extraArgs(extraArgs), m_key(key) {
+	commonPartConstructor(scriptPeriod, triggeringType, context);
 }
 
 std::string ska::Script::nextLine() {
@@ -210,7 +220,7 @@ std::string ska::Script::getFullPath() const {
 	return m_fullPath;
 }
 
-void ska::Script::killAndSave(const ska::Savegame& savegame) {
+void ska::Script::killAndSave(const Savegame& savegame) {
 	string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
 	std::ofstream scriptList;
 	scriptList.open(tmpScritFileName.c_str(), ios::app);

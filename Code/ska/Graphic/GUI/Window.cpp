@@ -1,12 +1,9 @@
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
 #include <fstream>
 #include "../../Utils/SkaConstants.h"
 #include "Window.h"
-
+#include "../Texture.h"
 using namespace std;
 
 #define TAILLEBLOCFENETRE 32
@@ -16,6 +13,7 @@ using namespace std;
 
 ska::Window::Window()
 {
+	Texture::setDefaultWindow(this);
 	m_flip = true;
     m_laFenetre = TAILLEECRANMINX*2;
 	m_loFenetre = TAILLEECRANMINY*3/2;

@@ -3,8 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
-#include "../Texture.h"
+#include "../../ska/Graphic/Texture.h"
 
 class SpriteBank;
 
@@ -30,7 +29,7 @@ class Bar
 	ska::Rectangle getPos();
 	~Bar();
     protected:
-    Texture m_barStyle, m_barContent;
+		ska::Texture m_barStyle, m_barContent;
 	ska::Rectangle m_pos, m_barSize;
     int m_maxValue, m_curValue;
     bool m_visible;

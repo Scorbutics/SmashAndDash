@@ -5,7 +5,7 @@
 #include <string>
 #include "DynamicWindowArea.h"
 #include "../../Gameplay/Inventory/Inventory.h"
-#include "../Rectangle.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 using namespace std;
 

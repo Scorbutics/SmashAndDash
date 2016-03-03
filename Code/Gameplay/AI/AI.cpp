@@ -1,10 +1,11 @@
 
 #include "AI.h"
 #include "../../Utils\IDs.h"
-#include <SDL2\SDL_timer.h>
 #include "..\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../Gameplay/Fight/Skill.h"
+#include "../../ska/Utils/RectangleUtils.h"
+#include "../../ska/Inputs/InputListener.h"
 using namespace std;
 
 AI::AI()
@@ -54,7 +55,7 @@ Character* AI::getOpponent()
 void AI::act(Fight& fight)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
     if(fight.getOpponent() == NULL || !fight.isFighting())
         return;
@@ -75,7 +76,7 @@ void AI::act(Fight& fight)
         switch(pathProbInt)
         {
             case 0:
-				pathChar[0] = GetCharFromDirection(GetDirectionFromPos(&opponentPos, &pkmnPos)%4);
+				pathChar[0] = GetCharFromDirection(ska::RectangleUtils::getDirectionFromPos(&opponentPos, &pkmnPos) % 4);
 				fight.getOpponent()->getPath()->setPathString(pathChar);
             break;
 
@@ -97,9 +98,9 @@ void AI::act(Fight& fight)
 		ska::Rectangle posTrainer = trainer->getPos(), posPkmn = wScreen.getFight().getPokemon()->getPos();
 
 		if (r == 0)
-			direction = GetDirectionFromPos(&posPkmn, &posTrainer) + 1;
+			direction = ska::RectangleUtils::getDirectionFromPos(&posPkmn, &posTrainer) + 1;
 		else if (r == 1)
-			direction = GetDirectionFromPos(&posPkmn, &posTrainer) - 1;
+			direction = ska::RectangleUtils::getDirectionFromPos(&posPkmn, &posTrainer) - 1;
 		else
 			trainer->getPath()->setPathString("");
 		
@@ -120,6 +121,6 @@ void AI::act(Fight& fight)
     centerPos.x += wScreen.getORel().x;
     centerPos.y += wScreen.getORel().y;
 
-    if(!IsPositionInBox(&centerPos, &screenRect) || !wScreen.getFight().getOpponent()->isAlive())
+	if (!ska::RectangleUtils::isPositionInBox(&centerPos, &screenRect) || !wScreen.getFight().getOpponent()->isAlive())
 		fight.end(EndFightReason::Win);
 }

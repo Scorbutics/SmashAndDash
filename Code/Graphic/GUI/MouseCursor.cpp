@@ -1,12 +1,12 @@
 #include <string>
 #include <vector>
-#include <SDL2/SDL.h>
 
 #include "MouseCursor.h"
 #include "../../Gameplay/WGameCore.h"
-#include "../SpritePath.h"
+#include "../../ska/Graphic/SpritePath.h"
 #include "../../Gameplay/Data/Statistics.h"
-#include "../../Utils/StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
+#include "../../Utils/IDs.h"
 
 MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
 {
@@ -20,14 +20,14 @@ MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
     m_stockObject = NULL;
     m_stockPkmn = NULL;
 
-    m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"mousec.png", T_RED, T_GREEN, T_BLUE);
+	m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"mousec.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     m_hintBox = unique_ptr<DialogMenu>(new DialogMenu("hintbox", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hintboxmenu.png", buf, 20));
     buf.w = m_sprite.getWidth()/3;
     buf.h = m_sprite.getHeight();
     m_aniCursor.setOffsetAndFrameSize(buf); //initialisation de l'animation
 }
 
-Animation* MouseCursor::getAnimation()
+ska::Animation* MouseCursor::getAnimation()
 {
     return &m_aniCursor;
 }
@@ -120,7 +120,7 @@ void MouseCursor::displaySelectedPokemon()
 	ska::Rectangle rectPkmnSprite, mousePos = m_in->getMousePos();
     if(m_stockPkmn != NULL)
     {
-		Texture pkmn(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_stockPkmn->getID()), T_RED, T_GREEN, T_BLUE);
+		ska::Texture pkmn(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_stockPkmn->getID()), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
         rectPkmnSprite.x = 0;
         rectPkmnSprite.y = m_stockPkmn->getHeight();
         rectPkmnSprite.w = m_stockPkmn->getWidth();

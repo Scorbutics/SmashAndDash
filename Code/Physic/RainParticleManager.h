@@ -1,7 +1,7 @@
 #pragma once
 #include "../ska/Physic/ParticleManager.h"
 
-class RainParticleManager : public ParticleManager
+class RainParticleManager : public ska::ParticleManager
 {
 public:
 	RainParticleManager();

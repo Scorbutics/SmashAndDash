@@ -1,6 +1,6 @@
 #include "CommandFollow.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandFollow::CommandFollow()
 {
@@ -15,7 +15,7 @@ int CommandFollow::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandFollow::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandFollow::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, id_target, number_target, flag;

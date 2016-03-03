@@ -1,9 +1,10 @@
 #include "WindowTeam.h"
-#include <stdint.h>
 #include "../../Gameplay\WGameCore.h"
 #include "../../Gameplay\PokemonManager.h"
 #include "Inventory_Area.h"
 #include "../../Utils\ChargementImages.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -66,7 +67,7 @@ void WindowTeam::refresh()
 {
     MovableWindow::refresh();
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput* in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 	PokemonManager& pkmnMng = wScreen.getPokemonManager();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 
@@ -82,7 +83,7 @@ void WindowTeam::refresh()
     {
  
 		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize(), mouseClickPos = in->getMouseClickPos();
-        if(pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && IsPositionInBox(&mouseClickPos, &rectSlot)) //Si on clique dans la fenetre d'un slot
+        if(pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mouseClickPos, &rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));
 			pkmnMng.remove(i);
@@ -90,7 +91,7 @@ void WindowTeam::refresh()
             m_indexCursor = i;
             break;
         }
-        else if(in->mouseClick(SDL_BUTTON_LEFT) && mouseCur.getPokemon() != NULL && IsPositionInBox(&mouseClickPos, &rectSlot))
+		else if (in->mouseClick(SDL_BUTTON_LEFT) && mouseCur.getPokemon() != NULL && ska::RectangleUtils::isPositionInBox(&mouseClickPos, &rectSlot))
         {
             pkmnMng.add(mouseCur.getPokemon());
 			mouseCur.removePokemon();

@@ -1,11 +1,9 @@
 #ifndef DEF_GANIMATION
 #define DEF_GANIMATION
 
-#include <vector>
-#include <memory>
-#include "Rectangle.h"
+#include "../ska/Graphic/Rectangle.h"
+#include "../ska/World/Layer.h"
 
-class Layer;
 
-ska::Rectangle TileAnimationManagement(Layer *monde, ska::Rectangle posMap, ska::Rectangle& OfChip);
+ska::Rectangle TileAnimationManagement(ska::Layer *monde, ska::Rectangle posMap, ska::Rectangle& OfChip);
 #endif

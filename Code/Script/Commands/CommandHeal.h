@@ -1,14 +1,13 @@
 #pragma once
-#include "AbstractFunctionCommand.h"
-#include <map>
+#include "../../ska/Script/Command/AbstractFunctionCommand.h"
 class CommandHeal :
-	public AbstractFunctionCommand
+	public ska::AbstractFunctionCommand
 {
 public:
 	CommandHeal();
 	virtual ~CommandHeal();
 
-	virtual std::string execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList) override;
+	virtual std::string execute(ska::IScript* script, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

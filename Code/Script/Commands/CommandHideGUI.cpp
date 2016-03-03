@@ -1,6 +1,6 @@
 #include "CommandHideGUI.h"
 #include "../../Gameplay\WGameCore.h"
-#include "../../Utils\StringUtils.h"
+#include "../../ska/Utils\StringUtils.h"
 
 CommandHideGUI::CommandHideGUI()
 {
@@ -15,7 +15,7 @@ int CommandHideGUI::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandHideGUI::execute(IScript* script, std::vector<std::string>& args, std::ofstream& scriptList)
+std::string CommandHideGUI::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	int b;
 	WGameCore& wScreen = WGameCore::getInstance();

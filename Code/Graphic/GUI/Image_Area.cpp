@@ -10,7 +10,7 @@
 using namespace std;
 
 Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, string name, bool alpha) : Window_Area(parent),
-m_image(name, T_RED, T_GREEN, T_BLUE, alpha ? 128 : -1)
+m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 {
     m_type = BUTTON_IMAGE_AREA;
     m_active = parent->isVisible();
@@ -30,7 +30,7 @@ m_image(name, T_RED, T_GREEN, T_BLUE, alpha ? 128 : -1)
 	
 }
 
-Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle *rectSrcBuf, Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
+Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle *rectSrcBuf, ska::Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
 {
 	m_type = BUTTON_IMAGE_AREA;
 	m_active = parent->isVisible();
@@ -52,7 +52,7 @@ void Image_Area::setImage(string name, bool alpha)
 {
     m_name = name;
 	m_alpha = alpha;
-	m_image.load(m_name, T_RED, T_GREEN, T_BLUE, alpha ? 128 : -1);
+	m_image.load(m_name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1);
 }
 
 std::string Image_Area::getImageName() const

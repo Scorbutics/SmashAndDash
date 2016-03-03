@@ -3,10 +3,9 @@
 
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
 #include <vector>
-#include "../Graphic/Texture.h"
-#include "../Graphic/Draw/DrawableFixedPriority.h"
+#include "../ska/Graphic/Texture.h"
+#include "../ska/Graphic/Draw/DrawableFixedPriority.h"
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage
  .hide();                             //Permet de cacher/afficher le temps
@@ -19,7 +18,7 @@
  .getFrequency();
  .getDirection();
  .getIntensity();
-*/
+*/ 
 class World;
 
 class Weather : public DrawableFixedPriority
@@ -49,7 +48,7 @@ class Weather : public DrawableFixedPriority
 
     protected:
      int m_intensityX, m_intensityY, m_number, m_distance;
-     std::unique_ptr<Texture> m_weather;
+     std::unique_ptr<ska::Texture> m_weather;
      std::vector<float> m_x, m_y;
      bool m_active, m_mosaic;
 

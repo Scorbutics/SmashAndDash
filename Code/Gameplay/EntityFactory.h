@@ -1,6 +1,8 @@
 #ifndef DEF_ENTITY_MANAGER
 #define DEF_ENTITY_MANAGER
 
+#include "../ska/Inputs/Readers/IniReader.h"
+
 class WGameCore;
 
 class EntityFactory
@@ -19,7 +21,7 @@ class EntityFactory
 	
 	
 		void createTrainer();
-		Character* createOpponent(IniReader* dataMob);
+		Character* createOpponent(ska::IniReader* dataMob);
 		void addNPC(int id, ska::Rectangle posEntity, string pathStringEntity);
 		void addNPC(Character* npc);
 		void remove(int id, unsigned entityNumber);

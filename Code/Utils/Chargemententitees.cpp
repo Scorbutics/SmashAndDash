@@ -8,8 +8,8 @@
 #include "../Utils\IDs.h"
 #include "Chargemententitees.h"
 #include "../Gameplay/WGameCore.h"
-#include "../Gameplay/World/LayerE.h"
-#include "../Graphic/Rectangle.h"
+#include "../ska/World/LayerE.h"
+#include "../ska/Graphic/Rectangle.h"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ void LoadEntities()
 {
 	ska::Rectangle posEntity;
 	WGameCore& wScreen = WGameCore::getInstance();
-	World& w = wScreen.getWorld();
+	ska::World& w = wScreen.getWorld();
 
 
     //Suppression des anciennes entités

@@ -1,6 +1,7 @@
 #include "Button.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -8,8 +9,8 @@ Button::Button(DialogMenu* parent, ska::Rectangle relativePos, std::string style
 {
     m_static = bstatic;
     m_index = 0;
-    m_buttonStyle.load(styleName, T_RED, T_GREEN, T_BLUE);
-    m_buttonStylePressed.load(styleNamePressed, T_RED, T_GREEN, T_BLUE);
+    m_buttonStyle.load(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+    m_buttonStylePressed.load(styleNamePressed, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     m_fontSize = fontSize;
     m_displayedText = displayedText;
     m_relativePos = relativePos;
@@ -47,16 +48,16 @@ void Button::display()
         m_active = true;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    MouseInput *in = wScreen.getInputListener().getMouseInput();
+    ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
 	ska::Rectangle buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
     buf.x += (m_parent->getPos())->x;
     buf.y += (m_parent->getPos())->y;
     textPos.w = m_stext.getWidth();
     textPos.h = m_stext.getHeight();
 
-    textPos = PosToCenterPicture(&textPos ,&buf);
+	textPos = ska::RectangleUtils::posToCenterPicture(&textPos, &buf);
 
-    if(!m_static && IsPositionInBox(&mousePos, &buf) && in->getMouseState(SDL_BUTTON_LEFT)) //Si on presse le bouton
+	if (!m_static && ska::RectangleUtils::isPositionInBox(&mousePos, &buf) && in->getMouseState(SDL_BUTTON_LEFT)) //Si on presse le bouton
     {
 		m_buttonStylePressed.render(buf.x, buf.y);
         textPos.x += 2; //pour faire un effet "bouton enfoncé", on décale le texte vers le bas droite
@@ -71,16 +72,16 @@ void Button::display()
 void Button::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	MouseInput *in = wScreen.getInputListener().getMouseInput();
+	ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
 	ska::Rectangle buf = m_relativePos, textPos = m_relativePos, mousePos = in->getMousePos();
 	buf.x += (m_parent->getPos())->x;
 	buf.y += (m_parent->getPos())->y;
 	textPos.w = m_stext.getWidth();
 	textPos.h = m_stext.getHeight();
 
-	textPos = PosToCenterPicture(&textPos ,&buf);
+	textPos = ska::RectangleUtils::posToCenterPicture(&textPos, &buf);
 
-	if(!m_static && IsPositionInBox(&mousePos, &buf) && in->mouseClick(SDL_BUTTON_LEFT) && m_variable != NULL) //Si on a cliqué sur le bouton (différent de l'état "bouton pressé" !)
+	if (!m_static && ska::RectangleUtils::isPositionInBox(&mousePos, &buf) && in->mouseClick(SDL_BUTTON_LEFT) && m_variable != NULL) //Si on a cliqué sur le bouton (différent de l'état "bouton pressé" !)
 	{
 		//m_parent->pause();
 		m_index++;

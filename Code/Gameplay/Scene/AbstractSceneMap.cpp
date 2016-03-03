@@ -1,9 +1,9 @@
 #include "../WGameCore.h"
 #include "../Weather.h"
-#include "../World/World.h"
+#include "../../ska/World/World.h"
 #include "../../Graphic/Scrolling.h"
-#include "../../Script/ScriptDispatcher.h"
-#include "../World/LayerE.h"
+#include "../../ska/Script/ScriptDispatcher.h"
+#include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
 AbstractSceneMap::AbstractSceneMap()
@@ -12,7 +12,7 @@ AbstractSceneMap::AbstractSceneMap()
 
 void AbstractSceneMap::graphicUpdate(DrawableContainer& drawables) {
 	WGameCore& core = WGameCore::getInstance();
-	World& world = core.getWorld();
+	ska::World& world = core.getWorld();
 	GUI& gui = core.getGUI();
 	
 
@@ -30,7 +30,7 @@ void AbstractSceneMap::graphicUpdate(DrawableContainer& drawables) {
 void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
 	GUI& gui = core.getGUI();
-	InputListener& kdListener = core.getInputListener();
+	ska::InputListener& kdListener = core.getInputListener();
 	
 	AbstractNoGUISceneMap::eventUpdate(stuck);
 

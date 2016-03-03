@@ -6,23 +6,21 @@
 #include <vector>
 #include <memory>
 #include "..\Character.h"
-#include "../../Inputs\Readers\IniReader.h"
-#include "../../Graphic\Texture.h"
-#include "../../Physic\Particle.h"
-
-using namespace std;
+#include "../../ska/Inputs\Readers\IniReader.h"
+#include "../../ska/Graphic\Texture.h"
+#include "../../ska/Physic\Particle.h"
 
 
 class Skill
 {
     public:
-	Skill(IniReader* data, Character* parent);
+	Skill(ska::IniReader* data, Character* parent);
 	
 	unsigned int getRange();
 	int getKnockback();
 	void setKnockback(int knockback);
-    Texture* getIcon();
-    void setIcon(Texture* icon);
+    ska::Texture* getIcon();
+    void setIcon(ska::Texture* icon);
     string getName();
 	void setPosIcon(ska::Rectangle posIcone);
 	ska::Rectangle getPosIcon();
@@ -31,9 +29,9 @@ class Skill
     void setDescription(string description);
 	virtual void launch(ska::Rectangle dest) = 0;
     bool cooldownOK();
-    Texture* getSpriteRemainingCD();
+    ska::Texture* getSpriteRemainingCD();
     string getType();
-    Particle* getParticle(unsigned int number);
+    ska::Particle* getParticle(unsigned int number);
     void setType(string type);
     virtual void refresh() = 0;
 	virtual void display() = 0;
@@ -44,17 +42,17 @@ class Skill
     int getContext();
 
     protected:
-    std::vector<unique_ptr<Particle>> m_particles;
+    std::vector<ska::ParticlePtr> m_particles;
     Character* m_parent;
     SDL_Color m_color;
 	ska::Rectangle m_src, m_dst, m_anim;
     vector<float> m_x, m_y; //m_x m_y seront des coordonnées précises (sans se limiter aux entiers pour les pixels)
     vector<bool> m_actif;
-    Texture m_cooldownText;
+    ska::Texture m_cooldownText;
     int m_comptAnim, m_direction, m_context, m_id;
     int m_cooldown, m_lastTimeCD, m_timeCD, m_degats, m_knockback;
 	unsigned int m_range;
-    Texture m_icone;
+    ska::Texture m_icone;
     string m_description, m_name, m_type, m_style1, m_style2;
 	ska::Rectangle m_posIcone;
 	unique_ptr<Statistics> m_statsBuffAlly, m_statsBuffEnemy;
@@ -70,7 +68,7 @@ typedef std::unique_ptr<Skill> Skill_ptr;
 class Projectile : public Skill
 {
     public:
-    Projectile(IniReader* data, Character* parent);
+    Projectile(ska::IniReader* data, Character* parent);
     virtual void refresh();
     virtual ~Projectile();
 	void setSpeed(float vitesse);
@@ -88,7 +86,7 @@ private:
 class AOE : public Skill
 {
 public:
-	AOE(IniReader* data, Character* parent);
+	AOE(ska::IniReader* data, Character* parent);
 	virtual void refresh();
 	virtual void launch(ska::Rectangle dest);
 	virtual ~AOE();

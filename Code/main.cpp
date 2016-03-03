@@ -11,8 +11,8 @@
 #include <SDL2/SDL_image.h>
 #include "Gameplay/WGameCore.h"
 #include "./Utils/ChargementDonneesMonde.h"
-#include "./Exceptions/GenericException.h"
-#include "./Utils/MessagePopup.h"
+#include "./ska/Exceptions/GenericException.h"
+#include "./ska/Utils/MessagePopup.h"
 
 using namespace std;
 typedef unique_ptr<Character> Character_ptr;
@@ -61,7 +61,7 @@ int main (int argc, char *argv[])
 	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
 		cerr << e.what() << endl;
-		MessagePopup(MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
+		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
 	}
     
 	IMG_Quit();

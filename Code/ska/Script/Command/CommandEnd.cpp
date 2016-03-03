@@ -26,5 +26,5 @@ const std::string& ska::CommandEnd::getCmdName() {
 }
 
 std::string ska::CommandEnd::execute(ska::IScript* script, std::vector<std::string>& args) {
-	throw ska::ScriptDiedException("end cmd");
+	throw ska::ScriptDiedException("");
 }

@@ -1,14 +1,13 @@
-#include "../Utils\IDs.h"
+#include "../Utils/IDs.h"
 #include "GestionAnimations.h"
-#include "../Gameplay\WGameCore.h"
-#include "../Gameplay\World\Layer.h"
+#include "../Gameplay/WGameCore.h"
 
 #define COMPTEUR_ANIM 26
 
 using namespace std;
 
 
-ska::Rectangle TileAnimationManagement(Layer *monde, ska::Rectangle posMap, ska::Rectangle &OfChip)
+ska::Rectangle TileAnimationManagement(ska::Layer *monde, ska::Rectangle posMap, ska::Rectangle &OfChip)
 {
    //Uint32 /*brightColor = SDL_MapRGB(screen->format, 170, 170, 170),*/ darkColor = SDL_MapRGB(screen->format, 70, 70, 70);
 	WGameCore& wScreen = WGameCore::getInstance();

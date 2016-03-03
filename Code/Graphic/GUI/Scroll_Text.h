@@ -1,13 +1,11 @@
 #ifndef DEF_SCROLL_TEXT
 #define DEF_SCROLL_TEXT
 
-#include <iostream>
 #include <string>
-#include <SDL2/SDL_ttf.h>
 #include <vector>
-#include "../Rectangle.h"
+#include "../../ska/Graphic/Rectangle.h"
 #include "DynamicWindowArea.h"
-#include "../Texture.h"
+#include "../../ska/Graphic/Texture.h"
 
 using namespace std;
 
@@ -24,8 +22,8 @@ class Scroll_Text : public DynamicWindowArea
     vector<string> m_text;
     unsigned int m_fontSize, m_linesNumber, m_width;
     int m_lastMouseState, m_start;
-    vector<Texture> m_stext;
-    Texture m_topArrow, m_botArrow, m_cursor, m_scrollBar;
+    vector<ska::Texture> m_stext;
+    ska::Texture m_topArrow, m_botArrow, m_cursor, m_scrollBar;
 	ska::Rectangle m_posTopArrow, m_posBotArrow, m_posCursor;
     SDL_Color m_color;
 };

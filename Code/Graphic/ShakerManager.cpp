@@ -1,7 +1,6 @@
 #include "ShakerManager.h"
 #include "../Gameplay\WGameCore.h"
-#include "../Utils\Singleton_template.h"
-#include "../Graphic/Rectangle.h"
+#include "../ska/Graphic/Rectangle.h"
 
 ShakerManager::ShakerManager()
 {

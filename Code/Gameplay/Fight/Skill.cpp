@@ -1,19 +1,14 @@
-#include <stdint.h>
 #include <iostream>
-#include <string>
-#include <SDL2/SDL.h>
-#include <fstream>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
-#include <math.h>
 
 #include "Skill.h"
-#include "../../Physic/LinearParticle.h"
+#include "../../ska/Physic/LinearParticle.h"
 #include "../WGameCore.h"
 #include "../../Utils/ChargementImages.h"
-#include "../../Graphic/SpritePath.h"
+#include "../../ska/Graphic/SpritePath.h"
 #include "../../Gameplay/Data/Statistics.h"
-#include "../../Utils/StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
+#include "../../ska/Utils/RectangleUtils.h"
+#include "../../Utils/IDs.h"
 
 const unsigned int Skill::m_fontSize = 30;
 
@@ -24,7 +19,7 @@ using namespace std;
 //avec pour héro le pokemon qui combat, et pour seules entités : le héro, fixe, le pokémon adverse et notre pokémon).
 bool CollisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB);
 
-Projectile::Projectile(IniReader* data, Character* parent):
+Projectile::Projectile(ska::IniReader* data, Character* parent):
 	Skill(data, parent)
 {
 	if(m_style1 == "Projectile" || m_style2 == "Projectile")
@@ -56,7 +51,7 @@ Projectile::Projectile(IniReader* data, Character* parent):
 		nullPos.w = 0;
 		nullPos.h = 0;
 
-		m_particles.push_back(unique_ptr<LinearParticle>(new LinearParticle(m_id, nullPos, 30, 10, false, false)));
+		m_particles.push_back(unique_ptr<ska::LinearParticle>(new ska::LinearParticle(m_id, nullPos, 30, 10, false, false)));
 		m_particles[i]->toSkillParticle();
 	}
 }
@@ -78,7 +73,7 @@ void Projectile::refresh()
 			particleOrigin = m_particles[i]->getOrigin();
 			particleOrigin.x += wScreen.getORel().x;
 			particleOrigin.y += wScreen.getORel().y;
-			distance = DistanceSquared(&particlePos, &particleOrigin);
+			distance = ska::RectangleUtils::distanceSquared(&particlePos, &particleOrigin);
 			//Si on dépasse la portée prévue, on détruit la particule
 			if (distance > m_range*TAILLEBLOC*m_range*TAILLEBLOC)
 				m_particles[i]->destroy();
@@ -104,7 +99,7 @@ Projectile::~Projectile()
 
 
 
-AOE::AOE(IniReader* data, Character* parent):
+AOE::AOE(ska::IniReader* data, Character* parent):
 	Skill(data, parent)
 {
 	m_active = false;
@@ -112,7 +107,7 @@ AOE::AOE(IniReader* data, Character* parent):
 
 void AOE::launch(ska::Rectangle pos)
 {
-	Texture text(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, m_range-1+3), T_RED, T_GREEN, T_BLUE, 128);
+	ska::Texture text(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, m_range-1+3), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::Rectangle ppos = m_parent->getHitboxCenterPos();
 	ppos.x -= text.getWidth()/4;
@@ -135,7 +130,7 @@ void AOE::refresh()
 	if (pkmn != NULL && opponent != NULL)
 	{
 		ska::Rectangle pkmnPos = pkmn->getPos(), opponentPos = opponent->getPos();
-		if(DistanceSquared(&pkmnPos, &opponentPos) <= (m_range*m_range*TAILLEBLOC*TAILLEBLOC))
+		if (ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= (m_range*m_range*TAILLEBLOC*TAILLEBLOC))
 		{
 			m_active = false;
 			//opposant qui tire
@@ -234,7 +229,7 @@ Melee::~Melee()
 
 
 
-Skill::Skill(IniReader* data, Character* parent)
+Skill::Skill(ska::IniReader* data, Character* parent)
 {
 	m_statsBuffAlly = NULL;
 	m_statsBuffEnemy = NULL;
@@ -256,7 +251,7 @@ Skill::Skill(IniReader* data, Character* parent)
 	m_type = data->getString("Description type");
 	m_context = data->getInt("Description context");
 	m_id = data->getInt("Description id");
-	m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", T_RED, T_GREEN, T_BLUE);
+	m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	m_cooldown = data->getInt("Stats cooldown");
 	m_range = data->getInt("Stats blocks_range");
@@ -313,7 +308,7 @@ void Projectile::launch(ska::Rectangle dest)
     if((dest.x - buf.x) < 0)
        angle += (float)M_PI;
 	
-	m_direction = GetDirectionFromPos(&buf, &dest);
+	m_direction = ska::RectangleUtils::getDirectionFromPos(&buf, &dest);
     buf.x -= wScreen.getORel().x;
     buf.y -= wScreen.getORel().y;
     
@@ -352,7 +347,7 @@ int Skill::getContext()
     return m_context;
 }
 
-Texture* Skill::getSpriteRemainingCD()
+ska::Texture* Skill::getSpriteRemainingCD()
 {
     return &m_cooldownText;
 }
@@ -455,7 +450,7 @@ void Projectile::collision()
 
 }
 
-Particle* Skill::getParticle(unsigned int number)
+ska::Particle* Skill::getParticle(unsigned int number)
 {
     if(number < m_particles.size())
         return &(*m_particles[number]);
@@ -464,12 +459,12 @@ Particle* Skill::getParticle(unsigned int number)
 }
 
 
-Texture* Skill::getIcon()
+ska::Texture* Skill::getIcon()
 {
     return &m_icone;
 }
 
-void Skill::setIcon(Texture *icone)
+void Skill::setIcon(ska::Texture *icone)
 {
     m_icone = *icone;
 }

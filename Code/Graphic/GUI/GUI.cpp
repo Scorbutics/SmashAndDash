@@ -1,23 +1,22 @@
 #include <string>
-#include <SDL2/SDL.h>
 #include <fstream>
 #include <sstream>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
 #include <math.h>
 
 #include "../../Utils\IDs.h"
 #include "GUI.h"
 #include "../../Gameplay\WGameCore.h"
-#define SCROLL_BUTTON_SPEED 3
 #include "Window_Area.h"
 #include "Inventory_Area.h"
 #include "MouseCursor.h"
 #include "../../Utils/ChargementImages.h"
-#include "../../Utils/StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Gameplay/Fight/Skill.h"
+#include "../../ska/Utils/RectangleUtils.h"
 #include "MouseCursor.h"
+
+#define SCROLL_BUTTON_SPEED 3
 
 GUI::GUI()
 {
@@ -203,7 +202,7 @@ void GUI::display()
 void GUI::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    MouseInput *in = wScreen.getInputListener().getMouseInput();
+    ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
 	ska::Rectangle mousePos = in->getMousePos(), lastMousePos = in->getMouseLastPos(), bufButtonPos;
     bufButtonPos.w = (TAILLEBLOCFENETRE)*2;
     bufButtonPos.h = (TAILLEBLOCFENETRE)*2;
@@ -220,7 +219,7 @@ void GUI::refresh()
         {
             m_buttonList[i]->refresh();
 			ska::Rectangle buttonPos = *m_buttonList[i]->getPos();
-            if(IsPositionInBox(&mousePos, &buttonPos))
+			if (ska::RectangleUtils::isPositionInBox(&mousePos, &buttonPos))
             {
 
 
@@ -253,7 +252,7 @@ void GUI::refresh()
 
                 }
 
-				if (!IsPositionInBox(&lastMousePos, &buttonPos)) //si on change de bouton de la gui, on actualise le curseur
+				if (!ska::RectangleUtils::isPositionInBox(&lastMousePos, &buttonPos)) //si on change de bouton de la gui, on actualise le curseur
 				{
 					wScreen.getMouseCursor().modifyHint(m_buttonList[i]->getActionClic());
 					wScreen.getMouseCursor().hideHint(false);
@@ -267,7 +266,7 @@ void GUI::refresh()
             if(m_side == 0) // GUI disposée en bas à droite de l'écran
             {
                 m_buttonList[i]->setPos(bufButtonPos.x, (wScreen.getHeight() - m_buttonList[i]->getPos()->h/2) - m_buttonScroll[i]);
-                m_buttonList[i]->setPosImg(PosToCenterPicture(m_buttonList[i]->getPosImg(), &bufButtonPos).x, PosToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getPos()).y - TAILLEBLOCFENETRE/4);
+				m_buttonList[i]->setPosImg(ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), &bufButtonPos).x, ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getPos()).y - TAILLEBLOCFENETRE / 4);
                 bufButtonPos.x += 5*TAILLEBLOCFENETRE/2;
             }
 
@@ -304,7 +303,7 @@ void GUI::setClickMenu()
     if(invArea != NULL && m_wBag->isVisible())
     {
         invAreaAbsolutePos = invArea->getAbsolutePos();
-        if(IsPositionInBox(&mousePos, &invAreaAbsolutePos) && !IsPositionInBox(&mousePos, m_clickMenu->getPos()))
+		if (ska::RectangleUtils::isPositionInBox(&mousePos, &invAreaAbsolutePos) && !ska::RectangleUtils::isPositionInBox(&mousePos, m_clickMenu->getPos()))
         {
 			ska::Rectangle posClickMenu = mousePos;
             posClickMenu.x -= 5;
@@ -340,7 +339,7 @@ void GUI::setClickMenu()
 
 
         }
-        else if(!IsPositionInBox(&mousePos, m_clickMenu->getPos()))
+		else if (!ska::RectangleUtils::isPositionInBox(&mousePos, m_clickMenu->getPos()))
         {
             m_clickMenu->hide(true);
             *m_wBag->getBoolUseObject() = 0;
@@ -521,7 +520,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
     }
 }
 
-void GUI::update(Observable* obs, EventArg* e)
+void GUI::update(ska::Observable* obs, ska::EventArg* e)
 {
 }
 
@@ -564,7 +563,7 @@ void GUI::dialogDisplay()
         {
             if(!(*v)[i]->cooldownOK())
             {
-				Texture* cooldownText;
+				ska::Texture* cooldownText;
                 cooldownText = (*v)[i]->getSpriteRemainingCD();
                 cooldownPos.x = m_attackPokemon->getPos()->x + TAILLEBLOC/2 + (i+1) * (*v)[i]->getIcon()->getWidth();
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
@@ -590,7 +589,7 @@ void GUI::dialogDisplay()
     if(m_clickMenu->isVisible())
     {
 		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
-        if(IsPositionInBox(&mousePos , m_clickMenu->getPos()))
+		if (ska::RectangleUtils::isPositionInBox(&mousePos, m_clickMenu->getPos()))
             m_clickMenu->display();
         else
         {
@@ -654,7 +653,7 @@ void GUI::dialogRefresh()
 		{
 			if(!(*v)[i]->cooldownOK())
 			{
-				Texture* cooldownText;
+				ska::Texture* cooldownText;
 				cooldownText = (*v)[i]->getSpriteRemainingCD();
 				cooldownPos.x = m_attackPokemon->getPos()->x + TAILLEBLOC/2 + (i+1) * (*v)[i]->getIcon()->getWidth();
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
@@ -680,7 +679,7 @@ void GUI::dialogRefresh()
 	if(m_clickMenu->isVisible())
 	{
 		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
-		if(IsPositionInBox(&mousePos , m_clickMenu->getPos()))
+		if (ska::RectangleUtils::isPositionInBox(&mousePos, m_clickMenu->getPos()))
 			m_clickMenu->refresh();
 		else
 		{
@@ -731,7 +730,7 @@ DialogMenu* GUI::getInfoPokemonWindow()
 int GUI::isPositionOnButton(ska::Rectangle *pos)
 {
     for(unsigned int i = 0; i < m_buttonList.size(); i++)
-        if(IsPositionInBox(pos, m_buttonList[i]->getPos()))
+	if (ska::RectangleUtils::isPositionInBox(pos, m_buttonList[i]->getPos()))
             return i;
     return -1;
 }
@@ -764,7 +763,10 @@ bool GUI::isMouseOnAWindow()
 	ska::Rectangle r = wScreen.getInputListener().getMouseInput()->getMousePos();
 	const ska::Rectangle* mousePos = &r;
     //bool bagVisible = m_wBag->isVisible(), bagPos = IsPositionInBox(mousePos, m_wBag->getPos());
-    return ((m_wBag->isVisible() && IsPositionInBox(mousePos, m_wBag->getPos())) || (m_wSettings->isVisible() && IsPositionInBox(mousePos, m_wSettings->getPos())) || (m_wTeam->isVisible() && IsPositionInBox(mousePos, m_wTeam->getPos())) || (m_toolBar->isVisible() && IsPositionInBox(mousePos, m_toolBar->getPos())) );
+	return ((m_wBag->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wBag->getPos())) 
+		|| (m_wSettings->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wSettings->getPos())) 
+		|| (m_wTeam->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wTeam->getPos()))
+		|| (m_toolBar->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_toolBar->getPos())));
 }
 
 int GUI::getRefreshPNJWindowCount()
