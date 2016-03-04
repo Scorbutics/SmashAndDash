@@ -124,6 +124,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\ECS\Component\Component.h" />
+    <ClInclude Include="Code\ska\ECS\Component\GraphicComponent.h" />
+    <ClInclude Include="Code\ska\ECS\ECSDefines.h" />
+    <ClInclude Include="Code\ska\ECS\System\System.h" />
     <ClInclude Include="Code\ska\Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Code\ska\Exceptions\FileException.h" />
     <ClInclude Include="Code\ska\Exceptions\IndexOutOfBoundsException.h" />
@@ -299,8 +303,12 @@
     <ClInclude Include="Code\ska\Utils\RectangleUtils.h" />
     <ClInclude Include="Code\ska\Utils\FileUtils.h" />
     <ClInclude Include="Code\ska\Core\GameCore.h" />
+    <ClInclude Include="Code\ska\ECS\Component\PositionComponent.h" />
+    <ClInclude Include="Code\ska\ECS\System\GraphicSystem.h" />
+    <ClInclude Include="Code\ska\ECS\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ska\ECS\Component\GraphicComponent.cpp" />
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
@@ -436,6 +444,9 @@
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
+    <ClCompile Include="Code\ska\ECS\Component\PositionComponent.cpp" />
+    <ClCompile Include="Code\ska\ECS\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\ska\ECS\EntityManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
