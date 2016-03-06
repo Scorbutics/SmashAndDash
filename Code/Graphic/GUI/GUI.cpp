@@ -520,8 +520,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
     }
 }
 
-void GUI::update(ska::Observable* obs, ska::EventArg* e)
-{
+void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
 }
 
 void GUI::dialogDisplay()

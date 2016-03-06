@@ -1,30 +1,46 @@
 #include <cstdlib>
-#include <SDL2/SDL.h>
 #include <time.h>
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <SDL2/SDL_ttf.h>
 #include <memory>
 #include <vector>
 #include <sstream>
-#include <SDL2/SDL_image.h>
 #include "Gameplay/WGameCore.h"
 #include "./Utils/ChargementDonneesMonde.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Utils/MessagePopup.h"
-
+#include "ska\ECS\Core\EntityManager.h"
+#include "ska\ECS\System\GraphicSystem.h"
+#include "ska\ECS\Component\PositionComponent.h"
 using namespace std;
 typedef unique_ptr<Character> Character_ptr;
 
 WGameCore* wScreen;
+
+void ECSTest() {
+	ska::EntityManager em;
+	ska::GraphicSystem gs(em);
+
+	ska::PositionComponent pc;
+	pc.x = -1;
+	pc.y = -3;
+	pc.z = 70;
+	ska::EntityId entity = em.createEntity();
+	ska::GraphicComponent gc;
+	gc.sprite = ska::Texture();
+	em.addComponent<ska::PositionComponent>(entity, pc);
+	em.addComponent<ska::GraphicComponent>(entity, gc);
+	gs.refreshAll();
+
+}
 
 int main (int argc, char *argv[])
 {
     argc = argc;
     argv = argv;
 
-
+	ECSTest();
     int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
     string startMapName, startMapChipsetName;
 

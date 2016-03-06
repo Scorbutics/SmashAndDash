@@ -2,13 +2,23 @@
 #define DEF_OBSERVER
 
 #include <string>
-#include "../Inputs/EventArg.h"
-
 namespace ska {
+	class EventArg
+	{
+	public:
+		EventArg(){}
+		virtual int type() const = 0;
+		virtual ~EventArg(){}
+
+	};
+
+	template <class T>
 	class Observable;
+
+	template <class T>
 	class Observer {
 	public:
-		virtual void update(Observable* obs, EventArg* e) = 0;
+		virtual void update(Observable<T>* obs, const EventArg& e, T& t) = 0;
 	};
 }
 /*

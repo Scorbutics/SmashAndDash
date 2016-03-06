@@ -1,9 +1,9 @@
 #include "InputListener.h"
 #include "../Utils\SkaConstants.h"
-#include "EventArg.h"
+
+
 //#include "../Gameplay\WGameCore.h"
 
-int GetSkillCursorFromKey(ska::Input *in);
 
 ska::InputListener::InputListener()
 {
@@ -55,14 +55,14 @@ bool ska::InputListener::update()
 		m_keyEvent.setScancode(SDL_SCANCODE_LSHIFT);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 	else
 	{
 		m_keyEvent.setScancode(SDL_SCANCODE_LSHIFT);
 		m_keyEvent.setState(0);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 
 	
@@ -71,7 +71,7 @@ bool ska::InputListener::update()
 		m_keyEvent.setScancode(SDL_SCANCODE_RETURN);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 
 
@@ -81,7 +81,7 @@ bool ska::InputListener::update()
 		m_keyEvent.setScancode(SDL_SCANCODE_SPACE);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 
 
@@ -91,28 +91,28 @@ bool ska::InputListener::update()
 		m_keyEvent.setScancode(SDL_SCANCODE_1);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_2))
 	{
 		m_keyEvent.setScancode(SDL_SCANCODE_2);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_3))
 	{
 		m_keyEvent.setScancode(SDL_SCANCODE_3);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_4))
 	{
 		m_keyEvent.setScancode(SDL_SCANCODE_4);
 		m_keyEvent.setState(1);
 
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 	}
 
 
@@ -122,7 +122,7 @@ bool ska::InputListener::update()
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_S);
 		m_keyEvent.setSecondScancode(SDL_SCANCODE_D);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
        
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_W) && m_keyIn.getKeyState(SDL_SCANCODE_D))
@@ -130,7 +130,7 @@ bool ska::InputListener::update()
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_W);
 		m_keyEvent.setSecondScancode(SDL_SCANCODE_D);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_W) && m_keyIn.getKeyState(SDL_SCANCODE_A))
@@ -138,7 +138,7 @@ bool ska::InputListener::update()
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_W);
 		m_keyEvent.setSecondScancode(SDL_SCANCODE_A);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
 
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_S) && m_keyIn.getKeyState(SDL_SCANCODE_A))
@@ -146,35 +146,35 @@ bool ska::InputListener::update()
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_S);
 		m_keyEvent.setSecondScancode(SDL_SCANCODE_A);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_W))
     {
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_W);
 		m_keyEvent.setSecondScancode(-1);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_S))
     {
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_S);
 		m_keyEvent.setSecondScancode(-1);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_D))
     {
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_D);
 		m_keyEvent.setSecondScancode(-1);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
     }
 	else if (m_keyIn.getKeyState(SDL_SCANCODE_A))
     {
 		m_keyEvent.setState(1);
 		m_keyEvent.setScancode(SDL_SCANCODE_A);
 		m_keyEvent.setSecondScancode(-1);
-		notifyObservers(&m_keyEvent);
+		notifyObservers(m_keyEvent, 0);
     }
 	else if (m_mouseIn.mouseClick(SDL_BUTTON_RIGHT))   //Enclenchement du Pathfinding
     {

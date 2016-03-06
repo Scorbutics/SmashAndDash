@@ -618,27 +618,6 @@
     <ClInclude Include="Code\ska\Script\Command\CommandWait.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\ECS\Component\Component.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\Component\GraphicComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\Component\PositionComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\System\GraphicSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\System\System.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\ECSDefines.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\ECS\EntityManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Scene\HasGraphic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -651,7 +630,31 @@
     <ClInclude Include="Code\ska\Scene\Scene.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\ECS\ComponentHandler.h">
+    <ClInclude Include="Code\ska\ECS\Core\Component\Component.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Core\System\System.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Core\EntityManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Core\ComponentHandler.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Core\ECSDefines.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Component\GraphicComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Component\PositionComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\System\GraphicSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\Core\StaticCounterGlobal.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -902,9 +905,6 @@
     <ClCompile Include="Code\ska\Utils\NumberUtils.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Utils\Observable.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Utils\ScriptUtils.cpp">
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
@@ -1061,13 +1061,10 @@
     <ClCompile Include="Code\ska\Graphic\Font.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\ECS\Component\GraphicComponent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\ECS\Component\PositionComponent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\ECS\System\GraphicSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\ECS\Core\StaticCounterGlobal.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

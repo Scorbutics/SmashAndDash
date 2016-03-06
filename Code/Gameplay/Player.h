@@ -5,11 +5,11 @@
 #include "Character.h"
 
 class Player :
-	public Character, public ska::Observer
+	public Character, public ska::Observer<const int>
 {
 	public:
 		Player(int id);
-		virtual void update(ska::Observable* obs, ska::EventArg* e);
+		virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 		virtual void refresh();
 		virtual ~Player();
 };

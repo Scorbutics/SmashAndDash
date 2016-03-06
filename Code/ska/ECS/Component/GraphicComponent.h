@@ -1,18 +1,14 @@
 #pragma once
-#include "Component.h"
+#include "../Core/Component/Component.h"
 #include "../../Graphic/Texture.h"
 
 namespace ska {
-	class PositionComponent;
-	class GraphicComponent : public  Component {
+	class GraphicComponent : public Component {
 	public:
-		GraphicComponent();
-
-		Texture& getSprite();
-		virtual ~GraphicComponent();
-
-	private:
-		Texture m_sprite;
+		Texture sprite;
+		void operator=(const GraphicComponent& gc) {
+			/* TODO FIXME */
+		}
 
 	};
 	typedef std::unique_ptr<GraphicComponent> GraphicComponentPtr;

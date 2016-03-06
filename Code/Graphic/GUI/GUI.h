@@ -17,12 +17,12 @@ using namespace std;
 
 class WGameCore;
 
-class GUI : public ska::Observer, public DrawableFixedPriority
+class GUI : public ska::Observer<const int>, public DrawableFixedPriority
 {
     public:
     GUI();
 
-	virtual void update(ska::Observable* obs, ska::EventArg* e);
+	virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
     void dialogRefresh();
     void refresh();

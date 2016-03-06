@@ -1,10 +1,11 @@
+#ifndef DEF_KEYBOARD_LISTENER
+#define DEF_KEYBOARD_LISTENER
+
 #include "KeyInput.h"
 #include "MouseInput.h"
 #include "../Utils\Observable.h"
 #include "../Graphic/Rectangle.h"
-
-#ifndef DEF_KEYBOARD_LISTENER
-#define DEF_KEYBOARD_LISTENER
+#include "../Utils/Observer.h"
 
 class WGameCore;
 class Layer;
@@ -17,7 +18,7 @@ int GetDirectionFromChar(char directionChar);
 char GetCharFromDirection(int dir);
 
 namespace ska {
-	class InputListener : public Observable
+	class InputListener : public Observable<const int>
 	{
 	public:
 

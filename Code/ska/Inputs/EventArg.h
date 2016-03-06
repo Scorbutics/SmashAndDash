@@ -3,23 +3,15 @@
 
 #include <string>
 #include "../Utils\SkaConstants.h"
-
+#include "../Utils/Observer.h"
 
 namespace ska {
-	class EventArg
-	{
-	public:
-		EventArg(){}
-		virtual int type() = 0;
-		virtual ~EventArg(){}
-
-	};
 
 	class MouseEvent : public EventArg
 	{
 	public:
 		MouseEvent() : m_state(0), m_button(-1), m_x(-1), m_y(-1){}
-		virtual int type(){ return EVENT_MOUSE; }
+		virtual int type() const override { return EVENT_MOUSE; }
 		int getButton() const { return m_button; }
 		void setButton(int b){ m_button = b; }
 		void setState(int s) { m_state = s; }
@@ -43,7 +35,7 @@ namespace ska {
 	{
 	public:
 		KeyEvent() : m_state(0), m_pressed(false), m_scancode(-1), m_secondScancode(-1) {}
-		virtual int type(){ return EVENT_KEYBOARD; }
+		virtual int type() const override { return EVENT_KEYBOARD; }
 		int getScancode() const { return m_scancode; }
 		void setScancode(int s){ m_scancode = s; }
 		int getSecondScancode() const { return m_secondScancode; }

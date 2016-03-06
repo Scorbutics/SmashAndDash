@@ -8,23 +8,23 @@
 #include "../Utils/IDs.h"
 #include "../ska/Utils/RectangleUtils.h"
 
-int GetSkillCursorFromKey(ska::KeyEvent* ke);
+int GetSkillCursorFromKey(const ska::KeyEvent* ke);
 
 Player::Player(int id) : Character(id)
 {
 	m_path.setPathString("");
 }
 
-void Player::update(ska::Observable* obs, ska::EventArg* event)
+void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event, const int& i)
 {
-	ska::MouseEvent* me;
-	ska::KeyEvent* ke;
+	const ska::MouseEvent* me;
+	const ska::KeyEvent* ke;
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int power = getSpeedLimit() * 12;
 
-	if (event->type() == EVENT_MOUSE)
+	if (event.type() == EVENT_MOUSE)
 	{
-		me = static_cast<ska::MouseEvent*>(event);
+		me = static_cast<const ska::MouseEvent*>(&event);
 		if (me->getButton() == SDL_BUTTON_RIGHT)
 		{
 			if (me->clicked())
@@ -96,7 +96,7 @@ void Player::update(ska::Observable* obs, ska::EventArg* event)
 	{
 		//m_path.setPathString("");
 
-		ke = static_cast<ska::KeyEvent*>(event);
+		ke = static_cast<const ska::KeyEvent*>(&event);
 		int direction = -1;
 
 		if (ke->getScancode() == SDL_SCANCODE_W && ke->getSecondScancode() == SDL_SCANCODE_A)
@@ -251,7 +251,7 @@ Player::~Player()
 {
 }
 
-int GetSkillCursorFromKey(ska::KeyEvent* ke)
+int GetSkillCursorFromKey(const ska::KeyEvent* ke)
 {
 	int ret = -1;
 	if (ke != NULL)
