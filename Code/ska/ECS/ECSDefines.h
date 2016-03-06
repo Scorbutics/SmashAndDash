@@ -3,12 +3,11 @@
 #include <unordered_map>
 
 #define SKA_ECS_MAX_ENTITIES 1000
+#define SKA_ECS_MAX_COMPONENTS 200
 
 namespace ska {
-	typedef int EntityId;
+	typedef unsigned int EntityId;
+	typedef unsigned int ComponentId;
 	
-	template<class T>
-	using ComponentContainer = std::unordered_map<EntityId, T>;
-
-	typedef std::vector<EntityId> EntityContainer;
+	typedef std::vector<EntityId> EntityIdContainer;
 }

@@ -2,20 +2,28 @@
 #include <iostream>
 #include "../ECSDefines.h"
 #include "../Component/Component.h"
+#include "../EntityManager.h"
 
 namespace ska {
-	template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-	class System;
 
-	template<class T>
-	class System<T> {
+	class System {
 	public :
-
-		System(){ }
+		System(EntityManager& entityManager) : m_entityManager(entityManager) { }
 		
-		virtual void refresh(EntityContainer& entities) = 0;
+		void refresh(EntityIdContainer& entityId) {
+			for (EntityId id : entityId) {
+				refresh(id);
+			}
+		}
+
 		~System(){}
+
+	private:
+		
+
 	protected:
-		ComponentContainer<std::unique_ptr<T>> m_components;
+		virtual void refresh(EntityId& entity) = 0;
+		EntityManager& m_entityManager;
+				
 	};
 }

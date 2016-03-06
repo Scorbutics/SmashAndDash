@@ -3,12 +3,13 @@
 #include "System.h"
 
 namespace ska {
-	class GraphicSystem : public System<GraphicComponent>
+	class GraphicSystem : public System
 	{
 	public:
-		GraphicSystem();
-		virtual void refresh(EntityContainer& entities) override;
+		GraphicSystem(EntityManager& entityManager);
 		virtual ~GraphicSystem();
+	protected:
+		virtual void refresh(EntityId& EntityId) override;
 	};
 }
 

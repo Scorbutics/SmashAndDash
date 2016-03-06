@@ -8,7 +8,7 @@
 #include "../Inputs/Readers/IniReader.h"
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
-#include "../Scene/IScene.h"
+#include "../Scene/Scene.h"
 
 
 

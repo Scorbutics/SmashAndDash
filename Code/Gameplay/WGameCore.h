@@ -105,7 +105,7 @@ public:
    
 
     protected:
-		ska::IScene* m_sceneCursor;
+		ska::Scene* m_sceneCursor;
 		SceneMap m_sceneMap;
 		SceneFight m_sceneFight;
 

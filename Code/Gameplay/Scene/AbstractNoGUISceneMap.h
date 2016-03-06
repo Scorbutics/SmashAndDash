@@ -1,8 +1,8 @@
 #pragma once
-#include "../../ska/Scene/IScene.h"
+#include "../../ska/Scene/Scene.h"
 
 class AbstractNoGUISceneMap :
-	public ska::IScene
+	public ska::Scene
 {
 
 public:

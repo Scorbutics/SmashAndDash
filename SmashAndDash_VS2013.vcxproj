@@ -289,7 +289,7 @@
     <ClInclude Include="Code\Graphic\GUI\Window_Area.h" />
     <ClInclude Include="Code\Graphic\GUI\Window_Choice.h" />
     <ClInclude Include="Code\ska\World\World.h" />
-    <ClInclude Include="Code\ska\Scene\IScene.h" />
+    <ClInclude Include="Code\ska\Scene\Scene.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneMap.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneFight.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\DrawableContainer.h" />
@@ -306,6 +306,7 @@
     <ClInclude Include="Code\ska\ECS\Component\PositionComponent.h" />
     <ClInclude Include="Code\ska\ECS\System\GraphicSystem.h" />
     <ClInclude Include="Code\ska\ECS\EntityManager.h" />
+    <ClInclude Include="Code\ska\ECS\ComponentHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\ska\ECS\Component\GraphicComponent.cpp" />
@@ -446,7 +447,6 @@
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
     <ClCompile Include="Code\ska\ECS\Component\PositionComponent.cpp" />
     <ClCompile Include="Code\ska\ECS\System\GraphicSystem.cpp" />
-    <ClCompile Include="Code\ska\ECS\EntityManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

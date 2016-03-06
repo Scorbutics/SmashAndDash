@@ -15,10 +15,13 @@ namespace ska {
 		void setZ(const int z);
 
 		virtual ~PositionComponent();
+
 	private:
 		int m_x;
 		int m_y;
 		int m_z;
 
 	};
+
+	typedef std::unique_ptr<PositionComponent> PositionComponentPtr;
 }

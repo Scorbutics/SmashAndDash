@@ -16,7 +16,7 @@ using namespace std;
 
 void LoadEntities()
 {
-	ska::Rectangle posEntity;
+	ska::Rectangle posEntityId;
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 
@@ -27,11 +27,11 @@ void LoadEntities()
     //Chargement des NPC sur la map (personnages & pokémon)
     for(int i = 1; i < w.getLayerEvent()->getNbrLignes(); i++)
     {
-        posEntity.y = w.getLayerEvent()->getBlocY(i) * TAILLEBLOC;
-        posEntity.x = w.getLayerEvent()->getBlocX(i) * TAILLEBLOC;
+        posEntityId.y = w.getLayerEvent()->getBlocY(i) * TAILLEBLOC;
+        posEntityId.x = w.getLayerEvent()->getBlocX(i) * TAILLEBLOC;
         int id = w.getLayerEvent()->getID(i);
         if(abs(id) <= ENTITEMAX)
-                wScreen.getEntityFactory().addNPC(id, posEntity, w.getLayerEvent()->getPath(i));
+                wScreen.getEntityFactory().addNPC(id, posEntityId, w.getLayerEvent()->getPath(i));
         else
             cerr << "Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " << i << endl;
 
