@@ -32,6 +32,8 @@ void ECSTest() {
 	em.addComponent<ska::PositionComponent>(entity, pc);
 	em.addComponent<ska::GraphicComponent>(entity, gc);
 	gs.refreshAll();
+	em.removeComponent<ska::GraphicComponent>(entity);
+	gs.refreshAll();
 
 }
 

@@ -20,6 +20,11 @@ namespace ska {
 			return m_mask;
 		}
 		
+		unsigned int remove(EntityId entityId) {
+			m_components[entityId].setMask(0);
+			return m_mask;
+		}
+
 		T& getComponent(const EntityId id) {
 			return m_components[id];
 		}

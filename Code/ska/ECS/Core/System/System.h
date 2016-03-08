@@ -67,7 +67,11 @@ namespace ska {
 			/* Retrieve all the components masks using the variadic template with ComponentType 
 			   We "iterate" through each ComponentType with the bracket initializer trick and 
 			   we add each component mask to the system component mask with a binary OR. */
-			m_systemComponentMask[m_entityManager.template getMask<T>()] = true;
+			unsigned int mask = m_entityManager.template getMask<T>();
+			if (mask >= m_systemComponentMask.size()) {
+				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
+			}
+			m_systemComponentMask[mask] = true;
 		}
 		
 

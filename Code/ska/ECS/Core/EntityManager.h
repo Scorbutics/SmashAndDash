@@ -57,6 +57,9 @@ namespace ska {
 				m_entities[entity] = false;
 				m_deletedEntities.push_back(entity);
 				
+				/* Reset all components */
+				m_componentMask[entity] &= 0;
+
 				EntityData data = std::make_pair(&m_componentMask[entity], entity);
 				notifyObservers(EventEntityComponentRemove(), data);
 			} else {
@@ -72,7 +75,6 @@ namespace ska {
 			m_componentMask[entity][addedComponentMask] = true;
 			
 			EntityData data = std::make_pair(&m_componentMask[entity], entity);
-
 			notifyObservers(EventEntityComponentAdd(), data);
 		}
 
@@ -80,6 +82,16 @@ namespace ska {
 		T& getComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			return components.getComponent(entityId);
+		}
+
+		template <class T>
+		void removeComponent(EntityId entity) {
+			ComponentHandler<T>& components = this->template getComponents<T>();
+			unsigned int removedComponentMask = components.remove(entity);
+			m_componentMask[entity][removedComponentMask] = false;
+
+			EntityData data = std::make_pair(&m_componentMask[entity], entity);
+			notifyObservers(EventEntityComponentRemove(), data);
 		}
 
 		template <class T>
