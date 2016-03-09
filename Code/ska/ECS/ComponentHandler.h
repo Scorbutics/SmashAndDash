@@ -16,12 +16,11 @@ namespace ska {
 
 		unsigned int add(EntityId entityId, const T& comp) {
 			m_components[entityId] = comp;
-			m_components[entityId].setMask(m_mask);
 			return m_mask;
 		}
 		
 		unsigned int remove(EntityId entityId) {
-			m_components[entityId].setMask(0);
+			/* We can add operations here depending of the ComponentHandler implementation */
 			return m_mask;
 		}
 

@@ -124,11 +124,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Code\ska\ECS\Core\Component\Component.h" />
-    <ClInclude Include="Code\ska\ECS\Component\GraphicComponent.h" />
-    <ClInclude Include="Code\ska\ECS\Core\ECSDefines.h" />
-    <ClInclude Include="Code\ska\ECS\Core\StaticCounterGlobal.h" />
-    <ClInclude Include="Code\ska\ECS\Core\System\System.h" />
+    <ClInclude Include="Code\Gameplay\Component\HitboxComponent.h" />
+    <ClInclude Include="Code\Gameplay\Component\MovementComponent.h" />
+    <ClInclude Include="Code\ska\ECS\Component.h" />
+    <ClInclude Include="Code\Graphic\Component\GraphicComponent.h" />
+    <ClInclude Include="Code\ska\ECS\ECSDefines.h" />
+    <ClInclude Include="Code\ska\ECS\StaticCounterGlobal.h" />
+    <ClInclude Include="Code\ska\ECS\System.h" />
     <ClInclude Include="Code\ska\Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Code\ska\Exceptions\FileException.h" />
     <ClInclude Include="Code\ska\Exceptions\IndexOutOfBoundsException.h" />
@@ -304,16 +306,18 @@
     <ClInclude Include="Code\ska\Utils\RectangleUtils.h" />
     <ClInclude Include="Code\ska\Utils\FileUtils.h" />
     <ClInclude Include="Code\ska\Core\GameCore.h" />
-    <ClInclude Include="Code\ska\ECS\Component\PositionComponent.h" />
-    <ClInclude Include="Code\ska\ECS\System\GraphicSystem.h" />
-    <ClInclude Include="Code\ska\ECS\Core\EntityManager.h" />
-    <ClInclude Include="Code\ska\ECS\Core\ComponentHandler.h" />
+    <ClInclude Include="Code\Gameplay\Component\PositionComponent.h" />
+    <ClInclude Include="Code\Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Code\ska\ECS\EntityManager.h" />
+    <ClInclude Include="Code\ska\ECS\ComponentHandler.h" />
+    <ClInclude Include="Code\Gameplay\System\MovementSystem.h" />
+    <ClInclude Include="Code\Gameplay\System\CollisionSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
-    <ClCompile Include="Code\ska\ECS\Core\StaticCounterGlobal.cpp" />
+    <ClCompile Include="Code\ska\ECS\StaticCounterGlobal.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractCommand.cpp" />
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
@@ -445,7 +449,9 @@
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
-    <ClCompile Include="Code\ska\ECS\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\Gameplay\System\MovementSystem.cpp" />
+    <ClCompile Include="Code\Gameplay\System\CollisionSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

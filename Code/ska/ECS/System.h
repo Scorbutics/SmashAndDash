@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include <unordered_set>
-#include "../ECSDefines.h"
-#include "../Component/Component.h"
-#include "../EntityManager.h"
-#include "../../../Utils/Observer.h"
+#include "ECSDefines.h"
+#include "Component.h"
+#include "EntityManager.h"
+#include "../Utils/Observer.h"
 
 namespace ska {
 	
@@ -77,6 +77,9 @@ namespace ska {
 
 	protected:
 		EntityManager& m_entityManager;
+		std::unordered_set<EntityId>& getProcessedEntities() {
+			return m_processed;
+		}
 				
 	};
 }

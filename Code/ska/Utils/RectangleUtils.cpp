@@ -17,7 +17,7 @@ bool ska::RectangleUtils::isPositionInBox(const ska::Rectangle *pos, const ska::
 	return((pos->x >= box->x) && (pos->x <= box->x + box->w) && (pos->y >= box->y) && (pos->y <= box->y + box->h));
 }
 
-bool ska::RectangleUtils::collisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB)
+bool ska::RectangleUtils::collisionBoxABoxB(const ska::Rectangle& rectA, const ska::Rectangle& rectB)
 {
 
 	if (rectA.x > rectB.x + rectB.w || rectA.x + rectA.w < rectB.x)
