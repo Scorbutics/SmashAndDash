@@ -2,7 +2,7 @@
 #define DEF_MOUSEINPUT
 
 #include "../Graphic/Rectangle.h"
-#include "EventArg.h"
+#include "InputEvents.h"
 
 namespace ska {
 	class MouseInput

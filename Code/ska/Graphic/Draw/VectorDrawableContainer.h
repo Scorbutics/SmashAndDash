@@ -4,17 +4,18 @@
 
 #include "DrawableContainer.h"
 
-class VectorDrawableContainer :
-	public DrawableContainer
-{
-public:
-	VectorDrawableContainer();
-	virtual void push(Drawable& d) override;
-	virtual void draw() override;
-	virtual ~VectorDrawableContainer();
+namespace ska {
+	class VectorDrawableContainer :
+		public DrawableContainer
+	{
+	public:
+		VectorDrawableContainer();
+		virtual void push(Drawable& d) override;
+		virtual void draw() override;
+		virtual ~VectorDrawableContainer();
 
-private:
-	/* TODO : smart pointers ? */
-	std::vector<Drawable*> m_data;
-};
-
+	private:
+		/* TODO : smart pointers ? */
+		std::vector<Drawable*> m_data;
+	};
+}

@@ -5,7 +5,7 @@ GraphicSystem::GraphicSystem(ska::EntityManager& entityManager) : System(entityM
 
 void GraphicSystem::refresh(ska::EntityId& entityId) {
 	GraphicComponent& gc = m_entityManager.getComponent<GraphicComponent>(entityId);
-	PositionComponent& pos = m_entityManager.getComponent<PositionComponent>(entityId);
+	ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 	gc.sprite.render(pos.x, pos.y, NULL);
 	
 }

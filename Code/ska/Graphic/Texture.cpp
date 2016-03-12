@@ -39,20 +39,27 @@ void ska::Texture::load(string id, int r, int g, int b, int a)
 
 void ska::Texture::setColor(Uint8 r, Uint8 g, Uint8 b)
 {
-	if (m_value != NULL)
-		SDL_SetTextureColorMod(m_value->m_texture, r, g, b );
+	if (m_value != NULL) {
+		SDL_SetTextureColorMod(m_value->m_texture, r, g, b);
+	}
 }
 
 void ska::Texture::setBlendMode(SDL_BlendMode blending)
 {
-	if (m_value != NULL)
+	if (m_value != NULL) {
 		SDL_SetTextureBlendMode(m_value->m_texture, blending);
+	}
+}
+
+void ska::Texture::operator=(const ska::Texture& text) {
+	m_key = text.m_key;
+	m_keyStr = text.m_keyStr;
+	m_value = text.m_value;
 }
 
 void ska::Texture::setAlpha(Uint8 alpha)
 {
-	if (m_value != NULL)
-	{
+	if (m_value != NULL) {
 		SDL_SetTextureAlphaMod(m_value->m_texture, alpha);
 		m_value->m_alpha = alpha;
 	}
@@ -72,8 +79,7 @@ int ska::Texture::render(int x, int y, ska::Rectangle* clip)
 
 	ska::Rectangle destBuf = { x, y, m_value->m_w, m_value->m_h };
 
-	if( clip != NULL )
-	{
+	if( clip != NULL ) {
 		destBuf.w = clip->w;
 		destBuf.h = clip->h;
 	}

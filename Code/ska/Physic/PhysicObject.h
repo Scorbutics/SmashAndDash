@@ -19,7 +19,7 @@ namespace ska {
 		PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, int x, int y, unsigned int w, unsigned int h, int offset0, int offset1, int offset2, int offset3);
 		PhysicObject(int id, unsigned int entityNumber);
 
-		ska::Rectangle getPos();
+		ska::Rectangle& getPos();
 		int getDirection() const;
 		ska::Rectangle getCenterPos();
 		ska::Rectangle getHitboxCenterPos() const;

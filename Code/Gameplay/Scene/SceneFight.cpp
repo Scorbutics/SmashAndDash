@@ -10,7 +10,7 @@ SceneFight::SceneFight()
 {
 }
 
-void SceneFight::graphicUpdate(DrawableContainer& drawables) {
+void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 	 WGameCore& core = WGameCore::getInstance();
 	/*World& world = core.getWorld();*/
 	Pokeball& pokeball = core.getPokeball();

@@ -15,7 +15,9 @@ using namespace std;
 
 
 WGameCore::WGameCore():
-    Window(), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC) {
+Window(), m_camera(m_entityManager, m_laFenetre, m_loFenetre), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_camera),
+	m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_entityManager), m_gravitySystem(m_entityManager),
+	m_forceSystem(m_entityManager) {
 	m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -39,7 +41,7 @@ WGameCore::WGameCore():
 	m_kdListener.getMouseInput()->resetAll();
 
 	m_saveManager.loadGame("save1");
-	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_laFenetre, m_loFenetre);
+	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName());
 	m_scrolling = true;
 }
 
@@ -243,9 +245,10 @@ bool WGameCore::refresh()
 //gros bordel !
 void WGameCore::graphicUpdate(void)
 {
-	VectorDrawableContainer drawables;
+	ska::VectorDrawableContainer drawables;
 	m_sceneCursor->graphicUpdate(drawables);
 	drawables.draw();
+	//m_graphicSystem.refreshAll();
 
 	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
 	Scrolling();
@@ -282,6 +285,12 @@ ska::InputListener& WGameCore::getInputListener()
 
 void WGameCore::eventUpdate(bool movingDisallowed)
 {
+	m_gravitySystem.refreshAll();
+	m_movementSystem.refreshAll();
+	m_collisionSystem.refreshAll();
+	m_forceSystem.refreshAll();
+	m_camera.refreshAll();
+
 	m_sceneCursor->eventUpdate(movingDisallowed);
 
 }

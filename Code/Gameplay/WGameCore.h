@@ -20,16 +20,23 @@
 #include "../ska/Graphic\SpriteAnimationManager.h"
 #include "../Graphic\GUI\MouseCursor.h"
 #include "../ska/Graphic\Rectangle.h"
-#include "../ska/Inputs/InputListener.h"
+#include "../ska/Inputs/RawInputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "../Graphic\ShakerManager.h"
 #include "Mobs\MobSpawningManager.h"
 #include "Data\SavegameManager.h"
-#include "../ska/World/World.h"
+#include "World\WorldImpl.h"
 #include "../ska/Utils\Singleton_template.h"
 #include "./Scene/SceneMap.h"
 #include "./Scene/SceneFight.h"
 #include "EnumScene.h"
+
+#include "System\CollisionSystem.h"
+#include "System\ForceSystem.h"
+#include "System\GravitySystem.h"
+#include "System\MovementSystem.h"
+#include "../Graphic/System/GraphicSystem.h"
+#include "../ska/Graphic/CameraSystem.h"
 
 class LayerE;
 class Layer;
@@ -131,10 +138,23 @@ public:
 		GUI m_gui;
 		MobSpawningManager m_mobSpawner;
 		SavegameManager m_saveManager;
-		ska::World m_world;
+		WorldImpl m_world;
 
 		ska::ParticleManager m_particleManager;
 		RainParticleManager m_rainParticleManager;
+
+
+		ska::EntityManager m_entityManager;
+
+		CollisionSystem m_collisionSystem;
+		ForceSystem m_forceSystem;
+		GravitySystem m_gravitySystem;
+		MovementSystem m_movementSystem;
+
+		GraphicSystem m_graphicSystem;
+
+		ska::CameraSystem m_camera;
+
 };
 
 #endif

@@ -3,9 +3,9 @@
 #include <vector>
 #include "ECSDefines.h"
 #include "ComponentHandler.h"
-#include "../../Exceptions/IllegalStateException.h"
-#include "../../Exceptions/IllegalArgumentException.h"
-#include "../../Utils/Observable.h"
+#include "../Exceptions/IllegalStateException.h"
+#include "../Exceptions/IllegalArgumentException.h"
+#include "../Utils/Observable.h"
 
 namespace ska {
 
@@ -40,7 +40,7 @@ namespace ska {
 			}
 
 			if (m_deletedEntities.empty()) {
-				newId = m_entities.size();
+				newId = (EntityId)m_entities.size();
 				m_entities.push_back(true);
 			}
 			else {
@@ -81,7 +81,19 @@ namespace ska {
 		template <class T>
 		T& getComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
-			return components.getComponent(entityId);
+			T& result = components.getComponent(entityId);
+			
+			/* If we hadn't any declared component of that type, we start by resetting it first */
+			if (!hasComponent<T>(entityId)) {
+				memset(&result, 0, sizeof(T));
+			}
+			return result;
+		}
+
+		template <class T>
+		bool hasComponent(EntityId entityId) {
+			ComponentHandler<T>& components = this->template getComponents<T>();
+			return m_componentMask[entityId][components.getMask()];	
 		}
 
 		template <class T>

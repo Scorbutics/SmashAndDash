@@ -3,7 +3,7 @@
 
 class Character;
 
-class CharacterDrawable : public Drawable
+class CharacterDrawable : public ska::Drawable
 {
 public:
 	CharacterDrawable(Character* parent, int part);

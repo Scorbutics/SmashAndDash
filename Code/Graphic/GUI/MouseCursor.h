@@ -8,7 +8,7 @@
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Inputs/MouseInput.h"
 
-class MouseCursor : public DrawableFixedPriority
+class MouseCursor : public ska::DrawableFixedPriority
 {
     public:
     MouseCursor();

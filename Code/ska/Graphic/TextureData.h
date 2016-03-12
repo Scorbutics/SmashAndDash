@@ -11,7 +11,7 @@ namespace ska {
 		TextureData(Window& window, std::string, SDL_Color);
 		TextureData();
 
-		void operator=(TextureData& t2);
+		void operator=(const TextureData& t2);
 
 		std::pair<std::string, SDL_Color>& getData();
 		Window& getWindow();

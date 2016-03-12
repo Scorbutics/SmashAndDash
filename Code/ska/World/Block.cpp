@@ -57,26 +57,24 @@ void ska::Block::setSpriteFrame(unsigned int x)
 	m_anim.stop(true);
 }
 
-void ska::Block::refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim)
+ska::Rectangle ska::Block::refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim)
 {
-	ska::Rectangle buf = m_spritePosInChipset, bufRectAnim;
-	//WGameCore& wScreen = WGameCore::getInstance();
-	if(rectAnim != NULL && m_auto_animation)
-	{
-		bufRectAnim = *rectAnim;
+	ska::Rectangle buf = m_spritePosInChipset;
+	
+	if (m_auto_animation) {
+		ska::Rectangle bufRectAnim;
+
+		if (rectAnim != NULL) {
+			bufRectAnim = *rectAnim;
+		} else  {
+			bufRectAnim = m_anim.getRectOfCurrentFrame();
+		}
+
 		buf.x += bufRectAnim.x;
 		buf.y += bufRectAnim.y;
 	}
-	else if(m_auto_animation)
-	{
-		bufRectAnim = m_anim.getRectOfCurrentFrame();
-		buf.x += bufRectAnim.x;
-		buf.y += bufRectAnim.y;
 
-	}
-
-	//wScreen.getWorld().getChipset()->render(pos.x, pos.y, &buf);
-
+	return buf;
 }
 
 ska::Block::~Block()

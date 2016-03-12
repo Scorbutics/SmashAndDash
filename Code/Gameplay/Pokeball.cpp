@@ -172,7 +172,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.x += oRel.x;
 		buf.y += oRel.y;
 
-		VectorDrawableContainer drawables;
+		ska::VectorDrawableContainer drawables;
 		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
@@ -206,7 +206,7 @@ void Pokeball::capture(Character* pkmn)
 		buf.y += oRel.y;
 		m_pokeballPos.y+=4;
 
-		VectorDrawableContainer drawables;
+		ska::VectorDrawableContainer drawables;
 		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 			
@@ -263,7 +263,7 @@ void Pokeball::capture(Character* pkmn)
 			else
 				animPos.x = 0;
 
-			VectorDrawableContainer drawables;
+			ska::VectorDrawableContainer drawables;
 			//w.graphicUpdate(drawables);
 			m_sprite.render(buf.x, buf.y, &animPos);
 

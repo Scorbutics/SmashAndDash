@@ -32,7 +32,7 @@ namespace ska {
 
 		void setColor(Uint8 red, Uint8 green, Uint8 blue);
 		void setBlendMode(SDL_BlendMode blending);
-		Texture clone();
+		void operator=(const Texture& text);
 		void setAlpha(Uint8 alpha);
 		int render(int x, int y, ska::Rectangle* clip = NULL);
 

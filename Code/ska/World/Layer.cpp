@@ -77,47 +77,45 @@ ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 void ska::Layer::display()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle absoluteCurrentPos, origineRelative = { 0 }, ofChip;
-    //origineRelative = wScreen.getORel();
+	ska::Rectangle absoluteCurrentPos, ofChip;
+	const ska::Rectangle* cameraPos = m_world.getView();
+	//origineRelative = wScreen.getORel();
     //ofChip = wScreen.getOffsetChipset();
+
+	if (cameraPos == NULL) {
+		return;
+	}
 
 	const unsigned int layerPixelsX = m_world.getPixelWidth();
 	const unsigned int layerPixelsY = m_world.getPixelHeight();
-	const unsigned int absORelX = NumberUtils::absolute(origineRelative.x);
-	const unsigned int absORelY = NumberUtils::absolute(origineRelative.y);
+	const unsigned int absORelX = NumberUtils::absolute(cameraPos->x);
+	const unsigned int absORelY = NumberUtils::absolute(cameraPos->y);
 	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
 	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockX = (absORelX /*+ wScreen.getWidth()*/) / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockY = (absORelY /*+ wScreen.getHeight()*/) / m_world.getBlockSize();
+	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w /*+ wScreen.getWidth()*/) / m_world.getBlockSize();
+	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h /*+ wScreen.getHeight()*/) / m_world.getBlockSize();
 	
-	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++)
-    {
-		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++)
-        {
+	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
+		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
 			unsigned int currentXBlock = i*m_world.getBlockSize();
 			unsigned int currentYBlock = j*m_world.getBlockSize();
 			absoluteCurrentPos.x = currentXBlock - absORelX;
 			absoluteCurrentPos.y = currentYBlock - absORelY;
 
-			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY)
-            {
+			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
 				BlockPtr& b = m_block[i][j];
-                if(b->getID() != BLOCK_ID_AIR)
-                {
-                    if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY)
-					{
+                if(b->getID() != BLOCK_ID_AIR) {
+					ska::Rectangle chipsetPartRender;
+                    if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY) {
 						b->setSpriteFrame(m_world.getWind());
-						b->refresh(absoluteCurrentPos);
-					}
-					else
-						b->refresh(absoluteCurrentPos, &m_rectAnim);
-                    
+						chipsetPartRender = b->refresh(absoluteCurrentPos);
+					} else {
+						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_rectAnim);
+					}                    
+					m_world.getChipset()->render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
                 }
-
             }
-
         }
-
     }
 }
 

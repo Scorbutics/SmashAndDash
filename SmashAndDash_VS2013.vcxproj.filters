@@ -516,12 +516,6 @@
     <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h">
       <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\EventArg.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputListener.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Inputs\KeyInput.h">
       <Filter>Fichiers d%27en-tête\Inputs</Filter>
     </ClInclude>
@@ -633,9 +627,6 @@
     <ClInclude Include="Code\Graphic\Component\GraphicComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Component\PositionComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\System\GraphicSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -667,6 +658,54 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\System\CollisionSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Component\CollisionComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Component\ForceComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\System\ForceSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Component\GravityAffectedComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\System\GravitySystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\System\InputSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Component\InputComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\World\WorldImpl.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\CameraSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\PositionComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputAction.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\RawInputListener.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputEvents.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -983,9 +1022,6 @@
     <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp">
       <Filter>Fichiers sources\Inputs\Readers</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\InputListener.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Inputs\KeyInput.cpp">
       <Filter>Fichiers sources\Inputs</Filter>
     </ClCompile>
@@ -1083,6 +1119,27 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\System\CollisionSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\System\ForceSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\System\GravitySystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\System\InputSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\World\WorldImpl.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\CameraSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\RawInputListener.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

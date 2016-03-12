@@ -1,23 +1,25 @@
 #pragma once
 
-class Drawable {
-public:
-	Drawable() { }
-	virtual void display() = 0;
-	
-	static bool staticOperatorInf(Drawable* a, Drawable* b) { return *a < *b; }
+namespace ska {
+	class Drawable {
+	public:
+		Drawable() { }
+		virtual void display() = 0;
 
-	bool operator< (Drawable const &id) {
-		int p1 = getPriority();
-		int p2 = id.getPriority();
-		return p1 < p2;
-	}
-	virtual ~Drawable() {}
+		static bool staticOperatorInf(Drawable* a, Drawable* b) { return *a < *b; }
 
-	virtual int getPriority2D() const {
-		return getPriority();
-	}
+		bool operator< (Drawable const &id) {
+			int p1 = getPriority();
+			int p2 = id.getPriority();
+			return p1 < p2;
+		}
+		virtual ~Drawable() {}
 
-	virtual int getPriority() const = 0;
-	virtual bool isVisible() const = 0;
-};
+		virtual int getPriority2D() const {
+			return getPriority();
+		}
+
+		virtual int getPriority() const = 0;
+		virtual bool isVisible() const = 0;
+	};
+}

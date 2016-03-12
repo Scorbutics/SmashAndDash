@@ -9,7 +9,7 @@
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
-
+#include "../Graphic/CameraSystem.h"
 
 
 namespace ska {
@@ -18,11 +18,10 @@ namespace ska {
 	class PhysicObject;
 	class Block;
 
-	class World 
-	{
+	class World : public HasGraphic {
 	public:
-		World(const unsigned int tailleBloc);
-		void load(std::string fileName, std::string chipsetName, int windowWidth, int windowHeight);
+		World(const unsigned int tailleBloc, CameraSystem& camera);
+		void load(std::string fileName, std::string chipsetName);
 
 		/*Weather* getFog();
 		Weather* getWeather();*/
@@ -35,6 +34,7 @@ namespace ska {
 		ska::Layer* getLayerBot();
 		ska::Layer* getLayerMid();
 		ska::Layer* getLayerTop();
+		const ska::Rectangle* getView() const;
 		ska::LayerE* getLayerEvent();
 		void setWind(int wind);
 		ska::Texture* getChipset();
@@ -60,9 +60,8 @@ namespace ska {
 		void changeLevel(std::string fileName, std::string chipsetName);
 		int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn);
 
-		//void refreshEntities();
-
-		//void graphicUpdate(DrawableContainer& drawables) override;
+		virtual void refreshEntities() = 0;
+		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
 
 		~World();
 
@@ -78,11 +77,14 @@ namespace ska {
 		unsigned int m_blockSize;
 
 		Texture m_chipset;
-		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
 		std::unique_ptr<LayerE> m_lEvent;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
 		//std::unique_ptr<Weather> m_temps, m_brouillard;
 		std::vector<IniReader> m_mobSettings;
+		CameraSystem& m_camera;
+
+	protected:
+		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
 		Animation m_animBlocks;
 
 	};

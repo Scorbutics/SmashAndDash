@@ -10,7 +10,7 @@ AbstractSceneMap::AbstractSceneMap()
 {
 }
 
-void AbstractSceneMap::graphicUpdate(DrawableContainer& drawables) {
+void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	WGameCore& core = WGameCore::getInstance();
 	ska::World& world = core.getWorld();
 	GUI& gui = core.getGUI();

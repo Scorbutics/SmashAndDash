@@ -5,7 +5,7 @@ class SceneFight :
 {
 public:
 	SceneFight();
-	virtual void graphicUpdate(DrawableContainer& drawables) override;
+	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();
 };

@@ -21,7 +21,7 @@
 */ 
 class World;
 
-class Weather : public DrawableFixedPriority
+class Weather : public ska::DrawableFixedPriority
 {
 
     public:

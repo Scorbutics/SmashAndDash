@@ -9,11 +9,11 @@
 
 using namespace std;
 
-ska::World::World(const unsigned int tailleBloc) : m_blockSize(tailleBloc), m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc)
+ska::World::World(const unsigned int tailleBloc, CameraSystem& camera) : m_blockSize(tailleBloc), m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), m_camera(camera)
 {
 }
 
-void ska::World::load(string fileName, string chipsetName, int windowWidth, int windowHeight)
+void ska::World::load(string fileName, string chipsetName)
 {
 	//m_bgm = NULL;
 	m_chipset.load(chipsetName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -167,6 +167,10 @@ bool ska::World::canMoveToPos(ska::Rectangle pos, ska::PhysicObject* entityToMov
         return false;
     else
         return true;
+}
+
+const ska::Rectangle* ska::World::getView() const {
+	return m_camera.getDisplay();
 }
 
 ska::Layer* ska::World::getLayerBot()

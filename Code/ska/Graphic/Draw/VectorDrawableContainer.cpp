@@ -2,15 +2,15 @@
 #include "VectorDrawableContainer.h"
 
 
-VectorDrawableContainer::VectorDrawableContainer()
+ska::VectorDrawableContainer::VectorDrawableContainer()
 {
 }
 
-void VectorDrawableContainer::push(Drawable& d) {
+void ska::VectorDrawableContainer::push(Drawable& d) {
 	m_data.push_back(&d);
 }
 
-void VectorDrawableContainer::draw() {
+void ska::VectorDrawableContainer::draw() {
 	std::sort(m_data.begin(), m_data.end(), Drawable::staticOperatorInf);
 	for (Drawable* d : m_data) {
 		if (d != NULL) {
@@ -19,6 +19,6 @@ void VectorDrawableContainer::draw() {
 	}
 }
 
-VectorDrawableContainer::~VectorDrawableContainer()
+ska::VectorDrawableContainer::~VectorDrawableContainer()
 {
 }

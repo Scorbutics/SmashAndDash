@@ -1,7 +1,7 @@
 #ifndef DEF_PLAYER
 #define DEF_PLAYER
 #include "../ska/Utils\Observer.h"
-#include "../ska/Inputs/EventArg.h"
+#include "../ska/Inputs/InputEvents.h"
 #include "Character.h"
 
 class Player :

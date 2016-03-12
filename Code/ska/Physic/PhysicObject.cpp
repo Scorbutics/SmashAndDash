@@ -320,8 +320,7 @@ float ska::PhysicObject::getSpeed()
     return (sqrtf(m_speedx*m_speedx + m_speedy*m_speedy));
 }
 
-ska::Rectangle ska::PhysicObject::getPos()
-{
+ska::Rectangle& ska::PhysicObject::getPos() {
     return m_rect;
 }
 

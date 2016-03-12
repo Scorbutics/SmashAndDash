@@ -10,7 +10,7 @@ AbstractNoGUISceneMap::AbstractNoGUISceneMap()
 {
 }
 
-void AbstractNoGUISceneMap::graphicUpdate(DrawableContainer& drawables) {
+void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	WGameCore& core = WGameCore::getInstance();
 	ska::World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
@@ -21,7 +21,7 @@ void AbstractNoGUISceneMap::graphicUpdate(DrawableContainer& drawables) {
 	Settings& settings = core.getSettings();
 
 	//Affiche les couches de blocs et les personnages
-	//world.graphicUpdate(drawables);
+	world.graphicUpdate(drawables);
 
 	//Affiche la pokeball si active
 	drawables.addHead(pokeball);
@@ -49,7 +49,7 @@ void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
 	ShakerManager& shaker = core.getShakerManager();
 	ska::InputListener& kdListener = core.getInputListener();
 
-	//world.refreshEntities();
+	world.refreshEntities();
 	particleManager.refresh();
 	rainParticleManager.refresh();
 

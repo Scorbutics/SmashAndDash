@@ -15,7 +15,7 @@ namespace ska {
 		unsigned int getProperties();
 		int getCollision();
 		unsigned int getID();
-		void refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL);
+		ska::Rectangle refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL);
 		~Block();
 		void setSpriteFrame(unsigned int x);
 

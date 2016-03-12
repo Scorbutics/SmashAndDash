@@ -17,7 +17,7 @@ using namespace std;
 
 class WGameCore;
 
-class GUI : public ska::Observer<const int>, public DrawableFixedPriority
+class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 {
     public:
     GUI();

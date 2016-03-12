@@ -9,7 +9,7 @@ ska::TextureData::TextureData() {
 	m_data = std::make_pair("-1", SDL_Color());
 }
 
-void ska::TextureData::operator=(ska::TextureData& t2) {
+void ska::TextureData::operator=(const ska::TextureData& t2) {
 	m_data = t2.m_data;
 	m_window = t2.m_window;
 }

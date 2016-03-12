@@ -10,7 +10,7 @@ SceneMap::SceneMap()
 {
 }
 
-void SceneMap::graphicUpdate(DrawableContainer& drawables) {
+void SceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	/*WGameCore& core = WGameCore::getInstance();
 	World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();

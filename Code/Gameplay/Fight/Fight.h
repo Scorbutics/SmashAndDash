@@ -13,7 +13,7 @@
 class World;
 class DialogMenu;
 
-class Fight : public DrawableFixedPriority
+class Fight : public ska::DrawableFixedPriority
 {
     public:
     Fight();
