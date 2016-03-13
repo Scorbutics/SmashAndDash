@@ -7,7 +7,6 @@
 #include <vector>
 #include <sstream>
 #include "Gameplay/WGameCore.h"
-#include "./Utils/ChargementDonneesMonde.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
 #include "./ska/Utils/MessagePopup.h"
@@ -48,8 +47,10 @@ int main (int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    LoadGameCoreData(widthBlocks, heightBlocks);
-
+	ska::IniReader reader("gamesettings.ini");
+	widthBlocks = reader.getInt("Settings window_width_blocks");
+	heightBlocks = reader.getInt("Settings window_height_blocks");
+	    
 	try {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
 		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)

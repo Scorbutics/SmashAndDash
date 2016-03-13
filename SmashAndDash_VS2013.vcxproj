@@ -181,7 +181,6 @@
     <ClInclude Include="Code\ska\Script\ScriptState.h" />
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h" />
     <ClInclude Include="Code\Gameplay\Character.h" />
-    <ClInclude Include="Code\Utils\ChargementDonneesMonde.h" />
     <ClInclude Include="Code\Utils\ChargementImages.h" />
     <ClInclude Include="Code\ska\Script\Command\Command.h" />
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h" />
@@ -353,7 +352,6 @@
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp" />
     <ClCompile Include="Code\Gameplay\Character.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
-    <ClCompile Include="Code\Utils\ChargementDonneesMonde.cpp" />
     <ClCompile Include="Code\Utils\ChargementImages.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandAddPokemon.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssign.cpp" />

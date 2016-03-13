@@ -123,9 +123,6 @@
     <ClInclude Include="Code\Gameplay\Character.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\ChargementDonneesMonde.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\ChargementImages.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -739,9 +736,6 @@
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Character.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\ChargementDonneesMonde.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utils\ChargementImages.cpp">
       <Filter>Fichiers sources\Utils</Filter>
