@@ -56,8 +56,7 @@ int main (int argc, char *argv[])
 		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
 		while (wScreen.refresh()); //boucle principale
 		wScreen.quitter(false);
-	}
-	catch (ska::TerminateProcessException tpe) {
+	} catch (ska::TerminateProcessException& tpe) {
 		clog << tpe.what() << endl;
 	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
