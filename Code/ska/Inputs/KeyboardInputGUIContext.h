@@ -2,10 +2,10 @@
 #include "KeyboardInputContext.h"
 
 namespace ska {
-	class KeyboardInputMapContext : public KeyboardInputContext {
+	class KeyboardInputGUIContext : public KeyboardInputContext {
 	public:
-		KeyboardInputMapContext();
-		virtual ~KeyboardInputMapContext();
+		KeyboardInputGUIContext();
+		virtual ~KeyboardInputGUIContext();
 
 	protected:
 		virtual void buildCodeMap(std::unordered_map<int, InputAction>& codeMap) override;

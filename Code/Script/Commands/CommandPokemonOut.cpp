@@ -24,10 +24,10 @@ std::string CommandPokemonOut::execute(ska::IScript* script, std::vector<std::st
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	index = ska::StringUtils::strToInt(args[0]);
-	ska::Point<int> launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
-	launchPos.y += TAILLEBLOC;
+	//ska::Point<int> launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
+	//launchPos.y += TAILLEBLOC;
 
-	wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), launchPos, PokeballLaunchReason::Throw);
+	//wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), launchPos, PokeballLaunchReason::Throw);
 
 	t0 = SDL_GetTicks();
 
@@ -41,6 +41,6 @@ std::string CommandPokemonOut::execute(ska::IScript* script, std::vector<std::st
 		SDL_Delay(20);
 
 	}
-	wScreen.getEntityFactory().addNPC(wScreen.getPokemonManager().getPokemon(index)->getID(), launchPos, "1");
+	//wScreen.getEntityFactory().addNPC(wScreen.getPokemonManager().getPokemon(index)->getID(), launchPos, "1");
 	return "";
 }

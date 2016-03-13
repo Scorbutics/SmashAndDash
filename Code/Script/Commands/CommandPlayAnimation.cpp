@@ -33,13 +33,13 @@ std::string CommandPlayAnimation::execute(ska::IScript* script, std::vector<std:
 
 	idTypeInt = ska::StringUtils::strToInt(idType);
 	idInt = ska::StringUtils::strToInt(id);
-	Character* c = wScreen.getEntityFactory().getNPC(idTypeInt, idInt);
+	/*Character* c = wScreen.getEntityFactory().getNPC(idTypeInt, idInt);
 	if (c != NULL)
 	{
 		posAnim = c->getHitboxCenterPos();
 		posAnim.y -= c->getHeight();
 		posAnim.x -= TAILLEBLOC / 2;
 		wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, posAnim, 2, 200);
-	}
+	}*/
 	return "";
 }

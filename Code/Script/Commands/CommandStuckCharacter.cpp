@@ -24,6 +24,6 @@ std::string CommandStuckCharacter::execute(ska::IScript* script, std::vector<std
 	number = ska::StringUtils::strToInt(args[1]);
 	moving = ska::StringUtils::strToInt(args[2]);
 
-	wScreen.getEntityFactory().getNPC(id, number)->setMoving(!moving);
+	//wScreen.getEntityFactory().getNPC(id, number)->setMoving(!moving);
 	return "";
 }

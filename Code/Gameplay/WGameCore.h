@@ -33,18 +33,11 @@
 
 #include "../ska/Inputs/RawInputListener.h"
 
-#include "System\CollisionSystem.h"
-#include "System\ForceSystem.h"
-#include "System\GravitySystem.h"
-#include "System\MovementSystem.h"
-#include "../Graphic/System/GraphicSystem.h"
-#include "../ska/Graphic/CameraSystem.h"
-
 class LayerE;
 class Layer;
-class Character;
+//class Character;
 
-typedef std::unique_ptr<Character> Character_ptr;
+//typedef std::unique_ptr<Character> Character_ptr;
 
 class WGameCore : public ska::Window, public ska::Singleton<WGameCore>
 {
@@ -78,7 +71,7 @@ public:
 	ska::Rectangle& getOffsetChipset();
 	ska::Rectangle& getOffsetActualHero();
 	ska::Rectangle& getORel();
-	Player* getHero();
+	//Player* getHero();
 	float getSpeedInertie();
 	ska::Animation& getChipsetAnimation();
 	GUI& getGUI();
@@ -88,7 +81,7 @@ public:
 	Inventory& getInventory();
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
-	EntityFactory& getEntityFactory();
+	//EntityFactory& getEntityFactory();
 	ska::SpriteAnimationManager& getSpriteAnimationManager();
     MouseCursor& getMouseCursor();
 	bool getContinue();
@@ -109,7 +102,7 @@ public:
     void setORel(int x, int y);
 	void setORel(const ska::Rectangle &oRel);
     void setSpeedInertie(float x);
-    void setHero(Player* hero);
+    //void setHero(Player* hero);
     void setChipset(SDL_Surface* chipset);
 	void setContinue(bool b);
 	
@@ -124,7 +117,7 @@ public:
 		Inventory m_inv;
 		ska::Rectangle m_OfChip, m_origineRelative;
 		bool m_quitFlip, m_ecritureLog, m_continue;
-		Player *m_phero; //Character héro courant
+		//Player *m_phero; //Character héro courant
 		ska::RawInputListener m_rawInputListener;
 
 		float m_speedInertie;
@@ -137,7 +130,7 @@ public:
 		ShakerManager m_shaker;
 		ska::SpriteAnimationManager m_spriteAnimManager;
 		bool m_scrolling;
-		EntityFactory m_EntityFactory; //Une instance de gestion des personnages à l'écran (hors combat)
+		//EntityFactory m_EntityFactory; //Une instance de gestion des personnages à l'écran (hors combat)
 		Fight m_fight;
 		MouseCursor m_mouseCursor;
 		GUI m_gui;
@@ -147,18 +140,6 @@ public:
 
 		ska::ParticleManager m_particleManager;
 		RainParticleManager m_rainParticleManager;
-
-
-		ska::EntityManager m_entityManager;
-
-		CollisionSystem m_collisionSystem;
-		ForceSystem m_forceSystem;
-		GravitySystem m_gravitySystem;
-		MovementSystem m_movementSystem;
-
-		GraphicSystem m_graphicSystem;
-
-		ska::CameraSystem m_camera;
 
 };
 

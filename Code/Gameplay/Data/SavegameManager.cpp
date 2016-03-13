@@ -157,13 +157,13 @@ void SavegameManager::saveTrainer()
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}
 	of.close();
-	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	/*ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 
 	hero = wScreen.getEntityFactory().getTrainer();
 	reader.set("Trainer start_posx", hero->getHitboxCenterPos().x/TAILLEBLOC);
 	reader.set("Trainer start_posy", hero->getHitboxCenterPos().y/TAILLEBLOC);
 	reader.set("Trainer start_map_name", wScreen.getWorld().getName());
-	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");*/
 
 	saveItems();
 }
@@ -204,8 +204,8 @@ void SavegameManager::loadTrainer()
 	if(m_startMapChipsetName == "STRINGNOTFOUND")
 		cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << endl;
 
-	hero = wScreen.getEntityFactory().getTrainer();
-	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);
+	/*hero = wScreen.getEntityFactory().getTrainer();
+	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
 	
 	for (unsigned int i = 0; reader.get("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);

@@ -167,12 +167,12 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 
 			if (buf.y != -ENTITEMAX)
 			{
-				int id = wScreen.getEntityFactory().getNPC(buf.x, buf.y)->getID();
+				/*int id = wScreen.getEntityFactory().getNPC(buf.x, buf.y)->getID();
 				if (id >= 0){
 					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + ska::StringUtils::intToStr(id) + ".png");
 				} else {
 					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"pnj" + ska::StringUtils::intToStr(-id) + ".png");
-				}
+				}*/
 					
 
 				int j = 0, i;
@@ -191,13 +191,13 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 				if (w.getLayerEvent()->getAction(i) == "script") {
 					/* TODO : passer par "World" pour atteindre le ScriptDispatcher */
 					/*ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 1);*/
-				} else if (id < 0) {
+				} /*else if (id < 0) {
 					wScreen.getGUI().getDialog()->modifyText(w.getLayerEvent()->getParam(i));
 					wScreen.getGUI().getDialog()->hide(false);
 					wScreen.getGUI().getDialog()->display();
 					wScreen.getGUI().getImgDialog()->hide(false);
 					wScreen.getGUI().getImgDialog()->display();
-				}
+				}*/
 			}
 
 		}
@@ -212,7 +212,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 			ska::Point<int> absoluteMousePos = mousePos;
 			absoluteMousePos.x -= wScreen.getORel().x;
 			absoluteMousePos.y -= wScreen.getORel().y;
-			wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);
+			//wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);
 		}
 	}
 }

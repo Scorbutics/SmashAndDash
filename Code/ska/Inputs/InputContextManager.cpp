@@ -1,9 +1,14 @@
 #include "InputContextManager.h"
 #include "KeyboardInputMapContext.h"
+#include "KeyboardInputGUIContext.h"
 
 ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {
 	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputMapContext()));
-	m_contexts[0]->buildCodeMap();
+	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputGUIContext()));
+	
+	for (InputContextPtr& it : m_contexts) {
+		it->buildCodeMap();
+	}
 	m_ranges.resize(INPUT_MAX_RANGE);
 }
 

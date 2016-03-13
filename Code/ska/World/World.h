@@ -10,7 +10,7 @@
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
 #include "../Graphic/CameraSystem.h"
-
+#include "../ECS/EntityManager.h"
 
 namespace ska {
 	class Layer;
@@ -20,7 +20,7 @@ namespace ska {
 
 	class World : public HasGraphic {
 	public:
-		World(const unsigned int tailleBloc, CameraSystem& camera);
+		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		void load(std::string fileName, std::string chipsetName);
 
 		/*Weather* getFog();
@@ -31,13 +31,13 @@ namespace ska {
 		unsigned int getPixelWidth() const;
 		unsigned int getPixelHeight() const;
 		int getNbrBlocY();
-		ska::Layer* getLayerBot();
-		ska::Layer* getLayerMid();
-		ska::Layer* getLayerTop();
+		std::unique_ptr<ska::Layer>& getLayerBot();
+		std::unique_ptr<ska::Layer>& getLayerMid();
+		std::unique_ptr<ska::Layer>& getLayerTop();
 		const ska::Rectangle* getView() const;
-		ska::LayerE* getLayerEvent();
+		std::unique_ptr<ska::LayerE>& getLayerEvent();
 		void setWind(int wind);
-		ska::Texture* getChipset();
+		ska::Texture& getChipset();
 		int getWind() const;
 		std::string getChipsetName();
 		std::string getName();
@@ -81,12 +81,12 @@ namespace ska {
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
 		//std::unique_ptr<Weather> m_temps, m_brouillard;
 		std::vector<IniReader> m_mobSettings;
-		CameraSystem& m_camera;
 
 	protected:
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
 		Animation m_animBlocks;
-
+		EntityManager m_entityManager;
+		CameraSystem m_cameraSystem;
 	};
 }
 

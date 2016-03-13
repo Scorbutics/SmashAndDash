@@ -9,7 +9,7 @@
 
 using namespace std;
 
-ska::World::World(const unsigned int tailleBloc, CameraSystem& camera) : m_blockSize(tailleBloc), m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), m_camera(camera)
+ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : m_blockSize(tailleBloc), m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), m_cameraSystem(m_entityManager, wWidth, wHeight)
 {
 }
 
@@ -37,9 +37,9 @@ void ska::World::load(string fileName, string chipsetName)
 	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
 }
 
-ska::Texture* ska::World::getChipset()
+ska::Texture& ska::World::getChipset()
 {
-	return &m_chipset;
+	return m_chipset;
 }
 
 void ska::World::setWind(int wind) {
@@ -170,27 +170,27 @@ bool ska::World::canMoveToPos(ska::Rectangle pos, ska::PhysicObject* entityToMov
 }
 
 const ska::Rectangle* ska::World::getView() const {
-	return m_camera.getDisplay();
+	return m_cameraSystem.getDisplay();
 }
 
-ska::Layer* ska::World::getLayerBot()
+ska::LayerPtr& ska::World::getLayerBot()
 {
-	return m_lBot.get();
+	return m_lBot;
 }
 
-ska::Layer* ska::World::getLayerMid()
+ska::LayerPtr& ska::World::getLayerMid()
 {
-	return m_lMid.get();
+	return m_lMid;
 }
 
-ska::Layer* ska::World::getLayerTop()
+ska::LayerPtr& ska::World::getLayerTop()
 {
-	return m_lTop.get();
+	return m_lTop;
 }
 
-ska::LayerE* ska::World::getLayerEvent()
+ska::LayerEPtr& ska::World::getLayerEvent()
 {
-	return m_lEvent.get();
+	return m_lEvent;
 }
 
 string ska::World::getName()

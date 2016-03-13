@@ -1,7 +1,6 @@
 #include <vector>
 #include "../Utils/IDs.h"
 #include "../Gameplay\WGameCore.h"
-#include "../Utils/Chargemententitees.h"
 #include "../ska/Utils/Observable.h"
 #include "../Utils/ChargementImages.h"
 #include "../Graphic/Scrolling.h"
@@ -10,15 +9,15 @@
 #include "../ska/Script/ScriptDispatcher.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
+#include "../ska/World/LayerE.h"
 
 using namespace std;
 
 
 WGameCore::WGameCore():
-Window(), m_camera(m_entityManager, m_laFenetre, m_loFenetre), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_camera),
-	m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_entityManager), m_gravitySystem(m_entityManager),
-	m_forceSystem(m_entityManager), m_sceneMap(m_rawInputListener), m_sceneFight(m_rawInputListener) {
-	m_phero = m_EntityFactory.getTrainer();
+Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_laFenetre, m_loFenetre),
+	m_sceneMap(m_rawInputListener), m_sceneFight(m_rawInputListener) {
+	//m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
 	m_OfChip.x = 0;
@@ -82,12 +81,14 @@ ska::Rectangle& WGameCore::getORel()
     return m_origineRelative;
 }
 
+/*
 Player* WGameCore::getHero()
 {
 	if(m_phero == NULL)
 		return NULL;
     return &(*m_phero);
 }
+*/
 
 void WGameCore::setOffsetChipset(int x, int y, int w, int h)
 {
@@ -278,16 +279,8 @@ bool WGameCore::getContinue()
     return m_continue;
 }
 
-void WGameCore::eventUpdate(bool movingDisallowed)
-{
-	m_gravitySystem.refreshAll();
-	m_movementSystem.refreshAll();
-	m_collisionSystem.refreshAll();
-	m_forceSystem.refreshAll();
-	m_camera.refreshAll();
-	
+void WGameCore::eventUpdate(bool movingDisallowed) {
 	m_sceneCursor->eventUpdate(movingDisallowed);
-
 }
 
 
@@ -300,8 +293,37 @@ void WGameCore::initNewWorld()
     // 3) Chargement des entités apparaissant à l'écran. Pour m_persoEntite on va créer un tableau bidimensionnel :
     //1ere dimension: le nombre de types différents de mobs sur la map et 2eme dimension: le nombre de mobs du même type.
     //Ainsi que récupération des positions des évenements/entités.
-    LoadEntities();
-    m_phero->setID(0);
+
+	ska::Point<int> posEntityId;
+	ska::World& w = getWorld();
+
+
+	//Suppression des anciennes entités
+	//wScreen.getEntityFactory().deleteAll();
+
+	//Chargement des NPC sur la map (personnages & pokémon)
+	for (int i = 1; i < w.getLayerEvent()->getNbrLignes(); i++)
+	{
+		posEntityId.y = w.getLayerEvent()->getBlocY(i) * TAILLEBLOC;
+		posEntityId.x = w.getLayerEvent()->getBlocX(i) * TAILLEBLOC;
+		int id = w.getLayerEvent()->getID(i);
+		if (abs(id) <= ENTITEMAX) {
+			//wScreen.getEntityFactory().addNPC(id, posEntityId, w.getLayerEvent()->getPath(i));
+		} else {
+			cerr << "Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " << i << endl;
+		}
+
+	}
+
+	//Chargement des sprites de l'équipe pokémon
+	const size_t teamSize = getPokemonManager().getPokemonTeamSize();
+	for (unsigned int i = 0; i < teamSize; i++)
+	{
+		//getPokemonManager().getPokemon(i)->setID(getPokemonManager().getPokemon(i)->getID());
+		getPokemonManager().getPokemon(i)->setDirection(0);
+	}
+	
+    //m_phero->setID(0);
 
     // 4) Rechargement des propriétés du monde (exemple : musique de fond, temps et brouillard, pluie, etc...)
     m_world.getData();
@@ -309,13 +331,12 @@ void WGameCore::initNewWorld()
 }
 
 
-
-void WGameCore::setHero(Player* hero)
+/*void WGameCore::setHero(Player* hero)
 {
 	//m_kdListener.removeObserver(m_phero);
-    m_phero = hero;
+    //m_phero = hero;
 	//m_kdListener.addObserver(m_phero);
-}
+}*/
 
 void WGameCore::waitQuit(DialogMenu* window)
 {
@@ -347,9 +368,9 @@ vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
 {
 	ska::Rectangle posEvent;
 	vector<ska::Rectangle> id;
-	list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
+	//list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
 
-	for (Character* entity : currentEntityList)
+	/*for (Character* entity : currentEntityList)
 	{
 		posEvent = entity->getHitbox();
 
@@ -363,7 +384,7 @@ vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
 			id.push_back(pos);
 		}
     }
-
+	*/
     return id;
 
 }
@@ -448,7 +469,7 @@ void WGameCore::quitter(bool transition)
 	m_particleManager.stop();
 
 	//Désallocation mémoire
-	m_EntityFactory.deleteAll();
+	//m_EntityFactory.deleteAll();
 	
 }
 
@@ -468,10 +489,10 @@ Fight& WGameCore::getFight()
     return m_fight;
 }
 
-EntityFactory& WGameCore::getEntityFactory()
+/*EntityFactory& WGameCore::getEntityFactory()
 {
     return m_EntityFactory;
-}
+}*/
 
 const ska::InputActionContainer& WGameCore::getActions() const {
 	return m_sceneCursor->getInputContextManager().getActions();

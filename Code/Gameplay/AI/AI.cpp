@@ -90,7 +90,7 @@ void AI::act(Fight& fight)
         }
 
 
-	Character* trainer = wScreen.getEntityFactory().getTrainer();
+	/*Character* trainer = wScreen.getEntityFactory().getTrainer();
 	//mouvements aléatoires du dresseur durant un combat
 	if ((long)(SDL_GetTicks() - m_trainerT0) >= m_trainerTimer)
 	{
@@ -111,7 +111,7 @@ void AI::act(Fight& fight)
 			trainer->getPath()->setPathString(pathChar);			
 		}
 		m_trainerT0 = SDL_GetTicks();
-	}
+	}*/
 
 
 	ska::Rectangle screenRect;

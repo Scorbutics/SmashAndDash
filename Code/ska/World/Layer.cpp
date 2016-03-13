@@ -112,7 +112,7 @@ void ska::Layer::display()
 					} else {
 						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_rectAnim);
 					}                    
-					m_world.getChipset()->render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
+					m_world.getChipset().render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
                 }
             }
         }

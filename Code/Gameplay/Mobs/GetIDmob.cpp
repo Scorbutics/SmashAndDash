@@ -8,7 +8,7 @@ ska::Rectangle GetIDmob()
 {
 	vector<ska::Rectangle> ids;
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle hitbox = wScreen.getHero()->getHitbox();
+	/*ska::Rectangle hitbox = wScreen.getHero()->getHitbox();
     int direction = wScreen.getHero()->getDirection();
 
     ids = wScreen.detectEntity(hitbox, direction);
@@ -28,7 +28,7 @@ ska::Rectangle GetIDmob()
 			ska::Rectangle heroPos = wScreen.getHero()->getPos();
 			return ids[1];
 		}
-    }
+    }*/
 	ska::Rectangle idmob;
 	idmob.x = -ENTITEMAX;
 	idmob.y = -ENTITEMAX;

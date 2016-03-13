@@ -21,7 +21,7 @@ Fight::Fight(): m_animGrass(1, 3, false)
 
     m_grassSprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"grass.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     m_pkmn = NULL;
-    m_trainer = wScreen.getEntityFactory().getTrainer();
+    //m_trainer = wScreen.getEntityFactory().getTrainer();
     m_opponent = NULL;
     m_isFighting = false;
     m_dialogActive = false;
@@ -116,8 +116,8 @@ void Fight::start(Character* opponent)
 	wScreen.switchScene(EnumScene::FIGHT);
 
 	//Enregistrement dans les entités courantes du monde de l'apparition du Pokémon et de son opposant
-	wScreen.getEntityFactory().setPokemon(&(*m_pkmn));
-	wScreen.getEntityFactory().setOpponent(opponent);
+	/*wScreen.getEntityFactory().setPokemon(&(*m_pkmn));
+	wScreen.getEntityFactory().setOpponent(opponent);*/
 
     m_opponent = opponent;
 	m_opponentID.x = opponent->getID();
@@ -145,10 +145,10 @@ void Fight::start(Character* opponent)
 	}
 	
 	m_dial->modifyText("Un " + m_opponent->getDescriptor()->getName() + " sauvage veut se battre !");
-	ska::Rectangle posDial = wScreen.getHero()->getPos();
+	/*ska::Rectangle posDial = wScreen.getHero()->getPos();
 	posDial.x += wScreen.getORel().x + posDial.w;
 	posDial.y -= m_dial->getWidth() - wScreen.getORel().y;
-	m_dial->setPos(posDial);
+	m_dial->setPos(posDial);*/
 	showDialog(2000);
 
 	time = SDL_GetTicks();
@@ -167,12 +167,12 @@ void Fight::start(Character* opponent)
     wScreen.getGUI().resetAttackPokemonWindow(m_pkmn);
     wScreen.getGUI().resetAttackOpponentWindow(m_opponent);
 	
-	ska::Rectangle randomPos, boxScreen;
+	ska::Rectangle randomPos = { 0 }, boxScreen;
 	ska::Point<int> relativePos;
-	randomPos.x = wScreen.getHero()->getPos().x;
+	/*randomPos.x = wScreen.getHero()->getPos().x;
 	randomPos.y = wScreen.getHero()->getPos().y;
 	randomPos.h = wScreen.getHero()->getHeight();
-	randomPos.w = wScreen.getHero()->getWidth();
+	randomPos.w = wScreen.getHero()->getWidth();*/
 	boxScreen.x = 0;
 	boxScreen.y = 0;
 	boxScreen.w = wScreen.getWidth();
@@ -202,7 +202,7 @@ void Fight::start(Character* opponent)
     m_pkmn->teleport(randomPos.x, randomPos.y);
 
     wScreen.getPokeball().hide(true);
-    wScreen.getPokeball().launch(wScreen.getHero(), m_pkmn->getPos(), PokeballLaunchReason::Throw);
+    //wScreen.getPokeball().launch(wScreen.getHero(), m_pkmn->getPos(), PokeballLaunchReason::Throw);
 
     time = SDL_GetTicks();
     while(SDL_GetTicks() - time < 2000) // 2 secondes, le temps de lancer la pokeball par terre
@@ -219,7 +219,7 @@ void Fight::start(Character* opponent)
 	m_pkmn->getHPBar()->setCurrentValue(m_pkmn->getHp());
     m_pkmn->getHPBar()->setVisible(true);
 
-    wScreen.setHero(m_pkmn);
+    //wScreen.setHero(m_pkmn);
 
 
 }
@@ -237,15 +237,15 @@ void Fight::end(EndFightReason::Enum endReason)
 
 	
 	//remet les stats réelles (et non plus celles en combat)
-	wScreen.getHero()->refreshStats();
+	//wScreen.getHero()->refreshStats();
 	m_opponent->refreshStats();
 
     //Lancer de Pokéball pour la fin du fight :
 	m_opponent->getHPBar()->setVisible(false);
 	m_pkmn->getHPBar()->setVisible(false);
 	m_opponent->setVisible(false);
-    wScreen.getPokeball().launch(m_trainer, wScreen.getHero()->getCenterPos(), PokeballLaunchReason::Recall);
-    wScreen.getHero()->reset();
+    //wScreen.getPokeball().launch(m_trainer, wScreen.getHero()->getCenterPos(), PokeballLaunchReason::Recall);
+    //wScreen.getHero()->reset();
 
     //on attend 2s le temps que la Pokéball aterrisse
     unsigned int duree = 2000, t0 = 0;
@@ -264,7 +264,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	//*****************
 
     //remettre le dresseur de pokémon en tant que héro principal
-    wScreen.setHero(m_trainer);
+    //wScreen.setHero(m_trainer);
 	
 	m_trainer->getPath()->setPathString("");
 
@@ -283,7 +283,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	if (endReason == EndFightReason::Lose)
 	{
 		wScreen.getWorld().changeLevel("poke1.bmp", "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"chipset.png");
-		wScreen.getHero()->teleport(8*TAILLEBLOC,5*TAILLEBLOC);
+		//wScreen.getHero()->teleport(8*TAILLEBLOC,5*TAILLEBLOC);
 		wScreen.getPokemonManager().heal();
 	}
 
@@ -342,8 +342,8 @@ void Fight::display()
 void Fight::refreshFight() {
 	WGameCore& wScreen = WGameCore::getInstance();
 	wScreen.getAI().act(*this);
-	if (wScreen.getHero() != NULL)
-		wScreen.getHero()->refreshSkills();
+	/*if (wScreen.getHero() != NULL)
+		wScreen.getHero()->refreshSkills();*/
 	if (isFighting() && m_opponent != NULL)
 		m_opponent->refreshSkills();
 }
@@ -356,19 +356,19 @@ void Fight::refresh()
 		throw ska::IllegalStateException("Impossible de refresh un combat sans être dans la scène de combat");
 	}
 
-	if(m_trainer->getSpeed() > 0)
-		m_fightCount = rand()%(COMBAT_COUNT) + 1; //chiffre aléatoire entre 1 et COMBAT_COUNT (en fait, cela servira à déclencher aléatoirement les combats en hautes herbes)
+	/*if(m_trainer->getSpeed() > 0)
+		m_fightCount = rand()%(COMBAT_COUNT) + 1; //chiffre aléatoire entre 1 et COMBAT_COUNT (en fait, cela servira à déclencher aléatoirement les combats en hautes herbes)*/
 
 	//2 : chiffre au hasard entre 1 et COMBAT_COUNT
-	if(m_fightCount == 2 && isInFightArea(m_trainer)) //Si on se trouve en zone de combat potentiel
+	/*if(m_fightCount == 2 && isInFightArea(m_trainer)) //Si on se trouve en zone de combat potentiel
 	{
 		m_fightCount = 0;
 		ska::IniReader* reader = GetRandomMobSettings(&wScreen.getWorld());
 
-		if(reader != NULL)
-			start(wScreen.getEntityFactory().createOpponent(reader));
+		/*if(reader != NULL)
+			start(wScreen.getEntityFactory().createOpponent(reader));*/
 		
-	}
+	/*}
 	else if(m_fightCount == 3)
 	{
 		m_fightCount = 0;
@@ -384,10 +384,10 @@ void Fight::refresh()
 		for(size_t i = 0; i < size; i++)
 			if(ids[i].x > 0 && (ids[i].x != m_trainer->getID() || ids[i].y != m_trainer->getEntityNumber()))  //Sinon si on est à proximité d'un Pokémon
 			{
-				start(wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y));
-				return;
+				/*start(wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y));*/
+				/*return;
 			}
-	}
+	}*/
 	
 }
 

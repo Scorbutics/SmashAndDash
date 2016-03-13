@@ -24,6 +24,6 @@ std::string CommandHideCharacter::execute(ska::IScript* script, std::vector<std:
 	number = ska::StringUtils::strToInt(args[1]);
 	hiding = ska::StringUtils::strToInt(args[2]);
 
-	wScreen.getEntityFactory().getNPC(id, number)->setVisible(!hiding);
+	//wScreen.getEntityFactory().getNPC(id, number)->setVisible(!hiding);
 	return "";
 }

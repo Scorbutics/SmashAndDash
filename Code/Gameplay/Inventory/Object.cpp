@@ -79,7 +79,7 @@ bool Object::use()
 		ska::Point<int> pos = mousePos;
 		pos.x -= wScreen.getORel().x;
 		pos.y -= wScreen.getORel().y;
-		wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), pos, PokeballLaunchReason::Capture);
+		//wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), pos, PokeballLaunchReason::Capture);
     }
 
 	return true;

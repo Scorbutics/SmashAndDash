@@ -36,7 +36,7 @@ std::string CommandTeleport::execute(ska::IScript* script, std::vector<std::stri
 		x = atoi(param.substr(0, param.find_first_of(':')).c_str());
 		y = atoi(param.substr(param.find_first_of(':') + 1, param.size()).c_str());
 
-		wScreen.getEntityFactory().getNPC(id, number)->teleport(x*TAILLEBLOC, y*TAILLEBLOC);
+		//wScreen.getEntityFactory().getNPC(id, number)->teleport(x*TAILLEBLOC, y*TAILLEBLOC);
 	}
 	else {
 		teleportHeroToMap(param);
@@ -48,7 +48,7 @@ void CommandTeleport::teleportHeroToMap(string param)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
-	Character* hero = wScreen.getHero();
+	//Character* hero = wScreen.getHero();
 
 	string fichier, fichier2, fichierD;
 	int x = 1, y;
@@ -84,6 +84,6 @@ void CommandTeleport::teleportHeroToMap(string param)
 
 	w.changeLevel(fichier, chipsetName);
 
-	hero->teleport(x*TAILLEBLOC - wScreen.getHero()->getWidth() / 2, y*TAILLEBLOC - wScreen.getHero()->getHeight() / 2);
+	//hero->teleport(x*TAILLEBLOC - wScreen.getHero()->getWidth() / 2, y*TAILLEBLOC - wScreen.getHero()->getHeight() / 2);
 
 }

@@ -26,6 +26,6 @@ std::string CommandFollow::execute(ska::IScript* script, std::vector<std::string
 	number_target = ska::StringUtils::strToInt(args[3]);
 	flag = ska::StringUtils::strToInt(args[4]);
 
-	wScreen.getEntityFactory().getNPC(id, number)->followEntity(flag ? wScreen.getEntityFactory().getNPC(id_target, number_target) : NULL);
+	//wScreen.getEntityFactory().getNPC(id, number)->followEntity(flag ? wScreen.getEntityFactory().getNPC(id_target, number_target) : NULL);
 	return "";
 }

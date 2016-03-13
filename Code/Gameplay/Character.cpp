@@ -95,7 +95,7 @@ vector<ska::Rectangle> Character::move()
         for(unsigned int i = 0; i < idSize; i++)
         {
 			
-            if((ids[i].y == ID_CURRENT_OPPONENT && m_entityNumber == ID_CURRENT_POKEMON) || (ids[i].y == ID_CURRENT_POKEMON && m_entityNumber == ID_CURRENT_OPPONENT))
+            /*if((ids[i].y == ID_CURRENT_OPPONENT && m_entityNumber == ID_CURRENT_POKEMON) || (ids[i].y == ID_CURRENT_POKEMON && m_entityNumber == ID_CURRENT_OPPONENT))
             {
 				Character* mob = wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y);
                 bool thisGetDamages = mob->getSpeed() > this->getSpeed();
@@ -113,7 +113,7 @@ vector<ska::Rectangle> Character::move()
 				
                 if(totdamage > 1)
                     wScreen.getShakerManager().shake(10, 1000);
-            }
+            }*/
         }
     }
 

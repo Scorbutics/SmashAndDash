@@ -24,7 +24,7 @@ std::string CommandMove::execute(ska::IScript* script, std::vector<std::string>&
 	dir = args[2];
 	speed = ska::StringUtils::strToInt(args[3]);
 
-	for (unsigned int j = 0; j < dir.size(); j++)
+	/*for (unsigned int j = 0; j < dir.size(); j++)
 	{
 		for (int i = 0; i < (TAILLEBLOC + 0.5*speed) / speed; i += ((speed + 1) / 2))
 		{
@@ -37,7 +37,7 @@ std::string CommandMove::execute(ska::IScript* script, std::vector<std::string>&
 			wScreen.flip();
 			SDL_Delay(30);
 		}
-	}
+	}*/
 	return "";
 }
 

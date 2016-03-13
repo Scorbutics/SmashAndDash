@@ -26,8 +26,8 @@ std::string CommandPlayerPresence::execute(ska::IScript* script, std::vector<std
 	posToX = args[2];
 	posToY = args[3];
 
-	idPlayer.x = wScreen.getEntityFactory().getTrainer()->getID();
-	idPlayer.y = wScreen.getEntityFactory().getTrainer()->getEntityNumber();
+	idPlayer.x = 0;//wScreen.getEntityFactory().getTrainer()->getID();
+	idPlayer.y = 0;//wScreen.getEntityFactory().getTrainer()->getEntityNumber();
 	idPlayer.w = 0;
 	idPlayer.h = 0;
 

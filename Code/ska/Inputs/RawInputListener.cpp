@@ -1,6 +1,6 @@
 #include "RawInputListener.h"
 #include "../Utils\SkaConstants.h"
-
+#include "../Exceptions/TerminateProcessException.h"
 
 
 ska::RawInputListener::RawInputListener()
@@ -49,6 +49,7 @@ void ska::RawInputListener::update()
                 break;
             case SDL_QUIT:
 				m_keyIn.setQuit(1);
+				throw TerminateProcessException("Program quitted");
                 break;
             default:
                 break;

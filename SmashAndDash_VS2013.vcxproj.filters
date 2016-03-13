@@ -126,9 +126,6 @@
     <ClInclude Include="Code\Utils\ChargementDonneesMonde.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\Chargemententitees.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\ChargementImages.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -714,6 +711,15 @@
     <ClInclude Include="Code\ska\Inputs\InputRange.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -735,9 +741,6 @@
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utils\ChargementDonneesMonde.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Utils\Chargemententitees.cpp">
       <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utils\ChargementImages.cpp">
@@ -1149,6 +1152,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputGUIContext.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputContext.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

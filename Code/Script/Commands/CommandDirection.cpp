@@ -30,6 +30,6 @@ std::string CommandDirection::execute(ska::IScript* script, std::vector<std::str
 	id = ska::StringUtils::strToInt(idStr);
 	dir = ska::StringUtils::strToInt(dirStr);
 
-	wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
+	//wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
 	return "";
 }

@@ -9,6 +9,7 @@
 #include "Gameplay/WGameCore.h"
 #include "./Utils/ChargementDonneesMonde.h"
 #include "./ska/Exceptions/GenericException.h"
+#include "./ska/Exceptions/TerminateProcessException.h"
 #include "./ska/Utils/MessagePopup.h"
 using namespace std;
 typedef unique_ptr<Character> Character_ptr;
@@ -54,6 +55,9 @@ int main (int argc, char *argv[])
 		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
 		while (wScreen.refresh()); //boucle principale
 		wScreen.quitter(false);
+	}
+	catch (ska::TerminateProcessException tpe) {
+		clog << tpe.what() << endl;
 	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
 		cerr << e.what() << endl;

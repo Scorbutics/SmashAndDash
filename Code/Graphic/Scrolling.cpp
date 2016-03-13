@@ -13,8 +13,8 @@ void Scrolling()
 	ska::Rectangle origineRelative;
 
     int x, y;
-    x = wScreen.getEntityFactory().getTrainer()->getPos().x;
-    y = wScreen.getEntityFactory().getTrainer()->getPos().y;
+	x = 0;//wScreen.getEntityFactory().getTrainer()->getPos().x;
+	y = 0;//wScreen.getEntityFactory().getTrainer()->getPos().y;
 
     if(wScreen.isScrollingActive())
     {

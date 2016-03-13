@@ -31,6 +31,6 @@ std::string CommandThrowPokebal::execute(ska::IScript* script, std::vector<std::
 	dst.y = ska::StringUtils::strToInt(args[3]);
 	launchReason = ska::StringUtils::strToInt(args[4]);
 
-	wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));
+	//wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));
 	return "";
 }

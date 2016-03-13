@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
     <ClInclude Include="Code\ska\Graphic\CameraSystem.h" />
     <ClInclude Include="Code\Gameplay\Component\CollisionComponent.h" />
@@ -154,6 +155,8 @@
     <ClInclude Include="Code\ska\Inputs\InputAction.h" />
     <ClInclude Include="Code\ska\Inputs\InputContext.h" />
     <ClInclude Include="Code\ska\Inputs\InputRange.h" />
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h" />
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h" />
     <ClInclude Include="Code\ska\Scene\HasGraphic.h" />
     <ClInclude Include="Code\ska\Scene\HasLogic.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\Drawable.h" />
@@ -179,7 +182,6 @@
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h" />
     <ClInclude Include="Code\Gameplay\Character.h" />
     <ClInclude Include="Code\Utils\ChargementDonneesMonde.h" />
-    <ClInclude Include="Code\Utils\Chargemententitees.h" />
     <ClInclude Include="Code\Utils\ChargementImages.h" />
     <ClInclude Include="Code\ska\Script\Command\Command.h" />
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h" />
@@ -338,6 +340,8 @@
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\ska\ECS\StaticCounterGlobal.cpp" />
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputContext.cpp" />
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputGUIContext.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractCommand.cpp" />
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
@@ -350,7 +354,6 @@
     <ClCompile Include="Code\Gameplay\Character.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
     <ClCompile Include="Code\Utils\ChargementDonneesMonde.cpp" />
-    <ClCompile Include="Code\Utils\Chargemententitees.cpp" />
     <ClCompile Include="Code\Utils\ChargementImages.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandAddPokemon.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssign.cpp" />

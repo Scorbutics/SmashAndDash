@@ -6,7 +6,9 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/World/Layer.h"
 
-WorldImpl::WorldImpl(const unsigned int tailleBloc, ska::CameraSystem& camera) : ska::World(tailleBloc, camera) {
+WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
+m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_entityManager), m_gravitySystem(m_entityManager),
+m_forceSystem(m_entityManager) {
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -14,7 +16,7 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	//Liste de tous les personnages sur le monde courant
-	list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
+	//list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
 
 	//Première couche
 	drawables.addHead(*m_lBot);
@@ -29,7 +31,7 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());
 
-	for (Character* npc : currentEntityList) {
+	/*for (Character* npc : currentEntityList) {
 		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
 
 		//Première partie des personnages		
@@ -37,7 +39,7 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 
 		//Deuxième partie des personnages (ceux au sol)
 		drawables.add(*parts[1]);
-	}
+	}*/
 
 	//Troisième couche
 	drawables.addHead2D(*m_lTop);
@@ -46,10 +48,15 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 
 
 void WorldImpl::refreshEntities() {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
+	m_gravitySystem.refreshAll();
+	m_movementSystem.refreshAll();
+	m_collisionSystem.refreshAll();
+	m_forceSystem.refreshAll();
+	m_cameraSystem.refreshAll();
 
 	//On refresh tous les personnages
-	auto it = wScreen.getEntityFactory().getCharacterList().begin();
+	/*auto it = wScreen.getEntityFactory().getCharacterList().begin();
 	while (it != wScreen.getEntityFactory().getCharacterList().end()) {
 		Character* npc = (*it);
 		if (npc->isVisible() && npc->isAlive()) {
@@ -64,7 +71,7 @@ void WorldImpl::refreshEntities() {
 			it = wScreen.getEntityFactory().getCharacterList().erase(it);
 		}
 
-	}
+	}*/
 }
 
 
