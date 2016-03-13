@@ -49,6 +49,8 @@ void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
 	ShakerManager& shaker = core.getShakerManager();
 	//ska::InputListener& kdListener = core.getInputListener();
 
+	m_inputCManager.refresh();
+
 	world.refreshEntities();
 	particleManager.refresh();
 	rainParticleManager.refresh();

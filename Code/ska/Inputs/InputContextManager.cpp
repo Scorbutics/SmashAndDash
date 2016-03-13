@@ -8,6 +8,7 @@ ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ri
 }
 
 void ska::InputContextManager::refresh() {
+	m_ril.update();
 	m_actions.reset();
 	InputRange empty;
 	std::fill(m_ranges.begin(), m_ranges.end(), empty);

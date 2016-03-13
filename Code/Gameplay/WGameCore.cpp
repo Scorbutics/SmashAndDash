@@ -285,7 +285,7 @@ void WGameCore::eventUpdate(bool movingDisallowed)
 	m_collisionSystem.refreshAll();
 	m_forceSystem.refreshAll();
 	m_camera.refreshAll();
-
+	
 	m_sceneCursor->eventUpdate(movingDisallowed);
 
 }

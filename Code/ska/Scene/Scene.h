@@ -15,7 +15,7 @@ namespace ska {
 		}
 
 		virtual ~Scene() {}
-	private:
+	protected:
 		InputContextManager m_inputCManager;
 	};
 }
