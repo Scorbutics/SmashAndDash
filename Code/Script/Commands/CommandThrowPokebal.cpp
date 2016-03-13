@@ -19,7 +19,7 @@ int CommandThrowPokebal::argumentsNumber() {
 std::string CommandThrowPokebal::execute(ska::IScript* script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle srcId, dst;
+	ska::Point<int> srcId, dst;
 	int launchReason;
 	//0 : Capture
 	//1 : Recall

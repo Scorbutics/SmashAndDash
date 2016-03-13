@@ -6,7 +6,7 @@
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap()
+AbstractSceneMap::AbstractSceneMap(ska::RawInputListener& ril) : AbstractNoGUISceneMap(ril)
 {
 }
 
@@ -30,17 +30,17 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
 	GUI& gui = core.getGUI();
-	ska::InputListener& kdListener = core.getInputListener();
+	//ska::InputListener& kdListener = core.getInputListener();
 	
 	AbstractNoGUISceneMap::eventUpdate(stuck);
 
 	//Gère les évènements extérieurs de la GUI (input)
 	//GUI A PASSER EN TANT QU'OBSERVATEUR
-	if (!kdListener.refresh(stuck)) {
+	/*if (!kdListener.refresh(stuck)) {
 		gui.getDialog()->hide(true);
 		gui.getImgDialog()->hide(true);
 		gui.hide(false);
-	}
+	}*/
 
 	//GUI
 	gui.dialogRefresh();

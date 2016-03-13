@@ -1,11 +1,12 @@
 #ifndef DEF_PARTICLE
 #define DEF_PARTICLE
 
-#include <SDL2/SDL.h>
+
 #include <iostream>
 #include <vector>
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
+#include "../Graphic/Point.h"
 
 namespace ska {
 	class Particle
@@ -15,10 +16,10 @@ namespace ska {
 		Particle(int idSprite, unsigned int weight, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative);
 		virtual void refresh() = 0;
 		void display();
-		virtual void launch(ska::Rectangle origin, float angle, unsigned int power);
+		virtual void launch(ska::Point<int> origin, float angle, unsigned int power);
 		virtual void addSlopeNoise(float x) = 0;
 		virtual void resetSlopeNoise() = 0;
-		virtual ska::Rectangle getOrigin() const;
+		virtual ska::Point<int> getOrigin() const;
 
 		void active();
 		void destroy();
@@ -49,7 +50,7 @@ namespace ska {
 		double m_t, m_lifetime, m_splashTime; //m_splashTime : temps pendant lequel la particule affiche son sprite de fin de vie (mettre à 0 s'il n'y a pas de sprite de fin de vie)
 
 	private:
-		ska::Rectangle m_fixedOrigin;
+		ska::Point<int> m_fixedOrigin;
 
 	};
 

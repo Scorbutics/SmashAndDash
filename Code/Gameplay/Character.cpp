@@ -131,8 +131,7 @@ void Character::refresh()
 	{
 		ska::Rectangle entityPos = m_entityFollow->getPos();
 		this->setSpeedLimit(m_entityFollow->getSpeedLimit());
- 		if (ska::RectangleUtils::distanceSquared(&entityPos, &m_rect) > 2*2*TAILLEBLOC*TAILLEBLOC)
-		{
+ 		if (ska::RectangleUtils::distanceSquared(entityPos, m_rect) > 2*2*TAILLEBLOC*TAILLEBLOC) {
 			//entityPos.x += wScreen.getORel().x;
 			//entityPos.y += wScreen.getORel().y;
 			applyForce(entityPos, (float)getSpeedLimit()*5);
@@ -441,7 +440,7 @@ void Character::setHP(int hp)
     m_hpbar.setCurrentValue(m_hp);
 }
 
-bool Character::launchSkill(unsigned int skillNumber, ska::Rectangle dest)
+bool Character::launchSkill(unsigned int skillNumber, ska::Point<int> dest)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     //Au cas où on essaie d'accéder à un skill inexistant
@@ -483,16 +482,16 @@ void Character::refreshSkills()
 		Character* pkmn = wScreen.getFight().getPokemon(), *opponent = wScreen.getFight().getOpponent();
 		ska::Rectangle pkmnPos = pkmn->getHitboxCenterPos(), opponentPos = opponent->getHitboxCenterPos();
 
-		if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_POKEMON  && ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
+		if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_POKEMON  && ska::RectangleUtils::distanceSquared(pkmnPos, opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
 		{
 			//pkmn->playAnimation(CHARACTER_ANIMATION_ATTACK, false);
-			pkmn->setDirection(ska::RectangleUtils::getDirectionFromPos(&pkmnPos, &opponentPos));
+			pkmn->setDirection(ska::RectangleUtils::getDirectionFromPos(pkmnPos, opponentPos));
 			m_skillAutoAttack->launch(opponentPos);
 		}
-		else if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_OPPONENT && ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
+		else if (m_skillAutoAttack->cooldownOK() && m_entityNumber == ID_CURRENT_OPPONENT && ska::RectangleUtils::distanceSquared(pkmnPos, opponentPos) <= m_skillAutoAttack->getRange()*m_skillAutoAttack->getRange()*TAILLEBLOC*TAILLEBLOC)
 		{
 			//opponent->playAnimation(CHARACTER_ANIMATION_ATTACK, false);
-			opponent->setDirection(ska::RectangleUtils::getDirectionFromPos(&opponentPos, &pkmnPos));
+			opponent->setDirection(ska::RectangleUtils::getDirectionFromPos(opponentPos, pkmnPos));
 			m_skillAutoAttack->launch(pkmnPos);
 		}
 		
@@ -641,7 +640,7 @@ bool Character::damage(Character* src, unsigned int damages)
 	
 	animPos.w = 48;
 	animPos.h = 48;
-	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, ska::RectangleUtils::posToCenterPicture(&animPos, &m_rect), 1, -1, 3, 150);
+	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, ska::RectangleUtils::posToCenterPicture(animPos, m_rect), 1, -1, 3, 150);
     m_hpbar.setCurrentValue(m_hp);
 	return m_alive;
 }

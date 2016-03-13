@@ -35,18 +35,19 @@ ska::Rectangle ska::Particle::getPos()
     return m_pos;
 }
 
-void ska::Particle::launch(ska::Rectangle origin, float angle, unsigned int power)
+void ska::Particle::launch(ska::Point<int> origin, float angle, unsigned int power)
 {
     this->active();
 	m_fixedOrigin = origin;
-	m_pos = origin;
+	m_pos.x = origin.x;
+	m_pos.y = origin.y;
     m_angle = angle;
     m_power = power;
     m_state = PARTICLE_STATE_LAUNCHED;
     //m_sprite = NULL;
 }
 
-ska::Rectangle ska::Particle::getOrigin() const
+ska::Point<int> ska::Particle::getOrigin() const
 {
 	return m_fixedOrigin;
 }

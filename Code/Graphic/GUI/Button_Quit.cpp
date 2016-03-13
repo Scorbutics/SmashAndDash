@@ -28,16 +28,17 @@ void Button_Quit::display()
         m_active = true;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    ska::MouseInput * in = wScreen.getInputListener().getMouseInput();
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 
-	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
-    buf.x += (m_parent->getPos())->x;
-    buf.y += (m_parent->getPos())->y;
+	ska::Rectangle buf = m_relativePos;
+    buf.x += (m_parent->getPos()).x;
+    buf.y += (m_parent->getPos()).y;
 
-	if (ska::RectangleUtils::isPositionInBox(&mousePos, &buf))
+	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
 		m_spriteActive.render(buf.x, buf.y);
-    else
-        m_sprite.render(buf.x, buf.y);
+	} else {
+		m_sprite.render(buf.x, buf.y);
+	}
     
 
 }
@@ -50,20 +51,17 @@ void Button_Quit::refresh()
 		m_active = true;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::MouseInput * in = wScreen.getInputListener().getMouseInput();
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputActionContainer& in = wScreen.getActions();
 
-	ska::Rectangle buf = m_relativePos, mousePos = in->getMousePos();
-	buf.x += (m_parent->getPos())->x;
-	buf.y += (m_parent->getPos())->y;
+	ska::Rectangle buf = m_relativePos;
+	buf.x += (m_parent->getPos()).x;
+	buf.y += (m_parent->getPos()).y;
 
-	if (ska::RectangleUtils::isPositionInBox(&mousePos, &buf))
-	{
-		if(in->mouseClick(SDL_BUTTON_LEFT))
-		{
+	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
+		if(in[ska::InputAction::LClic]) {
 			m_parent->hide(true);
 			m_active = false;
-			in->setMouseLastState(SDL_BUTTON_LEFT, 0);
-			in->setMouseState(SDL_BUTTON_LEFT, 0);
 		}
 	}
 }

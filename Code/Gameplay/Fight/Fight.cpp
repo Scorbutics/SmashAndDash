@@ -66,10 +66,10 @@ bool Fight::isInFightArea(Player* hero)
         return false;
     }
 
-	ska::Rectangle absolutePos = hero->getHitboxCenterPos();
+	ska::Point<int> absolutePos = hero->getHitboxCenterPos();
 
     for(unsigned int i = 0; i < m_areaList.size(); i++)
-        if(ska::RectangleUtils::isPositionInBox(&absolutePos, &(m_areaList[i])))
+        if(ska::RectangleUtils::isPositionInBox(absolutePos, m_areaList[i]))
             return true;
 
     return false;
@@ -147,7 +147,7 @@ void Fight::start(Character* opponent)
 	m_dial->modifyText("Un " + m_opponent->getDescriptor()->getName() + " sauvage veut se battre !");
 	ska::Rectangle posDial = wScreen.getHero()->getPos();
 	posDial.x += wScreen.getORel().x + posDial.w;
-	posDial.y -= m_dial->getPos()->h - wScreen.getORel().y;
+	posDial.y -= m_dial->getWidth() - wScreen.getORel().y;
 	m_dial->setPos(posDial);
 	showDialog(2000);
 
@@ -167,7 +167,8 @@ void Fight::start(Character* opponent)
     wScreen.getGUI().resetAttackPokemonWindow(m_pkmn);
     wScreen.getGUI().resetAttackOpponentWindow(m_opponent);
 	
-	ska::Rectangle randomPos, relativePos, boxScreen;
+	ska::Rectangle randomPos, boxScreen;
+	ska::Point<int> relativePos;
 	randomPos.x = wScreen.getHero()->getPos().x;
 	randomPos.y = wScreen.getHero()->getPos().y;
 	randomPos.h = wScreen.getHero()->getHeight();
@@ -190,7 +191,7 @@ void Fight::start(Character* opponent)
 			
 			relativePos.x = randomPos.x + wScreen.getORel().x;
 			relativePos.y = randomPos.y + wScreen.getORel().y;
-		} while (!ska::RectangleUtils::isPositionInBox(&relativePos, &boxScreen));
+		} while (!ska::RectangleUtils::isPositionInBox(relativePos, boxScreen));
 
 	}while(wScreen.getWorld().getCollision(randomPos.x/TAILLEBLOC, randomPos.y/TAILLEBLOC) || !wScreen.detectEntity(randomPos).empty()); 
 	
@@ -402,7 +403,7 @@ void Fight::displayDialog()
 		
 		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
         pos.x += wScreen.getORel().x + pos.w;
-        pos.y -= m_dial->getPos()->h - wScreen.getORel().y;
+        pos.y -= m_dial->getHeight() - wScreen.getORel().y;
 
         m_dial->setPos(pos);
         m_dial->display();

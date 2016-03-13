@@ -15,4 +15,6 @@ class WindowSettings: public MovableWindow
     int m_saveSettings, m_saveGame;
 };
 
+typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
+
 #endif

@@ -29,8 +29,8 @@ DialogMenu* Window_Area::getParent()
 ska::Rectangle Window_Area::getAbsolutePos()
 {
 	ska::Rectangle buf = m_relativePos;
-    buf.x += (m_parent->getPos())->x;
-    buf.y += (m_parent->getPos())->y;
+    buf.x += (m_parent->getPos()).x;
+    buf.y += (m_parent->getPos()).y;
     return buf;
 }
 

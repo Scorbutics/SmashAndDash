@@ -39,8 +39,8 @@ Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, in
     m_relativePos.w = width;
     m_relativePos.h = height;
 
-    m_posTopArrow.x = m_width + (m_parent->getPos())->x + m_relativePos.x;
-    m_posTopArrow.y = (m_parent->getPos())->y + m_relativePos.y;
+    m_posTopArrow.x = m_width + (m_parent->getPos()).x + m_relativePos.x;
+    m_posTopArrow.y = (m_parent->getPos()).y + m_relativePos.y;
     m_posTopArrow.w = m_topArrow.getWidth();
     m_posTopArrow.h = m_topArrow.getHeight();
 
@@ -67,8 +67,8 @@ void Scroll_Text::display()
 
     if(m_parent->isMoving())
     {
-        m_posTopArrow.x = m_width + (m_parent->getPos())->x + m_relativePos.x;
-        m_posTopArrow.y = (m_parent->getPos())->y + m_relativePos.y;
+        m_posTopArrow.x = m_width + (m_parent->getPos()).x + m_relativePos.x;
+        m_posTopArrow.y = (m_parent->getPos()).y + m_relativePos.y;
         m_posBotArrow = m_posTopArrow;
         m_posBotArrow.y += m_linesNumber * m_fontSize - m_botArrow.getHeight();
         m_posCursor = m_posTopArrow;
@@ -76,8 +76,8 @@ void Scroll_Text::display()
     }
 
 	ska::Rectangle buf = m_relativePos, bufScrollBar;
-    buf.x += (m_parent->getPos())->x;
-    buf.y += (m_parent->getPos())->y;
+    buf.x += (m_parent->getPos()).x;
+    buf.y += (m_parent->getPos()).y;
 
     bufScrollBar = buf;
     bufScrollBar.x += m_width;
@@ -107,39 +107,40 @@ void Scroll_Text::display()
 void Scroll_Text::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
-	ska::Rectangle buf = m_relativePos, bufScrollBar, mousePos = in->getMousePos();
-	buf.x += (m_parent->getPos())->x;
-	buf.y += (m_parent->getPos())->y;
+	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	ska::Rectangle buf = m_relativePos, bufScrollBar;
+	buf.x += (m_parent->getPos()).x;
+	buf.y += (m_parent->getPos()).y;
 
 	bufScrollBar = buf;
 	bufScrollBar.x += m_width;
 	bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
 	bufScrollBar.w = m_scrollBar.getWidth();
 
-	if(ska::RectangleUtils::isPositionInBox(&mousePos, &m_posTopArrow))
+	if (ska::RectangleUtils::isPositionInBox(mouseClickPos, m_posTopArrow))
 	{
-		if(m_lastMouseState == 1 && !in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la fleche du haut
+		if (m_lastMouseState == 1 && !in[ska::InputAction::LClic]) //Si on clique sur la fleche du haut
 		{
 			m_start--;
 			if(m_start < 0)
 				m_start = 0;
 		}
 	}
-	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &m_posBotArrow))
+	else if (ska::RectangleUtils::isPositionInBox(mouseClickPos, m_posBotArrow))
 	{
-		if(m_lastMouseState == 1 && !in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la fleche du bas
+		if (m_lastMouseState == 1 && !in[ska::InputAction::LClic]) //Si on clique sur la fleche du bas
 		{
 			m_start++;
 			if(m_start > (int)m_linesNumber)
 				m_start = m_linesNumber;
 		}
 	}
-	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &bufScrollBar))
+	else if (ska::RectangleUtils::isPositionInBox(mouseClickPos, bufScrollBar))
 	{
-		if(in->getMouseState(SDL_BUTTON_LEFT)) //Si on clique sur la barre du curseur
+		if (in[ska::InputAction::LClic]) //Si on clique sur la barre du curseur
 		{
-			m_start = (in->getMousePos().y - m_posTopArrow.y)/((int)m_text.size()) - 1;
+			m_start = (mouseClickPos.y - m_posTopArrow.y) / ((int)m_text.size()) - 1;
 
 			if(m_start > (int)m_linesNumber)
 				m_start = m_linesNumber;
@@ -151,7 +152,7 @@ void Scroll_Text::refresh()
 
 	m_posCursor.y = m_posTopArrow.y + m_topArrow.getHeight() + m_start * ((int)m_text.size());
 
-	m_lastMouseState = in->getMouseState(SDL_BUTTON_LEFT);
+	m_lastMouseState = in[ska::InputAction::LClic];
 }
 
 Scroll_Text::~Scroll_Text()

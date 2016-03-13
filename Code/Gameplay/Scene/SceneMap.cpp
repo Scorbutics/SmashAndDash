@@ -6,8 +6,7 @@
 #include "SceneMap.h"
 #include "../../ska/World/LayerE.h"
 
-SceneMap::SceneMap()
-{
+SceneMap::SceneMap(ska::RawInputListener& ril) : AbstractSceneMap(ril) {
 }
 
 void SceneMap::graphicUpdate(ska::DrawableContainer& drawables) {

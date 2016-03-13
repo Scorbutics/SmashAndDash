@@ -6,8 +6,7 @@
 #include "SceneFight.h"
 
 
-SceneFight::SceneFight()
-{
+SceneFight::SceneFight(ska::RawInputListener& ril) : AbstractSceneMap(ril) {
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {

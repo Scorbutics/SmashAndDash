@@ -72,17 +72,19 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 void SlotPokemon_Area::display()
 {
 	ska::Rectangle buf = m_relativePos;
-    buf.x += m_parent->getPos()->x;
-    buf.y += m_parent->getPos()->y;
+    buf.x += m_parent->getPos().x;
+    buf.y += m_parent->getPos().y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 
-    if(in->getMouseState(SDL_BUTTON_LEFT))
-        m_imagePressed.render(buf.x, buf.y);
-    else
-        m_image.render(buf.x, buf.y);
+	const ska::InputActionContainer& in = wScreen.getActions();
 
+	if (in[ska::InputAction::LClic]) {
+		m_imagePressed.render(buf.x, buf.y);
+	} else {
+		m_image.render(buf.x, buf.y);
+	}
+        
     m_spriteArea->display();
     m_pvArea->display();
     m_levelArea->display();
@@ -90,8 +92,9 @@ void SlotPokemon_Area::display()
     m_type2Area->display();
     m_nameArea->display();
 
-    if(m_buttonArea != NULL)
-        m_buttonArea->display();
+	if (m_buttonArea != NULL) {
+		m_buttonArea->display();
+	}
 
 }
 
@@ -103,7 +106,7 @@ void SlotPokemon_Area::refresh()
 
 ska::Rectangle SlotPokemon_Area::getRectSize()
 {
-	ska::Rectangle rect = *m_parent->getPos();
+	ska::Rectangle rect = m_parent->getRect();
     rect.x += m_relativePos.x;
     rect.y += m_relativePos.y;
     rect.w = m_pkmn->getWidth();

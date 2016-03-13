@@ -19,11 +19,14 @@ Object::Object(int id): m_animation(525, 2, false)
 	m_sprite.load(m_spriteName , DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     
     m_pos.x = m_pos.y = 0;
-    m_pos.w = m_sprite.getWidth()/2; //2 : nombre d'animations dans une seule image
-    m_pos.h = m_sprite.getHeight();
+	
+	//2 : nombre d'animations dans une seule image
+    m_width = m_sprite.getWidth()/2; 
+    m_height = m_sprite.getHeight();
     
-
-    m_animation.setOffsetAndFrameSize(m_pos); //initialisation de l'animation
+	//initialisation de l'animation
+	ska::Rectangle tmp = { m_pos.x, m_pos.y, m_width, m_height };
+	m_animation.setOffsetAndFrameSize(tmp); 
 }
 
 
@@ -35,7 +38,7 @@ void Object::display()
 
 unsigned int Object::getWidth()
 {
-    return m_pos.w;
+	return m_width;
 }
 
 string Object::getSpriteName()
@@ -45,7 +48,7 @@ string Object::getSpriteName()
 
 unsigned int Object::getHeight()
 {
-    return m_pos.h;
+	return m_height;
 }
 
 void Object::setPos(int x, int y)
@@ -72,10 +75,11 @@ bool Object::use()
 		if(wScreen.getPokeball().isVisible() || wScreen.getPokemonManager().getPokemonTeamSize() >= POKEMON_TEAM_MAX_SIZE)
 			return false;
 
-		ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
-		mousePos.x -= wScreen.getORel().x;
-		mousePos.y -= wScreen.getORel().y;
-		wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), mousePos, PokeballLaunchReason::Capture);
+		const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
+		ska::Point<int> pos = mousePos;
+		pos.x -= wScreen.getORel().x;
+		pos.y -= wScreen.getORel().y;
+		wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), pos, PokeballLaunchReason::Capture);
     }
 
 	return true;
@@ -102,15 +106,9 @@ bool Object::use(int i)
 	return true;
 }
 
-void Object::setPos(ska::Rectangle pos)
+const ska::Point<int>& Object::getPos()
 {
-    m_pos.x = pos.x;
-    m_pos.y = pos.y;
-}
-
-const ska::Rectangle* Object::getPos()
-{
-    return &m_pos;
+    return m_pos;
 }
 
 ska::Texture* Object::getSprite()

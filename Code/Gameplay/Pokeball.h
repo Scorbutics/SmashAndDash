@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include <SDL2/SDL.h>
+#include "../ska/Graphic/Point.h"
 #include "PokeballLaunchReasonEnum.h"
 #include "../ska/Graphic/Animation.h"
 #include "../ska/Graphic/Texture.h"
@@ -24,11 +24,11 @@ class Pokeball : public ska::DrawableFixedPriority
     void setSprites(std::string spriteName, std::string spriteOpenPokeball, std::string spritePokeballAura);
     void setPos(int x, int y);
 
-	const ska::Rectangle* getPos();
+	const ska::Rectangle& getPos();
     int getStatus();
 
     void capture(Character* pkmn);
-	void launch(Character* hero, ska::Rectangle mousePos, PokeballLaunchReason::Enum launchReason);
+	void launch(Character* hero, ska::Point<int> mousePos, PokeballLaunchReason::Enum launchReason);
 	void display() override;
 	bool isVisible() const override;
     void hide(bool b);

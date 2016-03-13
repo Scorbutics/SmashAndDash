@@ -63,7 +63,7 @@ void Projectile::refresh()
     for(int i = 0; i < m_nombre; i++)
         if(m_particles[i] != NULL && m_particles[i]->isActive())
         {
-			ska::Rectangle particlePos, particleOrigin;
+			ska::Point<int> particlePos, particleOrigin;
 			unsigned int distance;
             m_particles[i]->refresh();
             m_particles[i]->addSlopeNoise((float)((rand()%(m_slopeNoise + 1) - m_slopeNoise/2)/10.));
@@ -73,7 +73,7 @@ void Projectile::refresh()
 			particleOrigin = m_particles[i]->getOrigin();
 			particleOrigin.x += wScreen.getORel().x;
 			particleOrigin.y += wScreen.getORel().y;
-			distance = ska::RectangleUtils::distanceSquared(&particlePos, &particleOrigin);
+			distance = ska::RectangleUtils::distanceSquared(particlePos, particleOrigin);
 			//Si on dépasse la portée prévue, on détruit la particule
 			if (distance > m_range*TAILLEBLOC*m_range*TAILLEBLOC)
 				m_particles[i]->destroy();
@@ -105,7 +105,7 @@ AOE::AOE(ska::IniReader* data, Character* parent):
 	m_active = false;
 }
 
-void AOE::launch(ska::Rectangle pos)
+void AOE::launch(ska::Point<int> pos)
 {
 	ska::Texture text(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, m_range-1+3), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -130,7 +130,7 @@ void AOE::refresh()
 	if (pkmn != NULL && opponent != NULL)
 	{
 		ska::Rectangle pkmnPos = pkmn->getPos(), opponentPos = opponent->getPos();
-		if (ska::RectangleUtils::distanceSquared(&pkmnPos, &opponentPos) <= (m_range*m_range*TAILLEBLOC*TAILLEBLOC))
+		if (ska::RectangleUtils::distanceSquared(pkmnPos, opponentPos) <= (m_range*m_range*TAILLEBLOC*TAILLEBLOC))
 		{
 			m_active = false;
 			//opposant qui tire
@@ -299,16 +299,16 @@ float Projectile::getSpeed()
 	return m_vitesse;
 }
 
-void Projectile::launch(ska::Rectangle dest)
+void Projectile::launch(ska::Point<int> dest)
 {
-	ska::Rectangle buf = m_parent->getCenterPos();
+	ska::Point<int> buf = m_parent->getCenterPos();
 	WGameCore& wScreen = WGameCore::getInstance();
 
     float angle = atan((dest.y - buf.y)/(float)(dest.x - buf.x));
     if((dest.x - buf.x) < 0)
        angle += (float)M_PI;
 	
-	m_direction = ska::RectangleUtils::getDirectionFromPos(&buf, &dest);
+	m_direction = ska::RectangleUtils::getDirectionFromPos(buf, dest);
     buf.x -= wScreen.getORel().x;
     buf.y -= wScreen.getORel().y;
     

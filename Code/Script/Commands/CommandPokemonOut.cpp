@@ -24,7 +24,7 @@ std::string CommandPokemonOut::execute(ska::IScript* script, std::vector<std::st
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	index = ska::StringUtils::strToInt(args[0]);
-	ska::Rectangle launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
+	ska::Point<int> launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
 	launchPos.y += TAILLEBLOC;
 
 	wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), launchPos, PokeballLaunchReason::Throw);

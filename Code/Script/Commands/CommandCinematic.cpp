@@ -26,7 +26,7 @@ std::string CommandCinematic::execute(ska::IScript* script, std::vector<std::str
 	ska::Rectangle pos, menuPos;
 	string message;
 	ska::SpriteAnimation* cinematic;
-	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
+	//ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
 	menuPos.x = 0;
 	menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE * 4;
@@ -53,11 +53,11 @@ std::string CommandCinematic::execute(ska::IScript* script, std::vector<std::str
 
 	cinematic = wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, pos, -1, -1, frameNumber, delay);
 
-	while (continuer)
+	/*while (continuer)
 	{
 		SDL_RenderClear(wScreen.getRenderer());
 		wScreen.getSpriteAnimationManager().display();
-		wScreen.getInputListener().refresh(true);
+		//wScreen.getInputListener().refresh(true);
 		if (in->getKeyState(SDL_SCANCODE_SPACE) || in->getKeyState(SDL_SCANCODE_RETURN) || in->getKeyState(SDL_SCANCODE_ESCAPE)) {
 			continuer = false;
 		}
@@ -66,8 +66,8 @@ std::string CommandCinematic::execute(ska::IScript* script, std::vector<std::str
 		messageBox.display();
 		wScreen.flip();
 		SDL_Delay(20);
-	}
-	in->resetAll();
+	}*/
+	//in->resetAll();
 	wScreen.getSpriteAnimationManager().reset();
 	return "";
 }

@@ -87,12 +87,12 @@ void Pokeball::setSprites(string spriteName, string spriteOpenPokeball, string s
 }
 
 
-void Pokeball::launch(Character* hero, ska::Rectangle destPos, PokeballLaunchReason::Enum launchReason)
+void Pokeball::launch(Character* hero, ska::Point<int> destPos, PokeballLaunchReason::Enum launchReason)
 {
 	ska::Rectangle heroPos = hero->getPos();
 
 	m_capture = launchReason;
-    hero->setDirection(ska::RectangleUtils::getDirectionFromPos(&heroPos, &destPos));
+    hero->setDirection(ska::RectangleUtils::getDirectionFromPos(heroPos, destPos));
 
     if(m_show)
         return;
@@ -302,9 +302,9 @@ void Pokeball::setPos(int x, int y)
     m_pokeballPos.y = y;
 }
 
-const ska::Rectangle* Pokeball::getPos()
+const ska::Rectangle& Pokeball::getPos()
 {
-    return &m_pokeballPos;
+    return m_pokeballPos;
 }
 
 void Pokeball::display()

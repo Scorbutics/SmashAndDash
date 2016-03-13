@@ -131,7 +131,7 @@ void ska::ParticleManager::refresh()
                         this->remove((unsigned int)j); //On la supprime
                     else//Sinon, on la replace à sa position d'origine
                     {
-						ska::Rectangle posBuf;
+						ska::Point<int> posBuf;
 						posBuf = m_particles[j]->getOrigin();
 
                         if(m_particles[j]->isRelative())

@@ -37,7 +37,7 @@ class Character : public ska::PhysicSprite
 		void addSkill(const string& pathAttackName);
 		bool autoattack();
 		bool damage(Character* src, unsigned int damages);
-		bool launchSkill(unsigned int skillNumber, ska::Rectangle dest);
+		bool launchSkill(unsigned int skillNumber, ska::Point<int> dest);
 		void displaySkills();
 		void followEntity(Character* entity);
 		virtual void refresh();

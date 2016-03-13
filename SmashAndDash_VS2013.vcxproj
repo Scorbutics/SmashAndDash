@@ -153,6 +153,7 @@
     <ClInclude Include="Code\ska\Exceptions\ScriptDiedException.h" />
     <ClInclude Include="Code\ska\Inputs\InputAction.h" />
     <ClInclude Include="Code\ska\Inputs\InputContext.h" />
+    <ClInclude Include="Code\ska\Inputs\InputRange.h" />
     <ClInclude Include="Code\ska\Scene\HasGraphic.h" />
     <ClInclude Include="Code\ska\Scene\HasLogic.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\Drawable.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="Code\Gameplay\System\MovementSystem.h" />
     <ClInclude Include="Code\Gameplay\System\CollisionSystem.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h" />
+    <ClInclude Include="Code\ska\Inputs\InputContextManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\ska\Graphic\CameraSystem.cpp" />
@@ -471,6 +473,7 @@
     <ClCompile Include="Code\Gameplay\System\MovementSystem.cpp" />
     <ClCompile Include="Code\Gameplay\System\CollisionSystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp" />
+    <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

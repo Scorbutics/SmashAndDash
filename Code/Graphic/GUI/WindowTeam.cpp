@@ -33,7 +33,7 @@ void WindowTeam::reset(string action)
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.h = TAILLEBLOCFENETRE*3;
     this->addTextArea("Equipe Pokémon", 20, buf);
-    this->resize(this->getPos()->w, (int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE + 2*TAILLEBLOCFENETRE);
+    this->resize(this->getWidth(), (int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE + 2*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
     this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
     buf.x = TAILLEBLOCFENETRE/3;
@@ -67,7 +67,8 @@ void WindowTeam::refresh()
 {
     MovableWindow::refresh();
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
+	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	PokemonManager& pkmnMng = wScreen.getPokemonManager();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 
@@ -82,8 +83,8 @@ void WindowTeam::refresh()
     for(unsigned int i = 0; i < m_slotPkmn.size(); i++)
     {
  
-		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize(), mouseClickPos = in->getMouseClickPos();
-        if(pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mouseClickPos, &rectSlot)) //Si on clique dans la fenetre d'un slot
+		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize();
+		if (pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));
 			pkmnMng.remove(i);
@@ -91,7 +92,7 @@ void WindowTeam::refresh()
             m_indexCursor = i;
             break;
         }
-		else if (in->mouseClick(SDL_BUTTON_LEFT) && mouseCur.getPokemon() != NULL && ska::RectangleUtils::isPositionInBox(&mouseClickPos, &rectSlot))
+		else if (in[ska::InputAction::LClic] && mouseCur.getPokemon() != NULL && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot))
         {
             pkmnMng.add(mouseCur.getPokemon());
 			mouseCur.removePokemon();

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <SDL2/SDL.h>
+#include "../../ska/Graphic/Point.h"
 #include "../../ska/Graphic/Texture.h"
 #include "../../ska/Graphic/Animation.h"
 
@@ -17,9 +17,14 @@ class Object
     void display();
 
     void setPos(int x, int y);
-	void setPos(ska::Rectangle pos);
+	
+	template <class T>
+	void setPos(ska::Point<T> pos) {
+		m_pos.x = pos.x;
+		m_pos.y = pos.y;
+	}
 
-	const ska::Rectangle* getPos();
+	const ska::Point<int>& getPos();
 	ska::Texture* getSprite();
 	ska::Animation* getAnimation();
     std::string getDescription();
@@ -36,7 +41,8 @@ class Object
     private:
 		ska::Texture m_sprite;
 		ska::Animation m_animation;
-	ska::Rectangle m_pos;
+	ska::Point<int> m_pos;
+	unsigned int m_width, m_height;
     std::string m_description, m_name, m_effect, m_action, m_spriteName;
     int m_id;
 

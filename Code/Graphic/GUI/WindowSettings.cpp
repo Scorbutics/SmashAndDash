@@ -19,10 +19,10 @@ void WindowSettings::reset()
 	ska::Rectangle buf;
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
-    this->resize(this->getPos()->w, 10*TAILLEBLOCFENETRE);
+    this->resize(this->getWidth(), 10*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
     this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
-    this->resize(this->getPos()->w, 10*TAILLEBLOCFENETRE);
+    this->resize(this->getWidth(), 10*TAILLEBLOCFENETRE);
     vector<int> vbool, vSndVol;
     vbool.push_back(0);
     vbool.push_back(1);

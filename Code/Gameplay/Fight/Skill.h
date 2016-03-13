@@ -27,7 +27,7 @@ class Skill
     void setName(string name);
     string getDescription();
     void setDescription(string description);
-	virtual void launch(ska::Rectangle dest) = 0;
+	virtual void launch(ska::Point<int> dest) = 0;
     bool cooldownOK();
     ska::Texture* getSpriteRemainingCD();
     string getType();
@@ -75,7 +75,7 @@ class Projectile : public Skill
 	float getSpeed();
 	virtual void display();
 	void collision();
-	void launch(ska::Rectangle dest);
+	void launch(ska::Point<int> dest);
 private:
     unsigned int m_t;
 	int m_slopeNoise, m_noise, m_nombre;
@@ -88,7 +88,7 @@ class AOE : public Skill
 public:
 	AOE(ska::IniReader* data, Character* parent);
 	virtual void refresh();
-	virtual void launch(ska::Rectangle dest);
+	virtual void launch(ska::Point<int> dest);
 	virtual ~AOE();
 	virtual void display();
 private:

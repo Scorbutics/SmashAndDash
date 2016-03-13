@@ -14,7 +14,7 @@ EntityFactory::EntityFactory()
 
 void EntityFactory::createTrainer()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
     m_trainer = unique_ptr<Player>(new Player(0));
     m_trainer->setEntityNumber(0);
@@ -22,7 +22,7 @@ void EntityFactory::createTrainer()
     m_trainer->setOffset(1, 20);
     m_trainer->setOffset(2, 27);
     m_trainer->setOffset(3, 20);
-	wScreen.getInputListener().addObserver(&(*m_trainer));
+	//wScreen.getInputListener().addObserver(&(*m_trainer));
 
 	m_currentEntities.push_front(&(*m_trainer));
 	
@@ -161,7 +161,7 @@ void EntityFactory::addNPC(Character* npc)
 	m_currentEntities.push_front(&(*(*target)[id][i]));
 }
 
-void EntityFactory::addNPC(int id, ska::Rectangle posEntity, string pathStringEntity)
+void EntityFactory::addNPC(int id, ska::Point<int> posEntity, string pathStringEntity)
 {
 
 	unique_ptr<Character> npc = unique_ptr<Character>(new Character(id));

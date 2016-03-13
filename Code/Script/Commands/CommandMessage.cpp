@@ -47,7 +47,7 @@ std::string CommandMessage::execute(ska::IScript* script, std::vector<std::strin
 	}
 
 	DialogMenu imgDial("", (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22);
-	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
+	const ska::InputActionContainer& in = wScreen.getActions();
 
 	while (menu.getX(menu.getLines() - 1) < menu.getWLine(menu.getLines() - 1))
 	{
@@ -61,7 +61,7 @@ std::string CommandMessage::execute(ska::IScript* script, std::vector<std::strin
 		SDL_Delay(30);
 	}
 
-	while (!(in->getKeyState(SDL_SCANCODE_RETURN) || in->getKeyState(SDL_SCANCODE_ESCAPE)))
+	while (!(in[ska::InputAction::DoAction] || in[ska::InputAction::Quit]))
 	{
 		wScreen.eventUpdate(true);
 		wScreen.graphicUpdate();
@@ -73,7 +73,7 @@ std::string CommandMessage::execute(ska::IScript* script, std::vector<std::strin
 		SDL_Delay(30);
 	}
 
-	in->resetAll();
+	//in->resetAll();
 	//menu.pause();
 	return "";
 }

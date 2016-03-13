@@ -18,17 +18,17 @@ class Inventory_Area : public DynamicWindowArea
 	virtual std::string getKey(){return "";};
     virtual void forceValue(unsigned int){};
     Inventory* getInventory();
-	unsigned int getAmountAtPos(ska::Rectangle relativePos);
-	Object* getObjectAtPos(ska::Rectangle relativePos);
-	void useObjectAtPos(ska::Rectangle objectPos);
-	void useObjectAtPos(ska::Rectangle objectPos, int i); //i = indice du pokémon sur lequel appliquer l'objet
+	unsigned int getAmountAtPos(ska::Point<int> relativePos);
+	Object* getObjectAtPos(ska::Point<int> relativePos);
+	void useObjectAtPos(ska::Point<int> objectPos);
+	void useObjectAtPos(ska::Point<int> objectPos, int i); //i = indice du pokémon sur lequel appliquer l'objet
     virtual ~Inventory_Area();
 
     protected:
-		unsigned int getIndexFromPos(ska::Rectangle relativePos);
+		unsigned int getIndexFromPos(ska::Point<int> relativePos);
 
     Inventory *m_inv;
-	ska::Rectangle m_curObjectPos, m_lastObjectPos;
+	ska::Point<int> m_curObjectPos, m_lastObjectPos;
 
 };
 

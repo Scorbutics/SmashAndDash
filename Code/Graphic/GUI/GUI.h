@@ -2,7 +2,6 @@
 #define DEF_GUI
 
 #include <vector>
-#include <SDL2/SDL.h>
 #include <memory>
 #include "WindowSettings.h"
 #include "WindowTeam.h"
@@ -26,7 +25,7 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 
     void dialogRefresh();
     void refresh();
-	int isPositionOnButton(ska::Rectangle *pos);
+	int isPositionOnButton(const ska::Point<float>& pos);
     bool isMouseOnAWindow();
     bool isVisible() const override;
     void initButtons();
@@ -42,23 +41,23 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
     void resetMovableWindowPokemonBag();
     void resetMovableWindowSettings();
 
-    DialogMenu* getDialog();
-    DialogMenu* getImgDialog();
-    DialogMenu* getMovableWindow();
-    DialogMenu*getInfoPNJWindow();
-    DialogMenu* getInfoPokemonWindow();
-    DialogMenu* getAttackPokemonWindow();
-    DialogMenu* getAttackOpponentWindow();
-    DialogMenu* getFacesetPkmn();
-    DialogMenu* getClickMenu();
-    DialogMenu* getFacesetOpponent();
-    WindowSettings* getWindowSettings();
-    WindowTeam* getWindowTeam();
-    WindowBag* getWindowBag();
-    ToolBar* getToolbar();
-    WindowShop* getWindowShop();
+    DialogMenuPtr& getDialog();
+	DialogMenuPtr& getImgDialog();
+	DialogMenuPtr& getMovableWindow();
+	DialogMenuPtr& getInfoPNJWindow();
+	DialogMenuPtr& getInfoPokemonWindow();
+	DialogMenuPtr& getAttackPokemonWindow();
+	DialogMenuPtr& getAttackOpponentWindow();
+	DialogMenuPtr& getFacesetPkmn();
+	DialogMenuPtr& getClickMenu();
+	DialogMenuPtr& getFacesetOpponent();
+    WindowSettingsPtr& getWindowSettings();
+    WindowTeamPtr& getWindowTeam();
+    WindowBagPtr& getWindowBag();
+	ToolBarPtr& getToolbar();
+    WindowShopPtr& getWindowShop();
     int getRefreshPNJWindowCount();
-    DialogMenu* getButton(unsigned int id);
+    DialogMenuPtr& getButton(unsigned int id);
     size_t getButtonListSize();
 
     void setRefreshPNJWindowCount(int x);
@@ -67,10 +66,10 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 	void dialogDisplay();
 	void display() override;
 private:
-    vector<unique_ptr<DialogMenu>> m_buttonList;
-    unique_ptr<DialogMenu> m_dial, m_imgDial, m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
+    vector<DialogMenuPtr> m_buttonList;
+	DialogMenuPtr m_dial, m_imgDial, m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
     vector<int> m_buttonScroll;
-	ska::Rectangle m_lastMousePos, m_curObjectPos;
+	ska::Point<int> m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;
     bool m_hide, m_isMovingWindow;
     Character *m_pnj;

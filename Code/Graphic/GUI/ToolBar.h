@@ -21,4 +21,6 @@ class ToolBar : public MovableWindow
     Inventory_Area* m_invArea;
 };
 
+typedef std::unique_ptr<ToolBar> ToolBarPtr;
+
 #endif

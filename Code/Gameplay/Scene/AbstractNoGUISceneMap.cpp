@@ -6,7 +6,7 @@
 #include "../../ska/Script/ScriptDispatcher.h"
 #include "../../ska/World/LayerE.h"
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap()
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::RawInputListener& ril) : Scene(ril)
 {
 }
 
@@ -47,7 +47,7 @@ void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
 	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
 	RainParticleManager& rainParticleManager = core.getRainParticleManager();
 	ShakerManager& shaker = core.getShakerManager();
-	ska::InputListener& kdListener = core.getInputListener();
+	//ska::InputListener& kdListener = core.getInputListener();
 
 	world.refreshEntities();
 	particleManager.refresh();

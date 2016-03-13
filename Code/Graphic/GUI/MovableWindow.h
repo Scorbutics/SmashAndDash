@@ -3,6 +3,8 @@
 
 
 #include "DialogMenu.h"
+#include "../../ska/Graphic/Point.h"
+
 class WGameCore;
 
 class MovableWindow : public DialogMenu
@@ -15,7 +17,7 @@ class MovableWindow : public DialogMenu
     virtual ~MovableWindow();
 
     private:
-		ska::Rectangle m_mouseLastPos;
+		ska::Point<float> m_mouseLastPos;
 };
 
 #endif

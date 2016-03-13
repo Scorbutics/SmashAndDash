@@ -324,11 +324,11 @@ ska::Rectangle& ska::PhysicObject::getPos() {
     return m_rect;
 }
 
-ska::Rectangle ska::PhysicObject::getCenterPos()
+ska::Point<int> ska::PhysicObject::getCenterPos()
 {
-    ska::Rectangle r = m_rect;
-    r.x += r.w/2;
-    r.y += r.h/2;
+	ska::Point<int> r = { m_rect.x, m_rect.y };
+	r.x += m_rect.w / 2;
+	r.y += m_rect.h / 2;
 
     return r;
 }
@@ -473,7 +473,7 @@ vector<ska::Rectangle> ska::PhysicObject::move()
     lastTheoricPos.x += (int)(m_speedx + 0.5);
 	lastTheoricPos.y += (int)(m_speedy + 0.5);
     if(lastTheoricPos.x != rectOrigin.x || lastTheoricPos.y != rectOrigin.y)
-        m_direction = ska::RectangleUtils::getDirectionFromPos(&rectOrigin, &lastTheoricPos);
+        m_direction = ska::RectangleUtils::getDirectionFromPos(rectOrigin, lastTheoricPos);
 	
 
 

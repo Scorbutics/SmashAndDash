@@ -13,8 +13,7 @@ MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
     m_hideC = m_hideH = true;
     m_delay = 0;
     m_time = 0;
-    m_in = WGameCore::getInstance().getInputListener().getMouseInput();
-	ska::Rectangle buf = m_in->getMousePos();
+	ska::Rectangle buf = { 0, 0 };
     buf.w = 3*TAILLEBLOCFENETRE;
     buf.h = 2*TAILLEBLOCFENETRE;
     m_stockObject = NULL;
@@ -66,10 +65,9 @@ DialogMenu* MouseCursor::getHintBox()
 		return NULL;
 }
 
-bool MouseCursor::isActiveHint(GUI *g)
-{
-	ska::Rectangle mousePos = m_in->getMousePos();
-    int ind = g->isPositionOnButton(&mousePos);
+bool MouseCursor::isActiveHint(GUI *g) {
+	const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
+    int ind = g->isPositionOnButton(mousePos);
     if(ind != -1)
         m_hideH = false;
     else
@@ -117,7 +115,8 @@ void MouseCursor::display()
 
 void MouseCursor::displaySelectedPokemon()
 {
-	ska::Rectangle rectPkmnSprite, mousePos = m_in->getMousePos();
+	const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
+	ska::Rectangle rectPkmnSprite;
     if(m_stockPkmn != NULL)
     {
 		ska::Texture pkmn(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_stockPkmn->getID()), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -131,11 +130,12 @@ void MouseCursor::displaySelectedPokemon()
 
 void MouseCursor::displaySelectedObject()
 {
-	ska::Rectangle mousePos = m_in->getMousePos();
+	const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
+	ska::Point<float> pos = mousePos;
     if(m_stockObject != NULL)
     {
-        mousePos.x += 10;
-        m_stockObject->setPos(mousePos);
+		pos.x += 10;
+		m_stockObject->setPos(pos);
         m_stockObject->display();
     }
 
@@ -145,8 +145,8 @@ void MouseCursor::displaySelectedObject()
 void MouseCursor::displayHint()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
-    mousePos.y -= m_hintBox->getPos()->w/2;
+	ska::Point<float> mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+    mousePos.y -= m_hintBox->getWidth()/2;
     m_hintBox->setPos(mousePos);
     m_hintBox->display();
 }

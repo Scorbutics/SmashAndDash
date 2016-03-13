@@ -2,7 +2,6 @@
 #include "../../ska/ECS/System.h"
 #include "../Component/InputComponent.h"
 #include "../Component/ForceComponent.h"
-#include "../../ska/Inputs/InputListener.h"
 #include "../../ska/Utils/Observer.h"
 
 class InputSystem : public ska::System<InputComponent>, public ska::Observer<const int> {

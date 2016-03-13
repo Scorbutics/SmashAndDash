@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "Force.h"
+#include "../Graphic/Point.h"
 
 class World;
 
@@ -21,7 +22,7 @@ namespace ska {
 
 		ska::Rectangle& getPos();
 		int getDirection() const;
-		ska::Rectangle getCenterPos();
+		ska::Point<int> getCenterPos();
 		ska::Rectangle getHitboxCenterPos() const;
 		int getID();
 		float getAngle();

@@ -26,6 +26,8 @@ void ska::RawInputListener::update()
 	m_mouseIn.setMouseLastState(SDL_BUTTON_RIGHT, m_mouseIn.getMouseState(SDL_BUTTON_RIGHT));
 	m_mouseIn.setMouseLastPos(m_mouseIn.getMousePos());
 
+	m_keyIn.resetAll();
+
 	while(SDL_PollEvent(&event))
 	{
 		switch (event.type)

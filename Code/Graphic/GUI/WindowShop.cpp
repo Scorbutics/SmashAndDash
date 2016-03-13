@@ -77,22 +77,22 @@ void WindowShop::reset()
 
 	ska::Rectangle buf;
     buf.y = (TAILLEBLOCFENETRE*3)/4;
-    buf.x = m_shopBar.getPos()->w/2 - TAILLEBLOCFENETRE;
+	buf.x = m_shopBar.getWidth() / 2 - TAILLEBLOCFENETRE;
     m_shopBar.addTextArea("Shop", 20, buf);
-    buf.x = m_userBar.getPos()->w/2 - 2*TAILLEBLOCFENETRE;
+    buf.x = m_userBar.getWidth()/2 - 2*TAILLEBLOCFENETRE;
     m_userBar.addTextArea("Utilisateur", 20, buf);
-    buf.y = m_userBar.getPos()->h - TAILLEBLOCFENETRE;
-    buf.x = m_userBar.getPos()->w - 2*TAILLEBLOCFENETRE;
+    buf.y = m_userBar.getHeight() - TAILLEBLOCFENETRE;
+    buf.x = m_userBar.getWidth() - 2*TAILLEBLOCFENETRE;
     m_userBar.addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", &m_boolQuit, vBool, vQuit, 22, "window_shop_quit");
 
 	buf.x = TAILLEBLOCFENETRE/2;
 	buf.y =	2*TAILLEBLOCFENETRE;
-	buf.w = m_shopBar.getPos()->w;
-	buf.h = m_shopBar.getPos()->h;
+	buf.w = m_shopBar.getWidth();
+	buf.h = m_shopBar.getHeight();
     m_shopBar.addInventory(m_shopInv, buf);
 
-	buf.w = m_userBar.getPos()->w;
-	buf.h = m_userBar.getPos()->h;
+	buf.w = m_userBar.getWidth();
+	buf.h = m_userBar.getHeight();
 
     m_shopInvArea = m_shopBar.getInventoryArea(0);
     m_userBar.addInventory(wScreen.getInventory(), buf);
@@ -108,12 +108,12 @@ void WindowShop::reset()
 void WindowShop::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle mousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos]; 
+	const ska::InputActionContainer& in = wScreen.getActions();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
-	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
 
-    m_pos.x = m_dialog.getPos()->x;
-    m_pos.y = m_dialog.getPos()->y;
+    m_pos.x = m_dialog.getPos().x;
+    m_pos.y = m_dialog.getPos().y;
     m_shopBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y);
     m_userBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4*TAILLEBLOCFENETRE);
 
@@ -128,33 +128,28 @@ void WindowShop::refresh()
     }
 
     //Lors d'un dépot d'objet dans notre inventaire, on achète
-    if(mouseCur.getObject() != NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, m_userBar.getPos()) && m_lastClickInv == "shop")
+    if(mouseCur.getObject() != NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_userBar.getRect()) && m_lastClickInv == "shop")
     {
         wScreen.getInventory().add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         m_shopInv.remove(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         m_shopInv.add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         mouseCur.setObjectAmount(0);
         mouseCur.removeObject();
-        in->setMouseLastState(SDL_BUTTON_LEFT, 0);
-        in->setMouseState(SDL_BUTTON_LEFT, 0);
-
         //TODO: perdre les sous
     }
-	else if (mouseCur.getObject() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, m_userBar.getPos()))
+	else if (mouseCur.getObject() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_userBar.getRect()))
     {
         m_lastClickInv = "user";
     }
 
     //Lors d'un dépot d'objet dans le shop, on vend
-	if (mouseCur.getObject() != NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, m_shopBar.getPos()) && m_lastClickInv == "user")
+	if (mouseCur.getObject() != NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_shopBar.getRect()) && m_lastClickInv == "user")
     {
         mouseCur.setObjectAmount(0);
         mouseCur.removeObject();
         //TODO: gagner les sous
-        in->setMouseLastState(SDL_BUTTON_LEFT, 0);
-        in->setMouseState(SDL_BUTTON_LEFT, 0);
     }
-	else if (mouseCur.getObject() == NULL && in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, m_shopBar.getPos()))
+	else if (mouseCur.getObject() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_shopBar.getRect()))
     {
         m_lastClickInv = "shop";
     }

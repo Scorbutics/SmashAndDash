@@ -15,24 +15,23 @@ MovableWindow::MovableWindow(string fichierMenu, ska::Rectangle posFond, int tai
 void MovableWindow::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
-	ska::Rectangle mousePos = in->getMousePos(), movePos = m_posFond;
+	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	ska::Rectangle movePos = m_rect;
     movePos.h = TAILLEBLOCFENETRE/2;
-	if (in->mouseClick(SDL_BUTTON_LEFT) && ska::RectangleUtils::isPositionInBox(&mousePos, &movePos))
-	{
+	
+	if (in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, movePos)) {
         this->setMoving(true);
-		in->setMouseLastState(SDL_BUTTON_LEFT, 1);
+	} else if (!in[ska::InputAction::LClic]) {
+		this->setMoving(false);
 	}
-    else if(!in->getMouseState(SDL_BUTTON_LEFT))
-        this->setMoving(false);
 
-    if(this->isMoving())
-    {
-        m_posFond.x += in->getMousePos().x - m_mouseLastPos.x;
-        m_posFond.y += in->getMousePos().y - m_mouseLastPos.y;
+    if(this->isMoving()) {
+		m_rect.x += mouseClickPos.x - m_mouseLastPos.x;
+		m_rect.y += mouseClickPos.y - m_mouseLastPos.y;
     }
 
-    m_mouseLastPos = in->getMousePos();
+	m_mouseLastPos = mouseClickPos;
     DialogMenu::refresh();
 }
 

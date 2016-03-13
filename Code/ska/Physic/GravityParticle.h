@@ -10,7 +10,7 @@ namespace ska {
 	public:
 		GravityParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative);
 		virtual void refresh();
-		virtual void launch(ska::Rectangle origin, float angle, unsigned int power);
+		virtual void launch(ska::Point<int> origin, float angle, unsigned int power);
 		void addSlopeNoise(float x);
 		void resetSlopeNoise();
 		virtual ~GravityParticle();

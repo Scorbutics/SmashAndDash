@@ -223,9 +223,9 @@ void Inventory::remove(std::string name, unsigned int amount)
 void Inventory::display(ska::Rectangle rect)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::MouseInput *in = wScreen.getInputListener().getMouseInput();
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
     list<unique_ptr<Object>>::iterator iter;
-	ska::Rectangle buf, bufcenter, mouseClickPos;
+	ska::Rectangle buf, bufcenter;
     int i;
 
     for(iter = m_objects.begin(), i = 0; iter != m_objects.end(); ++iter, i++)
@@ -239,12 +239,11 @@ void Inventory::display(ska::Rectangle rect)
             buf.h = m_squareSprite.getHeight();
             bufcenter.w = (*iter)->getSprite()->getWidth()/2;
             bufcenter.h = (*iter)->getSprite()->getHeight();
-			bufcenter = ska::RectangleUtils::posToCenterPicture(&bufcenter, &buf);
+			bufcenter = ska::RectangleUtils::posToCenterPicture(bufcenter, buf);
             bufcenter.x -= bufcenter.w/4;
             bufcenter.y += bufcenter.h/4;
             (*iter)->setPos(bufcenter.x, bufcenter.y);
-            mouseClickPos = in->getMouseClickPos();
-			if (ska::RectangleUtils::isPositionInBox(&mouseClickPos, &buf))
+			if (ska::RectangleUtils::isPositionInBox(mousePos, buf))
                 m_squareSpriteHighlight.render(buf.x, buf.y);
             else
                 m_squareSprite.render(buf.x, buf.y);

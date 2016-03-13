@@ -36,9 +36,9 @@ DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Re
     m_sensScroll = F_IN;
     m_scroll = scroll;
     m_fontSize = taillePolice;
-    m_posFond = posFond;
-    m_posFond.w = (m_posFond.w/TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
-    m_posFond.h = (m_posFond.h/TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
+	m_rect = posFond;
+	m_rect.w = (m_rect.w / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
+	m_rect.h = (m_rect.h / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
 
     m_ligne = 0;
 
@@ -47,7 +47,7 @@ DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Re
     m_posLFond.w = TAILLEBLOCFENETRE;
     m_posLFond.h = TAILLEBLOCFENETRE;
 
-    m_posScrollFond.x = m_posFond.w;
+	m_posScrollFond.x = m_rect.w;
     m_posScrollFond.y = posFond.y;
 
 	m_fond.load(fichierMenu, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -55,19 +55,19 @@ DialogMenu::DialogMenu(string texte, string messImg, string fichierMenu, ska::Re
 	if(messImg != "")
 		m_messImage.load(messImg, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
-	m_posMessImage.w = m_messImage.getWidth();
-	m_posMessImage.h = m_messImage.getHeight();
-	m_posMessImage.x = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).x;
-	m_posMessImage.y = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).y;
+	m_rectMessImage.w = m_messImage.getWidth();
+	m_rectMessImage.h = m_messImage.getHeight();
+	m_rectMessImage.x = ska::RectangleUtils::posToCenterPicture(m_rectMessImage, m_rect).x;
+	m_rectMessImage.y = ska::RectangleUtils::posToCenterPicture(m_rectMessImage, m_rect).y;
 
     m_couleur.r = 0;
     m_couleur.g = 0;
     m_couleur.b = 0;
 	m_couleur.a = 255;
 
-    m_posTexte.x = RECT_OFFSET + m_posFond.x;
-    m_posTexte.y = 2*RECT_OFFSET + m_posFond.y + m_posMessImage.h;
-    m_posTexte.h = m_posFond.h;
+    m_posTexte.x = RECT_OFFSET + m_rect.x;
+	m_posTexte.y = 2 * RECT_OFFSET + m_rect.y + m_rectMessImage.h;
+    m_posTexte.h = m_rect.h;
     m_posTexte.w = m_fond.getWidth();
 
 	modifyText(texte);
@@ -95,7 +95,7 @@ string DialogMenu::getText(unsigned int line)
 void DialogMenu::pause()
 {
     int continuer = 1;
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
 	in->resetAll();
@@ -108,57 +108,57 @@ void DialogMenu::pause()
 		SDL_Delay(30);
     }
 
-    in->resetAll();
+    in->resetAll();*/
 }
 
 void DialogMenu::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-    for(int i = m_posFond.x; i < (m_posFond.x+m_posFond.w); i+=TAILLEBLOCFENETRE)
+	for (int i = m_rect.x; i < (m_rect.x + m_rect.w); i += TAILLEBLOCFENETRE)
     {
-        for(int j = m_posFond.y; j < (m_posFond.y+m_posFond.h); j+=TAILLEBLOCFENETRE)
+		for (int j = m_rect.y; j < (m_rect.y + m_rect.h); j += TAILLEBLOCFENETRE)
         {
 
-            m_positionFond.x = i - m_posScrollFond.x + m_posFond.x; //m_positionFond est un buffer (Rectangle déclaré dans Window)
+			m_positionFond.x = i - m_posScrollFond.x + m_rect.x; //m_positionFond est un buffer (Rectangle déclaré dans Window)
             m_positionFond.y = j;
 
-            if(i == m_posFond.x && j == m_posFond.y)
+			if (i == m_rect.x && j == m_rect.y)
             {
                 m_posLFond.x = 0;
                 m_posLFond.y = 0;
             }
-            else if(i == (m_posFond.x+m_posFond.w)-TAILLEBLOCFENETRE && j == (m_posFond.y+m_posFond.h)-TAILLEBLOCFENETRE)
+			else if (i == (m_rect.x + m_rect.w) - TAILLEBLOCFENETRE && j == (m_rect.y + m_rect.h) - TAILLEBLOCFENETRE)
             {
                 m_posLFond.x = 2*TAILLEBLOCFENETRE;
                 m_posLFond.y = 2*TAILLEBLOCFENETRE;
             }
-            else if(i == m_posFond.x && j == (m_posFond.y+m_posFond.h)-TAILLEBLOCFENETRE)
+			else if (i == m_rect.x && j == (m_rect.y + m_rect.h) - TAILLEBLOCFENETRE)
             {
                 m_posLFond.x = 0;
                 m_posLFond.y = 2*TAILLEBLOCFENETRE;
             }
-            else if(i == (m_posFond.x+m_posFond.w)-TAILLEBLOCFENETRE && j == m_posFond.y)
+			else if (i == (m_rect.x + m_rect.w) - TAILLEBLOCFENETRE && j == m_rect.y)
             {
                 m_posLFond.x = 2*TAILLEBLOCFENETRE;
                 m_posLFond.y = 0;
             }
-            else if(j == m_posFond.y)
+			else if (j == m_rect.y)
             {
                 m_posLFond.x = TAILLEBLOCFENETRE;
                 m_posLFond.y = 0;
             }
-            else if(j == (m_posFond.y+m_posFond.h)-TAILLEBLOCFENETRE)
+			else if (j == (m_rect.y + m_rect.h) - TAILLEBLOCFENETRE)
             {
                 m_posLFond.x = TAILLEBLOCFENETRE;
                 m_posLFond.y = 2*TAILLEBLOCFENETRE;
             }
-            else if(i == m_posFond.x)
+			else if (i == m_rect.x)
             {
                 m_posLFond.x = 0;
                 m_posLFond.y = TAILLEBLOCFENETRE;
             }
-            else if(i == (m_posFond.x+m_posFond.w)-TAILLEBLOCFENETRE)
+			else if (i == (m_rect.x + m_rect.w) - TAILLEBLOCFENETRE)
             {
                 m_posLFond.x = 2*TAILLEBLOCFENETRE;
                 m_posLFond.y = TAILLEBLOCFENETRE;
@@ -173,11 +173,11 @@ void DialogMenu::display()
         }
     }
 
-    m_posTexte.x = RECT_OFFSET + m_posFond.x - m_posScrollFond.x + m_posFond.x;
-	m_posTexte.y = RECT_OFFSET + m_posFond.y - m_posScrollFond.y + m_posFond.y + m_fontSize / 2;
-	m_posMessImage.x = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond).x - m_posScrollFond.x + m_posFond.x;
+	m_posTexte.x = RECT_OFFSET + m_rect.x - m_posScrollFond.x + m_rect.x;
+	m_posTexte.y = RECT_OFFSET + m_rect.y - m_posScrollFond.y + m_rect.y + m_fontSize / 2;
+	m_rectMessImage.x = ska::RectangleUtils::posToCenterPicture(m_rectMessImage, m_rect).x - m_posScrollFond.x + m_rect.x;
 
-	m_messImage.render(m_posMessImage.x, m_posMessImage.y);
+	m_messImage.render(m_rectMessImage.x, m_rectMessImage.y);
 
     if(!m_stexte.empty() /*&& !m_x.empty()*/)
         for(unsigned int i = 0; i <= m_ligne; i++)
@@ -216,17 +216,17 @@ void DialogMenu::display()
 
         }
 
-    m_posTexte.y = m_posFond.h/30+ m_posMessImage.y + m_posMessImage.h;
+		m_posTexte.y = m_rect.h / 30 + m_rectMessImage.y + m_rectMessImage.h;
 
     if(m_sensScroll == F_IN)
     {
-        if(m_posScrollFond.x - SCROLL_SPEED*TAILLEBLOCFENETRE/2 >= m_posFond.x && m_scroll == true) //Scroll in
+		if (m_posScrollFond.x - SCROLL_SPEED*TAILLEBLOCFENETRE / 2 >= m_rect.x && m_scroll == true) //Scroll in
         {
             m_posScrollFond.x -= SCROLL_SPEED*TAILLEBLOCFENETRE/2;
             m_show = true;
         }
         else
-            m_posScrollFond.x = m_posFond.x;
+			m_posScrollFond.x = m_rect.x;
     }
     else
     {
@@ -349,8 +349,8 @@ void DialogMenu::modifyText(string texte)
 	for (unsigned int j = 0; j < m_size; j++)
 	{
 		m_stexte[j].loadFromText(m_fontSize, m_texte[j], m_couleur);
-		if ((m_stexte[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE > m_posFond.w)
-			m_posFond.w = (m_stexte[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE;
+		if ((m_stexte[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE > m_rect.w)
+			m_rect.w = (m_stexte[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE;
 	}
         
     
@@ -359,8 +359,8 @@ void DialogMenu::modifyText(string texte)
 
 void DialogMenu::resize(int w, int h)
 {
-    m_posFond.w = (w/TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
-    m_posFond.h = (h/TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
+	m_rect.w = (w / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
+	m_rect.h = (h / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
 }
 
 bool DialogMenu::isVisible()
@@ -385,14 +385,28 @@ void DialogMenu::hide(bool x)
     m_ligne = 0;
 }
 
-const ska::Rectangle* DialogMenu::getPos()
+const ska::Rectangle& DialogMenu::getRect()
 {
-    return &m_posFond;
+	return m_rect;
 }
 
-const ska::Rectangle* DialogMenu::getPosImg()
+const ska::Point<int>& DialogMenu::getPos()
 {
-    return &m_posMessImage;
+	return m_rect;
+}
+
+const unsigned int DialogMenu::getWidth()
+{
+	return m_rect.w;
+}
+
+const unsigned int DialogMenu::getHeight()
+{
+	return m_rect.h;
+}
+
+const ska::Rectangle& DialogMenu::getPosImg() {
+    return m_rectMessImage;
 }
 
 bool DialogMenu::getAlpha()
@@ -402,18 +416,18 @@ bool DialogMenu::getAlpha()
 
 void DialogMenu::setPosImg(int x, int y)
 {
-    m_posMessImage.x = x;
-    m_posMessImage.y = y;
+	m_rectMessImage.x = x;
+	m_rectMessImage.y = y;
 }
 
 void DialogMenu::setPos(int x, int y)
 {
     //m_moving = true;
-    m_posFond.x = x;
-    m_posFond.y = y;
+    m_rect.x = x;
+	m_rect.y = y;
     //m_posScrollFond.x = x;
     m_posScrollFond.y = y;
-	m_posMessImage = ska::RectangleUtils::posToCenterPicture(&m_posMessImage, &m_posFond);
+	m_rectMessImage = ska::RectangleUtils::posToCenterPicture(m_rectMessImage, m_rect);
 }
 
 void DialogMenu::setAlpha(bool x)
@@ -479,8 +493,8 @@ Window_Area* DialogMenu::getButton(string key)
 void DialogMenu::addInventory(Inventory& inv, ska::Rectangle relativePos)
 {
 	ska::Rectangle buf = relativePos;
-    buf.h = m_posFond.h - relativePos.x;
-    buf.w = m_posFond.w - relativePos.y;
+	buf.h = m_rect.h - relativePos.x;
+	buf.w = m_rect.w - relativePos.y;
     m_areaList.push_back(unique_ptr<Inventory_Area>(new Inventory_Area(this, &inv, buf)));
 }
 
@@ -523,20 +537,20 @@ void DialogMenu::setMoving(bool x)
     m_moving = x;
 }
 
-void DialogMenu::setPos(ska::Rectangle pos)
+void DialogMenu::setPos(ska::Point<int> pos)
 {
     //m_moving = true;
-    m_posFond.x = pos.x;
-    m_posFond.y = pos.y;
+	m_rect.x = pos.x;
+	m_rect.y = pos.y;
     m_posScrollFond.x = pos.x;
     m_posScrollFond.y = pos.y;
 }
 
-void DialogMenu::move(ska::Rectangle delta)
+void DialogMenu::move(ska::Point<int> delta)
 {
     m_moving = true;
-    m_posFond.x += delta.x;
-    m_posFond.y += delta.y;
-    m_posScrollFond.x = m_posFond.x;
-    m_posScrollFond.y = m_posFond.y;
+	m_rect.x += delta.x;
+	m_rect.y += delta.y;
+	m_posScrollFond.x = m_rect.x;
+	m_posScrollFond.y = m_rect.y;
 }

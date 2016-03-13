@@ -13,7 +13,7 @@ ska::GravityParticle::GravityParticle(int idSprite, ska::Rectangle pos, double l
     m_countWind = 0;
 }
 
-void ska::GravityParticle::launch(ska::Rectangle origin, float angle, unsigned int power)
+void ska::GravityParticle::launch(ska::Point<int> origin, float angle, unsigned int power)
 {
     Particle::launch(origin, angle, power);
     m_by = power*sin(angle);

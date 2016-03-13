@@ -12,7 +12,7 @@ class WindowBag: public MovableWindow
     int* getBoolUseObject();
     int* getBoolTrashObject();
     int* getBoolGiveObject();
-	ska::Rectangle getCurObjectPos();
+	ska::Point<int> getCurObjectPos();
 
     void reset();
     void refresh();
@@ -20,7 +20,9 @@ class WindowBag: public MovableWindow
 
     private:
     int m_boolUseObject, m_boolGiveObject, m_boolTrashObject;
-	ska::Rectangle m_curObjectPos;
+	ska::Point<int> m_curObjectPos;
 };
+
+typedef std::unique_ptr<WindowBag> WindowBagPtr;
 
 #endif

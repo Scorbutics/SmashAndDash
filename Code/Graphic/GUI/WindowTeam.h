@@ -19,4 +19,6 @@ class WindowTeam: public MovableWindow
     int m_indexCursor;
 };
 
+typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
+
 #endif

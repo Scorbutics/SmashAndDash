@@ -708,6 +708,12 @@
     <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputContextManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputRange.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -1140,6 +1146,9 @@
       <Filter>Fichiers sources\Inputs</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

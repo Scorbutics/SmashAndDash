@@ -49,14 +49,14 @@ void Button_Bar::display()
 
 //Coordonnées relatives -> absolues
 	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
-    buf.x += (m_parent->getPos())->x;
-    buf.y += (m_parent->getPos())->y;
-    absoluteLeftPos.x += (m_parent->getPos())->x;
-    absoluteLeftPos.y += (m_parent->getPos())->y;
-    absoluteRightPos.x += (m_parent->getPos())->x + m_buttonStyle.getWidth();
-    absoluteRightPos.y += (m_parent->getPos())->y;
-    absoluteCursorPos.x += (m_parent->getPos())->x;
-    absoluteCursorPos.y += (m_parent->getPos())->y;
+    buf.x += (m_parent->getPos()).x;
+    buf.y += (m_parent->getPos()).y;
+    absoluteLeftPos.x += (m_parent->getPos()).x;
+    absoluteLeftPos.y += (m_parent->getPos()).y;
+    absoluteRightPos.x += (m_parent->getPos()).x + m_buttonStyle.getWidth();
+    absoluteRightPos.y += (m_parent->getPos()).y;
+    absoluteCursorPos.x += (m_parent->getPos()).x;
+    absoluteCursorPos.y += (m_parent->getPos()).y;
 
 
 	m_buttonStyle.render(buf.x, buf.y);
@@ -71,28 +71,30 @@ void Button_Bar::display()
 void Button_Bar::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::MouseInput* in = wScreen.getInputListener().getMouseInput();
+	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+
 	//Coordonnées relatives -> absolues
-	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos, mousePos = in->getMousePos();
-	buf.x += (m_parent->getPos())->x;
-	buf.y += (m_parent->getPos())->y;
-	absoluteLeftPos.x += (m_parent->getPos())->x;
-	absoluteLeftPos.y += (m_parent->getPos())->y;
-	absoluteRightPos.x += (m_parent->getPos())->x + m_buttonStyle.getWidth();
-	absoluteRightPos.y += (m_parent->getPos())->y;
-	absoluteCursorPos.x += (m_parent->getPos())->x;
-	absoluteCursorPos.y += (m_parent->getPos())->y;
+	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
+	buf.x += (m_parent->getPos()).x;
+	buf.y += (m_parent->getPos()).y;
+	absoluteLeftPos.x += (m_parent->getPos()).x;
+	absoluteLeftPos.y += (m_parent->getPos()).y;
+	absoluteRightPos.x += (m_parent->getPos()).x + m_buttonStyle.getWidth();
+	absoluteRightPos.y += (m_parent->getPos()).y;
+	absoluteCursorPos.x += (m_parent->getPos()).x;
+	absoluteCursorPos.y += (m_parent->getPos()).y;
 
 
 	//Si on clique sur la flèche gauche
-	if (ska::RectangleUtils::isPositionInBox(&mousePos, &absoluteLeftPos) && in->mouseClick(SDL_BUTTON_LEFT))
+	if (ska::RectangleUtils::isPositionInBox(mousePos, absoluteLeftPos) && in[ska::InputAction::LClic])
 	{
 		m_index--;
 		m_cursorPos.x = (int)(m_relativePos.x + m_index%(m_values.size()) * (((2*m_buttonStyle.getWidth())-m_cursor.getWidth()) / (float) m_values.size()+1));
 		*m_variable = m_values[m_index%(m_values.size())];
 	}
 	//Sinon si on clique sur la flèche droite
-	else if (ska::RectangleUtils::isPositionInBox(&mousePos, &absoluteRightPos) && in->mouseClick(SDL_BUTTON_LEFT))
+	else if (ska::RectangleUtils::isPositionInBox(mousePos, absoluteRightPos) && in[ska::InputAction::LClic])
 	{
 		m_index++;
 		m_cursorPos.x = (int)(m_relativePos.x + m_index%(m_values.size()) * (((2 * m_buttonStyle.getWidth())-m_cursor.getWidth()) / (float) m_values.size()+1));

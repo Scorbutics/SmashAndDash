@@ -31,6 +31,8 @@
 #include "./Scene/SceneFight.h"
 #include "EnumScene.h"
 
+#include "../ska/Inputs/RawInputListener.h"
+
 #include "System\CollisionSystem.h"
 #include "System\ForceSystem.h"
 #include "System\GravitySystem.h"
@@ -90,12 +92,14 @@ public:
 	ska::SpriteAnimationManager& getSpriteAnimationManager();
     MouseCursor& getMouseCursor();
 	bool getContinue();
-	ska::InputListener& getInputListener();
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
 	ska::World& getWorld();
 	MobSpawningManager& getMobSpawningManager();
 	SavegameManager& getSavegameManager();
+
+	const ska::InputActionContainer& getActions() const;
+	const ska::InputRangeContainer& getRanges() const;
 
 	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();
@@ -121,7 +125,8 @@ public:
 		ska::Rectangle m_OfChip, m_origineRelative;
 		bool m_quitFlip, m_ecritureLog, m_continue;
 		Player *m_phero; //Character héro courant
-		ska::InputListener m_kdListener;
+		ska::RawInputListener m_rawInputListener;
+
 		float m_speedInertie;
 		ska::Animation m_chipsetAni;
 		AI m_ai;

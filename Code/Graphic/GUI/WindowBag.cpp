@@ -13,7 +13,7 @@ WindowBag::WindowBag(string fichierMenu, ska::Rectangle posFond, int taillePolic
     m_curObjectPos.x = m_curObjectPos.y = 0;
 }
 
-ska::Rectangle WindowBag::getCurObjectPos()
+ska::Point<int> WindowBag::getCurObjectPos()
 {
     return m_curObjectPos;
 }
@@ -61,18 +61,13 @@ void WindowBag::refresh()
 		ska::Rectangle invAreaAbsolutePos = invArea->getAbsolutePos();
         gui.getClickMenu()->hide(true);
         m_boolUseObject = 0;
-        m_curObjectPos = *gui.getClickMenu()->getPos();
+        m_curObjectPos = gui.getClickMenu()->getPos();
         m_curObjectPos.x -= invAreaAbsolutePos.x;
         m_curObjectPos.y -= invAreaAbsolutePos.y;
         if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
         {
-			ska::Rectangle nullPos;
-			nullPos.x = 0;
-			nullPos.y = 0;
-			nullPos.w = 0;
-			nullPos.h = 0;
 
-            gui.getClickMenu()->setPos(nullPos);
+            gui.getClickMenu()->setPos(ska::Point<int>());
             if(invArea->getObjectAtPos(m_curObjectPos)->getEffect() == "onPkmn")
             {
                 gui.getWindowTeam()->reset("use_object");

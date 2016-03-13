@@ -4,7 +4,7 @@ class AbstractSceneMap :
 	public AbstractNoGUISceneMap
 {
 public:
-	AbstractSceneMap();
+	AbstractSceneMap(ska::RawInputListener& ril);
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~AbstractSceneMap();

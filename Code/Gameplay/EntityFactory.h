@@ -2,6 +2,7 @@
 #define DEF_ENTITY_MANAGER
 
 #include "../ska/Inputs/Readers/IniReader.h"
+#include "../ska/Graphic/Point.h"
 
 class WGameCore;
 
@@ -22,7 +23,7 @@ class EntityFactory
 	
 		void createTrainer();
 		Character* createOpponent(ska::IniReader* dataMob);
-		void addNPC(int id, ska::Rectangle posEntity, string pathStringEntity);
+		void addNPC(int id, ska::Point<int> posEntity, string pathStringEntity);
 		void addNPC(Character* npc);
 		void remove(int id, unsigned entityNumber);
 		void deleteAll();																//Détruit toutes les entités (à faire à chaque changement de monde (= téléportation))

@@ -16,7 +16,7 @@ using namespace std;
 
 void LoadEntities()
 {
-	ska::Rectangle posEntityId;
+	ska::Point<int> posEntityId;
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 

@@ -17,7 +17,7 @@ using namespace std;
 WGameCore::WGameCore():
 Window(), m_camera(m_entityManager, m_laFenetre, m_loFenetre), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_camera),
 	m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_entityManager), m_gravitySystem(m_entityManager),
-	m_forceSystem(m_entityManager) {
+	m_forceSystem(m_entityManager), m_sceneMap(m_rawInputListener), m_sceneFight(m_rawInputListener) {
 	m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -37,8 +37,8 @@ Window(), m_camera(m_entityManager, m_laFenetre, m_loFenetre), m_settings("games
 	m_speedInertie = 0;
 	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
-	m_kdListener.getKeyInput()->resetAll();
-	m_kdListener.getMouseInput()->resetAll();
+	//m_kdListener.getKeyInput()->resetAll();
+	//m_kdListener.getMouseInput()->resetAll();
 
 	m_saveManager.loadGame("save1");
 	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName());
@@ -278,11 +278,6 @@ bool WGameCore::getContinue()
     return m_continue;
 }
 
-ska::InputListener& WGameCore::getInputListener()
-{
-    return m_kdListener;
-}
-
 void WGameCore::eventUpdate(bool movingDisallowed)
 {
 	m_gravitySystem.refreshAll();
@@ -317,9 +312,9 @@ void WGameCore::initNewWorld()
 
 void WGameCore::setHero(Player* hero)
 {
-	m_kdListener.removeObserver(m_phero);
+	//m_kdListener.removeObserver(m_phero);
     m_phero = hero;
-	m_kdListener.addObserver(m_phero);
+	//m_kdListener.addObserver(m_phero);
 }
 
 void WGameCore::waitQuit(DialogMenu* window)
@@ -334,7 +329,7 @@ void WGameCore::waitQuit(DialogMenu* window)
 			m_gui.dialogRefresh();
 
             //Gère les évènements extérieurs (input)
-            m_kdListener.updateEvents();
+            //m_kdListener.updateEvents();
 
             flip();
 
@@ -478,7 +473,13 @@ EntityFactory& WGameCore::getEntityFactory()
     return m_EntityFactory;
 }
 
+const ska::InputActionContainer& WGameCore::getActions() const {
+	return m_sceneCursor->getInputContextManager().getActions();
+}
 
+const ska::InputRangeContainer& WGameCore::getRanges() const {
+	return m_sceneCursor->getInputContextManager().getRanges();
+}
 
 WGameCore::~WGameCore()
 {

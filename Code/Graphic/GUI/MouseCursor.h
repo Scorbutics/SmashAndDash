@@ -42,7 +42,6 @@ class MouseCursor : public ska::DrawableFixedPriority
     void showCursorTime(unsigned int delay);
 
     private:
-    ska::MouseInput *m_in;
     ska::Animation m_aniCursor;
     ska::Texture m_sprite;
 	ska::Rectangle m_cursorPos;

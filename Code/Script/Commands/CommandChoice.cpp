@@ -76,6 +76,9 @@ std::string CommandChoice::execute(ska::IScript* script, std::vector<std::string
 		SDL_Delay(30);
 	}
 
+	const ska::InputActionContainer& in = wScreen.getActions();
+	bool doAction = false;
+
 	do
 	{
 		wScreen.eventUpdate(true);
@@ -88,9 +91,9 @@ std::string CommandChoice::execute(ska::IScript* script, std::vector<std::string
 		wScreen.flip();
 		SDL_Delay(30);
 
-	} while (!wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) && !wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_ESCAPE));
+	} while (!(doAction = in[ska::InputAction::DoAction] || in[ska::InputAction::Quit]));
 
-	ska::ScriptUtils::setValueFromVarOrSwitchNumber(script->getParent().getSavegame(), script->getExtendedName(), var, wScreen.getInputListener().getKeyInput()->getKeyState(SDL_SCANCODE_RETURN) ? "1" : "0", script->getVarMap());
-	wScreen.getInputListener().getKeyInput()->resetAll();
+	ska::ScriptUtils::setValueFromVarOrSwitchNumber(script->getParent().getSavegame(), script->getExtendedName(), var, doAction ? "1" : "0", script->getVarMap());
+	
 	return "";
 }

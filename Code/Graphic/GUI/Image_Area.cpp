@@ -68,8 +68,8 @@ void Image_Area::display()
         m_active = true;
 
 	ska::Rectangle buf = m_relativePos;
-    buf.x += (m_parent->getPos())->x;
-    buf.y += (m_parent->getPos())->y;
+    buf.x += (m_parent->getPos()).x;
+    buf.y += (m_parent->getPos()).y;
 
 	m_image.render(buf.x, buf.y, &m_rectSrc);
 }

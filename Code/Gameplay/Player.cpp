@@ -64,13 +64,14 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					//VERIFIE S'IL EST POSSIBLE D'AUTOATTACK//
 					//////////////////////////////////////////
 
-					ska::Rectangle opponentPos = wScreen.getFight().getOpponent()->getPos(), mouseRightClickPos;
+					ska::Rectangle opponentPos = wScreen.getFight().getOpponent()->getPos();
+					ska::Point<int> mouseRightClickPos;
 					mouseRightClickPos.x = me->getX();
 					mouseRightClickPos.y = me->getY();
 					
 					opponentPos.x += wScreen.getORel().x;
 					opponentPos.y += wScreen.getORel().y;
-					wScreen.getFight().getPokemon()->setAutoattack(ska::RectangleUtils::isPositionInBox(&mouseRightClickPos, &opponentPos));
+					wScreen.getFight().getPokemon()->setAutoattack(ska::RectangleUtils::isPositionInBox(mouseRightClickPos, opponentPos));
 				}
 
 			}
@@ -207,7 +208,8 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 		int skillCursor = GetSkillCursorFromKey(ke);
 		if (skillCursor != -1)
 		{
-			ska::Rectangle absoluteMousePos = wScreen.getInputListener().getMouseInput()->getMousePos();
+			const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+			ska::Point<int> absoluteMousePos = mousePos;
 			absoluteMousePos.x -= wScreen.getORel().x;
 			absoluteMousePos.y -= wScreen.getORel().y;
 			wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);

@@ -23,7 +23,7 @@ ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, stri
 void ToolBar::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
+	const ska::InputActionContainer& in = wScreen.getActions();
 
     MovableWindow::refresh();
     if(m_invArea != NULL)
@@ -34,10 +34,9 @@ void ToolBar::refresh()
 	Inventory* inv = m_invArea->getInventory();
 	Object* obj;
 
-    if(in->getKeyState(SDL_SCANCODE_Z))
+	if (in[ska::InputAction::UseObject1])
     {
 		obj = inv->getObjectFromIndex(0);
-        in->setKeyState(SDL_SCANCODE_Z,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")
@@ -46,10 +45,9 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-    else if(in->getKeyState(SDL_SCANCODE_X))
+	else if (in[ska::InputAction::UseObject2])
     {
 		obj = inv->getObjectFromIndex(1);
-        in->setKeyState(SDL_SCANCODE_X,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")
@@ -58,10 +56,9 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-    else if(in->getKeyState(SDL_SCANCODE_C))
+	else if (in[ska::InputAction::UseObject3])
     {
 		obj = inv->getObjectFromIndex(2);
-        in->setKeyState(SDL_SCANCODE_C,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")
@@ -70,10 +67,9 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-    else if(in->getKeyState(SDL_SCANCODE_V))
+	else if (in[ska::InputAction::UseObject4])
     {
 		obj = inv->getObjectFromIndex(3);
-        in->setKeyState(SDL_SCANCODE_V,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")
@@ -82,10 +78,9 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-    else if(in->getKeyState(SDL_SCANCODE_B))
+	else if (in[ska::InputAction::UseObject5])
     {
 		obj = inv->getObjectFromIndex(4);
-        in->setKeyState(SDL_SCANCODE_B,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")
@@ -94,10 +89,9 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-    else if(in->getKeyState(SDL_SCANCODE_N))
+	else if (in[ska::InputAction::UseObject6])
     {
 		obj = inv->getObjectFromIndex(5);
-        in->setKeyState(SDL_SCANCODE_N,0);
 		if(obj != NULL)
 		{
 			if(obj->getEffect() == "onPkmn")

@@ -3,12 +3,10 @@
 
 #include <iostream>
 #include <string>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <vector>
 #include <memory>
 #include "../../ska/Graphic/Texture.h"
-
+#include "../../ska/Graphic/Point.h"
 
 class World;
 class Character;
@@ -29,12 +27,12 @@ class DialogMenu
     void modifyColor(SDL_Color col);
     bool isVisible();
     void hide(bool x);
-	void move(ska::Rectangle pos);
+	void move(ska::Point<int> pos);
     bool isMoving();
     void pause();
 
     void setActionClic(std::string action);
-	void setPos(ska::Rectangle pos);
+	void setPos(ska::Point<int> pos);
     void setPos(int x, int y);
     void setPosImg(int x, int y);
     void setMoving(bool x);
@@ -43,12 +41,15 @@ class DialogMenu
     int getLines();
     int getWLine(unsigned int ligne);
     int getX(unsigned int ligne);
-	const ska::Rectangle* getPos();
+	const ska::Point<int>& getPos();
+	const ska::Rectangle& getRect();
+	const unsigned int getWidth();
+	const unsigned int getHeight();
     bool getAlpha();
     void setAlpha(bool x);
     bool getAlphaImg();
     void setAlphaImg(bool x);
-	const ska::Rectangle* getPosImg();
+	const ska::Rectangle& getPosImg();
     std::string getActionClic();
     Window_Area* getCloseButton();
     Window_Area* getButton(std::string key);
@@ -70,7 +71,8 @@ class DialogMenu
     protected:
     ska::Texture m_fond, m_messImage;
     std::vector< ska::Texture > m_stexte;
-	ska::Rectangle m_posFond, m_posTexte, m_posMessImage, m_posLFond, m_posScrollFond, m_positionFond; //m_posScrollFond sert à faire scroll (défiler) la fenêtre lors de l'affichage d'un message
+	ska::Rectangle m_rect, m_rectMessImage;
+	ska::Rectangle m_posTexte, m_posLFond, m_posScrollFond, m_positionFond; //m_posScrollFond sert à faire scroll (défiler) la fenêtre lors de l'affichage d'un message
     std::vector<std::string> m_texte;
     std::string m_actionClic;                                       //m_posLFond, quant à lui, est utilisé pour parcourir le "menu.png" (l'image constructive du menu). c'est en quelque sorte un curseur.
     SDL_Color m_couleur;
@@ -82,5 +84,6 @@ class DialogMenu
 
 };
 
+typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 #endif

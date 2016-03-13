@@ -8,7 +8,7 @@ RainParticle::RainParticle(RainParticleManager& parent, int id, int idSprite, sk
 {
 }
 
-ska::Rectangle RainParticle::getOrigin() const {
+ska::Point<int> RainParticle::getOrigin() const {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::Rectangle posBuf;
 	posBuf.y = -3 * TAILLEBLOC;
