@@ -98,7 +98,7 @@ int ska::LayerE::getBlocY(int ligne)
 
 int ska::LayerE::getID(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne <= m_nbrLignes && ligne > 0)
         return m_vID[ligne];
     else
         return 0;

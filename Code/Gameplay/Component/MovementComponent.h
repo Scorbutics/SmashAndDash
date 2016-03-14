@@ -1,7 +1,6 @@
 #pragma once
 #include "../../ska/ECS/Component.h"
-class MovementComponent : public ska::Component {
-public:
+struct MovementComponent : public ska::Component {
 	float ax;
 	float ay;
 	float az;

@@ -40,7 +40,7 @@ Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawne
 	//m_kdListener.getMouseInput()->resetAll();
 
 	m_saveManager.loadGame("save1");
-	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName());
+	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 	m_scrolling = true;
 }
 
@@ -294,34 +294,7 @@ void WGameCore::initNewWorld()
     //1ere dimension: le nombre de types différents de mobs sur la map et 2eme dimension: le nombre de mobs du même type.
     //Ainsi que récupération des positions des évenements/entités.
 
-	ska::Point<int> posEntityId;
-	ska::World& w = getWorld();
 
-
-	//Suppression des anciennes entités
-	//wScreen.getEntityFactory().deleteAll();
-
-	//Chargement des NPC sur la map (personnages & pokémon)
-	for (int i = 1; i < w.getLayerEvent()->getNbrLignes(); i++)
-	{
-		posEntityId.y = w.getLayerEvent()->getBlocY(i) * TAILLEBLOC;
-		posEntityId.x = w.getLayerEvent()->getBlocX(i) * TAILLEBLOC;
-		int id = w.getLayerEvent()->getID(i);
-		if (abs(id) <= ENTITEMAX) {
-			//wScreen.getEntityFactory().addNPC(id, posEntityId, w.getLayerEvent()->getPath(i));
-		} else {
-			cerr << "Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " << i << endl;
-		}
-
-	}
-
-	//Chargement des sprites de l'équipe pokémon
-	const size_t teamSize = getPokemonManager().getPokemonTeamSize();
-	for (unsigned int i = 0; i < teamSize; i++)
-	{
-		//getPokemonManager().getPokemon(i)->setID(getPokemonManager().getPokemon(i)->getID());
-		getPokemonManager().getPokemon(i)->setDirection(0);
-	}
 	
     //m_phero->setID(0);
 
@@ -500,6 +473,10 @@ const ska::InputActionContainer& WGameCore::getActions() const {
 
 const ska::InputRangeContainer& WGameCore::getRanges() const {
 	return m_sceneCursor->getInputContextManager().getRanges();
+}
+
+const ska::InputToggleContainer& WGameCore::getToggles() const {
+	return m_sceneCursor->getInputContextManager().getToggles();
 }
 
 WGameCore::~WGameCore()

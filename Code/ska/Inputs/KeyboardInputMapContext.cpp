@@ -5,17 +5,17 @@
 ska::KeyboardInputMapContext::KeyboardInputMapContext() {
 }
 
-void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, ska::InputAction>& codeMap) {
+void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, ska::InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {
 	
 	codeMap[SDL_SCANCODE_ESCAPE] = InputAction::Quit;
-	codeMap[SDL_SCANCODE_LSHIFT] = InputAction::Run;
+	toggles[SDL_SCANCODE_LSHIFT] = InputToggle::Run;
 	codeMap[SDL_SCANCODE_RETURN] = InputAction::DoAction;
 	codeMap[SDL_SCANCODE_SPACE] = InputAction::Jump;
 
-	codeMap[SDL_SCANCODE_A] = InputAction::MoveLeft;
-	codeMap[SDL_SCANCODE_W] = InputAction::MoveUp;
-	codeMap[SDL_SCANCODE_S] = InputAction::MoveDown;
-	codeMap[SDL_SCANCODE_D] = InputAction::MoveRight;
+	toggles[SDL_SCANCODE_A] = InputToggle::MoveLeft;
+	toggles[SDL_SCANCODE_W] = InputToggle::MoveUp;
+	toggles[SDL_SCANCODE_S] = InputToggle::MoveDown;
+	toggles[SDL_SCANCODE_D] = InputToggle::MoveRight;
 	
 	codeMap[SDL_SCANCODE_Z] = InputAction::UseObject1;
 	codeMap[SDL_SCANCODE_X] = InputAction::UseObject2;
@@ -32,7 +32,7 @@ void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, ska::Inp
 
 	/* Mouse click */
 	/* Left */
-	codeMap[SDL_NUM_SCANCODES + 0] = InputAction::MoveTo;
+	toggles[SDL_NUM_SCANCODES + 0] = InputToggle::MoveTo;
 
 	/* Right */
 	codeMap[SDL_NUM_SCANCODES + 1] = InputAction::PathfindTo;

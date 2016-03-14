@@ -21,7 +21,7 @@ namespace ska {
 	class World : public HasGraphic {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
-		void load(std::string fileName, std::string chipsetName);
+		virtual void load(std::string fileName, std::string chipsetName, std::string saveName);
 
 		/*Weather* getFog();
 		Weather* getWeather();*/
@@ -77,13 +77,13 @@ namespace ska {
 		unsigned int m_blockSize;
 
 		Texture m_chipset;
-		std::unique_ptr<LayerE> m_lEvent;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
 		//std::unique_ptr<Weather> m_temps, m_brouillard;
 		std::vector<IniReader> m_mobSettings;
 
 	protected:
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
+		std::unique_ptr<LayerE> m_lEvent;
 		Animation m_animBlocks;
 		EntityManager m_entityManager;
 		CameraSystem m_cameraSystem;

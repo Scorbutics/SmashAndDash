@@ -3,11 +3,14 @@
 #include "../WGameCore.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../ska/Physic/ParticleManager.h"
+#include "../Component/MovementComponent.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/World/Layer.h"
+#include "../../ska/World/LayerE.h"
+#include "../../ska/Graphic/SpritePath.h"
 
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
-m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_entityManager), m_gravitySystem(m_entityManager),
+m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager) {
 }
 
@@ -31,6 +34,8 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());
 
+	m_graphicSystem.refreshAll();
+
 	/*for (Character* npc : currentEntityList) {
 		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
 
@@ -45,7 +50,91 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead2D(*m_lTop);
 }
 
+void WorldImpl::load(std::string fileName, std::string chipsetName, std::string saveName) {
+	World::load(fileName, chipsetName, saveName);
+	ska::Point<int> posEntityId;
 
+	//Suppression des anciennes entités
+	//wScreen.getEntityFactory().deleteAll();
+
+
+	//Character* hero;
+	unsigned int startPosx, startPosy;
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveName + FILE_SEPARATOR"trainer.ini");
+	WGameCore& wScreen = WGameCore::getInstance();
+
+	startPosx = reader.getInt("Trainer start_posx");
+	startPosy = reader.getInt("Trainer start_posy");
+	std::string startMapName = reader.getString("Trainer start_map_name");
+
+	string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+	buf += startMapName;
+	buf += FILE_SEPARATOR;
+	buf += startMapName;
+	buf += ".ini";
+
+	ska::IniReader mapReader(buf);
+	std::string startMapChipset = mapReader.getString("Chipset file");
+
+	if (startMapChipset == "STRINGNOTFOUND")
+		cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << endl;
+
+	/*hero = wScreen.getEntityFactory().getTrainer();
+	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
+
+	ska::EntityId hero = m_entityManager.createEntity();
+	ska::PositionComponent pc;
+	pc.x = 15;//startPosx*TAILLEBLOC;
+		pc.y = 15;//startPosy*TAILLEBLOC;
+	pc.z = 0;
+	m_entityManager.addComponent<ska::PositionComponent>(hero, pc);
+	MovementComponent mc;
+	memset(&mc, 0, sizeof(MovementComponent));
+	m_entityManager.addComponent<MovementComponent>(hero, mc);
+	GraphicComponent gc;
+	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, 0), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_entityManager.addComponent<GraphicComponent>(hero, gc);
+	
+
+	//Chargement des NPC sur la map (personnages & pokémon)
+	for (int i = 1; i < m_lEvent->getNbrLignes(); i++)
+	{
+		posEntityId.y = m_lEvent->getBlocY(i) * TAILLEBLOC;
+		posEntityId.x = m_lEvent->getBlocX(i) * TAILLEBLOC;
+		int id = m_lEvent->getID(i);
+		if (id == 0) {
+			continue;
+		}
+
+		if (abs(id) <= ENTITEMAX) {	
+			ska::EntityId newEntity = m_entityManager.createEntity();
+			ska::PositionComponent pc;
+			pc.x = posEntityId.x;
+			pc.y = posEntityId.y;
+			pc.z = 0;
+			m_entityManager.addComponent<ska::PositionComponent>(newEntity, pc);
+			MovementComponent mc;
+			memset(&mc, 0, sizeof(MovementComponent));
+			m_entityManager.addComponent<MovementComponent>(newEntity, mc);
+			GraphicComponent gc;
+			gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+			m_entityManager.addComponent<GraphicComponent>(newEntity, gc);
+
+			//m_entityManager.addNPC(id, posEntityId, m_lEvent->getPath(i));
+		} else {
+			cerr << "Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " << i << endl;
+		}
+
+	}
+
+	//Chargement des sprites de l'équipe pokémon
+	/*const size_t teamSize = getPokemonManager().getPokemonTeamSize();
+	for (unsigned int i = 0; i < teamSize; i++)
+	{
+		//getPokemonManager().getPokemon(i)->setID(getPokemonManager().getPokemon(i)->getID());
+		getPokemonManager().getPokemon(i)->setDirection(0);
+	}*/
+}
 
 void WorldImpl::refreshEntities() {
 	//WGameCore& wScreen = WGameCore::getInstance();

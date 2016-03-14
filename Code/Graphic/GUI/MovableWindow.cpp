@@ -15,18 +15,18 @@ MovableWindow::MovableWindow(string fichierMenu, ska::Rectangle posFond, int tai
 void MovableWindow::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputToggleContainer& in = wScreen.getToggles();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	ska::Rectangle movePos = m_rect;
     movePos.h = TAILLEBLOCFENETRE/2;
 	
-	if (in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, movePos)) {
-        this->setMoving(true);
-	} else if (!in[ska::InputAction::LClic]) {
-		this->setMoving(false);
+	if (in[ska::InputToggle::MoveWindow] && ska::RectangleUtils::isPositionInBox(mouseClickPos, movePos)) {
+        setMoving(true);
+	} else if (!in[ska::InputToggle::MoveWindow] && isMoving()) {
+		setMoving(false);
 	}
 
-    if(this->isMoving()) {
+    if(isMoving()) {
 		m_rect.x += mouseClickPos.x - m_mouseLastPos.x;
 		m_rect.y += mouseClickPos.y - m_mouseLastPos.y;
     }

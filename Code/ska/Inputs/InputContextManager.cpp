@@ -17,9 +17,11 @@ void ska::InputContextManager::refresh() {
 	m_actions.reset();
 	InputRange empty;
 	std::fill(m_ranges.begin(), m_ranges.end(), empty);
+	m_toggles.reset();
 	for (InputContextPtr& it : m_contexts) {
 		it->queryActions(m_ril, m_actions);
 		it->queryRanges(m_ril, m_ranges);
+		it->queryToggles(m_ril, m_toggles);
 	}
 }
 
@@ -29,6 +31,10 @@ const ska::InputRangeContainer& ska::InputContextManager::getRanges() const {
 
 const ska::InputActionContainer& ska::InputContextManager::getActions() const {
 	return m_actions;
+}
+
+const ska::InputToggleContainer& ska::InputContextManager::getToggles() const {
+	return m_toggles;
 }
 
 ska::InputContextManager::~InputContextManager()

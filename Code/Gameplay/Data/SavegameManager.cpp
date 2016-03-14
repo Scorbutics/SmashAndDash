@@ -144,6 +144,10 @@ string SavegameManager::getStartMapName()
 	return m_startMapName;
 }
 
+const std::string& SavegameManager::getPathName() {
+	return m_pathname;
+}
+
 void SavegameManager::saveTrainer()
 {
 	Character* hero;

@@ -2,6 +2,7 @@
 #define DEF_KEYINPUT
 
 #include <SDL2/SDL.h>
+#include <bitset>
 
 namespace ska {
 	class KeyInput
@@ -10,22 +11,19 @@ namespace ska {
 	public:
 		KeyInput();
 
-		char getKeyState(int touche);
-		void setKeyState(int touche, int x);
+		bool trigger(int key);
+		bool toggle(int key);
 
-		int getQuit();
-		void setQuit(int x);
+		void setKeyState(int key, bool state);
+		void setLastKeyState(int key, bool state);
 
-		void resetAll();
-		void resetDirectionStates();
-
+		void resetTriggers();
 
 		~KeyInput();
 
 	private:
-		char m_key[SDL_NUM_SCANCODES];
-		char m_quit;
-
+		std::bitset<SDL_NUM_SCANCODES> m_keys;
+		std::bitset<SDL_NUM_SCANCODES> m_toggle;
 
 	};
 }

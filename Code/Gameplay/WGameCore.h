@@ -93,6 +93,7 @@ public:
 
 	const ska::InputActionContainer& getActions() const;
 	const ska::InputRangeContainer& getRanges() const;
+	const ska::InputToggleContainer& getToggles() const;
 
 	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();

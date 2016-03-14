@@ -9,24 +9,20 @@ ska::RawInputListener::RawInputListener()
 
 
 
-ska::KeyInput& ska::RawInputListener::getKeyInput()
-{
+ska::KeyInput& ska::RawInputListener::getKeyInput() {
     return m_keyIn;
 }
 
-ska::MouseInput& ska::RawInputListener::getMouseInput()
-{
+ska::MouseInput& ska::RawInputListener::getMouseInput() {
 	return m_mouseIn;
 }
 
-void ska::RawInputListener::update()
-{
+void ska::RawInputListener::update() {
     SDL_Event event;
-	m_mouseIn.setMouseLastState(SDL_BUTTON_LEFT, m_mouseIn.getMouseState(SDL_BUTTON_LEFT));
-	m_mouseIn.setMouseLastState(SDL_BUTTON_RIGHT, m_mouseIn.getMouseState(SDL_BUTTON_RIGHT));
 	m_mouseIn.setMouseLastPos(m_mouseIn.getMousePos());
 
-	m_keyIn.resetAll();
+	m_keyIn.resetTriggers();
+	m_mouseIn.resetTriggers();
 
 	while(SDL_PollEvent(&event))
 	{
@@ -48,7 +44,6 @@ void ska::RawInputListener::update()
 				m_mouseIn.setMouseState(event.button.button, 0);
                 break;
             case SDL_QUIT:
-				m_keyIn.setQuit(1);
 				throw TerminateProcessException("Program quitted");
                 break;
             default:

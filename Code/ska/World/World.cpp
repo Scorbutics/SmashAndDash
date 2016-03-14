@@ -13,7 +13,7 @@ ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, cons
 {
 }
 
-void ska::World::load(string fileName, string chipsetName)
+void ska::World::load(string fileName, string chipsetName, std::string saveName)
 {
 	//m_bgm = NULL;
 	m_chipset.load(chipsetName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);

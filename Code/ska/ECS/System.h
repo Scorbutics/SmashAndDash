@@ -30,7 +30,7 @@ namespace ska {
 		void update(Observable<EntityData>* obs, const EventArg& e, EntityData& t) override {
 			
 			/* An entity belongs to the system ONLY IF it has ALL the requiered components of the system */
-			EntityComponentsMask& resultMask = *t.first;
+			EntityComponentsMask resultMask = *t.first;
 			EntityId entityId = t.second;
 			resultMask &= m_systemComponentMask;
 

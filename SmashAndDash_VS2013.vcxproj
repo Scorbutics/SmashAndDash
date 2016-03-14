@@ -155,6 +155,7 @@
     <ClInclude Include="Code\ska\Inputs\InputAction.h" />
     <ClInclude Include="Code\ska\Inputs\InputContext.h" />
     <ClInclude Include="Code\ska\Inputs\InputRange.h" />
+    <ClInclude Include="Code\ska\Inputs\InputToggle.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h" />
     <ClInclude Include="Code\ska\Scene\HasGraphic.h" />

@@ -22,6 +22,7 @@ class SavegameManager : public ska::Savegame
 		virtual void setGameSwitch(const unsigned int x, const bool value) override;
 
 		std::string getStartChipsetName();
+		const std::string& getPathName();
 		std::string getStartMapName();
 		~SavegameManager();
 

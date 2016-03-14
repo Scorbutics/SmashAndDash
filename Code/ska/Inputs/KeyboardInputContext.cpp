@@ -7,8 +7,8 @@ ska::KeyboardInputContext::KeyboardInputContext() {
 
 void ska::KeyboardInputContext::queryRanges(RawInputListener& ril, InputRangeContainer& ranges)  {
 	MouseInput& mouseKeys = ril.getMouseInput();
-	ska::Rectangle lastPos = mouseKeys.getMouseLastPos();
-	ska::Rectangle pos = mouseKeys.getMousePos();
+	ska::Point<int> lastPos = mouseKeys.getMouseLastPos();
+	ska::Point<int> pos = mouseKeys.getMousePos();
 
 	ranges[InputRangeType::MousePos] = InputRange( pos.x, pos.y );
 	ranges[InputRangeType::LastMousePos] = InputRange( lastPos.x, lastPos.y );
@@ -17,14 +17,27 @@ void ska::KeyboardInputContext::queryRanges(RawInputListener& ril, InputRangeCon
 void ska::KeyboardInputContext::queryActions(RawInputListener& ril, InputActionContainer& actions) {
 	KeyInput& keys = ril.getKeyInput();
 	MouseInput& mouseKeys = ril.getMouseInput();
-	for (auto& it = m_codesMapper.begin(); it != m_codesMapper.end(); it++) {
+	for (auto& it = m_actionsMapper.begin(); it != m_actionsMapper.end(); it++) {
 		if (it->first >= SDL_NUM_SCANCODES &&
-			(it->first == SDL_NUM_SCANCODES && mouseKeys.mouseClick(SDL_BUTTON_LEFT)
-			|| it->first == SDL_NUM_SCANCODES + 1 && mouseKeys.mouseClick(SDL_BUTTON_RIGHT))) {
+			(it->first == SDL_NUM_SCANCODES && mouseKeys.trigger(SDL_BUTTON_LEFT)
+			|| it->first == SDL_NUM_SCANCODES + 1 && mouseKeys.trigger(SDL_BUTTON_RIGHT))) {
+			actions[it->second] = true;
+		} else if (it->first < SDL_NUM_SCANCODES && keys.trigger(it->first)) {
 			actions[it->second] = true;
 		}
-		else if (keys.getKeyState(it->first) == 1) {
-			actions[it->second] = true;
+	}
+}
+
+void ska::KeyboardInputContext::queryToggles(RawInputListener& ril, InputToggleContainer& toggles) {
+	KeyInput& keys = ril.getKeyInput();
+	MouseInput& mouseKeys = ril.getMouseInput();
+	for (auto& it = m_togglesMapper.begin(); it != m_togglesMapper.end(); it++) {
+		if (it->first >= SDL_NUM_SCANCODES &&
+			(it->first == SDL_NUM_SCANCODES && mouseKeys.toggle(SDL_BUTTON_LEFT)
+			|| it->first == SDL_NUM_SCANCODES + 1 && mouseKeys.toggle(SDL_BUTTON_RIGHT))) {
+			toggles[it->second] = true;
+		} else if (it->first < SDL_NUM_SCANCODES && keys.toggle(it->first)) {
+			toggles[it->second] = true;
 		}
 	}
 }

@@ -11,6 +11,7 @@ class WorldImpl : public ska::World {
 public:
 	WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 	~WorldImpl();
+	virtual void load(std::string fileName, std::string chipsetName, std::string saveName) override;
 	virtual void refreshEntities() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 

@@ -1,129 +1,85 @@
 #include "MouseInput.h"
 
-ska::MouseInput::MouseInput()
-{
+ska::MouseInput::MouseInput() {
 	m_mousex = 0;
 	m_mousey = 0;
 	m_mousexrel = 0;
 	m_mouseyrel = 0;
 	m_clickPos.x = m_clickPos.y = 0;
-	this->resetAll();
+	resetAll();
 }
 
 
-ska::MouseInput::~MouseInput()
-{
+ska::MouseInput::~MouseInput() {
 }
 
 
-ska::Rectangle ska::MouseInput::getMouseLastPos()
-{
+ska::Point<int> ska::MouseInput::getMouseLastPos() {
 	return m_mouseLastPos;
 }
 
-
-
-void ska::MouseInput::setMouseState(int touche, int state)
-{
-	
-	m_mousebutton[touche] = state;
-	m_mouseEvent.setButton(touche);
-	m_mouseEvent.setState(state);
-	m_mouseEvent.setClicked(false);
-
-	if (this->mouseClick(touche))
-	{
-		m_mouseEvent.setClicked(true);
+void ska::MouseInput::setMouseState(int touche, int state) {	
+	m_mouseToggle[touche] = state;
+		
+	m_mouseState[touche] = state;
+	if (mouseClick(touche)) {
 		m_clickPos.x = m_mousex;
 		m_clickPos.y = m_mousey;
 	}
 
-	//notifyObservers(&m_mouseEvent);
 }
 
-void ska::MouseInput::setMouseLastState(int touche, int x)
-{
-	m_mouseLastState[touche] = x;
+int ska::MouseInput::trigger(int touche) {
+	return m_mouseState[touche];
 }
 
-
-int ska::MouseInput::getMouseState(int touche)
-{
-	return m_mousebutton[touche];
-}
-
-int ska::MouseInput::getMouseLastState(int touche)
-{
-	return m_mouseLastState[touche];
+int ska::MouseInput::toggle(int touche) {
+	return m_mouseToggle[touche];
 }
 
 
-void ska::MouseInput::setMousePos(SDL_Event event)
-{
+void ska::MouseInput::setMousePos(SDL_Event event) {
 	m_mousex = event.motion.x;
 	m_mousey = event.motion.y;
 	m_mousexrel = event.motion.xrel;
 	m_mouseyrel = event.motion.yrel;
-	
-	m_mouseEvent.setX(event.motion.x);
-	m_mouseEvent.setY(event.motion.y);
-
-	//notifyObservers(&m_mouseEvent);
 }
 
-ska::Rectangle ska::MouseInput::getMousePos()
-{
-	ska::Rectangle buf;
-
+ska::Point<int> ska::MouseInput::getMousePos() {
+	ska::Point<int> buf;
 	buf.x = m_mousex;
 	buf.y = m_mousey;
-	buf.h = 0;
-	buf.w = 0;
-
 	return buf;
 }
 
-void ska::MouseInput::resetAll()
-{
-	if (m_mousebutton[SDL_BUTTON_RIGHT] != 0)
-		m_mousebutton[SDL_BUTTON_RIGHT] = 0;
-	if (m_mousebutton[SDL_BUTTON_LEFT] != 0)
-		m_mousebutton[SDL_BUTTON_LEFT] = 0;
-	if (m_mouseLastState[SDL_BUTTON_RIGHT] != 0)
-		m_mouseLastState[SDL_BUTTON_RIGHT] = 0;
-	if (m_mouseLastState[SDL_BUTTON_LEFT] != 0)
-		m_mouseLastState[SDL_BUTTON_LEFT] = 0;
-
+void ska::MouseInput::resetAll() {
+	memset(m_mouseToggle, 0, sizeof(m_mouseToggle));
+	resetTriggers();
 }
 
+void ska::MouseInput::resetTriggers() {
+	memset(m_mouseState, 0, sizeof(m_mouseState));
+}
 
-bool ska::MouseInput::mouseClick(int touche)
-{
-	if(m_mousebutton[touche] == 1 && m_mouseLastState[touche] == 0)
-	{
-		m_mouseEvent.setButton(touche);
-		m_mouseEvent.setClicked(true);
-		//notifyObservers(&m_mouseEvent);
+bool ska::MouseInput::mouseClick(int touche) {
+	if (m_mouseState[touche]) {
 		return true;
 	}
 
 	return false;
 }
 
-ska::Rectangle ska::MouseInput::getMouseClickPos()
-{
+ska::Point<int> ska::MouseInput::getMouseClickPos() {
 	return m_clickPos;
 }
 
-ska::Rectangle ska::MouseInput::getMouseTranslation()
-{
-	ska::Rectangle mouseTrans;
+ska::Point<int> ska::MouseInput::getMouseTranslation() {
+	ska::Point<int> mouseTrans;
 	mouseTrans.x = m_mousex - m_mouseLastPos.x;
 	mouseTrans.y = m_mousey - m_mouseLastPos.y;
 	return mouseTrans;
 }
 
-void ska::MouseInput::setMouseLastPos(ska::Rectangle mouselastpos)
-{
+void ska::MouseInput::setMouseLastPos(ska::Point<int> mouselastpos) {
 	m_mouseLastPos = mouselastpos;
 }
