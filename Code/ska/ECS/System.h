@@ -49,6 +49,9 @@ namespace ska {
 						
 		}
 
+		bool operator=(const System& s) {
+			return false;
+		}
 
 
 		~System(){}

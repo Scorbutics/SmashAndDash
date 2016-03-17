@@ -27,6 +27,9 @@ namespace ska {
 		const unsigned int getWidth() const;
 		const unsigned int getHeight() const;
 
+		const unsigned int getFullWidth() const;
+		const unsigned int getFullHeight() const;
+
 		void operator=(const AnimatedTexture& text);
 
 	private:

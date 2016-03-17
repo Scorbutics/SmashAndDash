@@ -2,8 +2,14 @@
 #include "KeyboardInputMapContext.h"
 #include "KeyboardInputGUIContext.h"
 
+/* Default InputContextManager settings.
+   Contexts should be added depending of the current Scene in order to
+   enable or disable inputs in specific Scene */
 ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {
+	/* MAP inputs */
 	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputMapContext()));
+
+	/* GUI inputs */
 	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputGUIContext()));
 	
 	for (InputContextPtr& it : m_contexts) {

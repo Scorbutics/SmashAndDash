@@ -6,7 +6,7 @@
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap(ska::RawInputListener& ril) : AbstractNoGUISceneMap(ril)
+AbstractSceneMap::AbstractSceneMap(ska::EntityManager& em, ska::RawInputListener& ril) : AbstractNoGUISceneMap(em, ril)
 {
 }
 

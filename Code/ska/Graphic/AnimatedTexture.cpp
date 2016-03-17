@@ -55,10 +55,18 @@ int ska::AnimatedTexture::render(int x, int y) {
 }
 
 const unsigned int ska::AnimatedTexture::getWidth() const {
-	return m_sprite.getWidth();
+	return m_anim.getOffsetAndFrameSize().w;
 }
 
 const unsigned int ska::AnimatedTexture::getHeight() const {
+	return m_anim.getOffsetAndFrameSize().h;
+}
+
+const unsigned int ska::AnimatedTexture::getFullWidth() const {
+	return m_sprite.getWidth();
+}
+
+const unsigned int ska::AnimatedTexture::getFullHeight() const {
 	return m_sprite.getHeight();
 }
 

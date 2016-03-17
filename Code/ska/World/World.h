@@ -54,7 +54,7 @@ namespace ska {
 		void playBgm(bool x);
 		void setBgm(std::string bgm);
 		bool isBgmPlaying();
-		bool canMoveToPos(ska::Rectangle pos, PhysicObject* entityToMove);
+		bool canMoveToPos(ska::Point<int> pos);
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 		void changeLevel(std::string fileName, std::string chipsetName);
@@ -62,6 +62,8 @@ namespace ska {
 
 		virtual void refreshEntities() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
+
+		ska::EntityManager& getEntityManager();
 
 		~World();
 

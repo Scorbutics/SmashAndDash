@@ -14,11 +14,13 @@ namespace ska {
 		virtual void refresh() override;
 
 		void screenResized(const unsigned int screenW, const unsigned int screenH);
+		void worldResized(const unsigned int worldW, const unsigned int worldH);
 
 		const Rectangle* getDisplay() const;
 		~CameraSystem();
 
 	private:
+		unsigned int m_worldW, m_worldH;
 		PositionComponent* m_pos;
 		Rectangle m_cameraRect;
 	};

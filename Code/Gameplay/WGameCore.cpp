@@ -16,7 +16,7 @@ using namespace std;
 
 WGameCore::WGameCore():
 Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_laFenetre, m_loFenetre),
-	m_sceneMap(m_rawInputListener), m_sceneFight(m_rawInputListener) {
+m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world.getEntityManager(), m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_world.getEntityManager()) {
 	//m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -252,7 +252,7 @@ void WGameCore::graphicUpdate(void)
 	//m_graphicSystem.refreshAll();
 
 	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
-	Scrolling();
+	//Scrolling();
 }
 
 RainParticleManager& WGameCore::getRainParticleManager() {
@@ -281,6 +281,8 @@ bool WGameCore::getContinue()
 
 void WGameCore::eventUpdate(bool movingDisallowed) {
 	m_sceneCursor->eventUpdate(movingDisallowed);
+	/* Game Logic Input System */
+	m_inputSystem.refresh();
 }
 
 

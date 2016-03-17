@@ -32,6 +32,7 @@
 #include "EnumScene.h"
 
 #include "../ska/Inputs/RawInputListener.h"
+#include "../ska/Inputs/System/InputSystem.h"
 
 class LayerE;
 class Layer;
@@ -97,7 +98,7 @@ public:
 
 	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();
-
+	
     void setEntite(unsigned int i, int value);
     void setOffsetChipset(int x, int y, int w, int h);
     void setORel(int x, int y);
@@ -142,6 +143,7 @@ public:
 		ska::ParticleManager m_particleManager;
 		RainParticleManager m_rainParticleManager;
 
+		ska::InputSystem m_inputSystem;
 };
 
 #endif

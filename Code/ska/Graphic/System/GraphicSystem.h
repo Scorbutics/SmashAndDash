@@ -4,7 +4,7 @@
 #include "../../Physic/PositionComponent.h"
 #include "../../ECS/System.h"
 #include "CameraSystem.h"
-#include "../Draw/VectorDrawableContainer.h"
+#include "../Draw/DrawableContainer.h"
 #include "../PositionnedGraphicDrawable.h"
 
 namespace ska {
@@ -14,11 +14,11 @@ namespace ska {
 		GraphicSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager);
 		virtual ~GraphicSystem();
 		virtual void refresh() override;
-		ska::VectorDrawableContainer& getDrawables();
+		void setDrawables(DrawableContainer& container);
 
 	private:
 		ska::CameraSystem& m_camera;
-		ska::VectorDrawableContainer m_drawables;
+		ska::DrawableContainer* m_drawables;
 		std::vector<PositionnedGraphicDrawable> m_pgd;
 	};
 }

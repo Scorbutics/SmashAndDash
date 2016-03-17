@@ -133,7 +133,7 @@ ska::Rectangle ska::Animation::getOffsetBase()
 	return m_offsetBase;
 }
 
-ska::Rectangle ska::Animation::getOffsetAndFrameSize()
+const ska::Rectangle ska::Animation::getOffsetAndFrameSize() const
 {
     return m_offset;
 }
@@ -191,7 +191,7 @@ void ska::Animation::resetCycles()
 	m_cycles = 0;
 }
 
-ska::Rectangle ska::Animation::getRectOfCurrentFrame()
+const ska::Rectangle ska::Animation::getRectOfCurrentFrame()
 {
 
     if(m_active == false)

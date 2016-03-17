@@ -4,7 +4,7 @@ class SceneMap :
 	public AbstractSceneMap
 {
 public:
-	SceneMap(ska::RawInputListener& ril);
+	SceneMap(ska::EntityManager& em, ska::RawInputListener& ril);
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneMap();

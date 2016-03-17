@@ -6,7 +6,7 @@
 #include "../../ska/Script/ScriptDispatcher.h"
 #include "../../ska/World/LayerE.h"
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::RawInputListener& ril) : Scene(ril)
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::EntityManager& em, ska::RawInputListener& ril) : Scene(ril)
 {
 }
 
@@ -49,6 +49,7 @@ void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
 	ShakerManager& shaker = core.getShakerManager();
 	//ska::InputListener& kdListener = core.getInputListener();
 
+	/* Raw input acquisition */
 	m_inputCManager.refresh();
 
 	world.refreshEntities();

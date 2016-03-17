@@ -5,13 +5,15 @@
 #include "../../ska/Physic/ParticleManager.h"
 #include "../../ska/Physic/MovementComponent.h"
 #include "../../ska/Graphic/GraphicComponent.h"
+#include "../../ska/Inputs/InputComponent.h"
+#include "../../ska/Physic/ForceComponent.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/World/Layer.h"
 #include "../../ska/World/LayerE.h"
 #include "../../ska/Graphic/SpritePath.h"
 
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
-m_collisionSystem(m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
+m_collisionSystem(*this, m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager) {
 }
 
@@ -35,12 +37,9 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());
 
+	m_graphicSystem.setDrawables(drawables);
 	m_graphicSystem.refresh();
-	ska::VectorDrawableContainer& entitiesDrawables = m_graphicSystem.getDrawables();
-	for (ska::Drawable* d : entitiesDrawables) {
-		drawables.add(*d);
-	}
-
+	
 	//Troisième couche
 	drawables.addHead2D(*m_lTop);
 }
@@ -84,14 +83,30 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 	pc.z = 0;
 	m_entityManager.addComponent<ska::PositionComponent>(hero, pc);
 	m_entityManager.addComponent<ska::CameraFocusedComponent>(hero, ska::CameraFocusedComponent());
+	ska::InputComponent ic;
+	ic.movePower = 2;
+	m_entityManager.addComponent<ska::InputComponent>(hero, ic);
 	ska::MovementComponent mc;
 	memset(&mc, 0, sizeof(ska::MovementComponent));
+	ska::ForceComponent fc;
+	memset(&fc, 0, sizeof(fc));
+	ska::GravityAffectedComponent gac;
+	gac.friction = 8.5;
+	gac.weight = 65;
+	m_entityManager.addComponent<ska::GravityAffectedComponent>(hero, gac);
+	m_entityManager.addComponent<ska::ForceComponent>(hero, fc);
 	m_entityManager.addComponent<ska::MovementComponent>(hero, mc);
 	ska::GraphicComponent gc;
 	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, 0), 6, 8, 3);
 	gc.sprite.setDelay(300);
 	m_entityManager.addComponent<ska::GraphicComponent>(hero, gc);
-	
+	ska::HitboxComponent hc;
+	hc.xOffset = 0;
+	hc.yOffset = gc.sprite.getHeight() / 2;
+	hc.height = hc.yOffset;
+	hc.width = gc.sprite.getWidth();
+	m_entityManager.addComponent<ska::HitboxComponent>(hero, hc);
+
 
 	//Chargement des NPC sur la map (personnages & pokémon)
 	for (int i = 1; i < m_lEvent->getNbrLignes(); i++)
@@ -111,7 +126,7 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 			pc.z = 0;
 			m_entityManager.addComponent<ska::PositionComponent>(newEntity, pc);
 			ska::MovementComponent mc;
-			memset(&mc, 0, sizeof(ska::MovementComponent));
+			memset(&mc, 0, sizeof(mc));
 			m_entityManager.addComponent<ska::MovementComponent>(newEntity, mc);
 			ska::GraphicComponent gc;
 			gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
@@ -135,10 +150,11 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 
 void WorldImpl::refreshEntities() {
 	//WGameCore& wScreen = WGameCore::getInstance();
+	
+	m_forceSystem.refresh();
+	m_collisionSystem.refresh();
 	m_gravitySystem.refresh();
 	m_movementSystem.refresh();
-	m_collisionSystem.refresh();
-	m_forceSystem.refresh();
 	m_cameraSystem.refresh();
 
 	//On refresh tous les personnages

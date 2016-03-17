@@ -13,14 +13,14 @@ namespace ska {
 	{
 	public:
 		void addObserver(Observer<T>* obs) {
-			std::vector<Observer<T>*>::iterator temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
+			auto temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
 			if (temp == m_observerList.end()) {
 				m_observerList.push_back(obs);
 			}
 		}
 
 		void removeObserver(Observer<T>* obs) {
-			std::vector<Observer<T>*>::iterator temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
+			auto temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
 			if (temp != m_observerList.end()) {
 				m_observerList.erase(temp);
 			}

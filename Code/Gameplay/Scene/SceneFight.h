@@ -4,7 +4,7 @@ class SceneFight :
 	public AbstractSceneMap
 {
 public:
-	SceneFight(ska::RawInputListener& ril);
+	SceneFight(ska::EntityManager& em, ska::RawInputListener& ril);
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();

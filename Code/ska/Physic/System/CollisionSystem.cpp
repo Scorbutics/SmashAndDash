@@ -2,7 +2,7 @@
 #include "../../Utils/RectangleUtils.h"
 #include "../CollisionComponent.h"
 
-ska::CollisionSystem::CollisionSystem(ska::EntityManager& entityManager) : System(entityManager) {
+ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager) : System(entityManager), m_world(w) {
 }
 
 void ska::CollisionSystem::refresh() {
@@ -14,20 +14,25 @@ void ska::CollisionSystem::refresh() {
 		const ska::Rectangle entityHitbox = createHitBox(entityId);
 		std::unordered_set<ska::EntityId>& entities = m_processed;
 		for (ska::EntityId itEntity : entities) {
-			if (ska::RectangleUtils::collisionBoxABoxB(entityHitbox, createHitBox(itEntity))) {
-				CollisionComponent col;
-				col.origin = entityId;
-				col.target = itEntity;
-				col.world = false;
-				m_entityManager.addComponent<CollisionComponent>(entityId, col);
+			if (itEntity != entityId) {
+				if (ska::RectangleUtils::collisionBoxABoxB(entityHitbox, createHitBox(itEntity))) {
+					CollisionComponent col;
+					col.origin = entityId;
+					col.target = itEntity;
+					col.world = false;
+					m_entityManager.addComponent<CollisionComponent>(entityId, col);
+				}
 			}
-			else if (false/* TODO World collision check */){
-				CollisionComponent col;
-				col.origin = entityId;
-				col.world = true;
-				col.target = 0;
-				m_entityManager.addComponent<CollisionComponent>(entityId, col);
-			}
+			
+		}
+
+		ska::Point<int> pos = { entityHitbox.x + entityHitbox.w / 2, entityHitbox.y + entityHitbox.h/2 };
+		if (!m_world.canMoveToPos(pos)){
+			CollisionComponent col;
+			col.origin = entityId;
+			col.world = true;
+			col.target = 0;
+			m_entityManager.addComponent<CollisionComponent>(entityId, col);
 		}
 	}
 }

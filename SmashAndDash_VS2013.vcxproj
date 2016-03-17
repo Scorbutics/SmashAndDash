@@ -132,12 +132,12 @@
     <ClInclude Include="Code\ska\Physic\CollisionComponent.h" />
     <ClInclude Include="Code\ska\Physic\GravityAffectedComponent.h" />
     <ClInclude Include="Code\ska\Physic\HitboxComponent.h" />
-    <ClInclude Include="Code\ska\Physic\InputComponent.h" />
+    <ClInclude Include="Code\ska\Inputs\InputComponent.h" />
     <ClInclude Include="Code\ska\Physic\MovementComponent.h" />
     <ClInclude Include="Code\ska\Physic\ForceComponent.h" />
     <ClInclude Include="Code\ska\Physic\System\ForceSystem.h" />
     <ClInclude Include="Code\ska\Physic\System\GravitySystem.h" />
-    <ClInclude Include="Code\ska\Physic\System\InputSystem.h" />
+    <ClInclude Include="Code\ska\Inputs\System\InputSystem.h" />
     <ClInclude Include="Code\Gameplay\World\WorldImpl.h" />
     <ClInclude Include="Code\ska\ECS\Component.h" />
     <ClInclude Include="Code\ska\Graphic\GraphicComponent.h" />
@@ -337,7 +337,7 @@
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\ForceSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp" />
-    <ClCompile Include="Code\ska\Physic\System\InputSystem.cpp" />
+    <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp" />
     <ClCompile Include="Code\Gameplay\World\WorldImpl.cpp" />
     <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />

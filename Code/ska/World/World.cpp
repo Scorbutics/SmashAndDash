@@ -35,11 +35,17 @@ void ska::World::load(string fileName, string chipsetName, std::string saveName)
 	m_lTop = LayerPtr(new Layer(m_entityManager, *this, m_topLayerName, chipsetName, m_lMid.get()));
 
 	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
+
+	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 }
 
 ska::Texture& ska::World::getChipset()
 {
 	return m_chipset;
+}
+
+ska::EntityManager& ska::World::getEntityManager() {
+	return m_entityManager;
 }
 
 void ska::World::setWind(int wind) {
@@ -97,14 +103,14 @@ bool ska::World::getCollision(const int i, const int j)
     return false;
 }
 
-bool ska::World::canMoveToPos(ska::Rectangle pos, ska::PhysicObject* entityToMove)
+bool ska::World::canMoveToPos(ska::Point<int> pos)
 {
 	vector<ska::Rectangle> ids;
     int id, entityNumber;
     bool ok = true;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-    if(entityToMove != NULL)
+    /*if(entityToMove != NULL)
     {
         id = entityToMove->getID();
         entityNumber = entityToMove->getEntityNumber();
@@ -113,10 +119,8 @@ bool ska::World::canMoveToPos(ska::Rectangle pos, ska::PhysicObject* entityToMov
 	{
 		id = 0;
 		entityNumber = -1;
-	}
+	}*/
 
-    pos.w = 0;
-    pos.h = 0;
     //ids = wScreen.detectEntity(pos);
     //const size_t size = ids.size();
     //for(size_t i = 0; i < size; i++)

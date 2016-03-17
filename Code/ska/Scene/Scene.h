@@ -3,6 +3,7 @@
 #include "HasLogic.h"
 #include "../Inputs/InputContextManager.h"
 #include "../Inputs/RawInputListener.h"
+#include "../Inputs/System/InputSystem.h"
 
 namespace ska {
 	class Scene : public HasGraphic, public HasLogic

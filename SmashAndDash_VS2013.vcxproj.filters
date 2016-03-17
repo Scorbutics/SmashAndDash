@@ -690,9 +690,6 @@
     <ClInclude Include="Code\ska\Physic\System\GravitySystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Physic\System\InputSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Physic\System\MovementSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -711,9 +708,6 @@
     <ClInclude Include="Code\ska\Physic\HitboxComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Physic\InputComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GraphicComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -724,6 +718,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\System\InputSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1154,9 +1154,6 @@
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Physic\System\InputSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1164,6 +1161,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

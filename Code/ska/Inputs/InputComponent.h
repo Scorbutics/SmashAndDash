@@ -3,6 +3,6 @@
 namespace ska {
 	class InputComponent : public ska::Component {
 	public:
-
+		unsigned int movePower;
 	};
 }

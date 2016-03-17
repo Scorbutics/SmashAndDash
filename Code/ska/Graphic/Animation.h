@@ -16,8 +16,8 @@ namespace ska {
 		void nextFrame();
 		void resetCycles();
 
-		Rectangle getOffsetAndFrameSize();
-		Rectangle getRectOfCurrentFrame();
+		const Rectangle getOffsetAndFrameSize() const;
+		const Rectangle getRectOfCurrentFrame();
 		unsigned int getCount();
 		unsigned int getDelay();
 		unsigned int getNumberFrames();

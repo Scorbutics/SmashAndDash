@@ -13,10 +13,8 @@ ska::KeyInput::~KeyInput() {
 }
 
 void ska::KeyInput::setKeyState(int key, bool state) {
-	if (state ^ m_keys[key]) {
-		m_toggle[key] = state;
-		m_keys[key] = state;
-	}
+	m_toggle[key] = state;
+	m_keys[key] = state;
 }
 
 bool ska::KeyInput::toggle(int key) {
