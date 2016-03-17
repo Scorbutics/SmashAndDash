@@ -2,8 +2,22 @@
 #include <string>
 
 #include "Animation.h"
-
 using namespace std;
+
+ska::Animation::Animation() {
+	memset(&m_offset, 0, sizeof(m_offset));
+	m_offsetBase = m_offset;
+	m_frameWidth = m_offset.w;
+	m_frameHeight = m_offset.h;
+	m_frameNumber = 1;
+	m_count = SDL_GetTicks();
+	m_countMAX = -1;
+	m_position = 0;
+	m_isVertical = false;
+	m_sensAni = 1;
+	m_active = true;
+	m_cycles = 0;
+}
 
 ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::Rectangle offsetAndFrameSize)
 {
@@ -30,6 +44,7 @@ ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, 
 	r.y = y;
 	r.w = width;
 	r.h = height;
+	
 	m_offset = r;
 	m_offsetBase = m_offset;
 	m_frameWidth = r.w;
@@ -44,6 +59,10 @@ ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, 
     m_sensAni = 1;
     m_active = true;
 	m_cycles = 0;
+}
+
+void ska::Animation::setVertical(const bool b) {
+	m_isVertical = b;
 }
 
 unsigned int ska::Animation::getNumberFrames()
@@ -96,7 +115,7 @@ unsigned int ska::Animation::getCycles()
 	return m_cycles;
 }
 
-void ska::Animation::setOffsetAndFrameSize(ska::Rectangle s)
+void ska::Animation::setOffsetAndFrameSize(Rectangle s)
 {
     m_offsetBase = s;
     m_frameWidth = s.w;
@@ -119,9 +138,13 @@ ska::Rectangle ska::Animation::getOffsetAndFrameSize()
     return m_offset;
 }
 
-void ska::Animation::setNumberFrames(unsigned int x)
+void ska::Animation::setFrames(const unsigned int framesNumber) {
+	m_frameNumber = framesNumber;
+}
+
+void ska::Animation::setCurrentFrame(unsigned int number)
 {
-    m_position = x;
+	m_position = number;
 
     if(m_position > m_frameNumber-1)
     {

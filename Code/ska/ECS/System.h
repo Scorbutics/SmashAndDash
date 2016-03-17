@@ -8,7 +8,7 @@
 
 namespace ska {
 	
-	template <class ... ComponentType>
+	template <class Storage, class ... ComponentType>
 	class System : public Observer<EntityData> {
 	public :
 		System(EntityManager& entityManager) : 
@@ -21,11 +21,7 @@ namespace ska {
 			
 		}
 		
-		void refreshAll() {
-			for (EntityId id : m_processed) {
-				refresh(id);
-			}
-		}
+		virtual void refresh() = 0;
 
 		void update(Observable<EntityData>* obs, const EventArg& e, EntityData& t) override {
 			
@@ -58,9 +54,9 @@ namespace ska {
 		~System(){}
 
 	private:
-		std::unordered_set<EntityId> m_processed;
+		
 		EntityComponentsMask m_systemComponentMask;
-		virtual void refresh(EntityId& entity) = 0;
+		
 
 		template <class T>
 		void buildSystemMask() {
@@ -76,10 +72,8 @@ namespace ska {
 		
 
 	protected:
-		EntityManager& m_entityManager;
-		std::unordered_set<EntityId>& getProcessedEntities() {
-			return m_processed;
-		}
-				
+		EntityManager& m_entityManager;	
+		Storage m_processed;
+
 	};
 }

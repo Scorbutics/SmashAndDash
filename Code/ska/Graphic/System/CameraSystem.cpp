@@ -1,5 +1,5 @@
 #include "CameraSystem.h"
-#include "Rectangle.h"
+#include "../Rectangle.h"
 
 ska::CameraSystem::CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) : System(entityManager) {
 	m_pos = NULL;
@@ -11,10 +11,12 @@ void ska::CameraSystem::screenResized(const unsigned int screenW, const unsigned
 	m_cameraRect.h = screenH;
 }
 
-void ska::CameraSystem::refresh(EntityId& entity) {
-	m_pos = &m_entityManager.getComponent<PositionComponent>(entity);
-	m_cameraRect.x = m_pos->x;
-	m_cameraRect.y = m_pos->y;
+void ska::CameraSystem::refresh() {
+	for (ska::EntityId entityId : m_processed) {
+		m_pos = &m_entityManager.getComponent<PositionComponent>(entityId);
+		m_cameraRect.x = m_pos->x - m_cameraRect.w / 2;
+		m_cameraRect.y = m_pos->y - m_cameraRect.h / 2;
+	}
 }
 
 const ska::Rectangle* ska::CameraSystem::getDisplay() const {

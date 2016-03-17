@@ -133,7 +133,7 @@ void Weather::display()
             }
             else if(m_x[i] > w.getNbrBlocX()*TAILLEBLOC && m_intensityX > 0)
             {
-				m_x[i] = (float)-m_weather->getWidth();
+				m_x[i] = (float)-((int)m_weather->getWidth());
             }
 
 			if ((m_y[i] + m_weather->getHeight())< 0 && m_intensityY < 0)
@@ -142,7 +142,7 @@ void Weather::display()
             }
             else if(m_y[i] > w.getNbrBlocY()*TAILLEBLOC && m_intensityY > 0)
             {
-				m_y[i] = (float)-m_weather->getHeight();
+				m_y[i] = (float)-((int)m_weather->getHeight());
             }
 
 

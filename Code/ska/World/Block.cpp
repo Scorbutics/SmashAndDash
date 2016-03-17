@@ -53,7 +53,7 @@ unsigned int ska::Block::getID()
 
 void ska::Block::setSpriteFrame(unsigned int x)
 {
-	m_anim.setNumberFrames(x);
+	m_anim.setCurrentFrame(x);
 	m_anim.stop(true);
 }
 

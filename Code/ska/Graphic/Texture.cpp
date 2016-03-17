@@ -69,7 +69,7 @@ void ska::Texture::setDefaultWindow(ska::Window* w) {
 	m_window = w;
 }
 
-int ska::Texture::render(int x, int y, ska::Rectangle* clip)
+int ska::Texture::render(int x, int y, Rectangle* clip)
 {
 	if (m_value == NULL) {
 		return -1;
@@ -110,12 +110,12 @@ void ska::Texture::loadFromText(unsigned int fontSize, string text, SDL_Color c)
 
 }
 
-int ska::Texture::getWidth() const
+const unsigned int ska::Texture::getWidth() const
 {
 	return m_value == NULL ? 0 : m_value->m_w;
 }
 
-int ska::Texture::getHeight() const
+const unsigned int ska::Texture::getHeight() const
 {
 	return m_value == NULL ? 0 : m_value->m_h;
 }

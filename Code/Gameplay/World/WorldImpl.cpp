@@ -3,7 +3,8 @@
 #include "../WGameCore.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../ska/Physic/ParticleManager.h"
-#include "../Component/MovementComponent.h"
+#include "../../ska/Physic/MovementComponent.h"
+#include "../../ska/Graphic/GraphicComponent.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/World/Layer.h"
 #include "../../ska/World/LayerE.h"
@@ -34,17 +35,11 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());
 
-	m_graphicSystem.refreshAll();
-
-	/*for (Character* npc : currentEntityList) {
-		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
-
-		//Première partie des personnages		
-		drawables.add(*parts[0]);
-
-		//Deuxième partie des personnages (ceux au sol)
-		drawables.add(*parts[1]);
-	}*/
+	m_graphicSystem.refresh();
+	ska::VectorDrawableContainer& entitiesDrawables = m_graphicSystem.getDrawables();
+	for (ska::Drawable* d : entitiesDrawables) {
+		drawables.add(*d);
+	}
 
 	//Troisième couche
 	drawables.addHead2D(*m_lTop);
@@ -84,16 +79,18 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 
 	ska::EntityId hero = m_entityManager.createEntity();
 	ska::PositionComponent pc;
-	pc.x = 15;//startPosx*TAILLEBLOC;
-		pc.y = 15;//startPosy*TAILLEBLOC;
+	pc.x = startPosx*TAILLEBLOC;
+	pc.y = startPosy*TAILLEBLOC;
 	pc.z = 0;
 	m_entityManager.addComponent<ska::PositionComponent>(hero, pc);
-	MovementComponent mc;
-	memset(&mc, 0, sizeof(MovementComponent));
-	m_entityManager.addComponent<MovementComponent>(hero, mc);
-	GraphicComponent gc;
-	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, 0), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_entityManager.addComponent<GraphicComponent>(hero, gc);
+	m_entityManager.addComponent<ska::CameraFocusedComponent>(hero, ska::CameraFocusedComponent());
+	ska::MovementComponent mc;
+	memset(&mc, 0, sizeof(ska::MovementComponent));
+	m_entityManager.addComponent<ska::MovementComponent>(hero, mc);
+	ska::GraphicComponent gc;
+	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, 0), 6, 8, 3);
+	gc.sprite.setDelay(300);
+	m_entityManager.addComponent<ska::GraphicComponent>(hero, gc);
 	
 
 	//Chargement des NPC sur la map (personnages & pokémon)
@@ -113,12 +110,12 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 			pc.y = posEntityId.y;
 			pc.z = 0;
 			m_entityManager.addComponent<ska::PositionComponent>(newEntity, pc);
-			MovementComponent mc;
-			memset(&mc, 0, sizeof(MovementComponent));
-			m_entityManager.addComponent<MovementComponent>(newEntity, mc);
-			GraphicComponent gc;
-			gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-			m_entityManager.addComponent<GraphicComponent>(newEntity, gc);
+			ska::MovementComponent mc;
+			memset(&mc, 0, sizeof(ska::MovementComponent));
+			m_entityManager.addComponent<ska::MovementComponent>(newEntity, mc);
+			ska::GraphicComponent gc;
+			gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
+			m_entityManager.addComponent<ska::GraphicComponent>(newEntity, gc);
 
 			//m_entityManager.addNPC(id, posEntityId, m_lEvent->getPath(i));
 		} else {
@@ -138,11 +135,11 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 
 void WorldImpl::refreshEntities() {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	m_gravitySystem.refreshAll();
-	m_movementSystem.refreshAll();
-	m_collisionSystem.refreshAll();
-	m_forceSystem.refreshAll();
-	m_cameraSystem.refreshAll();
+	m_gravitySystem.refresh();
+	m_movementSystem.refresh();
+	m_collisionSystem.refresh();
+	m_forceSystem.refresh();
+	m_cameraSystem.refresh();
 
 	//On refresh tous les personnages
 	/*auto it = wScreen.getEntityFactory().getCharacterList().begin();

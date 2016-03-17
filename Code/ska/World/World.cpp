@@ -30,9 +30,9 @@ void ska::World::load(string fileName, string chipsetName, std::string saveName)
 	m_nbrBlockX = 0;
 	m_nbrBlockY = 0;
 
-	m_lBot = LayerPtr(new Layer(*this, m_botLayerName, chipsetName));
-	m_lMid = LayerPtr(new Layer(*this, m_midLayerName, chipsetName, m_lBot.get()));
-	m_lTop = LayerPtr(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
+	m_lBot = LayerPtr(new Layer(m_entityManager, *this, m_botLayerName, chipsetName));
+	m_lMid = LayerPtr(new Layer(m_entityManager, *this, m_midLayerName, chipsetName, m_lBot.get()));
+	m_lTop = LayerPtr(new Layer(m_entityManager, *this, m_topLayerName, chipsetName, m_lMid.get()));
 
 	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
 }
@@ -49,41 +49,6 @@ void ska::World::setWind(int wind) {
 int ska::World::getWind() const {
 	return m_windDirection;
 }
-/*
-void ska::World::graphicUpdate(DrawableContainer& drawables) {
-	ska::Rectangle rectAnimBlocks = m_animBlocks.getRectOfCurrentFrame();
-	WGameCore& wScreen = WGameCore::getInstance();
-
-	//Liste de tous les personnages sur le monde courant
-	list<Character*>& currentEntityList = wScreen.getEntityFactory().getCharacterList();
-
-	//Première couche
-	drawables.addHead(*m_lBot);
-
-	//Deuxième couche
-	drawables.addHead(*m_lMid);
-
-	//Affichage des effets
-	ParticleManager& particleManager = wScreen.getParticleManager();
-	drawables.addHead(particleManager);
-
-	//Curseur souris sur la map
-	drawables.addHead(wScreen.getMouseCursor());
-
-	for (Character* npc : currentEntityList) {
-		vector<unique_ptr<CharacterDrawable>>& parts = npc->getCharacterParts();
-
-		//Première partie des personnages		
-		drawables.add(*parts[0]);
-		
-		//Deuxième partie des personnages (ceux au sol)
-		drawables.add(*parts[1]);
-	}
-
-	//Troisième couche
-	drawables.addHead2D(*m_lTop);
-}*/
-
 
 
 /*void ska::World::refresh()

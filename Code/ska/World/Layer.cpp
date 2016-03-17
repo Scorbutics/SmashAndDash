@@ -2,9 +2,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_image.h>
 #include <windows.h>
 #include <sstream>
 
@@ -16,6 +13,9 @@
 #include "../Utils/NumberUtils.h"
 #include "../Exceptions/FileException.h"
 
+#include "../Physic/HitboxComponent.h"
+#include "../Graphic/GraphicComponent.h"
+
 using namespace std;
 
 bool LireFichierMonde(string *name, int *m_nbrBlocX, int *m_nbrBlockY, vector< vector<ska::Rectangle> > &m_block, std::vector<std::vector<Uint32> > &m_propblock, int windowWidth, int windowHeight, string chipsetName);
@@ -25,7 +25,7 @@ ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
 SDL_Color translate_color(Uint32 int_color);
 
 //Constructeur ouvrant un monde déjà créé
-ska::Layer::Layer(ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w) {
+ska::Layer::Layer(ska::EntityManager& entityManager, ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w), m_entityManager(entityManager) {
 	m_block.reserve(20);
 	m_rectAnim = { 0 };
 	m_parent = parent;
@@ -92,8 +92,8 @@ void ska::Layer::display()
 	const unsigned int absORelY = NumberUtils::absolute(cameraPos->y);
 	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
 	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w /*+ wScreen.getWidth()*/) / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h /*+ wScreen.getHeight()*/) / m_world.getBlockSize();
+	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
+	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
 	
 	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
 		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
@@ -125,10 +125,12 @@ void ska::Layer::setRectAnim(ska::Rectangle rectAnim) {
 
 int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j)
 {
-    if(i < m_block.size() && j < m_block[i].size())
-        return m_block[i][j]->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
-    else
-        return BLOCK_COL_NO;
+	if (i < m_block.size() && j < m_block[i].size()) {
+		//return m_entityManager.hasComponent<ska::HitboxComponent>(m_block[i][j]);
+		 m_block[i][j]->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
+	} else {
+		return BLOCK_COL_NO;
+	}
 }
 
 ska::Layer::~Layer()
@@ -161,7 +163,6 @@ void ska::Layer::reset(string pathFile, string chipsetName)
     fichierMProp = LoadImage32((m_chipsetname + ".prop").c_str(), 0);
 
     Uint16 darkcolor = SDL_MapRGB(fichierMChipset->format, 70, 70, 70);
-    //Uint16 blackColor =  SDL_MapRGB(fichierMChipset->format, 0, 0, 0);
     Uint16 lightColor = SDL_MapRGB(fichierMChipset->format, 170, 170, 170);
     Uint16 whiteColor =  SDL_MapRGB(fichierMChipset->format, 255, 255, 255);
 
@@ -175,13 +176,11 @@ void ska::Layer::reset(string pathFile, string chipsetName)
 
 	const unsigned int blockSize = m_world.getBlockSize();
 
-	for (int i = 0; i < m_fileWidth; i++)
-    {
-        m_block.push_back(vector<BlockPtr>());
-		m_block[i].reserve(15);
 
-		for (int j = 0; j < m_fileHeight; j++)
-        {
+	m_block.resize(m_fileWidth);
+	for (int i = 0; i < m_fileWidth; i++) {
+		m_block.reserve(m_fileHeight);
+		for (int j = 0; j < m_fileHeight; j++) {
 
             pix = GetPixel32(fichierMPng,i,j);
             SDL_GetRGB(pix, fichierMPng->format, &c.r,&c.g,&c.b);
@@ -200,29 +199,32 @@ void ska::Layer::reset(string pathFile, string chipsetName)
 
                     auto_anim = (col == darkcolor || col == lightColor);
 					
-					ska::Rectangle rectCorr;
-					rectCorr.x = 0;
-					rectCorr.y = 0;
-					rectCorr.w = fichierMCorr->w;
-					rectCorr.h = fichierMCorr->h;
+					/*EntityId entity = m_entityManager.createEntity();
+					PositionComponent pc;
+					pc.x = i*blockSize;
+					pc.y = j*blockSize;
+					pc.z = 0;
+					m_entityManager.addComponent<ska::PositionComponent>(entity, pc);
+					ska::GraphicComponent gc;
+					gc.sprite.load(m_world.getChipsetName(), fichierMCorr->w, fichierMCorr->h, auto_anim ? 3 : 1);
+					gc.sprite.setDelay(500);
+					gc.priority = 0;
+
+					if (collision) {
+						ska::HitboxComponent hc;
+						hc.xOffset = 0;
+						hc.yOffset = 0;
+						hc.width = blockSize;
+						hc.height = blockSize;
+						m_entityManager.addComponent<ska::HitboxComponent>(entity, hc);
+					}*/
+
+					Rectangle rectCorr = { 0, 0, blockSize, blockSize };
+					
 					m_block[i].push_back(BlockPtr(new Block(blockSize, rectCorr, buf_lcorr, translate_color(prop).r, auto_anim, collision)));
 
-                }
-                else
-                {
-					ska::Rectangle buf_rect;
-                    buf_rect.x = fichierMCorr->w + 1;
-                    buf_rect.y = fichierMCorr->h + 1;
-
-					ska::Rectangle rectCorr;
-					rectCorr.x = 0;
-					rectCorr.y = 0;
-					rectCorr.w = fichierMCorr->w;
-					rectCorr.h = fichierMCorr->h;
-
-					m_block[i].push_back(BlockPtr(new Block(blockSize, rectCorr, buf_rect, BLOCK_PROP_NONE, false, BLOCK_COL_YES)));
-
-                    cerr << "Impossible de trouver la correspondance en pixel (fichier niveau corrompu)" << endl;
+                } else {
+					throw CorruptedFileException("Impossible de trouver la correspondance en pixel (fichier niveau corrompu)");
                 }
             }
             else
@@ -258,7 +260,7 @@ void ska::Layer::checkSize(int nbrBlocX, int nbrBlocY) {
 
 void ska::Layer::printCollisionProfile()
 {
-    clog << m_name << endl;
+    /*clog << m_name << endl;
     for(int y = 0; y < m_world.getNbrBlocY(); y++)
     {
 		for (int x = 0; x < m_world.getNbrBlocX(); x++)
@@ -274,7 +276,7 @@ void ska::Layer::printCollisionProfile()
         clog << endl;
     }
 
-    clog << endl << endl;
+    clog << endl << endl;*/
 }
 
 ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c)

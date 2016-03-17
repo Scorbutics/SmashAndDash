@@ -7,6 +7,7 @@ namespace ska {
 	{
 	public:
 		DrawableContainer() { m_topPriority2D = INT_MIN; m_topPriority = INT_MIN; }
+		
 		void add(Drawable& d) {
 			if (d.isVisible()) {
 				int currentPriority = d.getPriority();
@@ -38,6 +39,7 @@ namespace ska {
 		}
 
 		virtual void draw() = 0;
+		virtual void clear() = 0;
 		virtual ~DrawableContainer() {}
 
 	protected:

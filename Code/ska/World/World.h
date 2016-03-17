@@ -9,7 +9,7 @@
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
-#include "../Graphic/CameraSystem.h"
+#include "../Graphic/System/CameraSystem.h"
 #include "../ECS/EntityManager.h"
 
 namespace ska {

@@ -1,11 +1,11 @@
 #pragma once
 #include "../../ska/World/World.h"
 
-#include "../System/CollisionSystem.h"
-#include "../System\ForceSystem.h"
-#include "../System\GravitySystem.h"
-#include "../System\MovementSystem.h"
-#include "../../Graphic/System/GraphicSystem.h"
+#include "../../ska/Physic/System/CollisionSystem.h"
+#include "../../ska/Physic/System\ForceSystem.h"
+#include "../../ska/Physic/System\GravitySystem.h"
+#include "../../ska/Physic/System\MovementSystem.h"
+#include "../../ska/Graphic/System/GraphicSystem.h"
 
 class WorldImpl : public ska::World {
 public:
@@ -17,10 +17,10 @@ public:
 
 private:
 
-	CollisionSystem m_collisionSystem;
-	ForceSystem m_forceSystem;
-	GravitySystem m_gravitySystem;
-	MovementSystem m_movementSystem;
+	ska::CollisionSystem m_collisionSystem;
+	ska::ForceSystem m_forceSystem;
+	ska::GravitySystem m_gravitySystem;
+	ska::MovementSystem m_movementSystem;
 
-	GraphicSystem m_graphicSystem;
+	ska::GraphicSystem m_graphicSystem;
 };
