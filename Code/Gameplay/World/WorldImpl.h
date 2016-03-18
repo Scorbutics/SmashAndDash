@@ -6,6 +6,7 @@
 #include "../../ska/Physic/System\GravitySystem.h"
 #include "../../ska/Physic/System\MovementSystem.h"
 #include "../../ska/Graphic/System/GraphicSystem.h"
+#include "../../ska/Graphic/System/DirectionalAnimationSystem.h"
 
 class WorldImpl : public ska::World {
 public:
@@ -21,6 +22,7 @@ private:
 	ska::ForceSystem m_forceSystem;
 	ska::GravitySystem m_gravitySystem;
 	ska::MovementSystem m_movementSystem;
+	ska::DirectionalAnimationSystem m_daSystem;
 
 	ska::GraphicSystem m_graphicSystem;
 };

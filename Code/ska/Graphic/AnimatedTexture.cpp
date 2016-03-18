@@ -25,6 +25,10 @@ void ska::AnimatedTexture::recalculateFrames(const unsigned int horizontalFrames
 	m_anim.setOffsetAndFrameSize(frame);
 }
 
+const ska::Rectangle ska::AnimatedTexture::getOffsetBase() const {
+	return m_anim.getOffsetBase();
+}
+
 void ska::AnimatedTexture::setOffset(const Point<int>& offset) {
 	Rectangle tmp = m_anim.getOffsetAndFrameSize();
 	tmp.x = offset.x;
@@ -72,6 +76,10 @@ const unsigned int ska::AnimatedTexture::getFullHeight() const {
 
 void ska::AnimatedTexture::stop(const bool x) {
 	m_anim.stop(x);
+}
+
+void ska::AnimatedTexture::reset() {
+	m_anim.setCurrentFrame(1);
 }
 
 void ska::AnimatedTexture::nextFrame() {

@@ -32,7 +32,7 @@ namespace ska {
 		void setDelay(unsigned int x);
 		void setCurrentFrame(unsigned int number);
 		void setFrames(const unsigned int framesNumber);
-		Rectangle getOffsetBase();
+		const Rectangle getOffsetBase() const;
 
 	private:
 		Rectangle m_offsetBase, m_offset;

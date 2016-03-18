@@ -8,22 +8,39 @@ void ska::InputSystem::refresh() {
 		InputComponent& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
 		ForceComponent& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
 		
+		Point<float> movePower;
+		bool moveX = false;
+		bool moveY = false;
+		const float factor = 0.709;
 		const InputToggleContainer& itc = m_icm.getToggles();
+
 		if (itc[InputToggle::MoveUp]) {
-			forceComponent.y -= inputComponent.movePower;
+			movePower.y = -(int)inputComponent.movePower;
+			moveY = true;
 		}
 
 		if (itc[InputToggle::MoveLeft]) {
-			forceComponent.x -= inputComponent.movePower;
+			movePower.x = -(int)inputComponent.movePower;
+			moveX = true;
 		}
 
 		if (itc[InputToggle::MoveDown]) {
-			forceComponent.y += inputComponent.movePower;
+			movePower.y = inputComponent.movePower;
+			moveY = true;
 		}
 
 		if (itc[InputToggle::MoveRight]) {
-			forceComponent.x += inputComponent.movePower;
+			movePower.x = inputComponent.movePower;
+			moveX = true;
 		}
+
+		if (moveX && moveY) {
+			movePower.x *= factor;
+			movePower.y *= factor;
+		}
+
+		forceComponent.x += movePower.x;
+		forceComponent.y += movePower.y;
 	}
 }
 

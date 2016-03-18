@@ -15,7 +15,7 @@ namespace ska {
 		virtual ~CollisionSystem();
 		virtual void refresh() override;
 	private:
-		const ska::Rectangle createHitBox(ska::EntityId entityId);
+		const ska::Rectangle createHitBox(ska::EntityId entityId, bool xaxis);
 		World& m_world;
 	};
 }

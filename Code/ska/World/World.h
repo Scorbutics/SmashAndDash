@@ -54,7 +54,7 @@ namespace ska {
 		void playBgm(bool x);
 		void setBgm(std::string bgm);
 		bool isBgmPlaying();
-		bool canMoveToPos(ska::Point<int> pos);
+		bool canMoveToPos(ska::Rectangle pos);
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 		void changeLevel(std::string fileName, std::string chipsetName);

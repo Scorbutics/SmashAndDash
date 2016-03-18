@@ -5,6 +5,7 @@
 #include "../../ska/Physic/ParticleManager.h"
 #include "../../ska/Physic/MovementComponent.h"
 #include "../../ska/Graphic/GraphicComponent.h"
+#include "../../ska/Graphic/DirectionalAnimationComponent.h"
 #include "../../ska/Inputs/InputComponent.h"
 #include "../../ska/Physic/ForceComponent.h"
 #include "../../Utils/IDs.h"
@@ -14,7 +15,7 @@
 
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
 m_collisionSystem(*this, m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
-m_forceSystem(m_entityManager) {
+m_forceSystem(m_entityManager), m_daSystem(m_entityManager) {
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -91,20 +92,21 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 	ska::ForceComponent fc;
 	memset(&fc, 0, sizeof(fc));
 	ska::GravityAffectedComponent gac;
-	gac.friction = 8.5;
-	gac.weight = 65;
+	gac.friction = 18.5;
+	gac.weight = 65.0;
 	m_entityManager.addComponent<ska::GravityAffectedComponent>(hero, gac);
 	m_entityManager.addComponent<ska::ForceComponent>(hero, fc);
 	m_entityManager.addComponent<ska::MovementComponent>(hero, mc);
 	ska::GraphicComponent gc;
 	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, 0), 6, 8, 3);
-	gc.sprite.setDelay(300);
+	gc.sprite.setDelay(100);
 	m_entityManager.addComponent<ska::GraphicComponent>(hero, gc);
+	m_entityManager.addComponent<ska::DirectionalAnimationComponent>(hero, ska::DirectionalAnimationComponent());
 	ska::HitboxComponent hc;
-	hc.xOffset = 0;
-	hc.yOffset = gc.sprite.getHeight() / 2;
-	hc.height = hc.yOffset;
-	hc.width = gc.sprite.getWidth();
+	hc.xOffset = 20;
+	hc.yOffset = gc.sprite.getHeight()*2 / 3;
+	hc.height = gc.sprite.getHeight() - hc.yOffset;
+	hc.width = gc.sprite.getWidth() - 2 * hc.xOffset;
 	m_entityManager.addComponent<ska::HitboxComponent>(hero, hc);
 
 
@@ -156,6 +158,7 @@ void WorldImpl::refreshEntities() {
 	m_gravitySystem.refresh();
 	m_movementSystem.refresh();
 	m_cameraSystem.refresh();
+	m_daSystem.refresh();
 
 	//On refresh tous les personnages
 	/*auto it = wScreen.getEntityFactory().getCharacterList().begin();

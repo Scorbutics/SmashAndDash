@@ -128,7 +128,7 @@ void ska::Animation::setOffsetAndFrameSize(Rectangle s)
         m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
 }
 
-ska::Rectangle ska::Animation::getOffsetBase()
+const ska::Rectangle ska::Animation::getOffsetBase() const
 {
 	return m_offsetBase;
 }
@@ -142,84 +142,44 @@ void ska::Animation::setFrames(const unsigned int framesNumber) {
 	m_frameNumber = framesNumber;
 }
 
-void ska::Animation::setCurrentFrame(unsigned int number)
-{
+void ska::Animation::setCurrentFrame(unsigned int number) {
 	m_position = number;
 
-    if(m_position > m_frameNumber-1)
-    {
+    if(m_position >= m_frameNumber) {
         m_sensAni = -1;
-        m_position = m_frameNumber-1;
-    }
-    else if(m_position < 0)
-    {
+        m_position = m_frameNumber-2;
+    } 
+	if(m_position <= 0) {
         m_sensAni = 1;
         m_position = 0;
     }
 
-    if(m_isVertical)
-        m_offset.y = m_offsetBase.y + m_position*m_frameHeight;
-    else
-        m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
+	if (m_isVertical) {
+		m_offset.y = m_offsetBase.y + m_position*m_frameHeight;
+	} else {
+		m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
+	}
 
 }
 
-void ska::Animation::nextFrame()
-{
+void ska::Animation::nextFrame() {
     m_position += m_sensAni;
-
-    if(m_isVertical)
-        m_offset.y = m_offsetBase.y + m_position*m_frameHeight;
-    else
-        m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
-
-    if(m_position == m_frameNumber-1)
-	{
-        m_sensAni = -1;
-		m_cycles++;
-	}
-    else if(m_position == 0)
-	{
-        m_sensAni = 1;
-		m_cycles++;
-	}
-
+	setCurrentFrame(m_position);
 }
 
-void ska::Animation::resetCycles()
-{
+void ska::Animation::resetCycles() {
 	m_cycles = 0;
 }
 
-const ska::Rectangle ska::Animation::getRectOfCurrentFrame()
-{
+const ska::Rectangle ska::Animation::getRectOfCurrentFrame() {
 
-    if(m_active == false)
-        return m_offset;
+	if (m_active == false) {
+		return m_offset;
+	}
 
-    if(SDL_GetTicks() - m_count > m_countMAX)
-    {
+    if(SDL_GetTicks() - m_count > m_countMAX) {
         m_count = SDL_GetTicks();
-
-        m_position += m_sensAni;
-
-        if(m_isVertical)
-            m_offset.y = m_offsetBase.y + m_position*m_frameHeight;
-        else
-            m_offset.x = m_offsetBase.x + m_position*m_frameWidth;
-
-
-        if(m_position == m_frameNumber-1)
-		{
-            m_sensAni = -1;
-			m_cycles++;
-		}
-        else if(m_position == 0)
-		{
-            m_sensAni = 1;
-			m_cycles++;
-		}
-
+		nextFrame();
     }
 
 

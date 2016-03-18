@@ -103,11 +103,29 @@ bool ska::World::getCollision(const int i, const int j)
     return false;
 }
 
-bool ska::World::canMoveToPos(ska::Point<int> pos)
-{
-	vector<ska::Rectangle> ids;
-    int id, entityNumber;
-    bool ok = true;
+bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
+	ska::Point<int> chd, chg, cbg;
+
+
+	//position coin haut droit hitbox
+	chd.x = hitbox.x + hitbox.w - 1;
+	chd.y = hitbox.y + 1;
+
+	//position coin haut gauche hitbox
+	chg.x = hitbox.x + 1;
+	chg.y = hitbox.y + 1;
+
+	//position coin bas gauche hitbox
+	cbg.x = hitbox.x + 1;
+	cbg.y = hitbox.y + hitbox.h - 1;
+
+	for (int j = chg.y / m_blockSize; j <= cbg.y / m_blockSize; j++) {
+		for (int i = chg.x / m_blockSize; i <= chd.x / m_blockSize; i++) {
+			if (getCollision(i, j) && !isBlockDodgeable(i, j)) {
+				return false;
+			}
+		}
+	}
 	//WGameCore& wScreen = WGameCore::getInstance();
 
     /*if(entityToMove != NULL)
@@ -130,12 +148,13 @@ bool ska::World::canMoveToPos(ska::Point<int> pos)
         //}
     
 
-    if(ok == false)
+    /*if(ok == false)
         return ok;                                          //pour renvoyer false
 	else if (this->getCollision(pos.x / m_blockSize, pos.y / m_blockSize))
         return false;
     else
-        return true;
+        return true;*/
+	return true;
 }
 
 const ska::Rectangle* ska::World::getView() const {

@@ -1,5 +1,6 @@
 #include "GravitySystem.h"
 #include "../../Utils/SkaConstants.h"
+#include "../../Utils/NumberUtils.h"
 
 ska::GravitySystem::GravitySystem(ska::EntityManager& entityManager) : System(entityManager) {
 }
@@ -12,8 +13,8 @@ void ska::GravitySystem::refresh() {
 
 		//on termine le PFD selon x et y avec la force de frottements fluides
 		//( en comptant qu'au préalable on a peut-être déjà appliqué une ou plusieurs force(s) avec "applyForce" )
-		forceComponent.x += -gaComponent.friction * moveComponent.vx / gaComponent.weight;
-		forceComponent.y += -gaComponent.friction * moveComponent.vy / gaComponent.weight;
+		forceComponent.x -= gaComponent.friction * moveComponent.vx / gaComponent.weight;
+		forceComponent.y -= gaComponent.friction * moveComponent.vy / gaComponent.weight;
 
 		//EARTH_GRAVITY était trop élevée alors j'ai préféré la diviser par 5
 		forceComponent.z += (float)EARTH_GRAVITY / 5;

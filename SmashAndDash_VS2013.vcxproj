@@ -127,8 +127,10 @@
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
+    <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollisionComponent.h" />
     <ClInclude Include="Code\ska\Physic\GravityAffectedComponent.h" />
     <ClInclude Include="Code\ska\Physic\HitboxComponent.h" />
@@ -335,6 +337,7 @@
   <ItemGroup>
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\ForceSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp" />
