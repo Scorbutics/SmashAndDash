@@ -10,7 +10,7 @@
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
 #include "../Graphic/System/CameraSystem.h"
-#include "../ECS/EntityManager.h"
+#include "../ECS/PrefabEntityManager.h"
 
 namespace ska {
 	class Layer;
@@ -63,7 +63,7 @@ namespace ska {
 		virtual void refreshEntities() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
 
-		ska::EntityManager& getEntityManager();
+		ska::PrefabEntityManager& getEntityManager();
 
 		~World();
 
@@ -87,7 +87,7 @@ namespace ska {
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
 		std::unique_ptr<LayerE> m_lEvent;
 		Animation m_animBlocks;
-		EntityManager m_entityManager;
+		PrefabEntityManager m_entityManager;
 		CameraSystem m_cameraSystem;
 	};
 }

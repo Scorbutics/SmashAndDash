@@ -9,9 +9,9 @@ void ska::ForceSystem::refresh() {
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		/* sum(F) = m*a */
-		moveComponent.ax = forceComponent.x;
-		moveComponent.ay = forceComponent.y;
-		moveComponent.az = forceComponent.z;
+		moveComponent.ax = forceComponent.x / forceComponent.weight;
+		moveComponent.ay = forceComponent.y / forceComponent.weight;
+		moveComponent.az = forceComponent.z / forceComponent.weight;
 		
 		/* Don't forget to reset the current forces applied to */
 		forceComponent.x = 0;

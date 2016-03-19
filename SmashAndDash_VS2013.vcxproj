@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\ECS\PrefabEntityManager.h" />
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
@@ -335,6 +336,7 @@
     <ClInclude Include="Code\ska\Inputs\InputContextManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />

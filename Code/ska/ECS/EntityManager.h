@@ -1,6 +1,7 @@
 #pragma once
 #include <bitset>
 #include <vector>
+#include <unordered_set>
 #include "ECSDefines.h"
 #include "ComponentHandler.h"
 #include "../Exceptions/IllegalStateException.h"
@@ -41,20 +42,19 @@ namespace ska {
 
 			if (m_deletedEntities.empty()) {
 				newId = (EntityId)m_entities.size();
-				m_entities.push_back(true);
-			}
-			else {
+				m_entities.insert(newId);
+			} else {
 				newId = m_deletedEntities[m_deletedEntities.size() - 1];
 				m_deletedEntities.pop_back();
-				m_entities[newId] = true;;
+				m_entities.insert(newId);
 			}
 			
 			return newId;
 		}
 		
 		void removeEntity(EntityId entity) {
-			if (entity < m_entities.size() && m_entities[entity]) {
-				m_entities[entity] = false;
+			if (entity < m_entities.size() && m_entities.count(entity) > 0) {
+				m_entities.erase(entity);
 				m_deletedEntities.push_back(entity);
 				
 				/* Reset all components */
@@ -65,6 +65,12 @@ namespace ska {
 			} else {
 				std::string startMessage = ("Unable to delete entity #" + entity);
 				throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
+			}
+		}
+
+		void removeEntities() {
+			for (EntityId entity : m_entities) {
+				removeEntity(entity);
 			}
 		}
 
@@ -116,8 +122,7 @@ namespace ska {
 	
 	private:
 		std::vector<EntityComponentsMask> m_componentMask;
-
-		std::vector<bool> m_entities;
+		std::unordered_set<EntityId> m_entities;
 		EntityIdContainer m_deletedEntities;
 
 		template <class T>

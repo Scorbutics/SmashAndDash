@@ -7,5 +7,7 @@ namespace ska {
 		float x;
 		float y;
 		float z;
+
+		float weight;
 	};
 }

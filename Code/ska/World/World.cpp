@@ -44,7 +44,7 @@ ska::Texture& ska::World::getChipset()
 	return m_chipset;
 }
 
-ska::EntityManager& ska::World::getEntityManager() {
+ska::PrefabEntityManager& ska::World::getEntityManager() {
 	return m_entityManager;
 }
 
@@ -108,16 +108,16 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
 
 
 	//position coin haut droit hitbox
-	chd.x = hitbox.x + hitbox.w - 1;
-	chd.y = hitbox.y + 1;
+	chd.x = hitbox.x + hitbox.w;
+	chd.y = hitbox.y ;
 
 	//position coin haut gauche hitbox
-	chg.x = hitbox.x + 1;
-	chg.y = hitbox.y + 1;
+	chg.x = hitbox.x;
+	chg.y = hitbox.y;
 
 	//position coin bas gauche hitbox
-	cbg.x = hitbox.x + 1;
-	cbg.y = hitbox.y + hitbox.h - 1;
+	cbg.x = hitbox.x;
+	cbg.y = hitbox.y + hitbox.h;
 
 	for (int j = chg.y / m_blockSize; j <= cbg.y / m_blockSize; j++) {
 		for (int i = chg.x / m_blockSize; i <= chd.x / m_blockSize; i++) {

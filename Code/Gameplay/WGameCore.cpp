@@ -10,6 +10,7 @@
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
 #include "../ska/World/LayerE.h"
+#include "../ska/Exceptions/CorruptedFileException.h"
 
 using namespace std;
 
@@ -41,6 +42,28 @@ m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world
 
 	m_saveManager.loadGame("save1");
 	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
+
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
+
+	ska::Point<int> startPos;
+	startPos.x = reader.getInt("Trainer start_posx");
+	startPos.y = reader.getInt("Trainer start_posy");
+	std::string startMapName = reader.getString("Trainer start_map_name");
+
+	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+	buf += startMapName;
+	buf += FILE_SEPARATOR;
+	buf += startMapName;
+	buf += ".ini";
+
+	ska::IniReader mapReader(buf);
+	std::string startMapChipset = mapReader.getString("Chipset file");
+	if (startMapChipset == "STRINGNOTFOUND") {
+		throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
+	}
+
+	m_world.getEntityManager().createTrainer(startPos, m_world.getBlockSize());
+
 	m_scrolling = true;
 }
 
