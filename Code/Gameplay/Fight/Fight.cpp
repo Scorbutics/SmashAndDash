@@ -43,40 +43,38 @@ void Fight::setAreasFromLayerEvent()
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 
-    this->deleteAllAreas();
-    for(int i = 0; i < w.getLayerEvent()->getNbrLignes(); i++)
-    {
-		if (w.getLayerEvent()->getAction(i) == "combat")
-        {
+    deleteAllAreas();
+    for(int i = 0; i < w.getLayerEvent()->getNbrLignes(); i++) {
+		if (w.getLayerEvent()->getAction(i) == "combat") {
             int width, height;
-			ska::StringUtils::extractTo(0, w.getLayerEvent()->getParam(i), ':', &width);
-			height = atoi(w.getLayerEvent()->getParam(i).substr(w.getLayerEvent()->getParam(i).find_last_of(':') + 1, w.getLayerEvent()->getParam(i).size()).c_str());
+			const std::string param = w.getLayerEvent()->getParam(i);
+			width = ska::StringUtils::strToInt(ska::StringUtils::extractTo(0, param, ':'));
+			height = ska::StringUtils::strToInt(param.substr(param.find_last_of(':') + 1, param.size()));
 
-			this->addArea(w.getLayerEvent()->getBlocX(i)*TAILLEBLOC, w.getLayerEvent()->getBlocY(i)*TAILLEBLOC, width*TAILLEBLOC, height*TAILLEBLOC);
+			addArea(w.getLayerEvent()->getBlocX(i)*w.getBlockSize(), w.getLayerEvent()->getBlocY(i)*w.getBlockSize(), width*w.getBlockSize(), height*w.getBlockSize());
         }
     }
 }
 
 
-bool Fight::isInFightArea(Player* hero)
-{
-    if(hero == NULL)
-    {
+bool Fight::isInFightArea(Player* hero) {
+    if(hero == NULL) {
         cerr << "Erreur (classe Fight) : Personnage invalide" << endl;
         return false;
     }
 
 	ska::Point<int> absolutePos = hero->getHitboxCenterPos();
 
-    for(unsigned int i = 0; i < m_areaList.size(); i++)
-        if(ska::RectangleUtils::isPositionInBox(absolutePos, m_areaList[i]))
-            return true;
+	for (unsigned int i = 0; i < m_areaList.size(); i++) {
+		if (ska::RectangleUtils::isPositionInBox(absolutePos, m_areaList[i])) {
+			return true;
+		}
+	}
 
     return false;
 }
 
-void Fight::addArea(int x, int y, int w, int h)
-{
+void Fight::addArea(int x, int y, int w, int h) {
 	ska::Rectangle buf;
     buf.x = x;
     buf.y = y;
@@ -85,31 +83,28 @@ void Fight::addArea(int x, int y, int w, int h)
     m_areaList.push_back(buf);
 }
 
-void Fight::addArea(ska::Rectangle area)
-{
+void Fight::addArea(ska::Rectangle area) {
     m_areaList.push_back(area);
 }
 
-const ska::Rectangle* Fight::getArea(int i)
-{
-    return &(m_areaList[i]);
+const ska::Rectangle& Fight::getArea(int i) {
+    return m_areaList[i];
 }
 
-void Fight::deleteAllAreas()
-{
+void Fight::deleteAllAreas() {
     m_areaList.clear();
 }
 
-void Fight::start(Character* opponent)
-{
+void Fight::start(Character* opponent) {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 	int time;
 	
     m_pkmn = wScreen.getPokemonManager().getFirstUsablePokemon();
 
-	if (m_pkmn == NULL || opponent == NULL)
+	if (m_pkmn == NULL || opponent == NULL) {
 		return;
+	}
 
 	m_isFighting = true;
 
@@ -125,7 +120,8 @@ void Fight::start(Character* opponent)
 
 
     //Création de la barre de vie apparaissant en combat
-	ska::Rectangle pos; //sa position  >!! relative !!<
+	//sa position  >!! relative !!<
+	ska::Rectangle pos; 
     pos.x = pos.y = 0;
 
 
@@ -136,10 +132,9 @@ void Fight::start(Character* opponent)
 	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 2, posAnim, 1, 200);
 
 	time = SDL_GetTicks();
-	while(SDL_GetTicks() - time < 2000) // 2 secondes, le temps d'afficher l'animation de lancement de combat
-	{
+	// 2 secondes, le temps d'afficher l'animation de lancement de combat
+	while(SDL_GetTicks() - time < 2000)  {
 		wScreen.graphicUpdate();
-
 		wScreen.flip();
 		SDL_Delay(30);
 	}
@@ -152,11 +147,10 @@ void Fight::start(Character* opponent)
 	showDialog(2000);
 
 	time = SDL_GetTicks();
-	while(SDL_GetTicks() - time < 2000) // 2 secondes, le temps d'afficher le message de début de combat
-	{
+	// 2 secondes, le temps d'afficher le message de début de combat
+	while(SDL_GetTicks() - time < 2000)  {
 		wScreen.graphicUpdate();
 		m_dial->display();
-
 		wScreen.flip();
 		SDL_Delay(30);
 	}
@@ -178,22 +172,21 @@ void Fight::start(Character* opponent)
 	boxScreen.w = wScreen.getWidth();
 	boxScreen.h = wScreen.getHeight();
 
-	do 
-	{
-		do 
-		{
+	const unsigned int blockSize = w.getBlockSize();
+	do {
+		do {
 			randomPos.x += rand()%(2*m_mobAggroRange + 1) - m_mobAggroRange;
 			randomPos.y += rand()%(2*m_mobAggroRange + 1) - m_mobAggroRange;
-			randomPos.x /= TAILLEBLOC;
-			randomPos.x *= TAILLEBLOC;
-			randomPos.y /= TAILLEBLOC;
-			randomPos.y *= TAILLEBLOC;
+			randomPos.x /= blockSize;
+			randomPos.x *= blockSize;
+			randomPos.y /= blockSize;
+			randomPos.y *= blockSize;
 			
 			relativePos.x = randomPos.x + wScreen.getORel().x;
 			relativePos.y = randomPos.y + wScreen.getORel().y;
 		} while (!ska::RectangleUtils::isPositionInBox(relativePos, boxScreen));
 
-	}while(wScreen.getWorld().getCollision(randomPos.x/TAILLEBLOC, randomPos.y/TAILLEBLOC) || !wScreen.detectEntity(randomPos).empty()); 
+	} while(wScreen.getWorld().getCollision(randomPos.x/TAILLEBLOC, randomPos.y/TAILLEBLOC) || !wScreen.detectEntity(randomPos).empty()); 
 	
 
 	m_opponent->setEntityNumber(ID_CURRENT_OPPONENT);
@@ -205,14 +198,13 @@ void Fight::start(Character* opponent)
     //wScreen.getPokeball().launch(wScreen.getHero(), m_pkmn->getPos(), PokeballLaunchReason::Throw);
 
     time = SDL_GetTicks();
-    while(SDL_GetTicks() - time < 2000) // 2 secondes, le temps de lancer la pokeball par terre
-    {
+	// 2 secondes, le temps de lancer la pokeball par terre
+    while(SDL_GetTicks() - time < 2000)  {
         wScreen.graphicUpdate();
 
         wScreen.flip();
         SDL_Delay(30);
     }
-
 
 	m_pkmn->setVisible(true);
 	m_pkmn->getHPBar()->setMaxValue(m_pkmn->getStatistics()->getHpMax());
@@ -220,15 +212,12 @@ void Fight::start(Character* opponent)
     m_pkmn->getHPBar()->setVisible(true);
 
     //wScreen.setHero(m_pkmn);
-
-
 }
 
 void Fight::end(EndFightReason::Enum endReason)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-    if(m_opponent == NULL || m_trainer == NULL)
-    {
+    if(m_opponent == NULL || m_trainer == NULL) {
         m_isFighting = false;
 		wScreen.switchScene(EnumScene::MAP);
         cerr << "Erreur (classe Fight) : un ou plusieurs participant au combat n'existe plus" << endl;
@@ -251,8 +240,7 @@ void Fight::end(EndFightReason::Enum endReason)
     unsigned int duree = 2000, t0 = 0;
     t0 = SDL_GetTicks();
 
-    while(SDL_GetTicks() - t0 < duree)
-    {
+    while(SDL_GetTicks() - t0 < duree) {
         wScreen.graphicUpdate();
         wScreen.flip();
         SDL_Delay(20);
@@ -280,8 +268,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	m_isFighting = false;
 	wScreen.switchScene(EnumScene::MAP);
 
-	if (endReason == EndFightReason::Lose)
-	{
+	if (endReason == EndFightReason::Lose) {
 		wScreen.getWorld().changeLevel("poke1.bmp", "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"chipset.png");
 		//wScreen.getHero()->teleport(8*TAILLEBLOC,5*TAILLEBLOC);
 		wScreen.getPokemonManager().heal();
@@ -289,8 +276,7 @@ void Fight::end(EndFightReason::Enum endReason)
 
 }
 
-void Fight::showDialog(unsigned int duration)
-{
+void Fight::showDialog(unsigned int duration) {
     m_t0 = SDL_GetTicks();
     m_duration = duration;
     m_dialogActive = true;
@@ -308,16 +294,15 @@ void Fight::display()
 	}
 
 	WGameCore& wScreen = WGameCore::getInstance();
-    if(m_pkmn != NULL)
-        m_pkmn->displaySkills();
-	if(m_opponent != NULL)
+	if (m_pkmn != NULL) {
+		m_pkmn->displaySkills();
+	}
+	if (m_opponent != NULL) {
 		m_opponent->displaySkills();
-
-
+	}
 
     //Refresh la barre de vie si active
-    if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible())
-    {
+    if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible()) {
 		ska::Rectangle pos = m_pkmn->getPos();
         pos.y -= m_pkmn->getHPBar()->getPos().h + abs(wScreen.getORel().y);
         pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
@@ -325,16 +310,13 @@ void Fight::display()
         m_pkmn->getHPBar()->refresh();
     }
 
-    if(m_opponent != NULL && m_opponent->getHPBar()->isVisible())
-    {
+    if(m_opponent != NULL && m_opponent->getHPBar()->isVisible()) {
 		ska::Rectangle pos = m_opponent->getPos();
         pos.y -= m_opponent->getHPBar()->getPos().h + abs(wScreen.getORel().y);
         pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
         m_opponent->getHPBar()->setPos(pos);
         m_opponent->getHPBar()->refresh();
     }
-
-    
 
 	this->displayDialog();
 }
@@ -348,8 +330,7 @@ void Fight::refreshFight() {
 		m_opponent->refreshSkills();
 }
 
-void Fight::refresh()
-{
+void Fight::refresh() {
 	WGameCore& wScreen = WGameCore::getInstance();
 
 	if (m_isFighting) {
@@ -391,16 +372,14 @@ void Fight::refresh()
 	
 }
 
-void Fight::displayDialog()
-{
+void Fight::displayDialog() {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-    if(SDL_GetTicks() - m_t0 >= m_duration)
-        m_dialogActive = false;
+	if (SDL_GetTicks() - m_t0 >= m_duration) {
+		m_dialogActive = false;
+	}
 
-    if(m_dialogActive)
-    {
-		
+    if(m_dialogActive) {
 		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
         pos.x += wScreen.getORel().x + pos.w;
         pos.y -= m_dial->getHeight() - wScreen.getORel().y;
@@ -412,47 +391,41 @@ void Fight::displayDialog()
 }
 
 
-Character* Fight::getOpponent()
-{
-    if(m_opponent == NULL)
-        cerr << "Erreur (class Character_ptr) : Opposant NULL" << endl;
+Character* Fight::getOpponent() {
+	if (m_opponent == NULL) {
+		cerr << "Erreur (class Character_ptr) : Opposant NULL" << endl;
+	}
     return m_opponent;
 }
 
-Player* Fight::getPokemon()
-{
+Player* Fight::getPokemon() {
     return m_pkmn;
 }
 
-Player* Fight::getTrainer()
-{
+Player* Fight::getTrainer() {
     return m_trainer;
 }
 
-void Fight::setFightCount(int x)
-{
+void Fight::setFightCount(int x) {
     m_fightCount = x;
 }
 
-DialogMenu* Fight::getDialog()
-{
-	if(m_dial == NULL)
+DialogMenu* Fight::getDialog() {
+	if (m_dial == NULL) {
 		cerr << "Erreur (class Character_ptr) : Fenêtre de dialogue du dresseur en combat NULL" << endl;
+	}
     return &(*m_dial);
 }
 
-int Fight::getFightCount()
-{
+int Fight::getFightCount() {
     return m_fightCount;
 }
 
-void Fight::setFight(bool x)
-{
+void Fight::setFight(bool x) {
     m_isFighting = x;
 }
 
-bool Fight::isFighting()
-{
+bool Fight::isFighting() {
     return m_isFighting;
 }
 

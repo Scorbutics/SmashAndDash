@@ -9,6 +9,7 @@
 #include "../Physic/ForceComponent.h"
 #include "../Physic/HitboxComponent.h"
 #include "../Graphic/SpritePath.h"
+#include "../Graphic/HasShadowComponent.h"
 
 ska::PrefabEntityManager::PrefabEntityManager() {
 }
@@ -34,6 +35,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const ska::Point<int> st
 	gc.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
 	gc.sprite.setDelay(100);
 	addComponent<ska::GraphicComponent>(hero, gc);
+	addComponent<ska::HasShadowComponent>(hero, ska::HasShadowComponent());
 	addComponent<ska::DirectionalAnimationComponent>(hero, ska::DirectionalAnimationComponent());
 	ska::HitboxComponent hc;
 	hc.xOffset = 20;

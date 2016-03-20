@@ -37,7 +37,7 @@ class Fight : public ska::DrawableFixedPriority
     Player* getPokemon();
     Player* getTrainer();
     DialogMenu* getDialog();
-	const ska::Rectangle* getArea(int i);
+	const ska::Rectangle& getArea(int i);
 
     void addArea(int x, int y, int w, int h);
 	void addArea(ska::Rectangle area);

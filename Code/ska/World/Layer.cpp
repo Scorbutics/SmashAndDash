@@ -110,7 +110,7 @@ void ska::Layer::display()
 						b->setSpriteFrame(m_world.getWind());
 						chipsetPartRender = b->refresh(absoluteCurrentPos);
 					} else {
-						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_rectAnim);
+						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_world.getChipsetAnimation().getRectOfCurrentFrame());
 					}                    
 					m_world.getChipset().render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
                 }

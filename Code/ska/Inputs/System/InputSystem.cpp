@@ -13,6 +13,7 @@ void ska::InputSystem::refresh() {
 		bool moveY = false;
 		const float factor = 0.709;
 		const InputToggleContainer& itc = m_icm.getToggles();
+		const InputActionContainer& iac = m_icm.getActions();
 
 		if (itc[InputToggle::MoveUp]) {
 			movePower.y = -(int)inputComponent.movePower;
@@ -32,6 +33,10 @@ void ska::InputSystem::refresh() {
 		if (itc[InputToggle::MoveRight]) {
 			movePower.x = inputComponent.movePower;
 			moveX = true;
+		}
+
+		if (iac[InputAction::Jump]) {
+			forceComponent.z += inputComponent.movePower << 3;
 		}
 
 		if (moveX && moveY) {

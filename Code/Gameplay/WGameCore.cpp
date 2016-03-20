@@ -64,7 +64,7 @@ m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world
 
 	m_world.getEntityManager().createTrainer(startPos, m_world.getBlockSize());
 
-	m_scrolling = true;
+	//m_scrolling = true;
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h)

@@ -11,7 +11,7 @@
 
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
 m_collisionSystem(*this, m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
-m_forceSystem(m_entityManager), m_daSystem(m_entityManager) {
+m_forceSystem(m_entityManager), m_daSystem(m_entityManager), m_shadowSystem(m_cameraSystem, m_entityManager) {
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -32,6 +32,9 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());*/
+
+	m_shadowSystem.setDrawables(drawables);
+	m_shadowSystem.refresh();
 
 	m_graphicSystem.setDrawables(drawables);
 	m_graphicSystem.refresh();
@@ -55,9 +58,10 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 		posEntityId.y = m_lEvent->getBlocY(i);
 		posEntityId.x = m_lEvent->getBlocX(i);
 		int id = m_lEvent->getID(i);
-		if (id == 0) {
+		if (id == 0 || id == INT_MIN) {
 			continue;
 		}
+
 
 		if (abs(id) <= ENTITEMAX) {	
 			m_entityManager.createCharacter(posEntityId, id, blockSize);

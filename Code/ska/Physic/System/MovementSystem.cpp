@@ -34,7 +34,7 @@ void ska::MovementSystem::refresh() {
 		}
 
 		/* Ground reflection */
-		if (posComponent.z <= 0) {
+		if (posComponent.z <= 0 || (posComponent.z + moveComponent.vz) <= 0) {
 			posComponent.z = 0;
 			moveComponent.vz = 0;
 		}

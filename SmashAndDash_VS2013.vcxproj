@@ -129,9 +129,12 @@
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
     <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
+    <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h" />
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\ShadowSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollisionComponent.h" />
     <ClInclude Include="Code\ska\Physic\GravityAffectedComponent.h" />
     <ClInclude Include="Code\ska\Physic\HitboxComponent.h" />
@@ -327,7 +330,7 @@
     <ClInclude Include="Code\ska\Utils\FileUtils.h" />
     <ClInclude Include="Code\ska\Core\GameCore.h" />
     <ClInclude Include="Code\ska\Physic\PositionComponent.h" />
-    <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\AbstractGraphicSystem.h" />
     <ClInclude Include="Code\ska\ECS\EntityManager.h" />
     <ClInclude Include="Code\ska\ECS\ComponentHandler.h" />
     <ClInclude Include="Code\ska\Physic\System\MovementSystem.h" />
@@ -340,6 +343,8 @@
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\ShadowSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\ForceSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp" />
@@ -479,7 +484,7 @@
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
-    <ClCompile Include="Code\ska\Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\AbstractGraphicSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\CollisionSystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp" />

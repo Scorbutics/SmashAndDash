@@ -1,14 +1,14 @@
-#include "GraphicSystem.h"
+#include "./GraphicSystem.h"
 #include "../PositionnedGraphicDrawable.h"
 
-ska::GraphicSystem::GraphicSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager) : System(entityManager), m_camera(camera) {
+ska::GraphicSystem::GraphicSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
 	m_drawables = NULL;
 }
 
 void ska::GraphicSystem::refresh() {
 	const ska::Rectangle* camera = m_camera.getDisplay();
-	const unsigned int cameraX = (camera == NULL ? 0 : camera->x);
-	const unsigned int cameraY = (camera == NULL ? 0 : camera->y);
+	const unsigned int cameraX = (camera == NULL || camera->x < 0 ? 0 : camera->x);
+	const unsigned int cameraY = (camera == NULL || camera->y < 0 ? 0 : camera->y);
 
 	if (m_drawables == NULL) {
 		return;
@@ -21,19 +21,15 @@ void ska::GraphicSystem::refresh() {
 		GraphicComponent& gc = m_entityManager.getComponent<GraphicComponent>(entityId);
 		ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 		const int relPosX = pos.x - cameraX;
-		const int relPosY = pos.y - cameraY;
+		const int relPosY = pos.y - cameraY - pos.z;
 		if (!(relPosX + gc.sprite.getWidth() < 0 || camera != NULL && relPosX >= camera->w ||
 			relPosY + gc.sprite.getHeight() < 0 || camera != NULL && relPosY >= camera->h)) {
-			m_pgd.push_back(PositionnedGraphicDrawable(gc, relPosX, relPosY, relPosY + pos.z));
+			m_pgd.push_back(PositionnedGraphicDrawable(gc.sprite, relPosX, relPosY, pos.y + (camera == NULL ? 0 : camera->h*pos.z), pos.y));
 			m_drawables->add(m_pgd[m_pgd.size() - 1]);
 		}
 	}
 
 	m_drawables = NULL;
-}
-
-void ska::GraphicSystem::setDrawables(DrawableContainer& container) {
-	m_drawables = &container;
 }
 
 ska::GraphicSystem::~GraphicSystem() {

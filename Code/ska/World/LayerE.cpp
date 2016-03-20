@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <SDL2/SDL.h>
 #include <sstream>
 
 #include "../Utils/StringUtils.h"
@@ -9,6 +8,8 @@
 #include "LayerE.h"
 #include "../Script/ScriptDispatcher.h"
 #include "World.h"
+#include "../Exceptions/CorruptedFileException.h"
+#include "../Exceptions/NumberFormatException.h"
 
 using namespace std;
 
@@ -38,25 +39,18 @@ void ska::LayerE::refresh() {
 		
 
 	ska::Rectangle posCentre = { 0 };
-	int i = 0;
 
 	/*posCentre.x = wScreen.getHero()->getHitboxCenterPos().x;
 	posCentre.y = wScreen.getHero()->getHitboxCenterPos().y;
 	posCentre.x /= TAILLEBLOC;
 	posCentre.y /= TAILLEBLOC;
 	*/
-	for (i = i; i < getNbrLignes(); i++)
-	{
-		if (getBlocX(i) == posCentre.x && getBlocY(i) == posCentre.y && (getTrigger(i) == 1))
-		{
-
-			if (getAction(i) == "teleport")
-			{
-				//CommandTeleport::teleportHeroToMap(w.getLayerEvent()->getParam(i));
-			}
-			else if (getAction(i) == "script")
-			{
-				ifstream fscript(getParam(i).c_str());
+	for (int i = 0; i < m_nbrLignes; i++) {
+		if (m_vcoordBX[i] == posCentre.x && m_vcoordBY[i] == posCentre.y && m_vtrigger[i] == 1) {
+			if (m_vaction[i] == "teleport") {
+				//CommandTeleport::teleportHeroToMap(m_vparam[i]);
+			} else if (m_vaction[i] == "script") {
+				ifstream fscript(m_vparam[i]);
 				char buf;
 				fscript.seekg(-1, ios::end);
 				fscript >> buf;
@@ -65,7 +59,7 @@ void ska::LayerE::refresh() {
 
 				if (buf == '£')
 				{
-					ofstream fwriteScript(getParam(i).c_str());
+					ofstream fwriteScript(m_vparam[i]);
 					fwriteScript.seekp(-1, ios::end);
 					fwriteScript << "";
 					fwriteScript.close();
@@ -74,8 +68,6 @@ void ska::LayerE::refresh() {
 				/*ScriptDispatcher::getInstance().addRunningScript(NULL, getParam(i), m_world.getName(), vector<string>(), 2, &scriptPeriod);*/
 			}
 		}
-
-
 	}
 	
 }
@@ -169,161 +161,78 @@ void ska::LayerE::changeLevel(string fichier)
 }
 
 
-
-
-int LireFEvent(ifstream *flux, char to)
-{
-    char a = 0;
-    /* char buffer[5] = {0}; //On fixe ainsi le maximum de la taille de la map, qui sera 10000x10000... Autant dire qu'on a de quoi faire ! */
-	string buffer; /*			^ N'importe quoi ce code et ce com' ! Utiliser une string à la place... */
-
-    do
-    {
-        a = flux->get();
-
-        if(a == to)
-        {
-            if(buffer[0] != '!')
-                return ska::StringUtils::strToInt(buffer);
-            else
-                return INT_MIN;
-
-        }
-        else if(flux->eof())
-			return INT_MIN;
-        else
-        {
-            buffer += a;
-        }
-    }while(a != to);
-
-	return INT_MIN;
-}
-
-
-
-void ChargerEvent(string *m_nomFichier,  int *m_nbrLignes, vector<int> &m_coordBX, vector<int> &m_coordBY, vector<int> &m_ID, vector<int> &m_trigger, vector<string> &m_param, vector<int> &m_solide, vector<string> &m_action, vector<string> &m_path)
-{
-	/* TODO Tout ceci est horrible. On dirait du C avec du C++. A réécrire. */
-
-    char a = 0;
-    int j = 0, i = 0;
-
-    ifstream flux;
-
-    string folder = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"";
-    string buffer;
-    ostringstream oss;
-
-    buffer = m_nomFichier->substr(0, m_nomFichier->find_last_of('E'));
-
-    oss << buffer;
-    oss << ""FILE_SEPARATOR"" + *m_nomFichier;
-    folder += oss.str();
-
-    flux.open(folder.c_str());
-
-    if(flux.fail())    //On teste si le fichier s'est bien ouvert.
-    {
-        cerr << "Erreur (classe LayerE) : Impossible d'ouvrir le fichier event demandé: " << folder.c_str() << endl;
-        exit(1);
+void ChargerEvent(string *m_nomFichier,  int *m_nbrLignes, vector<int> &m_coordBX, vector<int> &m_coordBY, vector<int> &m_ID, vector<int> &m_trigger, vector<string> &m_param, vector<int> &m_solide, vector<string> &m_action, vector<string> &m_path) {
+    const string folder = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_nomFichier->substr(0, m_nomFichier->find_last_of('E')) + ""FILE_SEPARATOR"" + *m_nomFichier;
+	ifstream flux(folder.c_str());
+	stringstream ss;
+    if(flux.fail()) {
+        throw ska::CorruptedFileException("Erreur (classe LayerE) : Impossible d'ouvrir le fichier event demandé: " + folder);
     }
 
+	m_coordBX.clear();
+	m_coordBY.clear();
+	m_ID.clear();
+	m_trigger.clear();
+	m_param.clear();
+	m_solide.clear();
+	m_action.clear();
+	m_path.clear();
 
-    for(i = 0; i < *m_nbrLignes; i++)
-    {
-        m_coordBX.pop_back();
-        m_coordBY.pop_back();
-        m_ID.pop_back();
-        m_trigger.pop_back();
-        m_param.pop_back();
-        m_solide.pop_back();
-        m_action.pop_back();
-        m_path.pop_back();
-    }
+    
+	std::string line;
 
-    i=0;
+	/* Ignore first line */
+	std::getline(flux, line);
 
-    *m_nbrLignes = 0;
+	int i = 0;
+	try {
+		while (std::getline(flux, line)) {
+			
+			i++;
+			int nextIndex = 0;
+			ss.clear();
 
-        do{
-            a = flux.get();
-            if (a == '\n')
-            {
-                *m_nbrLignes = *m_nbrLignes + 1;
-            }
-        }while(!flux.eof());
+			const std::string x = ska::StringUtils::extractTo(nextIndex, line, ':');
+			m_coordBX.push_back(ska::StringUtils::strToInt(x));
+			nextIndex += x.size() + 1;
+			
+			ss << line.substr(nextIndex);
+			std::string y;
+			ss >> y;
+			m_coordBY.push_back(ska::StringUtils::strToInt(y));
+			
+			std::string id;
+			ss >> id;
+			if (id != "!") {
+				m_ID.push_back(ska::StringUtils::strToInt(id));
+			} else {
+				m_ID.push_back(INT_MIN);
+			}
 
+			std::string solide;
+			ss >> solide;
+			m_solide.push_back(ska::StringUtils::strToInt(solide));
 
+			std::string trigger;
+			ss >> trigger;
+			m_trigger.push_back(ska::StringUtils::strToInt(trigger));
 
+			std::string path;
+			ss >> path;
+			m_path.push_back(path);
+			
+			std::string action;
+			ss >> action;
+			m_action.push_back(action);
 
-    a = 0;
-    j = 1;
-    flux.clear();
-    flux.seekg(ios::beg);
+			std::string param;
+			std::getline(ss, param);
+			m_param.push_back(ska::StringUtils::ltrim(param));
 
-    while(flux.get() != '\n');
-
-
-    m_coordBX.resize(*m_nbrLignes + 1);
-    m_coordBY.resize(*m_nbrLignes + 1);
-    m_ID.resize(*m_nbrLignes + 1);
-    m_trigger.resize(*m_nbrLignes + 1);
-    m_param.resize(*m_nbrLignes + 1);
-    m_solide.resize(*m_nbrLignes + 1);
-    m_action.resize(*m_nbrLignes + 1);
-    m_path.resize(*m_nbrLignes + 1);
-
-        do
-        {
-            i = LireFEvent(&flux, ':');
-            m_coordBX[j] = i;
-            i = LireFEvent(&flux, ' ');
-            m_coordBY[j] = i;
-            i = LireFEvent(&flux, ' ');
-			if (i == INT_MIN)
-                m_ID[j] = 0;
-            else
-                m_ID[j] = i;
-
-            i = LireFEvent(&flux, ' ');
-            m_solide[j] = i;
-            i = LireFEvent(&flux, ' ');
-            m_trigger[j] = i;
-
-            if(m_coordBX[j] == -1 || m_coordBY[j] == -1 || m_trigger[j] == -1 || m_solide[j] == -1 )
-            {
-                cerr << "Erreur (classe LayerE) : Erreur lors de la lecture du fichier evenements. Ligne : " << j << endl;
-            }
-
-            flux >> m_path[j];
-            flux >> m_action[j];
-
-            flux.get();
-
-           do
-            {
-
-                a = flux.get();
-                if(a != '\n'&& !flux.eof())
-                {
-                    m_param[j] += a;
-                }
-                else if(flux.eof())
-                {
-                    cerr << "Erreur (classe LayerE) : Impossible de lire le parametre de l'evenement numero " << j << endl;
-                    exit(0);
-                }
-
-
-
-
-            } while(a != '\n' && !flux.eof());
-
-            j++;
-
-        }while(j < *m_nbrLignes && !flux.eof());  //Tant qu'on n'est pas a la fin, on lit
-
-
+		}
+	} catch (ska::NumberFormatException& nfe) {
+		throw ska::CorruptedFileException("Erreur (classe LayerE) : Erreur lors de la lecture du fichier evenements (ligne : " + ska::StringUtils::intToStr(i) + ")\n" + std::string(nfe.what()));
+	}
+	*m_nbrLignes = i;
 }
 

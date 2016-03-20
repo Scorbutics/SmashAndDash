@@ -17,7 +17,7 @@ void ska::GravitySystem::refresh() {
 		forceComponent.y -= gaComponent.friction * moveComponent.vy;
 
 		//EARTH_GRAVITY était trop élevée alors j'ai préféré la diviser par 5
-		forceComponent.z += (float)EARTH_GRAVITY / 5;
+		forceComponent.z -= (EARTH_GRAVITY/5.0)*forceComponent.weight;
 	}
 }
 

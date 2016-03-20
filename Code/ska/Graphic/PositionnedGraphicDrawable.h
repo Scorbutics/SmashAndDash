@@ -7,13 +7,17 @@ namespace ska {
 	class PositionnedGraphicDrawable : public Drawable {
 	
 	public:
-		PositionnedGraphicDrawable(GraphicComponent& gc, int posx, int posy, int priority) : m_graphic(gc), m_priority(priority) { m_positionx = posx; m_positiony = posy; }
+		PositionnedGraphicDrawable(AnimatedTexture& gc, int posx, int posy, int priority, int priority2D) : m_graphic(gc), m_priority(priority), m_priority2D(priority2D) { m_positionx = posx; m_positiony = posy; }
 		virtual void display() override {
-			m_graphic.sprite.render(m_positionx, m_positiony);
+			m_graphic.render(m_positionx, m_positiony);
 		}
 		
 		virtual int getPriority() const override {
 			return m_priority;
+		}
+
+		virtual int getPriority2D() const override {
+			return m_priority2D;
 		}
 
 		virtual bool isVisible() const override {
@@ -22,9 +26,10 @@ namespace ska {
 		virtual ~PositionnedGraphicDrawable(){}
 
 	private:
-		GraphicComponent& m_graphic;
+		AnimatedTexture& m_graphic;
 		int m_positionx;
 		int m_positiony;
 		int m_priority;
+		int m_priority2D;
 	};
 }

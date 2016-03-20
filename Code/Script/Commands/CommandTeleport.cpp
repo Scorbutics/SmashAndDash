@@ -54,10 +54,10 @@ void CommandTeleport::teleportHeroToMap(string param)
 	int x = 1, y;
 
 
-	fichier = ska::StringUtils::extractTo(0, param, '/', NULL);
-	fichierD = ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + 1, param, '/', NULL);
-	fichier2 = ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + 2, param, '/', NULL);
-	ska::StringUtils::extractTo((int)strlen(fichier.c_str()) + (int)strlen(fichierD.c_str()) + (int)strlen(fichier2.c_str()) + 3, param, ':', &x);
+	fichier = ska::StringUtils::extractTo(0, param, '/');
+	fichierD = ska::StringUtils::extractTo(fichier.size() + 1, param, '/');
+	fichier2 = ska::StringUtils::extractTo(fichier.size() + fichierD.size() + 2, param, '/');
+	x = ska::StringUtils::strToInt(ska::StringUtils::extractTo(fichier.size() + fichierD.size() + fichier2.size() + 3, param, ':'));
 
 	// créer un flux de sortie
 	ostringstream oss;

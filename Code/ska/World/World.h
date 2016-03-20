@@ -35,6 +35,7 @@ namespace ska {
 		std::unique_ptr<ska::Layer>& getLayerMid();
 		std::unique_ptr<ska::Layer>& getLayerTop();
 		const ska::Rectangle* getView() const;
+		ska::Animation& getChipsetAnimation();
 		std::unique_ptr<ska::LayerE>& getLayerEvent();
 		void setWind(int wind);
 		ska::Texture& getChipset();
@@ -45,7 +46,7 @@ namespace ska {
 		bool getCollision(const int i, const int j);
 		bool isBlockDodgeable(const int i, const int j);
 
-		unsigned int getBlockSize() const;
+		const unsigned int getBlockSize() const;
 
 		void setNbrBlocX(int nbrBlockX);
 		void setNbrBlocY(int nbrBlockY);

@@ -19,7 +19,7 @@ namespace ska {
 		static std::string &rtrim(std::string &s);
 		static std::string &trim(std::string &s);
 
-		static std::string extractTo(const int start, const std::string& s, const char to, int *entier);
+		static std::string extractTo(const int start, const std::string& s, const char to);
 
 		static void replaceAll(std::string& str, const std::string& from, const std::string& to);
 		static void replaceAll(std::string& str, const char from, const char to);

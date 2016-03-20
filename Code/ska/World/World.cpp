@@ -83,6 +83,10 @@ int ska::World::getWind() const {
 
 }*/
 
+ska::Animation& ska::World::getChipsetAnimation() {
+	return m_animBlocks;
+}
+
 bool ska::World::isBlockDodgeable(const int i, const int j)
 {
 	return (m_lMid->getBlock(i, j)->getProperties() == BLOCK_PROP_JUMPWALL);
@@ -435,7 +439,7 @@ unsigned int ska::World::getPixelHeight() const {
 	return m_nbrBlockY*m_blockSize;
 }
 
-unsigned int ska::World::getBlockSize() const {
+const unsigned int ska::World::getBlockSize() const {
 	return m_blockSize;
 }
 

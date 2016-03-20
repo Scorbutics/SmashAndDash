@@ -87,16 +87,13 @@ void ska::StringUtils::replaceAll(std::string& str, const char from, const char 
 	replaceAll(str, string(1, from), string(1, to));
 }
 
-string ska::StringUtils::extractTo(const int start, const std::string& s, const char to, int *entier)
+string ska::StringUtils::extractTo(const int start, const std::string& s, const char to)
 {
 	const std::string subString = s.substr(start);
 	size_t pos = subString.find_first_of(to);
-	string result = "ERROR";
+	string result = "";
 	if (pos != string::npos) {
 		result = subString.substr(0, pos - start);
-		if (entier != NULL) {
-			*entier = strToInt(result);
-		}
 	}
 
 	return result;
