@@ -2,7 +2,7 @@
 #include "../SpritePath.h"
 
 ska::ShadowSystem::ShadowSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
-	m_shadow.load(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 13), 2, 1, 1);
+	m_shadow.load(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 13), 2, 1, 1, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 127);
 }
 
 void ska::ShadowSystem::refresh() {

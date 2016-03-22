@@ -1,6 +1,7 @@
 #include "MovementSystem.h"
 #include "../CollisionComponent.h"
 #include "../../Utils/NumberUtils.h"
+#include "../WorldCollisionComponent.h"
 
 ska::MovementSystem::MovementSystem(ska::EntityManager& entityManager) : System(entityManager) {
 }
@@ -13,30 +14,55 @@ void ska::MovementSystem::refresh() {
 		if (m_entityManager.hasComponent<CollisionComponent>(entityId)) {
 			CollisionComponent& col = m_entityManager.getComponent<CollisionComponent>(entityId);
 
-			if (col.entities) {
+			if (col.target != entityId) {
 				/* Entity Collision => Apply entity force */
-			}
-
-			if (col.world){
-				/* World Collision */
+				ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
+				MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
+				ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
 				if (col.xaxis) {
-					moveComponent.vx = 0;
-					moveComponent.ax = 0;
+					ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
 				}
 
 				if (col.yaxis) {
-					moveComponent.vy = 0;
-					moveComponent.ay = 0;
+					ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
+				}
+
+				if (col.xaxis) {
+					//moveComponent.vx = 0;
+					forigin.x = -ftarget.x/2;
+				}
+
+				if (col.yaxis) {
+					//moveComponent.vy = 0;
+					forigin.y = -ftarget.y/2;
 				}
 			}
 
 			m_entityManager.removeComponent<CollisionComponent>(entityId);
 		}
 
+		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
+			WorldCollisionComponent& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
+			
+			/* World Collision */
+			if (col.xaxis) {
+				moveComponent.vx = 0;
+				moveComponent.ax = 0;
+			}
+
+			if (col.yaxis) {
+				moveComponent.vy = 0;
+				moveComponent.ay = 0;
+			}
+
+			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
+		}
+
 		/* Ground reflection */
 		if (posComponent.z <= 0 || (posComponent.z + moveComponent.vz) <= 0) {
 			posComponent.z = 0;
 			moveComponent.vz = 0;
+			moveComponent.az = 0;
 		}
 
 		//(v(t) - v(t-1))/(t - (t-1)) = dv/dt (t) = a(t)
@@ -44,9 +70,9 @@ void ska::MovementSystem::refresh() {
 		moveComponent.vy += moveComponent.ay;
 		moveComponent.vz += moveComponent.az;
 
-		moveComponent.ax = 0;
+		/*moveComponent.ax = 0;
 		moveComponent.ay = 0;
-		moveComponent.az = 0;
+		moveComponent.az = 0;*/
 
 		//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
 		posComponent.x += moveComponent.vx + 0.5;

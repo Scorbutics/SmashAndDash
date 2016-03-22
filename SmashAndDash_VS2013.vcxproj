@@ -166,6 +166,7 @@
     <ClInclude Include="Code\ska\Inputs\InputToggle.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h" />
+    <ClInclude Include="Code\ska\Physic\WorldCollisionComponent.h" />
     <ClInclude Include="Code\ska\Scene\HasGraphic.h" />
     <ClInclude Include="Code\ska\Scene\HasLogic.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\Drawable.h" />

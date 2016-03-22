@@ -22,7 +22,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 			gc.sprite.stop(false);
 		}
 
-		dac.direction = RectangleUtils::getDirectionFromPos(Point<int>( 0, 0 ), Point<int>( (int)mov.vx, (int)mov.vy ));
+		dac.direction = RectangleUtils::getDirectionFromPos(Point<int>(0, 0), Point<int>((int)(mov.vx + mov.ax + 0.5), (int)(mov.vy + mov.ay + 0.5)));
 
 		switch (dac.direction)
 		{
