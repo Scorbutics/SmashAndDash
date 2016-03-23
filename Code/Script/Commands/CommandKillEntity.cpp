@@ -18,7 +18,7 @@ int CommandKillEntity::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandKillEntity::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandKillEntity::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number;

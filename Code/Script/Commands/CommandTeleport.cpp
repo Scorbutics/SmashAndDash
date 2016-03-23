@@ -20,7 +20,7 @@ int CommandTeleport::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandTeleport::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number;

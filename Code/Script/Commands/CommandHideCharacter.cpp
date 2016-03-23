@@ -15,7 +15,7 @@ int CommandHideCharacter::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandHideCharacter::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandHideCharacter::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, hiding;

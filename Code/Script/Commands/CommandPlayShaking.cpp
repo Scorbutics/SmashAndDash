@@ -15,7 +15,7 @@ int CommandPlayShaking::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayShaking::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandPlayShaking::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	unsigned intensity, duration;

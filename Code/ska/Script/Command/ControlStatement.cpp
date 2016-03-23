@@ -7,7 +7,7 @@ ska::ControlStatement::ControlStatement()
 {
 }
 
-std::string ska::ControlStatement::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+std::string ska::ControlStatement::process(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
 	return analyzeLine(script, streamCmd, args);
 }
 

@@ -3,8 +3,8 @@
 #include "..\..\Utils\StringUtils.h"
 #include "..\..\Utils\ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
-#include "../../Data/Savegame.h"
-#include "../IScript.h"
+#include "../System/ScriptAutoSystem.h"
+#include "../ScriptComponent.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ ska::AbstractCommand::AbstractCommand()
 {
 }
 
-std::string ska::AbstractCommand::process(ska::Savegame& saveGame, IScript* script, stringstream& streamCmd) {
+std::string ska::AbstractCommand::process(ska::ScriptAutoSystem& system, ScriptComponent& script, stringstream& streamCmd) {
 
 	string line;
 	getline(streamCmd, line);
@@ -20,21 +20,21 @@ std::string ska::AbstractCommand::process(ska::Savegame& saveGame, IScript* scri
 	line = ska::StringUtils::trim(line);
 
 	/* Avant tout traitement, effectue toutes les exécutions des sous-commandes possibles */
-	interpretSubCommands(saveGame, line, script);
+	interpretSubCommands(system, line, script);
 
 	vector<string>& args = ska::StringUtils::split(line, getSeparator());
 	
 	for (string& arg : args) {
 		arg = ska::StringUtils::trim(arg);
 		/* Pour chaque argument, explicite les valeurs des variables */
-		arg = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, script->getExtendedName(), arg, script->getVarMap());
+		arg = ScriptUtils::getValueFromVarOrSwitchNumber(system.getSavegame(), script.extendedName, arg, script.varMap);
 	}
 	
 
 	return process(script, streamCmd, args);
 }
 
-std::string ska::AbstractCommand::interpretSubCommands(Savegame& saveGame, string& line, IScript* script) {
+std::string ska::AbstractCommand::interpretSubCommands(ScriptAutoSystem& system, string& line, ScriptComponent& script) {
 	size_t outputCommandSize = 0;
 	size_t offset;
 	string parsedArg;
@@ -47,7 +47,7 @@ std::string ska::AbstractCommand::interpretSubCommands(Savegame& saveGame, strin
 	do {
 		string expression = line.substr(outputCommandSize);
 
-		parsedArg += ScriptUtils::getFirstExpressionFromLine(saveGame, expression, script, &offset);
+		parsedArg += ScriptUtils::getFirstExpressionFromLine(system, expression, script, &offset);
 		parsedArg += " ";
 		outputCommandSize += offset;
 	} while (offset != 0 && outputCommandSize < line.size());

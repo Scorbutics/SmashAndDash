@@ -13,7 +13,7 @@ int CommandMove::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandMove::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	int idtype, id, speed;
 	string dir;

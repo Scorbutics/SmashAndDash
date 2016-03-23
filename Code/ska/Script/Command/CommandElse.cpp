@@ -4,8 +4,8 @@
 #include "CommandElseEnd.h"
 #include "../../Utils/StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-#include "../IScript.h"
-
+#include "../ScriptComponent.h"
+#include "../System/ScriptAutoSystem.h"
 
 using namespace std;
 
@@ -23,21 +23,21 @@ const std::string& ska::CommandElse::getCmdName() {
 	return ControlStatement::getCommandElse();
 }
 
-std::string ska::CommandElse::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args)
+std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args)
 {
 	int ifEnd = 1;
 	string lineBuf;
 
-	while (ifEnd > 0 && !script->eof())
+	while (ifEnd > 0 && !script.parent->eof(script))
 	{
-		lineBuf = script->nextLine();
+		lineBuf = script.parent->nextLine(script);
 		ska::StringUtils::ltrim(lineBuf);
 		if (lineBuf.find(ControlStatement::getCommandIf()) == 0)
 			ifEnd++;
 		else if (lineBuf == ControlStatement::getCommandEndIf())
 			ifEnd--;
 	}
-	if (script->eof()) {
+	if (script.parent->eof(script)) {
 		throw ska::ScriptSyntaxError("Un endif est manquant");
 	}
 

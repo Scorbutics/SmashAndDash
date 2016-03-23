@@ -3,7 +3,8 @@
 #include <algorithm>
 #include "../../Utils\StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-#include "../IScript.h"
+#include "../System/ScriptAutoSystem.h"
+
 using namespace std;
 
 ska::CommandIf::CommandIf()
@@ -19,7 +20,7 @@ const string& ska::CommandIf::getCmdName() {
 	return ControlStatement::getCommandIf();
 }
 
-std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args)
+std::string ska::CommandIf::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args)
 {
 	int ifEnd = 1, num1, num2;
 	string varNumber, op, valeur, line;
@@ -35,9 +36,9 @@ std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& stre
 	if (!((op == "==" && num1 == num2) || (op == "<" && num1 < num2) || (op == ">" && num1 > num2) || (op == "<=" && num1 <= num2) || (op == ">=" && num1 >= num2)))
 	{
 
-		while (ifEnd > 0 && !script->eof())
+		while (ifEnd > 0 && !script.parent->eof(script))
 		{
-			line = script->nextLine();
+			line = script.parent->nextLine(script);
 			stringstream ss;
 			ss << line;
 			ss >> line;
@@ -49,7 +50,7 @@ std::string ska::CommandIf::analyzeLine(IScript* script, std::stringstream& stre
 				ifEnd--;
 		}
 
-		if (script->eof()) {
+		if (script.parent->eof(script)) {
 			throw ska::ScriptSyntaxError("Un " + ControlStatement::getCommandEndIf() + " est manquant");
 		}
 

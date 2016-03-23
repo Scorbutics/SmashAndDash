@@ -10,7 +10,7 @@ namespace ska {
 		}
 
 	protected:
-		virtual std::string analyzeLine(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) override
+		virtual std::string analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) override
 		{
 			return "";
 		}

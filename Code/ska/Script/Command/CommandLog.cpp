@@ -7,7 +7,7 @@ ska::CommandLog::CommandLog()
 {
 }
 
-std::string ska::CommandLog::execute(ska::IScript* script, std::vector<std::string>& args) {
+std::string ska::CommandLog::execute(ScriptComponent& script, std::vector<std::string>& args) {
 
 	string& message = args[0];
 

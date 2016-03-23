@@ -16,7 +16,7 @@ int CommandDirection::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandDirection::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idTypeStr, idStr, dirStr;

@@ -7,6 +7,7 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/Script/IScript.h"
 #include "../../ska/Script/ScriptDispatcher.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandChoice::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string fname, texte, buf, var;
@@ -93,7 +94,7 @@ std::string CommandChoice::execute(ska::IScript* script, std::vector<std::string
 
 	} while (!(doAction = in[ska::InputAction::DoAction] || in[ska::InputAction::Quit]));
 
-	ska::ScriptUtils::setValueFromVarOrSwitchNumber(script->getParent().getSavegame(), script->getExtendedName(), var, doAction ? "1" : "0", script->getVarMap());
+	ska::ScriptUtils::setValueFromVarOrSwitchNumber(script.parent->getSavegame(), script.extendedName, var, doAction ? "1" : "0", script.varMap);
 	
 	return "";
 }

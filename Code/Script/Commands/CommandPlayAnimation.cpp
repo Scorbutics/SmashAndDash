@@ -19,7 +19,7 @@ int CommandPlayAnimation::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandPlayAnimation::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string idType, id;

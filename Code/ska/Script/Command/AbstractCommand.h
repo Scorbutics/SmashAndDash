@@ -8,15 +8,15 @@ namespace ska {
 	class AbstractCommand : public Command
 	{
 	private:
-		std::string interpretSubCommands(Savegame& saveGame, std::string& line, IScript* script);
+		std::string interpretSubCommands(ScriptAutoSystem& saveGame, std::string& line, ScriptComponent& script);
 
 	public:
 		AbstractCommand();
-		std::string process(ska::Savegame& saveGame, IScript* script, std::stringstream& streamCmd) override;
+		std::string process(ScriptAutoSystem& saveGame, ScriptComponent& script, std::stringstream& streamCmd) override;
 		virtual ~AbstractCommand();
 
 	protected:
-		virtual std::string process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) = 0;
+		virtual std::string process(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) = 0;
 		virtual char getSeparator() = 0;
 	};
 }

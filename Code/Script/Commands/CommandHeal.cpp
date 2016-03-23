@@ -15,7 +15,7 @@ int CommandHeal::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandHeal::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandHeal::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int value;

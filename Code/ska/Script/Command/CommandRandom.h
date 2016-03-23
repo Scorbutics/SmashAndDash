@@ -8,7 +8,7 @@ namespace ska {
 		CommandRandom();
 		virtual ~CommandRandom();
 
-		virtual std::string execute(ska::IScript* script, std::vector<std::string>& args) override;
+		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;
 		virtual int argumentsNumber();
 	};
 }

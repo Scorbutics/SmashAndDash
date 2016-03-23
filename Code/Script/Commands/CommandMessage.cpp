@@ -17,7 +17,7 @@ int CommandMessage::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandMessage::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string fname, texte, buf;

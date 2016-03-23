@@ -14,6 +14,10 @@ unsigned int ska::NumberUtils::absolute(int i) {
 	return abs(i);
 }
 
+float ska::NumberUtils::exponential(float i) {
+	return exp(i);
+}
+
 double ska::NumberUtils::absolute(double i) {
 	return abs(i);
 }

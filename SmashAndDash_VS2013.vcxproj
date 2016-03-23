@@ -234,8 +234,6 @@
     <ClInclude Include="Code\ska\Exceptions\GenericException.h" />
     <ClInclude Include="Code\Script\GlobalScriptVariables.h" />
     <ClInclude Include="Code\ska\Script\IScript.h" />
-    <ClInclude Include="Code\ska\Script\Script.h" />
-    <ClInclude Include="Code\ska\Script\ScriptDispatcher.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptException.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptUnknownCommandException.h" />
     <ClInclude Include="Code\ska\Utils\MessageType.h" />
@@ -406,8 +404,6 @@
     <ClCompile Include="Code\Gameplay\Fight\Fight.cpp" />
     <ClCompile Include="Code\ska\Utils\FormalCalculation\FormalCalculator.cpp" />
     <ClCompile Include="Code\Script\GlobalScriptVariables.cpp" />
-    <ClCompile Include="Code\ska\Script\Script.cpp" />
-    <ClCompile Include="Code\ska\Script\ScriptDispatcher.cpp" />
     <ClCompile Include="Code\ska\Exceptions\GenericException.cpp" />
     <ClCompile Include="Code\ska\Utils\NumberUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\ScriptUtils.cpp" />

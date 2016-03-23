@@ -4,10 +4,10 @@
 #include "../Script/ScriptSymbolsConstants.h"
 #include "StringUtils.h"
 #include "SkaConstants.h"
-//#include "../Script\GlobalScriptVariables.h"
+#include "../Script/System/ScriptAutoSystem.h"
 #include "../Script/ScriptDispatcher.h"
 #include "../Exceptions/NumberFormatException.h"
-#include "../Data/Savegame.h"
+
 
 using namespace std;
 
@@ -111,7 +111,7 @@ Retourne la première expression sur "line" après calculs et formattage
 Ex : si line = " [|bidule|] %random 100% [|chance|] %truc 200% " , la fonction va calculer "random 100" et renvoyer le résultat de ce calcul.
 Ex : si line = " [|bidule|] %random %truc 200%% [|chance|]" , la fonction va calculer "random %truc 200%", lui-même va rappeler cette fonction et renvoyer le résultat de ce calcul total.
 */
-std::string ska::ScriptUtils::getFirstExpressionFromLine(Savegame& saveGame, const std::string& line, IScript* script, size_t* outputCommandSize)
+std::string ska::ScriptUtils::getFirstExpressionFromLine(ScriptAutoSystem& system, const std::string& line, ScriptComponent& script, size_t* outputCommandSize)
 {
 	size_t indexFirstChar;
 	for (indexFirstChar = 0; line[indexFirstChar] != ScriptSymbolsConstants::METHOD && line[indexFirstChar] != '\n' && indexFirstChar < line.size(); indexFirstChar++);
@@ -131,21 +131,19 @@ std::string ska::ScriptUtils::getFirstExpressionFromLine(Savegame& saveGame, con
 	if (outputCommandSize != NULL) {
 		if (!commandCall.empty()) {
 			*outputCommandSize = commandCall.size() + indexFirstChar + 2; //2 = les deux symboles '%' de la commande
-		}
-		else {
+		} else {
 			*outputCommandSize = 0;
 		}
 	}
 
 	if (!commandCall.empty()) {
-		std::string result = script->interpret(saveGame, commandCall);
+		std::string result = system.interpret(script, system.getSavegame(), commandCall);
 		if (!result.empty()) {
 			valeur = result;
 		} else {
 			valeur = formattedLine.substr(0, formattedLine.find_first_of(' '));
 		}
-	}
-	else {
+	} else {
 		valeur = formattedLine.substr(0, formattedLine.find_first_of(' '));
 	}
 

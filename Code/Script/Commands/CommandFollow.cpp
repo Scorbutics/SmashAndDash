@@ -15,7 +15,7 @@ int CommandFollow::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandFollow::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandFollow::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, id_target, number_target, flag;

@@ -13,6 +13,6 @@ int ska::CommandEndScript::argumentsNumber() {
 	return 1;
 }
 
-std::string ska::CommandEndScript::execute(IScript* script, std::vector<std::string>& args) {
+std::string ska::CommandEndScript::execute(ScriptComponent& script, std::vector<std::string>& args) {
 	throw ska::ScriptDiedException(args[0]);
 }

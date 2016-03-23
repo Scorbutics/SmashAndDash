@@ -15,7 +15,7 @@ int CommandPlayerPresence::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandPlayerPresence::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	string posFromX, posFromY, posToX, posToY;

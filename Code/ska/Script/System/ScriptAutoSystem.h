@@ -5,13 +5,15 @@
 #include "../Script.h"
 #include "../Command/Command.h"
 #include "../../Data/Savegame.h"
+#include "../ScriptComponent.h"
 #include "../../ECS/System.h"
 
 namespace ska {
 	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent>
 	{
+
 	public:
-		ScriptAutoSystem(ska::Savegame& saveGame);
+		ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame);
 		
 		Savegame& getSavegame();
 		IScript* addRunningScript(IScript* parent, const std::string& name, const std::string& context, const std::vector<std::string>& args, const int triggeringType, const unsigned int* period = NULL);
@@ -19,14 +21,26 @@ namespace ska {
 		void kill(const std::string& keyScript);
 		virtual void refresh() override;
 		std::string commandInterpreter(IScript* script, const std::string& cmd);
-		void clear();
+
+		/* ScriptComponent methods */
+		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);
+		bool canBePlayed(ScriptComponent& script);
+		bool transferActiveToDelay(ScriptComponent& script);
+		bool play(ScriptComponent& script, Savegame& savegame);
+		void killAndSave(ScriptComponent& script, const Savegame& savegame);
+		ScriptState manageCurrentState(ScriptComponent& script);
+		std::string nextLine(ScriptComponent& script);
+		std::string interpret(ScriptComponent& script, Savegame& savegame, const std::string& cmd);
+		void stop(ScriptComponent& script);
+		bool eof(ScriptComponent& script);
 
 		virtual ~ScriptAutoSystem();
 
 	private:
 		ska::Savegame& m_saveGame;
-		IScript* getHighestPriorityScript();
-		std::unordered_map<std::string, IScriptPtr> m_scripts;
+		ScriptComponent* getHighestPriorityScript();
+		std::unordered_map<std::string, ScriptComponent*> m_scripts;
+		std::unordered_map<std::string, CommandPtr> m_commands;
 		
 	};
 

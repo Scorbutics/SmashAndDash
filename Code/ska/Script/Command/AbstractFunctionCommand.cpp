@@ -2,7 +2,7 @@
 #include "..\..\Utils\StringUtils.h"
 #include "..\..\Exceptions\ScriptSyntaxError.h"
 #include "../ScriptSymbolsConstants.h"
-#include "../IScript.h"
+#include "../ScriptComponent.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ ska::AbstractFunctionCommand::AbstractFunctionCommand()
 {
 }
 
-std::string ska::AbstractFunctionCommand::process(IScript* script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+std::string ska::AbstractFunctionCommand::process(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
 	int argNumber = argumentsNumber();
 	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */

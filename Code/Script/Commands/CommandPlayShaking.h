@@ -7,7 +7,7 @@ public:
 	CommandPlayShaking();
 	virtual ~CommandPlayShaking();
 
-	virtual std::string execute(ska::IScript* script, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

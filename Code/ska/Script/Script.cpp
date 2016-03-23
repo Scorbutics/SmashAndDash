@@ -100,7 +100,7 @@ std::string ska::Script::interpret(Savegame& savegame, const std::string& cmd) {
 	if (m_commands.find(cmdName) != m_commands.end()) {
 		std::unordered_map<std::string, std::string>& varMap = m_varMap;
 		try {
-			return m_commands[cmdName]->process(savegame, this, streamCmd);
+			return m_commands[cmdName]->process(*this, this, streamCmd);
 		} catch (ska::NumberFormatException nfe) {
 			throw ska::ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
 		}

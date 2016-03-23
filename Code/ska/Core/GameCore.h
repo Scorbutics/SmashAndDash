@@ -1,5 +1,5 @@
 #pragma once
-#include "../Script/ScriptDispatcher.h"
+//#include "../Script/ScriptDispatcher.h"
 
 namespace ska {
 	class Savegame;
@@ -9,7 +9,7 @@ namespace ska {
 		GameCore(Savegame* saveGame);
 		virtual ~GameCore();
 	private:
-		ScriptDispatcher m_scripts;
+		//ScriptDispatcher m_scripts;
 		Savegame* m_saveGame;
 	};
 }

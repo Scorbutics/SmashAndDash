@@ -16,7 +16,7 @@ int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandThrowPokebal::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string CommandThrowPokebal::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::Point<int> srcId, dst;

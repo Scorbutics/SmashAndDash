@@ -2,6 +2,7 @@
 #include "../../Utils\ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
 #include "../ScriptDispatcher.h"
+#include "../System/ScriptAutoSystem.h"
 
 using namespace std;
 
@@ -18,13 +19,13 @@ int ska::CommandAssign::argumentsNumber() {
 	return 2;
 }
 
-std::string ska::CommandAssign::execute(IScript* script, std::vector<std::string>& args)
+std::string ska::CommandAssign::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
 	string valeur, varNumber, line, commandCall;
 
 	valeur = args[0];
 	varNumber = args[1];
 
-	ScriptUtils::setValueFromVarOrSwitchNumber(script->getParent().getSavegame(), script->getExtendedName(), ScriptSymbolsConstants::VARIABLE_LEFT + varNumber + ScriptSymbolsConstants::VARIABLE_RIGHT, valeur, script->getVarMap());
+	ScriptUtils::setValueFromVarOrSwitchNumber(script.parent->getSavegame(), script.extendedName, ScriptSymbolsConstants::VARIABLE_LEFT + varNumber + ScriptSymbolsConstants::VARIABLE_RIGHT, valeur, script.varMap);
 	return "";
 }

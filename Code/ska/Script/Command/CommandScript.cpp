@@ -19,7 +19,7 @@ int ska::CommandScript::argumentsNumber() {
 	return -1;
 }
 
-std::string ska::CommandScript::execute(ska::IScript* script, std::vector<std::string>& args)
+std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
 	string scriptName;
 	vector<string> extraArgs;
@@ -37,8 +37,9 @@ std::string ska::CommandScript::execute(ska::IScript* script, std::vector<std::s
 		extraArgs.push_back(args[i]);
 	}
 
-	ska::IScript* started = script->getParent().addRunningScript(script, scriptName, script->getContext(), extraArgs, 0, &period);
+	//ska::IScript* started = script->getParent().addRunningScript(script, scriptName, script->getContext(), extraArgs, 0, &period);
 
-	return started == NULL ? "" : started->getKey();
+	//return started == NULL ? "" : started->getKey();
+	return "";
 
 }

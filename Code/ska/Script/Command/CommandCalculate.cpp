@@ -3,6 +3,7 @@
 #include "../../Utils\ScriptUtils.h"
 #include "../../Utils\FormalCalculation\FormalCalculator.h"
 #include "../ScriptDispatcher.h"
+#include "../System/ScriptAutoSystem.h"
 
 using namespace std;
 
@@ -19,8 +20,8 @@ int ska::CommandCalculate::argumentsNumber() {
 	return 1;
 }
 
-std::string ska::CommandCalculate::execute(IScript* script, std::vector<std::string>& args)
+std::string ska::CommandCalculate::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
-	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script->getParent().getSavegame(), script->getExtendedName(), args[0], script->getVarMap()));
+	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script.parent->getSavegame(), script.extendedName, args[0], script.varMap));
 	return ska::StringUtils::intToStr((int)f);
 }
