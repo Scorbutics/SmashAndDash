@@ -10,7 +10,7 @@ void ska::CollisionSystem::refresh() {
 	for (ska::EntityId entityId : m_processed) {
 		PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 		HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
-		MovementComponent& movementComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		const ska::Rectangle entityHitboxX = createHitBox(entityId, true);
 		const ska::Rectangle entityHitboxY = createHitBox(entityId, false);
@@ -36,7 +36,28 @@ void ska::CollisionSystem::refresh() {
 			}
 
 			if (collided) {
-				m_entityManager.addComponent<CollisionComponent>(col.origin, col);
+				//m_entityManager.addComponent<CollisionComponent>(col.origin, col);
+				collided = false;
+
+				ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
+				MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
+				ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
+				if (col.xaxis) {
+					ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
+				}
+
+				if (col.yaxis) {
+					ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
+				}
+
+				if (col.xaxis) {
+					forigin.x = -ftarget.x / 2;
+				}
+
+				if (col.yaxis) {
+					forigin.y = -ftarget.y / 2;
+				}
+
 				break;
 			}
 

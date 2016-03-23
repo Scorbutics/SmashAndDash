@@ -7,7 +7,8 @@ void ska::InputSystem::refresh() {
 	for (EntityId entityId : m_processed) {
 		InputComponent& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
 		ForceComponent& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
-		
+		PositionComponent& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
+
 		Point<float> movePower;
 		bool moveX = false;
 		bool moveY = false;
@@ -35,7 +36,7 @@ void ska::InputSystem::refresh() {
 			moveX = true;
 		}
 
-		if (iac[InputAction::Jump]) {
+		if (iac[InputAction::Jump] && posComponent.z < 0.001) {
 			forceComponent.z += inputComponent.movePower << 3;
 		}
 

@@ -123,41 +123,16 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
 	cbg.x = hitbox.x;
 	cbg.y = hitbox.y + hitbox.h;
 
-	for (int j = chg.y / m_blockSize; j <= cbg.y / m_blockSize; j++) {
-		for (int i = chg.x / m_blockSize; i <= chd.x / m_blockSize; i++) {
-			if (getCollision(i, j) && !isBlockDodgeable(i, j)) {
+	const int yLimit = cbg.y / m_blockSize;
+	const int xLimit = chd.x / m_blockSize;
+
+	for (int y = chg.y / m_blockSize; y <= yLimit; y++) {
+		for (int x = chg.x / m_blockSize; x <= xLimit; x++) {
+			if (getCollision(x, y) /*&& !isBlockDodgeable(i, j)*/) {
 				return false;
 			}
 		}
 	}
-	//WGameCore& wScreen = WGameCore::getInstance();
-
-    /*if(entityToMove != NULL)
-    {
-        id = entityToMove->getID();
-        entityNumber = entityToMove->getEntityNumber();
-	}
-	else
-	{
-		id = 0;
-		entityNumber = -1;
-	}*/
-
-    //ids = wScreen.detectEntity(pos);
-    //const size_t size = ids.size();
-    //for(size_t i = 0; i < size; i++)
-      //  if(!wScreen.getEntityFactory().getNPC(ids[i].x, ids[i].y)->getGhost() && (ids[i].x != id || ids[i].y != entityNumber)) //afin de ne pas tester la collision d'une entité avec elle-même...
-       // {
-         //   ok = false;                                 // il suffit qu'il y ait au moins une entité sur le passage
-        //}
-    
-
-    /*if(ok == false)
-        return ok;                                          //pour renvoyer false
-	else if (this->getCollision(pos.x / m_blockSize, pos.y / m_blockSize))
-        return false;
-    else
-        return true;*/
 	return true;
 }
 

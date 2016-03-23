@@ -11,36 +11,6 @@ void ska::MovementSystem::refresh() {
 		ska::PositionComponent& posComponent = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
-		if (m_entityManager.hasComponent<CollisionComponent>(entityId)) {
-			CollisionComponent& col = m_entityManager.getComponent<CollisionComponent>(entityId);
-
-			if (col.target != entityId) {
-				/* Entity Collision => Apply entity force */
-				ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
-				MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
-				ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
-				if (col.xaxis) {
-					ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
-				}
-
-				if (col.yaxis) {
-					ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
-				}
-
-				if (col.xaxis) {
-					//moveComponent.vx = 0;
-					forigin.x = -ftarget.x/2;
-				}
-
-				if (col.yaxis) {
-					//moveComponent.vy = 0;
-					forigin.y = -ftarget.y/2;
-				}
-			}
-
-			m_entityManager.removeComponent<CollisionComponent>(entityId);
-		}
-
 		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			WorldCollisionComponent& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 			
@@ -62,7 +32,7 @@ void ska::MovementSystem::refresh() {
 		if (posComponent.z <= 0 || (posComponent.z + moveComponent.vz) <= 0) {
 			posComponent.z = 0;
 			moveComponent.vz = 0;
-			moveComponent.az = 0;
+			//moveComponent.az = 0;
 		}
 
 		//(v(t) - v(t-1))/(t - (t-1)) = dv/dt (t) = a(t)
