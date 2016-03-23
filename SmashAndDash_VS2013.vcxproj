@@ -182,6 +182,8 @@
     <ClInclude Include="Code\Gameplay\AI\AI.h" />
     <ClInclude Include="Code\ska\Graphic\Animation.h" />
     <ClInclude Include="Code\Graphic\GUI\Bar.h" />
+    <ClInclude Include="Code\ska\Script\ScriptAwareComponent.h" />
+    <ClInclude Include="Code\ska\Script\ScriptComponent.h" />
     <ClInclude Include="Code\ska\World\Block.h" />
     <ClInclude Include="Code\Graphic\GUI\Button.h" />
     <ClInclude Include="Code\Graphic\GUI\Button_Bar.h" />
@@ -338,6 +340,7 @@
     <ClInclude Include="Code\ska\Physic\System\CollisionSystem.h" />
     <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h" />
     <ClInclude Include="Code\ska\Inputs\InputContextManager.h" />
+    <ClInclude Include="Code\ska\Script\System\ScriptAutoSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
@@ -490,6 +493,7 @@
     <ClCompile Include="Code\ska\Physic\System\CollisionSystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp" />
     <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp" />
+    <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

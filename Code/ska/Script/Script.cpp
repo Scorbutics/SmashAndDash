@@ -111,9 +111,6 @@ std::string ska::Script::interpret(Savegame& savegame, const std::string& cmd) {
 }
 
 bool ska::Script::play(Savegame& savegame) {
-	string cmd;
-	string result;
-	
 
 	if (!canBePlayed()) {
 		return false;
@@ -128,7 +125,7 @@ bool ska::Script::play(Savegame& savegame) {
 
 	/* Read commands */
 	while (!eof()) {
-		cmd = nextLine();
+		const string cmd = nextLine();
 		if (cmd != "") {
 			m_lastResult = interpret(savegame, cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
