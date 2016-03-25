@@ -19,16 +19,5 @@ namespace ska {
 			period = 0;
 		}
 
-		ScriptSleepComponent(const ScriptSleepComponent& ssc) {
-			operator=(ssc);
-		}
-
-		void operator=(const ScriptSleepComponent& ssc) {
-			name = ssc.name;
-			context = ssc.context;
-			triggeringType = ssc.triggeringType;
-			period = ssc.period;
-			args = ssc.args;
-		}
 	};
 }

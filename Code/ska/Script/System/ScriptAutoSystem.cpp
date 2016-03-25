@@ -22,10 +22,13 @@ using namespace std;
 #define TRIGGER_AUTO_PERIODIC 0
 #define TRIGGER_PRESS_KEY 1
 
-ska::ScriptAutoSystem::ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
+/*ska::ScriptAutoSystem::ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
 
+}*/
+
+ska::ScriptAutoSystem::ScriptAutoSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
+	sch.setupCommands(m_commands);
 }
-
 
 void ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, ScriptComponent& script) {
 	script.parent = this;
@@ -35,6 +38,7 @@ void ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, ScriptCompon
 		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, script.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, script.varMap);
 		i++;
 	}
+
 	ifstream scriptFile(script.fullPath);
 	if (scriptFile.fail()) {
 		throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + script.fullPath);
@@ -205,6 +209,10 @@ std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame& 
 	else {
 		throw ska::ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}
+}
+
+void ska::ScriptAutoSystem::registerCommand(const std::string& cmdName, CommandPtr& cmd) {
+	m_commands[cmdName] = std::move(cmd);
 }
 
 std::string ska::ScriptAutoSystem::nextLine(ScriptComponent& script) {

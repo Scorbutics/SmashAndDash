@@ -185,6 +185,7 @@
     <ClInclude Include="Code\ska\Script\ScriptAwareComponent.h" />
     <ClInclude Include="Code\ska\Script\ScriptComponent.h" />
     <ClInclude Include="Code\ska\Script\ScriptSleepComponent.h" />
+    <ClInclude Include="Code\ska\Script\System\ScriptBasicCommandsSystem.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptRefreshSystem.h" />
     <ClInclude Include="Code\ska\World\Block.h" />
     <ClInclude Include="Code\Graphic\GUI\Button.h" />

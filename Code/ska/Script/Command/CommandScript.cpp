@@ -40,6 +40,6 @@ std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std
 	//ska::IScript* started = script->getParent().addRunningScript(script, scriptName, script->getContext(), extraArgs, 0, &period);
 
 	//return started == NULL ? "" : started->getKey();
-	return "";
+	return "0";
 
 }

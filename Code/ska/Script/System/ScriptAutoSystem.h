@@ -13,10 +13,11 @@ namespace ska {
 	{
 
 	public:
-		ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame);
+		//ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame);
 		
 		Savegame& getSavegame();
 		void registerScript(ScriptComponent* parent, ScriptComponent& script);
+		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);
 		virtual void refresh() override;
@@ -40,7 +41,13 @@ namespace ska {
 		ScriptComponent* getHighestPriorityScript();
 		std::unordered_map<std::string, ScriptComponent*> m_scripts;
 		std::unordered_map<std::string, CommandPtr> m_commands;
+
+	protected:
+		struct ScriptCommandHelper {
+			virtual void setupCommands(std::unordered_map<std::string, CommandPtr>& commands) const = 0;
+		};
 		
+		ScriptAutoSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
 	};
 
 }

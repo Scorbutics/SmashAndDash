@@ -95,6 +95,7 @@ void ska::ScriptRefreshSystem::startScript(EntityManager& entityManager, const E
 }
 
 const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const {
+	const unsigned int blockSizeSquared = m_blockSize * m_blockSize;
 	for (EntityId entityId : ScriptPositionSystemAccess::m_processed) {
 		ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(entityId);
 
@@ -107,7 +108,7 @@ const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(Enti
 		int varY = (scriptPos.y - entityPos.y);
 		int varZ = (scriptPos.z - entityPos.z);
 		unsigned int distanceSquared = varX * varX + varY * varY + varZ * varZ;
-		if (distanceSquared < m_blockSize) {
+		if (distanceSquared < blockSizeSquared) {
 			return entityId;
 		}
 	}

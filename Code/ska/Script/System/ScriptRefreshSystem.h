@@ -5,7 +5,7 @@
 #include "../ScriptSleepComponent.h"
 #include "../../Inputs/InputContextManager.h"
 #include "../../ECS/System.h"
-#include "ScriptAutoSystem.h"
+#include "ScriptBasicCommandsSystem.h"
 
 namespace ska {
 	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, PositionComponent, ScriptSleepComponent>;
@@ -23,7 +23,7 @@ namespace ska {
 		virtual ~ScriptRefreshSystem();
 	private:
 		const InputContextManager& m_icm;
-		ScriptAutoSystem m_scriptAutoSystem;
+		ScriptBasicCommandsSystem m_scriptAutoSystem;
 		const unsigned int m_blockSize;
 	};
 	
