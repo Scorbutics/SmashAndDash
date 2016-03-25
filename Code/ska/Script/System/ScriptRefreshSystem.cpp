@@ -9,10 +9,10 @@
 using namespace std;
 
 
-ska::ScriptRefreshSystem::ScriptRefreshSystem(const InputContextManager& icm, const unsigned int wBlockSize, ScriptAutoSystem& scriptAutoSystem, EntityManager& entityManager) :
+ska::ScriptRefreshSystem::ScriptRefreshSystem(const InputContextManager& icm, const unsigned int wBlockSize, Savegame& saveGame, EntityManager& entityManager) :
 System<std::unordered_set<EntityId>, PositionComponent, ScriptAwareComponent>(entityManager), 
 ScriptPositionSystemAccess(entityManager),
-m_icm(icm), m_blockSize(wBlockSize), m_scriptAutoSystem(scriptAutoSystem) {
+m_icm(icm), m_blockSize(wBlockSize), m_scriptAutoSystem(entityManager, saveGame) {
 
 }
 
@@ -27,7 +27,7 @@ void ska::ScriptRefreshSystem::refresh() {
 		if (iac[InputAction::DoAction]) {
 			EntityId scriptEntity = findNearScriptComponentEntity(entityManager, pc);
 			if (scriptEntity != UINT_MAX) {
-				startScript(entityManager, entityId);
+				startScript(entityManager, scriptEntity);
 			}
 		} else {
 			for (EntityId entityId : ScriptPositionSystemAccess::m_processed) {
@@ -42,6 +42,8 @@ void ska::ScriptRefreshSystem::refresh() {
 		
 	}
 
+	m_scriptAutoSystem.refresh();
+
 }
 
 void ska::ScriptRefreshSystem::startScript(EntityManager& entityManager, const EntityId entity) {
@@ -52,11 +54,11 @@ void ska::ScriptRefreshSystem::startScript(EntityManager& entityManager, const E
 	ifstream fscript(scriptData.name.c_str());
 	string keyArgs;
 
-	for (const string& arg : scriptData.args) {
+	for (string& arg : scriptData.args) {
 		keyArgs += arg + " ";
 	}
 
-	ska::StringUtils::rtrim(keyArgs);
+ 	ska::StringUtils::rtrim(keyArgs);
 
 	const string& keyScript = scriptData.name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + scriptData.context;
@@ -85,16 +87,20 @@ void ska::ScriptRefreshSystem::startScript(EntityManager& entityManager, const E
 
 		/*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
 		m_scriptAutoSystem.registerScript(NULL, sc);
-
+		entityManager.addComponent<ScriptComponent>(entity, sc);
 	} else {
 		throw ska::InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
 	}
-	
-	entityManager.addComponent<ScriptComponent>(entity, sc);
+
 }
 
 const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const {
 	for (EntityId entityId : ScriptPositionSystemAccess::m_processed) {
+		ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(entityId);
+
+		if (scriptData.triggeringType != SCRIPT_TRIGGER_ACTION) {
+			continue;
+		}
 		PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(entityId);
 
 		int varX = (scriptPos.x - entityPos.x);

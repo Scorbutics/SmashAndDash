@@ -8,6 +8,7 @@
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Exceptions/CorruptedFileException.h"
 #include "../../ska/Utils/StringUtils.h"
+#include "../../ska/Script/ScriptSleepComponent.h"
 
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
 m_collisionSystem(*this, m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
@@ -58,15 +59,30 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 		posEntityId.y = m_lEvent->getBlocY(i);
 		posEntityId.x = m_lEvent->getBlocX(i);
 		int id = m_lEvent->getID(i);
-		if (id == 0 || id == INT_MIN) {
+		if (id == 0) {
 			continue;
 		}
 
+		if (id == INT_MIN) {
+			ska::EntityId script = m_entityManager.createEntity();
+			ska::PositionComponent pc;
+			pc.x = posEntityId.x * blockSize;
+			pc.y = posEntityId.y * blockSize;
+			pc.z = 0;
+			m_entityManager.addComponent<ska::PositionComponent>(script, pc);
 
-		if (abs(id) <= ENTITEMAX) {	
-			m_entityManager.createCharacter(posEntityId, id, blockSize);
+			ska::ScriptSleepComponent ssc;
+			ssc.name = m_lEvent->getParam(i);
+			ssc.context = getName();
+			ssc.triggeringType = 2;
+			ssc.period = 1000;
+			m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
 		} else {
-			throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
+			if (abs(id) <= ENTITEMAX) {
+				m_entityManager.createCharacter(posEntityId, id, blockSize);
+			} else {
+				throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
+			}
 		}
 
 	}

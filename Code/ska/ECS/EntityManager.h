@@ -88,11 +88,6 @@ namespace ska {
 		T& getComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			T& result = components.getComponent(entityId);
-			
-			/* If we hadn't any declared component of that type, we start by resetting it first */
-			if (!hasComponent<T>(entityId)) {
-				memset(&result, 0, sizeof(T));
-			}
 			return result;
 		}
 

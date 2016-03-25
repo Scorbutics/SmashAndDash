@@ -17,13 +17,14 @@ using namespace std;
 
 WGameCore::WGameCore():
 Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_laFenetre, m_loFenetre),
-m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world.getEntityManager(), m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_world.getEntityManager()) {
+m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world.getEntityManager(), m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_world.getEntityManager()), 
+m_scriptSystem(m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_saveManager, m_world.getEntityManager()) {
 	//m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
 	m_OfChip.x = 0;
-	m_OfChip.w = TAILLEBLOC;
-	m_OfChip.h = TAILLEBLOC;
+	m_OfChip.w = m_world.getBlockSize();
+	m_OfChip.h = m_world.getBlockSize();
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
 	/* Let's start on the map */
@@ -229,11 +230,11 @@ bool WGameCore::refresh()
     m_continue = false;
     m_ecritureLog = false;
     m_quitFlip = false;
-    this->initNewWorld();
+    initNewWorld();
 
     
 	//Ici, transition entrante
-    this->transition(1);
+    transition(1);
 
 
 
@@ -244,8 +245,8 @@ bool WGameCore::refresh()
         if (t - t0 > 30) // Si 30 ms se sont écoulées
         {
             //Rafraîchissement à chaque frame : graphique puis évènementiel
-			this->graphicUpdate();
-			this->eventUpdate(false);
+			graphicUpdate();
+			eventUpdate(false);
 
             
 			flip();
@@ -257,7 +258,7 @@ bool WGameCore::refresh()
     }
 
 
-    this->quitter(m_continue);
+    quitter(m_continue);
 
     return m_continue;
 
@@ -306,6 +307,8 @@ void WGameCore::eventUpdate(bool movingDisallowed) {
 	m_sceneCursor->eventUpdate(movingDisallowed);
 	/* Game Logic Input System */
 	m_inputSystem.refresh();
+
+	m_scriptSystem.refresh();
 }
 
 

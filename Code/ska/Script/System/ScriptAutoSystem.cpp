@@ -35,6 +35,14 @@ void ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, ScriptCompon
 		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, script.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, script.varMap);
 		i++;
 	}
+	ifstream scriptFile(script.fullPath);
+	if (scriptFile.fail()) {
+		throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + script.fullPath);
+	}
+
+	for (std::string line; std::getline(scriptFile, line); /**/) {
+		script.file.push_back(line);
+	}
 }
 
 bool ska::ScriptAutoSystem::eof(ScriptComponent& script) {

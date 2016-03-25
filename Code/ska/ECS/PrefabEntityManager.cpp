@@ -3,6 +3,7 @@
 #include "../Physic/PositionComponent.h"
 #include "../Graphic/CameraFocusedComponent.h"
 #include "../Physic/GravityAffectedComponent.h"
+#include "../Script/ScriptAwareComponent.h"
 #include "../Graphic/GraphicComponent.h"
 #include "../Graphic/DirectionalAnimationComponent.h"
 #include "../Inputs/InputComponent.h"
@@ -52,6 +53,8 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const ska::Point<int> star
 	ska::InputComponent ic;
 	ic.movePower = 130;
 	addComponent<ska::InputComponent>(hero, ic);
+	ska::ScriptAwareComponent sac;
+	addComponent<ska::ScriptAwareComponent>(hero, sac);
 	return hero;
 }
 

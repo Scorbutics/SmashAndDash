@@ -31,6 +31,7 @@
 #include "./Scene/SceneFight.h"
 #include "EnumScene.h"
 
+#include "../ska/Script/System/ScriptRefreshSystem.h"
 #include "../ska/Inputs/RawInputListener.h"
 #include "../ska/Inputs/System/InputSystem.h"
 
@@ -144,6 +145,7 @@ public:
 		RainParticleManager m_rainParticleManager;
 
 		ska::InputSystem m_inputSystem;
+		ska::ScriptRefreshSystem m_scriptSystem;
 };
 
 #endif

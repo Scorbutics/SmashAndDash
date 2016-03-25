@@ -16,14 +16,14 @@ namespace ska {
 		public ScriptPositionSystemAccess {
 
 	public:
-		ScriptRefreshSystem(const InputContextManager& icm, const unsigned int wBlockSize, ScriptAutoSystem& scriptAutoSystem, EntityManager& entityManager);
+		ScriptRefreshSystem(const InputContextManager& icm, const unsigned int wBlockSize, Savegame& saveGame, EntityManager& entityManager);
 		virtual void refresh() override;
 		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const;
 		void startScript(EntityManager& entityManager, const EntityId entity);
 		virtual ~ScriptRefreshSystem();
 	private:
 		const InputContextManager& m_icm;
-		ScriptAutoSystem& m_scriptAutoSystem;
+		ScriptAutoSystem m_scriptAutoSystem;
 		const unsigned int m_blockSize;
 	};
 	
