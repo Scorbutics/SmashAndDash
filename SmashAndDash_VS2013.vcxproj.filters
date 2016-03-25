@@ -489,9 +489,6 @@
     <ClInclude Include="Code\ska\Graphic\TextureData.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Script\IScript.h">
-      <Filter>Fichiers d%27en-tête\Script</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Script\ScriptState.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -748,6 +745,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Script\System\ScriptAutoSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\System\ScriptRefreshSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\ScriptSleepComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1197,6 +1200,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\System\ScriptRefreshSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

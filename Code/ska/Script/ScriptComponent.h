@@ -12,7 +12,13 @@ namespace ska {
 
 	public:
 		ScriptComponent::ScriptComponent() {
-
+			state = EnumScriptState::STOPPED;
+			lastTimeStarted = 0;
+			commandsPlayed = 0;
+			currentLine = 0;
+			lastTimeDelayed = 0;
+			delay = 0;
+			active = 0;
 		}
 
 		ScriptComponent::ScriptComponent(const ska::ScriptComponent & sc) {
@@ -24,12 +30,12 @@ namespace ska {
 		std::string extendedName;
 		std::vector<std::string> extraArgs;
 		int triggeringType;
-		unsigned int delay;
 		ScriptAutoSystem* parent;
 		int active;
 		std::unordered_map<std::string, std::string> varMap;
+		std::string fullPath;
+		std::string key;
 
-		/* Do not copy the ifstream. */
 		void operator=(const ScriptComponent& sc) {
 			/* Private state */
 			state = sc.state;
@@ -40,6 +46,7 @@ namespace ska {
 			key = sc.key;
 			lastResult = sc.lastResult;
 			lastTimeDelayed = sc.lastTimeDelayed;
+			file = sc.file;
 
 			/* Public state */
 			scriptPeriod = sc.scriptPeriod;
@@ -59,10 +66,9 @@ namespace ska {
 		unsigned int lastTimeStarted;
 		unsigned int commandsPlayed;
 		unsigned int currentLine;
-		std::string fullPath;
-		std::string key;
 		std::string lastResult;
 		unsigned int lastTimeDelayed;
-		std::ifstream fscript;
+		std::vector<std::string> file;
+		unsigned int delay;
 	};
 }

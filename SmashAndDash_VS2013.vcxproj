@@ -184,6 +184,8 @@
     <ClInclude Include="Code\Graphic\GUI\Bar.h" />
     <ClInclude Include="Code\ska\Script\ScriptAwareComponent.h" />
     <ClInclude Include="Code\ska\Script\ScriptComponent.h" />
+    <ClInclude Include="Code\ska\Script\ScriptSleepComponent.h" />
+    <ClInclude Include="Code\ska\Script\System\ScriptRefreshSystem.h" />
     <ClInclude Include="Code\ska\World\Block.h" />
     <ClInclude Include="Code\Graphic\GUI\Button.h" />
     <ClInclude Include="Code\Graphic\GUI\Button_Bar.h" />
@@ -233,7 +235,6 @@
     <ClInclude Include="Code\ska\Utils\FormalCalculation\FormalCalculator.h" />
     <ClInclude Include="Code\ska\Exceptions\GenericException.h" />
     <ClInclude Include="Code\Script\GlobalScriptVariables.h" />
-    <ClInclude Include="Code\ska\Script\IScript.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptException.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptUnknownCommandException.h" />
     <ClInclude Include="Code\ska\Utils\MessageType.h" />
@@ -362,6 +363,7 @@
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
     <ClCompile Include="Code\ska\Graphic\Animation.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp" />
+    <ClCompile Include="Code\ska\Script\System\ScriptRefreshSystem.cpp" />
     <ClCompile Include="Code\ska\World\Block.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button_Bar.cpp" />

@@ -26,16 +26,19 @@ ska::ScriptAutoSystem::ScriptAutoSystem(EntityManager& entityManager, ska::Saveg
 
 }
 
-/* To save */
-/*unsigned int i = 0;
-for (const string& curArg : args) {
-	ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, script->getExtendedName(), "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, script->getVarMap());
-	i++;
+
+void ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, ScriptComponent& script) {
+	script.parent = this;
+
+	unsigned int i = 0;
+	for (const string& curArg : script.extraArgs) {
+		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, script.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, script.varMap);
+		i++;
+	}
 }
-*/
 
 bool ska::ScriptAutoSystem::eof(ScriptComponent& script) {
-	return script.fscript.eof();
+	return script.file.size() <= script.currentLine;
 }
 
 ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
@@ -81,13 +84,7 @@ void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&
 	script.state = EnumScriptState::DEAD;
 }
 
-std::string ska::ScriptAutoSystem::commandInterpreter(IScript* script, const std::string& cmd) {
-
-	return "";
-}
-
-ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript()
-{
+ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 	float maxPriorityScriptValue = -1;
 	ScriptComponent* maxPriorityScript = NULL;
 	unsigned int currentTimeTicks = ska::TimeUtils::getTicks();
@@ -110,7 +107,7 @@ bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	return !(EnumScriptState::RUNNING == script.state || script.active > 0 || (ska::TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
 		|| !(script.state == EnumScriptState::DEAD)
 		&& (script.triggeringType == TRIGGER_AUTO_PERIODIC && script.state == EnumScriptState::STOPPED || script.state != EnumScriptState::STOPPED)
-		&& !script.fscript.eof());
+		&& !eof(script));
 }
 
 
@@ -142,7 +139,7 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 	script.parent = this;
 
 	/* Read commands */
-	while (!script.fscript.eof()) {
+	while (!eof(script)) {
 		const string cmd = nextLine(script);
 		if (cmd != "") {
 			script.lastResult = interpret(script, savegame, cmd);
@@ -162,8 +159,8 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 		script.state = EnumScriptState::STOPPED;
 		/* If the script is terminated and triggering is not automatic, then we don't reload the script */
 		if (script.triggeringType == TRIGGER_AUTO_PERIODIC) {
-			script.fscript.clear();
-			script.fscript.seekg(0, std::ios::beg);
+			/*script.fscript.clear();
+			script.fscript.seekg(0, std::ios::beg);*/
 		}
 		script.commandsPlayed = 0;
 		script.currentLine = 0;
@@ -203,8 +200,7 @@ std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame& 
 }
 
 std::string ska::ScriptAutoSystem::nextLine(ScriptComponent& script) {
-	std::string line;
-	getline(script.fscript, line);
+	std::string line = script.file[script.currentLine];
 	script.currentLine++;
 	return line;
 }
