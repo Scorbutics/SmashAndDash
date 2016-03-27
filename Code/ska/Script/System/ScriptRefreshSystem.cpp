@@ -20,27 +20,44 @@ m_icm(icm), m_blockSize(wBlockSize), m_scriptAutoSystem(scriptAutoSystem) {
 void ska::ScriptRefreshSystem::refresh() {
 	const InputActionContainer& iac = m_icm.getActions();
 	EntityManager& entityManager = ScriptPositionSystemAccess::m_entityManager;
+	std::vector<EntityId> toDelete;
 
 	for (EntityId entityId : System<std::unordered_set<EntityId>, PositionComponent, ScriptAwareComponent>::m_processed) {
 		ScriptAwareComponent& sac = entityManager.getComponent<ScriptAwareComponent>(entityId);
 		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
 
-		if (iac[InputAction::DoAction]) {
-			EntityId scriptEntity = findNearScriptComponentEntity(entityManager, pc);
-			if (scriptEntity != UINT_MAX) {
-				startScript(scriptEntity, entityId);
-			}
-		} else {
-			for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
-				ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
-				if (scriptData.triggeringType == EnumScriptTriggerType::AUTO) {
-					PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(targets);
-					startScript(targets, entityId);
+		for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
+			ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
+			
+			EntityId scriptEntity;
+			
+			switch (scriptData.triggeringType) {
+			case EnumScriptTriggerType::AUTO:
+				startScript(targets, entityId);
+				toDelete.push_back(targets);
+				break;
+
+			case EnumScriptTriggerType::ACTION:
+				if (!iac[InputAction::DoAction]) {
+					break;
 				}
+
+			case EnumScriptTriggerType::MOVE:
+				scriptEntity = findNearScriptComponentEntity(entityManager, pc, targets);
+				if (scriptEntity != UINT_MAX) {
+					startScript(scriptEntity, entityId);
+				}
+				break;
+			default:
+				break;
 			}
 
+
 		}
-		
+	}
+
+	for (EntityId targets : toDelete) {
+		entityManager.removeComponent<ScriptSleepComponent>(targets);
 	}
 
 	m_scriptAutoSystem.refresh();
@@ -55,24 +72,20 @@ void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const En
 	m_scriptAutoSystem.registerScript(NULL, scriptEntity, origin);
 }
 
-const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const {
+const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
 	const unsigned int blockSizeSquared = m_blockSize * m_blockSize;
-	for (EntityId entityId : ScriptPositionSystemAccess::m_processed) {
-		ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(entityId);
+	
+	ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);
+	PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(script);
 
-		if (scriptData.triggeringType != EnumScriptTriggerType::ACTION) {
-			continue;
-		}
-		PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(entityId);
-
-		int varX = (scriptPos.x - entityPos.x);
-		int varY = (scriptPos.y - entityPos.y);
-		int varZ = (scriptPos.z - entityPos.z);
-		unsigned int distanceSquared = varX * varX + varY * varY + varZ * varZ;
-		if (distanceSquared < blockSizeSquared) {
-			return entityId;
-		}
+	int varX = (scriptPos.x - entityPos.x);
+	int varY = (scriptPos.y - entityPos.y);
+	int varZ = (scriptPos.z - entityPos.z);
+	unsigned int distanceSquared = varX * varX + varY * varY + varZ * varZ;
+	if (distanceSquared < blockSizeSquared) {
+		return script;
 	}
+	
 	return UINT_MAX;
 }
 

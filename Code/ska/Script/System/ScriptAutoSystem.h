@@ -2,7 +2,6 @@
 #include <unordered_set>
 #include <string>
 #include <unordered_map>
-#include "../Script.h"
 #include "../Command/Command.h"
 #include "../../Data/Savegame.h"
 #include "../ScriptComponent.h"

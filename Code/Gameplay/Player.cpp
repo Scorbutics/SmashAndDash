@@ -3,7 +3,6 @@
 #include "../Utils\ChargementImages.h"
 #include "Mobs\GetIDmob.h"
 #include "../ska/World\LayerE.h"
-#include "../ska/Script\ScriptDispatcher.h"
 #include "../ska/Utils\StringUtils.h"
 #include "../Utils/IDs.h"
 #include "../ska/Utils/RectangleUtils.h"

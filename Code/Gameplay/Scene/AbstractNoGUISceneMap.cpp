@@ -3,7 +3,6 @@
 #include "../Weather.h"
 #include "../../ska/World/World.h"
 #include "../../Graphic/Scrolling.h"
-#include "../../ska/Script/ScriptDispatcher.h"
 #include "../../ska/World/LayerE.h"
 
 AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::EntityManager& em, ska::RawInputListener& ril) : Scene(ril)

@@ -2,7 +2,6 @@
 #include "../../Utils\StringUtils.h"
 #include "../../Utils\ScriptUtils.h"
 #include "../../Utils\FormalCalculation\FormalCalculator.h"
-#include "../ScriptDispatcher.h"
 #include "../System/ScriptAutoSystem.h"
 
 using namespace std;

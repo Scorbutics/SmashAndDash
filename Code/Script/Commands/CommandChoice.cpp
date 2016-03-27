@@ -5,8 +5,6 @@
 #include "../../ska/Utils/ScriptUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
-#include "../../ska/Script/IScript.h"
-#include "../../ska/Script/ScriptDispatcher.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 
 using namespace std;

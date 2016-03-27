@@ -6,7 +6,6 @@
 #include "../Graphic/Scrolling.h"
 #include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
-#include "../ska/Script/ScriptDispatcher.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
 #include "../ska/World/LayerE.h"

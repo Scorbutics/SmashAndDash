@@ -2,7 +2,6 @@
 #include "../Weather.h"
 #include "../../ska/World/World.h"
 #include "../../Graphic/Scrolling.h"
-#include "../../ska/Script/ScriptDispatcher.h"
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 

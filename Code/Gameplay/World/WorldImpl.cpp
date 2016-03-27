@@ -98,7 +98,7 @@ std::unordered_map<std::string, ska::EntityId> WorldImpl::load(std::string fileN
 		}
 		ssc.name = ska::StringUtils::trim(totalArgs[0]);
 		ssc.context = getName();
-		ssc.triggeringType = ska::EnumScriptTriggerType::ACTION;
+		ssc.triggeringType = m_lEvent->getTrigger(i);
 		ssc.period = 1000;
 		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
 		result[ska::StringUtils::intToStr(i+2)] = script;

@@ -1,5 +1,4 @@
 #include "CommandEndScript.h"
-#include "../ScriptDispatcher.h"
 #include "../../Exceptions/ScriptDiedException.h"
 
 ska::CommandEndScript::CommandEndScript(EntityManager& e) : CommandEnd(e) {

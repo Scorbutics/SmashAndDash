@@ -5,7 +5,6 @@
 #include "StringUtils.h"
 #include "SkaConstants.h"
 #include "../Script/System/ScriptAutoSystem.h"
-#include "../Script/ScriptDispatcher.h"
 #include "../Exceptions/NumberFormatException.h"
 #include "../Exceptions/ScriptSyntaxError.h"
 

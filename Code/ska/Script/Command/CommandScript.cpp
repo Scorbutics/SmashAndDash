@@ -2,7 +2,6 @@
 #include "CommandScript.h"
 #include "../../Utils/StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-#include "../ScriptDispatcher.h"
 #include "../System/ScriptAutoSystem.h"
 #include "../ScriptSleepComponent.h"
 #include "../../ECS/EntityManager.h"

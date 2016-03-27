@@ -6,7 +6,6 @@
 #include "../Utils/StringUtils.h"
 #include "../Utils/SkaConstants.h"
 #include "LayerE.h"
-#include "../Script/ScriptDispatcher.h"
 #include "World.h"
 #include "../Exceptions/CorruptedFileException.h"
 #include "../Exceptions/NumberFormatException.h"

@@ -1,7 +1,6 @@
 #include "CommandAssign.h"
 #include "../../Utils\ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
-#include "../ScriptDispatcher.h"
 #include "../System/ScriptAutoSystem.h"
 
 using namespace std;
