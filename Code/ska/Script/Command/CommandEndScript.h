@@ -7,7 +7,7 @@ namespace ska {
 		public CommandEnd
 	{
 	public:
-		CommandEndScript();
+		CommandEndScript(EntityManager& e);
 		virtual ~CommandEndScript();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;

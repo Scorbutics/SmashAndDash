@@ -2,7 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils/StringUtils.h"
 
-CommandPlayShaking::CommandPlayShaking()
+CommandPlayShaking::CommandPlayShaking(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

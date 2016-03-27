@@ -189,7 +189,7 @@ void ChargerEvent(string *m_nomFichier,  int *m_nbrLignes, vector<int> &m_coordB
 		while (std::getline(flux, line)) {
 			
 			i++;
-			int nextIndex = 0;
+			size_t nextIndex = 0;
 			ss.clear();
 
 			const std::string x = ska::StringUtils::extractTo(nextIndex, line, ':');

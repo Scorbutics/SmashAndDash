@@ -4,7 +4,7 @@ class CommandShop :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandShop();
+	CommandShop(ska::EntityManager& entityManager);
 	virtual ~CommandShop();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

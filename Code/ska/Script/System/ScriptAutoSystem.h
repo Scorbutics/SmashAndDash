@@ -11,16 +11,16 @@
 namespace ska {
 	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent>
 	{
-
 	public:
-		//ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame);
 		
 		Savegame& getSavegame();
-		void registerScript(ScriptComponent* parent, ScriptComponent& script);
+		const ska::ScriptComponent registerScript(ScriptComponent* parent, EntityId scriptSleepEntity);
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);
 		virtual void refresh() override;
+		virtual const std::string map(const std::string& key, const std::string& id) const;
+		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 
 		/* ScriptComponent methods */
 		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);
@@ -39,14 +39,23 @@ namespace ska {
 	private:
 		ska::Savegame& m_saveGame;
 		ScriptComponent* getHighestPriorityScript();
+
 		std::unordered_map<std::string, ScriptComponent*> m_scripts;
 		std::unordered_map<std::string, CommandPtr> m_commands;
 
+		std::unordered_map<std::string, EntityId> m_namedScriptedEntities;
+
 	protected:
 		struct ScriptCommandHelper {
+			ScriptCommandHelper(EntityManager& parent) : m_entityManager(parent) {}
 			virtual void setupCommands(std::unordered_map<std::string, CommandPtr>& commands) const = 0;
+			EntityManager& m_entityManager;
 		};
+
 		
+		
+
+
 		ScriptAutoSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
 	};
 

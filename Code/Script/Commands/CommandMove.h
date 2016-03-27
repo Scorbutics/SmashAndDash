@@ -4,7 +4,7 @@ class CommandMove :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandMove();
+	CommandMove(ska::EntityManager& entityManager);
 	
 	virtual ~CommandMove();
 

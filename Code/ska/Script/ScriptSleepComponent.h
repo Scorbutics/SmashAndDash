@@ -2,15 +2,14 @@
 #include <vector>
 #include <string>
 #include "../ECS/Component.h"
-#define SCRIPT_TRIGGER_ACTION 2
-#define SCRIPT_TRIGGER_AUTO 1
+#include "ScriptTriggerType.h"
 
 namespace ska {
 	class ScriptSleepComponent : public Component {
 	public:
 		std::string name;
 		std::string context;
-		int triggeringType;
+		ScriptTriggerType triggeringType;
 		int period;
 		std::vector<std::string> args;
 

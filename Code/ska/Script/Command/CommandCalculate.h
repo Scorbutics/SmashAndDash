@@ -6,7 +6,7 @@ namespace ska {
 		public ska::AbstractFunctionCommand
 	{
 	public:
-		CommandCalculate();
+		CommandCalculate(EntityManager& e);
 		virtual ~CommandCalculate();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;

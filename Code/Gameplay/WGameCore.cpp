@@ -18,7 +18,7 @@ using namespace std;
 WGameCore::WGameCore():
 Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_laFenetre, m_loFenetre),
 m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world.getEntityManager(), m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_world.getEntityManager()), 
-m_scriptSystem(m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_saveManager, m_world.getEntityManager()) {
+m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_scriptAutoSystem, m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_world.getEntityManager()) {
 	//m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -42,7 +42,11 @@ m_scriptSystem(m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_sa
 	//m_kdListener.getMouseInput()->resetAll();
 
 	m_saveManager.loadGame("save1");
-	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
+	std::unordered_map<std::string, ska::EntityId> characters = m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
+
+	for (auto& c : characters) {
+		m_scriptSystem.registerNamedScriptedEntity(c.first, c.second);
+	}
 
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
 
@@ -367,7 +371,7 @@ void WGameCore::waitQuit(DialogMenu* window)
 //dans chaque .y : numéro de l'entité
 vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
 {
-	ska::Rectangle posEvent;
+	//ska::Rectangle posEvent;
 	vector<ska::Rectangle> id;
 	//list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
 

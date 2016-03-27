@@ -6,7 +6,7 @@ namespace ska {
 	class CommandEnd : public AbstractFunctionCommand
 	{
 	public:
-		CommandEnd();
+		CommandEnd(EntityManager& e);
 		virtual ~CommandEnd();
 
 		static const std::string& getCmdName();

@@ -4,7 +4,7 @@ class CommandPlayAnimation :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandPlayAnimation();
+	CommandPlayAnimation(ska::EntityManager& entityManager);
 	virtual ~CommandPlayAnimation();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

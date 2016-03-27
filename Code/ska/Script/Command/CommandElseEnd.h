@@ -5,6 +5,7 @@ namespace ska {
 	class CommandElseEnd : public ControlStatement {
 
 	public:
+		CommandElseEnd(EntityManager& e) : ControlStatement(e) { }
 		virtual const std::string& getCmdName() {
 			return ControlStatement::getCommandEndIf();
 		}

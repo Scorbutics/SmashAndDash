@@ -5,7 +5,7 @@ namespace ska {
 		public ControlStatement
 	{
 	public:
-		CommandElse();
+		CommandElse(EntityManager& e);
 		virtual ~CommandElse();
 
 		virtual std::string analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) override;

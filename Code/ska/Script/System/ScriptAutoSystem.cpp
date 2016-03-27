@@ -3,15 +3,19 @@
 #include "ScriptAutoSystem.h"
 #include "../../Exceptions/ScriptDiedException.h"
 #include "../../Exceptions\ScriptUnknownCommandException.h"
+#include "../../Exceptions/IllegalArgumentException.h"
 #include "../../Utils\ScriptUtils.h"
 #include "../../Exceptions\InvalidPathException.h"
 #include "../../Exceptions/NumberFormatException.h"
+#include "../../Exceptions/ScriptSyntaxError.h"
 #include "../../Utils\StringUtils.h"
 #include "../../Utils/FileUtils.h"
 #include "../../Utils/TimeUtils.h"
 #include "../ScriptSymbolsConstants.h"
 #include "../../Utils/NumberUtils.h"
 #include "../../Utils/SkaConstants.h"
+#include "../ScriptTriggerType.h"
+#include "../ScriptSleepComponent.h"
 
 using namespace std;
 
@@ -19,34 +23,95 @@ using namespace std;
 #define SCRIPT_DEFAULT_PERIOD 1
 #define MAX_CONSECUTIVE_COMMANDS_PLAYED 5
 
-#define TRIGGER_AUTO_PERIODIC 0
-#define TRIGGER_PRESS_KEY 1
-
-/*ska::ScriptAutoSystem::ScriptAutoSystem(EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
-
-}*/
 
 ska::ScriptAutoSystem::ScriptAutoSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
 	sch.setupCommands(m_commands);
 }
 
-void ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, ScriptComponent& script) {
-	script.parent = this;
+const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::string& id) const {
+	std::vector<std::string> keys = ska::StringUtils::split(key, '.');
+	if (keys.size() != 2) {
+		throw ska::ScriptSyntaxError("Error during recuperation of the global variable " + key);
+	}
+
+	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
+		EntityId entity = m_namedScriptedEntities.at(id);
+		return m_entityManager.serializeComponent(entity, keys[0], keys[1]);
+	}
+
+	return "";
+}
+
+/*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
+const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, EntityId scriptSleepEntity) {
+	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {
+		throw ska::IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
+	}
+	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
+	
+	string extendedName;
+	ifstream fscript(scriptData.name.c_str());
+	string keyArgs;
+
+	for (string& arg : scriptData.args) {
+		keyArgs += arg + " ";
+	}
+
+	ska::StringUtils::rtrim(keyArgs);
+
+	const string& keyScript = scriptData.name + "/\\" + keyArgs;
+	extendedName = keyScript + "_" + scriptData.context;
+
+	std::string validPath;
+	if (fscript.fail()) {
+		const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
+		validPath = (currentDir + "\\" + scriptData.name);
+		fscript.open(validPath.c_str());
+		if (fscript.fail()) {
+			throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + currentDir + "\\" + scriptData.name);
+		}
+	}
+	else {
+		validPath = scriptData.name;
+	}
+
+	if (validPath.empty()) {
+		throw ska::InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
+	}
+
+	ScriptComponent sc;
+	sc.extendedName = extendedName;
+	sc.active = 0;
+	sc.scriptPeriod = scriptData.period == 0 ? 1 : scriptData.period;
+	sc.triggeringType = EnumScriptTriggerType::AUTO;
+	sc.extraArgs = scriptData.args;
+	sc.context = scriptData.context;
+
+	sc.parent = this;
+	sc.fullPath = validPath;
+	sc.key = keyScript;
 
 	unsigned int i = 0;
-	for (const string& curArg : script.extraArgs) {
-		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, script.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, script.varMap);
+	for (const string& curArg : sc.extraArgs) {
+		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, sc.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, sc.varMap);
 		i++;
 	}
 
-	ifstream scriptFile(script.fullPath);
+	ifstream scriptFile(sc.fullPath);
 	if (scriptFile.fail()) {
-		throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + script.fullPath);
+		throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
 	}
 
-	for (std::string line; std::getline(scriptFile, line); /**/) {
-		script.file.push_back(line);
+	for (std::string line; std::getline(scriptFile, line);) {
+		sc.file.push_back(line);
 	}
+
+	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
+	return sc;
+}
+
+void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {
+	m_namedScriptedEntities[nameEntity] = entity;
 }
 
 bool ska::ScriptAutoSystem::eof(ScriptComponent& script) {
@@ -116,10 +181,15 @@ ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 
 bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	transferActiveToDelay(script);
-	return !(EnumScriptState::RUNNING == script.state || script.active > 0 || (ska::TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
-		|| !(script.state == EnumScriptState::DEAD)
-		&& (script.triggeringType == TRIGGER_AUTO_PERIODIC && script.state == EnumScriptState::STOPPED || script.state != EnumScriptState::STOPPED)
-		&& !eof(script));
+	bool cannotBePlayed = 
+		EnumScriptState::RUNNING == script.state
+		|| script.active > 0
+		|| (ska::TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
+		|| script.state == EnumScriptState::DEAD
+		|| !(script.triggeringType == EnumScriptTriggerType::AUTO && script.state == EnumScriptState::STOPPED || script.state != EnumScriptState::STOPPED)
+		|| eof(script);
+
+	return !cannotBePlayed;
 }
 
 
@@ -170,12 +240,12 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 	if (script.state == EnumScriptState::RUNNING) {
 		script.state = EnumScriptState::STOPPED;
 		/* If the script is terminated and triggering is not automatic, then we don't reload the script */
-		if (script.triggeringType == TRIGGER_AUTO_PERIODIC) {
+		if (script.triggeringType == EnumScriptTriggerType::AUTO) {
+			script.currentLine = 0;
 			/*script.fscript.clear();
 			script.fscript.seekg(0, std::ios::beg);*/
 		}
 		script.commandsPlayed = 0;
-		script.currentLine = 0;
 	}
 
 	return true;
@@ -265,7 +335,7 @@ ska::ScriptState ska::ScriptAutoSystem::manageCurrentState(ScriptComponent& scri
 void ska::ScriptAutoSystem::stop(ScriptComponent& script) {
 	/* kind of delete the script */
 	script.state = EnumScriptState::STOPPED;
-	script.triggeringType = 2;
+	script.triggeringType = EnumScriptTriggerType::NONE;
 }
 
 ska::ScriptAutoSystem::~ScriptAutoSystem()

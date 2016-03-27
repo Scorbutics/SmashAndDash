@@ -6,7 +6,7 @@
 
 using namespace std;
 
-CommandStop::CommandStop()
+CommandStop::CommandStop(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

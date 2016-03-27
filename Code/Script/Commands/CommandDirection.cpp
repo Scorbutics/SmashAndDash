@@ -3,7 +3,7 @@
 #include "../../ska/Utils\StringUtils.h"
 
 
-CommandDirection::CommandDirection()
+CommandDirection::CommandDirection(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 
@@ -13,20 +13,18 @@ CommandDirection::~CommandDirection()
 }
 
 int CommandDirection::argumentsNumber() {
-	return 3;
+	return 2;
 }
 
 std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	string idTypeStr, idStr, dirStr;
-	int dir, id, idType;
+	string idStr, dirStr;
+	int dir, id;
 
-	idTypeStr = args[0];
-	idStr = args[1];
-	dirStr = args[2];
+	idStr = args[0];
+	dirStr = args[1];
 
-	idType = ska::StringUtils::strToInt(idTypeStr);
 	id = ska::StringUtils::strToInt(idStr);
 	dir = ska::StringUtils::strToInt(dirStr);
 

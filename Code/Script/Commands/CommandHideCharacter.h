@@ -4,7 +4,7 @@ class CommandHideCharacter :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandHideCharacter();
+	CommandHideCharacter(ska::EntityManager& entityManager);
 	virtual ~CommandHideCharacter();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

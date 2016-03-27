@@ -4,7 +4,7 @@
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 
-CommandPokemonOut::CommandPokemonOut()
+CommandPokemonOut::CommandPokemonOut(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

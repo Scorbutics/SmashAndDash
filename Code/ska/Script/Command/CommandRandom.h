@@ -5,7 +5,7 @@ namespace ska {
 		public ska::AbstractFunctionCommand
 	{
 	public:
-		CommandRandom();
+		CommandRandom(EntityManager& e);
 		virtual ~CommandRandom();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;

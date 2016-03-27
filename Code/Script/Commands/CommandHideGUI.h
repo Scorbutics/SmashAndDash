@@ -4,7 +4,7 @@ class CommandHideGUI :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandHideGUI();
+	CommandHideGUI(ska::EntityManager& entityManager);
 	virtual ~CommandHideGUI();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

@@ -4,7 +4,7 @@ namespace ska {
 	class CommandIf : public ControlStatement
 	{
 	public:
-		CommandIf();
+		CommandIf(EntityManager& e);
 		virtual ~CommandIf();
 
 		virtual std::string analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) override;

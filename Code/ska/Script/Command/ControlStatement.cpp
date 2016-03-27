@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ska::ControlStatement::ControlStatement()
+ska::ControlStatement::ControlStatement(EntityManager& e) : AbstractCommand(e)
 {
 }
 

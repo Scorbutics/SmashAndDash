@@ -1,10 +1,21 @@
 #pragma once
 #include <memory>
+#include <string>
+#include <unordered_map>
 namespace ska {
+	
+	class Component;
+	typedef const std::string(*field_serializer_method)(const Component& component);
 	class Component {
 	public:
-		Component(){}
-		virtual ~Component(){}
+		Component() = default;
+		
+		const std::string serialize(const Component& component, const std::string& field, const std::string& className);
+		void addFieldSerializer(field_serializer_method serializer, const std::string& fieldName, const std::string& className);
+
+		virtual ~Component() = default;
+	private:
+		static std::unordered_map<std::string, field_serializer_method> m_fieldSerializer;
 	};
-	typedef std::unique_ptr<Component> ComponentPtr;
+	
 }

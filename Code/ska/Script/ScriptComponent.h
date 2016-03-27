@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "../ECS/Component.h"
 #include "ScriptState.h"
+#include "ScriptTriggerType.h"
 
 namespace ska {
 	class ScriptComponent : public Component {
@@ -19,46 +20,19 @@ namespace ska {
 			lastTimeDelayed = 0;
 			delay = 0;
 			active = 0;
-		}
-
-		ScriptComponent::ScriptComponent(const ska::ScriptComponent & sc) {
-			operator=(sc);
+			parent = NULL;
 		}
 
 		long scriptPeriod;
 		std::string context;
 		std::string extendedName;
 		std::vector<std::string> extraArgs;
-		int triggeringType;
+		ScriptTriggerType triggeringType;
 		ScriptAutoSystem* parent;
 		int active;
 		std::unordered_map<std::string, std::string> varMap;
 		std::string fullPath;
 		std::string key;
-
-		void operator=(const ScriptComponent& sc) {
-			/* Private state */
-			state = sc.state;
-			lastTimeStarted = sc.lastTimeStarted;
-			commandsPlayed = sc.commandsPlayed;
-			currentLine = sc.currentLine;
-			fullPath = sc.fullPath;
-			key = sc.key;
-			lastResult = sc.lastResult;
-			lastTimeDelayed = sc.lastTimeDelayed;
-			file = sc.file;
-
-			/* Public state */
-			scriptPeriod = sc.scriptPeriod;
-			context = sc.context;
-			extendedName = sc.extendedName;
-			extraArgs = sc.extraArgs;
-			triggeringType = sc.triggeringType;
-			delay = sc.delay;
-			parent = sc.parent;
-			active = sc.active;
-			varMap = sc.varMap;
-		}
 
 	private:
 		/* Manage states in order to dispatch all different scripts */

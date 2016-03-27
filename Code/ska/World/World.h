@@ -21,7 +21,7 @@ namespace ska {
 	class World : public HasGraphic {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
-		virtual void load(std::string fileName, std::string chipsetName, std::string saveName);
+		void load(std::string fileName, std::string chipsetName, std::string saveName);
 
 		/*Weather* getFog();
 		Weather* getWeather();*/

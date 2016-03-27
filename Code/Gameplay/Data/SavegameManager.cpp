@@ -160,7 +160,7 @@ void SavegameManager::saveTrainer()
 		CreateDirectory(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team").c_str(),0);
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}
-	of.close();
+
 	/*ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 
 	hero = wScreen.getEntityFactory().getTrainer();

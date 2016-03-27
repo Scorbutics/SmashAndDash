@@ -4,7 +4,7 @@ class CommandThrowPokebal :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandThrowPokebal();
+	CommandThrowPokebal(ska::EntityManager& entityManager);
 	virtual ~CommandThrowPokebal();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

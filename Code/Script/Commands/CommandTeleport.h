@@ -4,7 +4,7 @@ class CommandTeleport :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandTeleport();
+	CommandTeleport(ska::EntityManager& entityManager);
 	virtual ~CommandTeleport();
 
 	static void teleportHeroToMap(std::string param);

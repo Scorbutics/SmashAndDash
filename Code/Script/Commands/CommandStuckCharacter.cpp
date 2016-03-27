@@ -2,7 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
-CommandStuckCharacter::CommandStuckCharacter()
+CommandStuckCharacter::CommandStuckCharacter(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

@@ -4,7 +4,7 @@ class CommandTranslationCamera :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandTranslationCamera();
+	CommandTranslationCamera(ska::EntityManager& entityManager);
 	virtual ~CommandTranslationCamera();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

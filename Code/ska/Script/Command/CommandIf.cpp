@@ -7,7 +7,7 @@
 
 using namespace std;
 
-ska::CommandIf::CommandIf()
+ska::CommandIf::CommandIf(EntityManager& e) : ControlStatement(e)
 {
 }
 

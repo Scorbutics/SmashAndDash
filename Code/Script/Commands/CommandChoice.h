@@ -4,7 +4,7 @@ class CommandChoice :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandChoice();
+	CommandChoice(ska::EntityManager& entityManager);
 	
 	virtual ~CommandChoice();
 

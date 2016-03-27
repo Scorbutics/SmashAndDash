@@ -44,10 +44,12 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead2D(*m_lTop);
 }
 
-void WorldImpl::load(std::string fileName, std::string chipsetName, std::string saveName) {
+std::unordered_map<std::string, ska::EntityId> WorldImpl::load(std::string fileName, std::string chipsetName, std::string saveName) {
 	World::load(fileName, chipsetName, saveName);
 	ska::Point<int> posEntityId;
 	ska::Point<int> startPos;
+	
+	std::unordered_map<std::string, ska::EntityId> result;
 
 	//Suppression des anciennes entités
 	m_entityManager.removeEntities();
@@ -63,30 +65,32 @@ void WorldImpl::load(std::string fileName, std::string chipsetName, std::string 
 			continue;
 		}
 
+		ska::EntityId script;
 		if (id == INT_MIN) {
-			ska::EntityId script = m_entityManager.createEntity();
+			script = m_entityManager.createEntity();
 			ska::PositionComponent pc;
 			pc.x = posEntityId.x * blockSize;
 			pc.y = posEntityId.y * blockSize;
 			pc.z = 0;
 			m_entityManager.addComponent<ska::PositionComponent>(script, pc);
 
-			ska::ScriptSleepComponent ssc;
-			ssc.name = m_lEvent->getParam(i);
-			ssc.context = getName();
-			ssc.triggeringType = 2;
-			ssc.period = 1000;
-			m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
 		} else {
 			if (abs(id) <= ENTITEMAX) {
-				m_entityManager.createCharacter(posEntityId, id, blockSize);
+				script = m_entityManager.createCharacter(posEntityId, id, blockSize);
 			} else {
 				throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
 			}
 		}
 
+		ska::ScriptSleepComponent ssc;
+		ssc.name = m_lEvent->getParam(i);
+		ssc.context = getName();
+		ssc.triggeringType = ska::EnumScriptTriggerType::ACTION;
+		ssc.period = 1000;
+		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
+		result[ska::StringUtils::intToStr(i)] = script;
 	}
-
+	return result;
 	//Chargement des sprites de l'équipe pokémon
 	/*const size_t teamSize = getPokemonManager().getPokemonTeamSize();
 	for (unsigned int i = 0; i < teamSize; i++)

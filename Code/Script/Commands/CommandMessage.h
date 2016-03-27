@@ -4,7 +4,7 @@ class CommandMessage :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandMessage();
+	CommandMessage(ska::EntityManager& entityManager);
 	
 	virtual ~CommandMessage();
 

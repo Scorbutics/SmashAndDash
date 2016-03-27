@@ -2,11 +2,13 @@
 #include <bitset>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include "ECSDefines.h"
 #include "ComponentHandler.h"
 #include "../Exceptions/IllegalStateException.h"
 #include "../Exceptions/IllegalArgumentException.h"
 #include "../Utils/Observable.h"
+#include "ComponentSerializer.h"
 
 namespace ska {
 
@@ -91,6 +93,13 @@ namespace ska {
 			return result;
 		}
 
+		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field) {
+			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
+				return m_nameMappedComponent[component]->getComponentField(entityId, field);
+			}
+			return "";
+		}
+
 		template <class T>
 		bool hasComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
@@ -110,21 +119,26 @@ namespace ska {
 		template <class T>
 		unsigned int getMask() {
 			ComponentHandler<T>& components = this->template getComponents<T>();
+			m_nameMappedComponent.emplace(components.getClassName(), &components);
 			return components.getMask();
 		}
 
-		virtual ~EntityManager() {}
+		virtual ~EntityManager() { }
 	
 	private:
 		std::vector<EntityComponentsMask> m_componentMask;
 		std::unordered_set<EntityId> m_entities;
 		EntityIdContainer m_deletedEntities;
 
+		std::unordered_map<std::string, ComponentSerializer*> m_nameMappedComponent;
+
 		template <class T>
 		ComponentHandler<T>& getComponents() {
 			static ComponentHandler<T> m_components;
+			m_nameMappedComponent.emplace(m_components.getClassName(), &m_components);
 			return m_components;
 		}
 		
 	};
+
 }

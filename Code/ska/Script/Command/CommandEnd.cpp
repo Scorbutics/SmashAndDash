@@ -7,7 +7,7 @@
 
 using namespace std;
 
-ska::CommandEnd::CommandEnd()
+ska::CommandEnd::CommandEnd(EntityManager& e) : AbstractFunctionCommand(e)
 {
 }
 

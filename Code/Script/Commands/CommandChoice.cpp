@@ -11,7 +11,7 @@
 
 using namespace std;
 
-CommandChoice::CommandChoice()
+CommandChoice::CommandChoice(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

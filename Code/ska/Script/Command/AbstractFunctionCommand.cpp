@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ska::AbstractFunctionCommand::AbstractFunctionCommand()
+ska::AbstractFunctionCommand::AbstractFunctionCommand(EntityManager& entityManager) : AbstractCommand(entityManager)
 {
 }
 

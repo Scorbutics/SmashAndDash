@@ -7,7 +7,7 @@
 #include "../Script/System/ScriptAutoSystem.h"
 #include "../Script/ScriptDispatcher.h"
 #include "../Exceptions/NumberFormatException.h"
-
+#include "../Exceptions/ScriptSyntaxError.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ ska::ScriptUtils::ScriptUtils()
 }
 
 /* Récupère la valeur une variable LOCALE (dans varMap) */
-string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& saveGame, const string& scriptExtendedName, string varNumber, std::unordered_map<std::string, std::string>& varMap)
+string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& saveGame, const ScriptComponent& script, string varNumber)
 {
 	int num = -1;
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -35,8 +35,8 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 		string key = getVariableKey(v);
 		if (!key.empty())
 		{
-			if (varMap.find(key) != varMap.end()) {
-				return varMap[key];
+			if (script.varMap.find(key) != script.varMap.end()) {
+				return script.varMap.at(key);
 			} else {
 				return "";
 			}
@@ -48,16 +48,16 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 				varNum = ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2));
 			}
 			catch (ska::NumberFormatException nfe) {
-				return interpretVarName(saveGame, scriptExtendedName, varNumber.substr(1, varNumber.size() - 2), varMap);
+				return interpretVarName(saveGame, script, varNumber.substr(1, varNumber.size() - 2));
 			}
 
 			return ska::StringUtils::intToStr(saveGame.getGameVariable(varNum - 1));
 		}
 			
 	} else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {
-		const std::string& key = varNumber + scriptExtendedName;
-		if (varMap.find(key) != varMap.end()) {
-			return varMap[key];
+		const std::string& key = varNumber + script.extendedName;
+		if (script.varMap.find(key) != script.varMap.end()) {
+			return script.varMap.at(key);
 		}
 		else {
 			return "";
@@ -72,7 +72,7 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 	return varNumber;
 }
 
-string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const std::string& scriptExtendedName, const string& line, unordered_map<string, string>& varMap, char varStartSymbol, char varEndSymbol)
+string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const string& line, char varStartSymbol, char varEndSymbol)
 {
 	string it = line;
 	size_t posLeft, posRight;
@@ -84,7 +84,7 @@ string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGam
 			posRight += posLeft + 1;
 
 			string var = it.substr(posLeft, posRight - posLeft + 1);
-			string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, scriptExtendedName, var, varMap);
+			string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, script, var);
 
 			it = it.substr(0, posLeft) + varValue + it.substr(posRight + 1, it.size());
 		}
@@ -99,10 +99,10 @@ string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGam
 
 }
 
-string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const std::string& scriptExtendedName, const string& line, unordered_map<string, string>& varMap)
+string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const string& line)
 {
-	string& it = replaceVariablesByNumerics(saveGame, scriptExtendedName, line, varMap, ScriptSymbolsConstants::VARIABLE_LEFT, ScriptSymbolsConstants::VARIABLE_RIGHT);
-	it = replaceVariablesByNumerics(saveGame, scriptExtendedName, it, varMap, ScriptSymbolsConstants::ARG, ScriptSymbolsConstants::ARG);
+	string& it = replaceVariablesByNumerics(saveGame, script, line, ScriptSymbolsConstants::VARIABLE_LEFT, ScriptSymbolsConstants::VARIABLE_RIGHT);
+	it = replaceVariablesByNumerics(saveGame, script, it, ScriptSymbolsConstants::ARG, ScriptSymbolsConstants::ARG);
 	return it;
 }
 
@@ -209,7 +209,7 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, co
 }
 
 /* Récupère la valeur d'une variable GLOBALE en utilisant potentiellement des sous-variables locales en paramètres */
-std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, const std::string& scriptExtendedName, std::string& v, std::unordered_map<std::string, std::string>& varMap)
+std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, const ScriptComponent& script, std::string& v)
 {
 	/*
 	_variable_ : variable "constante" (intégrée au jeu)
@@ -218,28 +218,24 @@ std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, co
 	|variable| : variable utilisateur (créée en script et utilisée en script, morte à la fin du script)
 	*/
 
-	//WGameCore& wScreen = WGameCore::getInstance();
 	stringstream ss;
-	string cmds[3];
+	string cmds[2];
 
 	if (v[0] == '_' && v[v.size()-1] == '_')
 	{
 		ss << v.substr(1, v.size()-2);
 
 		unsigned int i;
-		for(i = 0; ss; i++) {
-			ss >> cmds[i];
+		for (i = 0; ss >> cmds[i] && i < 2; i++);
+
+		if (!ss.eof()) {
+			throw ska::ScriptSyntaxError("Error while interpreting global var (not enough arguments) : " + v);
 		}
 
-		int cmdInt[2];
-		cmdInt[0] = ska::StringUtils::strToInt(getValueFromVarOrSwitchNumber(saveGame, scriptExtendedName, cmds[1], varMap));
-		cmdInt[1] = ska::StringUtils::strToInt(getValueFromVarOrSwitchNumber(saveGame, scriptExtendedName, cmds[2], varMap));
-
-		return "";
-		//return GlobalScriptVariables::getInstance().returnValue(cmds[0], cmdInt[0], cmdInt[1]);
+		return script.parent->map(cmds[0], getValueFromVarOrSwitchNumber(saveGame, script, cmds[1]));
 	} 
 
-	return getValueFromVarOrSwitchNumber(saveGame, scriptExtendedName, v, varMap);
+	return getValueFromVarOrSwitchNumber(saveGame, script, v);
 }
 
 bool ska::ScriptUtils::isScriptActivated(const ska::Savegame& saveGame, const string& scriptName)

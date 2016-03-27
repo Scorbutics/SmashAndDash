@@ -5,7 +5,7 @@ namespace ska {
 		public ska::AbstractFunctionCommand
 	{
 	public:
-		CommandWait();
+		CommandWait(EntityManager& e);
 		virtual ~CommandWait();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-ska::CommandRandom::CommandRandom()
+ska::CommandRandom::CommandRandom(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

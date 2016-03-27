@@ -10,7 +10,7 @@
 using namespace std;
 
 
-ska::CommandElse::CommandElse()
+ska::CommandElse::CommandElse(EntityManager& entityManager) : ControlStatement(entityManager)
 {
 }
 

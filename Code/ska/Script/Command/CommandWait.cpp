@@ -3,7 +3,7 @@
 #include "../../Script/ScriptComponent.h"
 #include "../../Script/System/ScriptAutoSystem.h"
 
-ska::CommandWait::CommandWait()
+ska::CommandWait::CommandWait(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

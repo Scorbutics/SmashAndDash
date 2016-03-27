@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ska::CommandLog::CommandLog()
+ska::CommandLog::CommandLog(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

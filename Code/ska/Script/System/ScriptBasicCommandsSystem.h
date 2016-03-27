@@ -1,33 +1,19 @@
 #pragma once
 #include "ScriptAutoSystem.h"
 
-#include "../Command\CommandEnd.h"
-#include "../Command\CommandCalculate.h"
-#include "../Command\CommandEndScript.h"
-#include "../Command\CommandAssign.h"
-#include "../Command\CommandRandom.h"
-#include "../Command\CommandWait.h"
-#include "../Command/CommandLog.h"
-#include "../Command/CommandScript.h"
-
 namespace ska {
 
 	class ScriptBasicCommandsSystem : public ScriptAutoSystem {
+		friend class BasicScriptCommandHelper;
 	public :
-		ScriptBasicCommandsSystem(EntityManager& entityManager, ska::Savegame& saveGame) : ScriptAutoSystem(BasicScriptCommandHelper(), entityManager, saveGame) {
+		ScriptBasicCommandsSystem(EntityManager& entityManager, ska::Savegame& saveGame);
+		virtual ~ScriptBasicCommandsSystem();
 
-		}
-
-		struct BasicScriptCommandHelper : public ScriptCommandHelper {
-			virtual void setupCommands(std::unordered_map<std::string, CommandPtr>& c) const override {
-				c[CommandEnd::getCmdName()] = std::move(ska::CommandPtr(new CommandEnd()));
-				c["end_script"] = std::move(ska::CommandPtr(new CommandEndScript()));
-				c["calculate"] = std::move(ska::CommandPtr(new CommandCalculate()));
-				c["assign"] = std::move(ska::CommandPtr(new CommandAssign()));
-				c["random"] = std::move(ska::CommandPtr(new CommandRandom()));
-				c["log"] = std::move(ska::CommandPtr(new CommandLog()));
-				c["script"] = std::move(ska::CommandPtr(new CommandScript()));
-			}
+	protected:
+		ScriptBasicCommandsSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
+		struct BasicScriptCommandHelper : public ska::ScriptAutoSystem::ScriptCommandHelper {
+			BasicScriptCommandHelper(EntityManager& entityManager) : ScriptAutoSystem::ScriptCommandHelper(entityManager) {}
+			virtual void setupCommands(std::unordered_map<std::string, CommandPtr>& c) const override;
 		};
 	};
 

@@ -5,7 +5,7 @@
 #include "../ScriptSleepComponent.h"
 #include "../../Inputs/InputContextManager.h"
 #include "../../ECS/System.h"
-#include "ScriptBasicCommandsSystem.h"
+#include "ScriptAutoSystem.h"
 
 namespace ska {
 	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, PositionComponent, ScriptSleepComponent>;
@@ -16,14 +16,16 @@ namespace ska {
 		public ScriptPositionSystemAccess {
 
 	public:
-		ScriptRefreshSystem(const InputContextManager& icm, const unsigned int wBlockSize, Savegame& saveGame, EntityManager& entityManager);
+		ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, const unsigned int wBlockSize, EntityManager& entityManager);
 		virtual void refresh() override;
-		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const;
-		void startScript(EntityManager& entityManager, const EntityId entity);
+		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 		virtual ~ScriptRefreshSystem();
 	private:
+		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const;
+		void startScript(const EntityId scriptEntity);
+
 		const InputContextManager& m_icm;
-		ScriptBasicCommandsSystem m_scriptAutoSystem;
+		ScriptAutoSystem& m_scriptAutoSystem;
 		const unsigned int m_blockSize;
 	};
 	

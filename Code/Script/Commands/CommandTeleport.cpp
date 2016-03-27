@@ -7,7 +7,7 @@
 
 using namespace std;
 
-CommandTeleport::CommandTeleport()
+CommandTeleport::CommandTeleport(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

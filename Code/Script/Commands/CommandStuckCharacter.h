@@ -4,7 +4,7 @@ class CommandStuckCharacter :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandStuckCharacter();
+	CommandStuckCharacter(ska::EntityManager& entityManager);
 	virtual ~CommandStuckCharacter();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

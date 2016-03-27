@@ -2,7 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 
 
-CommandShop::CommandShop()
+CommandShop::CommandShop(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

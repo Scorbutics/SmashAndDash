@@ -34,6 +34,7 @@
 #include "../ska/Script/System/ScriptRefreshSystem.h"
 #include "../ska/Inputs/RawInputListener.h"
 #include "../ska/Inputs/System/InputSystem.h"
+#include "../Script/System/ScriptCommandsSystem.h"
 
 class LayerE;
 class Layer;
@@ -146,6 +147,7 @@ public:
 
 		ska::InputSystem m_inputSystem;
 		ska::ScriptRefreshSystem m_scriptSystem;
+		ScriptCommandsSystem m_scriptAutoSystem;
 };
 
 #endif

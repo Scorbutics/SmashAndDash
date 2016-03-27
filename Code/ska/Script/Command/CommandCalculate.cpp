@@ -7,7 +7,7 @@
 
 using namespace std;
 
-ska::CommandCalculate::CommandCalculate()
+ska::CommandCalculate::CommandCalculate(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 
@@ -22,6 +22,6 @@ int ska::CommandCalculate::argumentsNumber() {
 
 std::string ska::CommandCalculate::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
-	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script.parent->getSavegame(), script.extendedName, args[0], script.varMap));
+	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script.parent->getSavegame(), script, args[0]));
 	return ska::StringUtils::intToStr((int)f);
 }

@@ -2,7 +2,7 @@
 #include "../ScriptDispatcher.h"
 #include "../../Exceptions/ScriptDiedException.h"
 
-ska::CommandEndScript::CommandEndScript() {
+ska::CommandEndScript::CommandEndScript(EntityManager& e) : CommandEnd(e) {
 }
 
 

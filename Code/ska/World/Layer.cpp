@@ -127,10 +127,9 @@ int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j)
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		//return m_entityManager.hasComponent<ska::HitboxComponent>(m_block[i][j]);
-		 m_block[i][j]->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
-	} else {
-		return BLOCK_COL_NO;
-	}
+		 return m_block[i][j]->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
+	} 
+	return BLOCK_COL_NO;
 }
 
 ska::Layer::~Layer()

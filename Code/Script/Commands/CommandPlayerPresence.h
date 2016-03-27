@@ -4,7 +4,7 @@
 class CommandPlayerPresence : public ska::AbstractFunctionCommand
 {
 public:
-	CommandPlayerPresence() { }
+	CommandPlayerPresence(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) { }
 
 	virtual ~CommandPlayerPresence() { }
 

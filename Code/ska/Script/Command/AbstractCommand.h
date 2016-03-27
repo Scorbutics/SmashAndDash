@@ -11,7 +11,7 @@ namespace ska {
 		std::string interpretSubCommands(ScriptAutoSystem& saveGame, std::string& line, ScriptComponent& script);
 
 	public:
-		AbstractCommand();
+		AbstractCommand(EntityManager& entityManager);
 		std::string process(ScriptAutoSystem& saveGame, ScriptComponent& script, std::stringstream& streamCmd) override;
 		virtual ~AbstractCommand();
 

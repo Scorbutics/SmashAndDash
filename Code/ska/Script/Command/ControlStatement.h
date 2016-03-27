@@ -4,7 +4,7 @@
 namespace ska {
 	class ControlStatement : public AbstractCommand {
 	public:
-		ControlStatement();
+		ControlStatement(EntityManager& e);
 		virtual ~ControlStatement();
 
 		static const std::string& getCommandEndIf();

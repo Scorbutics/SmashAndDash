@@ -2,7 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
-CommandHideGUI::CommandHideGUI()
+CommandHideGUI::CommandHideGUI(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

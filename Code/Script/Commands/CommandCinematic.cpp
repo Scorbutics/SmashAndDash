@@ -4,7 +4,7 @@
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 
-CommandCinematic::CommandCinematic()
+CommandCinematic::CommandCinematic(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

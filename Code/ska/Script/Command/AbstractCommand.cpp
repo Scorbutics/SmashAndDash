@@ -8,8 +8,7 @@
 
 using namespace std;
 
-ska::AbstractCommand::AbstractCommand()
-{
+ska::AbstractCommand::AbstractCommand(EntityManager& entityManager) : Command(entityManager) {
 }
 
 std::string ska::AbstractCommand::process(ska::ScriptAutoSystem& system, ScriptComponent& script, stringstream& streamCmd) {
@@ -27,7 +26,7 @@ std::string ska::AbstractCommand::process(ska::ScriptAutoSystem& system, ScriptC
 	for (string& arg : args) {
 		arg = ska::StringUtils::trim(arg);
 		/* Pour chaque argument, explicite les valeurs des variables */
-		arg = ScriptUtils::getValueFromVarOrSwitchNumber(system.getSavegame(), script.extendedName, arg, script.varMap);
+		arg = ScriptUtils::getValueFromVarOrSwitchNumber(system.getSavegame(), script, arg);
 	}
 	
 

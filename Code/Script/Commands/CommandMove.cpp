@@ -5,7 +5,7 @@
 #include "../../ska/Utils\StringUtils.h"
 using namespace std;
 
-CommandMove::CommandMove()
+CommandMove::CommandMove(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

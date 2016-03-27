@@ -6,7 +6,7 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 
-CommandPlayAnimation::CommandPlayAnimation()
+CommandPlayAnimation::CommandPlayAnimation(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

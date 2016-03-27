@@ -9,7 +9,7 @@
 
 using namespace std;
 
-CommandMessage::CommandMessage()
+CommandMessage::CommandMessage(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

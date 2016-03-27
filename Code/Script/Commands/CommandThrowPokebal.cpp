@@ -3,7 +3,7 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 
-CommandThrowPokebal::CommandThrowPokebal()
+CommandThrowPokebal::CommandThrowPokebal(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

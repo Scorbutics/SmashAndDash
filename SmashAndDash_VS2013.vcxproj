@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\ECS\ComponentSerializer.h" />
     <ClInclude Include="Code\ska\ECS\PrefabEntityManager.h" />
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Code\ska\Script\ScriptAwareComponent.h" />
     <ClInclude Include="Code\ska\Script\ScriptComponent.h" />
     <ClInclude Include="Code\ska\Script\ScriptSleepComponent.h" />
+    <ClInclude Include="Code\ska\Script\ScriptTriggerType.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptBasicCommandsSystem.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptRefreshSystem.h" />
     <ClInclude Include="Code\ska\World\Block.h" />
@@ -341,8 +343,10 @@
     <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h" />
     <ClInclude Include="Code\ska\Inputs\InputContextManager.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptAutoSystem.h" />
+    <ClInclude Include="Code\Script\System\ScriptCommandsSystem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
@@ -364,6 +368,7 @@
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
     <ClCompile Include="Code\ska\Graphic\Animation.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp" />
+    <ClCompile Include="Code\ska\Script\System\ScriptBasicCommandsSystem.cpp" />
     <ClCompile Include="Code\ska\Script\System\ScriptRefreshSystem.cpp" />
     <ClCompile Include="Code\ska\World\Block.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button.cpp" />
@@ -493,6 +498,7 @@
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp" />
     <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp" />
     <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp" />
+    <ClCompile Include="Code\Script\System\ScriptCommandsSystem.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

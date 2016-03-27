@@ -2,7 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
-CommandFollow::CommandFollow()
+CommandFollow::CommandFollow(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

@@ -4,7 +4,7 @@ class CommandAddPokemon :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandAddPokemon();
+	CommandAddPokemon(ska::EntityManager& entityManager);
 	virtual ~CommandAddPokemon();
 
 	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;

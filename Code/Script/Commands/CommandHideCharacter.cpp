@@ -2,7 +2,7 @@
 #include "../../Gameplay/WGameCore.h"
 #include "../../ska/Utils/StringUtils.h"
 
-CommandHideCharacter::CommandHideCharacter()
+CommandHideCharacter::CommandHideCharacter(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

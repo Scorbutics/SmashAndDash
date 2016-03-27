@@ -5,7 +5,7 @@ namespace ska {
 		public AbstractCommand
 	{
 	public:
-		AbstractFunctionCommand();
+		AbstractFunctionCommand(EntityManager& entityManager);
 		virtual ~AbstractFunctionCommand();
 
 	protected:

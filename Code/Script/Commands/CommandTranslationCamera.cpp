@@ -3,7 +3,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
-CommandTranslationCamera::CommandTranslationCamera()
+CommandTranslationCamera::CommandTranslationCamera(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 

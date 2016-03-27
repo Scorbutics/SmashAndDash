@@ -13,7 +13,7 @@ class WorldImpl : public ska::World {
 public:
 	WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 	~WorldImpl();
-	virtual void load(std::string fileName, std::string chipsetName, std::string saveName) override;
+	std::unordered_map<std::string, ska::EntityId> load(std::string fileName, std::string chipsetName, std::string saveName);
 	virtual void refreshEntities() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 

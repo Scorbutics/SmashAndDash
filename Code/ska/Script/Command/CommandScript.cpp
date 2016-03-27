@@ -3,10 +3,13 @@
 #include "../../Utils/StringUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
 #include "../ScriptDispatcher.h"
+#include "../System/ScriptAutoSystem.h"
+#include "../ScriptSleepComponent.h"
+#include "../../ECS/EntityManager.h"
 
 using namespace std;
 
-ska::CommandScript::CommandScript()
+ska::CommandScript::CommandScript(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 
@@ -38,8 +41,15 @@ std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std
 	}
 
 	//ska::IScript* started = script->getParent().addRunningScript(script, scriptName, script->getContext(), extraArgs, 0, &period);
-
-	//return started == NULL ? "" : started->getKey();
-	return "0";
+	EntityId newScript = m_entityManager.createEntity();
+	ScriptSleepComponent ssc;
+	ssc.context = script.context;
+	ssc.args = extraArgs;
+	ssc.period = period;
+	ssc.triggeringType = 0;
+	ssc.name = scriptName;
+	m_entityManager.addComponent<ScriptSleepComponent>(newScript, ssc);
+	const ScriptComponent& sc = script.parent->registerScript(&script, newScript);
+	return sc.key;
 
 }

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-CommandKillEntity::CommandKillEntity()
+CommandKillEntity::CommandKillEntity(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 
