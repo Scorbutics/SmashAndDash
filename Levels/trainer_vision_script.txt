@@ -1,21 +1,22 @@
 assign [_PositionComponent.y #arg0#_], |pos_perso.y|
 assign [_PositionComponent.x #arg0#_], |pos_perso.x|
 assign [_DirectionalAnimationComponent.direction #arg0#_], |direction_perso|
+assign %calculate #arg1#*48%, |distance_check|
 
 if [|direction_perso|] == 0
-    assign %calculate [|pos_perso.y|] + #arg1#%, |pos_check.y|
+    assign %calculate [|pos_perso.y|] + [|distance_check|]%, |pos_check.y|
     assign [|pos_perso.x|], |pos_check.x|
 else
 	if [|direction_perso|] == 1
-		assign %calculate [|pos_perso.x|] + #arg1#%, |pos_check.x|
+		assign %calculate [|pos_perso.x|] + [|distance_check|]%, |pos_check.x|
 		assign [|pos_perso.y|], |pos_check.y|
 	else
 		if [|direction_perso|] == 2
-			assign %calculate [|pos_perso.y|] - #arg1#%, |pos_check.y|
+			assign %calculate [|pos_perso.y|] - [|distance_check|]%, |pos_check.y|
 			assign [|pos_perso.x|], |pos_check.x|
 		else
 			if [|direction_perso|] == 3
-				assign %calculate [|pos_perso.x|] - #arg1#%, |pos_check.x|
+				assign %calculate [|pos_perso.x|] - [|distance_check|]%, |pos_check.x|
 				assign [|pos_perso.y|], |pos_check.y|
 			endif
 		endif
@@ -29,7 +30,7 @@ if [|pres_joueur|] == 1
 	end_script #arg2#
 	wait 2500
 	move #arg0#, [|direction_perso|], 3
-	battle #arg0#
+	
 	end
 endif
 wait 350

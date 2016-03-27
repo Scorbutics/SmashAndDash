@@ -43,10 +43,16 @@ const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::
 }
 
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
-const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, EntityId scriptSleepEntity) {
+const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin) {
 	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {
 		throw ska::IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
 	}
+
+	/* If the script is already running, return the running instance */
+	if (m_entityManager.hasComponent<ScriptComponent>(scriptSleepEntity)) {
+		return m_entityManager.getComponent<ScriptComponent>(scriptSleepEntity);
+	}
+
 	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
 	
 	string extendedName;
@@ -86,10 +92,11 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	sc.triggeringType = EnumScriptTriggerType::AUTO;
 	sc.extraArgs = scriptData.args;
 	sc.context = scriptData.context;
-
+	sc.entityId = scriptSleepEntity;
 	sc.parent = this;
 	sc.fullPath = validPath;
 	sc.key = keyScript;
+	sc.origin = origin;
 
 	unsigned int i = 0;
 	for (const string& curArg : sc.extraArgs) {
@@ -106,12 +113,18 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 		sc.file.push_back(line);
 	}
 
+	
 	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
+
 	return sc;
 }
 
 void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {
 	m_namedScriptedEntities[nameEntity] = entity;
+}
+
+ska::EntityId ska::ScriptAutoSystem::getEntityFromName(const std::string& nameEntity) {
+	return m_namedScriptedEntities[nameEntity];
 }
 
 bool ska::ScriptAutoSystem::eof(ScriptComponent& script) {
@@ -150,14 +163,15 @@ void ska::ScriptAutoSystem::refresh()
 }
 
 void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame& savegame) {
-	string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
+	//string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
 	std::ofstream scriptList;
-	scriptList.open(tmpScritFileName.c_str(), ios::app);
+	/*scriptList.open(tmpScritFileName.c_str(), ios::app);
 	if (!scriptList.fail()) {
 		scriptList << script.extendedName << endl;
 		scriptList.close();
-	}
+	}*/
 
+	m_entityManager.removeComponent<ScriptComponent>(script.entityId);
 	script.state = EnumScriptState::DEAD;
 }
 
@@ -195,7 +209,7 @@ bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 
 /* When possible, transfers the value of m_active containing a time to wait to m_delay */
 bool ska::ScriptAutoSystem::transferActiveToDelay(ScriptComponent& script) {
-	if (script.active > 1 && script.delay == 0) {
+	if (script.active > 1) {
 		script.state = EnumScriptState::PAUSED;
 		script.delay = script.active;
 		script.lastTimeDelayed = ska::TimeUtils::getTicks();
@@ -234,10 +248,10 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 	}
 
 
-	/*  If loop is exited with having a running script, it means that it's terminated.
+	/*  If loop is exited it means that it's terminated or the script is stopped/paused.
 	That's why we rewind m_fscript.
 	(with a paused script here, it means that the script will resume next time we play it) */
-	if (script.state == EnumScriptState::RUNNING) {
+	if (eof(script)) {
 		script.state = EnumScriptState::STOPPED;
 		/* If the script is terminated and triggering is not automatic, then we don't reload the script */
 		if (script.triggeringType == EnumScriptTriggerType::AUTO) {

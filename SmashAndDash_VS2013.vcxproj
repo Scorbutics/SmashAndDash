@@ -129,10 +129,12 @@
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
+    <ClInclude Include="Code\ska\Graphic\DeleterComponent.h" />
     <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
     <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h" />
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\DeleterSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\ShadowSystem.h" />
@@ -344,12 +346,14 @@
     <ClInclude Include="Code\ska\Inputs\InputContextManager.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptAutoSystem.h" />
     <ClInclude Include="Code\Script\System\ScriptCommandsSystem.h" />
+    <ClInclude Include="Code\ska\Utils\PhysicUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\DeleterSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\GraphicSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\ShadowSystem.cpp" />
@@ -499,6 +503,7 @@
     <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp" />
     <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp" />
     <ClCompile Include="Code\Script\System\ScriptCommandsSystem.cpp" />
+    <ClCompile Include="Code\ska\Utils\PhysicUtils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

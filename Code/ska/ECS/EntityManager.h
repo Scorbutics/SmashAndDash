@@ -55,19 +55,20 @@ namespace ska {
 		}
 		
 		void removeEntity(EntityId entity) {
-			if (entity < m_entities.size() && m_entities.count(entity) > 0) {
-				m_entities.erase(entity);
-				m_deletedEntities.push_back(entity);
-				
-				/* Reset all components */
-				m_componentMask[entity] &= 0;
-
-				EntityData data = std::make_pair(&m_componentMask[entity], entity);
-				notifyObservers(EventEntityComponentRemove(), data);
-			} else {
+			if (entity >= m_entities.size() || m_entities.count(entity) <= 0) {
 				std::string startMessage = ("Unable to delete entity #" + entity);
 				throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
 			}
+
+			m_entities.erase(entity);
+
+			m_deletedEntities.push_back(entity);
+
+			/* Reset all components */
+			m_componentMask[entity] &= 0;
+
+			EntityData data = std::make_pair(&m_componentMask[entity], entity);
+			notifyObservers(EventEntityComponentRemove(), data);
 		}
 
 		void removeEntities() {

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-ska::SpriteAnimation::SpriteAnimation(int type, int id, ska::Rectangle pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
+ska::SpriteAnimation::SpriteAnimation(int type, int id, ska::Point<int> pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
 m_sprite(ska::SpritePath::getInstance().getPath(type, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha)
 {
 	m_type = type;
@@ -35,8 +35,6 @@ ska::SpriteAnimation::SpriteAnimation(int type, int id, unsigned int framesNumbe
 	m_id = id;
 	m_pos.x = 0;
 	m_pos.y = 0;
-	m_pos.w = 0;
-	m_pos.h = 0;
 
 	m_sprite.load(ska::SpritePath::getInstance().getPath(m_type, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha);
 	m_offset.x = 0;
@@ -56,7 +54,7 @@ void ska::SpriteAnimation::refresh()
 }
 
 
-void ska::SpriteAnimation::setPos(ska::Rectangle pos)
+void ska::SpriteAnimation::setPos(ska::Point<int> pos)
 {
     m_pos = pos;
 }
@@ -103,7 +101,7 @@ unsigned int ska::SpriteAnimation::getWidth()
 void ska::SpriteAnimation::display()
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();*/
-	ska::Rectangle pos = m_pos;
+	ska::Point<int>& pos = m_pos;
     /*pos.x += wScreen.getORel().x;
     pos.y += wScreen.getORel().y;*/
 

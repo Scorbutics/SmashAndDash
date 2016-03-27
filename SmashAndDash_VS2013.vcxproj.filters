@@ -765,6 +765,15 @@
     <ClInclude Include="Code\ska\ECS\ComponentSerializer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Utils\PhysicUtils.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\DeleterComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\System\DeleterSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -1224,6 +1233,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\ECS\Component.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\PhysicUtils.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\System\DeleterSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,6 +22,14 @@ double ska::NumberUtils::absolute(double i) {
 	return abs(i);
 }
 
+double ska::NumberUtils::cosinus(double angle) {
+	return cos(angle);
+}
+
+double ska::NumberUtils::sinus(double angle) {
+	return sinus(angle);
+}
+
 float ska::NumberUtils::random(float min, float max) {
 	const double coeff = random();
 	return (float)(coeff * (max - min + 1) + min);

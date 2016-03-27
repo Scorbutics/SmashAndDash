@@ -11,8 +11,8 @@ namespace ska {
 		Force(ska::Rectangle pos, float power, float angle);
 
 		ska::Rectangle getPos();
-		float getPower();
-		float getAngle();
+		float getPower() const;
+		float getAngle() const;
 
 		void setPos(ska::Rectangle pos);
 		void setPower(float power);

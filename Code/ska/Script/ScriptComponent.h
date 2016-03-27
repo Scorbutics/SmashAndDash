@@ -6,6 +6,7 @@
 #include "../ECS/Component.h"
 #include "ScriptState.h"
 #include "ScriptTriggerType.h"
+#include "../ECS/ECSDefines.h"
 
 namespace ska {
 	class ScriptComponent : public Component {
@@ -19,6 +20,7 @@ namespace ska {
 			currentLine = 0;
 			lastTimeDelayed = 0;
 			delay = 0;
+			entityId = UINT_MAX;
 			active = 0;
 			parent = NULL;
 		}
@@ -34,6 +36,14 @@ namespace ska {
 		std::string fullPath;
 		std::string key;
 
+		const EntityId getEntity() const {
+			return entityId;
+		}
+
+		const EntityId getOrigin() const {
+			return origin;
+		}
+
 	private:
 		/* Manage states in order to dispatch all different scripts */
 		ScriptState state;
@@ -44,5 +54,7 @@ namespace ska {
 		unsigned int lastTimeDelayed;
 		std::vector<std::string> file;
 		unsigned int delay;
+		EntityId entityId;
+		EntityId origin;
 	};
 }

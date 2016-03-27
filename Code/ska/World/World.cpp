@@ -247,8 +247,10 @@ int ska::World::spawnMob(Rectangle pos, unsigned int rmin, unsigned int rmax, fl
 //Fonction d'apparition d'un mob à une position pos
 int ska::World::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn)
 {
-	/*
-	if(nbrSpawns == 0)
+	
+	//TODO MobSpawnerSystem
+
+	/*if(nbrSpawns == 0)
 		return 0;
 
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -262,7 +264,7 @@ int ska::World::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	float angle = (float) (( 2*M_PI* (rand()%360))/360);
 	unsigned int radius;
 	int successfulSpawns = 0;
-	unique_ptr<Character> mob = unique_ptr<Character>(new Character(idMob));
+	//unique_ptr<Character> mob = unique_ptr<Character>(new Character(idMob));
 
 
 	for(unsigned int i = 0; i < nbrSpawns; i++)
@@ -272,19 +274,19 @@ int ska::World::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		ska::Rectangle dest;
 		dest.x = (int)(radius*cos(angle) + pos.x);
 		dest.y = (int)(radius*sin(angle) + pos.y);
-		dest.x = (dest.x/TAILLEBLOC) * TAILLEBLOC;
-		dest.y = (dest.y/TAILLEBLOC) * TAILLEBLOC;
+		dest.x = (dest.x / m_blockSize) * m_blockSize;
+		dest.y = (dest.y / m_blockSize) * m_blockSize;
 
 		ska::Rectangle boxWorld, boxDest;
 		boxWorld.x = 0;
 		boxWorld.y = 0;
-		boxWorld.w = getNbrBlocX()*TAILLEBLOC;
-		boxWorld.h = getNbrBlocY()*TAILLEBLOC;
+		boxWorld.w = getNbrBlocX()*m_blockSize;
+		boxWorld.h = getNbrBlocY()*m_blockSize;
 		boxDest.x = dest.x - radius;
 		boxDest.y = dest.y - radius;
 		boxDest.h = boxDest.w = 2*radius;
 
-		if(canMoveToPos(dest, NULL) && IsPositionInBox(&dest, &boxWorld) && wScreen.detectEntity(boxDest).size() < SPAWN_LIMIT_ALLOWED)
+		if(canMoveToPos(dest, NULL) && ska::RectangleUtils::isPositionInBox(&dest, &boxWorld) < SPAWN_LIMIT_ALLOWED)
 		{
 			bool spawnAllowed = true;
 			for(unsigned int j = 0; j < idBlocks.size(); j++)

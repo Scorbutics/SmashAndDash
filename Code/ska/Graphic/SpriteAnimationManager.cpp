@@ -8,7 +8,7 @@ ska::SpriteAnimationManager::SpriteAnimationManager()
 {
 }
 
-ska::SpriteAnimation* ska::SpriteAnimationManager::play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
+ska::SpriteAnimation* ska::SpriteAnimationManager::play(int type, int id, ska::Point<int> pos, unsigned int cycles, int alpha, unsigned int framesNumber, unsigned int delay)
 {
 	const size_t size = m_sprites.size();
 	size_t i;

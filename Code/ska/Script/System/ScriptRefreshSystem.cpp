@@ -28,14 +28,14 @@ void ska::ScriptRefreshSystem::refresh() {
 		if (iac[InputAction::DoAction]) {
 			EntityId scriptEntity = findNearScriptComponentEntity(entityManager, pc);
 			if (scriptEntity != UINT_MAX) {
-				startScript(scriptEntity);
+				startScript(scriptEntity, entityId);
 			}
 		} else {
-			for (EntityId entityId : ScriptPositionSystemAccess::m_processed) {
-				ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(entityId);
+			for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
+				ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
 				if (scriptData.triggeringType == EnumScriptTriggerType::AUTO) {
-					PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(entityId);
-					startScript(entityId);
+					PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(targets);
+					startScript(targets, entityId);
 				}
 			}
 
@@ -51,8 +51,8 @@ void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& na
 	m_scriptAutoSystem.registerNamedScriptedEntity(nameEntity, entity);
 }
 
-void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity) {
-	m_scriptAutoSystem.registerScript(NULL, scriptEntity);
+void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const EntityId origin) {
+	m_scriptAutoSystem.registerScript(NULL, scriptEntity, origin);
 }
 
 const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const {

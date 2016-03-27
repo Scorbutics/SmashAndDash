@@ -38,8 +38,6 @@ m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_
 	m_speedInertie = 0;
 	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
-	//m_kdListener.getKeyInput()->resetAll();
-	//m_kdListener.getMouseInput()->resetAll();
 
 	m_saveManager.loadGame("save1");
 	std::unordered_map<std::string, ska::EntityId> characters = m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
@@ -69,7 +67,6 @@ m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_
 
 	m_world.getEntityManager().createTrainer(startPos, m_world.getBlockSize());
 
-	//m_scrolling = true;
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h)

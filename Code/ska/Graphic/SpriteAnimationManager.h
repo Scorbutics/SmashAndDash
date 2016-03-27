@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 #include "./Draw/DrawableFixedPriority.h"
-#include "Rectangle.h"
+#include "Point.h"
 
 
 namespace ska {
@@ -14,7 +14,7 @@ namespace ska {
 	public:
 		SpriteAnimationManager();
 		void reset();
-		SpriteAnimation* play(int type, int id, ska::Rectangle pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
+		SpriteAnimation* play(int type, int id, ska::Point<int> pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
 		~SpriteAnimationManager();
 		bool isVisible() const override;
 		void display() override;

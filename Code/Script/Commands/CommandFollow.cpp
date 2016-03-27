@@ -1,5 +1,4 @@
 #include "CommandFollow.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
 CommandFollow::CommandFollow(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -17,7 +16,6 @@ int CommandFollow::argumentsNumber() {
 
 std::string CommandFollow::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, id_target, number_target, flag;
 
 	id = ska::StringUtils::strToInt(args[0]);
@@ -25,6 +23,8 @@ std::string CommandFollow::execute(ska::ScriptComponent& script, std::vector<std
 	id_target = ska::StringUtils::strToInt(args[2]);
 	number_target = ska::StringUtils::strToInt(args[3]);
 	flag = ska::StringUtils::strToInt(args[4]);
+
+	/* TODO en même temps que IAPathSystem */
 
 	//wScreen.getEntityFactory().getNPC(id, number)->followEntity(flag ? wScreen.getEntityFactory().getNPC(id_target, number_target) : NULL);
 	return "";

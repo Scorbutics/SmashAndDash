@@ -14,13 +14,14 @@ namespace ska {
 	public:
 		
 		Savegame& getSavegame();
-		const ska::ScriptComponent registerScript(ScriptComponent* parent, EntityId scriptSleepEntity);
+		const ska::ScriptComponent registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);
 		virtual void refresh() override;
 		virtual const std::string map(const std::string& key, const std::string& id) const;
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
+		ska::EntityId getEntityFromName(const std::string& nameEntity);
 
 		/* ScriptComponent methods */
 		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);

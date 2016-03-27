@@ -1,6 +1,8 @@
 #include "CommandKillEntity.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
+#include "../../ska/ECS/EntityManager.h"
+#include "../../ska/Script/ScriptComponent.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
 #include <string>
 
 using namespace std;
@@ -15,18 +17,14 @@ CommandKillEntity::~CommandKillEntity()
 }
 
 int CommandKillEntity::argumentsNumber() {
-	return 2;
+	return 1;
 }
 
 std::string CommandKillEntity::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	int id, number;
-	string param;
-
-	id = ska::StringUtils::strToInt(args[0]);
-	number = ska::StringUtils::strToInt(args[1]);
-
-	//wScreen.getEntityFactory().remove(id, number);
+	const string& id = args[0];
+	
+	ska::EntityId internalEntity =  script.parent->getEntityFromName(id);
+	m_entityManager.removeEntity(internalEntity);
 	return "";
 }

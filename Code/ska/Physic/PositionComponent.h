@@ -14,6 +14,7 @@ namespace ska {
 				addFieldSerializer(PositionComponent::serializeY, "y", className);
 				addFieldSerializer(PositionComponent::serializeZ, "z", className);
 			}
+			x = y = z = 0;
 		}
 
 	protected:

@@ -1,7 +1,6 @@
 #include "CommandEnd.h"
 #include "../../Utils\ScriptUtils.h"
 #include "../../Utils\StringUtils.h"
-#include <iosfwd>
 #include "../../Utils\SkaConstants.h"
 #include "../../Exceptions/ScriptDiedException.h"
 

@@ -1,8 +1,15 @@
 #include <string>
 #include "CommandMove.h"
+#include "../../ska/Exceptions/ScriptException.h"
 #include "../../Utils\IDs.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
+#include "../../ska/Inputs/InputComponent.h"
+#include "../../ska/Physic/ForceComponent.h"
+#include "../../ska/Physic/PositionComponent.h"
 #include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/PhysicUtils.h"
+#include "../../ska/Utils/NumberUtils.h"
+
 using namespace std;
 
 CommandMove::CommandMove(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -10,19 +17,28 @@ CommandMove::CommandMove(ska::EntityManager& entityManager) : AbstractFunctionCo
 }
 
 int CommandMove::argumentsNumber() {
-	return 4;
+	return 3;
 }
 
 std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	int idtype, id, speed;
-	string dir;
-	WGameCore& wScreen = WGameCore::getInstance();
+	
+    const std::string& id = args[0];
+	const int dir = ska::StringUtils::strToInt(args[1]);
+	const int speed = ska::StringUtils::strToInt(args[2]);
 
-	idtype = ska::StringUtils::strToInt(args[0]);
-	id = ska::StringUtils::strToInt(args[1]);
-	dir = args[2];
-	speed = ska::StringUtils::strToInt(args[3]);
+	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+
+	if (!m_entityManager.hasComponent<ska::ForceComponent>(internalEntity)) {
+		throw ska::ScriptException("The targetted entity cannot move : " + id);
+	}
+
+	ska::ForceComponent& forceComponent = m_entityManager.getComponent<ska::ForceComponent>(internalEntity);
+
+	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, speed*10.0);
+
+	forceComponent.x += moveForce.getPower() * ska::NumberUtils::cosinus(moveForce.getAngle());
+	forceComponent.y += moveForce.getPower() * ska::NumberUtils::sinus(moveForce.getAngle());
 
 	/*for (unsigned int j = 0; j < dir.size(); j++)
 	{

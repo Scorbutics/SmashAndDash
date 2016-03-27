@@ -15,6 +15,9 @@ namespace ska{
 		static double random();
 		static float exponential(float i);
 		static int random(int min, int max);
+		
+		static double cosinus(double angle);
+		static double sinus(double angle);
 
 		static double absolute(double i);
 		static unsigned int absolute(int i);

@@ -22,7 +22,7 @@ namespace ska {
 		virtual ~ScriptRefreshSystem();
 	private:
 		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos) const;
-		void startScript(const EntityId scriptEntity);
+		void startScript(const EntityId scriptEntity, const EntityId origin);
 
 		const InputContextManager& m_icm;
 		ScriptAutoSystem& m_scriptAutoSystem;

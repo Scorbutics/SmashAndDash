@@ -3,6 +3,7 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
+#include "../../ska/Utils/RectangleUtils.h"
 
 using namespace std;
 
@@ -18,35 +19,43 @@ int CommandPlayerPresence::argumentsNumber() {
 std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
+	ska::World& w = wScreen.getWorld();
 	string posFromX, posFromY, posToX, posToY;
 	ska::Rectangle collisionRect;
-	ska::Rectangle idPlayer;
+	//ska::Rectangle idPlayer;
 	posFromX = args[0];
 	posFromY = args[1];
 	posToX = args[2];
 	posToY = args[3];
 
-	idPlayer.x = 0;//wScreen.getEntityFactory().getTrainer()->getID();
+	/*idPlayer.x = 0;//wScreen.getEntityFactory().getTrainer()->getID();
 	idPlayer.y = 0;//wScreen.getEntityFactory().getTrainer()->getEntityNumber();
 	idPlayer.w = 0;
-	idPlayer.h = 0;
-
-	ska::Rectangle pos1, pos2;
-	
-	pos1.x = ska::StringUtils::strToInt(posFromX)*TAILLEBLOC;
-	pos1.y = ska::StringUtils::strToInt(posFromY)*TAILLEBLOC;
-	pos2.x = ska::StringUtils::strToInt(posToX)*TAILLEBLOC;
-	pos2.y = ska::StringUtils::strToInt(posToY)*TAILLEBLOC;
-	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
-	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
-	collisionRect.w = abs(pos1.x - pos2.x) + TAILLEBLOC - 1;
-	collisionRect.h = abs(pos1.y - pos2.y) + TAILLEBLOC - 1;
-	
-	vector<ska::Rectangle>& ids = wScreen.detectEntity(collisionRect);
-	if (!ids.empty() && find(ids.begin(), ids.end(), idPlayer) != ids.end())
-	{
-		return "1";
-	} else {
+	idPlayer.h = 0;*/
+	ska::EntityId internalEntity = script.getOrigin();
+	if (!m_entityManager.hasComponent<ska::PositionComponent>(internalEntity) ||
+		!m_entityManager.hasComponent<ska::HitboxComponent>(internalEntity)) {
 		return "0";
 	}
+
+	ska::PositionComponent& positionComponent = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	ska::HitboxComponent& hitboxComponent = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
+
+	ska::Rectangle pos1, pos2;
+	ska::Rectangle entityPos = { positionComponent.x + hitboxComponent.xOffset, positionComponent.y + hitboxComponent.yOffset, hitboxComponent.width, hitboxComponent.height};
+
+	pos1.x = ska::StringUtils::strToInt(posFromX);
+	pos1.y = ska::StringUtils::strToInt(posFromY);
+	pos2.x = ska::StringUtils::strToInt(posToX);
+	pos2.y = ska::StringUtils::strToInt(posToY);
+	
+	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
+	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
+	collisionRect.w = abs(pos1.x - pos2.x) + w.getBlockSize() - 1;
+	collisionRect.h = abs(pos1.y - pos2.y) + w.getBlockSize() - 1;
+	
+	if (ska::RectangleUtils::collisionBoxABoxB(collisionRect, entityPos)) {
+		return "1";
+	}
+	return "0";
 }

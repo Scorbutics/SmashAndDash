@@ -8,6 +8,7 @@
 #include "../../ska/Graphic/System/GraphicSystem.h"
 #include "../../ska/Graphic/System/ShadowSystem.h"
 #include "../../ska/Graphic/System/DirectionalAnimationSystem.h"
+#include "../../ska/Graphic/System/DeleterSystem.h"
 
 class WorldImpl : public ska::World {
 public:
@@ -27,4 +28,5 @@ private:
 
 	ska::GraphicSystem m_graphicSystem;
 	ska::ShadowSystem m_shadowSystem;
+	ska::DeleterSystem m_deleterSystem;
 };

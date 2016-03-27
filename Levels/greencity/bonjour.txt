@@ -1,0 +1,3 @@
+assign #arg0#, |id|
+message [|id|], Bonjour !
+end

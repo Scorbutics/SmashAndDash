@@ -38,7 +38,7 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 			if (script.varMap.find(key) != script.varMap.end()) {
 				return script.varMap.at(key);
 			} else {
-				return "";
+				return varNumber;
 			}
 				
 		}
@@ -60,7 +60,7 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 			return script.varMap.at(key);
 		}
 		else {
-			return "";
+			return varNumber;
 		}
 	}
 	else if (varNumber == "true") {

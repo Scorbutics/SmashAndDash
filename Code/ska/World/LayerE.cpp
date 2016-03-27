@@ -74,7 +74,7 @@ void ska::LayerE::refresh() {
 
 int ska::LayerE::getBlocX(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vcoordBX[ligne];
     else
         return -1;
@@ -82,7 +82,7 @@ int ska::LayerE::getBlocX(int ligne)
 
 int ska::LayerE::getBlocY(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vcoordBY[ligne];
     else
         return -1;
@@ -90,7 +90,7 @@ int ska::LayerE::getBlocY(int ligne)
 
 int ska::LayerE::getID(int ligne)
 {
-    if(ligne <= m_nbrLignes && ligne > 0)
+    if(ligne <= m_nbrLignes && ligne >= 0)
         return m_vID[ligne];
     else
         return 0;
@@ -98,7 +98,7 @@ int ska::LayerE::getID(int ligne)
 
 string ska::LayerE::getParam(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vparam[ligne];
     else
         return "Erreur";
@@ -107,7 +107,7 @@ string ska::LayerE::getParam(int ligne)
 
 int ska::LayerE::getTrigger(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vtrigger[ligne];
     else
         return -1;
@@ -115,7 +115,7 @@ int ska::LayerE::getTrigger(int ligne)
 
 int ska::LayerE::getSolide(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vsolide[ligne];
     else
         return -1;
@@ -123,29 +123,23 @@ int ska::LayerE::getSolide(int ligne)
 
 string ska::LayerE::getAction(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vaction[ligne];
-    else if (ligne != 0)
-    {
+    else if (ligne != 0) {
         cerr << "Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne " << ligne << " dans le fichier évènement " << m_nomFichier << endl;
-        return "Erreur";
     }
-    else
-        return "Erreur";
+    return "Erreur";
 
 }
 
 string ska::LayerE::getPath(int ligne)
 {
-    if(ligne < m_nbrLignes && ligne > 0)
+    if(ligne < m_nbrLignes && ligne >= 0)
         return m_vpath[ligne];
-    else if (ligne != 0)
-    {
+    else if (ligne != 0) {
         cerr << "Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne " << ligne << " dans le fichier évènement " << m_nomFichier << endl;
-        return "Erreur";
     }
-    else
-        return "Erreur";
+    return "Erreur";
 
 }
 

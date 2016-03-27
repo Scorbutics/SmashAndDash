@@ -26,12 +26,12 @@ ska::Rectangle ska::Force::getPos()
 	return m_pos;
 }
 
-float ska::Force::getPower()
+float ska::Force::getPower() const
 {
 	return m_power;
 }
 
-float ska::Force::getAngle()
+float ska::Force::getAngle() const
 {
 	return m_angle;
 }

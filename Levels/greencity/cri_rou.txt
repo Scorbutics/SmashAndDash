@@ -1,2 +1,4 @@
-script .\Levels\trainer_vision_script.txt, 2000, -1 1 3
-message f, Rouuuu ! Ce message est écrit par script !
+assign #arg0#, |id|
+script .\Levels\trainer_rotation_script.txt, 2000, 2
+message [|id|], Rouuuu ! Ce message est écrit par script !
+end

@@ -1,7 +1,8 @@
 #include "CommandTeleport.h"
 #include <string>
-#include <map>
+#include "../../ska/Exceptions/InvalidPathException.h"
 #include "../../Gameplay\WGameCore.h"
+#include "../../ska/World/World.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Utils\StringUtils.h"
 
@@ -17,30 +18,45 @@ CommandTeleport::~CommandTeleport()
 }
 
 int CommandTeleport::argumentsNumber() {
-	return 3;
+	return 4;
 }
 
 std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	int id, number;
-	string param;
+	ska::World& w = wScreen.getWorld();
 
-	id = ska::StringUtils::strToInt(args[0]);
-	number = ska::StringUtils::strToInt(args[1]);
-	param = args[2];
+	const std::string& mapName = args[0];	
+	const std::string& id = args[1];
+	const int x = ska::StringUtils::strToInt(args[2]);
+	const int y = ska::StringUtils::strToInt(args[3]);
 
-	if (id != 0)
-	{
-		int x, y;
-		x = atoi(param.substr(0, param.find_first_of(':')).c_str());
-		y = atoi(param.substr(param.find_first_of(':') + 1, param.size()).c_str());
+	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+	/* A script HAS a position component */
+	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	pc.x = w.getBlockSize() * x;
+	pc.y = w.getBlockSize() * y;
 
-		//wScreen.getEntityFactory().getNPC(id, number)->teleport(x*TAILLEBLOC, y*TAILLEBLOC);
+	/* Hero use case */
+	if (id == "0") {
+		const std::string& fichier = args[0];
+		const std::string buf = ".\\Levels"FILE_SEPARATOR""
+			+ fichier
+			+ ""FILE_SEPARATOR""
+			+ fichier
+			+ ".ini";
+
+		ska::IniReader mapReader(buf);
+
+		string chipsetName = mapReader.getString("Chipset file");
+
+		if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
+			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
+		}
+
+		w.changeLevel(fichier, chipsetName);
 	}
-	else {
-		teleportHeroToMap(param);
-	}
+
 	return "";
 }
 

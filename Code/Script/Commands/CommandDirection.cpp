@@ -1,7 +1,9 @@
 #include "CommandDirection.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
-
+#include "../../ska/Script/ScriptComponent.h"
+#include "../../ska/Graphic/DirectionalAnimationComponent.h"
+#include "../../ska/ECS/EntityManager.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
 
 CommandDirection::CommandDirection(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
@@ -16,18 +18,12 @@ int CommandDirection::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	string idStr, dirStr;
-	int dir, id;
+std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+	const std::string& idStr = args[0];
+	const int dir = ska::StringUtils::strToInt(args[1]);
 
-	idStr = args[0];
-	dirStr = args[1];
-
-	id = ska::StringUtils::strToInt(idStr);
-	dir = ska::StringUtils::strToInt(dirStr);
-
-	//wScreen.getEntityFactory().getNPC(idType, id)->setDirection(dir);
+	ska::EntityId internalId = script.parent->getEntityFromName(idStr);
+	ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(internalId);
+	dac.direction = dir;
 	return "";
 }
