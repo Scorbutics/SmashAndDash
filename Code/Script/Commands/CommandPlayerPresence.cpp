@@ -1,9 +1,13 @@
 #include "CommandPlayerPresence.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "../../ska/ECS/ECSDefines.h"
+#include "../../ska/ECS/EntityManager.h"
+#include "../../ska/Script/ScriptComponent.h"
+#include "../../ska/Physic/PositionComponent.h"
+#include "../../ska/Physic/HitboxComponent.h"
 
 using namespace std;
 
@@ -18,20 +22,14 @@ int CommandPlayerPresence::argumentsNumber() {
 
 std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
 	string posFromX, posFromY, posToX, posToY;
 	ska::Rectangle collisionRect;
-	//ska::Rectangle idPlayer;
+
 	posFromX = args[0];
 	posFromY = args[1];
 	posToX = args[2];
 	posToY = args[3];
 
-	/*idPlayer.x = 0;//wScreen.getEntityFactory().getTrainer()->getID();
-	idPlayer.y = 0;//wScreen.getEntityFactory().getTrainer()->getEntityNumber();
-	idPlayer.w = 0;
-	idPlayer.h = 0;*/
 	ska::EntityId internalEntity = script.getOrigin();
 	if (!m_entityManager.hasComponent<ska::PositionComponent>(internalEntity) ||
 		!m_entityManager.hasComponent<ska::HitboxComponent>(internalEntity)) {
@@ -51,8 +49,8 @@ std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::ve
 	
 	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
 	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
-	collisionRect.w = abs(pos1.x - pos2.x) + w.getBlockSize() - 1;
-	collisionRect.h = abs(pos1.y - pos2.y) + w.getBlockSize() - 1;
+	collisionRect.w = abs(pos1.x - pos2.x) + 48 - 1;
+	collisionRect.h = abs(pos1.y - pos2.y) + 48 - 1;
 	
 	if (ska::RectangleUtils::collisionBoxABoxB(collisionRect, entityPos)) {
 		return "1";
