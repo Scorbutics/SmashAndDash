@@ -14,11 +14,14 @@ class WorldImpl : public ska::World {
 public:
 	WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 	~WorldImpl();
-	std::unordered_map<std::string, ska::EntityId> load(std::string fileName, std::string chipsetName, std::string saveName);
+	void load(std::string fileName, std::string chipsetName, std::string saveName) override;
+	void changeLevel(std::string fileName, std::string chipsetName) override;
+	std::unordered_map<std::string, ska::EntityId> reinit(std::string fileName, std::string chipsetName);
 	virtual void refreshEntities() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 
 private:
+	ska::EntityId m_player;
 
 	ska::CollisionSystem m_collisionSystem;
 	ska::ForceSystem m_forceSystem;

@@ -39,33 +39,12 @@ m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 
 	m_saveManager.loadGame("save1");
-	std::unordered_map<std::string, ska::EntityId> characters = m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 
-	for (auto& c : characters) {
-		m_scriptSystem.registerNamedScriptedEntity(c.first, c.second);
-	}
+	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
+}
 
-	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
-
-	ska::Point<int> startPos;
-	startPos.x = reader.getInt("Trainer start_posx");
-	startPos.y = reader.getInt("Trainer start_posy");
-	std::string startMapName = reader.getString("Trainer start_map_name");
-
-	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
-	buf += startMapName;
-	buf += FILE_SEPARATOR;
-	buf += startMapName;
-	buf += ".ini";
-
-	ska::IniReader mapReader(buf);
-	std::string startMapChipset = mapReader.getString("Chipset file");
-	if (startMapChipset == "STRINGNOTFOUND") {
-		throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
-	}
-
-	m_world.getEntityManager().createTrainer(startPos, m_world.getBlockSize());
-
+ska::ScriptRefreshSystem& WGameCore::getScriptSystem() {
+	return m_scriptSystem;
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h)

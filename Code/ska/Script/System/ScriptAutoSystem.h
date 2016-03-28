@@ -20,6 +20,7 @@ namespace ska {
 		virtual void refresh() override;
 		virtual const std::string map(const std::string& key, const std::string& id) const;
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
+		void clearNamedScriptedEntities();
 		ska::EntityId getEntityFromName(const std::string& nameEntity);
 
 		/* ScriptComponent methods */

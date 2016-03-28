@@ -123,6 +123,10 @@ void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameE
 	m_namedScriptedEntities[nameEntity] = entity;
 }
 
+void ska::ScriptAutoSystem::clearNamedScriptedEntities() {
+	m_namedScriptedEntities.clear();
+}
+
 ska::EntityId ska::ScriptAutoSystem::getEntityFromName(const std::string& nameEntity) {
 	return m_namedScriptedEntities[nameEntity];
 }

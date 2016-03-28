@@ -37,6 +37,7 @@ void ska::World::load(string fileName, string chipsetName, std::string saveName)
 	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
 
 	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
+
 }
 
 ska::Texture& ska::World::getChipset()
@@ -200,6 +201,8 @@ void ska::World::changeLevel(string fileName, string chipsetname)
 	m_lTop->reset(m_topLayerName, chipsetname);
     
 	m_lEvent->changeLevel(m_genericName + "E.txt");
+
+	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 
     //m_lBot->printCollisionProfile();
     //m_lMid->printCollisionProfile();

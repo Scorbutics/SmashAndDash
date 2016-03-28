@@ -9,6 +9,7 @@
 #include "../Exceptions/IllegalArgumentException.h"
 #include "../Utils/Observable.h"
 #include "ComponentSerializer.h"
+#include "../Utils/StringUtils.h"
 
 namespace ska {
 
@@ -37,7 +38,7 @@ namespace ska {
 		EntityManager() { m_componentMask.resize(SKA_ECS_MAX_ENTITIES); }
 		EntityId createEntity() {
 			EntityId newId;
-			if ((m_entities.size() - m_deletedEntities.size()) >= SKA_ECS_MAX_ENTITIES) {
+			if (((int)(m_entities.size() - m_deletedEntities.size())) >= SKA_ECS_MAX_ENTITIES) {
 				throw IllegalStateException("Too many entities are currently in use. Unable to create a new one. "
 					"Increase SKA_ECS_MAX_ENTITIES at compile time to avoid the problem.");
 			}
@@ -55,8 +56,8 @@ namespace ska {
 		}
 		
 		void removeEntity(EntityId entity) {
-			if (entity >= m_entities.size() || m_entities.count(entity) <= 0) {
-				std::string startMessage = ("Unable to delete entity #" + entity);
+			if (m_entities.find(entity) == m_entities.end() || m_entities.count(entity) <= 0) {
+				std::string startMessage = ("Unable to delete entity #" + ska::StringUtils::intToStr(entity));
 				throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
 			}
 
@@ -71,9 +72,12 @@ namespace ska {
 			notifyObservers(EventEntityComponentRemove(), data);
 		}
 
-		void removeEntities() {
-			for (EntityId entity : m_entities) {
-				removeEntity(entity);
+		void removeEntities(const std::unordered_set<EntityId>& exceptions) {
+			std::unordered_set<EntityId> entities = m_entities;
+			for (EntityId entity : entities) {
+				if (exceptions.find(entity) == exceptions.end()) {
+					removeEntity(entity);
+				}
 			}
 		}
 

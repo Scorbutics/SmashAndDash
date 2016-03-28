@@ -1,5 +1,6 @@
 #include <list>
 #include "WorldImpl.h"
+#include "../WGameCore.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../ska/Physic/ParticleManager.h"
 #include "../../Utils/IDs.h"
@@ -45,17 +46,75 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead2D(*m_lTop);
 }
 
-std::unordered_map<std::string, ska::EntityId> WorldImpl::load(std::string fileName, std::string chipsetName, std::string saveName) {
+void WorldImpl::load(std::string fileName, std::string chipsetName, std::string saveName) {
 	World::load(fileName, chipsetName, saveName);
+
+	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveName + FILE_SEPARATOR"trainer.ini");
+
+	ska::Point<int> startPos;
+	startPos.x = reader.getInt("Trainer start_posx");
+	startPos.y = reader.getInt("Trainer start_posy");
+	std::string startMapName = reader.getString("Trainer start_map_name");
+
+	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+	buf += startMapName;
+	buf += FILE_SEPARATOR;
+	buf += startMapName;
+	buf += ".ini";
+
+	ska::IniReader mapReader(buf);
+	std::string startMapChipset = mapReader.getString("Chipset file");
+	if (startMapChipset == "STRINGNOTFOUND") {
+		throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
+	}
+
+	//Chargement des sprites de l'équipe pokémon
+	/*const size_t teamSize = getPokemonManager().getPokemonTeamSize();
+	for (unsigned int i = 0; i < teamSize; i++)
+	{
+		//getPokemonManager().getPokemon(i)->setID(getPokemonManager().getPokemon(i)->getID());
+		getPokemonManager().getPokemon(i)->setDirection(0);
+	}*/
+
+	WGameCore::getInstance().getScriptSystem().clearNamedScriptedEntities();
+	std::unordered_map<std::string, ska::EntityId>& entities = reinit(fileName, chipsetName);
+	for (auto& e : entities) {
+		WGameCore::getInstance().getScriptSystem().registerNamedScriptedEntity(e.first, e.second);
+	}
+	m_player = m_entityManager.createTrainer(startPos, getBlockSize());
+
+	/* Player Script ID = 0 */
+	WGameCore::getInstance().getScriptSystem().registerNamedScriptedEntity("0", m_player);
+}
+
+void WorldImpl::changeLevel(std::string fileName, std::string chipsetName) {
+	World::changeLevel(fileName, chipsetName);
+
+	/* Do not delete the player between 2 maps, just TP it */
+	std::unordered_set<ska::EntityId> toNotDelete;
+	toNotDelete.insert(m_player);
+
+	/* Delete others entities */
+	m_entityManager.removeEntities(toNotDelete);
+
+	WGameCore::getInstance().getScriptSystem().clearNamedScriptedEntities();
+	std::unordered_map<std::string, ska::EntityId>& entities = reinit(fileName, chipsetName);
+	for (auto& e : entities) {
+		WGameCore::getInstance().getScriptSystem().registerNamedScriptedEntity(e.first, e.second);
+	}
+
+	/* Player Script ID = 0 */
+	WGameCore::getInstance().getScriptSystem().registerNamedScriptedEntity("0", m_player);
+}
+
+std::unordered_map<std::string, ska::EntityId> WorldImpl::reinit(std::string fileName, std::string chipsetName) {
 	ska::Point<int> posEntityId;
 	ska::Point<int> startPos;
-	
+
 	std::unordered_map<std::string, ska::EntityId> result;
 
-	//Suppression des anciennes entités
-	m_entityManager.removeEntities();
 	const unsigned int blockSize = getBlockSize();
-	
+
 	//Chargement des NPC sur la map (personnages & pokémon)
 	for (int i = 0; i < m_lEvent->getNbrLignes(); i++)
 	{
@@ -75,16 +134,18 @@ std::unordered_map<std::string, ska::EntityId> WorldImpl::load(std::string fileN
 			pc.z = 0;
 			m_entityManager.addComponent<ska::PositionComponent>(script, pc);
 
-		} else {
+		}
+		else {
 			if (abs(id) <= ENTITEMAX) {
 				script = m_entityManager.createCharacter(posEntityId, id, blockSize);
-			} else {
+			}
+			else {
 				throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
 			}
 		}
 
 		ska::ScriptSleepComponent ssc;
-		
+
 		const std::string params = m_lEvent->getParam(i);
 		std::vector<std::string> totalArgs = ska::StringUtils::split(params, ',');
 		if (!totalArgs.empty()) {
@@ -101,16 +162,9 @@ std::unordered_map<std::string, ska::EntityId> WorldImpl::load(std::string fileN
 		ssc.triggeringType = m_lEvent->getTrigger(i);
 		ssc.period = 1000;
 		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
-		result[ska::StringUtils::intToStr(i+2)] = script;
+		result[ska::StringUtils::intToStr(i + 2)] = script;
 	}
 	return result;
-	//Chargement des sprites de l'équipe pokémon
-	/*const size_t teamSize = getPokemonManager().getPokemonTeamSize();
-	for (unsigned int i = 0; i < teamSize; i++)
-	{
-		//getPokemonManager().getPokemon(i)->setID(getPokemonManager().getPokemon(i)->getID());
-		getPokemonManager().getPokemon(i)->setDirection(0);
-	}*/
 }
 
 void WorldImpl::refreshEntities() {

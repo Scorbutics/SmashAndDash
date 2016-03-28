@@ -100,7 +100,8 @@ public:
 
 	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();
-	
+	ska::ScriptRefreshSystem& getScriptSystem();
+
     void setEntite(unsigned int i, int value);
     void setOffsetChipset(int x, int y, int w, int h);
     void setORel(int x, int y);

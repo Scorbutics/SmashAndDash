@@ -19,6 +19,7 @@ namespace ska {
 		ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, const unsigned int wBlockSize, EntityManager& entityManager);
 		virtual void refresh() override;
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
+		void clearNamedScriptedEntities();
 		virtual ~ScriptRefreshSystem();
 	private:
 		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const;

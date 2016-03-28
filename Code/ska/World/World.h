@@ -21,7 +21,7 @@ namespace ska {
 	class World : public HasGraphic {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
-		void load(std::string fileName, std::string chipsetName, std::string saveName);
+		virtual void load(std::string fileName, std::string chipsetName, std::string saveName);
 
 		/*Weather* getFog();
 		Weather* getWeather();*/
@@ -58,7 +58,7 @@ namespace ska {
 		bool canMoveToPos(ska::Rectangle pos);
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
-		void changeLevel(std::string fileName, std::string chipsetName);
+		virtual void changeLevel(std::string fileName, std::string chipsetName);
 		int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn);
 
 		virtual void refreshEntities() = 0;

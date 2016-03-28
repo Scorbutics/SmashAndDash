@@ -68,6 +68,10 @@ void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& na
 	m_scriptAutoSystem.registerNamedScriptedEntity(nameEntity, entity);
 }
 
+void ska::ScriptRefreshSystem::clearNamedScriptedEntities() {
+	m_scriptAutoSystem.clearNamedScriptedEntities();
+}
+
 void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const EntityId origin) {
 	m_scriptAutoSystem.registerScript(NULL, scriptEntity, origin);
 }
