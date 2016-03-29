@@ -27,7 +27,7 @@ double ska::NumberUtils::cosinus(double angle) {
 }
 
 double ska::NumberUtils::sinus(double angle) {
-	return sinus(angle);
+	return sin(angle);
 }
 
 float ska::NumberUtils::random(float min, float max) {

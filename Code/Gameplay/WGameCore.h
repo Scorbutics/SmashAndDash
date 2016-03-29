@@ -23,7 +23,6 @@
 #include "../ska/Inputs/RawInputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "../Graphic\ShakerManager.h"
-#include "Mobs\MobSpawningManager.h"
 #include "Data\SavegameManager.h"
 #include "World\WorldImpl.h"
 #include "../ska/Utils\Singleton_template.h"
@@ -91,7 +90,6 @@ public:
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
 	ska::World& getWorld();
-	MobSpawningManager& getMobSpawningManager();
 	SavegameManager& getSavegameManager();
 
 	const ska::InputActionContainer& getActions() const;
@@ -114,6 +112,10 @@ public:
    
 
     protected:
+		CustomEntityManager m_entityManager;
+
+		ska::RawInputListener m_rawInputListener;
+
 		ska::Scene* m_sceneCursor;
 		SceneMap m_sceneMap;
 		SceneFight m_sceneFight;
@@ -123,7 +125,7 @@ public:
 		ska::Rectangle m_OfChip, m_origineRelative;
 		bool m_quitFlip, m_ecritureLog, m_continue;
 		//Player *m_phero; //Character héro courant
-		ska::RawInputListener m_rawInputListener;
+		
 
 		float m_speedInertie;
 		ska::Animation m_chipsetAni;
@@ -139,7 +141,7 @@ public:
 		Fight m_fight;
 		MouseCursor m_mouseCursor;
 		GUI m_gui;
-		MobSpawningManager m_mobSpawner;
+		
 		SavegameManager m_saveManager;
 		WorldImpl m_world;
 

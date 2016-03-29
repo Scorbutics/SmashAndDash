@@ -13,12 +13,12 @@ namespace ska {
 	public :
 		System(EntityManager& entityManager) : 
 			m_entityManager(entityManager) { 
-			m_entityManager.addObserver(this); 
-
+			m_entityManager.addObserver(this);
+			
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
 			(void)_;
-			
+
 		}
 		
 		virtual void refresh() = 0;
@@ -48,11 +48,6 @@ namespace ska {
 			}
 						
 		}
-
-		bool operator=(const System& s) {
-			return false;
-		}
-
 
 		~System(){}
 

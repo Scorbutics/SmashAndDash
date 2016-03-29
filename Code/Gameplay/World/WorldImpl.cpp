@@ -1,6 +1,7 @@
 #include <list>
 #include "WorldImpl.h"
 #include "../WGameCore.h"
+#include "../CustomEntityManager.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../ska/Physic/ParticleManager.h"
 #include "../../Utils/IDs.h"
@@ -11,10 +12,22 @@
 #include "../../ska/Exceptions/ScriptSyntaxError.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
+#include "../../ska/Physic/PositionComponent.h"
+#include "../../ska/Utils/RectangleUtils.h"
+#include "../../ska/Inputs/Readers/IniReader.h"
 
-WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : ska::World(tailleBloc, wWidth, wHeight), 
-m_collisionSystem(*this, m_entityManager), m_movementSystem(m_entityManager), m_graphicSystem(m_cameraSystem, m_entityManager), m_gravitySystem(m_entityManager),
-m_forceSystem(m_entityManager), m_daSystem(m_entityManager), m_shadowSystem(m_cameraSystem, m_entityManager), m_deleterSystem(m_entityManager) {
+WorldImpl::WorldImpl(ska::PrefabEntityManager& entityManager, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
+ska::World(entityManager, tailleBloc, wWidth, wHeight),
+m_movementSystem(entityManager),
+m_graphicSystem(m_cameraSystem, entityManager),
+m_gravitySystem(entityManager),
+m_forceSystem(entityManager),
+m_daSystem(entityManager),
+m_shadowSystem(m_cameraSystem, entityManager),
+m_deleterSystem(entityManager),
+m_iaMovementSystem(entityManager),
+m_mobSpawningSystem(*this, entityManager, 15000), 
+m_collisionSystem(*this, entityManager) {
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -167,6 +180,69 @@ std::unordered_map<std::string, ska::EntityId> WorldImpl::reinit(std::string fil
 	return result;
 }
 
+int WorldImpl::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
+
+	if (nbrSpawns == 0) {
+		return 0;
+	}
+
+	std::vector<unsigned int> idBlocks;
+	for (unsigned int i = 0; dataSpawn->get("Spawn on_blockid_" + ska::StringUtils::intToStr(i)); i++) {
+		idBlocks.push_back(dataSpawn->getInt("Spawn on_blockid_" + ska::StringUtils::intToStr(i)));
+	}
+
+	const unsigned int idMob = dataSpawn->getInt("Data id");	
+	const unsigned int blockSize = getBlockSize();
+
+	int successfulSpawns = 0;
+	float angle = (float)((2 * M_PI* (rand() % 360)) / 360);
+	for (unsigned int i = 0; i < nbrSpawns; i++) {
+		const unsigned int radius = rmin + rand() % (rmax - rmin + 1);
+
+		ska::Point<int> dest;
+		dest.x = (int)(radius*cos(angle) + pos.x);
+		dest.y = (int)(radius*sin(angle) + pos.y);
+		dest.x = (dest.x / blockSize) * blockSize;
+		dest.y = (dest.y / blockSize) * blockSize;
+
+		ska::Rectangle boxWorld, boxDest;
+		boxWorld.x = 0;
+		boxWorld.y = 0;
+		boxWorld.w = getNbrBlocX()*blockSize;
+		boxWorld.h = getNbrBlocY()*blockSize;
+		boxDest.x = dest.x - radius;
+		boxDest.y = dest.y - radius;
+		boxDest.h = boxDest.w = 30;
+
+		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld) && canMoveToPos(boxDest)) {
+			bool spawnAllowed = true;
+			for (unsigned int j = 0; j < idBlocks.size(); j++) {
+				const ska::Block* b = getHigherBlock(dest.x / blockSize, dest.y / blockSize);
+				if (b != NULL && b->getID() == idBlocks[i]) {
+					spawnAllowed = false;
+				}
+			}
+
+
+			if (spawnAllowed) {
+				int level = rand() % (dataSpawn->getInt("Data level_min") + dataSpawn->getInt("Data level_max") + 1) + dataSpawn->getInt("Data level_min");
+				ska::EntityId mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
+				ska::IAMovementComponent iamc;
+				iamc.delay = 500;				
+				/* Random */
+				iamc.type = 1;
+				
+				m_entityManager.addComponent<ska::IAMovementComponent>(mob, iamc);
+				successfulSpawns++;
+			}
+		}
+		angle += (float)((2.0*M_PI) / nbrSpawns);
+
+	}
+	return successfulSpawns;
+	/*return 1;*/
+}
+
 void WorldImpl::refreshEntities() {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	
@@ -177,6 +253,8 @@ void WorldImpl::refreshEntities() {
 	m_cameraSystem.refresh();
 	m_daSystem.refresh();
 	m_deleterSystem.refresh();
+	m_mobSpawningSystem.refresh();
+	m_iaMovementSystem.refresh();
 
 	//On refresh tous les personnages
 	/*auto it = wScreen.getEntityFactory().getCharacterList().begin();

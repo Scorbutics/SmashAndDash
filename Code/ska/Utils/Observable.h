@@ -1,9 +1,8 @@
 #ifndef DEF_OBSERVABLE
 #define DEF_OBSERVABLE
 
-#include <string>
 #include <vector>
-
+#include <algorithm>
 #include "Observer.h"
 
 namespace ska {
@@ -13,14 +12,14 @@ namespace ska {
 	{
 	public:
 		void addObserver(Observer<T>* obs) {
-			auto temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
+			auto& temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
 			if (temp == m_observerList.end()) {
 				m_observerList.push_back(obs);
 			}
 		}
 
 		void removeObserver(Observer<T>* obs) {
-			auto temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
+			auto& temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
 			if (temp != m_observerList.end()) {
 				m_observerList.erase(temp);
 			}
@@ -33,7 +32,7 @@ namespace ska {
 		}
 
 		void notifyObserver(Observer<T>* obs, const EventArg& e, T& t) {
-			auto it = std::find(m_observerList.begin(), m_observerList.end(), obs);
+			auto& it = std::find(m_observerList.begin(), m_observerList.end(), obs);
 			if (it != m_observerList.end()) {
 				(*it)->update(this, e, t);
 			}

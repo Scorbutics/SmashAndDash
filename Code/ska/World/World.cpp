@@ -6,10 +6,15 @@
 #include "../Utils/RectangleUtils.h"
 #include "../Physic/PhysicObject.h"
 #include "LayerE.h"
+#include "../ECS/PrefabEntityManager.h"
 
 using namespace std;
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : m_blockSize(tailleBloc), m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), m_cameraSystem(m_entityManager, wWidth, wHeight)
+ska::World::World(PrefabEntityManager& entityManager, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
+m_entityManager(entityManager), 
+m_blockSize(tailleBloc), 
+m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), 
+m_cameraSystem(m_entityManager, wWidth, wHeight)
 {
 }
 
@@ -37,16 +42,13 @@ void ska::World::load(string fileName, string chipsetName, std::string saveName)
 	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
 
 	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
+	getData();
 
 }
 
 ska::Texture& ska::World::getChipset()
 {
 	return m_chipset;
-}
-
-ska::PrefabEntityManager& ska::World::getEntityManager() {
-	return m_entityManager;
 }
 
 void ska::World::setWind(int wind) {
@@ -204,6 +206,8 @@ void ska::World::changeLevel(string fileName, string chipsetname)
 
 	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 
+
+	getData();
     //m_lBot->printCollisionProfile();
     //m_lMid->printCollisionProfile();
     //m_lTop->printCollisionProfile();
@@ -248,80 +252,7 @@ int ska::World::spawnMob(Rectangle pos, unsigned int rmin, unsigned int rmax, fl
 */
 
 //Fonction d'apparition d'un mob à une position pos
-int ska::World::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, IniReader* dataSpawn)
-{
-	
-	//TODO MobSpawnerSystem
 
-	/*if(nbrSpawns == 0)
-		return 0;
-
-	//WGameCore& wScreen = WGameCore::getInstance();
-
-	vector<unsigned int> idBlocks;
-	for (unsigned int i = 0; dataSpawn->get("Spawn on_blockid_" + ska::StringUtils::intToStr(i)); i++)
-		idBlocks.push_back(dataSpawn->getInt("Spawn on_blockid_" + ska::StringUtils::intToStr(i)));
-
-	unsigned int idMob = dataSpawn->getInt("Data id");
-	World* w = this;
-	float angle = (float) (( 2*M_PI* (rand()%360))/360);
-	unsigned int radius;
-	int successfulSpawns = 0;
-	//unique_ptr<Character> mob = unique_ptr<Character>(new Character(idMob));
-
-
-	for(unsigned int i = 0; i < nbrSpawns; i++)
-	{
-		radius = rmin + rand()%(rmax - rmin + 1);
-
-		ska::Rectangle dest;
-		dest.x = (int)(radius*cos(angle) + pos.x);
-		dest.y = (int)(radius*sin(angle) + pos.y);
-		dest.x = (dest.x / m_blockSize) * m_blockSize;
-		dest.y = (dest.y / m_blockSize) * m_blockSize;
-
-		ska::Rectangle boxWorld, boxDest;
-		boxWorld.x = 0;
-		boxWorld.y = 0;
-		boxWorld.w = getNbrBlocX()*m_blockSize;
-		boxWorld.h = getNbrBlocY()*m_blockSize;
-		boxDest.x = dest.x - radius;
-		boxDest.y = dest.y - radius;
-		boxDest.h = boxDest.w = 2*radius;
-
-		if(canMoveToPos(dest, NULL) && ska::RectangleUtils::isPositionInBox(&dest, &boxWorld) < SPAWN_LIMIT_ALLOWED)
-		{
-			bool spawnAllowed = true;
-			for(unsigned int j = 0; j < idBlocks.size(); j++)
-			{
-				Block* b = getHigherBlock(dest.x/TAILLEBLOC, dest.y/TAILLEBLOC);
-				if(b != NULL && b->getID() == idBlocks[i])
-					spawnAllowed = false;
-			} 
-			
-
-			if(spawnAllowed)
-			{
-
-				int level = rand()%(dataSpawn->getInt("Data level_min") + dataSpawn->getInt("Data level_max") +1) + dataSpawn->getInt("Data level_min");
-				mob->getPath()->setPathString(dataSpawn->getString("Data path_type"));
-				mob->setID(idMob);
-				mob->teleport(dest.x, dest.y);
-				mob->setOffset(0, 10);
-				mob->setOffset(1, 20);
-				mob->setOffset(2, 37);
-				mob->setOffset(3, 20);
-
-				//wScreen.getEntityFactory().addNPC(&(*mob));
-				successfulSpawns++;
-			}
-		}
-		angle += (float)((2.0*M_PI) / nbrSpawns);
-
-	}
-	return successfulSpawns;*/
-	return 1;
-}
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j)
 {

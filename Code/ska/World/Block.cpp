@@ -46,7 +46,7 @@ int ska::Block::getCollision()
     return m_collision;
 }
 
-unsigned int ska::Block::getID()
+unsigned int ska::Block::getID() const
 {
     return m_idSprite;
 }

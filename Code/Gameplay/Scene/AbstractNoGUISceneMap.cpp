@@ -43,7 +43,7 @@ void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
 	Fight& fight = core.getFight();
 	ska::ParticleManager& particleManager = core.getParticleManager();
 	GUI& gui = core.getGUI();
-	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
+	//MobSpawningManager& mobSpawner = core.getMobSpawningManager();
 	RainParticleManager& rainParticleManager = core.getRainParticleManager();
 	ShakerManager& shaker = core.getShakerManager();
 	//ska::InputListener& kdListener = core.getInputListener();

@@ -102,6 +102,8 @@ void ska::IniReader::save(string inifilename)
 		iniFile << *it << endl;
 }
 
+/* TODO template pour get */
+
 bool ska::IniReader::get(string path)
 {
 	return (m_content.find(path) != m_content.end());

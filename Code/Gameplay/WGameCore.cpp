@@ -10,14 +10,14 @@
 #include "../ska/Utils/RectangleUtils.h"
 #include "../ska/World/LayerE.h"
 #include "../ska/Exceptions/CorruptedFileException.h"
-
+#include "../ska/ECS/PrefabEntityManager.h"
 using namespace std;
 
 
 WGameCore::WGameCore():
-Window(),  m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_mobSpawner(16000), m_saveManager("save1"), m_world(TAILLEBLOC, m_laFenetre, m_loFenetre),
-m_sceneMap(m_world.getEntityManager(), m_rawInputListener), m_sceneFight(m_world.getEntityManager(), m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_world.getEntityManager()), 
-m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_scriptAutoSystem, m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_world.getEntityManager()) {
+Window(), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_saveManager("save1"), m_world(m_entityManager, TAILLEBLOC, m_laFenetre, m_loFenetre),
+m_sceneMap(m_entityManager, m_rawInputListener), m_sceneFight(m_entityManager, m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_entityManager),
+m_scriptAutoSystem(m_entityManager, m_saveManager), m_scriptSystem(m_scriptAutoSystem, m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_entityManager) {
 	//m_phero = m_EntityFactory.getTrainer();
 
 	m_OfChip.y = 0;
@@ -38,7 +38,7 @@ m_scriptAutoSystem(m_world.getEntityManager(), m_saveManager), m_scriptSystem(m_
 	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 
-	m_saveManager.loadGame("save1");
+	m_saveManager.loadGame(m_saveManager.getPathName());
 
 	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 }
@@ -105,11 +105,6 @@ void WGameCore::setORel(int x, int y)
 {
     m_origineRelative.x = x;
     m_origineRelative.y = y;
-}
-
-MobSpawningManager& WGameCore::getMobSpawningManager()
-{
-	return m_mobSpawner;
 }
 
 ShakerManager& WGameCore::getShakerManager()
@@ -304,10 +299,7 @@ void WGameCore::initNewWorld()
 
 	
     //m_phero->setID(0);
-
-    // 4) Rechargement des propriétés du monde (exemple : musique de fond, temps et brouillard, pluie, etc...)
-    m_world.getData();
-
+	   
 }
 
 

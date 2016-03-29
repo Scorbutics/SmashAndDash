@@ -14,7 +14,7 @@ namespace ska {
 		Block(const unsigned int blockSize, ska::Rectangle corr, ska::Rectangle posChipset, unsigned int properties, bool auto_animation, int col);
 		unsigned int getProperties();
 		int getCollision();
-		unsigned int getID();
+		unsigned int getID() const;
 		ska::Rectangle refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL);
 		~Block();
 		void setSpriteFrame(unsigned int x);

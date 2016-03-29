@@ -26,7 +26,7 @@ void SceneMap::eventUpdate(bool stuck) {
 	AbstractSceneMap::eventUpdate(stuck);
 
 	WGameCore& core = WGameCore::getInstance();
-	MobSpawningManager& mobSpawner = core.getMobSpawningManager();
+	//MobSpawningManager& mobSpawner = core.getMobSpawningManager();
 	Fight& fight = core.getFight();
 
 	//Système de scripts
@@ -34,7 +34,7 @@ void SceneMap::eventUpdate(bool stuck) {
 	core.getWorld().getLayerEvent()->refresh();
 
 	//gère l'apparition aléatoire de Pokémon	
-	mobSpawner.refresh();
+	//mobSpawner.refresh();
 
 	//Evénements de lancement de combat	
 	fight.refresh();

@@ -124,6 +124,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
+    <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
+    <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
+    <ClInclude Include="Code\ska\AI\System\IAMovementSystem.h" />
     <ClInclude Include="Code\ska\ECS\ComponentSerializer.h" />
     <ClInclude Include="Code\ska\ECS\PrefabEntityManager.h" />
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
@@ -347,8 +351,11 @@
     <ClInclude Include="Code\ska\Script\System\ScriptAutoSystem.h" />
     <ClInclude Include="Code\Script\System\ScriptCommandsSystem.h" />
     <ClInclude Include="Code\ska\Utils\PhysicUtils.h" />
+    <ClInclude Include="Code\Gameplay\CustomEntityManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
+    <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp" />
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
@@ -504,6 +511,7 @@
     <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp" />
     <ClCompile Include="Code\Script\System\ScriptCommandsSystem.cpp" />
     <ClCompile Include="Code\ska\Utils\PhysicUtils.cpp" />
+    <ClCompile Include="Code\Gameplay\CustomEntityManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
