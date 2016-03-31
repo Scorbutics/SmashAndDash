@@ -41,11 +41,12 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 	pos.y = ska::StringUtils::strToInt(args[5]);
 	message = args[6];	
 
+/*
 	if (pos.x != -1)
 		pos.x -= wScreen.getORel().x;
 
 	if (pos.y != -1)
-		pos.y -= wScreen.getORel().y;
+		pos.y -= wScreen.getORel().y;*/
 
 	DialogMenu messageBox(message, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 21);
 

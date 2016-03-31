@@ -1,15 +1,16 @@
 #pragma once
-#include "CameraSystem.h"
-#include "../Draw/DrawableContainer.h"
+#include "../../ECS/IGraphicSystem.h"
 #include "../PositionnedGraphicDrawable.h"
 
 namespace ska {
-	class AbstractGraphicSystem
+	class CameraSystem;
+
+	class AbstractGraphicSystem : public IGraphicSystem
 	{
 	public:
 		AbstractGraphicSystem(ska::CameraSystem& camera);
 		virtual ~AbstractGraphicSystem();
-		void setDrawables(DrawableContainer& container);
+		virtual void setDrawables(DrawableContainer& container) override;
 
 	protected:
 		ska::CameraSystem& m_camera;

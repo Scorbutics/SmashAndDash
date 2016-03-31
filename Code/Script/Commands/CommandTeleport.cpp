@@ -1,5 +1,7 @@
 #include "CommandTeleport.h"
 #include <string>
+#include "../../ska/Script/ScriptComponent.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Exceptions/InvalidPathException.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/World/World.h"

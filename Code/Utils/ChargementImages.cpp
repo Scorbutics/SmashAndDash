@@ -7,6 +7,7 @@
 #include "../ska/World/World.h"
 #include "../Gameplay/Character.h"
 #include "../ska/Utils/NumberUtils.h"
+#include "../Gameplay/Mobs/MobSpawner.h"
 
 using namespace std;
 
@@ -36,19 +37,19 @@ int GetRandom(vector<int>& probs)
 	return newProbs[rand()%newSize];
 }
 
-ska::IniReader* GetRandomMobSettings(ska::World* w)
+ska::IniReader* GetRandomMobSettings(MobSpawner& w)
 {
 	ska::IniReader* reader = NULL;
 	vector<int> probs;
-	const size_t totMobs = w->getMobSettings().size();
+	const size_t totMobs = w.getMobSettings().size();
 
 	probs.resize(totMobs);
 	for(size_t i = 0; i < totMobs; i++)
-		probs[i] = w->getMobSettings()[i].getInt("Spawn probability_percent");
+		probs[i] = w.getMobSettings()[i].getInt("Spawn probability_percent");
 
 
 	if(totMobs != 0)
-		reader = &w->getMobSettings()[GetRandom(probs)];
+		reader = &w.getMobSettings()[GetRandom(probs)];
 
 	return reader;
 }

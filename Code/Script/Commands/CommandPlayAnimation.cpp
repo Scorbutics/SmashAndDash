@@ -4,6 +4,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\ScriptUtils.h"
 #include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Graphic/Rectangle.h"
 
 CommandPlayAnimation::CommandPlayAnimation(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

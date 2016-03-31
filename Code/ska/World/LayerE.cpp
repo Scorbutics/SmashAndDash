@@ -71,7 +71,7 @@ void ska::LayerE::refresh() {
 	
 }
 
-int ska::LayerE::getBlocX(int ligne)
+int ska::LayerE::getBlocX(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vcoordBX[ligne];
@@ -79,7 +79,7 @@ int ska::LayerE::getBlocX(int ligne)
         return -1;
 }
 
-int ska::LayerE::getBlocY(int ligne)
+int ska::LayerE::getBlocY(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vcoordBY[ligne];
@@ -87,7 +87,7 @@ int ska::LayerE::getBlocY(int ligne)
         return -1;
 }
 
-int ska::LayerE::getID(int ligne)
+int ska::LayerE::getID(int ligne) const
 {
     if(ligne <= m_nbrLignes && ligne >= 0)
         return m_vID[ligne];
@@ -95,7 +95,7 @@ int ska::LayerE::getID(int ligne)
         return 0;
 }
 
-string ska::LayerE::getParam(int ligne)
+string ska::LayerE::getParam(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vparam[ligne];
@@ -104,7 +104,7 @@ string ska::LayerE::getParam(int ligne)
 
 }
 
-int ska::LayerE::getTrigger(int ligne)
+int ska::LayerE::getTrigger(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vtrigger[ligne];
@@ -112,7 +112,7 @@ int ska::LayerE::getTrigger(int ligne)
         return -1;
 }
 
-int ska::LayerE::getSolide(int ligne)
+int ska::LayerE::getSolide(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vsolide[ligne];
@@ -120,7 +120,7 @@ int ska::LayerE::getSolide(int ligne)
         return -1;
 }
 
-string ska::LayerE::getAction(int ligne)
+string ska::LayerE::getAction(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vaction[ligne];
@@ -131,7 +131,7 @@ string ska::LayerE::getAction(int ligne)
 
 }
 
-string ska::LayerE::getPath(int ligne)
+string ska::LayerE::getPath(int ligne) const
 {
     if(ligne < m_nbrLignes && ligne >= 0)
         return m_vpath[ligne];
@@ -142,7 +142,7 @@ string ska::LayerE::getPath(int ligne)
 
 }
 
-int ska::LayerE::getNbrLignes()
+int ska::LayerE::getNbrLignes() const
 {
     return m_nbrLignes;
 }

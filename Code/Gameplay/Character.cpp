@@ -237,7 +237,7 @@ void Character::playAnimation(unsigned int characterAnim, bool waitFinish)
 void Character::display(int part, bool shadow)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle origineRelative = wScreen.getORel(), ofHeroA, buf = m_rect;
+	ska::Rectangle origineRelative = { 0 }/*wScreen.getORel()*/, ofHeroA, buf = m_rect;
 		
 	if (!m_visible) {
 		return;

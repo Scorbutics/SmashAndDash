@@ -1,3 +1,5 @@
+#include "CameraSystem.h"
+#include "../Draw/DrawableContainer.h"
 #include "./GraphicSystem.h"
 #include "../PositionnedGraphicDrawable.h"
 

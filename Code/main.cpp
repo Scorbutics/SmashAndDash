@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
 		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
 		while (wScreen.refresh()); //boucle principale
-		wScreen.quitter(false);
+		//wScreen.quitter(false);
 	} catch (ska::TerminateProcessException& tpe) {
 		clog << tpe.what() << endl;
 	} catch (ska::GenericException& e) {

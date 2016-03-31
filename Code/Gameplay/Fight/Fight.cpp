@@ -108,7 +108,7 @@ void Fight::start(Character* opponent) {
 
 	m_isFighting = true;
 
-	wScreen.switchScene(EnumScene::FIGHT);
+	//wScreen.switchScene(EnumScene::FIGHT);
 
 	//Enregistrement dans les entités courantes du monde de l'apparition du Pokémon et de son opposant
 	/*wScreen.getEntityFactory().setPokemon(&(*m_pkmn));
@@ -173,7 +173,7 @@ void Fight::start(Character* opponent) {
 	boxScreen.h = wScreen.getHeight();
 
 	const unsigned int blockSize = w.getBlockSize();
-	do {
+	/*do {
 		do {
 			randomPos.x += rand()%(2*m_mobAggroRange + 1) - m_mobAggroRange;
 			randomPos.y += rand()%(2*m_mobAggroRange + 1) - m_mobAggroRange;
@@ -187,7 +187,7 @@ void Fight::start(Character* opponent) {
 		} while (!ska::RectangleUtils::isPositionInBox(relativePos, boxScreen));
 
 	} while(wScreen.getWorld().getCollision(randomPos.x/TAILLEBLOC, randomPos.y/TAILLEBLOC) || !wScreen.detectEntity(randomPos).empty()); 
-	
+	*/
 
 	m_opponent->setEntityNumber(ID_CURRENT_OPPONENT);
 	m_opponent->setVisible(true);
@@ -219,7 +219,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	WGameCore& wScreen = WGameCore::getInstance();
     if(m_opponent == NULL || m_trainer == NULL) {
         m_isFighting = false;
-		wScreen.switchScene(EnumScene::MAP);
+		//wScreen.switchScene(EnumScene::MAP);
         cerr << "Erreur (classe Fight) : un ou plusieurs participant au combat n'existe plus" << endl;
         return;
     }
@@ -266,7 +266,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	m_opponentID.y = 0;
 
 	m_isFighting = false;
-	wScreen.switchScene(EnumScene::MAP);
+	//wScreen.switchScene(EnumScene::MAP);
 
 	if (endReason == EndFightReason::Lose) {
 		wScreen.getWorld().changeLevel("poke1.bmp", "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"chipset.png");
@@ -304,16 +304,18 @@ void Fight::display()
     //Refresh la barre de vie si active
     if(m_pkmn != NULL && m_pkmn->getHPBar()->isVisible()) {
 		ska::Rectangle pos = m_pkmn->getPos();
+/*
         pos.y -= m_pkmn->getHPBar()->getPos().h + abs(wScreen.getORel().y);
-        pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
+        pos.x -= (m_pkmn->getWidth()/2 - m_pkmn->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);*/
         m_pkmn->getHPBar()->setPos(pos);
         m_pkmn->getHPBar()->refresh();
     }
 
     if(m_opponent != NULL && m_opponent->getHPBar()->isVisible()) {
 		ska::Rectangle pos = m_opponent->getPos();
+/*
         pos.y -= m_opponent->getHPBar()->getPos().h + abs(wScreen.getORel().y);
-        pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);
+        pos.x -= (m_opponent->getWidth()/2 - m_opponent->getHPBar()->getPos().w/2) + abs(wScreen.getORel().x);*/
         m_opponent->getHPBar()->setPos(pos);
         m_opponent->getHPBar()->refresh();
     }
@@ -381,8 +383,9 @@ void Fight::displayDialog() {
 
     if(m_dialogActive) {
 		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
+/*
         pos.x += wScreen.getORel().x + pos.w;
-        pos.y -= m_dial->getHeight() - wScreen.getORel().y;
+        pos.y -= m_dial->getHeight() - wScreen.getORel().y;*/
 
         m_dial->setPos(pos);
         m_dial->display();

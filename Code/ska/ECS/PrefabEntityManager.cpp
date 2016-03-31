@@ -28,7 +28,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const ska::Point<int> st
 	memset(&fc, 0, sizeof(fc));
 	fc.weight = 65.0;
 	ska::GravityAffectedComponent gac;
-	gac.friction = 18.5;
+	gac.friction = 20;
 	addComponent<ska::GravityAffectedComponent>(hero, gac);
 	addComponent<ska::ForceComponent>(hero, fc);
 	addComponent<ska::MovementComponent>(hero, mc);
@@ -51,7 +51,8 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const ska::Point<int> star
 	ska::EntityId hero = createCharacter(startPos, 0, worldBlockSize);
 	addComponent<ska::CameraFocusedComponent>(hero, ska::CameraFocusedComponent());
 	ska::InputComponent ic;
-	ic.movePower = 130;
+	ic.movePower = 100;
+	ic.jumpPower = 130 << 3;
 	addComponent<ska::InputComponent>(hero, ic);
 	ska::ScriptAwareComponent sac;
 	addComponent<ska::ScriptAwareComponent>(hero, sac);

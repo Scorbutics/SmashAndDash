@@ -158,7 +158,7 @@ void Pokeball::capture(Character* pkmn)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
-	ska::Rectangle& oRel = wScreen.getORel();
+	ska::Rectangle oRel = { 0 };
 
 
 	/* Oh mon dieu... */
@@ -321,9 +321,9 @@ void Pokeball::display()
 	}    
 
 	vector<ska::Rectangle> ids;
-    if((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1) ) //Si la Pokeball est en l'air
-    {
-		ska::Rectangle buf, animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = wScreen.getORel();
+	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) //Si la Pokeball est en l'air
+	{
+		ska::Rectangle buf, animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = { 0 };
 
         if(m_pokeballPos.x < m_finalPos.x)
             m_pokeballPos.x += m_speed;
@@ -345,7 +345,7 @@ void Pokeball::display()
 
     if(m_isOpenning) //Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
     {
-		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame(), buf, oRel = wScreen.getORel();
+		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame(), buf, oRel = { 0 };
         buf = m_pokeballPos;
         buf.x += oRel.x;
         buf.y += oRel.y;
@@ -364,7 +364,7 @@ void Pokeball::display()
 			boxCapture.w = 2*TAILLEBLOC;
 			boxCapture.h = 2*TAILLEBLOC;
 
-			ids = wScreen.detectEntity(boxCapture);
+			/*ids = wScreen.detectEntity(boxCapture);*/
 			const size_t idSize = ids.size();
 			for(size_t i = 0; i < idSize; i++)
 				if(ids[i].y == ID_CURRENT_OPPONENT)
@@ -387,7 +387,7 @@ void Pokeball::display()
     }
     else if(m_isInactive) //Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
     {
-		ska::Rectangle buf, oRel = wScreen.getORel();
+		ska::Rectangle buf, oRel = { 0 };
         buf = m_pokeballPos;
         buf.x += oRel.x;
         buf.y += oRel.y;

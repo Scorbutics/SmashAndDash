@@ -38,8 +38,9 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					dest.x = me->getX();
 					dest.y = me->getY();
 
+/*
 					dest.x -= wScreen.getORel().x;
-					dest.y -= wScreen.getORel().y;
+					dest.y -= wScreen.getORel().y;*/
 
 					dest.x = (dest.x / TAILLEBLOC) * TAILLEBLOC;
 					dest.y = (dest.y / TAILLEBLOC) * TAILLEBLOC;
@@ -68,8 +69,9 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					mouseRightClickPos.x = me->getX();
 					mouseRightClickPos.y = me->getY();
 					
+/*
 					opponentPos.x += wScreen.getORel().x;
-					opponentPos.y += wScreen.getORel().y;
+					opponentPos.y += wScreen.getORel().y;*/
 					wScreen.getFight().getPokemon()->setAutoattack(ska::RectangleUtils::isPositionInBox(mouseRightClickPos, opponentPos));
 				}
 
@@ -86,8 +88,9 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 			ska::Rectangle buf;
 			buf.x = me->getX();
 			buf.y = me->getY();
+/*
 			buf.x -= wScreen.getORel().x;
-			buf.y -= wScreen.getORel().y;
+			buf.y -= wScreen.getORel().y;*/
 
 			applyForce(buf, (float)power);
 		}
@@ -209,8 +212,9 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 		{
 			const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 			ska::Point<int> absoluteMousePos = mousePos;
+/*
 			absoluteMousePos.x -= wScreen.getORel().x;
-			absoluteMousePos.y -= wScreen.getORel().y;
+			absoluteMousePos.y -= wScreen.getORel().y;*/
 			//wScreen.getHero()->launchSkill(skillCursor, absoluteMousePos);
 		}
 	}

@@ -9,7 +9,7 @@
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
-#include "../Graphic/System/CameraSystem.h"
+
 
 namespace ska {
 	class Layer;
@@ -20,8 +20,8 @@ namespace ska {
 
 	class World : public HasGraphic {
 	public:
-		World(PrefabEntityManager& entityManager, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
-		virtual void load(std::string fileName, std::string chipsetName, std::string saveName);
+		World(/*PrefabEntityManager& entityManager, */const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+		virtual void load(std::string fileName, std::string chipsetName);
 
 		/*Weather* getFog();
 		Weather* getWeather();*/
@@ -60,7 +60,6 @@ namespace ska {
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 		virtual void changeLevel(std::string fileName, std::string chipsetName);
 
-		virtual void refreshEntities() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
 
 		~World();
@@ -78,15 +77,12 @@ namespace ska {
 
 		Texture m_chipset;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
-		//std::unique_ptr<Weather> m_temps, m_brouillard;
 		std::vector<IniReader> m_mobSettings;
 
 	protected:
-		PrefabEntityManager& m_entityManager;
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
-		std::unique_ptr<LayerE> m_lEvent;
+		std::unique_ptr<LayerE> layerE;
 		Animation m_animBlocks;
-		CameraSystem m_cameraSystem;
 	};
 }
 

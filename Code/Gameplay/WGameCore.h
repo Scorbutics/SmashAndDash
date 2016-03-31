@@ -16,7 +16,6 @@
 #include "../Physic/RainParticleManager.h"
 #include "Data\Settings.h"
 #include "PokemonManager.h"
-#include "EntityFactory.h"
 #include "../ska/Graphic\SpriteAnimationManager.h"
 #include "../Graphic\GUI\MouseCursor.h"
 #include "../ska/Graphic\Rectangle.h"
@@ -26,14 +25,11 @@
 #include "Data\SavegameManager.h"
 #include "World\WorldImpl.h"
 #include "../ska/Utils\Singleton_template.h"
-#include "./Scene/SceneMap.h"
-#include "./Scene/SceneFight.h"
-#include "EnumScene.h"
-
-#include "../ska/Script/System/ScriptRefreshSystem.h"
+#include "../ska/Inputs/InputContextManager.h"
+#include "../ska/Scene/SceneHolder.h"
 #include "../ska/Inputs/RawInputListener.h"
-#include "../ska/Inputs/System/InputSystem.h"
-#include "../Script/System/ScriptCommandsSystem.h"
+#include "World/WorldScene.h"
+#include "../ska/Graphic/Rectangle.h"
 
 class LayerE;
 class Layer;
@@ -41,7 +37,7 @@ class Layer;
 
 //typedef std::unique_ptr<Character> Character_ptr;
 
-class WGameCore : public ska::Window, public ska::Singleton<WGameCore>
+class WGameCore : public ska::Window, public ska::Singleton<WGameCore>, public ska::SceneHolder
 {
 	friend class ska::Singleton<WGameCore>;
 
@@ -58,24 +54,14 @@ public:
     void activeEcritureLog();
 	bool isScrollingActive();
 	void activeScrolling(bool b);
-	void quitFlip();
-	void quitter(bool transition);
 	
-	std::vector<ska::Rectangle> detectEntity(ska::Rectangle box);
-	std::vector<ska::Rectangle> detectEntity(ska::Rectangle box, int direction);
-	
-	void switchScene(EnumScene::Enum scene);
 	void initNewWorld();
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
 
-	ska::Rectangle& getOffsetHero();
-	ska::Rectangle& getOffsetChipset();
-	ska::Rectangle& getOffsetActualHero();
-	ska::Rectangle& getORel();
-	//Player* getHero();
 	float getSpeedInertie();
 	ska::Animation& getChipsetAnimation();
+
 	GUI& getGUI();
 	Fight& getFight();
 	Pokeball& getPokeball();
@@ -83,49 +69,35 @@ public:
 	Inventory& getInventory();
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
-	//EntityFactory& getEntityFactory();
 	ska::SpriteAnimationManager& getSpriteAnimationManager();
     MouseCursor& getMouseCursor();
-	bool getContinue();
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
 	ska::World& getWorld();
-	SavegameManager& getSavegameManager();
-
+	
 	const ska::InputActionContainer& getActions() const;
 	const ska::InputRangeContainer& getRanges() const;
 	const ska::InputToggleContainer& getToggles() const;
 
 	ska::ParticleManager& getParticleManager();
 	RainParticleManager& getRainParticleManager();
-	ska::ScriptRefreshSystem& getScriptSystem();
 
-    void setEntite(unsigned int i, int value);
     void setOffsetChipset(int x, int y, int w, int h);
-    void setORel(int x, int y);
-	void setORel(const ska::Rectangle &oRel);
     void setSpeedInertie(float x);
-    //void setHero(Player* hero);
     void setChipset(SDL_Surface* chipset);
-	void setContinue(bool b);
 	
-   
+	virtual void nextScene(std::unique_ptr<ska::Scene>& scene) override;
 
     protected:
-		CustomEntityManager m_entityManager;
+		
 
 		ska::RawInputListener m_rawInputListener;
-
-		ska::Scene* m_sceneCursor;
-		SceneMap m_sceneMap;
-		SceneFight m_sceneFight;
-
-		Settings m_settings;
-		Inventory m_inv;
-		ska::Rectangle m_OfChip, m_origineRelative;
-		bool m_quitFlip, m_ecritureLog, m_continue;
-		//Player *m_phero; //Character héro courant
+		ska::InputContextManager m_inputCManager;
 		
+
+
+		ska::Rectangle m_OfChip;
+		bool m_ecritureLog;
 
 		float m_speedInertie;
 		ska::Animation m_chipsetAni;
@@ -136,21 +108,20 @@ public:
 		TrainerCard m_trainerCard;
 		ShakerManager m_shaker;
 		ska::SpriteAnimationManager m_spriteAnimManager;
-		bool m_scrolling;
-		//EntityFactory m_EntityFactory; //Une instance de gestion des personnages à l'écran (hors combat)
+		bool m_scrolling;		
 		Fight m_fight;
 		MouseCursor m_mouseCursor;
 		GUI m_gui;
 		
-		SavegameManager m_saveManager;
-		WorldImpl m_world;
+		Settings m_settings;
+		Inventory m_inv;
+		WorldScene m_worldScene;
 
 		ska::ParticleManager m_particleManager;
 		RainParticleManager m_rainParticleManager;
+		
 
-		ska::InputSystem m_inputSystem;
-		ska::ScriptRefreshSystem m_scriptSystem;
-		ScriptCommandsSystem m_scriptAutoSystem;
+
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "CollisionSystem.h"
 #include "../../Utils/RectangleUtils.h"
 #include "../CollisionComponent.h"
+#include "../ForceComponent.h"
 #include "../WorldCollisionComponent.h"
 
 ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager) : System(entityManager), m_world(w) {

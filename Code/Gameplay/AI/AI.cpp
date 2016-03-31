@@ -122,8 +122,8 @@ void AI::act(Fight& fight)
     screenRect.x = screenRect.y = 0;
     screenRect.w = wScreen.getWidth();
     screenRect.h = wScreen.getHeight();
-    centerPos.x += wScreen.getORel().x;
-    centerPos.y += wScreen.getORel().y;
+    /*centerPos.x += wScreen.getORel().x;
+    centerPos.y += wScreen.getORel().y;*/
 
 	if (!ska::RectangleUtils::isPositionInBox(centerPos, screenRect) || !wScreen.getFight().getOpponent()->isAlive()) {
 		fight.end(EndFightReason::Win);

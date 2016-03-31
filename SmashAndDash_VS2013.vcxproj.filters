@@ -267,9 +267,6 @@
     <ClInclude Include="Code\Gameplay\Mobs\GetIDmob.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Mobs\MobSpawningManager.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\MouseCursor.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
@@ -278,9 +275,6 @@
     </ClInclude>
     <ClInclude Include="Code\Graphic\ShakerManager.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\Scrolling.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Data\Settings.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Data</Filter>
@@ -319,9 +313,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Script\Commands\CommandPlayerPresence.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\EnumScene.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Scene\SceneMap.h">
@@ -789,6 +780,30 @@
     <ClInclude Include="Code\ska\AI\System\IAMovementSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Gameplay\Fight\FightComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\SceneHolder.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Scene\SceneType.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\ISystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\World\WorldScene.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\ECS\IGraphicSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -947,9 +962,6 @@
     <ClCompile Include="Code\Gameplay\Mobs\GetIDmob.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\Mobs\MobSpawningManager.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
@@ -957,9 +969,6 @@
       <Filter>Fichiers sources\Gameplay\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\ShakerManager.cpp">
-      <Filter>Fichiers sources\Graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\Scrolling.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Data\Settings.cpp">
@@ -1263,6 +1272,15 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Scene\Scene.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gameplay\World\WorldScene.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

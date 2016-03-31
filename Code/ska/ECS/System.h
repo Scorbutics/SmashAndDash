@@ -4,12 +4,13 @@
 #include "ECSDefines.h"
 #include "Component.h"
 #include "EntityManager.h"
+#include "ISystem.h"
 #include "../Utils/Observer.h"
 
 namespace ska {
 	
 	template <class Storage, class ... ComponentType>
-	class System : public Observer<EntityData> {
+	class System : public Observer<EntityData>, virtual public ISystem {
 	public :
 		System(EntityManager& entityManager) : 
 			m_entityManager(entityManager) { 
@@ -21,7 +22,7 @@ namespace ska {
 
 		}
 		
-		virtual void refresh() = 0;
+		
 
 		void update(Observable<EntityData>* obs, const EventArg& e, EntityData& t) override {
 			

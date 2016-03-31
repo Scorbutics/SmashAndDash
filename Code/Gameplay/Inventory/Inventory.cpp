@@ -58,9 +58,12 @@ int Inventory::search(int id)
 {
     list<unique_ptr<Object>>::iterator iter;
     int i = 0;
-    for(iter = m_objects.begin(); iter != m_objects.end(); ++iter, i++)
-        if(*iter != NULL && id == (*iter)->getID())
-            return i;
+	for (auto& iter : m_objects) {
+		if (iter != NULL && id == iter->getID()) {
+			return i;
+		}
+		i++;
+	}
     return -1;
 }
 

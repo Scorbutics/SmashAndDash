@@ -6,13 +6,13 @@
 #include <vector>
 #include "../Gameplay/Character.h"
 #include "../ska/Graphic/Rectangle.h"
-#include "../ska/World/World.h"
 
 class IniReader;
+class MobSpawner;
 
 ska::Rectangle GetCurrentSpritePosOfHero(Character* hero, bool animation);
 int GetRandom(std::vector<int>& probs);
-ska::IniReader* GetRandomMobSettings(ska::World* w);
+ska::IniReader* GetRandomMobSettings(MobSpawner& w);
 
 void SwitchesAcquisition(vector<bool> &vect, std::string filename);
 void VariablesAcquisition(vector<int> &vect, std::string filename);

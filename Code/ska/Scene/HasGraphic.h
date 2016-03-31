@@ -1,8 +1,8 @@
 #pragma once
-#include "../Graphic/Draw/DrawableContainer.h"
 #include <queue>
 
 namespace ska {
+	class DrawableContainer;
 	class HasGraphic {
 	public:
 		HasGraphic() {}

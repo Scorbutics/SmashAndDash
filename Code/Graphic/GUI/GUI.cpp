@@ -426,7 +426,7 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
     int id;
     stringstream ss;
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle buf, posHero, oRel = wScreen.getORel();
+	ska::Rectangle buf, posHero, oRel = { 0 };
 
     m_pokeInfoWindow->deleteAll();
     m_pnj = pokemon;
@@ -470,7 +470,7 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
 void GUI::resetInfoPNJWindow(Character* pnj)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle buf, posHero, oRel = wScreen.getORel();
+	ska::Rectangle buf, posHero, oRel = { 0 };
     stringstream ss;
     int id;
     m_pnjInfoWindow->deleteAll();

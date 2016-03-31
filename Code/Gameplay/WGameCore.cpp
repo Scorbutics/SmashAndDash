@@ -3,7 +3,6 @@
 #include "../Gameplay\WGameCore.h"
 #include "../ska/Utils/Observable.h"
 #include "../Utils/ChargementImages.h"
-#include "../Graphic/Scrolling.h"
 #include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
@@ -11,40 +10,33 @@
 #include "../ska/World/LayerE.h"
 #include "../ska/Exceptions/CorruptedFileException.h"
 #include "../ska/ECS/PrefabEntityManager.h"
+#include "./Scene/SceneMap.h"
+
 using namespace std;
 
 
 WGameCore::WGameCore():
-Window(), m_settings("gamesettings.ini"), m_chipsetAni(3, 4, true), m_saveManager("save1"), m_world(m_entityManager, TAILLEBLOC, m_laFenetre, m_loFenetre),
-m_sceneMap(m_entityManager, m_rawInputListener), m_sceneFight(m_entityManager, m_rawInputListener), m_inputSystem(m_sceneMap.getInputContextManager(), m_entityManager),
-m_scriptAutoSystem(m_entityManager, m_saveManager), m_scriptSystem(m_scriptAutoSystem, m_sceneMap.getInputContextManager(), m_world.getBlockSize(), m_entityManager) {
-	//m_phero = m_EntityFactory.getTrainer();
+Window(), 
+m_inputCManager(m_rawInputListener),
+m_settings("gamesettings.ini"),
+m_worldScene(*this, m_inputCManager, m_laFenetre, m_loFenetre),
+m_chipsetAni(3, 4, true) {
 
 	m_OfChip.y = 0;
 	m_OfChip.x = 0;
-	m_OfChip.w = m_world.getBlockSize();
-	m_OfChip.h = m_world.getBlockSize();
+	/*m_OfChip.w = m_world.getBlockSize();
+	m_OfChip.h = m_world.getBlockSize();*/
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
 	/* Let's start on the map */
-	m_sceneCursor = &m_sceneMap;
-
-	m_origineRelative.x = 0;
-	m_origineRelative.y = 0;
-	m_origineRelative.w = m_laFenetre;
-	m_origineRelative.h = m_loFenetre;
+	nextScene(ska::ScenePtr(new SceneMap(*this, m_inputCManager, m_worldScene)));
 
 	m_speedInertie = 0;
 	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 
-	m_saveManager.loadGame(m_saveManager.getPathName());
 
-	m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
-}
-
-ska::ScriptRefreshSystem& WGameCore::getScriptSystem() {
-	return m_scriptSystem;
+	//m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h)
@@ -54,10 +46,6 @@ void WGameCore::resize(unsigned int w, unsigned int h)
 	m_loFenetre = h;
 }
 
-SavegameManager& WGameCore::getSavegameManager()
-{
-	return m_saveManager;
-}
 
 Pokeball& WGameCore::getPokeball()
 {
@@ -74,25 +62,6 @@ TrainerCard& WGameCore::getTrainerCard()
     return m_trainerCard;
 }
 
-ska::Rectangle& WGameCore::getOffsetChipset()
-{
-    return m_OfChip;
-}
-
-ska::Rectangle& WGameCore::getORel()
-{
-    return m_origineRelative;
-}
-
-/*
-Player* WGameCore::getHero()
-{
-	if(m_phero == NULL)
-		return NULL;
-    return &(*m_phero);
-}
-*/
-
 void WGameCore::setOffsetChipset(int x, int y, int w, int h)
 {
     m_OfChip.x = x;
@@ -101,26 +70,10 @@ void WGameCore::setOffsetChipset(int x, int y, int w, int h)
     m_OfChip.h = h;
 }
 
-void WGameCore::setORel(int x, int y)
-{
-    m_origineRelative.x = x;
-    m_origineRelative.y = y;
-}
 
 ShakerManager& WGameCore::getShakerManager()
 {
     return m_shaker;
-}
-
-void WGameCore::setORel(const ska::Rectangle &oRel)
-{
-    m_origineRelative = oRel;
-}
-
-
-void WGameCore::quitFlip()
-{
-    m_quitFlip = true;
 }
 
 float WGameCore::getSpeedInertie()
@@ -183,27 +136,20 @@ ska::ParticleManager& WGameCore::getParticleManager() {
     return m_particleManager;
 }
 
-void WGameCore::switchScene(EnumScene::Enum scene) {
-	switch (scene) {
-	case EnumScene::FIGHT:
-		m_sceneCursor = &m_sceneFight;
-		break;
-	case EnumScene::MAP:
-		m_sceneCursor = &m_sceneMap;
-		break;
+void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
+	if (m_currentScene != NULL) {
+		m_currentScene->unload();
 	}
-	
+	m_currentScene = std::move(scene);
+	m_currentScene->load();
 }
 
 //Boucle principale gérant évènements et affichages du monde.
-bool WGameCore::refresh()
-{
+bool WGameCore::refresh() {
 	//t et t0 sont les temps pour la gestion des fps
     long t = 0, t0 = 0; 
 
-    m_continue = false;
     m_ecritureLog = false;
-    m_quitFlip = false;
     initNewWorld();
 
     
@@ -213,44 +159,33 @@ bool WGameCore::refresh()
 
 
     //BOUCLE PRINCIPALE A CHAQUE FRAME
-    while (!m_quitFlip)
-    {
-        t = SDL_GetTicks();
-        if (t - t0 > 30) // Si 30 ms se sont écoulées
-        {
+    while (1) {
+        t = ska::TimeUtils::getTicks();
+		
+		if (t - t0 > 20)  {
             //Rafraîchissement à chaque frame : graphique puis évènementiel
 			graphicUpdate();
 			eventUpdate(false);
 
-            
 			flip();
 			SDL_RenderClear(m_renderer);
-            t0 = t; // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
-        }
-        else // Si ça fait moins de 30ms depuis le dernier tour de boucle, on endort le programme le temps qu'il faut
-            SDL_Delay(30 - (t - t0));
+			// Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
+            t0 = t; 
+        } else {
+			/* Temporisation entre 2 frames */
+			SDL_Delay(20 - (t - t0));
+		}
     }
 
 
-    quitter(m_continue);
-
-    return m_continue;
-
-
+    return true;
 }
 
 
-//Gestion de l'ordre de l'affichage des éléments...
-//gros bordel !
-void WGameCore::graphicUpdate(void)
-{
+void WGameCore::graphicUpdate(void) {
 	ska::VectorDrawableContainer drawables;
-	m_sceneCursor->graphicUpdate(drawables);
+	m_currentScene->graphicUpdate(drawables);
 	drawables.draw();
-	//m_graphicSystem.refreshAll();
-
-	/* TODO faire une gestion de caméra externe (non uniquement focus sur le héro) */
-	//Scrolling();
 }
 
 RainParticleManager& WGameCore::getRainParticleManager() {
@@ -267,48 +202,19 @@ void WGameCore::activeScrolling(bool b)
 	m_scrolling = b;
 }
 
-void WGameCore::setContinue(bool b)
-{
-    m_continue = b;
-}
-
-bool WGameCore::getContinue()
-{
-    return m_continue;
-}
-
 void WGameCore::eventUpdate(bool movingDisallowed) {
-	m_sceneCursor->eventUpdate(movingDisallowed);
-	/* Game Logic Input System */
-	m_inputSystem.refresh();
-
-	m_scriptSystem.refresh();
-}
-
-
-void WGameCore::initNewWorld()
-{
-
-    // 2) Récupère les zones de combat situées dans le fichier evenement du monde
-    m_fight.setAreasFromLayerEvent();
-
-    // 3) Chargement des entités apparaissant à l'écran. Pour m_persoEntite on va créer un tableau bidimensionnel :
-    //1ere dimension: le nombre de types différents de mobs sur la map et 2eme dimension: le nombre de mobs du même type.
-    //Ainsi que récupération des positions des évenements/entités.
-
-
+	m_currentScene->eventUpdate(movingDisallowed);
 	
-    //m_phero->setID(0);
-	   
+	/* Game Logic Input System */
+	/*m_inputSystem.refresh();
+	m_scriptSystem.refresh();*/
 }
 
 
-/*void WGameCore::setHero(Player* hero)
-{
-	//m_kdListener.removeObserver(m_phero);
-    //m_phero = hero;
-	//m_kdListener.addObserver(m_phero);
-}*/
+void WGameCore::initNewWorld() {
+    // Récupère les zones de combat situées dans le fichier evenement du monde
+    //m_fight.setAreasFromLayerEvent();   
+}
 
 void WGameCore::waitQuit(DialogMenu* window)
 {
@@ -333,84 +239,6 @@ void WGameCore::waitQuit(DialogMenu* window)
     }
 }
 
-//fonction qui renvoie un tableau d'ids d'entités entrant en contact avec une box donnée (il peut y avoir plusieurs entités superposées et donc le tableau sera de taille > 1)
-//dans chaque .x : id pokédex
-//dans chaque .y : numéro de l'entité
-vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box)
-{
-	//ska::Rectangle posEvent;
-	vector<ska::Rectangle> id;
-	//list<Character*>& currentEntityList = m_EntityFactory.getCharacterList();
-
-	/*for (Character* entity : currentEntityList)
-	{
-		posEvent = entity->getHitbox();
-
-		if(ska::RectangleUtils::collisionBoxABoxB(box, posEvent))
-		{
-			ska::Rectangle pos;
-			pos.x = (Sint16)entity->getID();
-			pos.y = (Sint16)entity->getEntityNumber();
-			pos.w = 0;
-			pos.h = 0;
-			id.push_back(pos);
-		}
-    }
-	*/
-    return id;
-
-}
-
-vector<ska::Rectangle> WGameCore::detectEntity(ska::Rectangle box, int direction)
-{
-	static const int diagPitch = (int)(TAILLEBLOC / (2 * sqrt((float)2))) + 1;
-	static const int directPitch = TAILLEBLOC / 2 + 1;
-	ska::Rectangle buf = box;
-    switch(direction)
-    {
-        case 0:
-			buf.y += directPitch;
-        break;
-
-        case 1:
-			buf.x += directPitch;
-        break;
-
-        case 2:
-			buf.y -= directPitch;
-        break;
-
-        case 3:
-			buf.x -= directPitch;
-        break;
-
-        case 4:
-			buf.y += diagPitch;
-			buf.x += diagPitch;
-        break;
-
-        case 5:
-			buf.y -= diagPitch;
-			buf.x += diagPitch;
-        break;
-
-        case 6:
-			buf.y -= diagPitch;
-			buf.x -= diagPitch;
-        break;
-
-        case 7:
-			buf.y += diagPitch;
-			buf.x -= diagPitch;
-        break;
-
-        default:
-        break;
-    }
-
-    return this->detectEntity(buf);
-}
-
 AI& WGameCore::getAI()
 {
     return m_ai;
@@ -431,20 +259,6 @@ Settings& WGameCore::getSettings()
     return m_settings;
 }
 
-void WGameCore::quitter(bool transition)
-{
-	/*if (transition) {
-		this->transition(0);
-	}*/
-
-	m_rainParticleManager.stop();
-	m_particleManager.stop();
-
-	//Désallocation mémoire
-	//m_EntityFactory.deleteAll();
-	
-}
-
 GUI& WGameCore::getGUI()
 {
     return m_gui;
@@ -452,7 +266,7 @@ GUI& WGameCore::getGUI()
 
 ska::World& WGameCore::getWorld()
 {
-	return m_world;
+	return m_worldScene.getWorld();
 }
 
 
@@ -461,28 +275,23 @@ Fight& WGameCore::getFight()
     return m_fight;
 }
 
-/*EntityFactory& WGameCore::getEntityFactory()
-{
-    return m_EntityFactory;
-}*/
-
 const ska::InputActionContainer& WGameCore::getActions() const {
-	return m_sceneCursor->getInputContextManager().getActions();
+	return m_inputCManager.getActions();
 }
 
 const ska::InputRangeContainer& WGameCore::getRanges() const {
-	return m_sceneCursor->getInputContextManager().getRanges();
+	return m_inputCManager.getRanges();
 }
 
 const ska::InputToggleContainer& WGameCore::getToggles() const {
-	return m_sceneCursor->getInputContextManager().getToggles();
+	return m_inputCManager.getToggles();
 }
 
 WGameCore::~WGameCore()
 {
-   for(unsigned int i = 0; i < m_guiList.size(); i++)
-        delete m_guiList[i];
-    this->quitter(false);
+	for (unsigned int i = 0; i < m_guiList.size(); i++) {
+		delete m_guiList[i];
+	}
 }
 
 

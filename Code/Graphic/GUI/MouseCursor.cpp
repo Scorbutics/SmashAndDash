@@ -103,8 +103,9 @@ void MouseCursor::display()
     if(SDL_GetTicks() - m_time < m_delay)
     {
 		ska::Rectangle buf = m_aniCursor.getRectOfCurrentFrame(), relativeMousePos = m_cursorPos;
+/*
         relativeMousePos.x += wScreen.getORel().x;
-        relativeMousePos.y += wScreen.getORel().y;
+        relativeMousePos.y += wScreen.getORel().y;*/
 
 		m_sprite.render(relativeMousePos.x, relativeMousePos.y, &buf);
     }

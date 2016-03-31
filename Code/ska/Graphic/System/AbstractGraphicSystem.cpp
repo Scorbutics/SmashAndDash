@@ -1,4 +1,6 @@
+#include "CameraSystem.h"
 #include "AbstractGraphicSystem.h"
+#include "../Draw/DrawableContainer.h"
 #include "../PositionnedGraphicDrawable.h"
 
 ska::AbstractGraphicSystem::AbstractGraphicSystem(ska::CameraSystem& camera) : m_camera(camera) {

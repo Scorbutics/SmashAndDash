@@ -71,8 +71,9 @@ void Projectile::refresh()
 			
 			particlePos = m_particles[i]->getPos();
 			particleOrigin = m_particles[i]->getOrigin();
+/*
 			particleOrigin.x += wScreen.getORel().x;
-			particleOrigin.y += wScreen.getORel().y;
+			particleOrigin.y += wScreen.getORel().y;*/
 			distance = ska::RectangleUtils::distanceSquared(particlePos, particleOrigin);
 			//Si on dépasse la portée prévue, on détruit la particule
 			if (distance > m_range*TAILLEBLOC*m_range*TAILLEBLOC)
@@ -309,8 +310,9 @@ void Projectile::launch(ska::Point<int> dest)
        angle += (float)M_PI;
 	
 	m_direction = ska::RectangleUtils::getDirectionFromPos(buf, dest);
+/*
     buf.x -= wScreen.getORel().x;
-    buf.y -= wScreen.getORel().y;
+    buf.y -= wScreen.getORel().y;*/
     
     const size_t particleSize = m_particles.size();
     for(size_t i = 0; i < particleSize; i++)

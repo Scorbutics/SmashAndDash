@@ -116,7 +116,7 @@ void WindowSettings::refresh()
 
 	if (m_saveGame != 0)
 	{
-		wScreen.getSavegameManager().saveGame("save1");
+		//wScreen.getSavegameManager().saveGame("save1");
 		this->getButton("save_game")->forceValue(0);
 	}
 }

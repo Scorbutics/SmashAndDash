@@ -1,6 +1,5 @@
 #include "CommandStop.h"
 
-#include "../../Gameplay\WGameCore.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Script/ScriptComponent.h"
 
@@ -21,10 +20,10 @@ int CommandStop::argumentsNumber() {
 
 std::string CommandStop::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	ofstream scriptList;
 	scriptList.open(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + wScreen.getSavegameManager().getSaveName() + FILE_SEPARATOR"scripts.data").c_str(), ios::app);
 	scriptList << script.extendedName << endl;
-	scriptList.close();
+	scriptList.close();*/
 	return false;
 }

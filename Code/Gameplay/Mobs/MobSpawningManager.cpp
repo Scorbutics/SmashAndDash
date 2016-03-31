@@ -2,10 +2,11 @@
 #include "../../Utils\IDs.h"
 #include "..\World\WorldImpl.h"
 #include "../../Utils\ChargementImages.h"
+#include "MobSpawner.h"
 
 using namespace std;
 
-MobSpawningManager::MobSpawningManager(WorldImpl& w, unsigned int delay) : m_world(w)
+MobSpawningManager::MobSpawningManager(MobSpawner& w, unsigned int delay) : m_mobSpawner(w)
 {
 	m_t0 = SDL_GetTicks();
 	m_duration = delay;
@@ -16,18 +17,18 @@ MobSpawningManager::MobSpawningManager(WorldImpl& w, unsigned int delay) : m_wor
 
 void MobSpawningManager::spawnOnWorld(unsigned int spawnNumber)
 {
-	const unsigned int blockSize = m_world.getBlockSize();
-	const unsigned int range = (m_world.getNbrBlocX() > m_world.getNbrBlocY() ? m_world.getNbrBlocX()*blockSize : m_world.getNbrBlocY()*blockSize);
+	const unsigned int blockSize = m_mobSpawner.getBlockSize();
+	const unsigned int range = (m_mobSpawner.getNbrBlocX() > m_mobSpawner.getNbrBlocY() ? m_mobSpawner.getNbrBlocX()*blockSize : m_mobSpawner.getNbrBlocY()*blockSize);
 
 	for(unsigned int i = 0; i < spawnNumber; i++) {
-		ska::IniReader* reader = GetRandomMobSettings(&m_world);
+		ska::IniReader* reader = GetRandomMobSettings(&m_mobSpawner);
 
 		if(reader != NULL) {
 			ska::Rectangle pos;
-			pos.x = m_world.getNbrBlocX()*blockSize / 2;
-			pos.y = m_world.getNbrBlocY()*blockSize / 2;
+			pos.x = m_mobSpawner.getNbrBlocX()*blockSize / 2;
+			pos.y = m_mobSpawner.getNbrBlocY()*blockSize / 2;
 
-			m_world.spawnMob(pos, 0, range, m_spawnNum, reader);
+			m_mobSpawner.spawnMob(pos, 0, range, m_spawnNum, reader);
 		}
 			
 	}

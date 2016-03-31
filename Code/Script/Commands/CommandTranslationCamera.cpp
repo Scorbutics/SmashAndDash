@@ -27,19 +27,20 @@ std::string CommandTranslationCamera::execute(ska::ScriptComponent& script, std:
 	speedx = ska::StringUtils::strToInt(args[1]);
 	speedy = ska::StringUtils::strToInt(args[2]);
 
-	tmpRelativeOrigin = wScreen.getORel();
+/*	tmpRelativeOrigin = wScreen.getORel();*/
 	wScreen.activeScrolling(false);
 
 	t0 = SDL_GetTicks();
 
 	while (SDL_GetTicks() - t0 < duree)
 	{
+/*
 		tmpRelativeOrigin.x -= speedx;
-		tmpRelativeOrigin.y -= speedy;
+		tmpRelativeOrigin.y -= speedy;*/
 
 		wScreen.graphicUpdate();
 		wScreen.eventUpdate(true);
-		wScreen.setORel(tmpRelativeOrigin);
+		//wScreen.setORel(tmpRelativeOrigin);
 
 		wScreen.flip();
 		SDL_Delay(20);

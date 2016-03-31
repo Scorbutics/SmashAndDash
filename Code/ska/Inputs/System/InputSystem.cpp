@@ -37,7 +37,7 @@ void ska::InputSystem::refresh() {
 		}
 
 		if (iac[InputAction::Jump] && posComponent.z < 0.001) {
-			forceComponent.z += inputComponent.movePower << 3;
+			forceComponent.z += inputComponent.jumpPower;
 		}
 
 		if (moveX && moveY) {

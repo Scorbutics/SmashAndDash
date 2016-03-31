@@ -77,8 +77,9 @@ bool Object::use()
 
 		const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
 		ska::Point<int> pos = mousePos;
+/*
 		pos.x -= wScreen.getORel().x;
-		pos.y -= wScreen.getORel().y;
+		pos.y -= wScreen.getORel().y;*/
 		//wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), pos, PokeballLaunchReason::Capture);
     }
 

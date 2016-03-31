@@ -27,14 +27,14 @@ void ShakerManager::refresh()
 		else
 			buf.x = m_oRelBackup.x;
 
-		wScreen.setORel(buf);
+		//wScreen.setORel(buf);
 
 		m_sens *= -1;
 	}
 	else
 	{
 		m_active = false;
-		wScreen.setORel(m_oRelBackup);
+		//wScreen.setORel(m_oRelBackup);
 	}
 
 }
@@ -55,7 +55,7 @@ void ShakerManager::shake(unsigned int intensity, unsigned int duration)
 		m_duration = duration;
 		m_intensity = intensity;
 
-		m_oRelBackup = wScreen.getORel();
+/*		m_oRelBackup = wScreen.getORel();*/
 	}
 
 }

@@ -10,15 +10,15 @@
 
 using namespace std;
 
-ska::World::World(PrefabEntityManager& entityManager, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
-m_entityManager(entityManager), 
+ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
+//m_entityManager(entityManager), 
 m_blockSize(tailleBloc), 
-m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), 
-m_cameraSystem(m_entityManager, wWidth, wHeight)
+m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc)
+//m_cameraSystem(m_entityManager, wWidth, wHeight)
 {
 }
 
-void ska::World::load(string fileName, string chipsetName, std::string saveName)
+void ska::World::load(string fileName, string chipsetName)
 {
 	//m_bgm = NULL;
 	m_chipset.load(chipsetName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -35,13 +35,12 @@ void ska::World::load(string fileName, string chipsetName, std::string saveName)
 	m_nbrBlockX = 0;
 	m_nbrBlockY = 0;
 
-	m_lBot = LayerPtr(new Layer(m_entityManager, *this, m_botLayerName, chipsetName));
-	m_lMid = LayerPtr(new Layer(m_entityManager, *this, m_midLayerName, chipsetName, m_lBot.get()));
-	m_lTop = LayerPtr(new Layer(m_entityManager, *this, m_topLayerName, chipsetName, m_lMid.get()));
+	m_lBot = LayerPtr(new Layer(*this, m_botLayerName, chipsetName));
+	m_lMid = LayerPtr(new Layer(*this, m_midLayerName, chipsetName, m_lBot.get()));
+	m_lTop = LayerPtr(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
 
-	m_lEvent = LayerEPtr(new LayerE(*this, m_eventLayerName));
+	layerE = LayerEPtr(new LayerE(*this, m_eventLayerName));
 
-	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 	getData();
 
 }
@@ -58,33 +57,6 @@ void ska::World::setWind(int wind) {
 int ska::World::getWind() const {
 	return m_windDirection;
 }
-
-
-/*void ska::World::refresh()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-
-
-	//On refresh tous les personnages
-	auto it = wScreen.getEntityFactory().getCharacterList().begin();
-	while (it != wScreen.getEntityFactory().getCharacterList().end())
-	{
-		Character* npc = (*it);
-		if (npc->isVisible() && npc->isAlive()) {
-			npc->refresh();
-		}
-			
-		//Si jamais un personnage n'est plus vivant ou est notre Pokémon en combat alors que le combat est terminé, on le supprime
-		if (!(npc->getEntityNumber() == ID_CURRENT_POKEMON && !wScreen.getFight().isFighting())) {
-			it++;
-		} else {
-			it = wScreen.getEntityFactory().getCharacterList().erase(it);
-		}
-			
-    }    
-
-
-}*/
 
 ska::Animation& ska::World::getChipsetAnimation() {
 	return m_animBlocks;
@@ -140,7 +112,7 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
 }
 
 const ska::Rectangle* ska::World::getView() const {
-	return m_cameraSystem.getDisplay();
+	return NULL/*m_cameraSystem.getDisplay()*/;
 }
 
 ska::LayerPtr& ska::World::getLayerBot()
@@ -160,7 +132,7 @@ ska::LayerPtr& ska::World::getLayerTop()
 
 ska::LayerEPtr& ska::World::getLayerEvent()
 {
-	return m_lEvent;
+	return layerE;
 }
 
 string ska::World::getName()
@@ -202,9 +174,9 @@ void ska::World::changeLevel(string fileName, string chipsetname)
 	m_lMid->reset(m_midLayerName, chipsetname);
 	m_lTop->reset(m_topLayerName, chipsetname);
     
-	m_lEvent->changeLevel(m_genericName + "E.txt");
+	layerE->changeLevel(m_genericName + "E.txt");
 
-	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
+	//m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 
 
 	getData();

@@ -1,3 +1,5 @@
+#include "CameraSystem.h"
+#include "../Draw/DrawableContainer.h"
 #include "ShadowSystem.h"
 #include "../SpritePath.h"
 

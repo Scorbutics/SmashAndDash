@@ -124,11 +124,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Gameplay\Fight\FightComponent.h" />
+    <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
+    <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
     <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
     <ClInclude Include="Code\ska\AI\System\IAMovementSystem.h" />
     <ClInclude Include="Code\ska\ECS\ComponentSerializer.h" />
+    <ClInclude Include="Code\ska\ECS\ISystem.h" />
     <ClInclude Include="Code\ska\ECS\PrefabEntityManager.h" />
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
@@ -141,6 +145,7 @@
     <ClInclude Include="Code\ska\Graphic\System\DeleterSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Code\ska\ECS\IGraphicSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\ShadowSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollisionComponent.h" />
     <ClInclude Include="Code\ska\Physic\GravityAffectedComponent.h" />
@@ -165,7 +170,6 @@
     <ClInclude Include="Code\ska\Exceptions\IllegalArgumentException.h" />
     <ClInclude Include="Code\ska\Exceptions\IllegalStateException.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractSceneMap.h" />
-    <ClInclude Include="Code\Gameplay\EnumScene.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptDiedException.h" />
     <ClInclude Include="Code\ska\Inputs\InputAction.h" />
     <ClInclude Include="Code\ska\Inputs\InputContext.h" />
@@ -181,6 +185,8 @@
     <ClInclude Include="Code\ska\Graphic\Point.h" />
     <ClInclude Include="Code\ska\Graphic\Rectangle.h" />
     <ClInclude Include="Code\ska\Scene\Refreshable.h" />
+    <ClInclude Include="Code\ska\Scene\SceneHolder.h" />
+    <ClInclude Include="Code\ska\Scene\SceneType.h" />
     <ClInclude Include="Code\ska\Script\Command\AbstractFunctionCommand.h" />
     <ClInclude Include="Code\ska\Script\Command\AbstractCommand.h" />
     <ClInclude Include="Code\ska\Exceptions\InputException.h" />
@@ -273,7 +279,6 @@
     <ClInclude Include="Code\ska\World\Layer.h" />
     <ClInclude Include="Code\ska\World\LayerE.h" />
     <ClInclude Include="Code\ska\Physic\LinearParticle.h" />
-    <ClInclude Include="Code\Gameplay\Mobs\MobSpawningManager.h" />
     <ClInclude Include="Code\Graphic\GUI\MouseCursor.h" />
     <ClInclude Include="Code\ska\Inputs\MouseInput.h" />
     <ClInclude Include="Code\Graphic\GUI\MovableWindow.h" />
@@ -293,7 +298,6 @@
     <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h" />
     <ClInclude Include="Code\Utils\resource.h" />
     <ClInclude Include="Code\Gameplay\Data\SavegameManager.h" />
-    <ClInclude Include="Code\Graphic\Scrolling.h" />
     <ClInclude Include="Code\Graphic\GUI\Scroll_Text.h" />
     <ClInclude Include="Code\ska\Graphic\SDLTexture.h" />
     <ClInclude Include="Code\ska\Script\Command\ControlStatement.h" />
@@ -352,8 +356,10 @@
     <ClInclude Include="Code\Script\System\ScriptCommandsSystem.h" />
     <ClInclude Include="Code\ska\Utils\PhysicUtils.h" />
     <ClInclude Include="Code\Gameplay\CustomEntityManager.h" />
+    <ClInclude Include="Code\Gameplay\World\WorldScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp" />
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
@@ -374,6 +380,7 @@
     <ClCompile Include="Code\ska\ECS\StaticCounterGlobal.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputContext.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputGUIContext.cpp" />
+    <ClCompile Include="Code\ska\Scene\Scene.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractCommand.cpp" />
     <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
@@ -446,7 +453,6 @@
     <ClCompile Include="Code\ska\World\LayerE.cpp" />
     <ClCompile Include="Code\ska\Physic\LinearParticle.cpp" />
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="Code\Gameplay\Mobs\MobSpawningManager.cpp" />
     <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp" />
     <ClCompile Include="Code\ska\Inputs\MouseInput.cpp" />
     <ClCompile Include="Code\Graphic\GUI\MovableWindow.cpp" />
@@ -463,7 +469,6 @@
     <ClCompile Include="Code\Gameplay\PokemonManager.cpp" />
     <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp" />
     <ClCompile Include="Code\Gameplay\Data\SavegameManager.cpp" />
-    <ClCompile Include="Code\Graphic\Scrolling.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Scroll_Text.cpp" />
     <ClCompile Include="Code\ska\Graphic\SDLTexture.cpp" />
     <ClCompile Include="Code\Gameplay\Data\Settings.cpp" />
@@ -512,6 +517,7 @@
     <ClCompile Include="Code\Script\System\ScriptCommandsSystem.cpp" />
     <ClCompile Include="Code\ska\Utils\PhysicUtils.cpp" />
     <ClCompile Include="Code\Gameplay\CustomEntityManager.cpp" />
+    <ClCompile Include="Code\Gameplay\World\WorldScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

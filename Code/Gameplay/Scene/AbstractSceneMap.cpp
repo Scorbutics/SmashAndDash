@@ -1,12 +1,19 @@
 #include "../WGameCore.h"
 #include "../Weather.h"
 #include "../../ska/World/World.h"
-#include "../../Graphic/Scrolling.h"
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap(ska::EntityManager& em, ska::RawInputListener& ril) : AbstractNoGUISceneMap(em, ril)
+AbstractSceneMap::AbstractSceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril) : AbstractNoGUISceneMap(sh, ril)
 {
+}
+
+void AbstractSceneMap::load() {
+
+}
+
+void AbstractSceneMap::unload() {
+
 }
 
 void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {

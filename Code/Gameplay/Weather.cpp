@@ -109,7 +109,7 @@ void Weather::display()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
-	ska::Rectangle& oRel = wScreen.getORel();
+	ska::Rectangle oRel = { 0 };//wScreen.getORel();
 
 	if (!m_active) {
 		return;

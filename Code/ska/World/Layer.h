@@ -10,7 +10,6 @@
 #include "Block.h"
 
 #include "../Graphic/Draw/DrawableFixedPriority.h"
-#include "../ECS/EntityManager.h"
 
 class ParticleManager;
 namespace ska {
@@ -18,7 +17,7 @@ namespace ska {
 	class Layer : public DrawableFixedPriority
 	{
 	public:
-		Layer(ska::EntityManager& entityManager, ska::World& world, std::string nomFichier, std::string chipsetName, ska::Layer* parent = NULL);
+		Layer(ska::World& world, std::string nomFichier, std::string chipsetName, ska::Layer* parent = NULL);
 		~Layer();
 
 		void changeLevel(std::string fname, std::string chipsetname);
@@ -44,12 +43,10 @@ namespace ska {
 	private:
 		void checkSize(int nbrBlocX, int nbrBlocY);
 
-		EntityManager& m_entityManager;
 		Layer* m_parent;
 		World& m_world;
 		std::string m_name, m_nomFichier, m_chipsetname;
 		std::vector<std::vector<BlockPtr>> m_block;
-		//std::vector<std::vector<EntityId>> m_block;
 		ska::Rectangle m_rectAnim;
 		int m_seed, m_type;
 		int m_fileWidth, m_fileHeight;

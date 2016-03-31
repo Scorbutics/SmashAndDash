@@ -25,7 +25,7 @@ ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
 SDL_Color translate_color(Uint32 int_color);
 
 //Constructeur ouvrant un monde déjà créé
-ska::Layer::Layer(ska::EntityManager& entityManager, ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w), m_entityManager(entityManager) {
+ska::Layer::Layer(ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w) {
 	m_block.reserve(20);
 	m_rectAnim = { 0 };
 	m_parent = parent;
@@ -197,26 +197,6 @@ void ska::Layer::reset(string pathFile, string chipsetName)
                         collision = BLOCK_COL_YES;
 
                     auto_anim = (col == darkcolor || col == lightColor);
-					
-					/*EntityId entity = m_entityManager.createEntity();
-					PositionComponent pc;
-					pc.x = i*blockSize;
-					pc.y = j*blockSize;
-					pc.z = 0;
-					m_entityManager.addComponent<ska::PositionComponent>(entity, pc);
-					ska::GraphicComponent gc;
-					gc.sprite.load(m_world.getChipsetName(), fichierMCorr->w, fichierMCorr->h, auto_anim ? 3 : 1);
-					gc.sprite.setDelay(500);
-					gc.priority = 0;
-
-					if (collision) {
-						ska::HitboxComponent hc;
-						hc.xOffset = 0;
-						hc.yOffset = 0;
-						hc.width = blockSize;
-						hc.height = blockSize;
-						m_entityManager.addComponent<ska::HitboxComponent>(entity, hc);
-					}*/
 
 					Rectangle rectCorr = { 0, 0, blockSize, blockSize };
 					
