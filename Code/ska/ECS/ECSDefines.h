@@ -2,8 +2,8 @@
 #include <vector>
 #include <unordered_map>
 
-#define SKA_ECS_MAX_ENTITIES 1000
-#define SKA_ECS_MAX_COMPONENTS 200
+#define SKA_ECS_MAX_ENTITIES 2000
+#define SKA_ECS_MAX_COMPONENTS 50
 
 namespace ska {
 	typedef unsigned int EntityId;

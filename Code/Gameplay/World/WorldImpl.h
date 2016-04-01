@@ -9,7 +9,7 @@ namespace ska {
 class WorldImpl : public ska::World {
 	
 public:
-	WorldImpl(ska::CameraSystem& cs, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+	WorldImpl(unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 	~WorldImpl();
 	void load(std::string fileName, std::string chipsetName) override;
 	void changeLevel(std::string fileName, std::string chipsetName) override;

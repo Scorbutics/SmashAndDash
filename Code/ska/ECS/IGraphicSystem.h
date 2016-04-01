@@ -1,8 +1,12 @@
 #pragma once
 #include "ISystem.h"
+#include "../Graphic/System/CameraAware.h"
+
 namespace ska {
 	class DrawableContainer;
-	class IGraphicSystem : public ISystem {
+	class CameraSystem;
+
+	class IGraphicSystem : public ISystem, public CameraAware {
 	public:
 		IGraphicSystem() = default;
 		virtual ~IGraphicSystem() = default;

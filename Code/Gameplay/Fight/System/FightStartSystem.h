@@ -5,10 +5,11 @@
 #include "../../../ska/ECS/System.h"
 #include "../../../ska/Scene/SceneHolder.h"
 #include "../../../ska/Inputs/InputContextManager.h"
+#include "../../../ska/Graphic/GraphicComponent.h"
 
 class WorldScene;
 
-class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent> {
+class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent> {
 public:
 	FightStartSystem(ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
 	virtual ~FightStartSystem();

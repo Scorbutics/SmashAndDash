@@ -9,6 +9,7 @@
 #include "../Graphic/Texture.h"
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
+#include "../Graphic/System/CameraAware.h"
 
 namespace ska {
 	class Layer;
@@ -18,9 +19,9 @@ namespace ska {
 	class Block;
 	class PrefabEntityManager;
 
-	class World : public HasGraphic {
+	class World : public HasGraphic, public CameraAware {
 	public:
-		World(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		virtual void load(std::string fileName, std::string chipsetName);
 
 		/*Weather* getFog();
@@ -56,10 +57,12 @@ namespace ska {
 		void setBgm(std::string bgm);
 		bool isBgmPlaying();
 		bool canMoveToPos(ska::Rectangle pos);
+		
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
+		
+		void linkCamera(CameraSystem* cs) override;
 		virtual void changeLevel(std::string fileName, std::string chipsetName);
-
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
 
 		~World();
@@ -78,7 +81,7 @@ namespace ska {
 		Texture m_chipset;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
 		std::vector<IniReader> m_mobSettings;
-		ska::CameraSystem& m_cameraSystem;
+		ska::CameraSystem* m_cameraSystem;
 
 	protected:
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;

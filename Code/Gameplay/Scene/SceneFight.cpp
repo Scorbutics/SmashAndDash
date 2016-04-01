@@ -1,10 +1,12 @@
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
+#include "../CustomEntityManager.h"
 
-
-SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril) : 
+SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos) :
 AbstractSceneMap(sh, ril),
-m_worldScene(ws) {
+m_worldScene(ws),
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos) {
+	m_logics.push_back(&m_cameraSystem);
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -27,11 +29,12 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void SceneFight::load() {
-
+	m_worldScene.linkCamera(&m_cameraSystem);
+	m_worldScene.load();
 }
 
 void SceneFight::unload() {
-
+	m_worldScene.unload();
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {

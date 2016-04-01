@@ -7,6 +7,7 @@
 #include "../../ska/Script/System/ScriptRefreshSystem.h"
 #include "../../Script/System/ScriptCommandsSystem.h"
 #include "../Fight/System/FightStartSystem.h"
+#include "../../ska/Graphic/System/CameraFollowSystem.h"
 
 class WorldScene;
 
@@ -38,5 +39,6 @@ private:
 	ScriptCommandsSystem m_scriptAutoSystem;
 
 	FightStartSystem m_fightStartSystem;
+	ska::CameraFollowSystem m_cameraSystem;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;

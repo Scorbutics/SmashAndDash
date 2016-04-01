@@ -3,12 +3,12 @@
 #include "ShadowSystem.h"
 #include "../SpritePath.h"
 
-ska::ShadowSystem::ShadowSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
+ska::ShadowSystem::ShadowSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
 	m_shadow.load(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 13), 2, 1, 1, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 127);
 }
 
 void ska::ShadowSystem::refresh() {
-	const ska::Rectangle* camera = m_camera.getDisplay();
+	const ska::Rectangle* camera = m_camera == NULL ? NULL : m_camera->getDisplay();
 	const unsigned int cameraX = (camera == NULL || camera->x < 0 ? 0 : camera->x);
 	const unsigned int cameraY = (camera == NULL || camera->y < 0 ? 0 : camera->y);
 	

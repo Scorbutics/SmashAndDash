@@ -30,6 +30,8 @@
 #include "../ska/Inputs/RawInputListener.h"
 #include "../ska/Graphic/Rectangle.h"
 #include "World/WorldScene.h"
+#include "CustomEntityManager.h"
+#include "Scene/SceneHolderCore.h"
 
 class LayerE;
 class Layer;
@@ -37,7 +39,7 @@ class Layer;
 
 //typedef std::unique_ptr<Character> Character_ptr;
 
-class WGameCore : public ska::Window, public ska::Singleton<WGameCore>, public ska::SceneHolder
+class WGameCore : public ska::Window, public ska::Singleton<WGameCore>
 {
 	friend class ska::Singleton<WGameCore>;
 
@@ -87,8 +89,8 @@ public:
     void setSpeedInertie(float x);
     void setChipset(SDL_Surface* chipset);
 	
-	virtual void nextScene(std::unique_ptr<ska::Scene>& scene) override;
-	virtual ska::ScenePtr& getScene() override;
+	ska::ScenePtr& getScene();
+	void nextScene(std::unique_ptr<ska::Scene>& scene);
 
     protected:
 		
@@ -96,7 +98,9 @@ public:
 		ska::RawInputListener m_rawInputListener;
 		ska::InputContextManager m_inputCManager;
 		
-
+		CustomEntityManager m_entityManager;
+		
+		SceneHolderCore m_sceneHolder;
 
 		ska::Rectangle m_OfChip;
 		bool m_ecritureLog;

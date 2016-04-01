@@ -10,12 +10,18 @@
 
 using namespace std;
 
-ska::World::World(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
+ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
 //m_entityManager(entityManager), 
 m_blockSize(tailleBloc), 
-m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc),
-m_cameraSystem(cs)
+m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc)
 {
+}
+
+void ska::World::linkCamera(CameraSystem* cs) {
+	m_cameraSystem = cs;
+	if (m_cameraSystem != NULL) {
+		m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
+	}
 }
 
 void ska::World::load(string fileName, string chipsetName)
@@ -41,8 +47,9 @@ void ska::World::load(string fileName, string chipsetName)
 
 	layerE = LayerEPtr(new LayerE(*this, m_eventLayerName));
 
-	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
-
+	if (m_cameraSystem != NULL) {
+		m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
+	}
 	getData();
 
 }
@@ -114,7 +121,7 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
 }
 
 const ska::Rectangle* ska::World::getView() const {
-	return m_cameraSystem.getDisplay();
+	return m_cameraSystem == NULL ? NULL : m_cameraSystem->getDisplay();
 }
 
 ska::LayerPtr& ska::World::getLayerBot()
@@ -169,7 +176,6 @@ void ska::World::changeLevel(string fileName, string chipsetname)
     m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
     m_eventLayerName = m_genericName + "E.txt";
 
-    //ScriptsActiver(m_genericName);									//Réactualisation des scripts
 	//wScreen.getParticleManager().removeAll();							//Suppression des particules
 
     m_lBot->reset(m_botLayerName, chipsetname);
@@ -178,55 +184,13 @@ void ska::World::changeLevel(string fileName, string chipsetname)
     
 	layerE->changeLevel(m_genericName + "E.txt");
 
-	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
-
+	if (m_cameraSystem != NULL) {
+		m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
+	}
 
 	getData();
-    //m_lBot->printCollisionProfile();
-    //m_lMid->printCollisionProfile();
-    //m_lTop->printCollisionProfile();
-
-	/*wScreen.setContinue(1);
-	wScreen.quitFlip();*/
-
+		
 }
-
-/*
-int ska::World::spawnMob(Rectangle pos, unsigned int rmin, unsigned int rmax, float distanceSpawns, unsigned int idMob)
-{
-	if(distanceSpawns > 2*rmin)
-	{
-		cerr << "Erreur (class World) : lors d'un spawn, la distance entre deux spawns ne doit pas excéder le diamètre minimal (2*rmin)" << endl;
-		return;
-	}
-
-	if(distanceSpawns == 0)
-		return;
-
-	World* w = wScreen.getWorld();
-	float angle = 0;
-	unsigned int radius;
-
-	//attention, ce while bugue
-	while(angle < 360 && angle > -360)
-	{
-		radius = rmin + rand()%(rmax - rmin + 1);
-		Rectangle dest;
-		dest.x = radius*cos(angle) + pos.x;
-		dest.y = radius*sin(angle) + pos.y;
-		dest.x = (dest.x/TAILLEBLOC) * TAILLEBLOC;
-		dest.y = (dest.y/TAILLEBLOC) * TAILLEBLOC;
-
-		if(canMoveToPos(dest, NULL))
-			wScreen.getEntityFactory().addNPC(idMob, dest, intToStr(P_RANDOM));
-		angle += acos(1 - ((distanceSpawns*distanceSpawns)/(2*rmin*rmin)));
-
-	}
-}
-*/
-
-//Fonction d'apparition d'un mob à une position pos
-
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j)
 {

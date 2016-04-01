@@ -6,22 +6,24 @@
 #include "../CameraFocusedComponent.h"
 
 namespace ska {
-	
+	template <class T>
+	struct Point;
+
 	class CameraSystem : public System<std::unordered_set<ska::EntityId>, PositionComponent, CameraFocusedComponent> {
 	public:
 		CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH);
-
-		virtual void refresh() override;
 
 		void screenResized(const unsigned int screenW, const unsigned int screenH);
 		void worldResized(const unsigned int worldW, const unsigned int worldH);
 
 		const Rectangle* getDisplay() const;
-		~CameraSystem();
+		virtual ~CameraSystem();
 
-	private:
+	protected:
+		void focusOn(Point<int>& pos, EntityId* optionalEntityId);
+
 		unsigned int m_worldW, m_worldH;
-		PositionComponent* m_pos;
+		Point<int>* m_pos;
 		Rectangle m_cameraRect;
 	};
 }

@@ -14,8 +14,8 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 
-WorldImpl::WorldImpl(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
-ska::World(cs, tailleBloc, wWidth, wHeight)
+WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
+ska::World(tailleBloc, wWidth, wHeight)
 /**/
  {
 }

@@ -7,9 +7,9 @@
 #include "../Gameplay/Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
-#include "../ska/Exceptions/SceneDiedException.h"
 #include "../ska/World/LayerE.h"
 #include "../ska/Exceptions/CorruptedFileException.h"
+#include "../ska/Exceptions/SceneDiedException.h"
 #include "../ska/ECS/PrefabEntityManager.h"
 #include "./Scene/SceneMap.h"
 
@@ -20,7 +20,7 @@ WGameCore::WGameCore():
 Window(), 
 m_inputCManager(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(*this, m_inputCManager, m_laFenetre, m_loFenetre),
+m_worldScene(m_entityManager, m_sceneHolder, m_inputCManager, m_laFenetre, m_loFenetre),
 m_chipsetAni(3, 4, true) {
 
 	m_OfChip.y = 0;
@@ -30,7 +30,7 @@ m_chipsetAni(3, 4, true) {
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
 	/* Let's start on the map */
-	nextScene(ska::ScenePtr(new SceneMap(*this, m_inputCManager, m_worldScene)));
+	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_inputCManager, m_worldScene)));
 
 	m_speedInertie = 0;
 	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
@@ -52,7 +52,7 @@ WorldScene& WGameCore::getWorldScene() {
 }
 
 ska::ScenePtr& WGameCore::getScene() {
-	return m_currentScene;
+	return m_sceneHolder.getScene();
 }
 
 Pokeball& WGameCore::getPokeball()
@@ -145,21 +145,7 @@ ska::ParticleManager& WGameCore::getParticleManager() {
 }
 
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
-	bool firstScene;
-	if (m_currentScene != NULL) {
-		m_currentScene->unload();
-		firstScene = false;
-	} else {
-		firstScene = true;
-	}
-
-	m_currentScene = std::move(scene);
-	m_currentScene->load();
-
-	/* We have to invalidate the current iterating (old) scene. */
-	if (!firstScene) {
-		throw ska::SceneDiedException("");
-	}
+	m_sceneHolder.nextScene(scene);
 }
 
 //Boucle principale gérant évènements et affichages du monde.
@@ -202,7 +188,7 @@ bool WGameCore::refresh() {
 
 void WGameCore::graphicUpdate(void) {
 	ska::VectorDrawableContainer drawables;
-	m_currentScene->graphicUpdate(drawables);
+	m_sceneHolder.getScene()->graphicUpdate(drawables);
 	drawables.draw();
 }
 
@@ -222,14 +208,10 @@ void WGameCore::activeScrolling(bool b)
 
 void WGameCore::eventUpdate(bool movingDisallowed) {
 	try {
-		m_currentScene->eventUpdate(movingDisallowed);
+		m_sceneHolder.getScene()->eventUpdate(movingDisallowed);
 	}
 	catch (ska::SceneDiedException sde) {
 	}
-	
-	/* Game Logic Input System */
-	/*m_inputSystem.refresh();
-	m_scriptSystem.refresh();*/
 }
 
 

@@ -9,7 +9,7 @@ namespace ska {
 	class GraphicSystem : public AbstractGraphicSystem, public System<std::unordered_set<EntityId>, GraphicComponent, PositionComponent>
 	{
 	public:
-		GraphicSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager);
+		GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager);
 		virtual ~GraphicSystem();
 		virtual void refresh() override;
 	};

@@ -12,28 +12,30 @@
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Exceptions/ScriptSyntaxError.h"
 #include "../Fight/FightComponent.h"
+#include "../CustomEntityManager.h"
 
-WorldScene::WorldScene(ska::SceneHolder& sh, ska::InputContextManager& ril,  const unsigned int screenW, const unsigned int screenH) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, const unsigned int screenW, const unsigned int screenH) :
 ska::Scene(sh, ril),
+m_entityManager(entityManager),
 m_saveManager("save1"),
-m_cameraSystem(m_entityManager, screenW, screenH),
-m_world(m_cameraSystem, TAILLEBLOC, screenW, screenH),
-m_graphicSystem(m_cameraSystem, m_entityManager),
-m_shadowSystem(m_cameraSystem, m_entityManager),
+m_world(TAILLEBLOC, screenW, screenH),
+m_graphicSystem(NULL, m_entityManager),
+m_shadowSystem(NULL, m_entityManager),
 m_movementSystem(m_entityManager),
 m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager),
 m_daSystem(m_entityManager),
 m_deleterSystem(m_entityManager),
 m_collisionSystem(m_world, m_entityManager),
-m_inputSystem(m_inputCManager, m_entityManager) {
+m_inputSystem(m_inputCManager, m_entityManager),
+m_cameraSystem(NULL),
+m_screenW(screenW),
+m_screenH(screenH) {
 	m_loadedOnce = false;
 
 	m_graphics.push_back(&m_graphicSystem);
 	m_graphics.push_back(&m_shadowSystem);
 
-	
-	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_movementSystem);
 	m_logics.push_back(&m_gravitySystem);
 	m_logics.push_back(&m_forceSystem);
@@ -44,6 +46,16 @@ m_inputSystem(m_inputCManager, m_entityManager) {
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 
+}
+
+void WorldScene::linkCamera(ska::CameraSystem* cs) {
+	if (m_cameraSystem == NULL || cs == NULL) {
+		m_cameraSystem = cs;
+		for (auto& g : m_graphics) {
+			g->linkCamera(cs);
+		}
+		m_world.linkCamera(cs);
+	}
 }
 
 bool WorldScene::loadedOnce() {
@@ -73,11 +85,11 @@ ska::World& WorldScene::getWorld() {
 }
 
 void WorldScene::load() {
-
+	
 }
 
 void WorldScene::unload() {
-
+	linkCamera(NULL);
 }
 
 int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
@@ -171,6 +183,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		m_loadedOnce = true;
 	} else {
 		m_world.changeLevel(fileName, chipsetName);
+		m_entityManager.refreshEntity(m_player);
 	}
 
 	ska::Point<int> posEntityId;
@@ -231,6 +244,14 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		result[ska::StringUtils::intToStr(i + 2)] = script;
 	}
 	return result;
+}
+
+const unsigned int WorldScene::getScreenW() const {
+	return m_screenW;
+}
+
+const unsigned int WorldScene::getScreenH() const {
+	return m_screenH;
 }
 
 ska::EntityId WorldScene::getPlayer() {

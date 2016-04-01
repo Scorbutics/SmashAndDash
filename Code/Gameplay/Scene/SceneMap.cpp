@@ -1,6 +1,6 @@
 #include "../World/WorldScene.h"
 #include "SceneMap.h"
-
+#include "../CustomEntityManager.h"
 
 SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName) :
 AbstractSceneMap(sh, ril),
@@ -11,11 +11,13 @@ m_iaMovementSystem(ws.getEntityManager()),
 m_mobSpawningSystem(ws, ws.getEntityManager(), 15000),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld().getBlockSize(), ws.getEntityManager()),
-m_fightStartSystem(sh, ws, ril, ws.getPlayer()){
+m_fightStartSystem(sh, ws, ril, ws.getPlayer()),
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
+	m_logics.push_back(&m_cameraSystem);	
 }
 
 SceneMap::SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName) :  
@@ -27,11 +29,13 @@ m_iaMovementSystem(ws.getEntityManager()),
 m_mobSpawningSystem(ws, ws.getEntityManager(), 15000),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld().getBlockSize(), ws.getEntityManager()),
-m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()) {
+m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()),
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()){
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
+	m_logics.push_back(&m_cameraSystem);
 }
 
 SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws) : SceneMap(sh, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName()) {
@@ -44,11 +48,12 @@ void SceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void SceneMap::load() {
+	m_worldScene.linkCamera(&m_cameraSystem);
 	reinit();
 }
 
 void SceneMap::unload() {
-
+	m_worldScene.unload();
 }
 
 void SceneMap::reinit() {

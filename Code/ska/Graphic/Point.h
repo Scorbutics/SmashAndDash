@@ -13,7 +13,8 @@ namespace ska {
 
 		Point<T>(){ x = 0; y = 0; }
 
-		Point<T>(const Rectangle& r) {
+		template <class U>
+		Point<T>(const U& r) {
 			x = r.x;
 			y = r.y;
 		}

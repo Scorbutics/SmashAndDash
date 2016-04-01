@@ -81,6 +81,11 @@ namespace ska {
 			}
 		}
 
+		void refreshEntity(EntityId entity) {
+			EntityData data = std::make_pair(&m_componentMask[entity], entity);
+			notifyObservers(EventEntityComponentAdd(), data);
+		}
+
 		template <class T>
 		void addComponent(EntityId entity, const T& component) {
 			ComponentHandler<T>& components = this->template getComponents<T>();

@@ -3,12 +3,12 @@
 #include "./GraphicSystem.h"
 #include "../PositionnedGraphicDrawable.h"
 
-ska::GraphicSystem::GraphicSystem(ska::CameraSystem& camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
+ska::GraphicSystem::GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
 	m_drawables = NULL;
 }
 
 void ska::GraphicSystem::refresh() {
-	const ska::Rectangle* camera = m_camera.getDisplay();
+	const ska::Rectangle* camera = m_camera == NULL ? NULL : m_camera->getDisplay();
 	const unsigned int cameraX = (camera == NULL || camera->x < 0 ? 0 : camera->x);
 	const unsigned int cameraY = (camera == NULL || camera->y < 0 ? 0 : camera->y);
 

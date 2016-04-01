@@ -127,6 +127,7 @@
     <ClInclude Include="Code\Gameplay\Fight\FightComponent.h" />
     <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
+    <ClInclude Include="Code\Gameplay\Scene\SceneHolderCore.h" />
     <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
@@ -142,6 +143,9 @@
     <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
     <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h" />
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h" />
+    <ClInclude Include="Code\ska\Graphic\System\CameraAware.h" />
+    <ClInclude Include="Code\ska\Graphic\System\CameraFixedSystem.h" />
+    <ClInclude Include="Code\ska\Graphic\System\CameraFollowSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DeleterSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
@@ -362,10 +366,13 @@
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneHolderCore.cpp" />
     <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp" />
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\CameraFixedSystem.cpp" />
+    <ClCompile Include="Code\ska\Graphic\System\CameraFollowSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DeleterSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />
