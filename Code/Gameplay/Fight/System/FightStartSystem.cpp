@@ -24,7 +24,7 @@ void FightStartSystem::refresh() {
 		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 		ska::Point<int> p = { pc.x, pc.y };
 
-		if (ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
+		if (m_player != entityId && ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
 			if (currentDelay >= BATTLE_START_TICKS) {
 				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
 					/* Start a fight */

@@ -10,6 +10,12 @@ m_inputCManager(ril),
 m_holder(sh) {
 }
 
+ska::Scene::Scene(Scene& oldScene): 
+m_inputCManager(oldScene.m_inputCManager), 
+m_holder(oldScene.m_holder) {
+
+}
+
 void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
 	/* Graphics */
 	for (ska::IGraphicSystem* s : m_graphics) {

@@ -28,8 +28,8 @@
 #include "../ska/Inputs/InputContextManager.h"
 #include "../ska/Scene/SceneHolder.h"
 #include "../ska/Inputs/RawInputListener.h"
-#include "World/WorldScene.h"
 #include "../ska/Graphic/Rectangle.h"
+#include "World/WorldScene.h"
 
 class LayerE;
 class Layer;
@@ -74,6 +74,7 @@ public:
 	TrainerCard& getTrainerCard();
 	ShakerManager& getShakerManager();
 	ska::World& getWorld();
+	WorldScene& getWorldScene();
 	
 	const ska::InputActionContainer& getActions() const;
 	const ska::InputRangeContainer& getRanges() const;
@@ -87,6 +88,7 @@ public:
     void setChipset(SDL_Surface* chipset);
 	
 	virtual void nextScene(std::unique_ptr<ska::Scene>& scene) override;
+	virtual ska::ScenePtr& getScene() override;
 
     protected:
 		

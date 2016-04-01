@@ -50,7 +50,7 @@ namespace ska {
 						
 		}
 
-		~System(){}
+		virtual ~System(){ m_entityManager.removeObserver(this); }
 
 	private:
 		

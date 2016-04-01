@@ -14,18 +14,13 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 
-WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
-ska::World(tailleBloc, wWidth, wHeight)
+WorldImpl::WorldImpl(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
+ska::World(cs, tailleBloc, wWidth, wHeight)
 /**/
  {
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
-	//Première couche
-	drawables.addHead(*m_lBot);
-
-	//Deuxième couche
-	drawables.addHead(*m_lMid);
 
 	//Affichage des effets
 	/*ska::ParticleManager& particleManager = wScreen.getParticleManager();
@@ -33,9 +28,6 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 
 	//Curseur souris sur la map
 	drawables.addHead(wScreen.getMouseCursor());*/
-	
-	//Troisième couche
-	drawables.addHead2D(*m_lTop);
 }
 
 void WorldImpl::load(std::string fileName, std::string chipsetName) {

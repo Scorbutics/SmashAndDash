@@ -6,15 +6,15 @@
 #include "../Utils/RectangleUtils.h"
 #include "../Physic/PhysicObject.h"
 #include "LayerE.h"
-#include "../ECS/PrefabEntityManager.h"
+#include "../Graphic/System/CameraSystem.h"
 
 using namespace std;
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
+ska::World::World(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) : 
 //m_entityManager(entityManager), 
 m_blockSize(tailleBloc), 
-m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc)
-//m_cameraSystem(m_entityManager, wWidth, wHeight)
+m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc),
+m_cameraSystem(cs)
 {
 }
 
@@ -40,6 +40,8 @@ void ska::World::load(string fileName, string chipsetName)
 	m_lTop = LayerPtr(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
 
 	layerE = LayerEPtr(new LayerE(*this, m_eventLayerName));
+
+	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 
 	getData();
 
@@ -112,7 +114,7 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
 }
 
 const ska::Rectangle* ska::World::getView() const {
-	return NULL/*m_cameraSystem.getDisplay()*/;
+	return m_cameraSystem.getDisplay();
 }
 
 ska::LayerPtr& ska::World::getLayerBot()
@@ -176,7 +178,7 @@ void ska::World::changeLevel(string fileName, string chipsetname)
     
 	layerE->changeLevel(m_genericName + "E.txt");
 
-	//m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
+	m_cameraSystem.worldResized(getPixelWidth(), getPixelHeight());
 
 
 	getData();

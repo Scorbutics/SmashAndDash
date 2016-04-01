@@ -134,6 +134,7 @@
     <ClInclude Include="Code\ska\ECS\ComponentSerializer.h" />
     <ClInclude Include="Code\ska\ECS\ISystem.h" />
     <ClInclude Include="Code\ska\ECS\PrefabEntityManager.h" />
+    <ClInclude Include="Code\ska\Exceptions\SceneDiedException.h" />
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />

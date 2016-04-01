@@ -10,17 +10,17 @@
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
 
-
 namespace ska {
 	class Layer;
 	class LayerE;
+	class CameraSystem;
 	class PhysicObject;
 	class Block;
 	class PrefabEntityManager;
 
 	class World : public HasGraphic {
 	public:
-		World(/*PrefabEntityManager& entityManager, */const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+		World(ska::CameraSystem& cs, const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		virtual void load(std::string fileName, std::string chipsetName);
 
 		/*Weather* getFog();
@@ -78,6 +78,7 @@ namespace ska {
 		Texture m_chipset;
 		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
 		std::vector<IniReader> m_mobSettings;
+		ska::CameraSystem& m_cameraSystem;
 
 	protected:
 		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;

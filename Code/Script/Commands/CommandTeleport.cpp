@@ -2,11 +2,13 @@
 #include <string>
 #include "../../ska/Script/ScriptComponent.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
+#include "../../ska/Exceptions/SceneDiedException.h"
 #include "../../ska/Exceptions/InvalidPathException.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/World/World.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Utils\StringUtils.h"
+#include "../../Gameplay/Scene/SceneMap.h"
 
 using namespace std;
 
@@ -50,13 +52,15 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 
 		ska::IniReader mapReader(buf);
 
-		string chipsetName = mapReader.getString("Chipset file");
+		const std::string chipsetName = mapReader.getString("Chipset file");
 
 		if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		w.changeLevel(fichier, chipsetName);
+		ska::ScenePtr scene = ska::ScenePtr(new SceneMap(*wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName));
+		wScreen.nextScene(scene);
+		
 	}
 
 	return "";

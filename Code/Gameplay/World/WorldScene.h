@@ -41,28 +41,28 @@ public:
 
 private:
 	bool m_loadedOnce;
-	WorldImpl m_world;
 	ska::EntityId m_player;
-
 	SavegameManager m_saveManager;
 
 	CustomEntityManager m_entityManager;
 
-	/* Systems */
+	/* Special system : camera (linked to World) */
 	ska::CameraSystem m_cameraSystem;
+	WorldImpl m_world;
 
+	/* Systems */
+	/* Logics */
 	ska::ForceSystem m_forceSystem;
 	ska::GravitySystem m_gravitySystem;
 	ska::MovementSystem m_movementSystem;
 	ska::DirectionalAnimationSystem m_daSystem;
 	ska::DeleterSystem m_deleterSystem;
+	ska::CollisionSystem m_collisionSystem;
+	ska::InputSystem m_inputSystem;
 
+	/* Graphics */
 	ska::GraphicSystem m_graphicSystem;
 	ska::ShadowSystem m_shadowSystem;
-
-	ska::CollisionSystem m_collisionSystem;
-
-	ska::InputSystem m_inputSystem;
 
 };
 

@@ -18,8 +18,9 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 	GUI& gui = core.getGUI();
 	Settings& settings = core.getSettings();*/
 
-	AbstractSceneMap::graphicUpdate(drawables);
 	m_worldScene.graphicUpdate(drawables);
+	AbstractSceneMap::graphicUpdate(drawables);
+	
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
 	/*fight.setPriority(pokeball.getPriority() + 1);*/
 	/*drawables.add(fight);*/
@@ -36,7 +37,7 @@ void SceneFight::unload() {
 void SceneFight::eventUpdate(bool movingDisallowed) {
 	/*WGameCore& core = WGameCore::getInstance();
 	Fight& fight = core.getFight();*/
-	
+	m_worldScene.eventUpdate(movingDisallowed);
 	AbstractSceneMap::eventUpdate(movingDisallowed);
 	
 	//Evénements combat

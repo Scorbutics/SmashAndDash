@@ -9,6 +9,11 @@ Scene(sh, ril)
 {
 }
 
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::Scene& oldScene) : 
+Scene(oldScene) {
+
+}
+
 void AbstractNoGUISceneMap::load() {
 
 }

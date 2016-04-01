@@ -8,6 +8,11 @@ AbstractSceneMap::AbstractSceneMap(ska::SceneHolder& sh, ska::InputContextManage
 {
 }
 
+AbstractSceneMap::AbstractSceneMap(ska::Scene& oldScene) : 
+AbstractNoGUISceneMap(oldScene) {
+
+}
+
 void AbstractSceneMap::load() {
 
 }
@@ -36,17 +41,8 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
 	GUI& gui = core.getGUI();
-	//ska::InputListener& kdListener = core.getInputListener();
-	
-	AbstractNoGUISceneMap::eventUpdate(stuck);
 
-	//Gère les évènements extérieurs de la GUI (input)
-	//GUI A PASSER EN TANT QU'OBSERVATEUR
-	/*if (!kdListener.refresh(stuck)) {
-		gui.getDialog()->hide(true);
-		gui.getImgDialog()->hide(true);
-		gui.hide(false);
-	}*/
+	AbstractNoGUISceneMap::eventUpdate(stuck);
 
 	//GUI
 	gui.dialogRefresh();

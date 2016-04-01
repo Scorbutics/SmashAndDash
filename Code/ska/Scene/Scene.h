@@ -12,7 +12,8 @@ namespace ska {
 	{
 	public:
 		Scene(SceneHolder& sh, InputContextManager& ril);
-		
+		Scene(Scene& oldScene);
+
 		virtual void load() = 0;
 		virtual void unload() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) override;

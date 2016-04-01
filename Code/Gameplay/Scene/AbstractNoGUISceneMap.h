@@ -12,6 +12,7 @@ class AbstractNoGUISceneMap :
 
 public:
 	AbstractNoGUISceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril);
+	AbstractNoGUISceneMap(ska::Scene& oldScene);
 	virtual void load() override;
 	virtual void unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;

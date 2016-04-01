@@ -58,7 +58,7 @@ std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<st
 			imgDial.display();
 
 		wScreen.flip();
-		SDL_Delay(30);
+		SDL_Delay(20);
 	}
 
 	while (!(in[ska::InputAction::DoAction] || in[ska::InputAction::Quit]))
@@ -70,7 +70,7 @@ std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<st
 			imgDial.display();
 
 		wScreen.flip();
-		SDL_Delay(30);
+		SDL_Delay(20);
 	}
 
 	//in->resetAll();

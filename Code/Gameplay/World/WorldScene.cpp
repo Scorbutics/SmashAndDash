@@ -6,18 +6,20 @@
 #include "../../ska/AI/IAMovementComponent.h"
 #include "WorldScene.h"
 #include "../../ska/World/LayerE.h"
+#include "../../ska/World/Layer.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Exceptions/CorruptedFileException.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Exceptions/ScriptSyntaxError.h"
+#include "../Fight/FightComponent.h"
 
 WorldScene::WorldScene(ska::SceneHolder& sh, ska::InputContextManager& ril,  const unsigned int screenW, const unsigned int screenH) :
 ska::Scene(sh, ril),
 m_saveManager("save1"),
-m_world(TAILLEBLOC, screenW, screenH),
+m_cameraSystem(m_entityManager, screenW, screenH),
+m_world(m_cameraSystem, TAILLEBLOC, screenW, screenH),
 m_graphicSystem(m_cameraSystem, m_entityManager),
 m_shadowSystem(m_cameraSystem, m_entityManager),
-m_cameraSystem(m_entityManager, screenW, screenH),
 m_movementSystem(m_entityManager),
 m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager),
@@ -53,10 +55,17 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 }
 
 void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
-	ska::Scene::graphicUpdate(drawables);
-	
 	/* Hello, world */
-	m_world.graphicUpdate(drawables);
+	
+	//Première couche
+	drawables.addHead(*m_world.getLayerBot());
+
+	//Deuxième couche
+	drawables.addHead(*m_world.getLayerMid());
+
+	ska::Scene::graphicUpdate(drawables);
+
+	drawables.addHead2D(*m_world.getLayerTop());
 }
 
 ska::World& WorldScene::getWorld() {
@@ -124,6 +133,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				iamc.type = 1;
 
 				m_entityManager.addComponent<ska::IAMovementComponent>(mob, iamc);
+				m_entityManager.addComponent<FightComponent>(mob, FightComponent());
 				successfulSpawns++;
 			}
 		}
@@ -155,6 +165,9 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		if (startMapChipset == "STRINGNOTFOUND") {
 			throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
+		
+		m_player = m_entityManager.createTrainer(startPos, m_world.getBlockSize());
+
 		m_loadedOnce = true;
 	} else {
 		m_world.changeLevel(fileName, chipsetName);

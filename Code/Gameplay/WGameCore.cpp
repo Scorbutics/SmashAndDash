@@ -7,6 +7,7 @@
 #include "../Gameplay/Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
+#include "../ska/Exceptions/SceneDiedException.h"
 #include "../ska/World/LayerE.h"
 #include "../ska/Exceptions/CorruptedFileException.h"
 #include "../ska/ECS/PrefabEntityManager.h"
@@ -46,6 +47,13 @@ void WGameCore::resize(unsigned int w, unsigned int h)
 	m_loFenetre = h;
 }
 
+WorldScene& WGameCore::getWorldScene() {
+	return m_worldScene;
+}
+
+ska::ScenePtr& WGameCore::getScene() {
+	return m_currentScene;
+}
 
 Pokeball& WGameCore::getPokeball()
 {
@@ -137,11 +145,21 @@ ska::ParticleManager& WGameCore::getParticleManager() {
 }
 
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
+	bool firstScene;
 	if (m_currentScene != NULL) {
 		m_currentScene->unload();
+		firstScene = false;
+	} else {
+		firstScene = true;
 	}
+
 	m_currentScene = std::move(scene);
 	m_currentScene->load();
+
+	/* We have to invalidate the current iterating (old) scene. */
+	if (!firstScene) {
+		throw ska::SceneDiedException("");
+	}
 }
 
 //Boucle principale gérant évènements et affichages du monde.
@@ -203,7 +221,11 @@ void WGameCore::activeScrolling(bool b)
 }
 
 void WGameCore::eventUpdate(bool movingDisallowed) {
-	m_currentScene->eventUpdate(movingDisallowed);
+	try {
+		m_currentScene->eventUpdate(movingDisallowed);
+	}
+	catch (ska::SceneDiedException sde) {
+	}
 	
 	/* Game Logic Input System */
 	/*m_inputSystem.refresh();

@@ -15,6 +15,23 @@ m_fightStartSystem(sh, ws, ril, ws.getPlayer()){
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
+	m_logics.push_back(&m_fightStartSystem);
+}
+
+SceneMap::SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName) :  
+AbstractSceneMap(oldScene),
+m_fileName(fileName),
+m_chipsetName(chipsetName),
+m_worldScene(ws),
+m_iaMovementSystem(ws.getEntityManager()),
+m_mobSpawningSystem(ws, ws.getEntityManager(), 15000),
+m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
+m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld().getBlockSize(), ws.getEntityManager()),
+m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()) {
+	m_logics.push_back(&m_scriptSystem);
+	m_logics.push_back(&m_iaMovementSystem);
+	m_logics.push_back(&m_mobSpawningSystem);
+	m_logics.push_back(&m_fightStartSystem);
 }
 
 SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws) : SceneMap(sh, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName()) {
@@ -22,8 +39,8 @@ SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldSce
 }
 
 void SceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
-	AbstractSceneMap::graphicUpdate(drawables);
 	m_worldScene.graphicUpdate(drawables);
+	AbstractSceneMap::graphicUpdate(drawables);
 }
 
 void SceneMap::load() {
@@ -36,7 +53,7 @@ void SceneMap::unload() {
 
 void SceneMap::reinit() {
 	bool firstTime = !m_worldScene.loadedOnce();
-	if (firstTime) {
+	if (!firstTime) {
 		/* Do not delete the player between 2 maps, just TP it */
 		std::unordered_set<ska::EntityId> toNotDelete;
 		toNotDelete.insert(m_worldScene.getPlayer());
@@ -56,7 +73,9 @@ void SceneMap::reinit() {
 }
 
 void SceneMap::eventUpdate(bool stuck) {
+	m_worldScene.eventUpdate(stuck);
 	AbstractSceneMap::eventUpdate(stuck);
+
 
 	/*WGameCore& core = WGameCore::getInstance();
 	//MobSpawningManager& mobSpawner = core.getMobSpawningManager();

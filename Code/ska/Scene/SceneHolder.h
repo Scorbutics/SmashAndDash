@@ -9,6 +9,7 @@ namespace ska {
 		virtual ~SceneHolder() = default;
 
 		virtual void nextScene(ScenePtr& scene) = 0;
+		virtual ska::ScenePtr& getScene() = 0;
 
 	protected:
 		ScenePtr m_currentScene;
