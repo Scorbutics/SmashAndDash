@@ -40,9 +40,9 @@ void SceneFight::unload() {
 void SceneFight::eventUpdate(bool movingDisallowed) {
 	/*WGameCore& core = WGameCore::getInstance();
 	Fight& fight = core.getFight();*/
-	m_worldScene.eventUpdate(movingDisallowed);
 	AbstractSceneMap::eventUpdate(movingDisallowed);
-	
+	m_worldScene.eventUpdate(movingDisallowed);
+
 	//Evénements combat
 	/*fight.refreshFight();*/
 }

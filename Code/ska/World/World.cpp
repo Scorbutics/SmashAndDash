@@ -159,9 +159,7 @@ string ska::World::getChipsetName()
     return m_chipsetName;
 }
 
-void ska::World::changeLevel(string fileName, string chipsetname)
-{
-	//WGameCore& wScreen = WGameCore::getInstance();
+void ska::World::changeLevel(string fileName, string chipsetname) {
     m_lBot->clear();
     m_lTop->clear();
     m_lMid->clear();
@@ -175,8 +173,6 @@ void ska::World::changeLevel(string fileName, string chipsetname)
     m_midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "M.bmp";
     m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
     m_eventLayerName = m_genericName + "E.txt";
-
-	//wScreen.getParticleManager().removeAll();							//Suppression des particules
 
     m_lBot->reset(m_botLayerName, chipsetname);
 	m_lMid->reset(m_midLayerName, chipsetname);
@@ -198,14 +194,17 @@ ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int 
 	Block* bMid = m_lMid->getBlock(i, j);
 	Block* bTop = m_lTop->getBlock(i, j);
 
-	if(bTop != NULL && m_lTop->getBlock(i, j)->getID() != BLOCK_ID_AIR)
+	if (bTop != NULL && m_lTop->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
 		return m_lTop->getBlock(i, j);
+	}
 
-	if(bMid != NULL && m_lMid->getBlock(i, j)->getID() != BLOCK_ID_AIR)
+	if (bMid != NULL && m_lMid->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
 		return m_lMid->getBlock(i, j);
+	}
 
-	if(bBot != NULL && m_lBot->getBlock(i, j)->getID() != BLOCK_ID_AIR)
+	if (bBot != NULL && m_lBot->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
 		return m_lBot->getBlock(i, j);
+	}
 
 	return NULL;
 }

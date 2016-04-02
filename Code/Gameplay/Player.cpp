@@ -6,6 +6,7 @@
 #include "../ska/Utils\StringUtils.h"
 #include "../Utils/IDs.h"
 #include "../ska/Utils/RectangleUtils.h"
+#include "../Graphic/GUI/DialogMenu.h"
 
 int GetSkillCursorFromKey(const ska::KeyEvent* ke);
 
@@ -28,7 +29,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 		{
 			if (me->clicked())
 			{
-				if (!wScreen.getFight().isFighting())
+				//if (!wScreen.getFight().isFighting())
 				{
 					///////////////////////////////
 					//CREE LE PATH DU PATHFINDING//
@@ -58,22 +59,23 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					setCountD(0);
 					getAnimation()->setCount(1);
 				}
-				else
+				/*else
 				{
 					//////////////////////////////////////////
 					//VERIFIE S'IL EST POSSIBLE D'AUTOATTACK//
 					//////////////////////////////////////////
 
-					ska::Rectangle opponentPos = wScreen.getFight().getOpponent()->getPos();
+					//ska::Rectangle opponentPos = wScreen.getFight().getOpponent()->getPos();
+					ska::Rectangle opponentPos = { 0 };
 					ska::Point<int> mouseRightClickPos;
 					mouseRightClickPos.x = me->getX();
 					mouseRightClickPos.y = me->getY();
 					
-/*
+
 					opponentPos.x += wScreen.getORel().x;
-					opponentPos.y += wScreen.getORel().y;*/
+					opponentPos.y += wScreen.getORel().y;
 					wScreen.getFight().getPokemon()->setAutoattack(ska::RectangleUtils::isPositionInBox(mouseRightClickPos, opponentPos));
-				}
+				}*/
 
 			}
 		}
@@ -157,7 +159,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 		//INTERACTION AVEC LES EVENEMENTS		//
 		//////////////////////////////////////////
 
-		if (ke->getScancode() == SDL_SCANCODE_RETURN && !wScreen.getFight().isFighting())
+		if (ke->getScancode() == SDL_SCANCODE_RETURN /*&& !wScreen.getFight().isFighting()*/)
 		{
 			ska::World& w = wScreen.getWorld();
 			wScreen.getGUI().getDialog()->hide(true);
@@ -222,7 +224,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 
 void Player::refresh()
 {
-	if (!(m_id == 0 && WGameCore::getInstance().getFight().isFighting()) && !m_path.getPathString().empty())
+	if (!(m_id == 0 /*&& WGameCore::getInstance().getFight().isFighting()*/) && !m_path.getPathString().empty())
 	{
 		string path;
 		setCountD(getCountD() - 1);

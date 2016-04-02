@@ -8,6 +8,9 @@
 #include "../../ska/Exceptions/IllegalStateException.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "../Player.h"
+#include "../../Graphic/GUI/DialogMenu.h"
+#include "../Player.h"
 
 Fight::Fight(): m_animGrass(1, 3, false)
 {
@@ -129,7 +132,7 @@ void Fight::start(Character* opponent) {
 
 	ska::Rectangle posAnim;
 	posAnim = m_opponent->getPos();
-	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 2, posAnim, 1, 200);
+	//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 2, posAnim, 1, 200);
 
 	time = SDL_GetTicks();
 	// 2 secondes, le temps d'afficher l'animation de lancement de combat
@@ -382,13 +385,13 @@ void Fight::displayDialog() {
 	}
 
     if(m_dialogActive) {
-		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
-/*
+		/*		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();
+
         pos.x += wScreen.getORel().x + pos.w;
-        pos.y -= m_dial->getHeight() - wScreen.getORel().y;*/
+        pos.y -= m_dial->getHeight() - wScreen.getORel().y;
 
         m_dial->setPos(pos);
-        m_dial->display();
+        m_dial->display();*/
     }
 
 }

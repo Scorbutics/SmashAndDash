@@ -84,6 +84,6 @@ class DialogMenu
 
 };
 
-typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
+//typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 #endif

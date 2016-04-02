@@ -36,13 +36,13 @@ m_screenH(screenH) {
 	m_graphics.push_back(&m_graphicSystem);
 	m_graphics.push_back(&m_shadowSystem);
 
+	m_logics.push_back(&m_inputSystem);
 	m_logics.push_back(&m_movementSystem);
 	m_logics.push_back(&m_gravitySystem);
 	m_logics.push_back(&m_forceSystem);
 	m_logics.push_back(&m_daSystem);
 	m_logics.push_back(&m_deleterSystem);
 	m_logics.push_back(&m_collisionSystem);
-	m_logics.push_back(&m_inputSystem);
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 

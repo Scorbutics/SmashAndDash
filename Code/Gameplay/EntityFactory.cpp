@@ -201,12 +201,12 @@ Character* EntityFactory::getNPC(int id, unsigned int number)
     //unsigned int i;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-    if(id == 0)
+    /*if(id == 0)
         return &(*m_trainer);
     else if(number == ID_CURRENT_OPPONENT)
         return wScreen.getFight().getOpponent();
     else if(number == ID_CURRENT_POKEMON)
-		return wScreen.getFight().getPokemon();
+		return wScreen.getFight().getPokemon();*/
      
 
 

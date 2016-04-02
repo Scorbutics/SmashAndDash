@@ -176,8 +176,8 @@ void Pokeball::capture(Character* pkmn)
 		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
-		wScreen.getParticleManager().refresh();
-/*		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
+		/*		wScreen.getParticleManager().refresh();
+		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
 		wScreen.getParticleManager().displayRainFog();*/
 
@@ -218,8 +218,8 @@ void Pokeball::capture(Character* pkmn)
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
         
 
-		wScreen.getParticleManager().refresh();
-		/*wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
+		/*wScreen.getParticleManager().refresh();
+		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
 		wScreen.getParticleManager().displayRainFog();*/
 
@@ -268,8 +268,8 @@ void Pokeball::capture(Character* pkmn)
 			m_sprite.render(buf.x, buf.y, &animPos);
 
 
-			wScreen.getParticleManager().refresh();
-			/*wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
+			/*wScreen.getParticleManager().refresh();
+			wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 			wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
 			wScreen.getParticleManager().displayRainFog();*/
 			//Affiche la météo
@@ -291,7 +291,7 @@ void Pokeball::capture(Character* pkmn)
 	else
 	{
 		wScreen.getPokemonManager().add(pkmn);
-		wScreen.getFight().end(EndFightReason::Capture);
+		/*wScreen.getFight().end(EndFightReason::Capture);*/
 	}
 
 }
@@ -370,7 +370,7 @@ void Pokeball::display()
 				if(ids[i].y == ID_CURRENT_OPPONENT)
 				{
 					m_capture = PokeballLaunchReason::Recall;
-					this->capture(wScreen.getFight().getOpponent());
+					capture(/*wScreen.getFight().getOpponent()*/ NULL);
 					return;
 				}
 

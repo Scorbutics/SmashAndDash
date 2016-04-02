@@ -8,6 +8,7 @@
 #include "MouseCursor.h"
 #include "../../Utils/ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "DialogMenu.h"
 
 using namespace std;
 

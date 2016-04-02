@@ -8,6 +8,10 @@
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Inputs/MouseInput.h"
 
+class Character;
+
+typedef std::unique_ptr<Character> CharacterPtr;
+
 class MouseCursor : public ska::DrawableFixedPriority
 {
     public:
@@ -47,7 +51,7 @@ class MouseCursor : public ska::DrawableFixedPriority
 	ska::Rectangle m_cursorPos;
     std::unique_ptr<DialogMenu> m_hintBox;
     bool m_hideC, m_hideH;
-    Character_ptr m_stockPkmn;
+	CharacterPtr m_stockPkmn;
     unique_ptr<Object> m_stockObject;
     unsigned int m_objectAmount, m_time, m_delay;
 };

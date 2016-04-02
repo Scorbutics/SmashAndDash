@@ -25,8 +25,6 @@ void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void ska::Scene::eventUpdate(bool movingDisallowed) {
-	/* Raw input acquisition */
-	m_inputCManager.refresh();
 
 	/* Logics */
 	for (ska::ISystem* s : m_logics) {

@@ -3,18 +3,30 @@
 
 #include <vector>
 #include <memory>
-#include "WindowSettings.h"
-#include "WindowTeam.h"
-#include "WindowBag.h"
-#include "ToolBar.h"
-#include "WindowShop.h"
 #include "../../ska/Utils/Observer.h"
 #include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
+#include "../../ska/Graphic/Point.h"
 
 using namespace std;
 
+class WindowSettings;
+class WindowTeam;
+class WindowBag;
+class ToolBar;
+class WindowShop;
 class WGameCore;
+class DialogMenu;
+class Character;
+
+typedef std::unique_ptr<WindowBag> WindowBagPtr;
+typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
+typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
+typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
+typedef std::unique_ptr<WindowBag> WindowBagPtr;
+typedef std::unique_ptr<ToolBar> ToolBarPtr;
+typedef std::unique_ptr<WindowShop> WindowShopPtr;
+typedef std::unique_ptr<Character> CharacterPtr;
 
 class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 {
@@ -61,7 +73,7 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
     size_t getButtonListSize();
 
     void setRefreshPNJWindowCount(int x);
-    void setPNJ(Character_ptr *pnj);
+    void setPNJ(CharacterPtr *pnj);
     void setClickMenu();
 	void dialogDisplay();
 	void display() override;

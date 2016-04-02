@@ -6,6 +6,10 @@
 #include "../../ska/Utils/Singleton_template.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "WindowTeam.h"
+#include "WindowSettings.h"
+#include "WindowBag.h"
+#include "ToolBar.h"
 
 using namespace std;
 

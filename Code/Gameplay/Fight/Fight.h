@@ -3,15 +3,15 @@
 
 #include <string>
 #include <memory>
-#include <SDL2/SDL.h>
 #include "EndFightReasonEnum.h"
-#include "../Player.h"
 #include "../../ska/Graphic/Animation.h"
 #include "../../ska/Graphic/Texture.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 
 class World;
 class DialogMenu;
+class Player;
+class Character;
 
 class Fight : public ska::DrawableFixedPriority
 {

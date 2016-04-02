@@ -5,6 +5,7 @@
 #include "../../Utils\ChargementImages.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "WindowBag.h"
 
 using namespace std;
 
@@ -84,7 +85,7 @@ void WindowTeam::refresh()
     {
  
 		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize();
-		if (pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() && pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
+		if (/*pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() &&*/ pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));
 			pkmnMng.remove(i);

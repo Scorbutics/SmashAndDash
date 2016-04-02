@@ -78,9 +78,8 @@ void SceneMap::reinit() {
 }
 
 void SceneMap::eventUpdate(bool stuck) {
-	m_worldScene.eventUpdate(stuck);
 	AbstractSceneMap::eventUpdate(stuck);
-
+	m_worldScene.eventUpdate(stuck);
 
 	/*WGameCore& core = WGameCore::getInstance();
 	//MobSpawningManager& mobSpawner = core.getMobSpawningManager();

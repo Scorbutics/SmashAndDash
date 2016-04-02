@@ -15,6 +15,13 @@
 #include "../../Gameplay/Fight/Skill.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "MouseCursor.h"
+#include "DialogMenu.h"
+#include "WindowSettings.h"
+#include "WindowBag.h"
+#include "WindowTeam.h"
+#include "WindowShop.h"
+#include "ToolBar.h"
+
 
 #define SCROLL_BUTTON_SPEED 3
 
@@ -100,7 +107,7 @@ GUI::GUI()
     m_wShop = unique_ptr<WindowShop>(new WindowShop("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
     m_toolBar->hide(false);
 
-    this->initButtons();
+    initButtons();
 
 }
 
@@ -117,32 +124,34 @@ void GUI::initButtons()
     buf.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
     buf.y = 0;
 
-    for(unsigned int i = 0; i < m_buttonList.size(); i++)
-        m_buttonList[i]->deleteAll();
+	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
+		m_buttonList[i]->deleteAll();
+	}
 
     m_buttonList.clear();
-    m_buttonList.push_back(unique_ptr<DialogMenu> (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+    m_buttonList.push_back(DialogMenuPtr (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
     m_buttonList[0]->setActionClic("team");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-    m_buttonList.push_back(unique_ptr<DialogMenu> (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
     m_buttonList[1]->setActionClic("pokedex");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-    m_buttonList.push_back(unique_ptr<DialogMenu> (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
     m_buttonList[2]->setActionClic("pokebag");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-    m_buttonList.push_back(unique_ptr<DialogMenu> (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
     m_buttonList[3]->setActionClic("trainer_card");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-    m_buttonList.push_back(unique_ptr<DialogMenu> (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
     m_buttonList[4]->setActionClic("options");
 
     m_buttonScroll.resize(m_buttonList.size());
-    for(unsigned int i = 0; i < m_buttonList.size(); i++)
-        m_buttonScroll[i] = 0;
+	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
+		m_buttonScroll[i] = 0;
+	}
 
 
 }
@@ -544,7 +553,7 @@ void GUI::dialogDisplay()
 
 
     if(m_attackPokemon->isVisible()) {
-		vector<Skill_ptr>* v = wScreen.getFight().getPokemon()->getSkills();
+		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 		
 		ska::Rectangle cooldownPos;
         cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOCFENETRE/4;
@@ -621,7 +630,7 @@ void GUI::dialogRefresh()
 
 
 	if(m_attackPokemon->isVisible()) {
-		vector<Skill_ptr>* v = wScreen.getFight().getPokemon()->getSkills();
+		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 
 		ska::Rectangle cooldownPos;
 		cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOCFENETRE/4;

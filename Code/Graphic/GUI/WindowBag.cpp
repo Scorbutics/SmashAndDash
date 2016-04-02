@@ -2,6 +2,7 @@
 #include "../../Gameplay\WGameCore.h"
 #include "Inventory_Area.h"
 #include "../../Utils/IDs.h"
+#include "WindowTeam.h"
 
 using namespace std;
 

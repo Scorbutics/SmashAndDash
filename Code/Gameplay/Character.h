@@ -3,8 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
 #include <memory>
 #include "../ska/Physic/PhysicSprite.h"
 #include "Data/PokemonDescriptor.h"
@@ -102,5 +100,4 @@ class Character : public ska::PhysicSprite
 
 };
 
-typedef std::unique_ptr<Character> Character_ptr;
 #endif

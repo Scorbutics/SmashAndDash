@@ -13,6 +13,7 @@
 #include "../ska/World/Layer.h"
 #include "../Utils/IDs.h"
 #include "../ska/Utils/RectangleUtils.h"
+#include "../Graphic/GUI/DialogMenu.h"
 
 using namespace std;
 
@@ -86,10 +87,10 @@ void Character::spritesReload()
 vector<ska::Rectangle> Character::move()
 {
     vector<ska::Rectangle> ids = PhysicObject::move();
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
     //Si on est en combat et qu'on va assez vite en percutant l'ennemi, on lui inflige des dégâts !
-    if(wScreen.getFight().isFighting())
+    //if(wScreen.getFight().isFighting())
     {
         size_t idSize = ids.size();
         for(unsigned int i = 0; i < idSize; i++)
@@ -372,7 +373,7 @@ void Character::displaySpeed()
         ska::Rectangle rect = getHitbox();
         rect.y += rect.h/2;
         rect.h /= 4;
-		wScreen.getParticleManager().playEffect(2, 0.5, (float)0.35, 0, rect);
+		//wScreen.getParticleManager().playEffect(2, 0.5, (float)0.35, 0, rect);
     }
 
 }
@@ -392,7 +393,7 @@ void Character::displayGrassWalk()
 		ska::Rectangle rect = this->getHitbox();
         rect.y += rect.h/4;
         rect.h /= 4;
-        wScreen.getParticleManager().playEffect(3, (float)EARTH_GRAVITY, (float)1., 0, rect);
+        //wScreen.getParticleManager().playEffect(3, (float)EARTH_GRAVITY, (float)1., 0, rect);
 
         ska::Rectangle pos = m_rect;
         pos.y += m_rect.h - m_grassSprite.getHeight();
@@ -450,11 +451,11 @@ bool Character::launchSkill(unsigned int skillNumber, ska::Point<int> dest)
 
     m_skill[skillNumber]->launch(dest);
 
-    if(m_entityNumber == ID_CURRENT_POKEMON)
+    /*if(m_entityNumber == ID_CURRENT_POKEMON)
     {
         wScreen.getFight().getDialog()->modifyText(m_descriptor.getName() + " lance " + m_skill[skillNumber]->getName() + " !");
         wScreen.getFight().showDialog(2000);
-    }
+    }*/
     return true;
 }
 
@@ -477,7 +478,7 @@ void Character::refreshSkills()
 	for(unsigned int j = 0; j < m_skill.size(); j++)
 		m_skill[j]->refresh();
 	
-	if (wScreen.getFight().isFighting() && m_autoAttack )
+	/*if (wScreen.getFight().isFighting() && m_autoAttack )
 	{
 		Character* pkmn = wScreen.getFight().getPokemon(), *opponent = wScreen.getFight().getOpponent();
 		ska::Rectangle pkmnPos = pkmn->getHitboxCenterPos(), opponentPos = opponent->getHitboxCenterPos();
@@ -496,7 +497,7 @@ void Character::refreshSkills()
 		}
 		
 		m_skillAutoAttack->refresh();
-	}
+	}*/
 }
 
 ska::Texture* Character::getFaceset()
@@ -600,8 +601,8 @@ bool Character::damage(Character* src, unsigned int damages)
 	ska::Rectangle animPos;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	if (wScreen.getPokemonManager().getFirstUsablePokemon() == NULL)
-		wScreen.getFight().end(EndFightReason::Lose);
+	/*if (wScreen.getPokemonManager().getFirstUsablePokemon() == NULL)
+		wScreen.getFight().end(EndFightReason::Lose);*/
 
 	if (damages == 0)
 		return m_alive;
@@ -612,7 +613,7 @@ bool Character::damage(Character* src, unsigned int damages)
         m_alive = false;
 
 		//personnage source des dommages (NULL si aucun)
-		if (src != NULL)
+		/*if (src != NULL)
 		{
 			if (!m_alive)
 			{
@@ -632,7 +633,7 @@ bool Character::damage(Character* src, unsigned int damages)
 				}
 			}
 			
-		}
+		}*/
 		
     }
 	else
@@ -640,7 +641,7 @@ bool Character::damage(Character* src, unsigned int damages)
 	
 	animPos.w = 48;
 	animPos.h = 48;
-	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, ska::RectangleUtils::posToCenterPicture(animPos, m_rect), 1, -1, 3, 150);
+	//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, 14, ska::RectangleUtils::posToCenterPicture(animPos, m_rect), 1, -1, 3, 150);
     m_hpbar.setCurrentValue(m_hp);
 	return m_alive;
 }

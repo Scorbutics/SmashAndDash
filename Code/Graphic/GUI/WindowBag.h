@@ -23,6 +23,6 @@ class WindowBag: public MovableWindow
 	ska::Point<int> m_curObjectPos;
 };
 
-typedef std::unique_ptr<WindowBag> WindowBagPtr;
+//typedef std::unique_ptr<WindowBag> WindowBagPtr;
 
 #endif

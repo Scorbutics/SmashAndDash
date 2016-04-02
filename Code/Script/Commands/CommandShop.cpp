@@ -1,6 +1,6 @@
 #include "CommandShop.h"
 #include "../../Gameplay\WGameCore.h"
-
+#include "../../Graphic/GUI/WindowShop.h"
 
 CommandShop::CommandShop(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

@@ -7,6 +7,8 @@
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../Utils/IDs.h"
+#include "DialogMenu.h"
+
 
 MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
 {
@@ -33,8 +35,8 @@ ska::Animation* MouseCursor::getAnimation()
 
 void MouseCursor::modifyHint(string hint)
 {
-    (*m_hintBox).modifyText(hint);
-    (*m_hintBox).hide(false);
+    m_hintBox->modifyText(hint);
+    m_hintBox->hide(false);
 }
 
 void MouseCursor::hideCursor(bool x)
@@ -57,22 +59,14 @@ bool MouseCursor::isActiveCursor()
     return !m_hideC;
 }
 
-DialogMenu* MouseCursor::getHintBox()
-{
-	if(m_hintBox != NULL)
-		return &(*m_hintBox);
-	else
-		return NULL;
+DialogMenu* MouseCursor::getHintBox() {	
+	return m_hintBox.get();
 }
 
 bool MouseCursor::isActiveHint(GUI *g) {
 	const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
-    int ind = g->isPositionOnButton(mousePos);
-    if(ind != -1)
-        m_hideH = false;
-    else
-        m_hideH = true;
-
+    int ind = g->isPositionOnButton(mousePos);    
+	m_hideH = ind == -1;
     return !m_hideH;
 }
 
@@ -98,7 +92,7 @@ void MouseCursor::display()
 		return;
 	}
 
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
     if(SDL_GetTicks() - m_time < m_delay)
     {

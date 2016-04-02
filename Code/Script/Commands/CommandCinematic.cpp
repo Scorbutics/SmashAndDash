@@ -1,5 +1,6 @@
 #include "CommandCinematic.h"
 #include "../../Gameplay\WGameCore.h"
+#include "../../Graphic/GUI/DialogMenu.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
@@ -50,9 +51,9 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 
 	DialogMenu messageBox(message, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 21);
 
-	wScreen.getSpriteAnimationManager().reset();
+	//wScreen.getSpriteAnimationManager().reset();
 
-	cinematic = wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, pos, -1, -1, frameNumber, delay);
+	cinematic = NULL;//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, pos, -1, -1, frameNumber, delay);
 
 	/*while (continuer)
 	{
@@ -69,6 +70,6 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 		SDL_Delay(20);
 	}*/
 	//in->resetAll();
-	wScreen.getSpriteAnimationManager().reset();
+	//wScreen.getSpriteAnimationManager().reset();
 	return "";
 }

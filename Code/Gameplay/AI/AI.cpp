@@ -48,8 +48,8 @@ unsigned int AI::getContext()
 
 Character* AI::getOpponent()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-    return wScreen.getFight().getOpponent();
+	//WGameCore& wScreen = WGameCore::getInstance();
+	return NULL;//wScreen.getFight().getOpponent();
 }
 
 void AI::act(Fight& fight)
@@ -116,8 +116,8 @@ void AI::act(Fight& fight)
 
 	ska::Rectangle screenRect;
 	ska::Point<int> centerPos;
-	centerPos.x = wScreen.getFight().getPokemon()->getHitboxCenterPos().x;
-	centerPos.y = wScreen.getFight().getPokemon()->getHitboxCenterPos().y;
+	/*centerPos.x = wScreen.getFight().getPokemon()->getHitboxCenterPos().x;
+	centerPos.y = wScreen.getFight().getPokemon()->getHitboxCenterPos().y;*/
 
     screenRect.x = screenRect.y = 0;
     screenRect.w = wScreen.getWidth();
@@ -125,7 +125,7 @@ void AI::act(Fight& fight)
     /*centerPos.x += wScreen.getORel().x;
     centerPos.y += wScreen.getORel().y;*/
 
-	if (!ska::RectangleUtils::isPositionInBox(centerPos, screenRect) || !wScreen.getFight().getOpponent()->isAlive()) {
+	/*if (!ska::RectangleUtils::isPositionInBox(centerPos, screenRect) || !wScreen.getFight().getOpponent()->isAlive()) {
 		fight.end(EndFightReason::Win);
-	}
+	}*/
 }

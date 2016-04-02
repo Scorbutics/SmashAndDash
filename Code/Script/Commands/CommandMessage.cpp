@@ -1,6 +1,6 @@
 #include <string>
 #include "CommandMessage.h"
-#include <SDL2\SDL.h>
+#include "../../Graphic/GUI/DialogMenu.h"
 #include "../../Utils\IDs.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"

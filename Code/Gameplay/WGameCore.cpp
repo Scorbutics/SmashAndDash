@@ -1,8 +1,5 @@
 #include <vector>
-#include "../Utils/IDs.h"
 #include "../Gameplay\WGameCore.h"
-#include "../ska/Utils/Observable.h"
-#include "../Utils/ChargementImages.h"
 #include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
@@ -10,8 +7,13 @@
 #include "../ska/World/LayerE.h"
 #include "../ska/Exceptions/CorruptedFileException.h"
 #include "../ska/Exceptions/SceneDiedException.h"
-#include "../ska/ECS/PrefabEntityManager.h"
 #include "./Scene/SceneMap.h"
+#include "../Graphic/GUI/DialogMenu.h"
+#include "../Graphic/GUI/WindowSettings.h"
+#include "../Graphic/GUI/WindowTeam.h"
+#include "../Graphic/GUI/WindowShop.h"
+#include "../Graphic/GUI/WindowBag.h"
+#include "../Graphic/GUI/ToolBar.h"
 
 using namespace std;
 
@@ -45,6 +47,7 @@ void WGameCore::resize(unsigned int w, unsigned int h)
 	//SDL_RenderSetLogicalSize(m_renderer, w, h);
 	m_laFenetre = w;
 	m_loFenetre = h;
+	//m_worldScene.getWorld().
 }
 
 WorldScene& WGameCore::getWorldScene() {
@@ -79,10 +82,10 @@ void WGameCore::setOffsetChipset(int x, int y, int w, int h)
 }
 
 
-ShakerManager& WGameCore::getShakerManager()
+/*ShakerManager& WGameCore::getShakerManager()
 {
     return m_shaker;
-}
+}*/
 
 float WGameCore::getSpeedInertie()
 {
@@ -140,9 +143,9 @@ PokemonManager& WGameCore::getPokemonManager()
     return m_pkmnManager;
 }
 
-ska::ParticleManager& WGameCore::getParticleManager() {
+/*ska::ParticleManager& WGameCore::getParticleManager() {
     return m_particleManager;
-}
+}*/
 
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 	m_sceneHolder.nextScene(scene);
@@ -192,19 +195,19 @@ void WGameCore::graphicUpdate(void) {
 	drawables.draw();
 }
 
-RainParticleManager& WGameCore::getRainParticleManager() {
+/*RainParticleManager& WGameCore::getRainParticleManager() {
 	return m_rainParticleManager;
-}
+}*/
 
-bool WGameCore::isScrollingActive()
+/*bool WGameCore::isScrollingActive()
 {
 	return (!m_fight.isFighting() && m_scrolling);
-}
+}*/
 
-void WGameCore::activeScrolling(bool b)
+/*void WGameCore::activeScrolling(bool b)
 {
 	m_scrolling = b;
-}
+}*/
 
 void WGameCore::eventUpdate(bool movingDisallowed) {
 	try {
@@ -253,10 +256,10 @@ Inventory& WGameCore::getInventory()
     return m_inv;
 }
 
-ska::SpriteAnimationManager& WGameCore::getSpriteAnimationManager()
+/*ska::SpriteAnimationManager& WGameCore::getSpriteAnimationManager()
 {
 	return m_spriteAnimManager;
-}
+}*/
 
 Settings& WGameCore::getSettings()
 {
@@ -274,10 +277,10 @@ ska::World& WGameCore::getWorld()
 }
 
 
-Fight& WGameCore::getFight()
+/*Fight& WGameCore::getFight()
 {
     return m_fight;
-}
+}*/
 
 const ska::InputActionContainer& WGameCore::getActions() const {
 	return m_inputCManager.getActions();
@@ -293,9 +296,9 @@ const ska::InputToggleContainer& WGameCore::getToggles() const {
 
 WGameCore::~WGameCore()
 {
-	for (unsigned int i = 0; i < m_guiList.size(); i++) {
+	/*for (unsigned int i = 0; i < m_guiList.size(); i++) {
 		delete m_guiList[i];
-	}
+	}*/
 }
 
 

@@ -1,6 +1,5 @@
 #include "CommandTranslationCamera.h"
 #include "../../ska/Graphic/Rectangle.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
 CommandTranslationCamera::CommandTranslationCamera(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -18,7 +17,7 @@ int CommandTranslationCamera::argumentsNumber() {
 
 std::string CommandTranslationCamera::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;
 	int speedx, speedy;
 	ska::Rectangle tmpRelativeOrigin;
@@ -27,16 +26,16 @@ std::string CommandTranslationCamera::execute(ska::ScriptComponent& script, std:
 	speedx = ska::StringUtils::strToInt(args[1]);
 	speedy = ska::StringUtils::strToInt(args[2]);
 
-/*	tmpRelativeOrigin = wScreen.getORel();*/
+//	tmpRelativeOrigin = wScreen.getORel();
 	wScreen.activeScrolling(false);
 
 	t0 = SDL_GetTicks();
 
 	while (SDL_GetTicks() - t0 < duree)
 	{
-/*
+
 		tmpRelativeOrigin.x -= speedx;
-		tmpRelativeOrigin.y -= speedy;*/
+		tmpRelativeOrigin.y -= speedy;
 
 		wScreen.graphicUpdate();
 		wScreen.eventUpdate(true);
@@ -47,6 +46,6 @@ std::string CommandTranslationCamera::execute(ska::ScriptComponent& script, std:
 
 	}
 
-	wScreen.activeScrolling(true);
+	wScreen.activeScrolling(true);*/
 	return "";
 }

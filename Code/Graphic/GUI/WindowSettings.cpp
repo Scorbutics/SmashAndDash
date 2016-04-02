@@ -1,4 +1,8 @@
 #include "WindowSettings.h"
+#include "ToolBar.h"
+#include "WindowShop.h"
+#include "WindowTeam.h"
+#include "WindowBag.h"
 #include "../../Gameplay\WGameCore.h"
 #include "../../Utils/IDs.h"
 
@@ -111,13 +115,13 @@ void WindowSettings::refresh()
         gui.getImgDialog()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetPkmn()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetOpponent()->setAlpha((*settings.getGuiTransparency() != 0));
-        this->getButton("save_settings")->forceValue(0);
+        getButton("save_settings")->forceValue(0);
     }
 
 	if (m_saveGame != 0)
 	{
 		//wScreen.getSavegameManager().saveGame("save1");
-		this->getButton("save_game")->forceValue(0);
+		getButton("save_game")->forceValue(0);
 	}
 }
 

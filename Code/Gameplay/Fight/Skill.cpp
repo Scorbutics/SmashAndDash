@@ -109,11 +109,11 @@ AOE::AOE(ska::IniReader* data, Character* parent):
 void AOE::launch(ska::Point<int> pos)
 {
 	ska::Texture text(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, m_range-1+3), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	ska::Rectangle ppos = m_parent->getHitboxCenterPos();
 	ppos.x -= text.getWidth()/4;
 	ppos.y -= text.getHeight()/2;
-	wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, m_range-1+3, ppos, 1, 80, 2);
+	//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, m_range-1+3, ppos, 1, 80, 2);
 	m_lastTimeCD = m_timeCD;
 	m_active = true;
 }
@@ -122,7 +122,7 @@ void AOE::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	if(!wScreen.getFight().isFighting() || !m_active)
+	/*if(!wScreen.getFight().isFighting() || !m_active)
 		return;
 
 	Character* pkmn = wScreen.getFight().getPokemon();
@@ -179,7 +179,7 @@ void AOE::refresh()
 				
 			}
 		}
-	}
+	}*/
 }
 
 void AOE::display()
@@ -364,7 +364,7 @@ void Projectile::collision()
     //Rectangle mousePos = wScreen.getInputListener().getInput()->getMousePos();
     //int speed;
 
-    for(int i = 0; i < m_nombre; i++)
+   /* for(int i = 0; i < m_nombre; i++)
     {
 			idChar = m_particles[i]->collisionNPC();
 			size_t idCharSize = idChar.size();
@@ -433,13 +433,10 @@ void Projectile::collision()
 
 							if (!pkmn->isAlive())
 							{
-								/*if (wScreen.getPokemonManager().getFirstUsablePokemon() != NULL)
-									wScreen.getPokemonManager().useFirstUsablePokemon();
-								else
-								{*/
+								
 									wScreen.getFight().end(EndFightReason::Win);
 									return;
-								//}
+								
 							}
 						}
 							
@@ -448,7 +445,7 @@ void Projectile::collision()
 
 			}
 		
-	}
+	}*/
 
 }
 

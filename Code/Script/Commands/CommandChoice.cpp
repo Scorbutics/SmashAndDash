@@ -3,6 +3,7 @@
 #include "../../Gameplay/WGameCore.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/ScriptUtils.h"
+#include "../../Graphic/GUI/DialogMenu.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"

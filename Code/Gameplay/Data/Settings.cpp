@@ -36,8 +36,8 @@ void Settings::update() {
 	Weather* weather = core.getWorld().getWeather();
 	if (weather != NULL) {
 		weather->hide(!m_weatherActive);
-	}*/
-	core.getParticleManager().hide(!m_particles);
+	}
+	core.getParticleManager().hide(!m_particles);*/
 	core.getWorld().setBgmVolume(m_soundVol);
 }
 

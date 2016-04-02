@@ -26,6 +26,6 @@ class WindowShop
     std::string m_lastClickInv;
 };
 
-typedef std::unique_ptr<WindowShop> WindowShopPtr;
+//typedef std::unique_ptr<WindowShop> WindowShopPtr;
 
 #endif

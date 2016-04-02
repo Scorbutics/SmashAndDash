@@ -42,6 +42,9 @@ void AbstractSceneMap::eventUpdate(bool stuck) {
 	WGameCore& core = WGameCore::getInstance();
 	GUI& gui = core.getGUI();
 
+	/* Raw input acquisition */
+	m_inputCManager.refresh();
+
 	AbstractNoGUISceneMap::eventUpdate(stuck);
 
 	//GUI
