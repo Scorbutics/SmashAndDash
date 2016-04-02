@@ -35,21 +35,8 @@ GUI::GUI()
     m_pnj = NULL;
     m_isMovingWindow = m_hide = false;
 
-
 	ska::Rectangle menuPos;
-    menuPos.x = 0;
-    menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE*4;
-    menuPos.w = wScreen.getWidth()/2;
-    menuPos.h = TAILLEBLOCFENETRE*4;
-    m_dial = unique_ptr<DialogMenu>(new DialogMenu("Dialogue", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-
-    menuPos.x += TAILLEBLOCFENETRE;
-    menuPos.y -= TAILLEBLOCFENETRE*5;
-    menuPos.w = 4*TAILLEBLOCFENETRE;
-    menuPos.h = 5*TAILLEBLOCFENETRE;
-    m_imgDial = unique_ptr<DialogMenu>(new DialogMenu("ImgName", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"1.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-
-    menuPos.x = 0;
+	menuPos.x = 0;
     menuPos.y = 0;
     menuPos.w = 8*TAILLEBLOCFENETRE;
     menuPos.h = 5*TAILLEBLOCFENETRE;
@@ -151,6 +138,7 @@ void GUI::initButtons()
     m_buttonScroll.resize(m_buttonList.size());
 	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
 		m_buttonScroll[i] = 0;
+		m_buttonList[i]->hide(false);
 	}
 
 
@@ -229,8 +217,9 @@ void GUI::refresh()
             {
 
 
-				if (m_buttonScroll[i] < buttonPos.h / 2)
-                    m_buttonScroll[i] += SCROLL_BUTTON_SPEED;
+				if (m_buttonScroll[i] < buttonPos.h / 2) {
+					m_buttonScroll[i] += SCROLL_BUTTON_SPEED;
+				}
 
 
                 if(in[ska::InputAction::LClic] && !m_wShop->isVisible())
@@ -238,20 +227,20 @@ void GUI::refresh()
 
                     if(m_buttonList[i]->getActionClic() == "options")
                     {
-						m_wSettings->setPos(m_wTeam->getWidth() + m_wBag->getWidth(), 0);
+						m_wSettings->setPos(ska::Point<int>(m_wTeam->getRect().w + m_wBag->getRect().w, 0));
                         m_wSettings->reset();
                         m_wSettings->hide(false);
 
                     }
                     else if(m_buttonList[i]->getActionClic() == "pokebag")
                     {
-						m_wBag->setPos(m_wTeam->getWidth(), 0);
+						m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
                         m_wBag->reset();
                         m_wBag->hide(false);
                     }
                     else if(m_buttonList[i]->getActionClic() == "team")
                     {
-						m_wTeam->setPos(0, 0);
+						m_wTeam->setPos(ska::Point<int>());
                         m_wTeam->reset("show");
                         m_wTeam->hide(false);
                     }
@@ -271,8 +260,8 @@ void GUI::refresh()
 
             if(m_side == 0) // GUI disposée en bas à droite de l'écran
             {
-                m_buttonList[i]->setPos(bufButtonPos.x, (wScreen.getHeight() - m_buttonList[i]->getHeight()/2) - m_buttonScroll[i]);
-				m_buttonList[i]->setPosImg(ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), bufButtonPos).x, ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getRect()).y - TAILLEBLOCFENETRE / 4);
+				m_buttonList[i]->setPos(ska::Point<int>(bufButtonPos.x, (wScreen.getHeight() - m_buttonList[i]->getRect().h / 2) - m_buttonScroll[i]));
+				//m_buttonList[i]->setPosImg(ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), bufButtonPos).x, ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getRect()).y - TAILLEBLOCFENETRE / 4);
                 bufButtonPos.x += 5*TAILLEBLOCFENETRE/2;
             }
 
@@ -288,6 +277,10 @@ void GUI::refresh()
 
 
 
+}
+
+void GUI::addDialog(IDialogMenuPtr& d) {
+	m_extraWindows.push_back(std::move(d));
 }
 
 ToolBarPtr& GUI::getToolbar() {
@@ -319,7 +312,7 @@ void GUI::setClickMenu()
             posClickMenu.x -= 5;
             posClickMenu.y -= 5;
             m_clickMenu->setPos(posClickMenu);
-            m_curObjectPos = m_clickMenu->getPos();
+            m_curObjectPos = m_clickMenu->getRect();
             m_curObjectPos.x -= invAreaAbsolutePos.x;
             m_curObjectPos.y -= invAreaAbsolutePos.y;
             if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
@@ -535,16 +528,21 @@ void GUI::dialogDisplay()
 	WGameCore& wScreen = WGameCore::getInstance();
 	m_hide = false;
 
-    if(m_dial->isVisible()) {
-        m_hide = true;
-        m_dial->display();
-    }
-	
+	std::vector<std::vector<IDialogMenuPtr>::iterator> toDelete;
+	unsigned int index = 0;
+	for (auto& w = m_extraWindows.begin(); w != m_extraWindows.end(); w++) {
+		if ((*w)->isVisible()) {
+			//m_hide = true;
+			(*w)->display();
+		} else {
+			toDelete.push_back(w);
+		}
+		index++;
+	}
 
-    if(m_imgDial->isVisible()) {
-        m_hide = true;
-        m_imgDial->display();
-    }
+	for (auto& d : toDelete) {
+		m_extraWindows.erase(d);
+	}
 
 
 	if (m_pnjInfoWindow->isVisible()) {
@@ -556,8 +554,8 @@ void GUI::dialogDisplay()
 		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 		
 		ska::Rectangle cooldownPos;
-        cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOCFENETRE/4;
-        cooldownPos.y = m_attackPokemon->getPos().y;
+        cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE/4;
+		cooldownPos.y = m_attackPokemon->getRect().y;
 
         //On blit les sprites d'attaque
         m_attackPokemon->display();
@@ -567,7 +565,7 @@ void GUI::dialogDisplay()
             if(!(*v)[i]->cooldownOK()) {
 				ska::Texture* cooldownText;
                 cooldownText = (*v)[i]->getSpriteRemainingCD();
-                cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOC/2 + (i+1) * (*v)[i]->getIcon()->getWidth();
+				cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOC / 2 + (i + 1) * (*v)[i]->getIcon()->getWidth();
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
             }
         }
@@ -612,17 +610,12 @@ void GUI::dialogRefresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	if(m_dial->isVisible()) {
-		m_hide = true;
-		m_dial->refresh();
+	for (auto& w : m_extraWindows) {
+		if (w->isVisible()) {
+			//m_hide = true;
+			w->refresh();
+		}
 	}
-
-
-	if(m_imgDial->isVisible()) {
-		m_hide = true;
-		m_imgDial->refresh();
-	}
-
 
 	if (m_pnjInfoWindow->isVisible()) {
 		m_pnjInfoWindow->refresh();
@@ -633,8 +626,8 @@ void GUI::dialogRefresh()
 		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 
 		ska::Rectangle cooldownPos;
-		cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOCFENETRE/4;
-		cooldownPos.y = m_attackPokemon->getPos().y;
+		cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE / 4;
+		cooldownPos.y = m_attackPokemon->getRect().y;
 
 		//On blit les sprites d'attaque
 		m_attackPokemon->refresh();
@@ -644,7 +637,7 @@ void GUI::dialogRefresh()
 			if(!(*v)[i]->cooldownOK()) {
 				ska::Texture* cooldownText;
 				cooldownText = (*v)[i]->getSpriteRemainingCD();
-				cooldownPos.x = m_attackPokemon->getPos().x + TAILLEBLOC/2 + (i+1) * (*v)[i]->getIcon()->getWidth();
+				cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOC / 2 + (i + 1) * (*v)[i]->getIcon()->getWidth();
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
 
 			}
@@ -687,15 +680,6 @@ void GUI::dialogRefresh()
 		m_wShop->refresh();
 	}
 
-}
-
-
-DialogMenuPtr& GUI::getDialog() {
-    return m_dial;
-}
-
-DialogMenuPtr& GUI::getImgDialog() {
-    return m_imgDial;
 }
 
 DialogMenuPtr& GUI::getInfoPNJWindow() {

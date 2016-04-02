@@ -17,11 +17,10 @@ WindowShop::WindowShop(std::string squareSpriteName, std::string squareSpriteNam
 {
 	m_shopInv.load(squareSpriteName, squareSpriteNameHighlight);
     m_pos = posFond;
-    m_dialog.setPos(posFond.x, posFond.y);
     m_dialog.resize(4*TAILLEBLOCFENETRE, posFond.h);
-    m_shopBar.setPos(posFond.x+4*TAILLEBLOCFENETRE, posFond.y);
+    m_shopBar.setPos(ska::Point<int>(posFond.x+4*TAILLEBLOCFENETRE, posFond.y));
     m_shopBar.resize(posFond.w-4*TAILLEBLOCFENETRE, posFond.h-4*TAILLEBLOCFENETRE);
-    m_userBar.setPos(posFond.x+4*TAILLEBLOCFENETRE, posFond.y + posFond.h - 4*TAILLEBLOCFENETRE);
+	m_userBar.setPos(ska::Point<int>(posFond.x + 4 * TAILLEBLOCFENETRE, posFond.y + posFond.h - 4 * TAILLEBLOCFENETRE));
 
 
     m_boolQuit = 0;
@@ -54,11 +53,11 @@ void WindowShop::reset()
 
 
 
-    m_dialog.setPos(m_pos.x, m_pos.y);
+	m_dialog.setPos(ska::Point<int>(m_pos.x, m_pos.y));
     m_dialog.resize(4*TAILLEBLOCFENETRE, m_pos.h);
-    m_shopBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y);
+	m_shopBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y));
     m_shopBar.resize(m_pos.w-4*TAILLEBLOCFENETRE, m_pos.h-4*TAILLEBLOCFENETRE);
-    m_userBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4*TAILLEBLOCFENETRE);
+	m_userBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
     m_userBar.resize(m_pos.w - 4*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE);
 
     gui.hide(true);
@@ -81,22 +80,22 @@ void WindowShop::reset()
 
 	ska::Rectangle buf;
     buf.y = (TAILLEBLOCFENETRE*3)/4;
-	buf.x = m_shopBar.getWidth() / 2 - TAILLEBLOCFENETRE;
+	buf.x = m_shopBar.getRect().w/ 2 - TAILLEBLOCFENETRE;
     m_shopBar.addTextArea("Shop", 20, buf);
-    buf.x = m_userBar.getWidth()/2 - 2*TAILLEBLOCFENETRE;
+	buf.x = m_userBar.getRect().w / 2 - 2 * TAILLEBLOCFENETRE;
     m_userBar.addTextArea("Utilisateur", 20, buf);
-    buf.y = m_userBar.getHeight() - TAILLEBLOCFENETRE;
-    buf.x = m_userBar.getWidth() - 2*TAILLEBLOCFENETRE;
+	buf.y = m_userBar.getRect().h - TAILLEBLOCFENETRE;
+	buf.x = m_userBar.getRect().w - 2 * TAILLEBLOCFENETRE;
     m_userBar.addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", &m_boolQuit, vBool, vQuit, 22, "window_shop_quit");
 
 	buf.x = TAILLEBLOCFENETRE/2;
 	buf.y =	2*TAILLEBLOCFENETRE;
-	buf.w = m_shopBar.getWidth();
-	buf.h = m_shopBar.getHeight();
+	buf.w = m_shopBar.getRect().w;
+	buf.h = m_shopBar.getRect().h;
     m_shopBar.addInventory(m_shopInv, buf);
 
-	buf.w = m_userBar.getWidth();
-	buf.h = m_userBar.getHeight();
+	buf.w = m_userBar.getRect().w;
+	buf.h = m_userBar.getRect().h;
 
     m_shopInvArea = m_shopBar.getInventoryArea(0);
     m_userBar.addInventory(wScreen.getInventory(), buf);
@@ -116,10 +115,10 @@ void WindowShop::refresh()
 	const ska::InputActionContainer& in = wScreen.getActions();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 
-    m_pos.x = m_dialog.getPos().x;
-    m_pos.y = m_dialog.getPos().y;
-    m_shopBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y);
-    m_userBar.setPos(m_pos.x+4*TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4*TAILLEBLOCFENETRE);
+    m_pos.x = m_dialog.getRect().x;
+    m_pos.y = m_dialog.getRect().y;
+	m_shopBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y));
+	m_userBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
 
     //Lors d'un clic sur "Quitter", on quitte...
     if(m_boolQuit != 0)

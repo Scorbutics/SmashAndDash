@@ -76,8 +76,8 @@ void Inventory_Area::display()
         m_active = true;
 
 	ska::Rectangle buf = m_relativePos;
-    buf.x += (m_parent->getPos()).x;
-    buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
     if(m_inv != NULL)
         m_inv->display(buf);
@@ -87,8 +87,8 @@ void Inventory_Area::display()
 void Inventory_Area::refresh()
 {
 	ska::Rectangle buf = m_relativePos;
-	buf.x += (m_parent->getPos()).x;
-	buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();

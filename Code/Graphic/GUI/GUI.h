@@ -18,9 +18,11 @@ class WindowShop;
 class WGameCore;
 class DialogMenu;
 class Character;
+class IDialogMenu;
 
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
+typedef std::unique_ptr<IDialogMenu> IDialogMenuPtr;
 typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
 typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
@@ -36,6 +38,7 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 	virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
     void dialogRefresh();
+	void addDialog(IDialogMenuPtr& d);
     void refresh();
 	int isPositionOnButton(const ska::Point<float>& pos);
     bool isMouseOnAWindow();
@@ -53,8 +56,6 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
     void resetMovableWindowPokemonBag();
     void resetMovableWindowSettings();
 
-    DialogMenuPtr& getDialog();
-	DialogMenuPtr& getImgDialog();
 	DialogMenuPtr& getMovableWindow();
 	DialogMenuPtr& getInfoPNJWindow();
 	DialogMenuPtr& getInfoPokemonWindow();
@@ -79,7 +80,8 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 	void display() override;
 private:
     vector<DialogMenuPtr> m_buttonList;
-	DialogMenuPtr m_dial, m_imgDial, m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
+	vector<IDialogMenuPtr> m_extraWindows;
+	DialogMenuPtr m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
     vector<int> m_buttonScroll;
 	ska::Point<int> m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;

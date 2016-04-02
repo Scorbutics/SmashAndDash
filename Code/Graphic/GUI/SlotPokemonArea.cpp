@@ -72,8 +72,8 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 void SlotPokemon_Area::display()
 {
 	ska::Rectangle buf = m_relativePos;
-    buf.x += m_parent->getPos().x;
-    buf.y += m_parent->getPos().y;
+    buf.x += m_parent->getRect().x;
+	buf.y += m_parent->getRect().y;
 
 	WGameCore& wScreen = WGameCore::getInstance();
 

@@ -128,6 +128,7 @@
     <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneHolderCore.h" />
+    <ClInclude Include="Code\Graphic\GUI\IDialogMenu.h" />
     <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
@@ -362,6 +363,7 @@
     <ClInclude Include="Code\ska\Utils\PhysicUtils.h" />
     <ClInclude Include="Code\Gameplay\CustomEntityManager.h" />
     <ClInclude Include="Code\Gameplay\World\WorldScene.h" />
+    <ClInclude Include="Code\Graphic\GUI\MessageDialogBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
@@ -526,6 +528,7 @@
     <ClCompile Include="Code\ska\Utils\PhysicUtils.cpp" />
     <ClCompile Include="Code\Gameplay\CustomEntityManager.cpp" />
     <ClCompile Include="Code\Gameplay\World\WorldScene.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\MessageDialogBox.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

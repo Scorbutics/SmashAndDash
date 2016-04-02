@@ -39,8 +39,8 @@ Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, in
     m_relativePos.w = width;
     m_relativePos.h = height;
 
-    m_posTopArrow.x = m_width + (m_parent->getPos()).x + m_relativePos.x;
-    m_posTopArrow.y = (m_parent->getPos()).y + m_relativePos.y;
+	m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
+	m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
     m_posTopArrow.w = m_topArrow.getWidth();
     m_posTopArrow.h = m_topArrow.getHeight();
 
@@ -67,8 +67,8 @@ void Scroll_Text::display()
 
     if(m_parent->isMoving())
     {
-        m_posTopArrow.x = m_width + (m_parent->getPos()).x + m_relativePos.x;
-        m_posTopArrow.y = (m_parent->getPos()).y + m_relativePos.y;
+		m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
+		m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
         m_posBotArrow = m_posTopArrow;
         m_posBotArrow.y += m_linesNumber * m_fontSize - m_botArrow.getHeight();
         m_posCursor = m_posTopArrow;
@@ -76,8 +76,8 @@ void Scroll_Text::display()
     }
 
 	ska::Rectangle buf = m_relativePos, bufScrollBar;
-    buf.x += (m_parent->getPos()).x;
-    buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
     bufScrollBar = buf;
     bufScrollBar.x += m_width;
@@ -110,8 +110,8 @@ void Scroll_Text::refresh()
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	ska::Rectangle buf = m_relativePos, bufScrollBar;
-	buf.x += (m_parent->getPos()).x;
-	buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
 	bufScrollBar = buf;
 	bufScrollBar.x += m_width;

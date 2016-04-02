@@ -50,14 +50,14 @@ void Button_Bar::display()
 
 //Coordonnées relatives -> absolues
 	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
-    buf.x += (m_parent->getPos()).x;
-    buf.y += (m_parent->getPos()).y;
-    absoluteLeftPos.x += (m_parent->getPos()).x;
-    absoluteLeftPos.y += (m_parent->getPos()).y;
-    absoluteRightPos.x += (m_parent->getPos()).x + m_buttonStyle.getWidth();
-    absoluteRightPos.y += (m_parent->getPos()).y;
-    absoluteCursorPos.x += (m_parent->getPos()).x;
-    absoluteCursorPos.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
+	absoluteLeftPos.x += (m_parent->getRect()).x;
+	absoluteLeftPos.y += (m_parent->getRect()).y;
+	absoluteRightPos.x += (m_parent->getRect()).x + m_buttonStyle.getWidth();
+	absoluteRightPos.y += (m_parent->getRect()).y;
+	absoluteCursorPos.x += (m_parent->getRect()).x;
+	absoluteCursorPos.y += (m_parent->getRect()).y;
 
 
 	m_buttonStyle.render(buf.x, buf.y);
@@ -77,14 +77,14 @@ void Button_Bar::refresh()
 
 	//Coordonnées relatives -> absolues
 	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
-	buf.x += (m_parent->getPos()).x;
-	buf.y += (m_parent->getPos()).y;
-	absoluteLeftPos.x += (m_parent->getPos()).x;
-	absoluteLeftPos.y += (m_parent->getPos()).y;
-	absoluteRightPos.x += (m_parent->getPos()).x + m_buttonStyle.getWidth();
-	absoluteRightPos.y += (m_parent->getPos()).y;
-	absoluteCursorPos.x += (m_parent->getPos()).x;
-	absoluteCursorPos.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
+	absoluteLeftPos.x += (m_parent->getRect()).x;
+	absoluteLeftPos.y += (m_parent->getRect()).y;
+	absoluteRightPos.x += (m_parent->getRect()).x + m_buttonStyle.getWidth();
+	absoluteRightPos.y += (m_parent->getRect()).y;
+	absoluteCursorPos.x += (m_parent->getRect()).x;
+	absoluteCursorPos.y += (m_parent->getRect()).y;
 
 
 	//Si on clique sur la flèche gauche

@@ -7,10 +7,11 @@ class DialogMenu;
 
 class DynamicWindowArea: public Window_Area
 {
-	public:
+public:
 	DynamicWindowArea(DialogMenu* parent);
+	virtual ~DynamicWindowArea();
 	virtual void refresh() = 0;
-	~DynamicWindowArea();
+
 };
 
 #endif

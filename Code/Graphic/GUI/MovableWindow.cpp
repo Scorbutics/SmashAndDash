@@ -21,9 +21,9 @@ void MovableWindow::refresh()
     movePos.h = TAILLEBLOCFENETRE/2;
 	
 	if (in[ska::InputToggle::MoveWindow] && ska::RectangleUtils::isPositionInBox(mouseClickPos, movePos)) {
-        setMoving(true);
+		m_moving = true;
 	} else if (!in[ska::InputToggle::MoveWindow] && isMoving()) {
-		setMoving(false);
+		m_moving = false;
 	}
 
     if(isMoving()) {

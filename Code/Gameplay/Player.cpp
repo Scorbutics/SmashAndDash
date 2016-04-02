@@ -162,8 +162,8 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 		if (ke->getScancode() == SDL_SCANCODE_RETURN /*&& !wScreen.getFight().isFighting()*/)
 		{
 			ska::World& w = wScreen.getWorld();
-			wScreen.getGUI().getDialog()->hide(true);
-			wScreen.getGUI().getImgDialog()->hide(true);
+			/*wScreen.getGUI().getDialog()->hide(true);
+			wScreen.getGUI().getImgDialog()->hide(true);*/
 
 			ska::Rectangle buf;
 			buf = GetIDmob(); //Fonction qui renvoie l'ID du mob à la position du héro et entite[ID] respectivement dans buf.x et buf.y

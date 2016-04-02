@@ -2,7 +2,6 @@
 
 
 #include <map>
-#include "../Gameplay/WGameCore.h"
 #include "../Gameplay/Data/Statistics.h"
 #include "../ska/Utils/StringUtils.h"
 #include "../Utils/IDs.h"

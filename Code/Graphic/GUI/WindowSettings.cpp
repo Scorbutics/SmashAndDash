@@ -23,10 +23,10 @@ void WindowSettings::reset()
 	ska::Rectangle buf;
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
-    this->resize(this->getWidth(), 10*TAILLEBLOCFENETRE);
+	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
     this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
-    this->resize(this->getWidth(), 10*TAILLEBLOCFENETRE);
+	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
     vector<int> vbool, vSndVol;
     vbool.push_back(0);
     vbool.push_back(1);
@@ -100,19 +100,19 @@ void WindowSettings::refresh()
         for(unsigned int i = 0; i < gui.getButtonListSize(); i++)
         {
             gui.getButton(i)->setAlpha((*settings.getGuiTransparency() != 0));
-            gui.getButton(i)->setAlphaImg((*settings.getGuiTransparency() != 0));
+            //gui.getButton(i)->setAlphaImg((*settings.getGuiTransparency() != 0));
         }
         this->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getAttackPokemonWindow()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getAttackOpponentWindow()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getInfoPokemonWindow()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getInfoPNJWindow()->setAlpha((*settings.getGuiTransparency() != 0));
-        gui.getDialog()->setAlpha((*settings.getGuiTransparency() != 0));
+        //gui.getDialog()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getToolbar()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getWindowTeam()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getWindowShop()->getShopBar()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getWindowBag()->setAlpha((*settings.getGuiTransparency() != 0));
-        gui.getImgDialog()->setAlpha((*settings.getGuiTransparency() != 0));
+        //gui.getImgDialog()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetPkmn()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetOpponent()->setAlpha((*settings.getGuiTransparency() != 0));
         getButton("save_settings")->forceValue(0);

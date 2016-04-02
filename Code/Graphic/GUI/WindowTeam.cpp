@@ -34,7 +34,7 @@ void WindowTeam::reset(string action)
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.h = TAILLEBLOCFENETRE*3;
     this->addTextArea("Equipe Pokémon", 20, buf);
-    this->resize(this->getWidth(), (int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE + 2*TAILLEBLOCFENETRE);
+    this->resize(m_rect.w, (int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE + 2*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
     this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
     buf.x = TAILLEBLOCFENETRE/3;

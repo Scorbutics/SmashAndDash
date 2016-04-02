@@ -141,7 +141,7 @@ void MouseCursor::displayHint()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::Point<float> mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-    mousePos.y -= m_hintBox->getWidth()/2;
+	mousePos.y -= m_hintBox->getRect().w / 2;
     m_hintBox->setPos(mousePos);
     m_hintBox->display();
 }

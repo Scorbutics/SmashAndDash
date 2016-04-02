@@ -10,22 +10,24 @@ class WGameCore;
 
 class Window_Area
 {
-    public:
+public:
     Window_Area(DialogMenu* parent);
-    bool canBeClicked();
+	virtual ~Window_Area();
+
+	bool canBeClicked();
     bool isVisible();
     void hide(bool x);
 	ska::Rectangle* getRelativePos();
 	void setRelativePos(ska::Rectangle pos);
     DialogMenu* getParent();
-	virtual void display() = 0;
-    virtual std::string getKey() = 0;
-    virtual void forceValue(unsigned int index) = 0;
-    virtual ~Window_Area();
 	ska::Rectangle getAbsolutePos();
     bool isA(int type);
 
-    protected:
+	virtual void display() = 0;
+	virtual std::string getKey() = 0;
+	virtual void forceValue(unsigned int index) = 0;
+
+protected:
     DialogMenu* m_parent;
 	ska::Rectangle m_relativePos;
     bool m_canBeClicked, m_active;

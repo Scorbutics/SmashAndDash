@@ -53,8 +53,8 @@ void Button::display()
 	const ska::InputActionContainer& in = wScreen.getActions();
 
 	ska::Rectangle buf = m_relativePos, textPos = m_relativePos;
-    buf.x += (m_parent->getPos()).x;
-    buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
     textPos.w = m_stext.getWidth();
     textPos.h = m_stext.getHeight();
 
@@ -78,8 +78,8 @@ void Button::refresh()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputActionContainer& in = wScreen.getActions();
 	ska::Rectangle buf = m_relativePos, textPos = m_relativePos;
-	buf.x += (m_parent->getPos()).x;
-	buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 	textPos.w = m_stext.getWidth();
 	textPos.h = m_stext.getHeight();
 

@@ -62,7 +62,7 @@ void WindowBag::refresh()
 		ska::Rectangle invAreaAbsolutePos = invArea->getAbsolutePos();
         gui.getClickMenu()->hide(true);
         m_boolUseObject = 0;
-        m_curObjectPos = gui.getClickMenu()->getPos();
+		m_curObjectPos = gui.getClickMenu()->getRect();
         m_curObjectPos.x -= invAreaAbsolutePos.x;
         m_curObjectPos.y -= invAreaAbsolutePos.y;
         if(invArea->getObjectAtPos(m_curObjectPos) != NULL)

@@ -32,8 +32,8 @@ void Button_Quit::display()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 
 	ska::Rectangle buf = m_relativePos;
-    buf.x += (m_parent->getPos()).x;
-    buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
 	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
 		m_spriteActive.render(buf.x, buf.y);
@@ -56,8 +56,8 @@ void Button_Quit::refresh()
 	const ska::InputActionContainer& in = wScreen.getActions();
 
 	ska::Rectangle buf = m_relativePos;
-	buf.x += (m_parent->getPos()).x;
-	buf.y += (m_parent->getPos()).y;
+	buf.x += (m_parent->getRect()).x;
+	buf.y += (m_parent->getRect()).y;
 
 	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
 		if(in[ska::InputAction::LClic]) {
