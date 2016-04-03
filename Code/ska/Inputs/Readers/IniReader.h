@@ -22,7 +22,7 @@ namespace ska {
 		void clear();
 		bool load(std::string inifilename);
 		void save(std::string inifilename);
-		bool isLoaded();
+		bool isLoaded() const;
 
 		template<typename T>
 		void set(std::string path, T value)
@@ -32,11 +32,11 @@ namespace ska {
 			set(path, ss.str());
 		}
 
-		std::string getString(std::string path);
-		int getInt(std::string path);
-		bool getBoolean(std::string path);
-		float getFloat(std::string path);
-		bool get(std::string path);
+		std::string getString(std::string path) const;
+		int getInt(std::string path) const;
+		bool getBoolean(std::string path) const;
+		float getFloat(std::string path) const;
+		bool get(std::string path) const;
 
 	private:
 		std::unordered_map<std::string, std::string> m_content;

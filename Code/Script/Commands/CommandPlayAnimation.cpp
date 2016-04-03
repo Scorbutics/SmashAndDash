@@ -38,13 +38,19 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vec
 		
 		const int id_anim = ska::StringUtils::strToInt(args[1]);
 		ska::EntityId animation = m_entityManager.createEntity();
+		
+		if (gc.sprite.empty()) {
+			return "";
+		}
+
 		ska::PositionComponent pcANim;
 		pcANim.x = pc.x;
-		pcANim.y = (int)(pc.y + hc.yOffset - gc.sprite.getHeight());
+		pcANim.y = (int)(pc.y + hc.yOffset - gc.sprite[0].getHeight());
 		m_entityManager.addComponent<ska::PositionComponent>(animation, pcANim);
 		ska::GraphicComponent gcAnim;
-		gcAnim.sprite.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, id_anim), 4, 1, 4);
-		gcAnim.sprite.setDelay(300);
+		gcAnim.sprite.resize(1);
+		gcAnim.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, id_anim), 4, 1, 4);
+		gcAnim.sprite[0].setDelay(300);
 		m_entityManager.addComponent<ska::GraphicComponent>(animation, gcAnim);
 		ska::DeleterComponent dc;
 		dc.delay = 2100;

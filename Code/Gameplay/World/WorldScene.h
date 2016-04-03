@@ -5,8 +5,8 @@
 #include "../../ska/Physic/System\GravitySystem.h"
 #include "../../ska/Inputs/System/InputSystem.h"
 #include "../../ska/Physic/System\MovementSystem.h"
-#include "../../ska/Graphic/System/GraphicSystem.h"
-#include "../../ska/Graphic/System/ShadowSystem.h"
+#include "../../Graphic/System/GraphicSystem.h"
+#include "../../Graphic/System/ShadowSystem.h"
 #include "../../ska/Graphic/System/DirectionalAnimationSystem.h"
 #include "../../ska/Graphic/System/DeleterSystem.h"
 
@@ -67,8 +67,8 @@ private:
 	ska::InputSystem m_inputSystem;
 
 	/* Graphics */
-	ska::GraphicSystem m_graphicSystem;
-	ska::ShadowSystem m_shadowSystem;
+	GraphicSystem m_graphicSystem;
+	ShadowSystem m_shadowSystem;
 
 };
 

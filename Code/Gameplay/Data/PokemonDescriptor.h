@@ -10,7 +10,7 @@ class PokemonDescriptor
 	public:
 	PokemonDescriptor();
 	
-	bool load(ska::IniReader* data, std::string block);
+	bool load(const ska::IniReader& data, const std::string& block);
 
 	std::string getName();
 	std::string getType(unsigned int number);

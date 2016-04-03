@@ -104,36 +104,36 @@ void ska::IniReader::save(string inifilename)
 
 /* TODO template pour get */
 
-bool ska::IniReader::get(string path)
+bool ska::IniReader::get(string path) const
 {
 	return (m_content.find(path) != m_content.end());
 }
 
-string ska::IniReader::getString(string path)
+string ska::IniReader::getString(string path) const
 {
 	if(m_content.find(path) != m_content.end())
-		return m_content[path];
+		return m_content.at(path);
 	else
 		return "STRINGNOTFOUND";
 }
 
-int ska::IniReader::getInt(string path)
+int ska::IniReader::getInt(string path) const
 {
 	if(m_content.find(path) != m_content.end())
-		return atoi(m_content[path].c_str());
+		return atoi(m_content.at(path).c_str());
 	else
 		return 0;
 }
 
-bool ska::IniReader::getBoolean(string path)
+bool ska::IniReader::getBoolean(string path) const
 {
 	if(m_content.find(path) != m_content.end())
-		return (m_content[path] == "true");
+		return (m_content.at(path) == "true");
 	else
 		return false;
 }
 
-bool ska::IniReader::isLoaded()
+bool ska::IniReader::isLoaded() const
 {
 	return m_isLoaded;
 }
@@ -143,13 +143,13 @@ void ska::IniReader::clear()
 	m_content.clear();
 }
 
-float ska::IniReader::getFloat(std::string path)
+float ska::IniReader::getFloat(std::string path) const
 {
 	if(m_content.find(path) != m_content.end())
 	{		
 		stringstream ss;
 		float f;
-		ss << m_content[path];
+		ss << m_content.at(path);
 		ss >> f;
 		return f;
 	}

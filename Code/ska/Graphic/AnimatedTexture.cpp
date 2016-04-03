@@ -29,6 +29,10 @@ const ska::Rectangle ska::AnimatedTexture::getOffsetBase() const {
 	return m_anim.getOffsetBase();
 }
 
+void ska::AnimatedTexture::setRelativePosition(const Point<int>& p) {
+	m_relativePos = p;
+}
+
 void ska::AnimatedTexture::setOffset(const Point<int>& offset) {
 	Rectangle tmp = m_anim.getOffsetAndFrameSize();
 	tmp.x = offset.x;
@@ -55,7 +59,7 @@ void ska::AnimatedTexture::setDelay(const unsigned int delay) {
 
 int ska::AnimatedTexture::render(int x, int y) {
 	Rectangle tmp = m_anim.getRectOfCurrentFrame();
-	return m_sprite.render(x, y, &tmp);
+	return m_sprite.render(x + m_relativePos.x, y + m_relativePos.y, &tmp);
 }
 
 const unsigned int ska::AnimatedTexture::getWidth() const {

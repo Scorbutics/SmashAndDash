@@ -18,7 +18,7 @@ m_holder(oldScene.m_holder) {
 
 void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
 	/* Graphics */
-	for (ska::IGraphicSystem* s : m_graphics) {
+	for (auto& s : m_graphics) {
 		s->setDrawables(drawables);
 		s->refresh();
 	}
@@ -27,7 +27,7 @@ void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
 void ska::Scene::eventUpdate(bool movingDisallowed) {
 
 	/* Logics */
-	for (ska::ISystem* s : m_logics) {
+	for (auto& s : m_logics) {
 		s->refresh();
 	}
 }

@@ -24,6 +24,7 @@ namespace ska {
 		void setAlpha(int alpha);
 		void setColor(int red, int green, int blue);
 		void setOffset(const Point<int>& offset);
+		void setRelativePosition(const Point<int>& p);
 
 		const unsigned int getWidth() const;
 		const unsigned int getHeight() const;
@@ -37,6 +38,7 @@ namespace ska {
 
 	private:
 		void recalculateFrames(const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, const bool isVertical);
+		Point<int> m_relativePos;
 		Animation m_anim;
 		Texture m_sprite;
 	};

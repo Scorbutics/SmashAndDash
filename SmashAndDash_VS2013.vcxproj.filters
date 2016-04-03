@@ -264,9 +264,6 @@
     <ClInclude Include="Code\Script\Commands\CommandTranslationCamera.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Mobs\GetIDmob.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\MouseCursor.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
@@ -693,9 +690,6 @@
     <ClInclude Include="Code\ska\Graphic\GraphicComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -715,15 +709,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\System\ShadowSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\System\AbstractGraphicSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Physic\WorldCollisionComponent.h">
@@ -823,6 +808,21 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\IDialogMenu.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\DialogComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\System\GraphicSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\System\AbstractGraphicSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\System\ShadowSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -979,9 +979,6 @@
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandTranslationCamera.cpp">
       <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\Mobs\GetIDmob.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
@@ -1244,9 +1241,6 @@
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1254,15 +1248,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\System\ShadowSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\System\AbstractGraphicSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\System\GraphicSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Script\System\ScriptAutoSystem.cpp">
@@ -1314,6 +1299,18 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MessageDialogBox.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\System\GraphicSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\System\AbstractGraphicSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\System\ShadowSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

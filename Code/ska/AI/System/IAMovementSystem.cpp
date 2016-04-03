@@ -28,6 +28,8 @@ void ska::IAMovementSystem::refresh() {
 					iamc.direction = -1;
 				}
 				break;
+			default:
+				break;
 			}
 
 			iamc.lastTimeStarted = TimeUtils::getTicks();

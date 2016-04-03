@@ -7,7 +7,14 @@ namespace ska {
 	class PositionnedGraphicDrawable : public Drawable {
 	
 	public:
-		PositionnedGraphicDrawable(AnimatedTexture& gc, int posx, int posy, int priority, int priority2D) : m_graphic(gc), m_priority(priority), m_priority2D(priority2D) { m_positionx = posx; m_positiony = posy; }
+		PositionnedGraphicDrawable(AnimatedTexture& gc, int posx, int posy, int priority, int priority2D) : 
+			m_graphic(gc), 
+			m_priority(priority), 
+			m_priority2D(priority2D)  { 
+			m_positionx = posx; 
+			m_positiony = posy; 
+		}
+
 		virtual void display() override {
 			m_graphic.render(m_positionx, m_positiony);
 		}

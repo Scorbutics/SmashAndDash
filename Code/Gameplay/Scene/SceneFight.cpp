@@ -1,11 +1,16 @@
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
 #include "../CustomEntityManager.h"
+#include "../Fight/FightComponent.h"
+#include "../Data/PokemonDescriptor.h"
 
-SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos) :
+SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap(sh, ril),
 m_worldScene(ws),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos) {
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
+m_id(fc.id),
+m_level(fc.level),
+m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini"){
 	m_logics.push_back(&m_cameraSystem);
 }
 
@@ -31,6 +36,23 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 void SceneFight::load() {
 	m_worldScene.linkCamera(&m_cameraSystem);
 	m_worldScene.load();
+
+	//TODO stats
+	/*m_stats = unique_ptr<Statistics>(new Statistics(&data, "BaseStats"));
+	m_stats->nextLevel();
+	m_stats->nextLevel();
+
+	refreshStats(true);*/
+	std::vector<std::string> skills;
+	for (unsigned int i = 0; m_opponent.get("Skills " + ska::StringUtils::intToStr(i)); i++) {
+		if (m_opponent.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
+			skills.push_back(m_opponent.getString("Skills " + ska::StringUtils::intToStr(i)));
+		}
+	}
+
+	m_descriptor.load(m_opponent, "Description");
+	m_descriptor.getName()
+
 }
 
 void SceneFight::unload() {

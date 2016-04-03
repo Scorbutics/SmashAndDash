@@ -28,6 +28,10 @@ void MessageDialogBox::refresh() {
 	m_dialog.refresh();
 }
 
+int MessageDialogBox::getPriority() const {
+	return GUI_DEFAULT_DISPLAY_PRIORITY;
+}
+
 bool MessageDialogBox::isVisible() const {
 	return m_dialog.isVisible() || m_talker.isVisible();
 }

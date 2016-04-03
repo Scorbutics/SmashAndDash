@@ -2,21 +2,27 @@
 #include <memory>
 #include "AbstractSceneMap.h"
 #include "../../ska/Graphic/System/CameraFixedSystem.h"
+#include "../../ska/Inputs/Readers/IniReader.h"
 
 class WorldScene;
+class FightComponent;
 
 class SceneFight :
 	public AbstractSceneMap
 {
 public:
-	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos);
+	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
 	virtual void load() override;
 	virtual void unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();
 private:
+	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
+	const int m_id;
+	const unsigned int m_level;
+	const ska::IniReader m_opponent;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

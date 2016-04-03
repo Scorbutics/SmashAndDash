@@ -275,7 +275,7 @@ void Character::loadData()
 {
 	ska::IniReader data("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini");
 
-	m_descriptor.load(&data, "Description");
+	m_descriptor.load(data, "Description");
 	m_stats = unique_ptr<Statistics>(new Statistics(&data, "BaseStats"));
 	m_stats->nextLevel();
 	m_stats->nextLevel();

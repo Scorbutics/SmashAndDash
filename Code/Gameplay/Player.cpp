@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "../Gameplay\WGameCore.h"
 #include "../Utils\ChargementImages.h"
-#include "Mobs\GetIDmob.h"
 #include "../ska/World\LayerE.h"
 #include "../ska/Utils\StringUtils.h"
 #include "../Utils/IDs.h"
@@ -165,11 +164,11 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 			/*wScreen.getGUI().getDialog()->hide(true);
 			wScreen.getGUI().getImgDialog()->hide(true);*/
 
-			ska::Rectangle buf;
-			buf = GetIDmob(); //Fonction qui renvoie l'ID du mob à la position du héro et entite[ID] respectivement dans buf.x et buf.y
+			//ska::Rectangle buf;
+			//buf = GetIDmob(); //Fonction qui renvoie l'ID du mob à la position du héro et entite[ID] respectivement dans buf.x et buf.y
 			
 
-			if (buf.y != -ENTITEMAX)
+			//if (buf.y != -ENTITEMAX)
 			{
 				/*int id = wScreen.getEntityFactory().getNPC(buf.x, buf.y)->getID();
 				if (id >= 0){
@@ -184,10 +183,10 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 				for (i = 1; i < w.getLayerEvent()->getNbrLignes(); i++)
 				{
 
-					if (w.getLayerEvent()->getID(i) == buf.x)
-						j++;
+					//if (w.getLayerEvent()->getID(i) == buf.x)
+					//	j++;
 
-					if (j - 1 == buf.y)
+					//if (j - 1 == buf.y)
 						break;
 
 				}

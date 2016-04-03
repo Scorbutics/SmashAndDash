@@ -22,6 +22,7 @@ public:
 	DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
 	DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1);
 	DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout = -1);
+	DialogMenu(const DialogMenu& dm);
 	~DialogMenu();
     void resize(int w, int h);
     void modifyText(std::string text);
@@ -57,6 +58,9 @@ public:
 	void refresh() override;
 	void display() override;
 	bool isVisible() const override;
+	int getPriority() const override;
+
+	void operator=(const DialogMenu& dm);
 
 protected:
     ska::Texture m_menuTiles;
@@ -74,7 +78,7 @@ protected:
 	unsigned int m_fontSize, m_size, m_ligne, m_sensScroll;
     
 	/* Define a timeout to the displayed window (after that, it auto hides) */
-	const int m_timeout;
+	int m_timeout;
 	unsigned int m_t0;
 
 

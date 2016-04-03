@@ -128,6 +128,7 @@
     <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneHolderCore.h" />
+    <ClInclude Include="Code\Graphic\DialogComponent.h" />
     <ClInclude Include="Code\Graphic\GUI\IDialogMenu.h" />
     <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
@@ -150,9 +151,9 @@
     <ClInclude Include="Code\ska\Graphic\System\CameraSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DeleterSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h" />
-    <ClInclude Include="Code\ska\Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Code\Graphic\System\GraphicSystem.h" />
     <ClInclude Include="Code\ska\ECS\IGraphicSystem.h" />
-    <ClInclude Include="Code\ska\Graphic\System\ShadowSystem.h" />
+    <ClInclude Include="Code\Graphic\System\ShadowSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollisionComponent.h" />
     <ClInclude Include="Code\ska\Physic\GravityAffectedComponent.h" />
     <ClInclude Include="Code\ska\Physic\HitboxComponent.h" />
@@ -272,7 +273,6 @@
     <ClInclude Include="Code\ska\Graphic\Font.h" />
     <ClInclude Include="Code\ska\Physic\Force.h" />
     <ClInclude Include="Code\Graphic\GestionAnimations.h" />
-    <ClInclude Include="Code\Gameplay\Mobs\GetIDmob.h" />
     <ClInclude Include="Code\ska\Physic\GravityParticle.h" />
     <ClInclude Include="Code\Graphic\GUI\GUI.h" />
     <ClInclude Include="Code\Utils\IDs.h" />
@@ -351,7 +351,7 @@
     <ClInclude Include="Code\ska\Utils\FileUtils.h" />
     <ClInclude Include="Code\ska\Core\GameCore.h" />
     <ClInclude Include="Code\ska\Physic\PositionComponent.h" />
-    <ClInclude Include="Code\ska\Graphic\System\AbstractGraphicSystem.h" />
+    <ClInclude Include="Code\Graphic\System\AbstractGraphicSystem.h" />
     <ClInclude Include="Code\ska\ECS\EntityManager.h" />
     <ClInclude Include="Code\ska\ECS\ComponentHandler.h" />
     <ClInclude Include="Code\ska\Physic\System\MovementSystem.h" />
@@ -378,8 +378,8 @@
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DeleterSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp" />
-    <ClCompile Include="Code\ska\Graphic\System\GraphicSystem.cpp" />
-    <ClCompile Include="Code\ska\Graphic\System\ShadowSystem.cpp" />
+    <ClCompile Include="Code\Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Code\Graphic\System\ShadowSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\ForceSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp" />
@@ -450,7 +450,6 @@
     <ClCompile Include="Code\ska\Graphic\Font.cpp" />
     <ClCompile Include="Code\ska\Physic\Force.cpp" />
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp" />
-    <ClCompile Include="Code\Gameplay\Mobs\GetIDmob.cpp" />
     <ClCompile Include="Code\ska\Physic\GravityParticle.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Image_Area.cpp" />
@@ -518,7 +517,7 @@
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
-    <ClCompile Include="Code\ska\Graphic\System\AbstractGraphicSystem.cpp" />
+    <ClCompile Include="Code\Graphic\System\AbstractGraphicSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\CollisionSystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp" />

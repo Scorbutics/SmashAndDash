@@ -72,6 +72,14 @@ DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource
 
 }
 
+DialogMenu::DialogMenu(const DialogMenu& dm) {
+	operator=(dm);
+}
+
+int DialogMenu::getPriority() const {
+	return GUI_DEFAULT_DISPLAY_PRIORITY;
+}
+
 void DialogMenu::display() {
 	
 	ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
@@ -183,6 +191,31 @@ void DialogMenu::display() {
 
 }
 
+void DialogMenu::operator=(const DialogMenu& dm) {
+	/* Do not copy Window Areas */
+	m_actionClic = dm.m_actionClic;
+	m_alpha = dm.m_alpha;
+	m_color = dm.m_color;
+	m_fontSize = dm.m_fontSize;
+	m_image = dm.m_image;
+	m_isScrolling = dm.m_isScrolling;
+	m_ligne = dm.m_ligne;
+	m_menuTiles = dm.m_menuTiles;
+	m_moving = dm.m_moving;
+	m_rect = dm.m_rect;
+	m_rectImage = dm.m_rectImage;
+	m_scroll = dm.m_scroll;
+	m_scrollingRect = dm.m_scrollingRect;
+	m_scrollTextLengthPerLine = dm.m_scrollTextLengthPerLine;
+	m_sensScroll = dm.m_sensScroll;
+	m_show = dm.m_show;
+	m_size = dm.m_size;
+	m_t0 = dm.m_t0;
+	m_text = dm.m_text;
+	m_textImage = dm.m_textImage;
+	m_timeout = dm.m_timeout;
+}
+
 void DialogMenu::refresh() {
 	if (isVisible(true)) {
 		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= m_timeout) {
@@ -285,7 +318,7 @@ bool DialogMenu::isVisible() const {
 void DialogMenu::hide(bool hide) {    
 	if (!m_scroll) {
 		m_show = !hide;
-		std::fill(m_scrollTextLengthPerLine.begin(), m_scrollTextLengthPerLine.end(), 0);
+		std::fill(m_scrollTextLengthPerLine.begin(), m_scrollTextLengthPerLine.end(), 0.0F);
 	} else {
 		m_isScrolling = m_sensScroll != (hide ? F_OUT : F_IN);
 	}

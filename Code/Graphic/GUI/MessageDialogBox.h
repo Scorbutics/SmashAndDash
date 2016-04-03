@@ -11,6 +11,7 @@ public:
 	void display() override;
 	void hide(bool x) override;
 	bool isVisible() const override;
+	int getPriority() const override;
 
 	static bool instanceExists();
 

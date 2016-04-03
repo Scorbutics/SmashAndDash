@@ -30,6 +30,8 @@ void MovableWindow::refresh()
 		m_rect.x += mouseClickPos.x - m_mouseLastPos.x;
 		m_rect.y += mouseClickPos.y - m_mouseLastPos.y;
     }
+	
+	m_scrollingRect = m_rect;
 
 	m_mouseLastPos = mouseClickPos;
     DialogMenu::refresh();

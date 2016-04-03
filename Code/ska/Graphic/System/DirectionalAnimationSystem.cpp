@@ -10,16 +10,21 @@ void ska::DirectionalAnimationSystem::refresh() {
 		DirectionalAnimationComponent& dac = m_entityManager.getComponent<DirectionalAnimationComponent>(entityId);
 		MovementComponent& mov = m_entityManager.getComponent<MovementComponent>(entityId);
 
+		if (gc.sprite.empty()) {
+			break;
+		}
+
 		//ska::Rectangle base de l'animation
-		Rectangle spritePos = gc.sprite.getOffsetBase();
-		const int spriteHeight = gc.sprite.getHeight();
+		ska::AnimatedTexture& texture = gc.sprite[0];
+		Rectangle spritePos = texture.getOffsetBase();
+		const int spriteHeight = texture.getHeight();
 		
 
 		if (((int)mov.vx) == 0 && ((int)mov.vy) == 0) {
-			gc.sprite.stop(true);
-			gc.sprite.reset();
+			texture.stop(true);
+			texture.reset();
 		} else {
-			gc.sprite.stop(false);
+			texture.stop(false);
 		}
 
 		const int xMove = (int)(mov.vx + mov.ax + 0.5);
@@ -58,7 +63,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 			break;
 		}
 
-		gc.sprite.setOffset(spritePos);
+		texture.setOffset(spritePos);
 	}
 }
 

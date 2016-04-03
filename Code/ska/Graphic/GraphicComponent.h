@@ -5,7 +5,7 @@
 namespace ska {
 	class GraphicComponent : public ska::Component {
 	public:
-		ska::AnimatedTexture sprite;
+		std::vector<ska::AnimatedTexture> sprite;
 		void operator=(const GraphicComponent& gc) {
 			sprite = gc.sprite;
 		}

@@ -69,16 +69,15 @@ std::string PokemonDescriptor::getClass()
 	return m_class;
 }
 
-bool PokemonDescriptor::load(ska::IniReader* data, std::string block)
+bool PokemonDescriptor::load(const ska::IniReader& data, const std::string& block)
 {
-	if(data != NULL && data->isLoaded())
-	{
-		m_name = data->getString(block + " name");
-		m_type1 = data->getString(block + " type1");
-		m_type2 = data->getString(block + " type2");
-		m_class = data->getString(block + " class");
-		m_description = data->getString(block + " pokedex");
-		m_captureRate = (char) data->getInt(block + " capture_rate");
+	if(data.isLoaded()) {
+		m_name = data.getString(block + " name");
+		m_type1 = data.getString(block + " type1");
+		m_type2 = data.getString(block + " type2");
+		m_class = data.getString(block + " class");
+		m_description = data.getString(block + " pokedex");
+		m_captureRate = (char) data.getInt(block + " capture_rate");
 
 		return true;
 	}

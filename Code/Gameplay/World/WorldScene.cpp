@@ -141,11 +141,18 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				ska::EntityId mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
 				ska::IAMovementComponent iamc;
 				iamc.delay = 500;
-				/* Random */
-				iamc.type = 1;
+				/* 0 = Predifined */
+				/* 1 = Random */
+				/* 2 = Fixe */
+				iamc.type = dataSpawn->getInt("Data path_type");
+				if (iamc.type != 2) {
+					m_entityManager.addComponent<ska::IAMovementComponent>(mob, iamc);
+				}
 
-				m_entityManager.addComponent<ska::IAMovementComponent>(mob, iamc);
-				m_entityManager.addComponent<FightComponent>(mob, FightComponent());
+				FightComponent fc;
+				fc.level = level;
+				fc.id = idMob;
+				m_entityManager.addComponent<FightComponent>(mob, fc);
 				successfulSpawns++;
 			}
 		}
