@@ -22,6 +22,7 @@
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
 #include "Inventory\Inventory.h"
+#include "../ska/Task/TaskQueue.h"
 
 class LayerE;
 class Layer;
@@ -52,21 +53,20 @@ public:
 	void initNewWorld();
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
+	void addTaskToQueue(ska::TaskPtr& t);
 
 	float getSpeedInertie();
 	ska::Animation& getChipsetAnimation();
 
 	GUI& getGUI();
-	//Fight& getFight();
+	
 	Pokeball& getPokeball();
 	AI& getAI();
 	Inventory& getInventory();
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
-	//ska::SpriteAnimationManager& getSpriteAnimationManager();
-    MouseCursor& getMouseCursor();
+	MouseCursor& getMouseCursor();
 	TrainerCard& getTrainerCard();
-	//ShakerManager& getShakerManager();
 	ska::World& getWorld();
 	WorldScene& getWorldScene();
 	
@@ -74,50 +74,37 @@ public:
 	const ska::InputRangeContainer& getRanges() const;
 	const ska::InputToggleContainer& getToggles() const;
 
-	//ska::ParticleManager& getParticleManager();
-	//RainParticleManager& getRainParticleManager();
-
-    void setOffsetChipset(int x, int y, int w, int h);
+	void setOffsetChipset(int x, int y, int w, int h);
     void setSpeedInertie(float x);
     void setChipset(SDL_Surface* chipset);
 	
 	ska::ScenePtr& getScene();
 	void nextScene(std::unique_ptr<ska::Scene>& scene);
 
-    protected:
+protected:
+	ska::RawInputListener m_rawInputListener;
+	ska::InputContextManager m_inputCManager;
 		
+	CustomEntityManager m_entityManager;
+		
+	SceneHolderCore m_sceneHolder;
 
-		ska::RawInputListener m_rawInputListener;
-		ska::InputContextManager m_inputCManager;
-		
-		CustomEntityManager m_entityManager;
-		
-		SceneHolderCore m_sceneHolder;
+	ska::Rectangle m_OfChip;
+	bool m_ecritureLog;
 
-		ska::Rectangle m_OfChip;
-		bool m_ecritureLog;
+	float m_speedInertie;
+	ska::Animation m_chipsetAni;
+	AI m_ai;
+	Pokeball m_pokeball;
+	PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
+	TrainerCard m_trainerCard;
+	MouseCursor m_mouseCursor;
+	GUI m_gui;
+	Settings m_settings;
+	Inventory m_inv;
+	WorldScene m_worldScene;
 
-		float m_speedInertie;
-		ska::Animation m_chipsetAni;
-		AI m_ai;
-		//vector<DialogMenuPtr> m_guiList;
-		Pokeball m_pokeball;
-		PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
-		TrainerCard m_trainerCard;
-		//ShakerManager m_shaker;
-		//ska::SpriteAnimationManager m_spriteAnimManager;
-		//bool m_scrolling;		
-		//Fight m_fight;
-		MouseCursor m_mouseCursor;
-		GUI m_gui;
-		
-		Settings m_settings;
-		Inventory m_inv;
-		WorldScene m_worldScene;
-
-		/*ska::ParticleManager m_particleManager;
-		RainParticleManager m_rainParticleManager;*/
-		
+	ska::TaskQueue m_taskQueue;
 
 
 };

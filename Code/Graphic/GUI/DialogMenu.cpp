@@ -162,28 +162,33 @@ void DialogMenu::display() {
 	}
 	
 	/* Handles scrolling */
-    if(m_sensScroll == F_IN) {
-		//Scroll in
-		if (m_scrollingRect.y - SCROLL_SPEED*TAILLEBLOCFENETRE / 2 >= m_rect.y && m_scroll) {
-			m_scrollingRect.y -= SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
-        } else {
-			m_scrollingRect.y = m_rect.y;
-			hide(false);
-			m_show = true;
-			m_isScrolling = false;
-		}
-    } else {
-		//Scroll out
-		if (m_scroll && (m_scrollingRect.y + SCROLL_SPEED * TAILLEBLOCFENETRE / 2) <= m_rect.y + m_rect.h )  {
-			m_scrollingRect.y += SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
-		} else {
-			m_scrollingRect.y = m_rect.y + m_rect.h;
-			hide(true);
-			m_show = false;
-			m_isScrolling = false;
-        }
+	if (m_scroll) {
+		if (m_sensScroll == F_IN) {
+			//Scroll in
+			if (m_scrollingRect.y - SCROLL_SPEED*TAILLEBLOCFENETRE / 2 >= m_rect.y) {
+				m_scrollingRect.y -= SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
+			}
+			else {
+				m_scrollingRect.y = m_rect.y;
 
-    }
+				m_show = true;
+				m_isScrolling = false;
+			}
+		}
+		else {
+			//Scroll out
+			if ((m_scrollingRect.y + SCROLL_SPEED * TAILLEBLOCFENETRE / 2) <= m_rect.y + m_rect.h)  {
+				m_scrollingRect.y += SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
+			}
+			else {
+				m_scrollingRect.y = m_rect.y + m_rect.h;
+				//hide(true);
+				m_show = false;
+				m_isScrolling = false;
+			}
+
+		}
+	}
 
 	for (unsigned int i = 0; i < m_areaList.size(); i++){
 		m_areaList[i]->display();
@@ -308,19 +313,20 @@ void DialogMenu::resize(int w, int h) {
 }
 
 bool DialogMenu::isVisible(bool noScrolling) const {
-	return m_show || !noScrolling && m_isScrolling;
+	return m_show || m_scroll && (!noScrolling && m_isScrolling);
 }
 
 bool DialogMenu::isVisible() const {
 	return isVisible(false);
 }
 
-void DialogMenu::hide(bool hide) {    
+void DialogMenu::hide(bool hide) {   
+
 	if (!m_scroll) {
 		m_show = !hide;
 		std::fill(m_scrollTextLengthPerLine.begin(), m_scrollTextLengthPerLine.end(), 0.0F);
 	} else {
-		m_isScrolling = m_sensScroll != (hide ? F_OUT : F_IN);
+		m_isScrolling = true;
 	}
 
 	m_sensScroll = hide ? F_OUT : F_IN;

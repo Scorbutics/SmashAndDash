@@ -1,8 +1,12 @@
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
+#include "../../ska/Task/Task.h"
+#include "../WGameCore.h"
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
+#include "../../Graphic/DialogComponent.h"
+#include "../../Utils/IDs.h"
 
 SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap(sh, ril),
@@ -10,7 +14,8 @@ m_worldScene(ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_id(fc.id),
 m_level(fc.level),
-m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini"){
+m_player(fc.fighter),
+m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini") {
 	m_logics.push_back(&m_cameraSystem);
 }
 
@@ -51,8 +56,41 @@ void SceneFight::load() {
 	}
 
 	m_descriptor.load(m_opponent, "Description");
-	m_descriptor.getName()
+	
+	
+	int delay = 30000;
 
+	int dialogId = 0;
+
+	WGameCore& wScreen = WGameCore::getInstance();
+	wScreen.addTaskToQueue(ska::TaskPtr(new ska::Task([&, delay] { 
+		static bool started = false;
+		if (!started) {
+			started = true;
+
+			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_player)) {
+				return false;
+			}
+
+			m_ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_player);
+			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_player);
+			
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
+			const ska::Rectangle* display = m_cameraSystem.getDisplay();
+			dialogId = wScreen.getGUI().addDialog(IDialogMenuPtr(new DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { pc.x - (display == NULL ? 0 : display->x), pc.y - (display == NULL ? 0 : display->y) - TAILLEBLOC * 3, TAILLEBLOC * 6, TAILLEBLOC * 2 }, delay)));
+			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_player, dc);
+			return true;
+		}
+		/* Continue until dialog is still visible */
+		//DialogComponent& dc = m_worldScene.getEntityManager().getComponent<DialogComponent>(m_id);
+		
+		return wScreen.getGUI().existDialog(dialogId);
+	})));
+
+	wScreen.addTaskToQueue(ska::TaskPtr(new ska::Task([&] {
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_player, m_ic);
+		return false;
+	})));
 }
 
 void SceneFight::unload() {

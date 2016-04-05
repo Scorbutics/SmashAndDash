@@ -38,7 +38,8 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 	virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
     void dialogRefresh();
-	void addDialog(IDialogMenuPtr& d);
+	int addDialog(IDialogMenuPtr& d);
+	bool existDialog(const unsigned int index);
     void refresh();
 	int isPositionOnButton(const ska::Point<float>& pos);
     bool isMouseOnAWindow();

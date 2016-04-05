@@ -3,6 +3,8 @@
 #include "AbstractSceneMap.h"
 #include "../../ska/Graphic/System/CameraFixedSystem.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
+#include "../Data/PokemonDescriptor.h"
+#include "../../ska/Inputs/InputComponent.h"
 
 class WorldScene;
 class FightComponent;
@@ -24,5 +26,8 @@ private:
 	const int m_id;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;
+	const ska::EntityId m_player;
+	/* A save of the player's input component */
+	ska::InputComponent m_ic;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

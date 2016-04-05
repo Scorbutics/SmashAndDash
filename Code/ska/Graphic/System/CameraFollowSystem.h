@@ -1,6 +1,6 @@
 #pragma once
 #include "CameraSystem.h"
-#include "../Point.h"
+#include "../Rectangle.h"
 
 namespace ska {
 	class CameraFollowSystem : public CameraSystem {
@@ -10,6 +10,6 @@ namespace ska {
 
 		virtual void refresh() override;
 	private:
-		Point<int> m_follow;
+		Rectangle m_follow;
 	};
 }

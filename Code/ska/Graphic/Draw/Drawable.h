@@ -4,6 +4,8 @@ namespace ska {
 	class Drawable {
 	public:
 		Drawable() { }
+		virtual ~Drawable() {}
+
 		virtual void display() = 0;
 
 		static bool staticOperatorInf(Drawable* a, Drawable* b) { return *a < *b; }
@@ -13,8 +15,7 @@ namespace ska {
 			int p2 = id.getPriority();
 			return p1 < p2;
 		}
-		virtual ~Drawable() {}
-
+		
 		virtual int getPriority2D() const {
 			return getPriority();
 		}

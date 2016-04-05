@@ -16,14 +16,14 @@ namespace ska {
 		void screenResized(const unsigned int screenW, const unsigned int screenH);
 		void worldResized(const unsigned int worldW, const unsigned int worldH);
 
-		const Rectangle* getDisplay() const;
+		virtual const Rectangle* getDisplay() const;
 		virtual ~CameraSystem();
 
 	protected:
-		void focusOn(Point<int>& pos, EntityId* optionalEntityId);
+		void focusOn(Rectangle& pos, EntityId* optionalEntityId);
 
 		unsigned int m_worldW, m_worldH;
-		Point<int>* m_pos;
+		Rectangle* m_pos;
 		Rectangle m_cameraRect;
 	};
 }

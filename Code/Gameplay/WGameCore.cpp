@@ -42,12 +42,10 @@ m_chipsetAni(3, 4, true) {
 	//m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 }
 
-void WGameCore::resize(unsigned int w, unsigned int h)
-{
+void WGameCore::resize(unsigned int w, unsigned int h) {
 	//SDL_RenderSetLogicalSize(m_renderer, w, h);
 	m_laFenetre = w;
 	m_loFenetre = h;
-	//m_worldScene.getWorld().
 }
 
 WorldScene& WGameCore::getWorldScene() {
@@ -80,12 +78,6 @@ void WGameCore::setOffsetChipset(int x, int y, int w, int h)
     m_OfChip.w = w;
     m_OfChip.h = h;
 }
-
-
-/*ShakerManager& WGameCore::getShakerManager()
-{
-    return m_shaker;
-}*/
 
 float WGameCore::getSpeedInertie()
 {
@@ -143,9 +135,9 @@ PokemonManager& WGameCore::getPokemonManager()
     return m_pkmnManager;
 }
 
-/*ska::ParticleManager& WGameCore::getParticleManager() {
-    return m_particleManager;
-}*/
+void WGameCore::addTaskToQueue(ska::TaskPtr& t) {
+	m_taskQueue.queueTask(t);
+}
 
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 	m_sceneHolder.nextScene(scene);
@@ -195,25 +187,13 @@ void WGameCore::graphicUpdate(void) {
 	drawables.draw();
 }
 
-/*RainParticleManager& WGameCore::getRainParticleManager() {
-	return m_rainParticleManager;
-}*/
-
-/*bool WGameCore::isScrollingActive()
-{
-	return (!m_fight.isFighting() && m_scrolling);
-}*/
-
-/*void WGameCore::activeScrolling(bool b)
-{
-	m_scrolling = b;
-}*/
-
 void WGameCore::eventUpdate(bool movingDisallowed) {
 	try {
+		/* Scene dependent event update */
 		m_sceneHolder.getScene()->eventUpdate(movingDisallowed);
-	}
-	catch (ska::SceneDiedException sde) {
+		/* If exists, an helper that executes current running task once */
+		m_taskQueue.refresh();
+	} catch (ska::SceneDiedException sde) {
 	}
 }
 
@@ -226,7 +206,7 @@ void WGameCore::initNewWorld() {
 void WGameCore::waitQuit(DialogMenu* window)
 {
     int t = 0, t0 = 0; //t et t0 sont les temps pour la gestion de la durée (SDL_PollEvent).
-    while(window->isVisible())
+/*    while(window->isVisible())
     {
         t = SDL_GetTicks();
         if (t - t0 > 30) // Si 30 ms se sont écoulées
@@ -243,7 +223,7 @@ void WGameCore::waitQuit(DialogMenu* window)
         }
         else // Si ça fait moins de 30ms depuis le dernier tour de boucle, on endort le programme le temps qu'il faut
             SDL_Delay(30 - (t - t0));
-    }
+    }*/
 }
 
 AI& WGameCore::getAI()
@@ -255,11 +235,6 @@ Inventory& WGameCore::getInventory()
 {
     return m_inv;
 }
-
-/*ska::SpriteAnimationManager& WGameCore::getSpriteAnimationManager()
-{
-	return m_spriteAnimManager;
-}*/
 
 Settings& WGameCore::getSettings()
 {
@@ -276,12 +251,6 @@ ska::World& WGameCore::getWorld()
 	return m_worldScene.getWorld();
 }
 
-
-/*Fight& WGameCore::getFight()
-{
-    return m_fight;
-}*/
-
 const ska::InputActionContainer& WGameCore::getActions() const {
 	return m_inputCManager.getActions();
 }
@@ -294,11 +263,7 @@ const ska::InputToggleContainer& WGameCore::getToggles() const {
 	return m_inputCManager.getToggles();
 }
 
-WGameCore::~WGameCore()
-{
-	/*for (unsigned int i = 0; i < m_guiList.size(); i++) {
-		delete m_guiList[i];
-	}*/
+WGameCore::~WGameCore() {
 }
 
 

@@ -364,6 +364,8 @@
     <ClInclude Include="Code\Gameplay\CustomEntityManager.h" />
     <ClInclude Include="Code\Gameplay\World\WorldScene.h" />
     <ClInclude Include="Code\Graphic\GUI\MessageDialogBox.h" />
+    <ClInclude Include="Code\ska\Task\Task.h" />
+    <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
@@ -528,6 +530,7 @@
     <ClCompile Include="Code\Gameplay\CustomEntityManager.cpp" />
     <ClCompile Include="Code\Gameplay\World\WorldScene.cpp" />
     <ClCompile Include="Code\Graphic\GUI\MessageDialogBox.cpp" />
+    <ClCompile Include="Code\ska\Task\TaskQueue.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,8 @@ ska::CameraFollowSystem::CameraFollowSystem(EntityManager& entityManager, const 
 
 void ska::CameraFollowSystem::refresh() {
 	for (ska::EntityId entityId : m_processed) {
-		m_follow = m_entityManager.getComponent<PositionComponent>(entityId);
+		PositionComponent& pc = m_entityManager.getComponent<PositionComponent>(entityId);
+		m_follow = { pc.x, pc.y, 0, 0 };
 		m_pos = &m_follow;
 		focusOn(m_follow, &entityId);
 		break;

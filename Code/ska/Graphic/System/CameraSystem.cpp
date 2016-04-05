@@ -18,7 +18,7 @@ void ska::CameraSystem::screenResized(const unsigned int screenW, const unsigned
 	m_cameraRect.h = screenH;
 }
 
-void ska::CameraSystem::focusOn(Point<int>& pos, EntityId* entityId) {
+void ska::CameraSystem::focusOn(Rectangle& pos, EntityId* entityId) {
 	m_cameraRect.x = pos.x - m_cameraRect.w / 2;
 	m_cameraRect.y = pos.y - m_cameraRect.h / 2;
 

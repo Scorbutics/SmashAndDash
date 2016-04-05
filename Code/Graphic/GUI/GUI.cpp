@@ -279,8 +279,10 @@ void GUI::refresh()
 
 }
 
-void GUI::addDialog(IDialogMenuPtr& d) {
-	m_extraWindows.push_back(std::move(d));
+int GUI::addDialog(IDialogMenuPtr& d) {
+	d->hide(false);
+	m_extraWindows.emplace_back(std::move(d));
+	return (int)(m_extraWindows.size() - 1);
 }
 
 ToolBarPtr& GUI::getToolbar() {
@@ -362,6 +364,10 @@ void GUI::setClickMenu()
 
 }
 
+
+bool GUI::existDialog(const unsigned int index) {
+	return index < m_extraWindows.size() && m_extraWindows[index] != nullptr;
+}
 
 //Reset des informations de notre pokémon (à chaque refresh)
 void GUI::resetAttackPokemonWindow(Character* pokemon)
