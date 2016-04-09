@@ -135,7 +135,7 @@ PokemonManager& WGameCore::getPokemonManager()
     return m_pkmnManager;
 }
 
-void WGameCore::addTaskToQueue(ska::TaskPtr& t) {
+void WGameCore::addTaskToQueue(ska::RunnablePtr& t) {
 	m_taskQueue.queueTask(t);
 }
 

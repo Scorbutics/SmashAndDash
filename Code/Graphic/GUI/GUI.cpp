@@ -365,7 +365,7 @@ void GUI::setClickMenu()
 }
 
 
-bool GUI::existDialog(const unsigned int index) {
+bool GUI::existDialog(const unsigned int index) const {
 	return index < m_extraWindows.size() && m_extraWindows[index] != nullptr;
 }
 

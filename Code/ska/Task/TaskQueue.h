@@ -2,9 +2,10 @@
 #include <queue>
 #include <memory>
 
+
 namespace ska {
-	class Task;
-	typedef std::unique_ptr<Task> TaskPtr;
+	class Runnable;
+	typedef std::unique_ptr<Runnable> RunnablePtr;
 
 	class TaskQueue
 	{
@@ -12,10 +13,11 @@ namespace ska {
 		TaskQueue();
 		~TaskQueue();
 
-		void queueTask(TaskPtr& t);
+		void queueTask(RunnablePtr& t);
 		void refresh();
 	private:
-		std::queue<TaskPtr> m_tasks;
-		TaskPtr m_current;
+		std::queue<RunnablePtr> m_tasks;
+		RunnablePtr m_previous;
+		RunnablePtr m_current;
 	};
 }

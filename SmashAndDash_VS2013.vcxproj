@@ -208,6 +208,8 @@
     <ClInclude Include="Code\ska\Script\ScriptTriggerType.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptBasicCommandsSystem.h" />
     <ClInclude Include="Code\ska\Script\System\ScriptRefreshSystem.h" />
+    <ClInclude Include="Code\ska\Task\RepeatableTask.h" />
+    <ClInclude Include="Code\ska\Task\Runnable.h" />
     <ClInclude Include="Code\ska\World\Block.h" />
     <ClInclude Include="Code\Graphic\GUI\Button.h" />
     <ClInclude Include="Code\Graphic\GUI\Button_Bar.h" />
@@ -275,6 +277,7 @@
     <ClInclude Include="Code\Graphic\GestionAnimations.h" />
     <ClInclude Include="Code\ska\Physic\GravityParticle.h" />
     <ClInclude Include="Code\Graphic\GUI\GUI.h" />
+    <ClInclude Include="Code\Utils\Identity.h" />
     <ClInclude Include="Code\Utils\IDs.h" />
     <ClInclude Include="Code\Graphic\GUI\Image_Area.h" />
     <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h" />

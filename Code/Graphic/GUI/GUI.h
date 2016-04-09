@@ -39,7 +39,7 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
 
     void dialogRefresh();
 	int addDialog(IDialogMenuPtr& d);
-	bool existDialog(const unsigned int index);
+	bool existDialog(const unsigned int index) const;
     void refresh();
 	int isPositionOnButton(const ska::Point<float>& pos);
     bool isMouseOnAWindow();

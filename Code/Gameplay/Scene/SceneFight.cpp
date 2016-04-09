@@ -1,6 +1,6 @@
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
-#include "../../ska/Task/Task.h"
+#include "../../ska/Task/RepeatableTask.h"
 #include "../WGameCore.h"
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
@@ -58,13 +58,14 @@ void SceneFight::load() {
 	m_descriptor.load(m_opponent, "Description");
 	
 	
-	int delay = 30000;
-
-	int dialogId = 0;
+	int delay = 4000;
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.addTaskToQueue(ska::TaskPtr(new ska::Task([&, delay] { 
+
+	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
+	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
 		static bool started = false;
+		static int dialogId = 0;
 		if (!started) {
 			started = true;
 
@@ -72,25 +73,29 @@ void SceneFight::load() {
 				return false;
 			}
 
-			m_ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_player);
+			ska::InputComponent ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_player);
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_player);
-			
+
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
 			const ska::Rectangle* display = m_cameraSystem.getDisplay();
 			dialogId = wScreen.getGUI().addDialog(IDialogMenuPtr(new DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { pc.x - (display == NULL ? 0 : display->x), pc.y - (display == NULL ? 0 : display->y) - TAILLEBLOC * 3, TAILLEBLOC * 6, TAILLEBLOC * 2 }, delay)));
+			t.forward(ic);
 			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_player, dc);
 			return true;
 		}
-		/* Continue until dialog is still visible */
+		// Continue until dialog is still visible
 		//DialogComponent& dc = m_worldScene.getEntityManager().getComponent<DialogComponent>(m_id);
-		
 		return wScreen.getGUI().existDialog(dialogId);
-	})));
+	}));
 
-	wScreen.addTaskToQueue(ska::TaskPtr(new ska::Task([&] {
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_player, m_ic);
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
+	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_player, ic);
 		return false;
-	})));
+	}, *dialogRawTask));
+
+	wScreen.addTaskToQueue(dialogTask);
+	wScreen.addTaskToQueue(finalTask);
 }
 
 void SceneFight::unload() {

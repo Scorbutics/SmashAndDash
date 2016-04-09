@@ -53,7 +53,7 @@ public:
 	void initNewWorld();
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
-	void addTaskToQueue(ska::TaskPtr& t);
+	void addTaskToQueue(ska::RunnablePtr& t);
 
 	float getSpeedInertie();
 	ska::Animation& getChipsetAnimation();
