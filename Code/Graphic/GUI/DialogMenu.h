@@ -20,9 +20,10 @@ class DialogMenu : public IDialogMenu
 {
 public:
 	DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
-	DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1);
-	DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout = -1);
+	DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
+	DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
 	DialogMenu(const DialogMenu& dm);
+	DialogMenu();
 	~DialogMenu();
     void resize(int w, int h);
     void modifyText(std::string text);

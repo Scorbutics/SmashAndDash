@@ -5,6 +5,7 @@
 #include "../../ska/World/Block.h"
 #include "../../ska/AI/IAMovementComponent.h"
 #include "WorldScene.h"
+#include "../WGameCore.h"
 #include "../../ska/World/LayerE.h"
 #include "../../ska/World/Layer.h"
 #include "../../Utils/IDs.h"
@@ -76,8 +77,18 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead(*m_world.getLayerMid());
 
 	ska::Scene::graphicUpdate(drawables);
+	
+	/* We use the maximum drawing priority of characters to draw the top layer */
+	m_world.getLayerTop()->setPriority(m_graphicSystem.getTopLayerPriority());
+	drawables.add(*m_world.getLayerTop());
 
-	drawables.addHead2D(*m_world.getLayerTop());
+	WGameCore& wScreen = WGameCore::getInstance();
+	wScreen.getPokeball().setPriority(m_graphicSystem.getTopLayerPriority() + 1);
+	drawables.add(wScreen.getPokeball());
+}
+
+void WorldScene::eventUpdate(bool movingDisallowed) {
+	return Scene::eventUpdate(movingDisallowed);
 }
 
 ska::World& WorldScene::getWorld() {
@@ -151,7 +162,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 				FightComponent fc;
 				fc.level = level;
-				fc.id = idMob;
+				fc.scriptId = idMob;
 				m_entityManager.addComponent<FightComponent>(mob, fc);
 				successfulSpawns++;
 			}

@@ -20,7 +20,7 @@ void ska::TaskQueue::refresh() {
 	}
 
 	if (!(*m_current)()) {
-		m_previous = m_current == nullptr ? nullptr : std::move(m_current);
+		m_previous = std::move(m_current);
 		m_current = nullptr;
 	}
 }

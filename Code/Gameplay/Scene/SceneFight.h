@@ -23,10 +23,11 @@ private:
 	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
-	const int m_id;
+	const int m_scriptId;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;
 	const ska::EntityId m_player;
+	const ska::EntityId m_opponentId;
 	/* A save of the player's input component */
 	ska::InputComponent m_ic;
 };

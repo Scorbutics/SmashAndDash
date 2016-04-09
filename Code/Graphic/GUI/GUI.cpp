@@ -25,8 +25,7 @@
 
 #define SCROLL_BUTTON_SPEED 3
 
-GUI::GUI()
-{
+GUI::GUI() {
 	WGameCore& wScreen = WGameCore::getInstance();
 
     m_refreshCount = REFRESH_PNJWINDOW_COUNT;
@@ -95,6 +94,8 @@ GUI::GUI()
     m_toolBar->hide(false);
 
     initButtons();
+
+	setPriority(INT_MAX);
 
 }
 

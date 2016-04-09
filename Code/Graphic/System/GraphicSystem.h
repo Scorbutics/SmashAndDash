@@ -9,8 +9,11 @@ class GraphicSystem : public AbstractGraphicSystem, public ska::System<std::unor
 {
 public:
 	GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager);
+	int getTopLayerPriority() const;
 	virtual ~GraphicSystem();
 	virtual void refresh() override;
+private:
+	int m_topLayerPriority;
 };
 
 

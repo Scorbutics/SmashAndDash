@@ -16,6 +16,11 @@ namespace ska{
 		static float exponential(float i);
 		static int random(int min, int max);
 		
+		template <typename T>
+		static T maximum(T a, T b) {
+			return a > b ? a : b;
+		}
+
 		static double cosinus(double angle);
 		static double sinus(double angle);
 

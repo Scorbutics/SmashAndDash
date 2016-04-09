@@ -30,7 +30,7 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	AbstractNoGUISceneMap::graphicUpdate(drawables);
 
 	//Affiche la GUI
-	drawables.addHead(gui);
+	drawables.add(gui);
 
 	//Affiche le Pokémon ou l'objet sur le curseur de la souris
 	//mouseCursor.displaySelectedPokemon();

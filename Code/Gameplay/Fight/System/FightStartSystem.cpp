@@ -47,7 +47,8 @@ void FightStartSystem::refresh() {
 				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
 					/* Start a fight */
 					FightComponent& fc = m_entityManager.getComponent<FightComponent>(entityId);
-					fc.fighter = m_player;
+					fc.fighterPlayer = m_player;
+					fc.fighterOpponent = entityId;
 					m_sceneHolder.nextScene(ska::ScenePtr(new SceneFight(m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc)));
 				}
 				m_t0 = ska::TimeUtils::getTicks();

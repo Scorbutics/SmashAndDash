@@ -6,11 +6,13 @@ class FightComponent : public ska::Component {
 public:
 	FightComponent() {
 		level = 0;
-		id = 0;
-		fighter = 0;
+		scriptId = 0;
+		fighterOpponent = 0;
+		fighterPlayer = 0;
 	}
 
 	unsigned int level;
-	int id;
-	ska::EntityId fighter;
+	int scriptId;
+	ska::EntityId fighterOpponent;
+	ska::EntityId fighterPlayer;
 };

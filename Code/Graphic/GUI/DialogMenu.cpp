@@ -64,11 +64,15 @@ m_timeout(timeout) {
 	modifyText(text);
 }
 
-DialogMenu::DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout) : DialogMenu(text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, true, timeout) {
+DialogMenu::DialogMenu() : DialogMenu("", "", { 0 }) {
 
 }
 
-DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout) : DialogMenu(text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, true, timeout) {
+DialogMenu::DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) : DialogMenu(text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+
+}
+
+DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) : DialogMenu(text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
 
 }
 

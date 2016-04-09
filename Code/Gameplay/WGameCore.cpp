@@ -25,21 +25,14 @@ m_settings("gamesettings.ini"),
 m_worldScene(m_entityManager, m_sceneHolder, m_inputCManager, m_laFenetre, m_loFenetre),
 m_chipsetAni(3, 4, true) {
 
-	m_OfChip.y = 0;
-	m_OfChip.x = 0;
-	/*m_OfChip.w = m_world.getBlockSize();
-	m_OfChip.h = m_world.getBlockSize();*/
+	m_OfChip = { 0, 0 };
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
 	/* Let's start on the map */
 	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_inputCManager, m_worldScene)));
 
 	m_speedInertie = 0;
-	m_pokeball.setSprites("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
-
-
-	//m_world.load(m_saveManager.getStartMapName(), m_saveManager.getStartChipsetName(), m_saveManager.getPathName());
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h) {
@@ -90,8 +83,8 @@ void WGameCore::setSpeedInertie(float x)
 }
 
 
-void WGameCore::transition(int type) //type : 1 = entrant, 0 = sortant
-{
+void WGameCore::transition(int type)  {
+	//type : 1 = entrant, 0 = sortant
 	ska::Texture fondu("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"fondu.png");
 	WGameCore& wScreen = WGameCore::getInstance();
     unsigned int mosaicNumberX, mosaicNumberY;
@@ -101,17 +94,13 @@ void WGameCore::transition(int type) //type : 1 = entrant, 0 = sortant
     mosaicNumberY = wScreen.getHeight()/fondu.getHeight() + 1;
 
 	ska::Rectangle buf;
-    for(unsigned int i = 0; i <= 255; i += 50)
-    {
-		
-        this->graphicUpdate();
+    for(unsigned int i = 0; i <= 255; i += 50) {
+        graphicUpdate();
         fondu.setAlpha((255-i)*type + (1-type)*i);
 
         buf.x = buf.y = 0;
-        for(unsigned int j = 0; j < mosaicNumberX; j++)
-        {
-            for(unsigned int k = 0; k < mosaicNumberY; k++)
-            {
+        for(unsigned int j = 0; j < mosaicNumberX; j++) {
+            for(unsigned int k = 0; k < mosaicNumberY; k++) {
 				fondu.render(buf.x, buf.y);
                 buf.y += fondu.getHeight();
             }
@@ -155,10 +144,8 @@ bool WGameCore::refresh() {
 	//Ici, transition entrante
     transition(1);
 
-
-
     //BOUCLE PRINCIPALE A CHAQUE FRAME
-    while (1) {
+    while (true) {
         t = ska::TimeUtils::getTicks();
 		
 		if (t - t0 > 20)  {

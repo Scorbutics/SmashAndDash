@@ -27,6 +27,7 @@ public:
 	virtual void load() override;
 	virtual void unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~WorldScene();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn);

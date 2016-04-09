@@ -7,15 +7,20 @@
 #include "../Data/PokemonDescriptor.h"
 #include "../../Graphic/DialogComponent.h"
 #include "../../Utils/IDs.h"
+#include "../../Graphic/GUI/DialogMenu.h"
+
+
+typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap(sh, ril),
 m_worldScene(ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
-m_id(fc.id),
+m_scriptId(fc.scriptId),
 m_level(fc.level),
-m_player(fc.fighter),
-m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".ini") {
+m_player(fc.fighterPlayer),
+m_opponentId(fc.fighterOpponent),
+m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_scriptId) + ".ini") {
 	m_logics.push_back(&m_cameraSystem);
 }
 
@@ -32,7 +37,7 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 
 	m_worldScene.graphicUpdate(drawables);
 	AbstractSceneMap::graphicUpdate(drawables);
-	
+
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
 	/*fight.setPriority(pokeball.getPriority() + 1);*/
 	/*drawables.add(fight);*/
@@ -77,25 +82,42 @@ void SceneFight::load() {
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_player);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
-			const ska::Rectangle* display = m_cameraSystem.getDisplay();
-			dialogId = wScreen.getGUI().addDialog(IDialogMenuPtr(new DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { pc.x - (display == NULL ? 0 : display->x), pc.y - (display == NULL ? 0 : display->y) - TAILLEBLOC * 3, TAILLEBLOC * 6, TAILLEBLOC * 2 }, delay)));
+			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, 0, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
+			dc.dialog.hide(false);
+
+			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_player, dc);
 			t.forward(ic);
-			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_player, dc);
 			return true;
 		}
 		// Continue until dialog is still visible
-		//DialogComponent& dc = m_worldScene.getEntityManager().getComponent<DialogComponent>(m_id);
-		return wScreen.getGUI().existDialog(dialogId);
+		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_player);
 	}));
+
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>* pokeballRawTask;
+	ska::RunnablePtr pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>& t, ska::InputComponent ic) {
+		static bool started = false;
+		if (!started) {
+			started = true;
+			t.forward(ic);
+
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
+			ska::PositionComponent& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
+			wScreen.getPokeball().launch({pc.x, pc.y}, {opponentPc.x, opponentPc.y}, PokeballLaunchReason::Throw);
+			return true;
+		}
+		return wScreen.getPokeball().isVisible();
+	}, *dialogRawTask));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
 	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_player, ic);
 		return false;
-	}, *dialogRawTask));
+	}, *pokeballRawTask));
 
 	wScreen.addTaskToQueue(dialogTask);
+	wScreen.addTaskToQueue(pokeballTask);
 	wScreen.addTaskToQueue(finalTask);
+	
 }
 
 void SceneFight::unload() {
