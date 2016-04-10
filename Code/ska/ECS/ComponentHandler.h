@@ -38,7 +38,7 @@ namespace ska {
 			return m_mask;
 		}
 
-		~ComponentHandler() {
+		virtual ~ComponentHandler() {
 		}
 
 		static const std::string& getClassName() {

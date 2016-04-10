@@ -129,7 +129,6 @@ namespace ska {
 		template <class T>
 		unsigned int getMask() {
 			ComponentHandler<T>& components = this->template getComponents<T>();
-			m_nameMappedComponent.emplace(components.getClassName(), &components);
 			return components.getMask();
 		}
 
@@ -145,7 +144,12 @@ namespace ska {
 		template <class T>
 		ComponentHandler<T>& getComponents() {
 			static ComponentHandler<T> m_components;
-			m_nameMappedComponent.emplace(m_components.getClassName(), &m_components);
+			static bool initialized = false;
+			/* Correction performances issues du Profiling Very Sleepy : temps passé dans le hachage pour la table de noms de composants trop élevé */
+			if (!initialized) {
+				initialized = true;
+				m_nameMappedComponent.emplace(m_components.getClassName(), &m_components);
+			}
 			return m_components;
 		}
 		

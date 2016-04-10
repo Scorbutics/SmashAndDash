@@ -2,13 +2,15 @@
 #include "SceneMap.h"
 #include "../CustomEntityManager.h"
 
+#define MOB_SPAWNING_DELAY 5000
+
 SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName) :
 AbstractSceneMap(sh, ril),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
 m_worldScene(ws),
 m_iaMovementSystem(ws.getEntityManager()),
-m_mobSpawningSystem(ws, ws.getEntityManager(), 15000),
+m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld().getBlockSize(), ws.getEntityManager()),
 m_fightStartSystem(sh, ws, ril, ws.getPlayer()),
@@ -26,7 +28,7 @@ m_fileName(fileName),
 m_chipsetName(chipsetName),
 m_worldScene(ws),
 m_iaMovementSystem(ws.getEntityManager()),
-m_mobSpawningSystem(ws, ws.getEntityManager(), 15000),
+m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld().getBlockSize(), ws.getEntityManager()),
 m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()),

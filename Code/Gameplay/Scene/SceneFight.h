@@ -28,7 +28,5 @@ private:
 	const ska::IniReader m_opponent;
 	const ska::EntityId m_player;
 	const ska::EntityId m_opponentId;
-	/* A save of the player's input component */
-	ska::InputComponent m_ic;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

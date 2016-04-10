@@ -15,7 +15,7 @@ MobSpawningSystem::MobSpawningSystem(MobSpawner& ms, ska::EntityManager& entityM
 }
 
 void MobSpawningSystem::refresh() {
-	if (/*m_totalSpawnedEntities < SPAWN_LIMIT_ALLOWED &&*/ ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
+	if (m_totalSpawnedEntities < SPAWN_LIMIT_ALLOWED && ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
 		ska::IniReader* reader = GetRandomMobSettings(m_mobSpawner);
 		if (reader != NULL) {
 			for (ska::EntityId entityId : m_processed) {
