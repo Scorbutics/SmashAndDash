@@ -255,7 +255,7 @@ const ska::Point<int>& Pokeball::getPos() {
 void Pokeball::display() {
 	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes.
 	   Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
-	   qui refresh le bon état par polymorphisme. TODO ! */
+	   qui refresh le bon état par polymorphisme. TODO */
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();

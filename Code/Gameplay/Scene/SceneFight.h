@@ -5,6 +5,7 @@
 #include "../../ska/Inputs/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
 #include "../../ska/Inputs/InputComponent.h"
+#include "../System/PokeballSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -23,6 +24,7 @@ private:
 	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
+	PokeballSystem m_pokeballSystem;
 	const int m_scriptId;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;

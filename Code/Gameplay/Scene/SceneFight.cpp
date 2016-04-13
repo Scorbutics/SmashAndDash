@@ -16,12 +16,14 @@ SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextMa
 AbstractSceneMap(sh, ril),
 m_worldScene(ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
+m_pokeballSystem(ws.getEntityManager()),
 m_scriptId(fc.scriptId),
 m_level(fc.level),
 m_player(fc.fighterPlayer),
 m_opponentId(fc.fighterOpponent),
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_scriptId) + ".ini") {
 	m_logics.push_back(&m_cameraSystem);
+	m_logics.push_back(&m_pokeballSystem);
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -89,19 +91,26 @@ void SceneFight::load() {
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>* pokeballRawTask;
 	ska::RunnablePtr pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>& t, ska::InputComponent ic) {
 		static bool started = false;
+		static ska::EntityId pokeball;
+
 		if (!started) {
 			started = true;
 			t.forward(ic);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
 			ska::PositionComponent& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
-			/* Création d'une entité : Pokéball (Position + Graphics) 
-			   Ajout d'un composant particulier : PokeballMoveComponent 
-			   Ajout d'un système déplaçant la Pokéball */
-			//wScreen.getPokeball().launch({pc.x, pc.y}, {opponentPc.x, opponentPc.y}, PokeballLaunchReason::Throw);
+			
+			/* Création d'une entité : Pokéball (Position + Pokeball) */
+			pokeball = m_worldScene.getEntityManager().createEntity();
+			PokeballComponent pokeballc;
+			pokeballc.finalPos = { opponentPc.x, opponentPc.y };
+			m_worldScene.getEntityManager().addComponent<PokeballComponent>(pokeball, pokeballc);
+			ska::PositionComponent pokePc;
+			pokePc = pc;
+			m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(pokeball, pokePc);
 			return true;
 		}
-		return false /*wScreen.getPokeball().isVisible()*/;
+		return m_worldScene.getEntityManager().hasComponent<PokeballComponent>(pokeball)/*wScreen.getPokeball().isVisible()*/;
 	}, *dialogRawTask));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
