@@ -53,8 +53,11 @@ void PokeballSystem::refresh() {
 			/* Lorsque la pokeball s'ouvre, on y ajoute un effet temporaire de "vortex" */
 			ska::EntityId vortexEntity = m_entityManager.createEntity();
 			ska::DeleterComponent vortexDeleter;
-			vortexDeleter.delay = 2500;
+			vortexDeleter.delay = 1500;
 			ska::PositionComponent vortexPc = pc;
+			vortexPc.x -= m_vortex.getWidth() / 2 - m_openPokeball.getWidth() / 2;
+			vortexPc.y -= m_vortex.getHeight() / 2 - m_openPokeball.getHeight() / 2;
+
 			m_entityManager.addComponent<ska::DeleterComponent>(vortexEntity, vortexDeleter);
 			m_entityManager.addComponent<ska::PositionComponent>(vortexEntity, vortexPc);
 			ska::GraphicComponent vortexGc;

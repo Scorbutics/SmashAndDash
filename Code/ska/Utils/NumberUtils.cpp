@@ -30,9 +30,21 @@ double ska::NumberUtils::sinus(double angle) {
 	return sin(angle);
 }
 
+float ska::NumberUtils::arctan(float slope) {
+	return atan(slope);
+}
+
+double ska::NumberUtils::arctan(double slope) {
+	return atan(slope);
+}
+
 float ska::NumberUtils::random(float min, float max) {
 	const double coeff = random();
 	return (float)(coeff * (max - min + 1) + min);
+}
+
+unsigned int ska::NumberUtils::squareroot(const unsigned int i) {
+	return (unsigned int) sqrt(i);
 }
 
 double ska::NumberUtils::random() {

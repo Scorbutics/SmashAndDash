@@ -68,9 +68,8 @@ namespace ska {
 		~World();
 
 	private:
-		void getFogFromData(std::string stringDataFile);
+		//void getFogFromData(std::string stringDataFile);
 		void getRainFromData(std::string stringDataFile);
-		void getWeatherFromData(std::string stringDataFile);
 		void getBgmFromData(std::string stringDataFile);
 		void getMobSettingsFromData();
 

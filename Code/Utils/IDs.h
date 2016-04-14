@@ -47,8 +47,6 @@
 //idem mais verticalement, sur une même colonne
 #define VERTICAL_SPRITE_NUMBER_PER_CHAR_SHEET 8
 
-#define WEATHER_ALPHA_LVL 100
-
 #define SPAWN_LIMIT_ALLOWED 50
 
 #define ID_CURRENT_POKEMON INT16_MAX-1

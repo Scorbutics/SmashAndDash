@@ -3,6 +3,8 @@
 #include "../ska/Graphic/Point.h"
 
 class PokeballComponent : public ska::Component {
+	friend class PokeballSystem;
+
 public:
 	PokeballComponent() {
 		started = false;
@@ -13,19 +15,22 @@ public:
 	}
 	virtual ~PokeballComponent() = default;
 
+	ska::Point<int> finalPos;
+	unsigned int speed;
+
+private:
 	/* Parabolic coeffs */
 	float a;
 	float b;
 	float c;
 
-	ska::Point<int> finalPos;
+	
 
 	bool isOpenning;
 	bool isInactive;
 	bool started;
 
 	unsigned int count;
-	unsigned int speed;
 
 	int sens;
 

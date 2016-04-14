@@ -1,190 +1,120 @@
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <math.h>
 #include "Weather.h"
-#include "../Gameplay\WGameCore.h"
-#include "../Utils/IDs.h"
+#include "../ska/World/World.h"
+#include "../ska/Utils/NumberUtils.h"
 
-using namespace std;
+Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) : m_world(w) {
+	m_active = false;
+	m_mosaic = false;
+	load(wSprite, number, distance, intensityX, intensityY, alpha);
+}
 
-Weather::Weather(string wSprite, int number, int distance, int intensityX, int intensityY, int alpha)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
+Weather::Weather(ska::World& w) : m_world(w) {
+	m_active = false;
+	m_mosaic = false;
+}
 
-    m_intensityX = intensityX;
-    m_intensityY = intensityY;
-    m_number = number;
-    m_active = false;
-    m_mosaic = false;
-
-	if(wSprite != "")
+void Weather::load(const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) {
+	m_distance = distance;
+	m_intensityX = intensityX;
+	m_intensityY = intensityY;
+	setNumber(number);
+	m_active = true;
+	
+	if (!wSprite.empty()) {
 		m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha));
+	}
 
-
-    for(int i = 0; i < m_number; i++)
-    {
-        m_x.push_back(0);
-        m_y.push_back(0);
-    }
-
-    for(int i = 0; i < m_number; i++)
-    {
-        do
-        {
-            m_x[i] = (float) (rand()%(w.getNbrBlocX()*TAILLEBLOC));
-			m_y[i] = (float) (rand() % (w.getNbrBlocY()*TAILLEBLOC));
-        }while(sqrt((m_x[i])*(m_x[i]) + (m_y[i])*(m_y[i])) <= distance);
-
-    }
-
+	resetRandomPos();
 }
 
 bool Weather::isVisible() const {
 	return m_active;
 }
 
-void Weather::setIntensity(int intensityX, int intensityY)
-{
-    m_intensityY = intensityY;
-    m_intensityX = intensityX;
-}
-
-void Weather::changeSprite(string wSprite)
-{
-    m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128));
-}
-
-void Weather::setNumber(int number)
-{
-    for(int i = 0; i < m_number; i++)
-    {
-        m_x.pop_back();
-        m_y.pop_back();
-    }
-
+void Weather::setNumber(int number) {
+	m_pos.clear();
+	
     m_number = number;
 
-    for(int i = 0; i < m_number; i++)
-    {
-        m_x.push_back(0);
-        m_y.push_back(0);
+	m_pos.reserve(m_number);
+    for(int i = 0; i < m_number; i++) {
+		m_pos.push_back({ 0, 0 });
     }
 }
 
-void Weather::setMosaicEffect(bool x)
-{
+void Weather::setMosaicEffect(bool x) {
     m_mosaic = x;
 }
 
-void Weather::resetPos()
-{
-    for(int i = 0; i < m_number; i++)
-    {
-        m_x[i] = 0;
-        m_y[i] = 0;
+void Weather::resetPos() {
+    for(int i = 0; i < m_number; i++) {
+		m_pos[i] = { 0, 0 };
     }
 
 }
 
-void Weather::resetRandomPos()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
-
-    for(int i = 0; i < m_number; i++)
-    {
-        do
-        {
-			m_x[i] = (float)(rand() % (w.getNbrBlocX()*TAILLEBLOC));
-			m_y[i] = (float)(rand() % (w.getNbrBlocY()*TAILLEBLOC));
-
-        }while(sqrt((float) ((m_x[i])*(m_x[i]) + (m_y[i])*(m_y[i]))) <= (TAILLEBLOC/3 * sqrt((float) (w.getNbrBlocX() * w.getNbrBlocX() + w.getNbrBlocY() * w.getNbrBlocY()))));
-
+void Weather::resetRandomPos() {
+    for(int i = 0; i < m_number; i++) {
+		float radius = (float) ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2);
+		m_pos[i] = ska::NumberUtils::cartesian(radius, ska::NumberUtils::random(0.0, 2*M_PI));
     }
 }
 
-void Weather::display()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
-	ska::Rectangle oRel = { 0 };//wScreen.getORel();
+void Weather::display() {
+	const ska::Rectangle* worldView = m_world.getView();
 
-	if (!m_active) {
+	if (!m_active || worldView == nullptr) {
 		return;
 	}
 
-    for(int i = 0; i < m_number; i++)
-    {
+	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
+
+	const float worldWidth = (float) m_world.getPixelWidth();
+	const float worldHeight = (float) m_world.getPixelHeight();
+
+    for(int i = 0; i < m_number; i++) {
 
 		ska::Rectangle buf;
-			m_x[i] += (float)(m_intensityX / 5.);
-			m_y[i] += (float)(m_intensityY / 5.);
+		m_pos[i].x += (float) (m_intensityX / 5.);
+		m_pos[i].y += (float) (m_intensityY / 5.);
 
-            buf.x = (int)m_x[i] + oRel.x;
-            buf.y = (int)m_y[i] + oRel.y;
+        buf.x = (int) m_pos[i].x + oRel.x;
+		buf.y = (int) m_pos[i].y + oRel.y;			
 
-			
+		if ((m_pos[i].x + m_weather->getWidth()) < 0 && m_intensityX < 0) {
+			m_pos[i].x = worldWidth;
+		} else if (m_pos[i].x > worldWidth && m_intensityX > 0) {
+			m_pos[i].x = - worldWidth;
+        }
 
-            if((m_x[i]+m_weather->getWidth()) < 0 && m_intensityX < 0)
-            {
-				m_x[i] = (float)w.getNbrBlocX()*TAILLEBLOC;
-            }
-            else if(m_x[i] > w.getNbrBlocX()*TAILLEBLOC && m_intensityX > 0)
-            {
-				m_x[i] = (float)-((int)m_weather->getWidth());
-            }
-
-			if ((m_y[i] + m_weather->getHeight())< 0 && m_intensityY < 0)
-            {
-				m_y[i] = (float)w.getNbrBlocY()*TAILLEBLOC;
-            }
-            else if(m_y[i] > w.getNbrBlocY()*TAILLEBLOC && m_intensityY > 0)
-            {
-				m_y[i] = (float)-((int)m_weather->getHeight());
-            }
+		if ((m_pos[i].y + m_weather->getHeight())< 0 && m_intensityY < 0) {
+			m_pos[i].y = worldHeight;
+		} else if (m_pos[i].y > worldHeight && m_intensityY > 0) {
+			m_pos[i].y = - worldHeight;
+        }
 
 
-        if(m_mosaic)
-        {
+        if(m_mosaic) {
             int nbrMosaicX, nbrMosaicY;
-			nbrMosaicX = w.getNbrBlocX()*TAILLEBLOC / m_weather->getWidth() + 1;
-			nbrMosaicY = w.getNbrBlocY()*TAILLEBLOC / m_weather->getHeight() + 1;
+			nbrMosaicX = worldWidth / m_weather->getWidth() + 1;
+			nbrMosaicY = worldHeight / m_weather->getHeight() + 1;
 
-            for(int i = 0; i < nbrMosaicX; i++)
-            {
+            for(int i = 0; i < nbrMosaicX; i++) {
 				buf.x = i * m_weather->getWidth() + oRel.x;
-                for(int j = 0; j < nbrMosaicY; j++)
-                {
+                for(int j = 0; j < nbrMosaicY; j++) {
 					buf.y = j*m_weather->getHeight() + oRel.y;
-					if (buf.x + m_weather->getWidth() >= 0 && buf.x <= w.getNbrBlocX()*TAILLEBLOC && buf.y + m_weather->getHeight() >= 0 && buf.y <= w.getNbrBlocY()*TAILLEBLOC)
+					if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
 						m_weather->render(buf.x, buf.y);
+					}
                 }
             }
 
-        }
-		else if (buf.x + m_weather->getWidth() >= 0 && buf.x <= w.getNbrBlocX()*TAILLEBLOC && buf.y + m_weather->getHeight() >= 0 && buf.y <= w.getNbrBlocY()*TAILLEBLOC)
+		} else if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
 			m_weather->render(buf.x, buf.y);
+		}
     }
-}
-
-void Weather::setMX(float x, unsigned int i)
-{
-    if(i < m_x.size())
-        m_x[i] = x;
-    else
-        cerr << "Buffer overflow au niveau de la coordonnée x de la position du i_ème sprite météo" << endl;
-
-}
-
-void Weather::setMY(float y, unsigned int i)
-{
-    if(i < m_y.size())
-        m_y[i] = y;
-    else
-        cerr << "Buffer overflow au niveau de la coordonnée y de la position du i_ème sprite météo" << endl;
-
 }
 
 void Weather::hide(bool active)

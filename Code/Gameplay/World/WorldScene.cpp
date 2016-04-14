@@ -68,8 +68,7 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 }
 
 void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
-	/* Hello, world */
-	
+
 	//Première couche
 	drawables.addHead(*m_world.getLayerBot());
 
@@ -85,6 +84,9 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	WGameCore& wScreen = WGameCore::getInstance();
 	wScreen.getPokeball().setPriority(m_graphicSystem.getTopLayerPriority() + 1);
 	drawables.add(wScreen.getPokeball());
+
+	/* Hello, world */
+	m_world.graphicUpdate(drawables);
 }
 
 void WorldScene::eventUpdate(bool movingDisallowed) {

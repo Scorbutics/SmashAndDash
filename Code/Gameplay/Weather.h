@@ -5,7 +5,9 @@
 #include <string>
 #include <vector>
 #include "../ska/Graphic/Texture.h"
+#include "../ska/Graphic/Point.h"
 #include "../ska/Graphic/Draw/DrawableFixedPriority.h"
+
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage
  .hide();                             //Permet de cacher/afficher le temps
@@ -19,25 +21,27 @@
  .getDirection();
  .getIntensity();
 */ 
-class World;
+namespace ska {
+	class World;
+}
 
 class Weather : public ska::DrawableFixedPriority
 {
 
-    public:
-     Weather(std::string wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
-     ~Weather();
+public:
+	Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
+	 Weather(ska::World& w);
+	 ~Weather();
+
+	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
+
 	 void display() override;
 	 bool isVisible() const override;
 	 void hide(bool active);
      void resetRandomPos();
-     void changeSprite(std::string spriteName);
-
+     
      void setDirection(int direction);
-     void setIntensity(int intensityX, int intensityY);
      void setNumber(int number);
-     void setMX(float x, unsigned int i);
-     void setMY(float y, unsigned int i);
      void setMosaicEffect(bool x);
      void resetPos();
 
@@ -49,8 +53,9 @@ class Weather : public ska::DrawableFixedPriority
     protected:
      int m_intensityX, m_intensityY, m_number, m_distance;
      std::unique_ptr<ska::Texture> m_weather;
-     std::vector<float> m_x, m_y;
+     std::vector<ska::Point<float>> m_pos;
      bool m_active, m_mosaic;
+	 ska::World& m_world;
 
 };
 

@@ -299,40 +299,7 @@ void ska::World::setNbrBlocY(int nbrBlockY) {
 	m_nbrBlockY = nbrBlockY;
 }
 
-void ska::World::getFogFromData(string stringDataFile)
-{
-    /*string sprite;
-	int number, xintensity, yintensity;
-	bool transparency;
-    int alpha;
 
-	IniReader reader(stringDataFile);
-
-	sprite = reader.getString("Fog sprite");
-	xintensity = reader.getInt("Fog xintensity");
-	yintensity = reader.getInt("Fog yintensity");
-	number = reader.getInt("Fog number");
-	transparency = reader.getBoolean("Fog transparency");
-
-
-	if(sprite == "STRINGNOTFOUND")
-	{
-		clog << "Le brouillard est inexistant sur cette map" << endl;
-		m_brouillard->hide(true);
-		return;
-	}
-
-
-	if(transparency)
-		alpha = WEATHER_ALPHA_LVL;
-	else
-		alpha = 255;
-
-
-	m_brouillard = unique_ptr<Weather>(new Weather(sprite, number, 100, xintensity, yintensity, alpha));
-	m_brouillard->hide(false);*/
-
-}
 
 void ska::World::getRainFromData(string stringDataFile)
 {
@@ -354,42 +321,6 @@ void ska::World::getRainFromData(string stringDataFile)
     }
 }
 
-
-void ska::World::getWeatherFromData(string stringDataFile)
-{
-    /*string sprite;
-	int number, xintensity, yintensity;
-    bool alpha, transparency;
-	IniReader reader(stringDataFile);
-	//WGameCore& wScreen = WGameCore::getInstance();
-
-	sprite = reader.getString("Weather sprite");
-
-
-    if(sprite != "STRINGNOTFOUND")
-    {
-
-        transparency = reader.getBoolean("Weather transparency");
-		xintensity = reader.getInt("Weather xintensity");
-		yintensity = reader.getInt("Weather yintensity");
-		number = reader.getInt("Weather number");
-
-        if(transparency)
-            alpha = true;
-        else
-            alpha = false;
-
-        m_temps = unique_ptr<Weather>(new Weather(sprite, number, 100, xintensity, yintensity, alpha));
-        m_temps->hide(false);
-
-    }
-    else
-    {
-        clog << "Le temps est inexistant sur cette map" << endl;
-        m_temps->hide(true);
-    }*/
-
-}
 
 void ska::World::getBgmFromData(string stringDataFile)
 {
@@ -439,7 +370,7 @@ void ska::World::getData()
     string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".ini";
 
     //this->getWeatherFromData(stringDataFile);
-    this->getFogFromData(stringDataFile);
+    //this->getFogFromData(stringDataFile);
     this->getBgmFromData(stringDataFile);
     this->getRainFromData(stringDataFile);
 	this->getMobSettingsFromData();

@@ -60,7 +60,7 @@ void SceneFight::load() {
 	m_descriptor.load(m_opponent, "Description");
 	
 	
-	int delay = 4000;
+	int delay = 3000;
 
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
 	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
@@ -98,15 +98,20 @@ void SceneFight::load() {
 			t.forward(ic);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
+			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_player);
 			ska::PositionComponent& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
-			
+			ska::HitboxComponent& opponentHc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_opponentId);
+
 			/* Création d'une entité : Pokéball (Position + Pokeball) */
 			pokeball = m_worldScene.getEntityManager().createEntity();
 			PokeballComponent pokeballc;
-			pokeballc.finalPos = { opponentPc.x, opponentPc.y };
+			/* TODO random position autour de l'ennemi */
+			pokeballc.finalPos = { (int)(opponentPc.x + opponentHc.xOffset + opponentHc.width / 2), (int)(opponentPc.y + opponentHc.yOffset + opponentHc.height / 2) };
 			m_worldScene.getEntityManager().addComponent<PokeballComponent>(pokeball, pokeballc);
 			ska::PositionComponent pokePc;
 			pokePc = pc;
+			pokePc.x += hc.xOffset + hc.width/2;
+			pokePc.y += hc.yOffset + hc.height/2;
 			m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(pokeball, pokePc);
 			return true;
 		}
