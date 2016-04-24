@@ -1,6 +1,7 @@
 #pragma once
 #include "../ECS/Component.h"
 #include "../Utils/StringUtils.h"
+#include "../Graphic/Point.h"
 
 namespace ska {
 	class PositionComponent : public ska::Component {
@@ -37,6 +38,11 @@ namespace ska {
 			return name;
 		}
 	public:
+		void operator=(const Point<int>& p) {
+			x = p.x;
+			y = p.y;
+		}
+
 		int x;
 		int y;
 		int z;

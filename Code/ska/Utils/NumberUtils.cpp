@@ -30,8 +30,8 @@ double ska::NumberUtils::sinus(double angle) {
 	return sin(angle);
 }
 
-float ska::NumberUtils::arctan(float slope) {
-	return atan(slope);
+double ska::NumberUtils::arctan(int x, int y) {
+	return atan2(y, x);
 }
 
 double ska::NumberUtils::arctan(double slope) {

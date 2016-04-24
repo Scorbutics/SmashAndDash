@@ -155,7 +155,7 @@ void SceneFight::load() {
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
 	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
 		
-		/* Ajout InputComponent au Pokémon (m_opponentId),
+		/* Ajout InputComponent au Pokémon,
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
 		   Ajout d'un composant de combat au Pokémon */
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_playerId, ic);

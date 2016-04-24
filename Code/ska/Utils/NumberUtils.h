@@ -17,7 +17,7 @@ namespace ska{
 		static double random();
 		static float exponential(float i);
 		static int random(int min, int max);
-		static float arctan(float slope);
+		static double arctan(int x, int y);
 		static double arctan(double slope);
 
 		template <typename T>
@@ -49,9 +49,30 @@ namespace ska{
 				throw ska::IllegalArgumentException("Error while converting cartesian coordinates to polar : slope cannot be infinite (x must be != 0)");
 			}
 
-			result.angle = artcan(y / x);
+			result.angle = arctan(x, y);
 			result.radius = squareroot(x * x + y * y);
 			return result;
+		}
+
+		/*	
+			In a non-standard coordinate system (as we are, in computer graphics we have the y axis down and not up),
+			Matrix rotation equation 
+			|x'|   |cos(angle)	sin(angle)	| * |x|
+			|y'| = |-sin(angle)	cos(angle)	|	|y|
+			with (x'; y') the resulting coords, (x; y) the current ones and angle the angle of rotation
+		*/
+		template <typename T>
+		static Point<T> rotate(const Point<T>& origin, double angle, const Point<T>& currentPoint) {
+			/* First, we have to work with a (0;0) origin to make the rotation correctly */
+			Point<T> diff = currentPoint - origin;
+			
+			/* Then we apply the multiplication with the rotation matrix with angle "angle" */
+			Point<T> result = diff;
+			result.x = diff.x * cosinus(angle) + diff.y * sinus(angle);
+			result.y = -diff.x * sinus(angle) + diff.y * cosinus(angle);
+
+			/* And we add the origin again */
+			return result + origin;
 		}
 	};
 }

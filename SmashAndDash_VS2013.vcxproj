@@ -132,6 +132,7 @@
     <ClInclude Include="Code\Gameplay\Fight\SkillsHolderComponent.h" />
     <ClInclude Include="Code\Gameplay\Fight\System\BattleSystem.h" />
     <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
+    <ClInclude Include="Code\Gameplay\Fight\System\SkillRefreshSystem.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
     <ClInclude Include="Code\Gameplay\PokeballComponent.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneHolderCore.h" />
@@ -382,6 +383,7 @@
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
+    <ClCompile Include="Code\Gameplay\Fight\System\SkillRefreshSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneHolderCore.cpp" />
     <ClCompile Include="Code\Gameplay\System\PokeballSystem.cpp" />
