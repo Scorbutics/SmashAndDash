@@ -1,6 +1,7 @@
 #ifndef DEF_STATISTICS
 #define DEF_STATISTICS
 #include <string>
+#include "RawStatistics.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 
 
@@ -15,7 +16,8 @@ class Statistics
 
 	bool addExperience(int exp);
 	void setExperience(int exp);
-
+	
+	const RawStatistics<int>& getRawStats() const;
 	int getAttack();
 	int getDefense();
 	int getSpeAttack();
@@ -30,26 +32,11 @@ class Statistics
 	~Statistics();
 	
 private:
-	int m_hp,
-	m_attack,
-	m_defense,
-	m_spe_attack,
-	m_spe_defense,
-	m_speed,
-	m_level,
-	m_exp,
-	m_droppedExp;
+	RawStatistics<int> m_stats;
 	
 	int m_type;
-
-	float m_slopeHp,
-	m_slopeAttack,
-	m_slopeDefense,
-	m_slopeSpeAttack,
-	m_slopeSpeDefense,
-	m_slopeSpeed,
-	m_slopeExp,
-	m_slopeDroppedExp;
+	int m_level;
+	RawStatistics<float> m_slopes;
 };
 
 #endif

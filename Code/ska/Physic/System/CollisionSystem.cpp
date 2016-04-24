@@ -25,8 +25,7 @@ void ska::CollisionSystem::refresh() {
 					col.target = itEntity;
 					collided = true;
 					col.xaxis = true;
-				}
-				
+				} 
 				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, false))) {
 					col.origin = entityId;
 					col.target = itEntity;
@@ -37,27 +36,11 @@ void ska::CollisionSystem::refresh() {
 			}
 
 			if (collided) {
-				//m_entityManager.addComponent<CollisionComponent>(col.origin, col);
 				collided = false;
-
-				ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
-				MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
-				ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
-				if (col.xaxis) {
-					ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
-				}
-
-				if (col.yaxis) {
-					ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
-				}
-
-				if (col.xaxis) {
-					forigin.x = -ftarget.x / 2;
-				}
-
-				if (col.yaxis) {
-					forigin.y = -ftarget.y / 2;
-				}
+				
+				/* When collision between entities is detected, we can do things as decreasing health, 
+				pushing entities, or any statistic interaction */
+				handleEntityCollision(col);
 
 				break;
 			}
@@ -81,6 +64,30 @@ void ska::CollisionSystem::refresh() {
 		if (collided) {
 			m_entityManager.addComponent<WorldCollisionComponent>(entityId, col);
 		}
+	}
+}
+
+void ska::CollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
+	ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
+	MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
+
+	ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
+	MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(col.origin);
+
+	if (col.xaxis) {
+		ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
+	}
+
+	if (col.yaxis) {
+		ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
+	}
+
+	if (col.xaxis) {
+		forigin.x = -ftarget.x / 2;
+	}
+
+	if (col.yaxis) {
+		forigin.y = -ftarget.y / 2;
 	}
 }
 

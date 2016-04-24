@@ -124,7 +124,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Gameplay\Data\RawStatistics.h" />
+    <ClInclude Include="Code\Gameplay\Fight\BattleComponent.h" />
     <ClInclude Include="Code\Gameplay\Fight\FightComponent.h" />
+    <ClInclude Include="Code\Gameplay\Fight\SkillComponent.h" />
+    <ClInclude Include="Code\Gameplay\Fight\SkillDescriptor.h" />
+    <ClInclude Include="Code\Gameplay\Fight\SkillsHolderComponent.h" />
+    <ClInclude Include="Code\Gameplay\Fight\System\BattleSystem.h" />
     <ClInclude Include="Code\Gameplay\Fight\System\FightStartSystem.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawner.h" />
     <ClInclude Include="Code\Gameplay\PokeballComponent.h" />
@@ -132,6 +138,7 @@
     <ClInclude Include="Code\Gameplay\System\PokeballSystem.h" />
     <ClInclude Include="Code\Graphic\DialogComponent.h" />
     <ClInclude Include="Code\Graphic\GUI\IDialogMenu.h" />
+    <ClInclude Include="Code\Physic\System\SkillCollisionSystem.h" />
     <ClInclude Include="Code\ska\AI\IAMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
@@ -373,10 +380,12 @@
     <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneHolderCore.cpp" />
     <ClCompile Include="Code\Gameplay\System\PokeballSystem.cpp" />
+    <ClCompile Include="Code\Physic\System\SkillCollisionSystem.cpp" />
     <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp" />
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />

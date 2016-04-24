@@ -9,6 +9,8 @@
 
 class WorldScene;
 class FightComponent;
+class SkillDescriptor;
+class SkillsHolderComponent;
 
 class SceneFight :
 	public AbstractSceneMap
@@ -21,6 +23,9 @@ public:
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();
 private:
+	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
+	void loadSkills(const ska::IniReader& reader, SkillsHolderComponent& shc);
+
 	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
@@ -28,7 +33,8 @@ private:
 	const int m_scriptId;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;
-	const ska::EntityId m_player;
+	const ska::IniReader m_player;
+	const ska::EntityId m_playerId;
 	const ska::EntityId m_opponentId;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

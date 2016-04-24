@@ -8,7 +8,8 @@
 #include "../../Graphic/DialogComponent.h"
 #include "../../Utils/IDs.h"
 #include "../../Graphic/GUI/DialogMenu.h"
-
+#include "../Fight/SkillsHolderComponent.h"
+#include "../Data/Statistics.h"
 
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
@@ -19,8 +20,9 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos
 m_pokeballSystem(ws.getEntityManager()),
 m_scriptId(fc.scriptId),
 m_level(fc.level),
-m_player(fc.fighterPlayer),
+m_playerId(fc.fighterPlayer),
 m_opponentId(fc.fighterOpponent),
+m_player("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_playerId) + ".ini"),
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_scriptId) + ".ini") {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
@@ -40,23 +42,55 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 	/*drawables.add(fight);*/
 }
 
+
+void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) {
+	ska::IniReader skillData(skillPath);
+
+	sd.style1 = skillData.getString("Description style_1");
+	sd.style2 = skillData.getString("Description style_2");
+	sd.description = skillData.getString("Description description");
+	sd.name = skillData.getString("Description name");
+	sd.type = skillData.getString("Description type");
+	sd.context = skillData.getInt("Description context");
+
+	sd.id = skillData.getInt("Description id");
+
+
+	/* TODO put the sprite in the GUI */
+	//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+
+	sd.cooldown = skillData.getInt("Stats cooldown");
+	sd.range = skillData.getInt("Stats blocks_range");
+
+	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
+		sd.buffAlly = Statistics(&skillData, "BuffsAlly").getRawStats();
+		sd.buffEnemy = Statistics(&skillData, "BuffsEnemy").getRawStats();
+		sd.alterAlly = skillData.getInt("StatusAlter ally");
+		sd.alterEnemy = skillData.getInt("StatusAlter enemy");
+	}
+}
+
+void SceneFight::loadSkills(const ska::IniReader& reader, SkillsHolderComponent& shc) {
+	for (unsigned int i = 0; reader.get("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
+		if (reader.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
+			createSkill(shc.skills[i], reader.getString("Skills " + ska::StringUtils::intToStr(i)));
+		}
+
+	}
+}
+
 void SceneFight::load() {
 	m_worldScene.linkCamera(&m_cameraSystem);
 	m_worldScene.load();
 
-	//TODO stats
-	/*m_stats = unique_ptr<Statistics>(new Statistics(&data, "BaseStats"));
-	m_stats->nextLevel();
-	m_stats->nextLevel();
+	SkillsHolderComponent shc;
+	loadSkills(m_player, shc);
+	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_playerId, shc);
 
-	refreshStats(true);*/
-	std::vector<std::string> skills;
-	for (unsigned int i = 0; m_opponent.get("Skills " + ska::StringUtils::intToStr(i)); i++) {
-		if (m_opponent.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
-			skills.push_back(m_opponent.getString("Skills " + ska::StringUtils::intToStr(i)));
-		}
-	}
-
+	SkillsHolderComponent shcOpponent;
+	loadSkills(m_opponent, shcOpponent);
+	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
+	
 	m_descriptor.load(m_opponent, "Description");
 	
 	
@@ -69,23 +103,23 @@ void SceneFight::load() {
 		if (!started) {
 			started = true;
 
-			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_player)) {
+			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_playerId)) {
 				return false;
 			}
 
-			ska::InputComponent ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_player);
-			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_player);
+			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_playerId);
+			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_playerId);
 
-			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_playerId);
 			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, 0, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			dc.dialog.hide(false);
 
-			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_player, dc);
+			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_playerId, dc);
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_player);
+		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_playerId);
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>* pokeballRawTask;
@@ -97,8 +131,8 @@ void SceneFight::load() {
 			started = true;
 			t.forward(ic);
 
-			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_player);
-			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_player);
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_playerId);
+			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_playerId);
 			ska::PositionComponent& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
 			ska::HitboxComponent& opponentHc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_opponentId);
 
@@ -124,7 +158,7 @@ void SceneFight::load() {
 		/* Ajout InputComponent au Pokémon (m_opponentId),
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
 		   Ajout d'un composant de combat au Pokémon */
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_player, ic);
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_playerId, ic);
 		return false;
 	}, *pokeballRawTask));
 
