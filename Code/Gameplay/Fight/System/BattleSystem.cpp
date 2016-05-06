@@ -32,7 +32,7 @@ void BattleSystem::refresh() {
 		}
 		
 		if (bc.hp < 0) {
-			/* TODO end fight */
+			/* TODO end fight + move this out of the loop */
 			m_entityManager.removeEntity(entityId);
 		}
 
@@ -56,7 +56,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	}
 
 
-	int n = reader.getInt("Particle number");
+	int n = shc.skills[index].particleNumber;
 
 	for (int i = 0; i < n; i++) {
 		ska::EntityId skill = m_customEM.createSkill(reader, shc, i);

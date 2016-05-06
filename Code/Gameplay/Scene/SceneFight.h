@@ -7,6 +7,7 @@
 #include "../../ska/Inputs/InputComponent.h"
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
+#include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -41,5 +42,6 @@ private:
 	const ska::EntityId m_opponentId;
 
 	BattleSystem m_battleSystem;
+	SkillRefreshSystem m_skillRefreshSystem;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

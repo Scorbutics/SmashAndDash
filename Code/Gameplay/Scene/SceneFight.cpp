@@ -25,10 +25,12 @@ m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
 m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
-m_battleSystem(ws.getEntityManager(), m_inputCManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent) {
+m_battleSystem(ws.getEntityManager(), m_inputCManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
+m_skillRefreshSystem(ws.getEntityManager()) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
+	m_logics.push_back(&m_skillRefreshSystem);
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -55,6 +57,7 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	sd.name = skillData.getString("Description name");
 	sd.type = skillData.getString("Description type");
 	sd.context = skillData.getInt("Description context");
+	sd.particleNumber = skillData.getInt("Particle number");
 
 	sd.id = skillData.getInt("Description id");
 

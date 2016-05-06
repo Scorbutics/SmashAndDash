@@ -4,4 +4,7 @@
 
 class BattleComponent : public ska::Component, public RawStatistics<int> {
 public:
+	BattleComponent() {
+		hp = 10;
+	}
 };
