@@ -12,6 +12,7 @@ ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComp
 m_worldScene(ws),
 m_icm(icm),
 m_player(player),
+m_cem(ws.getEntityManager()),
 m_sceneHolder(sceneHolder){
 	m_t0 = ska::TimeUtils::getTicks();
 }
@@ -47,7 +48,12 @@ void FightStartSystem::refresh() {
 				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
 					/* Start a fight */
 					FightComponent& fc = m_entityManager.getComponent<FightComponent>(entityId);
-					fc.fighterPlayer = m_player;
+					/* TODO first available pokemon of the team */
+					fc.pokemonScriptId = 25;
+					fc.trainer = m_player;
+					const int blockSize = m_worldScene.getWorld().getBlockSize();
+					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
+					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
 					m_sceneHolder.nextScene(ska::ScenePtr(new SceneFight(m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc)));
 				}

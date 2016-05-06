@@ -6,6 +6,7 @@
 #include "../Data/PokemonDescriptor.h"
 #include "../../ska/Inputs/InputComponent.h"
 #include "../System/PokeballSystem.h"
+#include "../../Gameplay/Fight/System/BattleSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -30,11 +31,15 @@ private:
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
 	PokeballSystem m_pokeballSystem;
-	const int m_scriptId;
+	
+	const int m_opponentScriptId;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;
-	const ska::IniReader m_player;
-	const ska::EntityId m_playerId;
+	const ska::IniReader m_pokemon;
+	const ska::EntityId m_pokemonId;
+	const ska::EntityId m_trainerId;
 	const ska::EntityId m_opponentId;
+
+	BattleSystem m_battleSystem;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

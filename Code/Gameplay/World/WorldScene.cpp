@@ -164,7 +164,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 				FightComponent fc;
 				fc.level = level;
-				fc.scriptId = idMob;
+				fc.opponentScriptId = idMob;
 				m_entityManager.addComponent<FightComponent>(mob, fc);
 				successfulSpawns++;
 			}

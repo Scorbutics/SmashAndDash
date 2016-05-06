@@ -6,13 +6,17 @@ class FightComponent : public ska::Component {
 public:
 	FightComponent() {
 		level = 0;
-		scriptId = 0;
+		pokemonScriptId = 0;
+		opponentScriptId = 0;
 		fighterOpponent = 0;
-		fighterPlayer = 0;
+		trainer = 0;
+		fighterPokemon = 0;
 	}
 
 	unsigned int level;
-	int scriptId;
+	int opponentScriptId;
+	int pokemonScriptId;
+	ska::EntityId trainer;
 	ska::EntityId fighterOpponent;
-	ska::EntityId fighterPlayer;
+	ska::EntityId fighterPokemon;
 };

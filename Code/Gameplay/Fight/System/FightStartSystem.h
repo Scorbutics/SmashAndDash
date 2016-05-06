@@ -8,6 +8,7 @@
 #include "../../../ska/Graphic/GraphicComponent.h"
 
 class WorldScene;
+class CustomEntityManager;
 
 class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent> {
 public:
@@ -15,6 +16,7 @@ public:
 	virtual ~FightStartSystem();
 	virtual void refresh() override;
 private:
+	CustomEntityManager& m_cem;
 	WorldScene& m_worldScene;
 	ska::InputContextManager& m_icm;
 	ska::SceneHolder& m_sceneHolder;

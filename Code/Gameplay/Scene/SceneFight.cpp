@@ -18,14 +18,17 @@ AbstractSceneMap(sh, ril),
 m_worldScene(ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
-m_scriptId(fc.scriptId),
+m_opponentScriptId(fc.opponentScriptId),
 m_level(fc.level),
-m_playerId(fc.fighterPlayer),
+m_pokemonId(fc.fighterPokemon),
+m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
-m_player("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_playerId) + ".ini"),
-m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(m_scriptId) + ".ini") {
+m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
+m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
+m_battleSystem(ws.getEntityManager(), m_inputCManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
+	m_logics.push_back(&m_battleSystem);
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -84,8 +87,8 @@ void SceneFight::load() {
 	m_worldScene.load();
 
 	SkillsHolderComponent shc;
-	loadSkills(m_player, shc);
-	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_playerId, shc);
+	loadSkills(m_pokemon, shc);
+	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_pokemonId, shc);
 
 	SkillsHolderComponent shcOpponent;
 	loadSkills(m_opponent, shcOpponent);
@@ -103,43 +106,42 @@ void SceneFight::load() {
 		if (!started) {
 			started = true;
 
-			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_playerId)) {
+			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_trainerId)) {
 				return false;
 			}
 
-			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_playerId);
-			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_playerId);
+			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_trainerId);
+			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_trainerId);
 
-			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_playerId);
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, 0, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			dc.dialog.hide(false);
 
-			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_playerId, dc);
+			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_playerId);
+		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
 	}));
 
-	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>* pokeballRawTask;
-	ska::RunnablePtr pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent>>& t, ska::InputComponent ic) {
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>* pokeballRawTask;
+	ska::RunnablePtr pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>& t, ska::InputComponent ic) {
 		static bool started = false;
 		static ska::EntityId pokeball;
 
 		if (!started) {
 			started = true;
-			t.forward(ic);
 
-			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_playerId);
-			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_playerId);
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
+			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_trainerId);
 			ska::PositionComponent& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
 			ska::HitboxComponent& opponentHc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_opponentId);
 
 			/* Création d'une entité : Pokéball (Position + Pokeball) */
 			pokeball = m_worldScene.getEntityManager().createEntity();
 			PokeballComponent pokeballc;
-			/* TODO random position autour de l'ennemi */
+			
 			pokeballc.finalPos = { (int)(opponentPc.x + opponentHc.xOffset + opponentHc.width / 2), (int)(opponentPc.y + opponentHc.yOffset + opponentHc.height / 2) };
 			m_worldScene.getEntityManager().addComponent<PokeballComponent>(pokeball, pokeballc);
 			ska::PositionComponent pokePc;
@@ -147,18 +149,23 @@ void SceneFight::load() {
 			pokePc.x += hc.xOffset + hc.width/2;
 			pokePc.y += hc.yOffset + hc.height/2;
 			m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(pokeball, pokePc);
+			t.forward(ic, pokePc);
 			return true;
 		}
 		return m_worldScene.getEntityManager().hasComponent<PokeballComponent>(pokeball)/*wScreen.getPokeball().isVisible()*/;
 	}, *dialogRawTask));
 
-	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
-	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>* finalRawTask;
+	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>& t, ska::InputComponent ic, ska::PositionComponent pc) {
 		
 		/* Ajout InputComponent au Pokémon,
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
 		   Ajout d'un composant de combat au Pokémon */
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_playerId, ic);
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
+
+		/* TODO random position autour de l'ennemi */
+		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
+		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
 		return false;
 	}, *pokeballRawTask));
 

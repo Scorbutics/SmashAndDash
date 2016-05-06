@@ -7,8 +7,8 @@
 
 BattleSystem::BattleSystem(CustomEntityManager& em, const ska::InputContextManager& icm, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) : 
 System(em), m_icm(icm), 
-m_player(player), m_opponent(opponent),
-m_opponentReader(opponentReader), m_playerReader(playerReader),
+m_pokemon(player), m_opponent(opponent),
+m_opponentReader(opponentReader), m_pokemonReader(playerReader),
 m_customEM(em) {
 
 }
@@ -41,12 +41,12 @@ void BattleSystem::refresh() {
 
 void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	/* Ignore potential external entity */
-	if (from != m_player && from != m_opponent) {
+	if (from != m_pokemon && from != m_opponent) {
 		return;
 	}
 	const ska::InputRangeContainer& irc = m_icm.getRanges();
 	const ska::InputRange& mousePos = irc[ska::InputRangeType::MousePos];
-	const ska::IniReader& reader = from == m_player ? m_playerReader : m_opponentReader;
+	const ska::IniReader& reader = from == m_pokemon ? m_pokemonReader : m_opponentReader;
 	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(from);
 	ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(from);
 	SkillsHolderComponent& shc = m_entityManager.getComponent<SkillsHolderComponent>(from);

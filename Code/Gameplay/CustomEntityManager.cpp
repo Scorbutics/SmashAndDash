@@ -49,15 +49,15 @@ ska::EntityId CustomEntityManager::createSkill(const ska::IniReader& reader, con
 	return skill;
 }
 
-ska::EntityId CustomEntityManager::createTrainer(const ska::Point<int> startPos, const unsigned int worldBlockSize) {
-	ska::EntityId trainer = ska::PrefabEntityManager::createTrainer(startPos, worldBlockSize);
+ska::EntityId CustomEntityManager::createTrainer(const ska::Point<int> startBlockPos, const unsigned int worldBlockSize) {
+	ska::EntityId trainer = ska::PrefabEntityManager::createTrainer(startBlockPos, worldBlockSize);
 	addComponent<MobSpawnAreaComponent>(trainer, MobSpawnAreaComponent());
 	addComponent<FightComponent>(trainer, FightComponent());
 	return trainer;
 }
 
-ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startPos, const int id, const unsigned int worldBlockSize) {
-	return ska::PrefabEntityManager::createCharacter(startPos, id, worldBlockSize);
+ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize) {
+	return ska::PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize);
 }
 
 CustomEntityManager::~CustomEntityManager()
