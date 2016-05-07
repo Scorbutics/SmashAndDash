@@ -46,7 +46,6 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	}
 	const ska::InputRangeContainer& irc = m_icm.getRanges();
 	const ska::InputRange& mousePos = irc[ska::InputRangeType::MousePos];
-	const ska::IniReader& reader = from == m_pokemon ? m_pokemonReader : m_opponentReader;
 	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(from);
 	ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(from);
 	SkillsHolderComponent& shc = m_entityManager.getComponent<SkillsHolderComponent>(from);
@@ -59,10 +58,11 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	int n = shc.skills[index].particleNumber;
 
 	for (int i = 0; i < n; i++) {
-		ska::EntityId skill = m_customEM.createSkill(reader, shc, i);
+		ska::EntityId skill = m_customEM.createSkill(shc, i);
 		
 		m_entityManager.addComponent<ska::PositionComponent>(skill, pc);
 		SkillComponent& sc = m_entityManager.getComponent<SkillComponent>(skill);
+		sc.origin = pc;
 		sc.target = mousePos;
 	}
 }

@@ -14,7 +14,10 @@ class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, s
 public:
 	FightStartSystem(ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
 	virtual ~FightStartSystem();
+
+protected:
 	virtual void refresh() override;
+
 private:
 	CustomEntityManager& m_cem;
 	WorldScene& m_worldScene;

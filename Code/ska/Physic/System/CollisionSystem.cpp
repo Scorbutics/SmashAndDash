@@ -15,56 +15,62 @@ void ska::CollisionSystem::refresh() {
 
 		const ska::Rectangle entityHitboxX = createHitBox(entityId, true);
 		const ska::Rectangle entityHitboxY = createHitBox(entityId, false);
-
+		
+		bool entityCollided = false;
+		CollisionComponent col;
 		for (ska::EntityId itEntity : m_processed) {
-			CollisionComponent col;
-			bool collided = false;
 			if (itEntity != entityId) {
 				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, true))) {
 					col.origin = entityId;
 					col.target = itEntity;
-					collided = true;
+					entityCollided = true;
 					col.xaxis = true;
 				} 
 				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, false))) {
 					col.origin = entityId;
 					col.target = itEntity;
-					collided = true;
+					entityCollided = true;
 					col.yaxis = true;
 				}
 
 			}
 
-			if (collided) {
-				collided = false;
-				
-				/* When collision between entities is detected, we can do things as decreasing health, 
-				pushing entities, or any statistic interaction */
-				handleEntityCollision(col);
-
+			if (entityCollided) {
 				break;
 			}
 
 		}
 
-		WorldCollisionComponent col;
+		WorldCollisionComponent wcol;
 		bool collided = false;
 		Rectangle nextPosX = { entityHitboxX.x, entityHitboxX.y, entityHitboxX.w, entityHitboxX.h };
 		Rectangle nextPosY = { entityHitboxY.x, entityHitboxY.y, entityHitboxY.w, entityHitboxY.h };
 		if (!m_world.canMoveToPos(nextPosX)){
 			collided = true;
-			col.xaxis = true;
+			wcol.xaxis = true;
 		}
 
 		if (!m_world.canMoveToPos(nextPosY)){
 			collided = true;
-			col.yaxis = true;
+			wcol.yaxis = true;
 		}
 
 		if (collided) {
-			m_entityManager.addComponent<WorldCollisionComponent>(entityId, col);
+			m_entityManager.addComponent<WorldCollisionComponent>(entityId, wcol);
+			handleWorldCollision(wcol, entityId);
+		}
+
+		if (entityCollided) {
+			entityCollided = false;
+			/* When collision between entities is detected, we can do things as decreasing health,
+			pushing entities, or any statistic interaction */
+			handleEntityCollision(col);
 		}
 	}
+}
+
+void ska::CollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
+	
 }
 
 void ska::CollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {

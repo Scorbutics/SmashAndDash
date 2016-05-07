@@ -10,6 +10,7 @@ namespace ska {
 	public:
 		MovementSystem(ska::EntityManager& entityManager);
 		virtual ~MovementSystem();
+	protected:
 		virtual void refresh() override;
 
 	};

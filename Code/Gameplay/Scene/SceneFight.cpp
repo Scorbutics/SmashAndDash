@@ -26,11 +26,13 @@ m_opponentId(fc.fighterOpponent),
 m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 m_battleSystem(ws.getEntityManager(), m_inputCManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
-m_skillRefreshSystem(ws.getEntityManager()) {
+m_skillRefreshSystem(ws.getEntityManager()),
+m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
 	m_logics.push_back(&m_skillRefreshSystem);
+	m_logics.push_back(&m_skillCollisionSystem);
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -58,6 +60,11 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	sd.type = skillData.getString("Description type");
 	sd.context = skillData.getInt("Description context");
 	sd.particleNumber = skillData.getInt("Particle number");
+	sd.speed = skillData.getFloat("Particle speed");
+	sd.knockback = skillData.getInt("Particle knockback");
+	sd.noise = skillData.getInt("Particle noise");
+	sd.amplitude = skillData.getFloat("Particle amplitude");
+
 
 	sd.id = skillData.getInt("Description id");
 
@@ -76,12 +83,11 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	}
 }
 
-void SceneFight::loadSkills(const ska::IniReader& reader, SkillsHolderComponent& shc) {
+void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId entity, SkillsHolderComponent& shc) {
 	for (unsigned int i = 0; reader.get("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
 		if (reader.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
 			createSkill(shc.skills[i], reader.getString("Skills " + ska::StringUtils::intToStr(i)));
 		}
-
 	}
 }
 
@@ -90,11 +96,12 @@ void SceneFight::load() {
 	m_worldScene.load();
 
 	SkillsHolderComponent shc;
-	loadSkills(m_pokemon, shc);
+	loadSkills(m_pokemon, m_pokemonId, shc);
 	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_pokemonId, shc);
 
 	SkillsHolderComponent shcOpponent;
-	loadSkills(m_opponent, shcOpponent);
+	loadSkills(m_opponent, m_opponentId, shcOpponent);
+	
 	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
 	
 	m_descriptor.load(m_opponent, "Description");

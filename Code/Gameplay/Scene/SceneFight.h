@@ -8,6 +8,7 @@
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
+#include "../../Physic/System/SkillCollisionSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -26,7 +27,7 @@ public:
 	virtual ~SceneFight();
 private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
-	void loadSkills(const ska::IniReader& reader, SkillsHolderComponent& shc);
+	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc);
 
 	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
@@ -43,5 +44,6 @@ private:
 
 	BattleSystem m_battleSystem;
 	SkillRefreshSystem m_skillRefreshSystem;
+	SkillCollisionSystem m_skillCollisionSystem;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

@@ -27,7 +27,6 @@ m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager),
 m_daSystem(m_entityManager),
 m_deleterSystem(m_entityManager),
-m_collisionSystem(m_world, m_entityManager),
 m_inputSystem(m_inputCManager, m_entityManager),
 m_cameraSystem(NULL),
 m_screenW(screenW),
@@ -43,7 +42,6 @@ m_screenH(screenH) {
 	m_logics.push_back(&m_forceSystem);
 	m_logics.push_back(&m_daSystem);
 	m_logics.push_back(&m_deleterSystem);
-	m_logics.push_back(&m_collisionSystem);
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 

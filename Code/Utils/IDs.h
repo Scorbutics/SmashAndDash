@@ -8,7 +8,7 @@
 #define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
 #define BATTLE_START_TICKS 1000
-#define BATTLE_START_CHANCE 15
+#define BATTLE_START_CHANCE 5
 #define BATTLE_START_DISTANCE_SQUARED 20736 //= 3 blocs
 
 #define BUTTON_CLOSE 0 //Type de boutons pouvant composer une fenêtre

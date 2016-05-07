@@ -6,11 +6,12 @@
 #include "EntityManager.h"
 #include "ISystem.h"
 #include "../Utils/Observer.h"
+#include "../Utils/Refreshable.h"
 
 namespace ska {
 	
 	template <class Storage, class ... ComponentType>
-	class System : public Observer<EntityData>, virtual public ISystem {
+	class System : public Observer<EntityData>, virtual public ISystem, virtual protected Refreshable {
 	public :
 		System(EntityManager& entityManager) : 
 			m_entityManager(entityManager) { 
@@ -21,8 +22,20 @@ namespace ska {
 			(void)_;
 
 		}
-		
-		
+
+		void update() override {
+			refresh();
+			if (!m_toDelete.empty()) {
+				for (EntityId entity : m_toDelete) {
+					m_entityManager.removeEntity(entity);
+				}
+				m_toDelete.clear();
+			}
+		}
+
+		void scheduleDeferredRemove(ska::EntityId e) {
+			m_toDelete.emplace(e);
+		}
 
 		void update(Observable<EntityData>* obs, const EventArg& e, EntityData& t) override {
 			
@@ -53,7 +66,7 @@ namespace ska {
 		virtual ~System(){ m_entityManager.removeObserver(this); }
 
 	private:
-		
+		std::unordered_set<ska::EntityId> m_toDelete;
 		EntityComponentsMask m_systemComponentMask;
 		
 

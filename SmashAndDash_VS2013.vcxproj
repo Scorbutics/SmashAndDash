@@ -201,7 +201,7 @@
     <ClInclude Include="Code\ska\Graphic\Draw\DrawableFixedPriority.h" />
     <ClInclude Include="Code\ska\Graphic\Point.h" />
     <ClInclude Include="Code\ska\Graphic\Rectangle.h" />
-    <ClInclude Include="Code\ska\Scene\Refreshable.h" />
+    <ClInclude Include="Code\ska\Utils\Refreshable.h" />
     <ClInclude Include="Code\ska\Scene\SceneHolder.h" />
     <ClInclude Include="Code\ska\Scene\SceneType.h" />
     <ClInclude Include="Code\ska\Script\Command\AbstractFunctionCommand.h" />

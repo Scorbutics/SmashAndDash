@@ -60,8 +60,12 @@ void ska::ScriptRefreshSystem::refresh() {
 		entityManager.removeComponent<ScriptSleepComponent>(targets);
 	}
 
-	m_scriptAutoSystem.refresh();
+	m_scriptAutoSystem.update();
 
+}
+
+void ska::ScriptRefreshSystem::update() {
+	System<std::unordered_set<EntityId>, PositionComponent, ScriptAwareComponent>::update();
 }
 
 void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {

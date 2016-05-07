@@ -9,8 +9,9 @@ namespace ska {
 	class GravitySystem : public ska::System<std::unordered_set<ska::EntityId>, ForceComponent, GravityAffectedComponent, MovementComponent> {
 	public:
 		GravitySystem(ska::EntityManager& entityManager);
-		virtual void refresh() override;
 		virtual ~GravitySystem();
+	protected:
+		virtual void refresh() override;
 
 	};
 }

@@ -11,13 +11,17 @@ public:
 	std::string type;
 	std::string context;
 	int id;
-	int cooldown;
-	int range;
 
 	RawStatistics<int> buffAlly;
 	RawStatistics<int> buffEnemy;
 	int alterAlly;
 	int alterEnemy;
 
+	float speed;
 	int particleNumber;
+	unsigned int cooldown;
+	int range;
+	int knockback;
+	int noise;
+	float amplitude;
 };

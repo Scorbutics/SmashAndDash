@@ -12,6 +12,7 @@ namespace ska {
 	public:
 		InputSystem(const InputContextManager& icm, ska::EntityManager& entityManager);
 		virtual ~InputSystem();
+	protected:
 		virtual void refresh() override;
 	private:
 		const InputContextManager& m_icm;

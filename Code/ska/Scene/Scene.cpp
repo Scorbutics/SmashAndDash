@@ -20,7 +20,7 @@ void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
 	/* Graphics */
 	for (auto& s : m_graphics) {
 		s->setDrawables(drawables);
-		s->refresh();
+		s->update();
 	}
 }
 
@@ -28,6 +28,6 @@ void ska::Scene::eventUpdate(bool movingDisallowed) {
 
 	/* Logics */
 	for (auto& s : m_logics) {
-		s->refresh();
+		s->update();
 	}
 }

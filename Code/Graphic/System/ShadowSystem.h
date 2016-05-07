@@ -11,6 +11,8 @@ class ShadowSystem : public AbstractGraphicSystem, public ska::System<std::unord
 public:
 	ShadowSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager);
 	virtual ~ShadowSystem();
+	virtual void update() override;
+protected:
 	virtual void refresh() override;
 	
 private:

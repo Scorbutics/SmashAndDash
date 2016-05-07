@@ -5,6 +5,6 @@ namespace ska {
 	public:
 		Refreshable() {}
 		virtual void refresh() = 0;
-		~Refreshable() {}
+		virtual ~Refreshable() {}
 	};
 }

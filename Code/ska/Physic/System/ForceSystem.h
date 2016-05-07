@@ -9,6 +9,7 @@ namespace ska {
 	public:
 		ForceSystem(ska::EntityManager& entityManager);
 		virtual ~ForceSystem();
+	protected:
 		virtual void refresh() override;
 
 	};

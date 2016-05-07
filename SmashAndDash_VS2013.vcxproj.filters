@@ -591,9 +591,6 @@
     <ClInclude Include="Code\ska\Scene\HasLogic.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Scene\Refreshable.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Scene\Scene.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -868,6 +865,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\System\SkillRefreshSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Refreshable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

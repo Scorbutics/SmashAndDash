@@ -8,6 +8,7 @@
 #include "../../Script/System/ScriptCommandsSystem.h"
 #include "../Fight/System/FightStartSystem.h"
 #include "../../ska/Graphic/System/CameraFollowSystem.h"
+#include "../../ska/Physic/System/CollisionSystem.h"
 
 class WorldScene;
 
@@ -40,5 +41,6 @@ private:
 
 	FightStartSystem m_fightStartSystem;
 	ska::CameraFollowSystem m_cameraSystem;
+	ska::CollisionSystem m_collisionSystem;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;

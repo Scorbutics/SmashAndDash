@@ -1,6 +1,5 @@
 #pragma once
 #include "../../ska/Scene/Scene.h"
-#include "../../ska/Physic/System/CollisionSystem.h"
 #include "../../ska/Physic/System\ForceSystem.h"
 #include "../../ska/Physic/System\GravitySystem.h"
 #include "../../ska/Inputs/System/InputSystem.h"
@@ -64,7 +63,6 @@ private:
 	ska::MovementSystem m_movementSystem;
 	ska::DirectionalAnimationSystem m_daSystem;
 	ska::DeleterSystem m_deleterSystem;
-	ska::CollisionSystem m_collisionSystem;
 	ska::InputSystem m_inputSystem;
 
 	/* Graphics */

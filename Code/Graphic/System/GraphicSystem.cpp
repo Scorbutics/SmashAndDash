@@ -55,6 +55,10 @@ void GraphicSystem::refresh() {
 	m_drawables = NULL;
 }
 
+void GraphicSystem::update() {
+	System::update();
+}
+
 int GraphicSystem::getTopLayerPriority() const {
 	return m_topLayerPriority + 1;
 }

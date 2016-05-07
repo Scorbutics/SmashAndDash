@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 
-#include "../Scene/Refreshable.h"
+#include "../Utils/Refreshable.h"
 
 namespace ska {
 	class World;

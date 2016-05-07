@@ -17,10 +17,12 @@ namespace ska {
 
 	public:
 		ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, const unsigned int wBlockSize, EntityManager& entityManager);
-		virtual void refresh() override;
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 		void clearNamedScriptedEntities();
 		virtual ~ScriptRefreshSystem();
+		virtual void update() override;
+	protected:
+		virtual void refresh() override;
 	private:
 		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const;
 		void startScript(const EntityId scriptEntity, const EntityId origin);

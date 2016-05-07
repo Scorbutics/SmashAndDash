@@ -39,5 +39,9 @@ void ShadowSystem::refresh() {
 
 }
 
+void ShadowSystem::update() {
+	System::update();
+}
+
 ShadowSystem::~ShadowSystem() {
 }

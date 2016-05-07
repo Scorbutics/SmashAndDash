@@ -16,17 +16,18 @@ CustomEntityManager::CustomEntityManager()
 {
 }
 
-ska::EntityId CustomEntityManager::createSkill(const ska::IniReader& reader, const SkillsHolderComponent& shc, unsigned int index) {
+ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc, unsigned int index) {
 
 	SkillComponent sc;
 	//sc.noise = reader.getInt("Particle slope_noise");
-	sc.speed = (float) reader.getInt("Particle speed");
-	sc.damage = reader.getInt("Particle damage");
-	sc.knockback = reader.getInt("Particle knockback");
-	const int maxNoise = reader.getInt("Particle noise");
-	sc.noise = ska::NumberUtils::random(maxNoise/2, maxNoise);
-
 	const SkillDescriptor& sd = shc.skills[index];
+	sc.speed = sd.speed;
+	sc.damage = -sd.buffEnemy.hp;
+	sc.knockback = sd.knockback;
+	const int maxNoise = sd.noise;
+	sc.noise = ska::NumberUtils::random(maxNoise/2, maxNoise);
+	sc.amplitude = sd.amplitude;
+	
 
 	ska::EntityId skill = createEntity();
 
@@ -42,7 +43,7 @@ ska::EntityId CustomEntityManager::createSkill(const ska::IniReader& reader, con
 	hc.yOffset = 0;
 	hc.width = gcSkill.sprite[0].getWidth();
 	hc.height = gcSkill.sprite[0].getHeight();
-
+	addComponent<ska::ForceComponent>(skill, ska::ForceComponent());
 	addComponent<ska::HitboxComponent>(skill, hc);
 	addComponent<ska::GraphicComponent>(skill, gcSkill);
 

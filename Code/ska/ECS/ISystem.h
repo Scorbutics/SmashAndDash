@@ -6,7 +6,7 @@ namespace ska {
 		ISystem() = default;
 		virtual ~ISystem() = default;
 
-		virtual void refresh() = 0;
+		virtual void update() = 0;
 	};
 
 }

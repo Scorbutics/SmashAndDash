@@ -9,13 +9,16 @@
 
 namespace ska {
 	class CollisionComponent;
+	class WorldCollisionComponent;
 
 	class CollisionSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MovementComponent, HitboxComponent>
 	{
 	public:
 		CollisionSystem(ska::World& w, ska::EntityManager& entityManager);
 		virtual void handleEntityCollision(ska::CollisionComponent& col);
+		virtual void handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e);
 		virtual ~CollisionSystem();
+	protected:
 		virtual void refresh() override;
 	private:
 		inline const ska::Rectangle createHitBox(ska::EntityId entityId, bool xaxis);

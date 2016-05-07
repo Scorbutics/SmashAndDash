@@ -11,6 +11,7 @@ public:
 	PokeballSystem(ska::EntityManager& entityManager);
 	virtual ~PokeballSystem();
 
+protected:
 	virtual void refresh() override;
 private:
 	void throwBall(ska::EntityId entityId);

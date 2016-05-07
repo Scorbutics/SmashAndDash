@@ -14,12 +14,14 @@ m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld().getBlockSize(), ws.getEntityManager()),
 m_fightStartSystem(sh, ws, ril, ws.getPlayer()),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()),
+m_collisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
 	m_logics.push_back(&m_cameraSystem);	
+	m_logics.push_back(&m_collisionSystem);
 }
 
 SceneMap::SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName) :  
@@ -32,12 +34,14 @@ m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld().getBlockSize(), ws.getEntityManager()),
 m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()){
+m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()), 
+m_collisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
 	m_logics.push_back(&m_cameraSystem);
+	m_logics.push_back(&m_collisionSystem);
 }
 
 SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws) : SceneMap(sh, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName()) {

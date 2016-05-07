@@ -15,17 +15,21 @@ System(em) {
 void SkillRefreshSystem::refresh() {
 	for (ska::EntityId entityId : m_processed) {
 		SkillComponent& sc = m_entityManager.getComponent<SkillComponent>(entityId);
-		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+		ska::MovementComponent& mc = m_entityManager.getComponent<ska::MovementComponent>(entityId);
+		//ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 
 		const unsigned int t = sc.currentTime;
 
 		/* Example : sinusoidal move with noise */
-		pc.x = sc.amplitude * ska::NumberUtils::cosinus(t * sc.speed + sc.noise);
-		pc.y = sc.amplitude * ska::NumberUtils::sinus(t * sc.speed + sc.noise);
+		mc.vx = 1;
+		mc.vy = sc.amplitude * ska::NumberUtils::sinus(((t / (float)sc.lastTime) * sc.speed + sc.noise) * M_PI/180);
+		mc.vz = 0;
 		/* End of example */
 
-		ska::PolarPoint<int> pp = ska::NumberUtils::polar(sc.target.x - sc.origin.x, sc.target.y - sc.origin.y);
-		pc = ska::NumberUtils::rotate<int>(sc.origin, pp.angle, pc);
+		ska::PolarPoint<int> pp = ska::NumberUtils::polar(sc.origin.x - sc.target.x, sc.origin.y - sc.target.y);
+		ska::Point<float>& directionalPoint = ska::NumberUtils::rotate<float>(ska::Point<float>(), pp.angle, ska::Point<float>(mc.vx, mc.vy));
+		mc.vx = directionalPoint.x;
+		mc.vy = directionalPoint.y;
 
 		sc.lastTime = sc.currentTime;
 		sc.currentTime = ska::TimeUtils::getTicks();

@@ -1,5 +1,6 @@
 #include "SkillCollisionSystem.h"
 #include "../../ska/Physic/CollisionComponent.h"
+#include "../../ska/Physic/WorldCollisionComponent.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 
@@ -12,15 +13,18 @@ void SkillCollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
 	
 	SkillComponent* sc = nullptr;
 	BattleComponent* bc = nullptr;
+	ska::EntityId skillEntity;
 
 	/* Skill collision with a battle entity => Statistics modification */
 	if (m_entityManager.hasComponent<SkillComponent>(col.origin) && m_entityManager.hasComponent<BattleComponent>(col.target)) {
-		sc = &m_entityManager.getComponent<SkillComponent>(col.origin);
+		skillEntity = col.origin;
+		sc = &m_entityManager.getComponent<SkillComponent>(skillEntity);
 		bc = &m_entityManager.getComponent<BattleComponent>(col.target);
 	}
 
 	if (sc != nullptr && m_entityManager.hasComponent<SkillComponent>(col.target) && m_entityManager.hasComponent<BattleComponent>(col.origin)) {
-		sc = &m_entityManager.getComponent<SkillComponent>(col.target);
+		skillEntity = col.target;
+		sc = &m_entityManager.getComponent<SkillComponent>(skillEntity);
 		bc = &m_entityManager.getComponent<BattleComponent>(col.origin);
 	}
 
@@ -32,10 +36,17 @@ void SkillCollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
 		}
 		return;
 	}
-	
 
 	bc->hp -= sc->damage;
 
+}
+
+void SkillCollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
+	CollisionSystem::handleWorldCollision(col, e);
+
+	if (m_entityManager.hasComponent<SkillComponent>(e)) {
+		scheduleDeferredRemove(e);
+	}
 }
 
 SkillCollisionSystem::~SkillCollisionSystem() {

@@ -11,6 +11,7 @@ namespace ska {
 	public:
 		IAMovementSystem(ska::EntityManager& entityManager);
 		virtual ~IAMovementSystem();
+	protected:
 		virtual void refresh() override;
 
 	};
