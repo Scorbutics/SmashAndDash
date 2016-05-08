@@ -39,10 +39,10 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	addComponent<SkillComponent>(skill, sc);
 	addComponent<ska::PositionComponent>(skill, pcSkill);
 	ska::HitboxComponent hc;
-	hc.xOffset = 0;
-	hc.yOffset = 0;
-	hc.width = gcSkill.sprite[0].getWidth();
-	hc.height = gcSkill.sprite[0].getHeight();
+	hc.xOffset = gcSkill.sprite[0].getWidth() / 2 - 1;
+	hc.yOffset = gcSkill.sprite[0].getHeight() / 2 - 1;
+	hc.width = gcSkill.sprite[0].getWidth() / 2;
+	hc.height = gcSkill.sprite[0].getHeight() / 2;
 	addComponent<ska::ForceComponent>(skill, ska::ForceComponent());
 	addComponent<ska::HitboxComponent>(skill, hc);
 	addComponent<ska::GraphicComponent>(skill, gcSkill);

@@ -69,7 +69,9 @@ namespace ska{
 			/* Then we apply the multiplication with the rotation matrix with angle "angle" */
 			Point<T> result = diff;
 			result.x = diff.x * cosinus(angle) + diff.y * sinus(angle);
-			result.y = -diff.x * sinus(angle) + diff.y * cosinus(angle);
+			result.y = - diff.x * sinus(angle) + diff.y * cosinus(angle);
+
+			result.y = -result.y;
 
 			/* And we add the origin again */
 			return result + origin;

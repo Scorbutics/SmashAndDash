@@ -43,6 +43,14 @@ namespace ska {
 			result.y += p.y;
 			return result;
 		}
+
+		void operator+=(const Point<T>& p) const {
+			*this = operator+(p);
+		}
+
+		void operator-=(const Point<T>& p) const {
+			*this = operator-(p);
+		}
 	};
 
 

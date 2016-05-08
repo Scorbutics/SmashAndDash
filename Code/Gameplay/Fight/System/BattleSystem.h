@@ -2,6 +2,7 @@
 #include <unordered_set>
 #include "../../../ska/ECS/System.h"
 #include "../../../ska/Physic/PositionComponent.h"
+#include "../../../ska/Physic/HitboxComponent.h"
 #include "../../../ska/Graphic/DirectionalAnimationComponent.h"
 #include "../BattleComponent.h"
 #include "../SkillsHolderComponent.h"
@@ -13,7 +14,7 @@ namespace ska {
 
 class CustomEntityManager;
 
-class BattleSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, ska::DirectionalAnimationComponent, BattleComponent, SkillsHolderComponent> {
+class BattleSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, ska::HitboxComponent, ska::DirectionalAnimationComponent, BattleComponent, SkillsHolderComponent> {
 public:
 	BattleSystem(CustomEntityManager& em, const ska::InputContextManager& icm, const ska::EntityId pokemon, const ska::EntityId opponent, const ska::IniReader& pokemonReader, const ska::IniReader& opponentReader);
 	void createSkill(const unsigned int index, ska::EntityId from);

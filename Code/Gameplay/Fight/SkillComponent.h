@@ -12,7 +12,8 @@ public:
 		noise = 0;
 
 		lastTime = ska::TimeUtils::getTicks();
-		currentTime = ska::TimeUtils::getTicks();
+		currentTime = lastTime;
+		firstTime = lastTime;
 	}
 
 	int damage;
@@ -26,6 +27,7 @@ public:
 	ska::Point<int> target;
 	unsigned int currentTime;
 	unsigned int lastTime;
+	unsigned int firstTime;
 
 	float speed;
 	float amplitude;

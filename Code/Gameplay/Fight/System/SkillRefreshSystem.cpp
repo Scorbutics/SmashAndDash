@@ -21,12 +21,12 @@ void SkillRefreshSystem::refresh() {
 		const unsigned int t = sc.currentTime;
 
 		/* Example : sinusoidal move with noise */
-		mc.vx = 1;
-		mc.vy = sc.amplitude * ska::NumberUtils::sinus(((t / (float)sc.lastTime) * sc.speed + sc.noise) * M_PI/180);
+		mc.vx = sc.speed+1;
+		mc.vy = sc.amplitude * ska::NumberUtils::sinus((t-sc.firstTime + sc.noise) * M_PI / 180);
 		mc.vz = 0;
 		/* End of example */
 
-		ska::PolarPoint<int> pp = ska::NumberUtils::polar(sc.origin.x - sc.target.x, sc.origin.y - sc.target.y);
+		ska::PolarPoint<int> pp = ska::NumberUtils::polar(sc.target.x - sc.origin.x,  sc.target.y - sc.origin.y);
 		ska::Point<float>& directionalPoint = ska::NumberUtils::rotate<float>(ska::Point<float>(), pp.angle, ska::Point<float>(mc.vx, mc.vy));
 		mc.vx = directionalPoint.x;
 		mc.vy = directionalPoint.y;

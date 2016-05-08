@@ -4,6 +4,9 @@
 #include "../../../ska/Inputs/Readers/IniReader.h"
 #include "../../../ska/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
+#include "../../../ska/Utils/PhysicUtils.h"
+#include "../../../ska/Utils/NumberUtils.h"
+#include "../../../ska/Graphic/GraphicComponent.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, const ska::InputContextManager& icm, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) : 
 System(em), m_icm(icm), 
@@ -47,6 +50,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	const ska::InputRangeContainer& irc = m_icm.getRanges();
 	const ska::InputRange& mousePos = irc[ska::InputRangeType::MousePos];
 	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(from);
+	ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(from);
 	ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(from);
 	SkillsHolderComponent& shc = m_entityManager.getComponent<SkillsHolderComponent>(from);
 
@@ -54,16 +58,21 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 		return;
 	}
 
+	ska::Point<int> skillStartPos = ska::PositionComponent::getFrontPosition(pc, hc, dac);
+	
 
 	int n = shc.skills[index].particleNumber;
 
 	for (int i = 0; i < n; i++) {
 		ska::EntityId skill = m_customEM.createSkill(shc, i);
 		
-		m_entityManager.addComponent<ska::PositionComponent>(skill, pc);
+		
 		SkillComponent& sc = m_entityManager.getComponent<SkillComponent>(skill);
-		sc.origin = pc;
-		sc.target = mousePos;
+		ska::GraphicComponent& gcSkill = m_entityManager.getComponent<ska::GraphicComponent>(skill);
+		sc.origin = skillStartPos - ska::Point<int>(gcSkill.sprite[0].getWidth() / 2, gcSkill.sprite[0].getHeight() / 2);
+		m_entityManager.addComponent<ska::PositionComponent>(skill, sc.origin);
+		ska::PositionComponent& pcTarget = m_entityManager.getComponent<ska::PositionComponent>(from == m_pokemon ? m_opponent : m_pokemon);
+		sc.target = pcTarget;
 	}
 }
 
