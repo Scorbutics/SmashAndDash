@@ -56,7 +56,6 @@ void ska::CollisionSystem::refresh() {
 		}
 
 		if (collided) {
-			m_entityManager.addComponent<WorldCollisionComponent>(entityId, wcol);
 			handleWorldCollision(wcol, entityId);
 		}
 
@@ -70,7 +69,7 @@ void ska::CollisionSystem::refresh() {
 }
 
 void ska::CollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
-	
+	m_entityManager.addComponent<WorldCollisionComponent>(e, col);
 }
 
 void ska::CollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {

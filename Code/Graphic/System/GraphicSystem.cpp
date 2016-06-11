@@ -29,11 +29,13 @@ void GraphicSystem::refresh() {
 		ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 		const int relPosX = pos.x - cameraX;
 		const int relPosY = pos.y - cameraY - pos.z;
+
 		for (auto& sprite : gc.sprite) {
 			if (!(relPosX + sprite.getWidth() < 0 || camera != NULL && relPosX >= camera->w ||
 				relPosY + sprite.getHeight() < 0 || camera != NULL && relPosY >= camera->h)) {
 				m_topLayerPriority = ska::NumberUtils::maximum(pos.y, m_topLayerPriority);
-				m_pgd.push_back(ska::PositionnedGraphicDrawable(sprite, relPosX, relPosY, pos.y + (camera == NULL ? 0 : camera->h*pos.z), m_topLayerPriority));
+				const int priority = gc.desiredPriority > INT_MIN ? gc.desiredPriority : pos.y + (camera == NULL ? 0 : camera->h*pos.z);
+				m_pgd.push_back(ska::PositionnedGraphicDrawable(sprite, relPosX, relPosY, priority, m_topLayerPriority));
 			}
 		}
 

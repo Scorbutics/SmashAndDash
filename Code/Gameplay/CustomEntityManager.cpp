@@ -11,6 +11,7 @@
 #include "../ska/Graphic/SpritePath.h"
 #include "./Fight/SkillsHolderComponent.h"
 #include "../ska/Utils/NumberUtils.h"
+#include "../Utils/IDs.h"
 
 CustomEntityManager::CustomEntityManager()
 {
@@ -33,6 +34,7 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 
 	ska::PositionComponent pcSkill;
 	ska::GraphicComponent gcSkill;
+	gcSkill.desiredPriority = SKILLS_DEFAULT_DISPLAY_PRIORITY;
 	gcSkill.sprite.resize(1);
 	gcSkill.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_SKILL, sd.id), 2, 2, 2);
 	addComponent<ska::MovementComponent>(skill, ska::MovementComponent());

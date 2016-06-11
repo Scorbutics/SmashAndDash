@@ -42,10 +42,14 @@ void SkillCollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
 }
 
 void SkillCollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
-	CollisionSystem::handleWorldCollision(col, e);
-
-	if (m_entityManager.hasComponent<SkillComponent>(e)) {
+	/*if (m_entityManager.hasComponent<SkillComponent>(e)) {
 		scheduleDeferredRemove(e);
+	}*/
+
+
+	if (!m_entityManager.hasComponent<SkillComponent>(e)) {
+		//scheduleDeferredRemove(e);
+		CollisionSystem::handleWorldCollision(col, e);
 	}
 }
 
