@@ -9,6 +9,7 @@
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
 #include "../../Physic/System/SkillCollisionSystem.h"
+#include "../../Gameplay/Fight/System/StatisticsSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -34,7 +35,8 @@ private:
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;
 	PokeballSystem m_pokeballSystem;
-	
+	StatisticsSystem m_statsSystem;
+
 	const int m_opponentScriptId;
 	const unsigned int m_level;
 	const ska::IniReader m_opponent;

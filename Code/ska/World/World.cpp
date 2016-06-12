@@ -24,33 +24,8 @@ void ska::World::linkCamera(CameraSystem* cs) {
 	}
 }
 
-void ska::World::load(string fileName, string chipsetName)
-{
-	//m_bgm = NULL;
-	m_chipset.load(chipsetName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_chipsetName = chipsetName;
-	m_fileName = fileName;
-	m_genericName = fileName.substr(0, fileName.find_last_of('.'));
-	m_worldName = m_genericName.substr(m_genericName.find_last_of('/') + 1, m_genericName.size());
-	m_botLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR + fileName + FILE_SEPARATOR + fileName + ".bmp";
-	m_midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR + fileName + FILE_SEPARATOR + fileName + "M.bmp";
-	m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR + fileName + FILE_SEPARATOR + fileName + "T.bmp";
-	m_eventLayerName = fileName + "E.txt";
-	m_windDirection = WIND_STOP;
-
-	m_nbrBlockX = 0;
-	m_nbrBlockY = 0;
-
-	m_lBot = LayerPtr(new Layer(*this, m_botLayerName, chipsetName));
-	m_lMid = LayerPtr(new Layer(*this, m_midLayerName, chipsetName, m_lBot.get()));
-	m_lTop = LayerPtr(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
-
-	layerE = LayerEPtr(new LayerE(*this, m_eventLayerName));
-
-	if (m_cameraSystem != NULL) {
-		m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
-	}
-	getData();
+void ska::World::load(string fileName, string chipsetName) {
+	changeLevel(fileName, chipsetName);
 
 }
 
@@ -58,6 +33,11 @@ ska::Texture& ska::World::getChipset()
 {
 	return m_chipset;
 }
+
+std::string ska::World::getFileName() {
+	return m_fileName;
+}
+
 
 void ska::World::setWind(int wind) {
 	m_windDirection = wind;
@@ -159,32 +139,65 @@ string ska::World::getChipsetName()
     return m_chipsetName;
 }
 
-void ska::World::changeLevel(string fileName, string chipsetname) {
-    m_lBot->clear();
-    m_lTop->clear();
-    m_lMid->clear();
+void ska::World::changeLevel(string fileName, string chipsetName) {
+
 	
-    m_chipsetName = chipsetname;
-	m_chipset.load(chipsetname);
-    m_genericName = fileName.substr(0, fileName.find_last_of('.'));
-    m_worldName = m_genericName.substr(m_genericName.find_last_of('/')+1, m_genericName.size());
-    m_fileName = fileName;
-    m_botLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".bmp";
-    m_midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "M.bmp";
-    m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
-    m_eventLayerName = m_genericName + "E.txt";
+	bool chipsetChanged = chipsetName != m_chipsetName;
+	bool worldChanged = fileName != m_fileName;
 
-    m_lBot->reset(m_botLayerName, chipsetname);
-	m_lMid->reset(m_midLayerName, chipsetname);
-	m_lTop->reset(m_topLayerName, chipsetname);
-    
-	layerE->changeLevel(m_genericName + "E.txt");
-
-	if (m_cameraSystem != NULL) {
-		m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
+	if (chipsetChanged) {
+		m_chipsetName = chipsetName;
+		m_chipset.load(chipsetName);
 	}
 
-	getData();
+	if (worldChanged) {
+		m_genericName = fileName.substr(0, fileName.find_last_of('.'));
+		m_worldName = m_genericName.substr(m_genericName.find_last_of('/') + 1, m_genericName.size());
+		m_fileName = fileName;
+		m_botLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".bmp";
+		m_midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "M.bmp";
+		m_topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
+		m_eventLayerName = m_genericName + "E.txt";
+		
+		getData();
+	}
+
+	if (worldChanged || chipsetChanged) {
+		if (m_lBot != nullptr) {
+			m_lBot->clear();
+			m_lBot->reset(m_botLayerName, chipsetName);
+		}
+		else {
+			m_lBot = LayerPtr(new Layer(*this, m_botLayerName, chipsetName));
+		}
+
+		if (m_lMid != nullptr) {
+			m_lMid->clear();
+			m_lMid->reset(m_midLayerName, chipsetName);
+		}
+		else {
+			m_lMid = LayerPtr(new Layer(*this, m_midLayerName, chipsetName, m_lBot.get()));
+		}
+
+		if (m_lTop != nullptr) {
+			m_lTop->clear();
+			m_lTop->reset(m_topLayerName, chipsetName);
+		}
+		else {
+			m_lTop = LayerPtr(new Layer(*this, m_topLayerName, chipsetName, m_lMid.get()));
+		}
+
+		if (layerE != nullptr) {
+			layerE->changeLevel(m_genericName + "E.txt");
+		}
+		else {
+			layerE = LayerEPtr(new LayerE(*this, m_eventLayerName));
+		}
+		
+		if (m_cameraSystem != NULL) {
+			m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
+		}
+	}
 		
 }
 

@@ -17,6 +17,7 @@ SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextMa
 AbstractSceneMap(sh, ril),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_worldScene(ws),
+m_statsSystem(ws.getEntityManager(), sh, ril, ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
 m_opponentScriptId(fc.opponentScriptId),
@@ -34,6 +35,7 @@ m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_battleSystem);
 	m_logics.push_back(&m_skillRefreshSystem);
 	m_logics.push_back(&m_skillCollisionSystem);
+	m_logics.push_back(&m_statsSystem);
 
 	//TODO add IA input context
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -193,6 +195,8 @@ void SceneFight::load() {
 
 void SceneFight::unload() {
 	m_worldScene.unload();
+	ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
+	m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {

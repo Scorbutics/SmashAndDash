@@ -43,6 +43,7 @@ namespace ska {
 		int getWind() const;
 		std::string getChipsetName();
 		std::string getName();
+		std::string getFileName();
 		void getData();
 		bool getCollision(const int i, const int j);
 		bool isBlockDodgeable(const int i, const int j);

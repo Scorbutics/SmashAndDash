@@ -42,13 +42,14 @@ void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void WorldImpl::load(std::string fileName, std::string chipsetName) {
-	World::load(fileName, chipsetName);
-	const string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + getGenericName() + ""FILE_SEPARATOR"" + getGenericName() + ".ini";
-	loadWeatherFromData(stringDataFile);
-	loadFogFromData(stringDataFile);
+	changeLevel(fileName, chipsetName);
 }
 
 void WorldImpl::changeLevel(std::string fileName, std::string chipsetName) {
+	if (getFileName() == fileName && chipsetName == getChipsetName()) {
+		return;
+	}
+
 	World::changeLevel(fileName, chipsetName);
 	const string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + getGenericName() + ""FILE_SEPARATOR"" + getGenericName() + ".ini";
 	loadWeatherFromData(stringDataFile);

@@ -32,11 +32,6 @@ void BattleSystem::refresh() {
 		} else if (iac[ska::InputAction::ShotSkill4]) {
 			createSkill(3, entityId);
 		}
-		
-		if (bc.hp < 0) {
-			/* TODO StatisticsSystem to handle stats effects */
-			scheduleDeferredRemove(entityId);
-		}
 
 	}
 }
