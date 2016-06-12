@@ -15,6 +15,7 @@ typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap(sh, ril),
+m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_worldScene(ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
@@ -25,7 +26,7 @@ m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
 m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
-m_battleSystem(ws.getEntityManager(), m_inputCManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
+m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
 m_skillRefreshSystem(ws.getEntityManager()),
 m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_cameraSystem);
@@ -33,6 +34,9 @@ m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()) {
 	m_logics.push_back(&m_battleSystem);
 	m_logics.push_back(&m_skillRefreshSystem);
 	m_logics.push_back(&m_skillCollisionSystem);
+
+	//TODO add IA input context
+	//m_iaICM.addContext(ska::InputContextPtr());
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -73,7 +77,7 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	sd.cooldown = skillData.getInt("Stats cooldown");
-	sd.range = skillData.getInt("Stats blocks_range");
+	sd.range = skillData.getInt("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
 
 	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
 		sd.buffAlly = Statistics(&skillData, "BuffsAlly").getRawStats();
@@ -176,6 +180,7 @@ void SceneFight::load() {
 		/* TODO random position autour de l'ennemi */
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
+		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_opponentId, BattleComponent());
 		return false;
 	}, *pokeballRawTask));
 

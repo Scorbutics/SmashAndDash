@@ -1,4 +1,7 @@
 #include <vector>
+#include "../ska/Inputs/InputContext.h"
+#include "../ska/Inputs/KeyboardInputMapContext.h"
+#include "../ska/Inputs/KeyboardInputGUIContext.h"
 #include "../Gameplay\WGameCore.h"
 #include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
@@ -18,18 +21,25 @@
 using namespace std;
 
 
+
 WGameCore::WGameCore():
 Window(), 
-m_inputCManager(m_rawInputListener),
+m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_inputCManager, m_laFenetre, m_loFenetre),
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, m_laFenetre, m_loFenetre),
 m_chipsetAni(3, 4, true) {
 
 	m_OfChip = { 0, 0 };
 	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
+	/* MAP inputs */
+	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputMapContext()));
+
+	/* GUI inputs */
+	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputGUIContext()));
+
 	/* Let's start on the map */
-	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_inputCManager, m_worldScene)));
+	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene)));
 
 	m_speedInertie = 0;
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
@@ -239,15 +249,15 @@ ska::World& WGameCore::getWorld()
 }
 
 const ska::InputActionContainer& WGameCore::getActions() const {
-	return m_inputCManager.getActions();
+	return m_playerICM.getActions();
 }
 
 const ska::InputRangeContainer& WGameCore::getRanges() const {
-	return m_inputCManager.getRanges();
+	return m_playerICM.getRanges();
 }
 
 const ska::InputToggleContainer& WGameCore::getToggles() const {
-	return m_inputCManager.getToggles();
+	return m_playerICM.getToggles();
 }
 
 WGameCore::~WGameCore() {

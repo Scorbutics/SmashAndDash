@@ -25,6 +25,7 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	sc.speed = sd.speed;
 	sc.damage = -sd.buffEnemy.hp;
 	sc.knockback = sd.knockback;
+	sc.range = sd.range;
 	const int maxNoise = sd.noise;
 	sc.noise = ska::NumberUtils::random(maxNoise/2, maxNoise);
 	sc.amplitude = sd.amplitude;

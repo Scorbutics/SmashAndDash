@@ -5,17 +5,16 @@
 /* Default InputContextManager settings.
    Contexts should be added depending of the current Scene in order to
    enable or disable inputs in specific Scene */
-ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {
-	/* MAP inputs */
-	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputMapContext()));
-
-	/* GUI inputs */
-	m_contexts.push_back(InputContextPtr(new ska::KeyboardInputGUIContext()));
-	
+ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {	
 	for (InputContextPtr& it : m_contexts) {
 		it->buildCodeMap();
 	}
 	m_ranges.resize(INPUT_MAX_RANGE);
+}
+
+void ska::InputContextManager::addContext(InputContextPtr& icp) {
+	m_contexts.push_back(std::move(icp));
+	m_contexts[m_contexts.size() - 1]->buildCodeMap();
 }
 
 void ska::InputContextManager::refresh() {
@@ -29,6 +28,23 @@ void ska::InputContextManager::refresh() {
 		it->queryRanges(m_ril, m_ranges);
 		it->queryToggles(m_ril, m_toggles);
 	}
+}
+
+ska::InputContextManager ska::InputContextManager::instantiateEmpty(ska::InputContextManager& icm) {
+	return ska::InputContextManager(icm.m_ril);
+}
+
+ska::InputContextManager::InputContextManager(const ska::InputContextManager& icm) : m_ril(icm.m_ril) {
+	*this = icm;
+}
+
+void ska::InputContextManager::operator=(const InputContextManager& icm) {
+	m_ril = icm.m_ril;
+	m_ranges = icm.m_ranges;
+	m_toggles = icm.m_toggles;
+	/* Cannot copy contexts : they are uniques */
+	//m_contexts = icm.m_contexts;
+	m_actions = icm.m_actions;
 }
 
 const ska::InputRangeContainer& ska::InputContextManager::getRanges() const {

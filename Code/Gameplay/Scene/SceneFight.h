@@ -29,6 +29,7 @@ private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
 	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc);
 
+	ska::InputContextManager m_iaICM;
 	PokemonDescriptor m_descriptor;
 	WorldScene& m_worldScene;
 	ska::CameraFixedSystem m_cameraSystem;

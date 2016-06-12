@@ -3,6 +3,7 @@
 #include "../../../ska/Utils/TimeUtils.h"
 #include "../../../ska/Utils/NumberUtils.h"
 #include "../../../ska/Utils/PhysicUtils.h"
+#include "../../../ska/Utils/RectangleUtils.h"
 #include "../../../ska/Inputs/Readers/IniReader.h"
 #include "../../../ska/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
@@ -16,7 +17,7 @@ void SkillRefreshSystem::refresh() {
 	for (ska::EntityId entityId : m_processed) {
 		SkillComponent& sc = m_entityManager.getComponent<SkillComponent>(entityId);
 		ska::MovementComponent& mc = m_entityManager.getComponent<ska::MovementComponent>(entityId);
-		//ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 
 		const unsigned int t = sc.currentTime;
 
@@ -30,6 +31,11 @@ void SkillRefreshSystem::refresh() {
 		ska::Point<float>& directionalPoint = ska::NumberUtils::rotate<float>(ska::Point<float>(), pp.angle, ska::Point<float>(mc.vx, mc.vy));
 		mc.vx = directionalPoint.x;
 		mc.vy = directionalPoint.y;
+		
+		/* Max range reached : delete the skill */
+		if (ska::RectangleUtils::distanceSquared(sc.origin, pc) > sc.range*sc.range) {
+			scheduleDeferredRemove(entityId);
+		}
 
 		sc.lastTime = sc.currentTime;
 		sc.currentTime = ska::TimeUtils::getTicks();

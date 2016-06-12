@@ -23,6 +23,7 @@ public:
 
 	int noise;	
 	
+	ska::EntityId battler;
 	ska::Point<int> origin;
 	ska::Point<int> target;
 	unsigned int currentTime;

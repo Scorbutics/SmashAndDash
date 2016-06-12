@@ -83,7 +83,7 @@ public:
 
 protected:
 	ska::RawInputListener m_rawInputListener;
-	ska::InputContextManager m_inputCManager;
+	ska::InputContextManager m_playerICM;
 		
 	CustomEntityManager m_entityManager;
 		
