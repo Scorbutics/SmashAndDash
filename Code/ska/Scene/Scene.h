@@ -14,8 +14,8 @@ namespace ska {
 		Scene(SceneHolder& sh, InputContextManager& ril);
 		Scene(Scene& oldScene);
 
-		virtual void load() = 0;
-		virtual void unload() = 0;
+		virtual void load(std::unique_ptr<Scene>* lastScene) = 0;
+		virtual bool unload() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) override;
 		virtual void eventUpdate(bool movingDisallowed) override;
 

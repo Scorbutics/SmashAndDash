@@ -13,6 +13,7 @@ namespace ska {
 		TaskQueue();
 		~TaskQueue();
 
+		bool hasRunningTask() const;
 		void queueTask(RunnablePtr& t);
 		void refresh();
 	private:

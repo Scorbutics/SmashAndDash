@@ -13,12 +13,12 @@ AbstractNoGUISceneMap(oldScene) {
 
 }
 
-void AbstractSceneMap::load() {
+void AbstractSceneMap::load(ska::ScenePtr* lastScene) {
 
 }
 
-void AbstractSceneMap::unload() {
-
+bool AbstractSceneMap::unload() {
+	return false;
 }
 
 void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {

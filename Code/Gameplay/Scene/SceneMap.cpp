@@ -53,13 +53,13 @@ void SceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	AbstractSceneMap::graphicUpdate(drawables);
 }
 
-void SceneMap::load() {
+void SceneMap::load(ska::ScenePtr* lastScene) {
 	m_worldScene.linkCamera(&m_cameraSystem);
 	reinit();
 }
 
-void SceneMap::unload() {
-	m_worldScene.unload();
+bool SceneMap::unload() {
+	return m_worldScene.unload();
 }
 
 void SceneMap::reinit() {

@@ -54,6 +54,7 @@ public:
 	void transition(int type);
 	void waitQuit(DialogMenu* window);
 	void addTaskToQueue(ska::RunnablePtr& t);
+	bool hasRunningTask();
 
 	float getSpeedInertie();
 	ska::Animation& getChipsetAnimation();

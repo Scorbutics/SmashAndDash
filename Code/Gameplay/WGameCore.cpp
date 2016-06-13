@@ -138,6 +138,10 @@ void WGameCore::addTaskToQueue(ska::RunnablePtr& t) {
 	m_taskQueue.queueTask(t);
 }
 
+bool WGameCore::hasRunningTask() {
+	return m_taskQueue.hasRunningTask();
+}
+
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 	m_sceneHolder.nextScene(scene);
 }

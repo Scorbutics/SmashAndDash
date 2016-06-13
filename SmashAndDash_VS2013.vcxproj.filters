@@ -483,18 +483,6 @@
     <ClInclude Include="Code\ska\Script\ScriptSymbolsConstants.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h">
-      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h">
-      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\KeyInput.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\MouseInput.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Physic\Force.h">
       <Filter>Fichiers d%27en-tête\Physic</Filter>
     </ClInclude>
@@ -621,37 +609,7 @@
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputContext.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputAction.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\RawInputListener.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputEvents.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputContextManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputRange.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputToggle.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h">
@@ -688,12 +646,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\System\InputSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\System\DirectionalAnimationSystem.h">
@@ -872,6 +824,54 @@
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\System\StatisticsSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h">
+      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h">
+      <Filter>Fichiers d%27en-tête\Inputs\Readers</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\System\InputSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputAction.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputContextManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputEvents.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputRange.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\InputToggle.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputGUIContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyboardInputMapContext.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\KeyInput.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\MouseInput.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Inputs\RawInputListener.h">
+      <Filter>Fichiers d%27en-tête\Inputs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1160,18 +1160,6 @@
     <ClCompile Include="Code\ska\Graphic\TextureData.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\Readers\IniReader.cpp">
-      <Filter>Fichiers sources\Inputs\Readers</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp">
-      <Filter>Fichiers sources\Inputs\Readers</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\KeyInput.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\MouseInput.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Physic\Force.cpp">
       <Filter>Fichiers sources\Physic</Filter>
     </ClCompile>
@@ -1259,21 +1247,6 @@
     <ClCompile Include="Code\Gameplay\World\WorldImpl.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\RawInputListener.cpp">
-      <Filter>Fichiers sources\Inputs</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\KeyboardInputGUIContext.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\KeyboardInputContext.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1287,9 +1260,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\System\DirectionalAnimationSystem.cpp">
@@ -1378,6 +1348,36 @@
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Fight\System\StatisticsSystem.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\Readers\IniReader.cpp">
+      <Filter>Fichiers sources\Inputs\Readers</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp">
+      <Filter>Fichiers sources\Inputs\Readers</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\InputContextManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputContext.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputGUIContext.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyboardInputMapContext.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\KeyInput.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\MouseInput.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\RawInputListener.cpp">
+      <Filter>Fichiers sources\Inputs</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -19,8 +19,8 @@ public:
 	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName);
 	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws);
 	SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName);
-	virtual void load() override;
-	virtual void unload() override;
+	virtual void load(ska::ScenePtr* lastScene) override;
+	virtual bool unload() override;
 	void reinit();
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;

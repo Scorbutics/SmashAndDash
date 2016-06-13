@@ -23,8 +23,8 @@ class CustomEntityManager;
 class WorldScene : public ska::Scene, public MobSpawner, public ska::CameraAware {
 public:
 	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, const unsigned int screenW, const unsigned int screenH);
-	virtual void load() override;
-	virtual void unload() override;
+	virtual void load(ska::ScenePtr* scene) override;
+	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~WorldScene();

@@ -97,9 +97,9 @@ void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId en
 	}
 }
 
-void SceneFight::load() {
+void SceneFight::load(ska::ScenePtr* lastScene) {
 	m_worldScene.linkCamera(&m_cameraSystem);
-	m_worldScene.load();
+	m_worldScene.load(lastScene);
 
 	SkillsHolderComponent shc;
 	loadSkills(m_pokemon, m_pokemonId, shc);
@@ -130,7 +130,7 @@ void SceneFight::load() {
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_trainerId);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, 0, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
+			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			dc.dialog.hide(false);
 
 			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
@@ -193,20 +193,58 @@ void SceneFight::load() {
 	
 }
 
-void SceneFight::unload() {
-	m_worldScene.unload();
-	ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
-	m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
+bool SceneFight::unload() {
+	
+	
+	/* Triggers end fight cinematic to the next scene */
+	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
+	const unsigned int delay = 3000;
+
+	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
+		static bool started = false;
+		static int dialogId = 0;
+		if (!started) {
+			started = true;
+
+			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_pokemonId)) {
+				return false;
+			}
+
+			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
+			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_pokemonId);
+
+			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
+			DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
+			dc.dialog.hide(false);
+
+			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
+			t.forward(ic);
+			return true;
+		}
+		// Continue until dialog is still visible
+		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
+	}));
+
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
+	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>(
+		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
+
+		m_worldScene.unload();
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
+		m_worldScene.getEntityManager().removeEntity(m_pokemonId);
+		return false;
+	}, *dialogRawTask));
+
+
+	WGameCore& wScreen = WGameCore::getInstance();
+	wScreen.addTaskToQueue(dialogTask);
+	wScreen.addTaskToQueue(finalTask);
+	return wScreen.hasRunningTask();
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {
-	/*WGameCore& core = WGameCore::getInstance();
-	Fight& fight = core.getFight();*/
 	AbstractSceneMap::eventUpdate(movingDisallowed);
 	m_worldScene.eventUpdate(movingDisallowed);
-
-	//Evénements combat
-	/*fight.refreshFight();*/
 }
 
 SceneFight::~SceneFight()

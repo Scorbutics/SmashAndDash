@@ -10,6 +10,10 @@ void ska::TaskQueue::queueTask(RunnablePtr& t) {
 	m_tasks.push(std::move(t));
 }
 
+bool ska::TaskQueue::hasRunningTask() const {
+	return !m_tasks.empty();
+}
+
 void ska::TaskQueue::refresh() {
 	if (m_current == nullptr) {
 		m_current = m_tasks.empty() ? nullptr : std::move(m_tasks.front());

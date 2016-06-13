@@ -95,12 +95,13 @@ ska::World& WorldScene::getWorld() {
 	return m_world;
 }
 
-void WorldScene::load() {
+void WorldScene::load(ska::ScenePtr* lastScene) {
 	
 }
 
-void WorldScene::unload() {
+bool WorldScene::unload() {
 	linkCamera(NULL);
+	return false;
 }
 
 int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {

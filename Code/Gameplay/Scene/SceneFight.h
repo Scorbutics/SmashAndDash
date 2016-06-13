@@ -21,8 +21,8 @@ class SceneFight :
 {
 public:
 	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
-	virtual void load() override;
-	virtual void unload() override;
+	virtual void load(ska::ScenePtr* lastScene) override;
+	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~SceneFight();

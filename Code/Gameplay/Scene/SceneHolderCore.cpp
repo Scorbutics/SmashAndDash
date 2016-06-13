@@ -3,20 +3,24 @@
 
 void SceneHolderCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 	bool firstScene;
+	bool triggerChangeScene;
 	if (m_currentScene != NULL) {
-		m_currentScene->unload();
+		triggerChangeScene = !m_currentScene->unload();
 		firstScene = false;
-	}
-	else {
+	} else {
+		triggerChangeScene = true;
 		firstScene = true;
 	}
+	
+	if (triggerChangeScene) {
+		std::unique_ptr<ska::Scene>& lastScene = std::move(firstScene ? nullptr : std::move(m_currentScene));
+		m_currentScene = std::move(scene);
+		m_currentScene->load(firstScene ? nullptr : &lastScene);
 
-	m_currentScene = std::move(scene);
-	m_currentScene->load();
-
-	/* We have to invalidate the current iterating (old) scene. */
-	if (!firstScene) {
-		throw ska::SceneDiedException("");
+		/* We have to invalidate the current iterating (old) scene. */
+		if (!firstScene) {
+			throw ska::SceneDiedException("");
+		}
 	}
 }
 
