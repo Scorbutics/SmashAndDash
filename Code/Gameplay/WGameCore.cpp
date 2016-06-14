@@ -40,6 +40,7 @@ m_chipsetAni(3, 4, true) {
 
 	/* Let's start on the map */
 	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene)));
+	m_sceneHolder.update();
 
 	m_speedInertie = 0;
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
@@ -163,6 +164,7 @@ bool WGameCore::refresh() {
         t = ska::TimeUtils::getTicks();
 		
 		if (t - t0 > 20)  {
+			
             //Rafraîchissement à chaque frame : graphique puis évènementiel
 			graphicUpdate();
 			eventUpdate(false);
@@ -192,6 +194,7 @@ void WGameCore::eventUpdate(bool movingDisallowed) {
 	try {
 		/* Scene dependent event update */
 		m_sceneHolder.getScene()->eventUpdate(movingDisallowed);
+		m_sceneHolder.update();
 		/* If exists, an helper that executes current running task once */
 		m_taskQueue.refresh();
 	} catch (ska::SceneDiedException sde) {

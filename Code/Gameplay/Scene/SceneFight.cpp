@@ -29,7 +29,8 @@ m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::S
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
 m_skillRefreshSystem(ws.getEntityManager()),
-m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()) {
+m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()),
+m_sceneLoaded(false) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -98,6 +99,10 @@ void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId en
 }
 
 void SceneFight::load(ska::ScenePtr* lastScene) {
+	if (m_sceneLoaded) {
+		return;
+	}
+
 	m_worldScene.linkCamera(&m_cameraSystem);
 	m_worldScene.load(lastScene);
 
@@ -183,6 +188,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_opponentId, BattleComponent());
+		
+		m_sceneLoaded = true;
 		return false;
 	}, *pokeballRawTask));
 
@@ -231,14 +238,16 @@ bool SceneFight::unload() {
 
 		m_worldScene.unload();
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
-		m_worldScene.getEntityManager().removeEntity(m_pokemonId);
+		//m_worldScene.getEntityManager().removeEntity(m_pokemonId);
 		return false;
 	}, *dialogRawTask));
 
-
 	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.addTaskToQueue(dialogTask);
-	wScreen.addTaskToQueue(finalTask);
+	if (m_sceneLoaded) {
+		m_sceneLoaded = false;
+		wScreen.addTaskToQueue(dialogTask);
+		wScreen.addTaskToQueue(finalTask);
+	}
 	return wScreen.hasRunningTask();
 }
 

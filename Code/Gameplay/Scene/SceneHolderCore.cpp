@@ -2,24 +2,32 @@
 #include "../../ska/Exceptions/SceneDiedException.h"
 
 void SceneHolderCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
-	bool firstScene;
-	bool triggerChangeScene;
-	if (m_currentScene != NULL) {
-		triggerChangeScene = !m_currentScene->unload();
-		firstScene = false;
-	} else {
-		triggerChangeScene = true;
-		firstScene = true;
-	}
-	
-	if (triggerChangeScene) {
-		std::unique_ptr<ska::Scene>& lastScene = std::move(firstScene ? nullptr : std::move(m_currentScene));
-		m_currentScene = std::move(scene);
-		m_currentScene->load(firstScene ? nullptr : &lastScene);
+	m_nextScene = std::move(scene);
+}
 
-		/* We have to invalidate the current iterating (old) scene. */
-		if (!firstScene) {
-			throw ska::SceneDiedException("");
+void SceneHolderCore::update() {
+	if (m_nextScene != nullptr) {
+		bool firstScene;
+		bool triggerChangeScene;
+		if (m_currentScene != nullptr) {
+			triggerChangeScene = !m_currentScene->unload();
+			firstScene = false;
+		}
+		else {
+			triggerChangeScene = true;
+			firstScene = true;
+		}
+
+		if (triggerChangeScene) {
+			std::unique_ptr<ska::Scene>& lastScene = std::move(firstScene ? std::unique_ptr<ska::Scene>(nullptr) : std::move(m_currentScene));
+			m_currentScene = std::move(m_nextScene);
+			m_nextScene = nullptr;
+			m_currentScene->load(firstScene ? nullptr : &lastScene);
+
+			/* We have to invalidate the current iterating (old) scene. */
+			if (!firstScene) {
+				throw ska::SceneDiedException("");
+			}
 		}
 	}
 }

@@ -45,6 +45,8 @@ private:
 	const ska::EntityId m_trainerId;
 	const ska::EntityId m_opponentId;
 
+	bool m_sceneLoaded;
+
 	BattleSystem m_battleSystem;
 	SkillRefreshSystem m_skillRefreshSystem;
 	SkillCollisionSystem m_skillCollisionSystem;
