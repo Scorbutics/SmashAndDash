@@ -4,14 +4,13 @@
 #include <vector>
 #include <memory>
 #include "../Graphic/Animation.h"
-#include "../Graphic/Rectangle.h"
+#include "../Graphic/Point.h"
 
 namespace ska {
 	class Block
 	{
 	public:
-		Block(const unsigned int blockSize, ska::Rectangle corr, unsigned int idSprite, unsigned int properties, bool auto_animation, int col);
-		Block(const unsigned int blockSize, ska::Rectangle corr, ska::Rectangle posChipset, unsigned int properties, bool auto_animation, int col);
+		Block(const unsigned int blockSize, int corrFileWidth, ska::Point<int> posChipset, unsigned int properties, bool auto_animation, int col);
 		unsigned int getProperties();
 		int getCollision();
 		unsigned int getID() const;
@@ -20,7 +19,8 @@ namespace ska {
 		void setSpriteFrame(unsigned int x);
 
 	private:
-		unsigned int m_properties, m_idSprite;
+		unsigned int m_properties;
+		unsigned int m_id;
 		ska::Rectangle m_spritePosInChipset;
 		bool m_auto_animation;
 		int m_collision;

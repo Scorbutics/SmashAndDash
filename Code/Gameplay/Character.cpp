@@ -388,7 +388,7 @@ void Character::displayGrassWalk()
 	ska::Block* bBot = wScreen.getWorld().getLayerBot()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
 	ska::Block* bMid = wScreen.getWorld().getLayerMid()->getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
 
-	if(bBot != NULL && bMid != NULL && (bBot->getID() == BLOCK_ID_GRASS || bMid->getID() == BLOCK_ID_GRASS) && this->getSpeed() >= 1)
+	/*if(bBot != NULL && bMid != NULL && (bBot->getID() == BLOCK_ID_GRASS || bMid->getID() == BLOCK_ID_GRASS) && this->getSpeed() >= 1)*/
     {
 		ska::Rectangle rect = this->getHitbox();
         rect.y += rect.h/4;

@@ -12,6 +12,8 @@
 #include "../Graphic/Draw/DrawableFixedPriority.h"
 
 class ParticleManager;
+
+
 namespace ska {
 	class World;
 	class Layer : public DrawableFixedPriority
@@ -53,5 +55,9 @@ namespace ska {
 
 	};
 	typedef std::unique_ptr<Layer> LayerPtr;
+
+	
 }
+
+
 #endif

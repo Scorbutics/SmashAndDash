@@ -152,6 +152,7 @@
     <ClInclude Include="Code\ska\Exceptions\TerminateProcessException.h" />
     <ClInclude Include="Code\ska\Graphic\AnimatedTexture.h" />
     <ClInclude Include="Code\ska\Graphic\CameraFocusedComponent.h" />
+    <ClInclude Include="Code\ska\Graphic\Color.h" />
     <ClInclude Include="Code\ska\Graphic\DeleterComponent.h" />
     <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
     <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h" />

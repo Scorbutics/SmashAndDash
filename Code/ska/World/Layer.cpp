@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <sstream>
 
+#include "../Graphic/Color.h"
 #include "Layer.h"
 #include "World.h"
 #include "../Exceptions/CorruptedFileException.h"
@@ -20,9 +21,10 @@ using namespace std;
 
 bool LireFichierMonde(string *name, int *m_nbrBlocX, int *m_nbrBlockY, vector< vector<ska::Rectangle> > &m_block, std::vector<std::vector<Uint32> > &m_propblock, int windowWidth, int windowHeight, string chipsetName);
 Uint32 GetPixel32(SDL_Surface* image, int x, int y);
-SDL_Surface* LoadImage32(const char *fichier_image, int vram);
-ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c);
-SDL_Color translate_color(Uint32 int_color);
+SDL_Surface* LoadImage32(const std::string& fichier_image);
+void BuildCorrMap(SDL_Surface* corr, std::unordered_map<ska::Color, ska::Point<int>>& map);
+ska::Color translate_color(Uint32 int_color);
+ska::Color GetPixelColor(SDL_Surface* image, int x, int y);
 
 //Constructeur ouvrant un monde déjà créé
 ska::Layer::Layer(ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w) {
@@ -46,7 +48,7 @@ void ska::Layer::clear() {
 	m_block.clear();
 }
 
-SDL_Color translate_color(Uint32 int_color)     //Change from an "int color" to an SDL_Color
+ska::Color translate_color(Uint32 int_color)     //Change from an "int color" to an SDL_Color
 {
     #if SDL_BYTEORDER == SDL_BIG_ENDIAN
         SDL_Color color;
@@ -104,7 +106,7 @@ void ska::Layer::display()
 
 			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
 				BlockPtr& b = m_block[i][j];
-                if(b->getID() != BLOCK_ID_AIR) {
+                if(b != nullptr) {
 					ska::Rectangle chipsetPartRender;
                     if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY) {
 						b->setSpriteFrame(m_world.getWind());
@@ -127,17 +129,19 @@ int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j)
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		//return m_entityManager.hasComponent<ska::HitboxComponent>(m_block[i][j]);
-		 return m_block[i][j]->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
+		BlockPtr& b = m_block[i][j];
+		if (b == nullptr) {
+			return BLOCK_COL_VOID;
+		}
+		return b->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
 	} 
 	return BLOCK_COL_NO;
 }
 
-ska::Layer::~Layer()
-{
+ska::Layer::~Layer() {
 }
 
-void ska::Layer::reset(string pathFile, string chipsetName)
-{
+void ska::Layer::reset(string pathFile, string chipsetName) {
 
 	/* TODO réécrire... */
 
@@ -148,18 +152,11 @@ void ska::Layer::reset(string pathFile, string chipsetName)
     SDL_Surface *fichierMPng, *fichierMCol, *fichierMCorr, *fichierMChipset, *fichierMProp;
     Uint32 pix;
 
-    bool auto_anim;
-    int collision;
-
-    SDL_Color c;
-    string buf;
-    ostringstream oss;
-
-    fichierMCorr = LoadImage32("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png", 0);
-    fichierMPng = LoadImage32((pathFile).c_str(), 0);
-    fichierMCol = LoadImage32((m_chipsetname +".col").c_str(), 0);
-    fichierMChipset = LoadImage32((m_chipsetname).c_str(), 0);
-    fichierMProp = LoadImage32((m_chipsetname + ".prop").c_str(), 0);
+    fichierMCorr = LoadImage32("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png");
+    fichierMPng = LoadImage32(pathFile);
+    fichierMCol = LoadImage32(m_chipsetname + ".col");
+    fichierMChipset = LoadImage32(m_chipsetname);
+    fichierMProp = LoadImage32(m_chipsetname + ".prop");
 
     Uint16 darkcolor = SDL_MapRGB(fichierMChipset->format, 70, 70, 70);
     Uint16 lightColor = SDL_MapRGB(fichierMChipset->format, 170, 170, 170);
@@ -167,6 +164,7 @@ void ska::Layer::reset(string pathFile, string chipsetName)
 
 	m_fileHeight = fichierMPng->h;
 	m_fileWidth = fichierMPng->w;
+
 	/* Layer coherence check */
 	checkSize(m_fileWidth, m_fileHeight);
 
@@ -175,45 +173,30 @@ void ska::Layer::reset(string pathFile, string chipsetName)
 
 	const unsigned int blockSize = m_world.getBlockSize();
 
+	std::unordered_map<ska::Color, ska::Point<int>> map;
+	BuildCorrMap(fichierMCorr, map);
 
 	m_block.resize(m_fileWidth);
 	for (int i = 0; i < m_fileWidth; i++) {
 		m_block.reserve(m_fileHeight);
 		for (int j = 0; j < m_fileHeight; j++) {
 
-            pix = GetPixel32(fichierMPng,i,j);
-            SDL_GetRGB(pix, fichierMPng->format, &c.r,&c.g,&c.b);
-
-            if(c.r != 255 || c.g != 255 || c.b != 255)
-            {
-				ska::Rectangle buf_lcorr = LocateColorInCorr(fichierMCorr, c);
-                if(buf_lcorr.x != -1 && buf_lcorr.y != -1)
-                {
-                    Uint16 prop = GetPixel32(fichierMProp, buf_lcorr.x, buf_lcorr.y);
-                    Uint16 col = GetPixel32(fichierMCol, buf_lcorr.x, buf_lcorr.y);
-                    if(col == whiteColor || col == lightColor)
-                        collision = BLOCK_COL_NO;
-                    else
-                        collision = BLOCK_COL_YES;
-
-                    auto_anim = (col == darkcolor || col == lightColor);
-
-					Rectangle rectCorr = { 0, 0, blockSize, blockSize };
+			ska::Color c = GetPixelColor(fichierMPng, i, j);
+            if(c.r != 255 || c.g != 255 || c.b != 255) {
+                if(map.find(c) != map.end()) {
+					ska::Point<int> posCorr = map.at(c);
+					Uint16 prop = GetPixel32(fichierMProp, posCorr.x, posCorr.y);
+					Uint16 col = GetPixel32(fichierMCol, posCorr.x, posCorr.y);
 					
-					m_block[i].push_back(BlockPtr(new Block(blockSize, rectCorr, buf_lcorr, translate_color(prop).r, auto_anim, collision)));
+					int collision = (col == whiteColor || col == lightColor) ? BLOCK_COL_NO : BLOCK_COL_YES;
+                    bool auto_anim = (col == darkcolor || col == lightColor);
 
+					m_block[i].push_back(BlockPtr(new Block(blockSize, fichierMCorr->w, posCorr, translate_color(prop).r, auto_anim, collision)));
                 } else {
 					throw CorruptedFileException("Impossible de trouver la correspondance en pixel (fichier niveau corrompu)");
                 }
-            }
-            else
-            {
-				ska::Rectangle rectCorr;
-				rectCorr.x = 0;
-				rectCorr.y = 0;
-				rectCorr.w = fichierMCorr->w;
-				rectCorr.h = fichierMCorr->h;
-                m_block[i].push_back(BlockPtr(new Block(blockSize, rectCorr, BLOCK_ID_AIR, BLOCK_PROP_NONE, false, BLOCK_COL_VOID)));
+            } else {
+				m_block[i].push_back(BlockPtr(nullptr));
             }
         }
     }
@@ -237,8 +220,7 @@ void ska::Layer::checkSize(int nbrBlocX, int nbrBlocY) {
 	}
 }
 
-void ska::Layer::printCollisionProfile()
-{
+void ska::Layer::printCollisionProfile() {
     /*clog << m_name << endl;
     for(int y = 0; y < m_world.getNbrBlocY(); y++)
     {
@@ -258,61 +240,54 @@ void ska::Layer::printCollisionProfile()
     clog << endl << endl;*/
 }
 
-ska::Rectangle LocateColorInCorr(SDL_Surface* corr, SDL_Color c)
-{
-	ska::Rectangle buf;
-	SDL_Color cCmp;
-
-	for(int x = 0; x < corr->w; x++)
-        for(int y = 0; y < corr->h; y++)
-            {
-				SDL_GetRGB(GetPixel32(corr, x, y), corr->format,&cCmp.r, &cCmp.g, &cCmp.b);
-				if(c.r == cCmp.r && c.g == cCmp.g && c.b == cCmp.b)
-				{
-
-					buf.x = x;
-					buf.y = y;
-					return buf;
-				}
+void BuildCorrMap(SDL_Surface* corr, std::unordered_map<ska::Color, ska::Point<int>>& map) {
+	for (int x = 0; x < corr->w; x++) {
+		for (int y = 0; y < corr->h; y++) {
+			ska::Color c = GetPixelColor(corr, x, y);
+			if (map.find(c) == map.end()) {
+				map.insert(std::make_pair(c, ska::Point<int>(x, y)));
+			} else {
+				ska::Point<int>& pos2 = map[c];
+				throw ska::CorruptedFileException("Chipset correspondance file (corr.png) has several tiles with same color at (" 
+					+ ska::StringUtils::intToStr(pos2.x) + "; " + ska::StringUtils::intToStr(pos2.y) + ") and (" + ska::StringUtils::intToStr(x) + "; " + ska::StringUtils::intToStr(y) 
+					+ "). Please keep only one color correspondance per tile");
 			}
+		}
+	}
 
-    buf.x = -1;
-    buf.y = -1;
-    return buf;
 }
 
+ska::Color GetPixelColor(SDL_Surface* image, int x, int y) {
+	SDL_Color c;
+	c.a = 0;
+	Uint32 pix = GetPixel32(image, x, y);
+	SDL_GetRGB(pix, image->format, &c.r, &c.g, &c.b);
+	return c;
+}
 
-
-Uint32 GetPixel32(SDL_Surface* image, int x, int y)
-{
-	if (x<0 || x>image->w-1 || y<0 || y>image->h-1)
+Uint32 GetPixel32(SDL_Surface* image, int x, int y) {
+	if (x < 0 || x > image->w - 1 || y < 0 || y > image->h - 1) {
 		return 0;
-	return ((Uint32*)(image->pixels))[y*(image->pitch/4)+x];   // lecture directe des pixels
+	}
+	return ((Uint32*)(image->pixels))[y*(image->pitch/4)+x];
 }
 
-SDL_Surface* LoadImage32(const char *fichier_image, int vram)
-{
-	SDL_Surface *image_result, *image_ram;
-	image_ram = IMG_Load(fichier_image);
+SDL_Surface* LoadImage32(const std::string& fichier_image) {
+	SDL_Surface *result; 
+	SDL_Surface *imageRam;
+	imageRam = IMG_Load(fichier_image.c_str());
 
-	if (image_ram == NULL)
-	{
+	result = SDL_CreateRGBSurface(0, imageRam->w, imageRam->h, 32, 0, 0, 0, 0);
+	if (result == NULL || imageRam == NULL) {
 		stringstream ss;
-		ss << "Erreur (fonction LoadImage32) : Impossible de charger le monde " << *fichier_image << endl;
+		ss << "Erreur (fonction LoadImage32) : Impossible de charger le monde " << fichier_image << endl;
 		ss << "IMG_Load : " << IMG_GetError() << endl;
 		throw ska::FileException(ss.str());
 	}
-
-	image_result = NULL;
-	if (vram)
-		image_result=SDL_CreateRGBSurface(0, image_ram->w, image_ram->h, 32, 0, 0, 0, 0);  // cree une imageen VRAM
-	if (image_result==NULL)
-		vram = 0;
-	if (!vram)
-		image_result=SDL_CreateRGBSurface(0, image_ram->w, image_ram->h, 32, 0, 0, 0, 0);  // cree une image en RAM
-
-	
-	SDL_UpperBlit(image_ram,NULL,image_result,NULL);	// copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits
-	SDL_FreeSurface(image_ram);      // supprime la surface image_ram : inutile maintenant --> libere la mémoire
-	return image_result;
+		
+	/* Copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits */
+	SDL_UpperBlit(imageRam, NULL, result, NULL);
+	SDL_FreeSurface(imageRam);
+	imageRam = NULL;
+	return result;
 }

@@ -15,6 +15,11 @@ namespace ska{
 		static float random(float min, float max);
 		static double random(double min, double max);
 		static double random();
+		template<typename T>
+		static void hashCombine(std::size_t& seed, T& value) {
+			seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		}
+
 		static float exponential(float i);
 		static int random(int min, int max);
 		static double arctan(int x, int y);

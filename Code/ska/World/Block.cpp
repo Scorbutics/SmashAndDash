@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ska::Block::Block(const unsigned int blockSize, ska::Rectangle corr, unsigned int idSprite, unsigned int properties, bool auto_animation, int col) : m_anim(375, 4, true, 0, 0, blockSize, blockSize)
+ska::Block::Block(const unsigned int blockSize, int corrFileWidth, ska::Point<int> posChipset, unsigned int properties, bool auto_animation, int col) : m_anim(375, 4, true, 0, 0, blockSize, blockSize)
 {
 	m_properties = properties;
 
@@ -10,24 +10,7 @@ ska::Block::Block(const unsigned int blockSize, ska::Rectangle corr, unsigned in
 
     m_collision = col;
 
-	m_idSprite = idSprite;
-
-	m_spritePosInChipset.x = idSprite%corr.w * blockSize;
-	m_spritePosInChipset.y = idSprite / corr.w * blockSize;
-	m_spritePosInChipset.w = blockSize;
-	m_spritePosInChipset.h = blockSize;
-
-}
-
-ska::Block::Block(const unsigned int blockSize, ska::Rectangle corr, ska::Rectangle posChipset, unsigned int properties, bool auto_animation, int col) : m_anim(375, 4, true, 0, 0, blockSize, blockSize)
-{
-	m_properties = properties;
-
-	m_auto_animation = auto_animation;
-
-    m_collision = col;
-
-	m_idSprite = posChipset.x + posChipset.y * corr.w;
+	m_id = posChipset.x + posChipset.y * corrFileWidth;
 
 	m_spritePosInChipset.x = posChipset.x*blockSize;
 	m_spritePosInChipset.y = posChipset.y*blockSize;
@@ -48,7 +31,7 @@ int ska::Block::getCollision()
 
 unsigned int ska::Block::getID() const
 {
-    return m_idSprite;
+	return m_id;
 }
 
 void ska::Block::setSpriteFrame(unsigned int x)

@@ -58,15 +58,18 @@ bool ska::World::isBlockDodgeable(const int i, const int j)
 
 bool ska::World::getCollision(const int i, const int j)
 {
-	if (m_lBot == NULL)
+	if (m_lBot == NULL) {
 		return false;
+	}
 
-    if(m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&			//Si on ne peut pas marcher sur le bot
-        (m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO))			//(ou inexistant)
-        return true;
+	if (m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&
+		(m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO)) {
+		return true;
+	}
 
-    if(m_lMid->getBlockCollision(i, j) == BLOCK_COL_YES)
-        return true;
+	if (m_lMid->getBlockCollision(i, j) == BLOCK_COL_YES) {
+		return true;
+	}
 
     return false;
 }
@@ -207,15 +210,15 @@ ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int 
 	Block* bMid = m_lMid->getBlock(i, j);
 	Block* bTop = m_lTop->getBlock(i, j);
 
-	if (bTop != NULL && m_lTop->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
+	if (bTop != NULL && m_lTop->getBlock(i, j) != nullptr) {
 		return m_lTop->getBlock(i, j);
 	}
 
-	if (bMid != NULL && m_lMid->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
+	if (bMid != NULL && m_lMid->getBlock(i, j) != nullptr) {
 		return m_lMid->getBlock(i, j);
 	}
 
-	if (bBot != NULL && m_lBot->getBlock(i, j)->getID() != BLOCK_ID_AIR) {
+	if (bBot != NULL && m_lBot->getBlock(i, j) != nullptr) {
 		return m_lBot->getBlock(i, j);
 	}
 
