@@ -10,6 +10,16 @@ namespace ska {
 		uint8_t b;
 		uint8_t a;
 
+		Color(uint8_t pr,
+		uint8_t pg,
+		uint8_t pb,
+		uint8_t pa) {
+			r = pr;
+			g = pg;
+			b = pb;
+			a = pa;
+		}
+
 		Color() {
 			r = g = b = a = 0;
 		}
@@ -42,7 +52,12 @@ namespace ska {
 			b = c.b;
 			a = c.a;
 		}
+
+		SDL_Color toNative() {
+			return SDL_Color{ r, g, b, a };
+		}
 	};
+
 }
 
 namespace std {

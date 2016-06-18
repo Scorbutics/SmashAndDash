@@ -10,6 +10,7 @@
 #include "../Graphic/Animation.h"
 #include "../Scene/Scene.h"
 #include "../Graphic/System/CameraAware.h"
+#include "ChipsetHolder.h"
 
 namespace ska {
 	class Layer;
@@ -24,8 +25,6 @@ namespace ska {
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		virtual void load(std::string fileName, std::string chipsetName);
 
-		/*Weather* getFog();
-		Weather* getWeather();*/
 		std::vector<IniReader>& getMobSettings();
 		std::string getGenericName();
 		int getNbrBlocX();
@@ -39,9 +38,9 @@ namespace ska {
 		ska::Animation& getChipsetAnimation();
 		std::unique_ptr<ska::LayerE>& getLayerEvent();
 		void setWind(int wind);
-		ska::Texture& getChipset();
+		ska::ChipsetHolder& getChipset();
 		int getWind() const;
-		std::string getChipsetName();
+		const std::string& getChipsetName() const;
 		std::string getName();
 		std::string getFileName();
 		void getData();
@@ -53,10 +52,6 @@ namespace ska {
 		void setNbrBlocX(int nbrBlockX);
 		void setNbrBlocY(int nbrBlockY);
 		void setSpriteFrame(unsigned int x);
-		void setBgmVolume(int volPercent);
-		void playBgm(bool x);
-		void setBgm(std::string bgm);
-		bool isBgmPlaying();
 		bool canMoveToPos(ska::Rectangle pos);
 		
 
@@ -69,17 +64,15 @@ namespace ska {
 		~World();
 
 	private:
-		//void getFogFromData(std::string stringDataFile);
 		void getRainFromData(std::string stringDataFile);
-		void getBgmFromData(std::string stringDataFile);
 		void getMobSettingsFromData();
 
 		int m_windDirection;
 		int m_nbrBlockX, m_nbrBlockY;
 		unsigned int m_blockSize;
 
-		Texture m_chipset;
-		std::string m_chipsetName, m_fileName, m_genericName, m_worldName, m_botLayerName, m_midLayerName, m_topLayerName, m_eventLayerName, m_bgmName;
+		ska::ChipsetHolder m_chipset;
+		std::string m_fileName, m_genericName, m_worldName;
 		std::vector<IniReader> m_mobSettings;
 		ska::CameraSystem* m_cameraSystem;
 

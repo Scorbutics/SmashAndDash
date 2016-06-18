@@ -14,7 +14,7 @@ namespace ska {
 	public:
 		Window();
 		void pause();
-		SDL_Renderer* getRenderer();
+		SDL_Renderer* getRenderer() const;
 		~Window();
 		unsigned int getWidth();
 		unsigned int getHeight();

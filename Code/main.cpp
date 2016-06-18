@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <sstream>
+#include <SDL2\SDL_ttf.h>
 #include "Gameplay/WGameCore.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"

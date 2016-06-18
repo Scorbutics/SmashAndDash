@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\World\ChipsetHolder.h" />
     <ClInclude Include="Code\Gameplay\Data\RawStatistics.h" />
     <ClInclude Include="Code\Gameplay\Fight\BattleComponent.h" />
     <ClInclude Include="Code\Gameplay\Fight\FightComponent.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Code\ska\Graphic\DirectionalAnimationComponent.h" />
     <ClInclude Include="Code\ska\Graphic\HasShadowComponent.h" />
     <ClInclude Include="Code\ska\Graphic\PositionnedGraphicDrawable.h" />
+    <ClInclude Include="Code\ska\Graphic\SDLSurface.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraAware.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraFixedSystem.h" />
     <ClInclude Include="Code\ska\Graphic\System\CameraFollowSystem.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="Code\ska\Script\ScriptState.h" />
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h" />
     <ClInclude Include="Code\Gameplay\Character.h" />
+    <ClInclude Include="Code\ska\World\Chipset.h" />
     <ClInclude Include="Code\Utils\ChargementImages.h" />
     <ClInclude Include="Code\ska\Script\Command\Command.h" />
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h" />
@@ -278,8 +281,6 @@
     <ClInclude Include="Code\ska\Utils\SkaConstants.h" />
     <ClInclude Include="Code\ska\Utils\StringUtils.h" />
     <ClInclude Include="Code\ska\Utils\TimeUtils.h" />
-    <ClInclude Include="Code\ska\Utils\UInteger.h" />
-    <ClInclude Include="Code\ska\Utils\IStringAble.h" />
     <ClInclude Include="Code\Gameplay\PokeballLaunchReasonEnum.h" />
     <ClInclude Include="Code\ska\Utils\ResourceTemplate.h" />
     <ClInclude Include="Code\ska\Script\ScriptSymbolsConstants.h" />
@@ -383,6 +384,7 @@
     <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\ska\World\ChipsetHolder.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\SkillRefreshSystem.cpp" />
@@ -395,6 +397,7 @@
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\AnimatedTexture.cpp" />
+    <ClCompile Include="Code\ska\Graphic\SDLSurface.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraFixedSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraFollowSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\CameraSystem.cpp" />
@@ -426,6 +429,7 @@
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp" />
     <ClCompile Include="Code\Gameplay\Character.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
+    <ClCompile Include="Code\ska\World\Chipset.cpp" />
     <ClCompile Include="Code\Utils\ChargementImages.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandAddPokemon.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssign.cpp" />
@@ -467,7 +471,6 @@
     <ClCompile Include="Code\ska\Utils\ScriptUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\StringUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\TimeUtils.cpp" />
-    <ClCompile Include="Code\ska\Utils\UInteger.cpp" />
     <ClCompile Include="Code\ska\Graphic\SDLFont.cpp" />
     <ClCompile Include="Code\ska\Graphic\Font.cpp" />
     <ClCompile Include="Code\ska\Physic\Force.cpp" />

@@ -54,8 +54,7 @@ unsigned int ska::Window::getHeight()
 	return m_loFenetre;
 }
 
-SDL_Renderer* ska::Window::getRenderer()
-{
+SDL_Renderer* ska::Window::getRenderer() const {
 	return m_renderer;
 }
 

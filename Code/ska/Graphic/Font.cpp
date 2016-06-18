@@ -4,16 +4,13 @@
 
 using namespace std;
 
-ska::Font::Font() : ResourceTemplate()
-{
+ska::Font::Font() : ResourceTemplate() {
 }
 
-ska::Font::Font(unsigned int fontSize) : ResourceTemplate(UInteger(fontSize))
-{
+ska::Font::Font(unsigned int fontSize) : ResourceTemplate(fontSize) {
 }
 
-TTF_Font* ska::Font::getInstance()
-{
+TTF_Font* ska::Font::getInstance() const {
 	return m_value->getInstance();
 }
 

@@ -38,7 +38,7 @@ void Settings::update() {
 		weather->hide(!m_weatherActive);
 	}
 	core.getParticleManager().hide(!m_particles);*/
-	core.getWorld().setBgmVolume(m_soundVol);
+	//core.getWorld().setBgmVolume(m_soundVol);
 }
 
 void Settings::load()

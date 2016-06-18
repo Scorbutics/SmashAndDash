@@ -6,14 +6,14 @@
 #include "../Utils\ResourceTemplate.h"
 
 namespace ska {
-	class Font : public ResourceTemplate<SDLFont, UInteger>
+	class Font : public ResourceTemplate<SDLFont, int>
 	{
 
 	public:
 		Font();
 		Font(unsigned int fontSize);
 
-		TTF_Font* getInstance();
+		TTF_Font* getInstance() const;
 
 		virtual ~Font();
 

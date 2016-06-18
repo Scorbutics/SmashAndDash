@@ -372,17 +372,11 @@
     <ClInclude Include="Code\ska\Data\Savegame.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Utils\UInteger.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h">
       <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Utils\FormalCalculation\FormalCalculator.h">
       <Filter>Fichiers d%27en-tête\Utils\FormalCalculation</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Utils\IStringAble.h">
-      <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Utils\MessagePopup.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -876,6 +870,15 @@
     <ClInclude Include="Code\ska\Graphic\Color.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\World\Chipset.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\SDLSurface.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\World\ChipsetHolder.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\AI\AI.cpp">
@@ -1117,9 +1120,6 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Utils\TimeUtils.cpp">
       <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Utils\UInteger.cpp">
-      <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\World\Block.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
@@ -1381,6 +1381,15 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Inputs\RawInputListener.cpp">
       <Filter>Fichiers sources\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\Chipset.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\SDLSurface.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\World\ChipsetHolder.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
