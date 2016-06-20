@@ -44,24 +44,6 @@ void ska::Layer::clear() {
 	m_block.clear();
 }
 
-ska::Color translate_color(Uint32 int_color)     //Change from an "int color" to an SDL_Color
-{
-    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-        SDL_Color color;
-        color.r = (int_color & 0x00ff0000)/0x10000;
-        color.g = (int_color & 0x0000ff00)/0x100;
-        color.b = (int_color & 0x000000ff);
-        color.a = 255;
-    #else
-        SDL_Color color;
-        color.r = (int_color & 0x000000ff);
-        color.g = (int_color & 0x0000ff00)/0x100;
-        color.b = (int_color & 0x00ff0000)/0x10000;
-        color.a = 255;
-    #endif
-    return color;
-}
-
 ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
@@ -101,12 +83,15 @@ void ska::Layer::display() {
 				BlockPtr& b = m_block[i][j];
                 if(b != nullptr) {
 					ska::Rectangle chipsetPartRender;
+
+					/* TODO passer cette propriété en script de chipset */
                     if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY) {
 						b->setSpriteFrame(m_world.getWind());
 						chipsetPartRender = b->refresh(absoluteCurrentPos);
 					} else {
 						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_world.getChipsetAnimation().getRectOfCurrentFrame());
 					}                    
+
 					m_world.getChipset().getChipset().render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
                 }
             }
@@ -139,8 +124,7 @@ void ska::Layer::reset(string pathFile, string chipsetName) {
     m_name = m_nomFichier.substr(0, m_nomFichier.find_last_of('.'));
 
     ska::SDLSurface fichierMPng;
-    Uint32 pix;
-
+    
     fichierMPng.load32(pathFile);
 	if (fichierMPng.getInstance() == nullptr) {
 		throw ska::FileException("Erreur lors du chargement de la couche " + m_name + " : " + std::string(SDL_GetError()));
@@ -155,7 +139,7 @@ void ska::Layer::reset(string pathFile, string chipsetName) {
 	m_world.setNbrBlocX(m_fileWidth);
 	m_world.setNbrBlocY(m_fileHeight);
 
-	auto& map = m_world.getChipset();
+	auto& chipset = m_world.getChipset();
 	const unsigned int blockSize = m_world.getBlockSize();
 
 	m_block.resize(m_fileWidth);
@@ -163,7 +147,7 @@ void ska::Layer::reset(string pathFile, string chipsetName) {
 		m_block.reserve(m_fileHeight);
 		for (int j = 0; j < m_fileHeight; j++) {
 			ska::Color c = fichierMPng.getPixel32Color(i, j);
-			m_block[i].push_back(m_world.getChipset().generateBlock(c));
+			m_block[i].push_back(chipset.generateBlock(c));
         }
     }
 

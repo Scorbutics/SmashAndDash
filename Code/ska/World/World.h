@@ -19,6 +19,8 @@ namespace ska {
 	class PhysicObject;
 	class Block;
 	class PrefabEntityManager;
+	class ScriptSleepComponent;
+	typedef char ScriptTriggerType;
 
 	class World : public HasGraphic, public CameraAware {
 	public:
@@ -48,6 +50,9 @@ namespace ska {
 		bool isBlockDodgeable(const int i, const int j);
 
 		const unsigned int getBlockSize() const;
+
+		ScriptSleepComponent chipsetScript(const ska::Point<int>& p, 
+			const ScriptTriggerType& reason);
 
 		void setNbrBlocX(int nbrBlockX);
 		void setNbrBlocY(int nbrBlockY);

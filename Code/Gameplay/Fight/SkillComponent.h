@@ -8,7 +8,7 @@ public:
 	SkillComponent() {
 		damage = 0;
 		knockback = 0;
-		speed = 0.01;
+		speed = 0.01F;
 		noise = 0;
 
 		lastTime = ska::TimeUtils::getTicks();

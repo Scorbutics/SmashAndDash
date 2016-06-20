@@ -2,10 +2,12 @@
 
 #include "World.h"
 #include "Layer.h"
+#include "Block.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/RectangleUtils.h"
 #include "../Physic/PhysicObject.h"
 #include "LayerE.h"
+#include "../Script/ScriptSleepComponent.h"
 #include "../Graphic/System/CameraSystem.h"
 
 using namespace std;
@@ -180,6 +182,37 @@ void ska::World::changeLevel(string fileName, string chipsetName) {
 		}
 	}
 		
+}
+
+ska::ScriptSleepComponent ska::World::chipsetScript(const ska::Point<int>& p, const ScriptTriggerType& reason) {
+	Block* b = m_lBot->getBlock(p.x / m_blockSize, p.y / m_blockSize);
+	ska::ScriptSleepComponent ssc;
+	
+	if (b != nullptr) {
+		
+		/* TODO methode commune de création de ScriptSleepComponent de sorte à générer facilement un script */
+		//const std::string& params;
+		/*std::vector<std::string> totalArgs = ska::StringUtils::split(params, ',');
+		if (!totalArgs.empty()) {
+			ssc.args.reserve(totalArgs.size() - 1);
+			for (unsigned int i = 1; i < totalArgs.size(); i++) {
+				ssc.args.push_back(ska::StringUtils::trim(totalArgs[i]));
+			}
+		}
+		else {
+			throw ska::ScriptSyntaxError("Error while reading a script in the event layer file (l." + ska::StringUtils::intToStr(i) + ") : no arguments supplied to the script cmd");
+		}*/
+		const unsigned int id = b->getID();
+		ssc.name = m_chipset.getName() + ""FILE_SEPARATOR"Scripts"FILE_SEPARATOR"" + ska::StringUtils::intToStr(id) + "_" + reason;
+		//ska::StringUtils::trim(totalArgs[0]);
+		ssc.context = getName();
+		ssc.triggeringType = EnumScriptTriggerType::ACTION;
+		ssc.period = 1000;
+
+		
+		return ssc;
+	}
+	return ssc;
 }
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) {

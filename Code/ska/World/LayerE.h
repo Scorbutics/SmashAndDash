@@ -14,7 +14,7 @@ namespace ska {
 	public:
 		virtual void refresh() override;
 
-		LayerE(ska::World& world, std::string nomFichier);
+		LayerE(ska::World& world, const std::string& nomFichier);
 		int getBlocX(int ligne) const;
 		int getBlocY(int ligne) const;
 		int getID(int ligne) const;
@@ -23,14 +23,14 @@ namespace ska {
 		std::string getAction(int ligne) const;
 		int getSolide(int ligne) const;
 		int getNbrLignes() const;
-		void changeLevel(std::string nomFichier);
+		void changeLevel(const std::string& nomFichier);
 		std::string getPath(int ligne) const;
 
 	private:
 		std::string m_nomFichier, m_chipsetname;
 		int m_nbrLignes;
-		std::vector<int> m_vcoordBX, m_vcoordBY, m_vID, m_vtrigger, m_vsolide;
-		std::vector<std::string> m_vaction, m_vparam, m_vpath;
+		std::vector<int> m_coordBX, m_coordBY, m_ID, m_trigger, m_solide;
+		std::vector<std::string> m_action, m_param, m_path;
 		World& m_world;
 	};
 	using LayerEPtr = std::unique_ptr<LayerE>;

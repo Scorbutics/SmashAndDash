@@ -52,6 +52,8 @@ void ska::ScriptRefreshSystem::refresh() {
 				break;
 			}
 
+			/* World based events */
+
 
 		}
 	}
