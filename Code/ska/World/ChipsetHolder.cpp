@@ -32,6 +32,10 @@ const std::string& ska::ChipsetHolder::getName() const {
 	return m_chipset->getName();
 }
 
+std::vector<ska::ScriptSleepComponent*> ska::ChipsetHolder::getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList) {
+	return m_chipset->getScript(id, type, autoBlackList);
+}
+
 bool ska::ChipsetHolder::attach(const unsigned int blockSize, const std::string& chipsetName) {
 	if (m_currentChipsetName != chipsetName) {
 		m_currentChipsetName = chipsetName;

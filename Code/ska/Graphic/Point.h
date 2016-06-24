@@ -30,10 +30,25 @@ namespace ska {
 			y = (T)p.y;
 		}
 
+		bool operator==(const Point<T>& p) const {
+			return x == p.x && y == p.y;
+		}
+
+		bool operator!=(const Point<T>& p) const {
+			return !(operator==(p));
+		}
+
 		Point<T> operator-(const Point<T>& p) const {
 			Point<T> result = *this;
 			result.x -= p.x;
 			result.y -= p.y;
+			return result;
+		}
+
+		Point<T> operator/(unsigned int i) const {
+			Point<T> result = *this;
+			result.x /= i;
+			result.y /= i;
 			return result;
 		}
 

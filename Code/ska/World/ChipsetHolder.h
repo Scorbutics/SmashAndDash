@@ -13,6 +13,7 @@ namespace ska {
 	public:
 		ChipsetHolder(const std::string& correspondanceFile);
 		bool attach(const unsigned int blockSize, const std::string& chipsetName);
+		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
 		Texture& getChipset();
 		const std::string& getName() const;
 		BlockPtr generateBlock(ska::Color& key);

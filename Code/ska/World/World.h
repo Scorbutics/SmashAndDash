@@ -51,8 +51,8 @@ namespace ska {
 
 		const unsigned int getBlockSize() const;
 
-		ScriptSleepComponent chipsetScript(const ska::Point<int>& p, 
-			const ScriptTriggerType& reason);
+		/* TODO classe à part ? */
+		std::vector<ska::ScriptSleepComponent*> chipsetScript(const ska::Point<int>& p, const ScriptTriggerType& reason);
 
 		void setNbrBlocX(int nbrBlockX);
 		void setNbrBlocY(int nbrBlockY);
@@ -78,6 +78,8 @@ namespace ska {
 
 		ska::ChipsetHolder m_chipset;
 		std::string m_fileName, m_genericName, m_worldName;
+		
+		bool m_autoScriptsPlayed;
 		std::vector<IniReader> m_mobSettings;
 		ska::CameraSystem* m_cameraSystem;
 

@@ -56,7 +56,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
 	
 	string extendedName;
-	ifstream fscript(scriptData.name.c_str());
+	std::string validPath;
 	string keyArgs;
 
 	for (string& arg : scriptData.args) {
@@ -68,52 +68,60 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	const string& keyScript = scriptData.name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + scriptData.context;
 
-	std::string validPath;
-	if (fscript.fail()) {
-		const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
-		validPath = (currentDir + "\\" + scriptData.name);
-		fscript.open(validPath.c_str());
-		if (fscript.fail()) {
-			throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + currentDir + "\\" + scriptData.name);
-		}
-	}
-	else {
-		validPath = scriptData.name;
-	}
-
-	if (validPath.empty()) {
-		throw ska::InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
-	}
+	const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
+	validPath = (currentDir + "\\" + scriptData.name);
 
 	ScriptComponent sc;
+	if (m_cache.find(validPath) == m_cache.end()) {
+		ifstream fscript(scriptData.name.c_str());
+		if (fscript.fail()) {
+			fscript.open(validPath.c_str());
+			if (fscript.fail()) {
+				throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + currentDir + "\\" + scriptData.name);
+			}
+		}
+		else {
+			validPath = scriptData.name;
+		}
+
+		if (validPath.empty()) {
+			throw ska::InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
+		}
+
+		sc.active = 0;
+		sc.parent = this;
+		sc.fullPath = validPath;
+		sc.key = keyScript;
+		sc.origin = origin;
+
+		ifstream scriptFile(sc.fullPath);
+		if (scriptFile.fail()) {
+			throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
+		}
+
+		for (std::string line; std::getline(scriptFile, line);) {
+			sc.file.push_back(line);
+		}
+
+		m_cache.insert(std::make_pair(sc.fullPath, sc));
+	} else {
+		sc = m_cache[validPath];
+	}
+
 	sc.extendedName = extendedName;
-	sc.active = 0;
 	sc.scriptPeriod = scriptData.period == 0 ? 1 : scriptData.period;
-	sc.triggeringType = EnumScriptTriggerType::AUTO;
 	sc.extraArgs = scriptData.args;
 	sc.context = scriptData.context;
+	sc.triggeringType = EnumScriptTriggerType::AUTO;
 	sc.entityId = scriptSleepEntity;
-	sc.parent = this;
-	sc.fullPath = validPath;
-	sc.key = keyScript;
-	sc.origin = origin;
 
+	/* Setup next args for the future script */
 	unsigned int i = 0;
 	for (const string& curArg : sc.extraArgs) {
 		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, sc.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, sc.varMap);
 		i++;
 	}
 
-	ifstream scriptFile(sc.fullPath);
-	if (scriptFile.fail()) {
-		throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
-	}
-
-	for (std::string line; std::getline(scriptFile, line);) {
-		sc.file.push_back(line);
-	}
-
-	
 	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
 
 	return sc;
@@ -139,8 +147,7 @@ ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
 	return m_saveGame;
 }
 
-void ska::ScriptAutoSystem::refresh()
-{
+void ska::ScriptAutoSystem::refresh() {
 	ScriptComponent* nextScript = getHighestPriorityScript();
 	if (nextScript == NULL) {
 		return;
@@ -149,14 +156,20 @@ void ska::ScriptAutoSystem::refresh()
 	try {
 		play(*nextScript, m_saveGame);
 	} catch (ska::ScriptDiedException sde) {
-		const std::string& scriptName = sde.getScript();
-		if (scriptName.empty()) {
+		const std::string& entityScriptId = sde.getScript();
+		if (entityScriptId.empty()) {
 			killAndSave(*nextScript, m_saveGame);
 		} else {
-			if (m_scripts.find(scriptName) == m_scripts.end()) {
-				cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found : " << scriptName << endl;
+			if (ska::StringUtils::isInt(entityScriptId, 10)) {
+				EntityId scriptEntity = ska::StringUtils::strToInt(entityScriptId);
+				if (!m_entityManager.hasComponent<ScriptComponent>(scriptEntity)) {
+					cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found with id : " << entityScriptId << endl;
+				}
+				else {
+					killAndSave(m_entityManager.getComponent<ScriptComponent>(scriptEntity), m_saveGame);
+				}
 			} else {
-				killAndSave(*m_scripts[scriptName], m_saveGame);
+				cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " This is not an integer id : " << entityScriptId << endl;
 			}
 		}
 
@@ -168,7 +181,7 @@ void ska::ScriptAutoSystem::refresh()
 
 void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame& savegame) {
 	//string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
-	std::ofstream scriptList;
+	//std::ofstream scriptList;
 	/*scriptList.open(tmpScritFileName.c_str(), ios::app);
 	if (!scriptList.fail()) {
 		scriptList << script.extendedName << endl;

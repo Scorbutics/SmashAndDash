@@ -8,8 +8,7 @@
 #include "../../ECS/System.h"
 
 namespace ska {
-	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent>
-	{
+	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent> {
 	public:
 		
 		Savegame& getSavegame();
@@ -40,7 +39,7 @@ namespace ska {
 		ska::Savegame& m_saveGame;
 		ScriptComponent* getHighestPriorityScript();
 
-		std::unordered_map<std::string, ScriptComponent*> m_scripts;
+		std::unordered_map<std::string, ScriptComponent> m_cache;
 		std::unordered_map<std::string, CommandPtr> m_commands;
 
 		std::unordered_map<std::string, EntityId> m_namedScriptedEntities;

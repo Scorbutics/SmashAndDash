@@ -7,6 +7,7 @@
 #include "../Graphic/Point.h"
 
 namespace ska {
+	class ScriptSleepComponent;
 	class Block
 	{
 	public:
@@ -16,6 +17,8 @@ namespace ska {
 		unsigned int getID() const;
 		ska::Rectangle refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL);
 		~Block();
+		void setScript(ska::ScriptSleepComponent* s);
+		ska::ScriptSleepComponent* getScript() const;
 		void setSpriteFrame(unsigned int x);
 
 	private:
@@ -25,6 +28,7 @@ namespace ska {
 		bool m_auto_animation;
 		int m_collision;
 		Animation m_anim;
+		ScriptSleepComponent* m_script;
 
 	};
 

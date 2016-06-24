@@ -1,0 +1,3 @@
+log tentative de marcher sur l'eau
+wait 1000
+end

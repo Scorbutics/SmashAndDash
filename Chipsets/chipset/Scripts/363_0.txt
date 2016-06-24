@@ -1,0 +1,2 @@
+log auto script ticks hautes herbes
+wait 1000
