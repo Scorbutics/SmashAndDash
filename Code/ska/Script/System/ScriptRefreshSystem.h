@@ -29,6 +29,8 @@ namespace ska {
 		const EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const;
 		void startScript(const EntityId scriptEntity, const EntityId origin);
 
+		const unsigned int m_scriptDetectionTemporisation;
+		unsigned int m_t0;
 		World& m_world;
 		const InputContextManager& m_icm;
 		ScriptAutoSystem& m_scriptAutoSystem;

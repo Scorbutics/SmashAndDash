@@ -45,7 +45,7 @@ namespace ska {
 			return result;
 		}
 
-		Point<T> operator/(unsigned int i) const {
+		Point<T> operator/(const unsigned int i) const {
 			Point<T> result = *this;
 			result.x /= i;
 			result.y /= i;

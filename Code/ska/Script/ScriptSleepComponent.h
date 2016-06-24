@@ -10,10 +10,12 @@ namespace ska {
 		std::string name;
 		std::string context;
 		ScriptTriggerType triggeringType;
+		bool deleteEntityWhenFinished;
 		int period;
 		std::vector<std::string> args;
 
 		ScriptSleepComponent() {
+			deleteEntityWhenFinished = false;
 			triggeringType = 0;
 			period = 0;
 		}

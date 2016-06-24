@@ -24,7 +24,8 @@ namespace ska {
 			active = 0;
 			parent = NULL;
 		}
-
+		
+		bool deleteEntityWhenFinished;
 		long scriptPeriod;
 		std::string context;
 		std::string extendedName;

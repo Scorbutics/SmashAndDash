@@ -114,6 +114,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	sc.context = scriptData.context;
 	sc.triggeringType = EnumScriptTriggerType::AUTO;
 	sc.entityId = scriptSleepEntity;
+	sc.deleteEntityWhenFinished = scriptData.deleteEntityWhenFinished;
 
 	/* Setup next args for the future script */
 	unsigned int i = 0;
@@ -188,7 +189,11 @@ void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&
 		scriptList.close();
 	}*/
 
-	m_entityManager.removeComponent<ScriptComponent>(script.entityId);
+	if (!script.deleteEntityWhenFinished) {
+		m_entityManager.removeComponent<ScriptComponent>(script.entityId);
+	} else {
+		m_entityManager.removeEntity(script.entityId);
+	}
 	script.state = EnumScriptState::DEAD;
 }
 

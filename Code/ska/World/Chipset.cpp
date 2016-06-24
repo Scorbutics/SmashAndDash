@@ -66,7 +66,7 @@ void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::strin
 	ssc.triggeringType = type;
 	ssc.name = fullName;
 	ssc.period = 1000;
-	
+
 	if (type == EnumScriptTriggerType::AUTO) {
 		m_autoScripts.insert(std::make_pair(ska::StringUtils::strToInt(id), ssc));
 	} else {
