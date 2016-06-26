@@ -12,6 +12,15 @@ void ska::CollisionSystem::refresh() {
 		PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 		HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+		
+		ska::Point<int> lastBlockColPosX;
+		ska::Point<int> lastBlockColPosY;
+		if (m_entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
+			const WorldCollisionComponent& wcc = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
+			lastBlockColPosX = wcc.blockColPosX;
+			lastBlockColPosY = wcc.blockColPosY;
+			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
+		}
 
 		const ska::Rectangle entityHitboxX = createHitBox(entityId, true);
 		const ska::Rectangle entityHitboxY = createHitBox(entityId, false);
@@ -48,11 +57,15 @@ void ska::CollisionSystem::refresh() {
 		if (!m_world.canMoveToPos(nextPosX)){
 			collided = true;
 			wcol.xaxis = true;
+			wcol.lastBlockColPosX = lastBlockColPosX;
+			wcol.blockColPosX = (ska::Point<int>(nextPosX) / m_world.getBlockSize()) * m_world.getBlockSize();
 		}
 
 		if (!m_world.canMoveToPos(nextPosY)){
 			collided = true;
 			wcol.yaxis = true;
+			wcol.lastBlockColPosY = lastBlockColPosY;
+			wcol.blockColPosY = (ska::Point<int>(nextPosY) / m_world.getBlockSize()) * m_world.getBlockSize();
 		}
 
 		if (collided) {

@@ -11,21 +11,11 @@ ska::Block::Block(const unsigned int blockSize, int corrFileWidth, ska::Point<in
 
 	m_id = posChipset.x + posChipset.y * corrFileWidth;
 
-	m_script = nullptr;
-
 	m_spritePosInChipset.x = posChipset.x*blockSize;
 	m_spritePosInChipset.y = posChipset.y*blockSize;
 	m_spritePosInChipset.w = blockSize;
 	m_spritePosInChipset.h = blockSize;
 
-}
-
-void ska::Block::setScript(ska::ScriptSleepComponent* s) {
-	m_script = s;
-}
-
-ska::ScriptSleepComponent* ska::Block::getScript() const {
-	return m_script;
 }
 
 unsigned int ska::Block::getProperties() {

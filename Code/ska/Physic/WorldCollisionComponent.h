@@ -7,5 +7,9 @@ namespace ska {
 		WorldCollisionComponent() { xaxis = false; yaxis = false; }
 		bool xaxis;
 		bool yaxis;
+		ska::Point<int> blockColPosX;
+		ska::Point<int> lastBlockColPosX;
+		ska::Point<int> blockColPosY;
+		ska::Point<int> lastBlockColPosY;
 	};
 }

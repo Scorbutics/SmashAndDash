@@ -6,6 +6,7 @@
 #include "../../Utils/TimeUtils.h"
 #include "../../ECS/EntityManager.h"
 #include "../../Exceptions/InvalidPathException.h"
+#include "../../Physic/WorldCollisionComponent.h"
 #include "../ScriptTriggerType.h"
 
 using namespace std;
@@ -14,9 +15,9 @@ using namespace std;
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
 System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
-m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem), m_scriptDetectionTemporisation(500) {
-	m_t0 = ska::TimeUtils::getTicks();
-
+m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem),
+m_lastFrontPos(0, 0) {
+	
 }
 
 void ska::ScriptRefreshSystem::refresh() {
@@ -49,7 +50,7 @@ void ska::ScriptRefreshSystem::refresh() {
 				if (!iac[InputAction::DoAction]) {
 					break;
 				}
-
+				
 			case EnumScriptTriggerType::MOVE:
 				scriptEntity = findNearScriptComponentEntity(entityManager, pc, targets);
 				if (scriptEntity != UINT_MAX) {
@@ -68,18 +69,22 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		worldScripts = m_world.chipsetScript(centerPos, EnumScriptTriggerType::AUTO);
 		if (iac[InputAction::DoAction]) {
+			clog << "Enter Pressed" << std::endl;
 			std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::ACTION);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 		}
 
 		//bool wantsToMove = (ska::NumberUtils::absolute(mc.ax) > 0.001 || ska::NumberUtils::absolute(mc.ay) > 0.001);
-		bool moving = ska::NumberUtils::absolute(mc.vx) > 0.001 || ska::NumberUtils::absolute(mc.vy) > 0.001;
-		unsigned int blockSize = m_world.getBlockSize();
-		if (moving && (frontPos / blockSize) != (centerPos / blockSize)) {
-			if (ska::TimeUtils::getTicks() - m_t0 > m_scriptDetectionTemporisation) {
+		const unsigned int blockSize = m_world.getBlockSize();
+		
+		if (entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
+			const ska::WorldCollisionComponent& wcc = entityManager.getComponent<ska::WorldCollisionComponent>(entityId);
+			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
+				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
+				clog << "Block collision" << std::endl;
+
 				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::MOVE);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
-				m_t0 = ska::TimeUtils::getTicks();
 			}
 		}
 
@@ -96,7 +101,7 @@ void ska::ScriptRefreshSystem::refresh() {
 				}
 			}
 		}
-		
+
 	}
 
 	for (EntityId targets : toDelete) {
@@ -105,6 +110,7 @@ void ska::ScriptRefreshSystem::refresh() {
 	
 
 	m_scriptAutoSystem.update();
+
 }
 
 void ska::ScriptRefreshSystem::update() {

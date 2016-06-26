@@ -25,7 +25,6 @@ void ska::MovementSystem::refresh() {
 				moveComponent.ay = 0;
 			}
 
-			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
 		}
 
 		/* Ground reflection */
