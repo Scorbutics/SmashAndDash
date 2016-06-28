@@ -21,7 +21,7 @@ namespace ska {
 	class Chipset {
 	public:
 		Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName);
-		void generateBlock(ska::Color& key, BlockPtr& outputBlock, BlockRenderablePtr& outputRenderable);
+		void generateBlock(ska::Color& key, std::shared_ptr<Block>& outputBlock, std::shared_ptr<BlockRenderable>& outputRenderable);
 		const std::string& getName() const;
 		ChipsetRenderable& getRenderable();
 		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
@@ -34,6 +34,8 @@ namespace ska {
 		const std::unordered_map<ska::Color, ska::Point<int>>& m_corr;
 		std::unordered_map<std::string, ScriptSleepComponent> m_triggeredScripts;
 		std::unordered_map<int, ScriptSleepComponent> m_autoScripts;
+		
+		std::vector<std::shared_ptr<Block>> m_blocks;
 		
 		const int m_blockSize;
 		const unsigned int m_corrFileWidth;

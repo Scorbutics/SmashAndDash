@@ -45,7 +45,7 @@ bool ska::ChipsetHolder::attach(const unsigned int blockSize, const std::string&
 	return false;
 }
 
-void ska::ChipsetHolder::generateBlock(ska::Color& key, BlockPtr& outputBlock, BlockRenderablePtr& outputRenderable) {
+void ska::ChipsetHolder::generateBlock(ska::Color& key, std::shared_ptr<Block>& outputBlock, std::shared_ptr<BlockRenderable>& outputRenderable) {
 	if (m_chipset == nullptr) {
 		/* TODO exception */
 	}
@@ -53,7 +53,7 @@ void ska::ChipsetHolder::generateBlock(ska::Color& key, BlockPtr& outputBlock, B
 	return m_chipset->generateBlock(key, outputBlock, outputRenderable);
 }
 
-void ska::ChipsetHolder::render(Rectangle pos, const BlockRenderablePtr& block) {
+void ska::ChipsetHolder::render(Rectangle pos, const std::shared_ptr<BlockRenderable>& block) {
 	m_chipset->getRenderable().render(pos, block);
 }
 

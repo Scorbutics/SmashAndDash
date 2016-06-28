@@ -36,7 +36,7 @@ std::string ska::World::getFileName() const {
 }
 
 bool ska::World::isBlockDodgeable(const int i, const int j) {
-	return (m_lMid.getBlock(i, j)->getProperties() == BLOCK_PROP_JUMPWALL);
+	return (m_lMid.getBlock(i, j).lock()->getProperties() == BLOCK_PROP_JUMPWALL);
 }
 
 bool ska::World::getCollision(const int i, const int j) {
@@ -161,7 +161,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 
 	/* TODO autres layers ??? */
-	BlockPtr& b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
+	std::shared_ptr<Block> b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize).lock();
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
@@ -178,9 +178,9 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 }
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) {
-	BlockPtr& bBot = m_lBot.getBlock(i, j);
-	BlockPtr& bMid = m_lMid.getBlock(i, j);
-	BlockPtr& bTop = m_lTop.getBlock(i, j);
+	std::shared_ptr<Block>& bBot = m_lBot.getBlock(i, j).lock();
+	std::shared_ptr<Block>& bMid = m_lMid.getBlock(i, j).lock();
+	std::shared_ptr<Block>& bTop = m_lTop.getBlock(i, j).lock();
 
 	if (bTop != nullptr) {
 		return bTop.get();

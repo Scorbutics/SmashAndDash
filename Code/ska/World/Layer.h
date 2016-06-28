@@ -30,7 +30,7 @@ namespace ska {
 		void printCollisionProfile();
 		void clear();
 
-		BlockPtr& getBlock(unsigned int i, unsigned int j);
+		std::weak_ptr<ska::Block> getBlock(unsigned int i, unsigned int j);
 		int getBlockCollision(const unsigned int i, const unsigned int j);
 		int getNbrBlocX();
 		int getNbrBlocY();
@@ -44,7 +44,7 @@ namespace ska {
 		Layer* m_parent;
 		World& m_world;
 		std::string m_name, m_nomFichier;
-		std::vector<std::vector<BlockPtr>> m_block;
+		std::vector<std::vector<std::shared_ptr<Block>>> m_block;
 		LayerRenderable m_renderable;
 		int m_fileWidth, m_fileHeight;
 

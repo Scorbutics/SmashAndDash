@@ -385,8 +385,8 @@ void Character::displayGrassWalk()
 	if(hitCenterPos.x/TAILLEBLOC >= wScreen.getWorld().getNbrBlocX() || hitCenterPos.y/TAILLEBLOC >= wScreen.getWorld().getNbrBlocY())
 		return;
 
-	ska::BlockPtr& bBot = wScreen.getWorld().getLayerBot().getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
-	ska::BlockPtr& bMid = wScreen.getWorld().getLayerMid().getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC);
+	std::shared_ptr<ska::Block>& bBot = wScreen.getWorld().getLayerBot().getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC).lock();
+	std::shared_ptr<ska::Block>& bMid = wScreen.getWorld().getLayerMid().getBlock(hitCenterPos.x / TAILLEBLOC, hitCenterPos.y / TAILLEBLOC).lock();
 
 	/*if(bBot != NULL && bMid != NULL && (bBot->getID() == BLOCK_ID_GRASS || bMid->getID() == BLOCK_ID_GRASS) && this->getSpeed() >= 1)*/
     {

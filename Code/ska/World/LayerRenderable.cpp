@@ -41,7 +41,7 @@ void ska::LayerRenderable::display() {
 			absoluteCurrentPos.y = currentYBlock - absORelY;
 
 			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
-				BlockRenderablePtr& b = m_block[i][j];
+				std::shared_ptr<BlockRenderable>& b = m_block[i][j];
 				if (b != nullptr) {
 					/* TODO passer la propriété BLOCK_PROP_WIND_SENSITIVITY en script de chipset */
 					m_world.getChipset().render(absoluteCurrentPos, b);
@@ -59,7 +59,7 @@ void ska::LayerRenderable::clear() {
 	m_block.clear();
 }
 
-ska::BlockRenderablePtr& ska::LayerRenderable::getBlock(const unsigned int i, const unsigned int j) {
+std::weak_ptr<ska::BlockRenderable> ska::LayerRenderable::getBlock(const unsigned int i, const unsigned int j) {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		return m_block[i][j];
 	}
@@ -69,7 +69,7 @@ ska::BlockRenderablePtr& ska::LayerRenderable::getBlock(const unsigned int i, co
 
 }
 
-void ska::LayerRenderable::reset(std::vector<std::vector<BlockRenderablePtr>>& block) {
+void ska::LayerRenderable::reset(std::vector<std::vector<std::shared_ptr<BlockRenderable>>>& block) {
 	m_block = std::move(block);
 }
 
