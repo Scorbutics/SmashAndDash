@@ -1,5 +1,4 @@
-#ifndef DEF_MONDEE
-#define DEF_MONDEE
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -14,7 +13,7 @@ namespace ska {
 	public:
 		virtual void refresh() override;
 
-		LayerE(ska::World& world, const std::string& nomFichier);
+		LayerE(ska::World& world);
 		int getBlocX(int ligne) const;
 		int getBlocY(int ligne) const;
 		int getID(int ligne) const;
@@ -35,4 +34,4 @@ namespace ska {
 	};
 	using LayerEPtr = std::unique_ptr<LayerE>;
 }
-#endif
+

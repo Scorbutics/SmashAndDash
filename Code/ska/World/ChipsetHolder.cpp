@@ -7,7 +7,7 @@
 #include "../Utils/SkaConstants.h"
 #include "Chipset.h"
 #include "ChipsetHolder.h"
-
+#include "../Graphic/Animation.h"
 
 ska::ChipsetHolder::ChipsetHolder(const std::string& correspondanceFile) {
 	ska::SDLSurface fichierMCorr;
@@ -45,16 +45,16 @@ bool ska::ChipsetHolder::attach(const unsigned int blockSize, const std::string&
 	return false;
 }
 
-ska::BlockPtr ska::ChipsetHolder::generateBlock(ska::Color& key) {
+void ska::ChipsetHolder::generateBlock(ska::Color& key, BlockPtr& outputBlock, BlockRenderablePtr& outputRenderable) {
 	if (m_chipset == nullptr) {
 		/* TODO exception */
 	}
 
-	return m_chipset->generateBlock(key);
+	return m_chipset->generateBlock(key, outputBlock, outputRenderable);
 }
 
-ska::Texture& ska::ChipsetHolder::getChipset() {
-	return m_chipset->getTexture();
+void ska::ChipsetHolder::render(Rectangle pos, const BlockRenderablePtr& block) {
+	m_chipset->getRenderable().render(pos, block);
 }
 
 void ska::ChipsetHolder::buildCorrMap(const ska::SDLSurface& fichierMCorr) {

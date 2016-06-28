@@ -68,16 +68,16 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 
 	//Première couche
-	drawables.addHead(*m_world.getLayerBot());
+	drawables.addHead(m_world.getLayerBot().getRenderable());
 
 	//Deuxième couche
-	drawables.addHead(*m_world.getLayerMid());
+	drawables.addHead(m_world.getLayerMid().getRenderable());
 
 	ska::Scene::graphicUpdate(drawables);
 	
 	/* We use the maximum drawing priority of characters to draw the top layer */
-	m_world.getLayerTop()->setPriority(m_graphicSystem.getTopLayerPriority());
-	drawables.add(*m_world.getLayerTop());
+	m_world.getLayerTop().getRenderable().setPriority(m_graphicSystem.getTopLayerPriority());
+	drawables.add(m_world.getLayerTop().getRenderable());
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	wScreen.getPokeball().setPriority(m_graphicSystem.getTopLayerPriority() + 1);
@@ -176,8 +176,8 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fileName, std::string chipsetName) {
 	
+	m_world.load(fileName, chipsetName);
 	if (!m_loadedOnce) {
-		m_world.load(fileName, chipsetName);
 		ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
 
 		ska::Point<int> startPos;
@@ -201,7 +201,6 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 
 		m_loadedOnce = true;
 	} else {
-		m_world.changeLevel(fileName, chipsetName);
 		m_entityManager.refreshEntity(m_player);
 	}
 
@@ -211,14 +210,14 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 	std::unordered_map<std::string, ska::EntityId> result;
 
 	const unsigned int blockSize = m_world.getBlockSize();
-	const ska::LayerEPtr& layerE = m_world.getLayerEvent();
+	const ska::LayerE& layerE = m_world.getLayerEvent();
 
 	//Chargement des NPC sur la map (personnages & pokémon)
-	for (int i = 0; i < layerE->getNbrLignes(); i++)
+	for (int i = 0; i < layerE.getNbrLignes(); i++)
 	{
-		posEntityId.y = layerE->getBlocY(i);
-		posEntityId.x = layerE->getBlocX(i);
-		int id = layerE->getID(i);
+		posEntityId.y = layerE.getBlocY(i);
+		posEntityId.x = layerE.getBlocX(i);
+		int id = layerE.getID(i);
 		if (id == 0) {
 			continue;
 		}
@@ -244,7 +243,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 
 		ska::ScriptSleepComponent ssc;
 
-		const std::string params = layerE->getParam(i);
+		const std::string& params = layerE.getParam(i);
 		std::vector<std::string> totalArgs = ska::StringUtils::split(params, ',');
 		if (!totalArgs.empty()) {
 			ssc.args.reserve(totalArgs.size() - 1);
@@ -257,7 +256,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		}
 		ssc.name = ska::StringUtils::trim(totalArgs[0]);
 		ssc.context = m_world.getName();
-		ssc.triggeringType = layerE->getTrigger(i);
+		ssc.triggeringType = layerE.getTrigger(i);
 		ssc.period = 1000;
 		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
 		result[ska::StringUtils::intToStr(i + 2)] = script;

@@ -13,7 +13,7 @@ void StatisticsSystem::refresh() {
 		/* TODO handle more stats effects */
 		if (bc.hp < 0) {
 			scheduleDeferredRemove(entityId);
-			m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, m_worldScene.getWorld().getFileName(), m_worldScene.getWorld().getChipsetName())));
+			m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, m_worldScene.getWorld().getFileName(), m_worldScene.getWorld().getChipset().getName())));
 		}
 	}
 }

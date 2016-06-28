@@ -47,14 +47,14 @@ void Fight::setAreasFromLayerEvent()
 	ska::World& w = wScreen.getWorld();
 
     deleteAllAreas();
-    for(int i = 0; i < w.getLayerEvent()->getNbrLignes(); i++) {
-		if (w.getLayerEvent()->getAction(i) == "combat") {
+    for(int i = 0; i < w.getLayerEvent().getNbrLignes(); i++) {
+		if (w.getLayerEvent().getAction(i) == "combat") {
             int width, height;
-			const std::string param = w.getLayerEvent()->getParam(i);
+			const std::string param = w.getLayerEvent().getParam(i);
 			width = ska::StringUtils::strToInt(ska::StringUtils::extractTo(0, param, ':'));
 			height = ska::StringUtils::strToInt(param.substr(param.find_last_of(':') + 1, param.size()));
 
-			addArea(w.getLayerEvent()->getBlocX(i)*w.getBlockSize(), w.getLayerEvent()->getBlocY(i)*w.getBlockSize(), width*w.getBlockSize(), height*w.getBlockSize());
+			addArea(w.getLayerEvent().getBlocX(i)*w.getBlockSize(), w.getLayerEvent().getBlocY(i)*w.getBlockSize(), width*w.getBlockSize(), height*w.getBlockSize());
         }
     }
 }
@@ -272,7 +272,7 @@ void Fight::end(EndFightReason::Enum endReason)
 	//wScreen.switchScene(EnumScene::MAP);
 
 	if (endReason == EndFightReason::Lose) {
-		wScreen.getWorld().changeLevel("poke1.bmp", "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"chipset.png");
+		wScreen.getWorld().load("poke1.bmp", "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"chipset.png");
 		//wScreen.getHero()->teleport(8*TAILLEBLOC,5*TAILLEBLOC);
 		wScreen.getPokemonManager().heal();
 	}

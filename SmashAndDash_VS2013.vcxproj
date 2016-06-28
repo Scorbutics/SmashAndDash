@@ -124,6 +124,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
+    <ClInclude Include="Code\ska\Script\Command\CommandAssignSwitch.h" />
+    <ClInclude Include="Code\ska\World\BlockRenderable.h" />
     <ClInclude Include="Code\ska\World\ChipsetHolder.h" />
     <ClInclude Include="Code\Gameplay\Data\RawStatistics.h" />
     <ClInclude Include="Code\Gameplay\Fight\BattleComponent.h" />
@@ -234,6 +237,8 @@
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h" />
     <ClInclude Include="Code\Gameplay\Character.h" />
     <ClInclude Include="Code\ska\World\Chipset.h" />
+    <ClInclude Include="Code\ska\World\ChipsetRenderable.h" />
+    <ClInclude Include="Code\ska\World\LayerRenderable.h" />
     <ClInclude Include="Code\Utils\ChargementImages.h" />
     <ClInclude Include="Code\ska\Script\Command\Command.h" />
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h" />
@@ -384,6 +389,9 @@
     <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
+    <ClCompile Include="Code\ska\Script\Command\CommandAssignSwitch.cpp" />
+    <ClCompile Include="Code\ska\World\BlockRenderable.cpp" />
     <ClCompile Include="Code\ska\World\ChipsetHolder.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp" />
@@ -430,6 +438,8 @@
     <ClCompile Include="Code\Gameplay\Character.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
     <ClCompile Include="Code\ska\World\Chipset.cpp" />
+    <ClCompile Include="Code\ska\World\ChipsetRenderable.cpp" />
+    <ClCompile Include="Code\ska\World\LayerRenderable.cpp" />
     <ClCompile Include="Code\Utils\ChargementImages.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandAddPokemon.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssign.cpp" />

@@ -181,19 +181,12 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, co
 	if (value.empty())
 		return;
 
-	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}')
-	{
-		if (value == "true")
-			saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1, true);
-		else
-			saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1, false);
-	}
-	else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']')
-	{
+	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}') {
+		saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1, (value == "true"));
+	} else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']') {
 		string v = varNumber.substr(1, varNumber.size() - 2);
 		string key = getVariableKey(v);
-		if (!key.empty())
-		{
+		if (!key.empty()) {
 			varMap[key] = value;
 			return;
 		}

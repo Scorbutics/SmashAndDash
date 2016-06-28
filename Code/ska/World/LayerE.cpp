@@ -12,10 +12,8 @@
 #include "../Exceptions/NumberFormatException.h"
 
 //Constructeur ouvrant un monde déjà créé
-ska::LayerE::LayerE(ska::World& world, const std::string& nomFichier) : m_world(world) {
+ska::LayerE::LayerE(ska::World& world) : m_world(world) {
     m_nbrLignes = 0;
-
-	changeLevel(nomFichier);
 }
 
 

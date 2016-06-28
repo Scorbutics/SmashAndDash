@@ -11,10 +11,10 @@
 #include "../Scene/Scene.h"
 #include "../Graphic/System/CameraAware.h"
 #include "ChipsetHolder.h"
+#include "Layer.h"
+#include "LayerE.h"
 
 namespace ska {
-	class Layer;
-	class LayerE;
 	class CameraSystem;
 	class PhysicObject;
 	class Block;
@@ -25,27 +25,33 @@ namespace ska {
 	class World : public HasGraphic, public CameraAware {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
-		virtual void load(std::string fileName, std::string chipsetName);
+		virtual void load(const std::string& fileName, const std::string& chipsetName);
 
 		std::vector<IniReader>& getMobSettings();
-		std::string getGenericName();
-		int getNbrBlocX();
+		std::string getGenericName() const;
+		std::string getName() const;
+		std::string getFileName() const;
+
 		unsigned int getPixelWidth() const;
 		unsigned int getPixelHeight() const;
-		int getNbrBlocY();
-		std::unique_ptr<ska::Layer>& getLayerBot();
-		std::unique_ptr<ska::Layer>& getLayerMid();
-		std::unique_ptr<ska::Layer>& getLayerTop();
+		
+		int getNbrBlocX() const;
+		int getNbrBlocY() const;
+		void setNbrBlocX(int nbrBlockX);
+		void setNbrBlocY(int nbrBlockY);
+
+		Layer& getLayerBot();
+		Layer& getLayerMid();
+		Layer& getLayerTop();
+		LayerE& getLayerEvent();
+
 		const ska::Rectangle* getView() const;
-		ska::Animation& getChipsetAnimation();
-		std::unique_ptr<ska::LayerE>& getLayerEvent();
-		void setWind(int wind);
 		ska::ChipsetHolder& getChipset();
-		int getWind() const;
-		const std::string& getChipsetName() const;
-		std::string getName();
-		std::string getFileName();
+
+		Block* getHigherBlock(const unsigned int i, const unsigned int j);
+
 		void getData();
+		bool canMoveToPos(ska::Rectangle pos);
 		bool getCollision(const int i, const int j);
 		bool isBlockDodgeable(const int i, const int j);
 
@@ -54,19 +60,10 @@ namespace ska {
 		/* TODO classe à part ? */
 		std::vector<ska::ScriptSleepComponent*> chipsetScript(const ska::Point<int>& p, const ScriptTriggerType& reason);
 
-		void setNbrBlocX(int nbrBlockX);
-		void setNbrBlocY(int nbrBlockY);
-		void setSpriteFrame(unsigned int x);
-		bool canMoveToPos(ska::Rectangle pos);
-		
-
-		Block* getHigherBlock(const unsigned int i, const unsigned int j);
-		
 		void linkCamera(CameraSystem* cs) override;
-		virtual void changeLevel(std::string fileName, std::string chipsetName);
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
 
-		~World();
+		virtual ~World() = default;
 
 	private:
 		void getRainFromData(std::string stringDataFile);
@@ -76,17 +73,19 @@ namespace ska {
 		int m_nbrBlockX, m_nbrBlockY;
 		unsigned int m_blockSize;
 
-		ska::ChipsetHolder m_chipset;
+		
 		std::string m_fileName, m_genericName, m_worldName;
 		
 		bool m_autoScriptsPlayed;
 		std::vector<IniReader> m_mobSettings;
-		ska::CameraSystem* m_cameraSystem;
+		CameraSystem* m_cameraSystem;
 
 	protected:
-		std::unique_ptr<Layer> m_lBot, m_lMid, m_lTop;
-		std::unique_ptr<LayerE> layerE;
-		Animation m_animBlocks;
+		Layer m_lBot;
+		Layer m_lMid;
+		Layer m_lTop;
+		LayerE m_layerE;
+		ChipsetHolder m_chipset;
 	};
 }
 

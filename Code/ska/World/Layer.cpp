@@ -1,107 +1,49 @@
-#include <stdint.h>
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <windows.h>
-#include <sstream>
 
-#include "../Graphic/SDLSurface.h"
-#include "../Graphic/Color.h"
 #include "Layer.h"
 #include "World.h"
 #include "../Exceptions/CorruptedFileException.h"
 #include "../Exceptions/IndexOutOfBoundsException.h"
 #include "../Utils/StringUtils.h"
-#include "../Utils/NumberUtils.h"
 #include "../Exceptions/FileException.h"
 
-#include "../Physic/HitboxComponent.h"
-#include "../Graphic/GraphicComponent.h"
-
-using namespace std;
-
-ska::Color translate_color(Uint32 int_color);
-
 //Constructeur ouvrant un monde déjà créé
-ska::Layer::Layer(ska::World& w, string pathFile, string chipsetName, Layer* parent) : m_world(w) {
+ska::Layer::Layer(ska::World& w, std::string pathFile, std::string chipsetName, Layer* parent) : m_world(w), m_renderable(w) {
 	m_block.reserve(20);
-	m_rectAnim = { 0 };
 	m_parent = parent;
 	m_fileWidth = 0; 
 	m_fileHeight = 0;
     reset(pathFile, chipsetName);
 }
 
+ska::Layer::Layer(ska::World& w, Layer* parent) : m_world(w), m_renderable(w) {
+}
+
 ska::Layer* ska::Layer::getParent() const {
 	return m_parent;
 }
 
-bool ska::Layer::isVisible() const {
-	return !m_block.empty();
+ska::LayerRenderable& ska::Layer::getRenderable() {
+	return m_renderable;
 }
 
 void ska::Layer::clear() {
 	m_block.clear();
 }
 
-ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
+ska::BlockPtr& ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
-		return m_block[i][j].get();
+		return m_block[i][j];
 	} else {
 		throw ska::IndexOutOfBoundsException("block at coordinates (" + ska::StringUtils::intToStr(i) + "; " + ska::StringUtils::intToStr(j) + ") cannot be accessed");
     }
 
 }
 
-void ska::Layer::display() {
-	
-	ska::Rectangle absoluteCurrentPos;
-	const ska::Rectangle* cameraPos = m_world.getView();
 
-	if (cameraPos == NULL) {
-		return;
-	}
-
-	const unsigned int layerPixelsX = m_world.getPixelWidth();
-	const unsigned int layerPixelsY = m_world.getPixelHeight();
-	const unsigned int absORelX = NumberUtils::absolute(cameraPos->x);
-	const unsigned int absORelY = NumberUtils::absolute(cameraPos->y);
-	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
-	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
-	
-	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
-		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
-			unsigned int currentXBlock = i*m_world.getBlockSize();
-			unsigned int currentYBlock = j*m_world.getBlockSize();
-			absoluteCurrentPos.x = currentXBlock - absORelX;
-			absoluteCurrentPos.y = currentYBlock - absORelY;
-
-			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
-				BlockPtr& b = m_block[i][j];
-                if(b != nullptr) {
-					ska::Rectangle chipsetPartRender;
-
-					/* TODO passer cette propriété en script de chipset */
-                    if(b->getProperties() == BLOCK_PROP_WIND_SENSITIVITY) {
-						b->setSpriteFrame(m_world.getWind());
-						chipsetPartRender = b->refresh(absoluteCurrentPos);
-					} else {
-						chipsetPartRender = b->refresh(absoluteCurrentPos, &m_world.getChipsetAnimation().getRectOfCurrentFrame());
-					}                    
-
-					m_world.getChipset().getChipset().render(absoluteCurrentPos.x, absoluteCurrentPos.y, &chipsetPartRender);
-                }
-            }
-        }
-    }
-}
-
-void ska::Layer::setRectAnim(ska::Rectangle rectAnim) {
-	m_rectAnim = rectAnim;
-}
 
 int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) {
 	if (i < m_block.size() && j < m_block[i].size()) {
@@ -114,12 +56,9 @@ int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) {
 	return BLOCK_COL_NO;
 }
 
-ska::Layer::~Layer() {
-}
 
-void ska::Layer::reset(string pathFile, string chipsetName) {
+void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 
-    m_chipsetname = chipsetName;
     m_nomFichier = pathFile.substr(pathFile.find_last_of('/')+1, pathFile.size());
     m_name = m_nomFichier.substr(0, m_nomFichier.find_last_of('.'));
 
@@ -142,14 +81,23 @@ void ska::Layer::reset(string pathFile, string chipsetName) {
 	auto& chipset = m_world.getChipset();
 	const unsigned int blockSize = m_world.getBlockSize();
 
+	std::vector<std::vector<BlockRenderablePtr>> renderableBlocks;
 	m_block.resize(m_fileWidth);
+	renderableBlocks.resize(m_fileWidth);
 	for (int i = 0; i < m_fileWidth; i++) {
 		m_block.reserve(m_fileHeight);
+		renderableBlocks.reserve(m_fileHeight);
 		for (int j = 0; j < m_fileHeight; j++) {
 			ska::Color c = fichierMPng.getPixel32Color(i, j);
-			m_block[i].push_back(chipset.generateBlock(c));
+			BlockRenderablePtr brp;
+			BlockPtr bp;
+			chipset.generateBlock(c, bp, brp);
+			m_block[i].push_back(std::move(bp));
+			renderableBlocks[i].push_back(std::move(brp));
         }
     }
+
+	m_renderable.reset(renderableBlocks);
 
 }
 

@@ -15,8 +15,7 @@ using namespace std;
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
 System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
-m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem),
-m_lastFrontPos(0, 0) {
+m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem) {
 	
 }
 
@@ -69,19 +68,17 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		worldScripts = m_world.chipsetScript(centerPos, EnumScriptTriggerType::AUTO);
 		if (iac[InputAction::DoAction]) {
-			clog << "Enter Pressed" << std::endl;
+			//clog << "Enter Pressed" << std::endl;
 			std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::ACTION);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 		}
 
-		//bool wantsToMove = (ska::NumberUtils::absolute(mc.ax) > 0.001 || ska::NumberUtils::absolute(mc.ay) > 0.001);
-		const unsigned int blockSize = m_world.getBlockSize();
-		
+
 		if (entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
 			const ska::WorldCollisionComponent& wcc = entityManager.getComponent<ska::WorldCollisionComponent>(entityId);
 			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
-				clog << "Block collision" << std::endl;
+				//clog << "Block collision" << std::endl;
 
 				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::MOVE);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());

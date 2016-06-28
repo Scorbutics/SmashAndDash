@@ -10,13 +10,14 @@
 #include "../Script/ScriptSleepComponent.h"
 #include "../Graphic/System/CameraSystem.h"
 
-using namespace std;
-
 ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :  
-	m_blockSize(tailleBloc),  
-	m_animBlocks(375, 4, true, 0, 0, tailleBloc, tailleBloc), 
+	m_blockSize(tailleBloc), 
 	m_chipset("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png"),
-	m_autoScriptsPlayed(false) {
+	m_autoScriptsPlayed(false), 
+	m_lTop(*this, &m_lMid),
+	m_lMid(*this, &m_lBot), 
+	m_lBot(*this), 
+	m_layerE(*this) {
 }
 
 void ska::World::linkCamera(CameraSystem* cs) {
@@ -26,46 +27,25 @@ void ska::World::linkCamera(CameraSystem* cs) {
 	}
 }
 
-void ska::World::load(string fileName, string chipsetName) {
-	changeLevel(fileName, chipsetName);
-}
-
 ska::ChipsetHolder& ska::World::getChipset() {
 	return m_chipset;
 }
 
-std::string ska::World::getFileName() {
+std::string ska::World::getFileName() const {
 	return m_fileName;
 }
 
-
-void ska::World::setWind(int wind) {
-	m_windDirection = wind;
-}
-
-int ska::World::getWind() const {
-	return m_windDirection;
-}
-
-ska::Animation& ska::World::getChipsetAnimation() {
-	return m_animBlocks;
-}
-
 bool ska::World::isBlockDodgeable(const int i, const int j) {
-	return (m_lMid->getBlock(i, j)->getProperties() == BLOCK_PROP_JUMPWALL);
+	return (m_lMid.getBlock(i, j)->getProperties() == BLOCK_PROP_JUMPWALL);
 }
 
 bool ska::World::getCollision(const int i, const int j) {
-	if (m_lBot == NULL) {
-		return false;
-	}
-
-	if (m_lBot->getBlockCollision(i, j) == BLOCK_COL_YES &&
-		(m_lMid->getBlockCollision(i, j) != BLOCK_COL_NO)) {
+	if (m_lBot.getBlockCollision(i, j) == BLOCK_COL_YES &&
+		(m_lMid.getBlockCollision(i, j) != BLOCK_COL_NO)) {
 		return true;
 	}
 
-	if (m_lMid->getBlockCollision(i, j) == BLOCK_COL_YES) {
+	if (m_lMid.getBlockCollision(i, j) == BLOCK_COL_YES) {
 		return true;
 	}
 
@@ -105,35 +85,31 @@ const ska::Rectangle* ska::World::getView() const {
 	return m_cameraSystem == NULL ? NULL : m_cameraSystem->getDisplay();
 }
 
-ska::LayerPtr& ska::World::getLayerBot() {
+ska::Layer& ska::World::getLayerBot() {
 	return m_lBot;
 }
 
-ska::LayerPtr& ska::World::getLayerMid() {
+ska::Layer& ska::World::getLayerMid() {
 	return m_lMid;
 }
 
-ska::LayerPtr& ska::World::getLayerTop() {
+ska::Layer& ska::World::getLayerTop() {
 	return m_lTop;
 }
 
-ska::LayerEPtr& ska::World::getLayerEvent() {
-	return layerE;
+ska::LayerE& ska::World::getLayerEvent() {
+	return m_layerE;
 }
 
-string ska::World::getName() {
+std::string ska::World::getName() const {
     return m_worldName;
 }
 
-string ska::World::getGenericName() {
+std::string ska::World::getGenericName() const {
     return m_genericName;
 }
 
-const std::string& ska::World::getChipsetName() const {
-	return m_chipset.getName();
-}
-
-void ska::World::changeLevel(string fileName, string chipsetName) {
+void ska::World::load(const std::string& fileName, const std::string& chipsetName) {
 	bool worldChanged = fileName != m_fileName;
 	m_autoScriptsPlayed = false;
 	bool chipsetChanged = m_chipset.attach(m_blockSize, chipsetName);
@@ -152,32 +128,15 @@ void ska::World::changeLevel(string fileName, string chipsetName) {
 		const std::string& topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
 		const std::string& eventLayerName = m_genericName + "E.txt";
 
-		if (m_lBot != nullptr) {
-			m_lBot->clear();
-			m_lBot->reset(botLayerName, chipsetName);
-		} else {
-			m_lBot = LayerPtr(new Layer(*this, botLayerName, chipsetName));
-		}
+		m_lBot.clear();
+		m_lMid.clear();
+		m_lTop.clear();
 
-		if (m_lMid != nullptr) {
-			m_lMid->clear();
-			m_lMid->reset(midLayerName, chipsetName);
-		} else {
-			m_lMid = LayerPtr(new Layer(*this, midLayerName, chipsetName, m_lBot.get()));
-		}
+		m_lBot.reset(botLayerName, chipsetName);
+		m_lMid.reset(midLayerName, chipsetName);
+		m_lTop.reset(topLayerName, chipsetName);
 
-		if (m_lTop != nullptr) {
-			m_lTop->clear();
-			m_lTop->reset(topLayerName, chipsetName);
-		} else {
-			m_lTop = LayerPtr(new Layer(*this, topLayerName, chipsetName, m_lMid.get()));
-		}
-
-		if (layerE != nullptr) {
-			layerE->changeLevel(eventLayerName);
-		} else {
-			layerE = LayerEPtr(new LayerE(*this, eventLayerName));
-		}
+		m_layerE.changeLevel(eventLayerName);
 		
 		if (m_cameraSystem != NULL) {
 			m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
@@ -202,7 +161,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 
 	/* TODO autres layers ??? */
-	Block* b = m_lBot->getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
+	BlockPtr& b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
@@ -219,27 +178,23 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 }
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) {
-	Block* bBot = m_lBot->getBlock(i, j);
-	Block* bMid = m_lMid->getBlock(i, j);
-	Block* bTop = m_lTop->getBlock(i, j);
+	BlockPtr& bBot = m_lBot.getBlock(i, j);
+	BlockPtr& bMid = m_lMid.getBlock(i, j);
+	BlockPtr& bTop = m_lTop.getBlock(i, j);
 
-	if (bTop != NULL && m_lTop->getBlock(i, j) != nullptr) {
-		return m_lTop->getBlock(i, j);
+	if (bTop != nullptr) {
+		return bTop.get();
 	}
 
-	if (bMid != NULL && m_lMid->getBlock(i, j) != nullptr) {
-		return m_lMid->getBlock(i, j);
+	if (bMid != nullptr) {
+		return bMid.get();
 	}
 
-	if (bBot != NULL && m_lBot->getBlock(i, j) != nullptr) {
-		return m_lBot->getBlock(i, j);
-	}
-
-	return NULL;
+	return bBot.get();
 }
 
 
-int ska::World::getNbrBlocX() {
+int ska::World::getNbrBlocX() const {
     return m_nbrBlockX;
 }
 
@@ -247,7 +202,7 @@ unsigned int ska::World::getPixelWidth() const {
 	return m_nbrBlockX*m_blockSize;
 }
 
-int ska::World::getNbrBlocY() {
+int ska::World::getNbrBlocY() const {
 	return m_nbrBlockY;
 }
 
@@ -269,7 +224,7 @@ void ska::World::setNbrBlocY(int nbrBlockY) {
 
 
 
-void ska::World::getRainFromData(string stringDataFile) {
+void ska::World::getRainFromData(std::string stringDataFile) {
     int idsprite, acceleration, density;	
 	IniReader reader(stringDataFile);
 
@@ -279,7 +234,7 @@ void ska::World::getRainFromData(string stringDataFile) {
 		density = reader.getInt("Rain density");
 
     } else {
-        clog << "La pluie est inexistante sur cette map" << endl;
+        std::clog << "La pluie est inexistante sur cette map" << std::endl;
     }
 }
 
@@ -298,18 +253,13 @@ void ska::World::getMobSettingsFromData() {
 }
 
 void ska::World::getData() {
+    std::string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".ini";
 
-    string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".ini";
-
-    this->getRainFromData(stringDataFile);
-	this->getMobSettingsFromData();
+    getRainFromData(stringDataFile);
+	getMobSettingsFromData();
 }
 
-ska::World::~World() {
-}
-
-vector<ska::IniReader>& ska::World::getMobSettings()
-{
+std::vector<ska::IniReader>& ska::World::getMobSettings() {
 	return m_mobSettings;
 }
 

@@ -138,8 +138,8 @@ void Scroll_Text::refresh()
 	}
 	else if (ska::RectangleUtils::isPositionInBox(mouseClickPos, bufScrollBar))
 	{
-		if (in[ska::InputAction::LClic]) //Si on clique sur la barre du curseur
-		{
+		//Si on clique sur la barre du curseur
+		if (in[ska::InputAction::LClic]) {
 			m_start = (mouseClickPos.y - m_posTopArrow.y) / ((int)m_text.size()) - 1;
 
 			if(m_start > (int)m_linesNumber)

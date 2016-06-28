@@ -28,7 +28,7 @@ namespace ska {
 		void setBlendMode(SDL_BlendMode blending);
 		void operator=(const Texture& text);
 		void setAlpha(Uint8 alpha);
-		int render(int x, int y, Rectangle* clip = NULL);
+		int render(int x, int y, Rectangle* clip = NULL) const;
 
 		const unsigned int getWidth() const;
 		const unsigned int getHeight() const;

@@ -62,7 +62,7 @@ void ska::Texture::setDefaultWindow(ska::Window* w) {
 	m_window = w;
 }
 
-int ska::Texture::render(int x, int y, Rectangle* clip) {
+int ska::Texture::render(int x, int y, Rectangle* clip) const {
 	if (m_value == NULL) {
 		return -1;
 	}

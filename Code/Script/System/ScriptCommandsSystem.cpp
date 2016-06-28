@@ -51,6 +51,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["add_pokemon"] = move(ska::CommandPtr(new CommandAddPokemon(m_entityManager)));
 	c["throw_pokemon"] = move(ska::CommandPtr(new CommandPokemonOut(m_entityManager)));
 	c["player_presence"] = move(ska::CommandPtr(new CommandPlayerPresence(m_entityManager)));
+	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager)));
 }
 
 

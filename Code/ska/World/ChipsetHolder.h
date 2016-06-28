@@ -9,14 +9,15 @@ namespace ska {
 	typedef std::unique_ptr<Block> BlockPtr;
 	typedef std::unique_ptr<Chipset> ChipsetPtr;
 	class SDLSurface;
+
 	class ChipsetHolder {
 	public:
 		ChipsetHolder(const std::string& correspondanceFile);
 		bool attach(const unsigned int blockSize, const std::string& chipsetName);
 		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
-		Texture& getChipset();
+		void render(Rectangle pos, const BlockRenderablePtr& block);
 		const std::string& getName() const;
-		BlockPtr generateBlock(ska::Color& key);
+		void generateBlock(ska::Color& key, BlockPtr& outputBlock, BlockRenderablePtr& outputRenderable);
 		~ChipsetHolder() = default;
 
 	private:

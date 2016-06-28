@@ -6,20 +6,25 @@
 #include "../Graphic/SDLSurface.h"
 #include "../Graphic/Texture.h"
 #include "../Script/ScriptSleepComponent.h"
+#include "../Graphic/Animation.h"
+#include "ChipsetRenderable.h"
 
 namespace ska {
+	class Animation;
 	class Block;
 	typedef std::unique_ptr<Block> BlockPtr;
+	class BlockRenderable;
+	typedef std::unique_ptr<BlockRenderable> BlockRenderablePtr;
 	typedef char ScriptTriggerType;
 	
 
 	class Chipset {
 	public:
 		Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName);
-		BlockPtr generateBlock(ska::Color& inputColor);
+		void generateBlock(ska::Color& key, BlockPtr& outputBlock, BlockRenderablePtr& outputRenderable);
 		const std::string& getName() const;
+		ChipsetRenderable& getRenderable();
 		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
-		Texture& getTexture();
 		~Chipset() = default;
 
 	private:
@@ -29,13 +34,15 @@ namespace ska {
 		const std::unordered_map<ska::Color, ska::Point<int>>& m_corr;
 		std::unordered_map<std::string, ScriptSleepComponent> m_triggeredScripts;
 		std::unordered_map<int, ScriptSleepComponent> m_autoScripts;
+		
 		const int m_blockSize;
 		const unsigned int m_corrFileWidth;
 		std::string m_chipsetName;
 		SDLSurface m_sCol;
 		SDLSurface m_sChipset;
 		SDLSurface m_sProperties;
-		Texture m_chipset;
+
+		ChipsetRenderable m_renderable;
 
 		Uint16 m_darkColor;
 		Uint16 m_whiteColor;

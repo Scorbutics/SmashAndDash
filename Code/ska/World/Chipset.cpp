@@ -2,6 +2,7 @@
 #include "../Exceptions/CorruptedFileException.h"
 #include "../Exceptions/FileException.h"
 #include "../World/Block.h"
+#include "../World/BlockRenderable.h"
 #include "../Utils/SkaConstants.h"
 #include "../Utils/StringUtils.h"
 #include "Chipset.h"
@@ -11,7 +12,8 @@ ska::Chipset::Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& cor
 	m_blockSize(blockSize), 
 	m_chipsetName(chipsetName), 
 	m_corr(corr), 
-	m_corrFileWidth(corrFileWidth) {
+	m_corrFileWidth(corrFileWidth), 
+	m_renderable(blockSize, chipsetName) {
 	load();
 }
 
@@ -34,8 +36,6 @@ void ska::Chipset::load() {
 	m_darkColor = SDL_MapRGB(m_sChipset.getFormat(), 70, 70, 70);
 	m_lightColor = SDL_MapRGB(m_sChipset.getFormat(), 170, 170, 170);
 	m_whiteColor = SDL_MapRGB(m_sChipset.getFormat(), 255, 255, 255);
-
-	m_chipset.load(m_chipsetName);
 
 	std::ifstream scriptList;
 	const std::string& chipsetFolder = m_chipsetName.substr(0, m_chipsetName.find_last_of('.'));
@@ -98,11 +98,11 @@ const std::string& ska::Chipset::getName() const {
 	return m_chipsetName;
 }
 
-ska::Texture& ska::Chipset::getTexture() {
-	return m_chipset;
+ska::ChipsetRenderable& ska::Chipset::getRenderable() {
+	return m_renderable;
 }
 
-ska::BlockPtr ska::Chipset::generateBlock(ska::Color& key) {
+void ska::Chipset::generateBlock(ska::Color& key, ska::BlockPtr& outputBlock, ska::BlockRenderablePtr& outputRenderable) {
 	if (key.r != 255 || key.g != 255 || key.b != 255) {
 		if (m_corr.find(key) != m_corr.end()) {
 			ska::Point<int> posCorr = m_corr.at(key);
@@ -111,14 +111,17 @@ ska::BlockPtr ska::Chipset::generateBlock(ska::Color& key) {
 
 			int collision = (col == m_whiteColor || col == m_lightColor) ? BLOCK_COL_NO : BLOCK_COL_YES;
 			bool auto_anim = (col == m_darkColor || col == m_lightColor);
-
-			return std::move(ska::BlockPtr(new Block(m_blockSize, m_corrFileWidth, posCorr, prop, auto_anim, collision)));
+			
+			/* TODO vector<shared_ptr<Block>> et return un autre shared_ptr */
+			outputBlock = std::move(ska::BlockPtr(new Block(m_corrFileWidth, posCorr, prop, collision)));
+			outputRenderable = std::move(ska::BlockRenderablePtr(new BlockRenderable(m_blockSize, posCorr, auto_anim)));
 		}
 		else {
 			throw ska::CorruptedFileException("Impossible de trouver la correspondance en pixel (fichier niveau corrompu)");
 		}
 	}
 	else {
-		return std::move(ska::BlockPtr(nullptr));
+		outputBlock = std::move(ska::BlockPtr(nullptr));
+		outputRenderable = std::move(ska::BlockRenderablePtr(nullptr));
 	}
 }

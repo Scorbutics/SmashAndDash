@@ -104,8 +104,6 @@ void CommandTeleport::teleportHeroToMap(string param)
 	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA")
 		cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << endl;
 
-	w.changeLevel(fichier, chipsetName);
-
-	//hero->teleport(x*TAILLEBLOC - wScreen.getHero()->getWidth() / 2, y*TAILLEBLOC - wScreen.getHero()->getHeight() / 2);
-
+	w.load(fichier, chipsetName);
+	
 }

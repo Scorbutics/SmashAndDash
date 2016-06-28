@@ -1,5 +1,4 @@
-#ifndef DEF_MONDE
-#define DEF_MONDE
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -8,6 +7,7 @@
 #include <memory>
 
 #include "Block.h"
+#include "LayerRenderable.h"
 
 #include "../Graphic/Draw/DrawableFixedPriority.h"
 
@@ -16,11 +16,13 @@ class ParticleManager;
 
 namespace ska {
 	class World;
-	class Layer : public DrawableFixedPriority
-	{
+	class Layer {
 	public:
-		Layer(ska::World& world, std::string nomFichier, std::string chipsetName, ska::Layer* parent = NULL);
-		~Layer();
+		Layer(ska::World& world, std::string nomFichier, std::string chipsetName, ska::Layer* parent = nullptr);
+		Layer(ska::World& w, Layer* parent = nullptr);
+		~Layer() = default;
+
+		ska::LayerRenderable& getRenderable();
 
 		void changeLevel(std::string fname, std::string chipsetname);
 		void reset(std::string file, std::string chipsetName);
@@ -28,29 +30,22 @@ namespace ska {
 		void printCollisionProfile();
 		void clear();
 
-		void display() override;
-		bool isVisible() const override;
-
-		Block* getBlock(unsigned int i, unsigned int j);
+		BlockPtr& getBlock(unsigned int i, unsigned int j);
 		int getBlockCollision(const unsigned int i, const unsigned int j);
-		std::string getWorldName();
 		int getNbrBlocX();
 		int getNbrBlocY();
-		std::string getChipsetName();
 		void getData();
 		Layer* getParent() const;
 
-		void setRectAnim(ska::Rectangle rectAnim);
 
 	private:
 		void checkSize(int nbrBlocX, int nbrBlocY);
 
 		Layer* m_parent;
 		World& m_world;
-		std::string m_name, m_nomFichier, m_chipsetname;
+		std::string m_name, m_nomFichier;
 		std::vector<std::vector<BlockPtr>> m_block;
-		ska::Rectangle m_rectAnim;
-		int m_seed, m_type;
+		LayerRenderable m_renderable;
 		int m_fileWidth, m_fileHeight;
 
 	};
@@ -59,5 +54,3 @@ namespace ska {
 	
 }
 
-
-#endif

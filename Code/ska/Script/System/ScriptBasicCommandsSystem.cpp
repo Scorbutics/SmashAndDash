@@ -3,6 +3,7 @@
 
 #include "../Command\CommandEnd.h"
 #include "../Command\CommandCalculate.h"
+#include "../Command/CommandAssignSwitch.h"
 #include "../Command\CommandEndScript.h"
 #include "../Command\CommandAssign.h"
 #include "../Command\CommandRandom.h"
@@ -29,6 +30,7 @@ void ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper::setupCommands(std
 	c["end_script"] = std::move(ska::CommandPtr(new CommandEndScript(m_entityManager)));
 	c["calculate"] = std::move(ska::CommandPtr(new CommandCalculate(m_entityManager)));
 	c["assign"] = std::move(ska::CommandPtr(new CommandAssign(m_entityManager)));
+	c["assign_switch"] = std::move(ska::CommandPtr(new CommandAssignSwitch(m_entityManager)));
 	c["random"] = std::move(ska::CommandPtr(new CommandRandom(m_entityManager)));
 	c["log"] = std::move(ska::CommandPtr(new CommandLog(m_entityManager)));
 	c["script"] = std::move(ska::CommandPtr(new CommandScript(m_entityManager)));

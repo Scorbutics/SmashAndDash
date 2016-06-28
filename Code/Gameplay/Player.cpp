@@ -180,7 +180,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 
 				int j = 0, i;
 
-				for (i = 1; i < w.getLayerEvent()->getNbrLignes(); i++)
+				for (i = 1; i < w.getLayerEvent().getNbrLignes(); i++)
 				{
 
 					//if (w.getLayerEvent()->getID(i) == buf.x)
@@ -191,7 +191,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 
 				}
 
-				if (w.getLayerEvent()->getAction(i) == "script") {
+				if (w.getLayerEvent().getAction(i) == "script") {
 					/* TODO : passer par "World" pour atteindre le ScriptDispatcher */
 					/*ScriptDispatcher::getInstance().addRunningScript(NULL, w.getLayerEvent()->getParam(i), vector<string>(), 1);*/
 				} /*else if (id < 0) {

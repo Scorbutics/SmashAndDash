@@ -67,7 +67,7 @@ void RainParticleManager::refresh() {
 	{
 		//ajoute un effet de vent en fonction de la pluie
 		const int windForce = (int)(3 * windX + 0.5);
-		w.setWind(windForce);
+		//w.setWind(windForce);
 	}
 }
 
