@@ -252,44 +252,101 @@ const ska::Point<int>& Pokeball::getPos() {
     return m_pokeballPos;
 }
 
-void Pokeball::display() {
+void Pokeball::update() {
 	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes.
-	   Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
-	   qui refresh le bon état par polymorphisme. TODO */
+	Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
+	qui refresh le bon état par polymorphisme. TODO */
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 
 	if (!m_show) {
 		return;
-	}    
+	}
 
 	vector<ska::Rectangle> ids;
-	
+
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {
-		ska::Rectangle animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = { 0 };
+		m_gestionAnim.getRectOfCurrentFrame();
 
 		if (m_pokeballPos.x < m_finalPos.x) {
 			m_pokeballPos.x += m_speed;
-		} else {
+		}
+		else {
 			m_pokeballPos.x -= m_speed;
 		}
 
 		//calcul des coordonnées à l'aide de l'équation de parabole préalablement calculée dans Pokeball::launch
-        m_pokeballPos.y = (int) (m_a*m_pokeballPos.x*m_pokeballPos.x + m_b*m_pokeballPos.x + m_c); 
-
-		m_sprite.render(m_pokeballPos.x, m_pokeballPos.y, &animPos);
-    } else if (!m_isInactive)  {
+		m_pokeballPos.y = (int)(m_a*m_pokeballPos.x*m_pokeballPos.x + m_b*m_pokeballPos.x + m_c);
+	}
+	else if (!m_isInactive)  {
 		//sinon lorsqu'elle tombe par terre
 		m_isOpenning = true;
 	}
 
 
+	if (m_isOpenning)  {
+		//Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
+		m_gestionAnimVortex.getRectOfCurrentFrame();
+
+		if (m_capture == PokeballLaunchReason::Capture) {
+			ska::Rectangle boxCapture = { m_pokeballPos.x, m_pokeballPos.y, 0, 0 };
+			boxCapture.x -= TAILLEBLOC;
+			boxCapture.y -= TAILLEBLOC;
+			boxCapture.w = 2 * TAILLEBLOC;
+			boxCapture.h = 2 * TAILLEBLOC;
+
+			//TODO capture
+
+			/*ids = wScreen.detectEntity(boxCapture);
+			const size_t idSize = ids.size();
+			for (size_t i = 0; i < idSize; i++) {
+			if (ids[i].y == ID_CURRENT_OPPONENT) {
+			m_capture = PokeballLaunchReason::Recall;
+			capture(wScreen.getFight().getOpponent());
+			return;
+			}
+			}*/
+
+		}
+
+		m_countOpenning--;
+		if (m_countOpenning <= 0) {
+			m_countOpenning = OPEN_DELAY;
+			m_isOpenning = false;
+			m_isInactive = true;
+		}
+
+
+	} else if (m_isInactive) {
+		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation) 
+		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
+
+		m_countOpenned--;
+		if (m_countOpenned <= 0) {
+			m_countOpenned = OPEN_DELAY;
+			m_isInactive = false;
+			m_show = false;
+		}
+		m_capture = PokeballLaunchReason::Recall;
+	}
+}
+
+void Pokeball::display() const {
+
+	//Si la Pokeball est en l'air
+	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {
+		ska::Rectangle animPos = m_gestionAnim.getOffsetAndFrameSize();
+		ska::Rectangle oRel = { 0 };
+
+		m_sprite.render(m_pokeballPos.x, m_pokeballPos.y, &animPos);
+	}
+
 
     if(m_isOpenning)  {
 		//Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
-		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame();
+		ska::Rectangle animVortexPos = m_gestionAnimVortex.getOffsetAndFrameSize();
 		ska::Point<int> buf = m_pokeballPos;
 
 		m_openPokeball.render(buf.x, buf.y);
@@ -299,45 +356,9 @@ void Pokeball::display() {
         buf.y -= m_vortex.getHeight()/4;
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
         
-		if(m_capture == PokeballLaunchReason::Capture) {
-			ska::Rectangle boxCapture = { m_pokeballPos.x, m_pokeballPos.y, 0, 0 };
-			boxCapture.x -= TAILLEBLOC;
-			boxCapture.y -= TAILLEBLOC;
-			boxCapture.w = 2*TAILLEBLOC;
-			boxCapture.h = 2*TAILLEBLOC;
-
-			//TODO capture
-
-			/*ids = wScreen.detectEntity(boxCapture);*/
-			const size_t idSize = ids.size();
-			for (size_t i = 0; i < idSize; i++) {
-				if (ids[i].y == ID_CURRENT_OPPONENT) {
-					m_capture = PokeballLaunchReason::Recall;
-					capture(/*wScreen.getFight().getOpponent()*/);
-					return;
-				}
-			}
-
-		}
-
-        m_countOpenning--;
-        if(m_countOpenning <= 0) {
-            m_countOpenning = OPEN_DELAY;
-            m_isOpenning = false;
-            m_isInactive = true;
-        }
-
     } else if(m_isInactive) {
 		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation) 
 		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
-
-        m_countOpenned--;
-        if(m_countOpenned <= 0) {
-            m_countOpenned = OPEN_DELAY;
-            m_isInactive = false;
-            m_show = false;
-        }
-        m_capture = PokeballLaunchReason::Recall;
     }
 
 

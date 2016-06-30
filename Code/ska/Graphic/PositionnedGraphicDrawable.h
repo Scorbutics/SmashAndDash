@@ -15,7 +15,7 @@ namespace ska {
 			m_positiony = posy; 
 		}
 
-		virtual void display() override {
+		virtual void display() const override {
 			m_graphic.render(m_positionx, m_positiony);
 		}
 		

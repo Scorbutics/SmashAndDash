@@ -83,8 +83,7 @@ void ska::ParticleManager::remove(unsigned int index)
 	}
 }
 
-void ska::ParticleManager::display()
-{
+void ska::ParticleManager::display() const {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	//World& w = wScreen.getWorld();
 		

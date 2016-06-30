@@ -21,20 +21,21 @@ namespace ska {
 		~LayerRenderable() = default;
 
 		void changeLevel(std::string fname, std::string chipsetname);
-		void reset(std::vector<std::vector<std::shared_ptr<BlockRenderable>>>& block);
+		void reset(std::vector<std::vector<BlockRenderable*>>& block);
 
+		void update();
 		void clear();
 
-		void display() override;
+		void display() const override;
 		bool isVisible() const override;
 
-		std::weak_ptr<ska::BlockRenderable> getBlock(unsigned int i, unsigned int j);
+		ska::BlockRenderable* getBlock(unsigned int i, unsigned int j);
 	
 		void setRectAnim(ska::Rectangle rectAnim);
 
 	private:
 		World& m_world;
-		std::vector<std::vector<std::shared_ptr<BlockRenderable>>> m_block;
+		std::vector<std::vector<BlockRenderable*>> m_block;
 
 	};
 	typedef std::unique_ptr<LayerRenderable> LayerRenderablePtr;

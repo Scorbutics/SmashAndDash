@@ -2,7 +2,8 @@
 
 using namespace std;
 
-ska::BlockRenderable::BlockRenderable(const unsigned int blockSize, ska::Point<int> posChipset, bool auto_animation) : m_anim(375, 4, true, 0, 0, blockSize, blockSize) {
+ska::BlockRenderable::BlockRenderable(const unsigned int blockSize, ska::Point<int> posChipset, bool auto_animation) : 
+	m_anim(375, 4, true, 0, 0, blockSize, blockSize) {
 	m_auto_animation = auto_animation;
 
 	m_spritePosInChipset.x = posChipset.x*blockSize;
@@ -17,7 +18,13 @@ void ska::BlockRenderable::setSpriteFrame(unsigned int x) {
 	m_anim.stop(true);
 }
 
-ska::Rectangle ska::BlockRenderable::refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim) {
+void ska::BlockRenderable::refresh() {
+	if (m_auto_animation) {
+		m_anim.getRectOfCurrentFrame();
+	}
+}
+
+ska::Rectangle ska::BlockRenderable::determineFrame(ska::Rectangle pos, const ska::Rectangle* rectAnim) const {
 	ska::Rectangle buf = m_spritePosInChipset;
 
 	if (m_auto_animation) {
@@ -25,9 +32,8 @@ ska::Rectangle ska::BlockRenderable::refresh(ska::Rectangle pos, const ska::Rect
 
 		if (rectAnim != NULL) {
 			bufRectAnim = *rectAnim;
-		}
-		else  {
-			bufRectAnim = m_anim.getRectOfCurrentFrame();
+		} else  {
+			bufRectAnim = m_anim.getOffsetAndFrameSize();
 		}
 
 		buf.x += bufRectAnim.x;

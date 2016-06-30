@@ -23,9 +23,9 @@ namespace ska {
 		unsigned int getHeight();
 		unsigned int getWidth();
 
-	private:
-		void display();
+		void display() const;
 
+	private:
 		Animation m_anim;
 		Texture m_sprite;
 		int m_type, m_id;

@@ -86,8 +86,11 @@ bool MouseCursor::isVisible() const {
 	return !m_hideC;
 }
 
-void MouseCursor::display()
-{
+void MouseCursor::update() {
+	m_aniCursor.getRectOfCurrentFrame();
+}
+
+void MouseCursor::display() const {
 	if (m_hideC) {
 		return;
 	}
@@ -96,7 +99,8 @@ void MouseCursor::display()
 
     if(SDL_GetTicks() - m_time < m_delay)
     {
-		ska::Rectangle buf = m_aniCursor.getRectOfCurrentFrame(), relativeMousePos = m_cursorPos;
+		ska::Rectangle buf = m_aniCursor.getOffsetAndFrameSize();
+		ska::Rectangle relativeMousePos = m_cursorPos;
 /*
         relativeMousePos.x += wScreen.getORel().x;
         relativeMousePos.y += wScreen.getORel().y;*/

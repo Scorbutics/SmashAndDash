@@ -6,11 +6,15 @@ namespace ska {
 		Drawable() { }
 		virtual ~Drawable() {}
 
-		virtual void display() = 0;
+		virtual void display() const = 0;
 
-		static bool staticOperatorInf(Drawable* a, Drawable* b) { return *a < *b; }
+		static bool staticOperatorInf(const Drawable* a, const Drawable* b) {
+			int p1 = a->getPriority();
+			int p2 = b->getPriority();
+			return p1 < p2;
+		}
 
-		bool operator< (Drawable const &id) {
+		bool operator< (const Drawable &id) {
 			int p1 = getPriority();
 			int p2 = id.getPriority();
 			return p1 < p2;

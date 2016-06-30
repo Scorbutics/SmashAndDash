@@ -290,7 +290,7 @@ bool Fight::isVisible() const {
 	return m_isFighting;
 }
 
-void Fight::display()
+void Fight::display() const
 {
 	if (!isVisible()) {
 		return;
@@ -323,7 +323,7 @@ void Fight::display()
         m_opponent->getHPBar()->refresh();
     }
 
-	this->displayDialog();
+	displayDialog();
 }
 
 void Fight::refreshFight() {
@@ -377,12 +377,12 @@ void Fight::refresh() {
 	
 }
 
-void Fight::displayDialog() {
+void Fight::displayDialog() const {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	if (SDL_GetTicks() - m_t0 >= m_duration) {
+	/*if (SDL_GetTicks() - m_t0 >= m_duration) {
 		m_dialogActive = false;
-	}
+	}*/
 
     if(m_dialogActive) {
 		/*		ska::Rectangle pos = wScreen.getFight().getTrainer()->getPos();

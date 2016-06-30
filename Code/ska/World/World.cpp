@@ -36,7 +36,8 @@ std::string ska::World::getFileName() const {
 }
 
 bool ska::World::isBlockDodgeable(const int i, const int j) {
-	return (m_lMid.getBlock(i, j).lock()->getProperties() == BLOCK_PROP_JUMPWALL);
+	Block* b = m_lMid.getBlock(i, j);
+	return (b != nullptr && b->getProperties() == BLOCK_PROP_JUMPWALL);
 }
 
 bool ska::World::getCollision(const int i, const int j) {
@@ -50,6 +51,12 @@ bool ska::World::getCollision(const int i, const int j) {
 	}
 
     return false;
+}
+
+void ska::World::update() {
+	m_lBot.getRenderable().update();
+	m_lMid.getRenderable().update();
+	m_lTop.getRenderable().update();
 }
 
 bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
@@ -85,16 +92,18 @@ const ska::Rectangle* ska::World::getView() const {
 	return m_cameraSystem == NULL ? NULL : m_cameraSystem->getDisplay();
 }
 
-ska::Layer& ska::World::getLayerBot() {
-	return m_lBot;
-}
-
-ska::Layer& ska::World::getLayerMid() {
-	return m_lMid;
-}
-
-ska::Layer& ska::World::getLayerTop() {
-	return m_lTop;
+ska::LayerRenderable& ska::World::getLayerRenderable(int level) {
+	switch (level) {
+	case 0:
+		return m_lBot.getRenderable();
+		break;
+	case 1:
+		return m_lMid.getRenderable();
+		break;
+	default:
+		return m_lTop.getRenderable();
+		break;
+	}
 }
 
 ska::LayerE& ska::World::getLayerEvent() {
@@ -161,7 +170,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 
 	/* TODO autres layers ??? */
-	std::shared_ptr<Block> b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize).lock();
+	Block* b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
@@ -171,26 +180,25 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 				result.push_back(ssc);
 			}
 		}
-		return result;
 	}
 	return result;
 	
 }
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) {
-	std::shared_ptr<Block>& bBot = m_lBot.getBlock(i, j).lock();
-	std::shared_ptr<Block>& bMid = m_lMid.getBlock(i, j).lock();
-	std::shared_ptr<Block>& bTop = m_lTop.getBlock(i, j).lock();
+	Block* bBot = m_lBot.getBlock(i, j);
+	Block* bMid = m_lMid.getBlock(i, j);
+	Block* bTop = m_lTop.getBlock(i, j);
 
 	if (bTop != nullptr) {
-		return bTop.get();
+		return bTop;
 	}
 
 	if (bMid != nullptr) {
-		return bMid.get();
+		return bMid;
 	}
 
-	return bBot.get();
+	return bBot;
 }
 
 

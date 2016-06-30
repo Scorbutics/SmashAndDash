@@ -23,6 +23,7 @@
 #include "Scene/SceneHolderCore.h"
 #include "Inventory\Inventory.h"
 #include "../ska/Task/TaskQueue.h"
+#include "../ska/Utils/FpsCalculator.h"
 
 class LayerE;
 class Layer;
@@ -104,6 +105,7 @@ protected:
 	Settings m_settings;
 	Inventory m_inv;
 	WorldScene m_worldScene;
+	ska::FpsCalculator m_fpsCalculator;
 
 	ska::TaskQueue m_taskQueue;
 

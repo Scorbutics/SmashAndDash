@@ -35,11 +35,13 @@ public:
 
 	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
 
-	 void display() override;
+	 void display() const override;
 	 bool isVisible() const override;
 	 void hide(bool active);
      void resetRandomPos();
      
+	 void update();
+
      void setDirection(int direction);
      void setNumber(int number);
      void setMosaicEffect(bool x);

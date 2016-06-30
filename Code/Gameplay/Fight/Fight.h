@@ -42,10 +42,10 @@ class Fight : public ska::DrawableFixedPriority
     void addArea(int x, int y, int w, int h);
 	void addArea(ska::Rectangle area);
     void deleteAllAreas();
-	void display() override;
+	void display() const override;
 	
     private:
-    void displayDialog();
+    void displayDialog() const;
 	bool m_isFighting, m_dialogActive;
     unsigned int m_t0, m_duration, m_mobAggroRange;
     int m_fightCount;

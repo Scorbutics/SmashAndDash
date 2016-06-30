@@ -35,14 +35,14 @@ namespace ska {
 		unsigned int getPixelWidth() const;
 		unsigned int getPixelHeight() const;
 		
+		void update();
+
 		int getNbrBlocX() const;
 		int getNbrBlocY() const;
 		void setNbrBlocX(int nbrBlockX);
 		void setNbrBlocY(int nbrBlockY);
 
-		Layer& getLayerBot();
-		Layer& getLayerMid();
-		Layer& getLayerTop();
+		ska::LayerRenderable& getLayerRenderable(int level);
 		LayerE& getLayerEvent();
 
 		const ska::Rectangle* getView() const;

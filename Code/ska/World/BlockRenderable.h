@@ -12,7 +12,8 @@ namespace ska {
 		BlockRenderable(const unsigned int blockSize, ska::Point<int> posChipset, bool auto_animation);
 		~BlockRenderable() = default;
 
-		ska::Rectangle refresh(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL);
+		void refresh();
+		ska::Rectangle determineFrame(ska::Rectangle pos, const ska::Rectangle* rectAnim = NULL) const;
 		void setSpriteFrame(unsigned int x);
 
 	private:

@@ -84,7 +84,7 @@ int DialogMenu::getPriority() const {
 	return GUI_DEFAULT_DISPLAY_PRIORITY;
 }
 
-void DialogMenu::display() {
+void DialogMenu::display() const {
 	
 	ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
 	ska::Point<int> backgroundTilePos;
@@ -134,7 +134,6 @@ void DialogMenu::display() {
     }
 
 	/* Draw the associated image */
-	m_rectImage = ska::RectangleUtils::posToCenterPicture(m_rectImage, m_scrollingRect);
 	m_image.render(m_rectImage.x, m_rectImage.y);
 	
 	/* Draw the text */
@@ -147,14 +146,9 @@ void DialogMenu::display() {
 
 			if (i == m_ligne) {
 				if (m_scrollTextLengthPerLine[m_ligne] < m_textImage[m_ligne].getWidth()) {
-					m_scrollTextLengthPerLine[m_ligne] += 9.5;
 					textClip.w += (int)m_scrollTextLengthPerLine[m_ligne];
 				} else {
 					textClip.w = m_textImage[m_ligne].getWidth();
-					m_scrollTextLengthPerLine[m_ligne] = (float)textClip.w;
-					if (m_ligne + 1 < m_text.size()) {
-						m_ligne++;
-					}
 				}
 				m_textImage[i].render(textPos.x, textPos.y, &textClip);
 			} else {
@@ -165,34 +159,7 @@ void DialogMenu::display() {
 		}
 	}
 	
-	/* Handles scrolling */
-	if (m_scroll) {
-		if (m_sensScroll == F_IN) {
-			//Scroll in
-			if (m_scrollingRect.y - SCROLL_SPEED*TAILLEBLOCFENETRE / 2 >= m_rect.y) {
-				m_scrollingRect.y -= SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
-			}
-			else {
-				m_scrollingRect.y = m_rect.y;
 
-				m_show = true;
-				m_isScrolling = false;
-			}
-		}
-		else {
-			//Scroll out
-			if ((m_scrollingRect.y + SCROLL_SPEED * TAILLEBLOCFENETRE / 2) <= m_rect.y + m_rect.h)  {
-				m_scrollingRect.y += SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
-			}
-			else {
-				m_scrollingRect.y = m_rect.y + m_rect.h;
-				//hide(true);
-				m_show = false;
-				m_isScrolling = false;
-			}
-
-		}
-	}
 
 	for (unsigned int i = 0; i < m_areaList.size(); i++){
 		m_areaList[i]->display();
@@ -229,6 +196,54 @@ void DialogMenu::refresh() {
 	if (isVisible(true)) {
 		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= m_timeout) {
 			hide(true);
+		}
+	}
+
+	/* Re-center image */
+	m_rectImage = ska::RectangleUtils::posToCenterPicture(m_rectImage, m_scrollingRect);
+
+	/* Text scrolling */
+	if (!m_textImage.empty()) {		
+		ska::Rectangle textClip = { 0, 0, 0, m_textImage[0].getHeight() };
+	
+		if (m_scrollTextLengthPerLine[m_ligne] < m_textImage[m_ligne].getWidth()) {
+			m_scrollTextLengthPerLine[m_ligne] += 9.5;
+			textClip.w += (int)m_scrollTextLengthPerLine[m_ligne];
+		} else {
+			textClip.w = m_textImage[m_ligne].getWidth();
+			m_scrollTextLengthPerLine[m_ligne] = (float)textClip.w;
+			if (m_ligne + 1 < m_text.size()) {
+				m_ligne++;
+			}
+		}
+	}
+
+	/* Window scrolling */
+	if (m_scroll) {
+		if (m_sensScroll == F_IN) {
+			//Scroll in
+			if (m_scrollingRect.y - SCROLL_SPEED*TAILLEBLOCFENETRE / 2 >= m_rect.y) {
+				m_scrollingRect.y -= SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
+			}
+			else {
+				m_scrollingRect.y = m_rect.y;
+
+				m_show = true;
+				m_isScrolling = false;
+			}
+		}
+		else {
+			//Scroll out
+			if ((m_scrollingRect.y + SCROLL_SPEED * TAILLEBLOCFENETRE / 2) <= m_rect.y + m_rect.h)  {
+				m_scrollingRect.y += SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
+			}
+			else {
+				m_scrollingRect.y = m_rect.y + m_rect.h;
+				//hide(true);
+				m_show = false;
+				m_isScrolling = false;
+			}
+
 		}
 	}
 

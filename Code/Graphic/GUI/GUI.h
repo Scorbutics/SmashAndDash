@@ -77,8 +77,10 @@ class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
     void setRefreshPNJWindowCount(int x);
     void setPNJ(CharacterPtr *pnj);
     void setClickMenu();
-	void dialogDisplay();
-	void display() override;
+	void dialogDisplay() const;
+	void display() const override;
+
+	void update();
 private:
     vector<DialogMenuPtr> m_buttonList;
 	vector<IDialogMenuPtr> m_extraWindows;

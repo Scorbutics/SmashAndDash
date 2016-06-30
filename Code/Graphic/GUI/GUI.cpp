@@ -169,7 +169,7 @@ WindowShopPtr& GUI::getWindowShop() {
     return m_wShop;
 }
 
-void GUI::display() {
+void GUI::display() const {
 
 	dialogDisplay();
 
@@ -530,9 +530,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
 void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
 }
 
-void GUI::dialogDisplay()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+void GUI::update() {
 	m_hide = false;
 
 	std::vector<std::vector<IDialogMenuPtr>::iterator> toDelete;
@@ -541,7 +539,8 @@ void GUI::dialogDisplay()
 		if ((*w)->isVisible()) {
 			//m_hide = true;
 			(*w)->display();
-		} else {
+		}
+		else {
 			toDelete.push_back(w);
 		}
 		index++;
@@ -550,7 +549,10 @@ void GUI::dialogDisplay()
 	for (auto& d : toDelete) {
 		m_extraWindows.erase(d);
 	}
+}
 
+void GUI::dialogDisplay() const {
+	WGameCore& wScreen = WGameCore::getInstance();
 
 	if (m_pnjInfoWindow->isVisible()) {
 		m_pnjInfoWindow->display();

@@ -8,7 +8,7 @@ namespace ska {
 	public:
 		DrawableContainer() { m_topPriority2D = INT_MIN; m_topPriority = INT_MIN; }
 		
-		void add(Drawable& d) {
+		void add(const Drawable& d) {
 			if (d.isVisible()) {
 				int currentPriority = d.getPriority();
 				int currentPriority2D = d.getPriority2D();
@@ -43,7 +43,7 @@ namespace ska {
 		virtual ~DrawableContainer() {}
 
 	protected:
-		virtual void push(Drawable& d) = 0;
+		virtual void push(const Drawable& d) = 0;
 
 	private:
 		int m_topPriority2D;

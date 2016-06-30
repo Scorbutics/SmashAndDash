@@ -24,7 +24,8 @@ public:
 
     void capture(/*Character* pkmn*/);
 	void launch(const ska::Point<int>& src, const ska::Point<int>& destPos, PokeballLaunchReason::Enum launchReason);
-	void display() override;
+	void update();
+	void display() const override;
 	bool isVisible() const override;
     void hide(bool b);
     ~Pokeball();

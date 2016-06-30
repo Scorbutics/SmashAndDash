@@ -47,10 +47,8 @@ ska::SpriteAnimation::SpriteAnimation(int type, int id, unsigned int framesNumbe
 }
 
 
-void ska::SpriteAnimation::refresh()
-{
+void ska::SpriteAnimation::refresh() {
 	m_offset = m_anim.getRectOfCurrentFrame();
-	this->display();
 }
 
 
@@ -98,10 +96,10 @@ unsigned int ska::SpriteAnimation::getWidth()
     return m_offset.w;
 }
 
-void ska::SpriteAnimation::display()
+void ska::SpriteAnimation::display() const
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();*/
-	ska::Point<int>& pos = m_pos;
+	const ska::Point<int>& pos = m_pos;
     /*pos.x += wScreen.getORel().x;
     pos.y += wScreen.getORel().y;*/
 

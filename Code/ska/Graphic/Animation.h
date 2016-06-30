@@ -16,8 +16,16 @@ namespace ska {
 		void nextFrame();
 		void resetCycles();
 
+		/*
+		* Retourne la frame courante sans faire avancer l'animation
+		*/
 		const Rectangle getOffsetAndFrameSize() const;
+		
+		/*
+		*  Fait "avancer" l'animation si nécessaire et retourne la frame courante
+		*/
 		const Rectangle getRectOfCurrentFrame();
+
 		unsigned int getCount();
 		unsigned int getDelay();
 		unsigned int getNumberFrames();

@@ -17,7 +17,8 @@ namespace ska {
 		SpriteAnimation* play(int type, int id, ska::Point<int> pos, unsigned int cycles, int alpha = -1, unsigned int framesNumber = 4, unsigned int delay = 300);
 		~SpriteAnimationManager();
 		bool isVisible() const override;
-		void display() override;
+		void display() const override;
+		void refresh();
 
 	private:
 		std::vector<unsigned int> m_cycles;

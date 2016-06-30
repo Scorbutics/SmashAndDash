@@ -25,7 +25,7 @@ namespace ska {
 		void hide(bool h);
 
 		virtual bool isVisible() const override;
-		virtual void display() override;
+		virtual void display() const override;
 
 		virtual void refresh();
 		int collisionNPC();

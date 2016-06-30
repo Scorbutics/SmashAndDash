@@ -28,18 +28,22 @@ ska::SpriteAnimation* ska::SpriteAnimationManager::play(int type, int id, ska::P
 	return &(*m_sprites[i]);
 }
 
-void ska::SpriteAnimationManager::display()
-{
-	for(unsigned int i = 0; i < m_sprites.size(); i++)
-	{
-		if(m_sprites[i] != NULL)
-		{
+void ska::SpriteAnimationManager::refresh() {
+	for (unsigned int i = 0; i < m_sprites.size(); i++) {
+		if (m_sprites[i] != NULL) {
 			m_sprites[i]->refresh();
-			if(m_sprites[i]->getAnimation()->getCycles() == m_cycles[i])
-			{
+			if (m_sprites[i]->getAnimation()->getCycles() == m_cycles[i]) {
 				m_sprites[i] = NULL;
 				m_cycles[i] = 0;
 			}
+		}
+	}
+}
+
+void ska::SpriteAnimationManager::display() const {
+	for (unsigned int i = 0; i < m_sprites.size(); i++) {
+		if (m_sprites[i] != NULL) {
+			m_sprites[i]->display();
 		}
 	}
 }

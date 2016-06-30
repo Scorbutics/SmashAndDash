@@ -126,6 +126,8 @@
   <ItemGroup>
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandAssignSwitch.h" />
+    <ClInclude Include="Code\ska\Utils\FpsCalculator.h" />
+    <ClInclude Include="Code\ska\Utils\FpsRenderable.h" />
     <ClInclude Include="Code\ska\World\BlockRenderable.h" />
     <ClInclude Include="Code\ska\World\ChipsetHolder.h" />
     <ClInclude Include="Code\Gameplay\Data\RawStatistics.h" />
@@ -391,6 +393,8 @@
   <ItemGroup>
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssignSwitch.cpp" />
+    <ClCompile Include="Code\ska\Utils\FpsCalculator.cpp" />
+    <ClCompile Include="Code\ska\Utils\FpsRenderable.cpp" />
     <ClCompile Include="Code\ska\World\BlockRenderable.cpp" />
     <ClCompile Include="Code\ska\World\ChipsetHolder.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />

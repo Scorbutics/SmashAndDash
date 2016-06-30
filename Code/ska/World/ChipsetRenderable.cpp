@@ -15,14 +15,19 @@ m_animBlocks(375, 4, true, 0, 0, blockSize, blockSize) {
 	m_blocks.resize(corrFileSize);
 }
 
-void ska::ChipsetRenderable::render(Rectangle pos, const std::shared_ptr<BlockRenderable>& block) {
-	Rectangle& chipsetPartRender = block->refresh(pos, &m_animBlocks.getRectOfCurrentFrame());
+void ska::ChipsetRenderable::render(Rectangle pos, const BlockRenderable& block) const {
+	Rectangle& chipsetPartRender = block.determineFrame(pos, &m_animBlocks.getOffsetAndFrameSize());
 	m_chipset.render(pos.x, pos.y, &chipsetPartRender);
 }
 
-std::shared_ptr<ska::BlockRenderable> ska::ChipsetRenderable::generateBlock(const int id, const int blockSize, ska::Point<int> posCorr, bool auto_anim) {
+void ska::ChipsetRenderable::update(BlockRenderable& block) {
+	block.refresh();
+	m_animBlocks.getRectOfCurrentFrame();
+}
+
+ska::BlockRenderablePtr& ska::ChipsetRenderable::generateBlock(const int id, const int blockSize, ska::Point<int> posCorr, bool auto_anim) {
 	if (m_blocks[id] == nullptr) {
-		m_blocks[id] = std::move(std::shared_ptr<ska::BlockRenderable>(new BlockRenderable(blockSize, posCorr, auto_anim)));
+		m_blocks[id] = std::move(BlockRenderablePtr(new BlockRenderable(blockSize, posCorr, auto_anim)));
 	}
 	return m_blocks[id];
 }

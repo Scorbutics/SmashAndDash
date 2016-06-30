@@ -68,16 +68,16 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 
 	//Première couche
-	drawables.addHead(m_world.getLayerBot().getRenderable());
+	drawables.addHead(m_world.getLayerRenderable(0));
 
 	//Deuxième couche
-	drawables.addHead(m_world.getLayerMid().getRenderable());
+	drawables.addHead(m_world.getLayerRenderable(1));
 
 	ska::Scene::graphicUpdate(drawables);
 	
 	/* We use the maximum drawing priority of characters to draw the top layer */
-	m_world.getLayerTop().getRenderable().setPriority(m_graphicSystem.getTopLayerPriority());
-	drawables.add(m_world.getLayerTop().getRenderable());
+	m_world.getLayerRenderable(2).setPriority(m_graphicSystem.getTopLayerPriority());
+	drawables.add(m_world.getLayerRenderable(2));
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	wScreen.getPokeball().setPriority(m_graphicSystem.getTopLayerPriority() + 1);
@@ -88,6 +88,7 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void WorldScene::eventUpdate(bool movingDisallowed) {
+	m_world.update();
 	return Scene::eventUpdate(movingDisallowed);
 }
 

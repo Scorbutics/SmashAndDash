@@ -8,7 +8,7 @@ CharacterDrawable::CharacterDrawable(Character* parent, int part) {
 	m_part = part;
 }
 
-void CharacterDrawable::display() {
+void CharacterDrawable::display() const {
 	m_parent->display(m_part);
 }
 

@@ -57,7 +57,7 @@ public:
 
 	const ska::Rectangle getRect() const override;
 	void refresh() override;
-	void display() override;
+	void display() const override;
 	bool isVisible() const override;
 	int getPriority() const override;
 

@@ -11,7 +11,7 @@ m_talker("", imageResource, { TAILLEBLOCFENETRE, screenH - TAILLEBLOCFENETRE * 9
 	m_instanceExists++;
 }
 
-void MessageDialogBox::display() {
+void MessageDialogBox::display() const {
 	m_talker.display();
 	m_dialog.display();
 }

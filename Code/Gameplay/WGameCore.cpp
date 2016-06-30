@@ -44,6 +44,7 @@ m_chipsetAni(3, 4, true) {
 
 	m_speedInertie = 0;
 	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
+	m_fpsCalculator.setDisplayPriority(INT_MAX);
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h) {
@@ -158,12 +159,14 @@ bool WGameCore::refresh() {
     
 	//Ici, transition entrante
     transition(1);
+	static const int FPS = 63;
+	static const int TICKS = 1000 / FPS;
 
     //BOUCLE PRINCIPALE A CHAQUE FRAME
     while (true) {
         t = ska::TimeUtils::getTicks();
 		
-		if (t - t0 > 20)  {
+		if (t - t0 > TICKS)  {
 			
             //Rafraîchissement à chaque frame : graphique puis évènementiel
 			graphicUpdate();
@@ -172,10 +175,11 @@ bool WGameCore::refresh() {
 			flip();
 			SDL_RenderClear(m_renderer);
 			// Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
-            t0 = t; 
+			m_fpsCalculator.calculate(t - t0);
+			t0 = t; 
         } else {
 			/* Temporisation entre 2 frames */
-			SDL_Delay(20 - (t - t0));
+			SDL_Delay(TICKS - (t - t0));
 		}
     }
 
@@ -187,9 +191,12 @@ bool WGameCore::refresh() {
 void WGameCore::graphicUpdate(void) {
 	ska::VectorDrawableContainer drawables;
 	m_sceneHolder.getScene()->graphicUpdate(drawables);
+	drawables.add(m_fpsCalculator.getRenderable());
 	drawables.draw();
 }
 
+
+/* TODO éviter try catch chaque frame (PERFS ?) */
 void WGameCore::eventUpdate(bool movingDisallowed) {
 	try {
 		/* Scene dependent event update */

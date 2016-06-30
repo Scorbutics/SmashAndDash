@@ -19,7 +19,7 @@ int RainParticleManager::getWind() const {
 }
 
 
-void RainParticleManager::displayRainFog()
+void RainParticleManager::displayRainFog() const
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
@@ -40,19 +40,10 @@ void RainParticleManager::displayRainFog()
 			buf.y = 0;
 		}
 
-		if (m_countWind < 2000 && m_countWind != 0) {
-			m_countWind += m_sens;
-			m_Twind = m_countWind * M_PI / 140;
-		} else {
-			m_sens *= -1;
-			m_countWind += m_sens;
-			m_Twind = m_countWind * M_PI / 140;
-		}
-
 	}
 }
 
-void RainParticleManager::display() {
+void RainParticleManager::display() const {
 	ParticleManager::display();	
 	displayRainFog();
 }
@@ -68,6 +59,19 @@ void RainParticleManager::refresh() {
 		//ajoute un effet de vent en fonction de la pluie
 		const int windForce = (int)(3 * windX + 0.5);
 		//w.setWind(windForce);
+	}
+
+	/* Gestion du vent */
+	if (m_active) {
+		if (m_countWind < 2000 && m_countWind != 0) {
+			m_countWind += m_sens;
+			m_Twind = m_countWind * M_PI / 140;
+		}
+		else {
+			m_sens *= -1;
+			m_countWind += m_sens;
+			m_Twind = m_countWind * M_PI / 140;
+		}
 	}
 }
 

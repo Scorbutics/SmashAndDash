@@ -29,8 +29,10 @@ class MouseCursor : public ska::DrawableFixedPriority
 	void setPokemon(Character* pkmn);
 	void setCursorPos(ska::Rectangle pos);
 
-	void display() override;
+	void display() const override;
 	bool isVisible() const override;
+
+	void update();
 
 	void removePokemon();
 	void removeObject();

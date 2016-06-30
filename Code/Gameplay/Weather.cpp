@@ -62,7 +62,40 @@ void Weather::resetRandomPos() {
     }
 }
 
-void Weather::display() {
+void Weather::update() {
+	const ska::Rectangle* worldView = m_world.getView();
+
+	if (!m_active || worldView == nullptr) {
+		return;
+	}
+
+	const float worldWidth = (float)m_world.getPixelWidth();
+	const float worldHeight = (float)m_world.getPixelHeight();
+	
+	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
+
+	for (int i = 0; i < m_number; i++) {
+
+		m_pos[i].x += (float)(m_intensityX / 5.);
+		m_pos[i].y += (float)(m_intensityY / 5.);
+
+		if ((m_pos[i].x + m_weather->getWidth()) < 0 && m_intensityX < 0) {
+			m_pos[i].x = worldWidth;
+		}
+		else if (m_pos[i].x > worldWidth && m_intensityX > 0) {
+			m_pos[i].x = -worldWidth;
+		}
+
+		if ((m_pos[i].y + m_weather->getHeight())< 0 && m_intensityY < 0) {
+			m_pos[i].y = worldHeight;
+		}
+		else if (m_pos[i].y > worldHeight && m_intensityY > 0) {
+			m_pos[i].y = -worldHeight;
+		}
+	}
+}
+
+void Weather::display() const {
 	const ska::Rectangle* worldView = m_world.getView();
 
 	if (!m_active || worldView == nullptr) {
@@ -77,24 +110,8 @@ void Weather::display() {
     for(int i = 0; i < m_number; i++) {
 
 		ska::Rectangle buf;
-		m_pos[i].x += (float) (m_intensityX / 5.);
-		m_pos[i].y += (float) (m_intensityY / 5.);
-
-        buf.x = (int) m_pos[i].x + oRel.x;
-		buf.y = (int) m_pos[i].y + oRel.y;			
-
-		if ((m_pos[i].x + m_weather->getWidth()) < 0 && m_intensityX < 0) {
-			m_pos[i].x = worldWidth;
-		} else if (m_pos[i].x > worldWidth && m_intensityX > 0) {
-			m_pos[i].x = - worldWidth;
-        }
-
-		if ((m_pos[i].y + m_weather->getHeight())< 0 && m_intensityY < 0) {
-			m_pos[i].y = worldHeight;
-		} else if (m_pos[i].y > worldHeight && m_intensityY > 0) {
-			m_pos[i].y = - worldHeight;
-        }
-
+		buf.x = (int)m_pos[i].x + oRel.x;
+		buf.y = (int)m_pos[i].y + oRel.y;
 
         if(m_mosaic) {
             int nbrMosaicX, nbrMosaicY;

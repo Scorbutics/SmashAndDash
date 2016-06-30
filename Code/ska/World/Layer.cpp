@@ -33,7 +33,7 @@ void ska::Layer::clear() {
 	m_block.clear();
 }
 
-std::weak_ptr<ska::Block> ska::Layer::getBlock(const unsigned int i, const unsigned int j)
+ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		return m_block[i][j];
@@ -47,7 +47,7 @@ std::weak_ptr<ska::Block> ska::Layer::getBlock(const unsigned int i, const unsig
 
 int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) {
 	if (i < m_block.size() && j < m_block[i].size()) {
-		std::shared_ptr<ska::Block>& b = m_block[i][j];
+		Block* b = m_block[i][j];
 		if (b == nullptr) {
 			return BLOCK_COL_VOID;
 		}
@@ -81,7 +81,7 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 	auto& chipset = m_world.getChipset();
 	const unsigned int blockSize = m_world.getBlockSize();
 
-	std::vector<std::vector<std::shared_ptr<BlockRenderable>>> renderableBlocks;
+	std::vector<std::vector<BlockRenderable*>> renderableBlocks;
 	m_block.resize(m_fileWidth);
 	renderableBlocks.resize(m_fileWidth);
 	for (int i = 0; i < m_fileWidth; i++) {
@@ -89,11 +89,11 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 		renderableBlocks.reserve(m_fileHeight);
 		for (int j = 0; j < m_fileHeight; j++) {
 			ska::Color c = fichierMPng.getPixel32Color(i, j);
-			std::shared_ptr<BlockRenderable> brp;
-			std::shared_ptr<Block> bp;
-			chipset.generateBlock(c, bp, brp);
-			m_block[i].push_back(std::move(bp));
-			renderableBlocks[i].push_back(std::move(brp));
+			BlockRenderable* brp = nullptr;
+			Block* bp = nullptr;
+			chipset.generateBlock(c, &bp, &brp);
+			m_block[i].push_back(bp);
+			renderableBlocks[i].push_back(brp);
         }
     }
 

@@ -9,8 +9,8 @@ public:
 	int getWind() const;
 	virtual void refresh() override;
 	
-	virtual void display() override;
-	void displayRainFog();
+	virtual void display() const override;
+	void displayRainFog() const;
 	void playRain(int idSprite, float acceleration, float density, unsigned int duration);
 
 	virtual ~RainParticleManager();

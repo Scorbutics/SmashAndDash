@@ -7,7 +7,7 @@ class CharacterDrawable : public ska::Drawable
 {
 public:
 	CharacterDrawable(Character* parent, int part);
-	virtual void display() override;
+	virtual void display() const override;
 	virtual bool isVisible() const override;
 	virtual int getPriority() const override;
 	virtual int getPriority2D() const override;
