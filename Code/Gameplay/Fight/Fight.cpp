@@ -59,7 +59,7 @@ void Fight::setAreasFromLayerEvent()
     }
 }
 
-
+/*
 bool Fight::isInFightArea(Player* hero) {
     if(hero == NULL) {
         cerr << "Erreur (classe Fight) : Personnage invalide" << endl;
@@ -76,6 +76,7 @@ bool Fight::isInFightArea(Player* hero) {
 
     return false;
 }
+*/
 
 void Fight::addArea(int x, int y, int w, int h) {
 	ska::Rectangle buf;
@@ -103,7 +104,7 @@ void Fight::start(Character* opponent) {
 	ska::World& w = wScreen.getWorld();
 	int time;
 	
-    m_pkmn = wScreen.getPokemonManager().getFirstUsablePokemon();
+    //m_pkmn = wScreen.getPokemonManager().getFirstUsablePokemon();
 
 	if (m_pkmn == NULL || opponent == NULL) {
 		return;

@@ -237,11 +237,6 @@ void WGameCore::waitQuit(DialogMenu* window)
     }*/
 }
 
-AI& WGameCore::getAI()
-{
-    return m_ai;
-}
-
 Inventory& WGameCore::getInventory()
 {
     return m_inv;

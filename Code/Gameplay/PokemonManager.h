@@ -11,11 +11,14 @@ typedef std::unique_ptr<Character> CharacterPtr;
 
 //PokemonManager permet de gérer de façon simplifiée les ajouts/modifications à la team Pokémon et aux Pokémon sauvages, ainsi que de les stocker.
 //L'instance est unique et appartient au coeur du moteur de jeu (WGameCore)
+
 class PokemonManager
 {
     public:
     PokemonManager();
-    void generateOpponent(WGameCore* wm); //Génère un Pokémon sauvage en fonction du lieu où se trouve le héros
+	~PokemonManager();
+
+    /*void generateOpponent(WGameCore* wm); //Génère un Pokémon sauvage en fonction du lieu où se trouve le héros
 
     Character* getOpponent(); //Renvoie le Pokémon sauvage généré aléatoirement
     Player* getPokemon(unsigned int index); //Renvoie le Pokémon numéro "index" de la team
@@ -29,14 +32,14 @@ class PokemonManager
 	void add(Character* pkmn);
 	void add(int id);
 	void remove(unsigned int index); //Supprime le Pokémon numéro "index" de la team
-    ~PokemonManager();
+    
 	
     private:
 	std::unique_ptr<Player>& getPokemonPtr(unsigned int index);
 	
 
 	std::list<std::unique_ptr<Player>> m_team;
-    CharacterPtr m_opponent;
+    CharacterPtr m_opponent;*/
 };
 
 #endif

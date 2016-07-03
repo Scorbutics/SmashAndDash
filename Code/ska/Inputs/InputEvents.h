@@ -3,8 +3,7 @@
 
 #include <string>
 #include "../Utils\SkaConstants.h"
-#include "../Utils/Observer.h"
-
+/*
 namespace ska {
 
 	class MouseEvent : public EventArg
@@ -51,5 +50,5 @@ namespace ska {
 		bool m_pressed;
 		int m_state;
 	};
-}
+}*/
 #endif

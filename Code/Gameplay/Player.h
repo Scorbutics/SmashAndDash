@@ -4,7 +4,7 @@
 #include "../ska/Inputs/InputEvents.h"
 #include "Character.h"
 
-class Player :
+/*class Player :
 	public Character, public ska::Observer<const int>
 {
 	public:
@@ -13,5 +13,5 @@ class Player :
 		virtual void refresh();
 		virtual ~Player();
 };
-
+*/
 #endif

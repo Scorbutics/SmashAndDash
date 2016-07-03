@@ -34,21 +34,21 @@ void WindowTeam::reset(string action)
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.h = TAILLEBLOCFENETRE*3;
     this->addTextArea("Equipe Pokémon", 20, buf);
-    this->resize(m_rect.w, (int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE + 2*TAILLEBLOCFENETRE);
+    this->resize(m_rect.w, /*(int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE*/ + 2*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
     this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
     buf.x = TAILLEBLOCFENETRE/3;
     buf.y = TAILLEBLOCFENETRE*5/2;
     m_slotPkmn.clear();
-    for(unsigned int i = 0; i < pkmnMng.getPokemonTeamSize(); i++)
+    /*for(unsigned int i = 0; i < pkmnMng.getPokemonTeamSize(); i++)
     {
         if(pkmnMng.getPokemon(i) != NULL )
         {
-			ska::Rectangle /*rectSrcBuf,*/ posSlot;
-            /*rectSrcBuf.x = 0;
-            rectSrcBuf.y = pkmnMng->getPokemon(i)->getHeight();
-            rectSrcBuf.w = pkmnMng->getPokemon(i)->getWidth();
-            rectSrcBuf.h = pkmnMng->getPokemon(i)->getHeight();*/
+			//ska::Rectangle rectSrcBuf, posSlot;
+            //rectSrcBuf.x = 0;
+            //rectSrcBuf.y = pkmnMng->getPokemon(i)->getHeight();
+            //rectSrcBuf.w = pkmnMng->getPokemon(i)->getWidth();
+            //rectSrcBuf.h = pkmnMng->getPokemon(i)->getHeight();
 			posSlot.x = 6;
             posSlot.y = buf.y - TAILLEBLOCFENETRE;
 			posSlot.w = 0;
@@ -59,7 +59,7 @@ void WindowTeam::reset(string action)
             buf.y += buf.h;
 
         }
-    }
+    }*/
 }
 
 
@@ -85,7 +85,7 @@ void WindowTeam::refresh()
     {
  
 		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize();
-		if (/*pkmnMng.getPokemon(i) != wScreen.getFight().getPokemon() &&*/ pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
+		/*if (pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));
 			pkmnMng.remove(i);
@@ -100,7 +100,7 @@ void WindowTeam::refresh()
             pkmnMng.swapPokemonOrders(i, m_indexCursor);
             this->reset("show");
             break;
-        }
+        }*/
 
     }
 

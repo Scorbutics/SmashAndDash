@@ -105,9 +105,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\Gameplay\AI\AI.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\AI</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Bar.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
@@ -134,12 +131,6 @@
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\EndFightReasonEnum.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Fight</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\Fight\Fight.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\Fight</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Gameplay\EntityFactory.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\GUI.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
@@ -285,9 +276,6 @@
     <ClInclude Include="Code\Gameplay\Fight\Skill.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Fight</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Player.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Pokeball.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
@@ -386,12 +374,6 @@
     </ClInclude>
     <ClInclude Include="Code\ska\Utils\NumberUtils.h">
       <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Utils\Observable.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Utils\Observer.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Utils\ResourceTemplate.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
@@ -774,9 +756,6 @@
     <ClInclude Include="Code\ska\Task\Task.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Utils\Identity.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Task\Runnable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -840,9 +819,6 @@
     <ClInclude Include="Code\ska\Inputs\InputContextManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Inputs\InputEvents.h">
-      <Filter>Fichiers d%27en-tête\Inputs</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Inputs\InputRange.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -900,11 +876,17 @@
     <ClInclude Include="Code\ska\Utils\FpsRenderable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Identity.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Observer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\Observable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Code\Gameplay\AI\AI.cpp">
-      <Filter>Fichiers sources\Gameplay\AI</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
@@ -928,12 +910,6 @@
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\DynamicWindowArea.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\Fight\Fight.cpp">
-      <Filter>Fichiers sources\Gameplay\Fight</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\EntityFactory.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
@@ -1075,9 +1051,6 @@
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Fight\Skill.cpp">
       <Filter>Fichiers sources\Gameplay\Fight</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\Player.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Pokeball.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>

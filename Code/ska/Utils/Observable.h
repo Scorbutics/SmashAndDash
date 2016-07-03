@@ -1,5 +1,4 @@
-#ifndef DEF_OBSERVABLE
-#define DEF_OBSERVABLE
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -7,39 +6,48 @@
 
 namespace ska {
 
-	template <class T>
+	template <class T, class ...Args>
 	class Observable
 	{
 	public:
-		void addObserver(Observer<T>* obs) {
-			auto& temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
-			if (temp == m_observerList.end()) {
-				m_observerList.push_back(obs);
+		Observable() : m_head(nullptr) {
+
+		}
+
+		void addObserver(Observer<T, Args...>& obs) {
+			if (m_head != nullptr) {
+				m_head->m_left = &obs;
+			}
+			obs.m_left = nullptr;
+			obs.m_right = m_head;		
+			m_head = &obs;
+		}
+
+		void removeObserver(Observer<T, Args...>& obs) {
+			if (m_head == &obs) {
+				m_head = obs.m_right;
+			}
+
+			if (obs.m_left != nullptr) {
+				obs.m_left->m_right = obs.m_right;
+			}
+
+			if (obs.m_right != nullptr) {
+				obs.m_right->m_left = obs.m_left;
 			}
 		}
 
-		void removeObserver(Observer<T>* obs) {
-			auto& temp = std::find(m_observerList.begin(), m_observerList.end(), obs);
-			if (temp != m_observerList.end()) {
-				m_observerList.erase(temp);
+		void notifyObservers(const T& t, Args... args) {
+			for (auto& it = m_head; it != nullptr; it = it->m_right) {
+				it->receive(t, std::forward<Args&>(args)...);
 			}
 		}
 
-		void notifyObservers(const EventArg& e, T& t) {
-			for (auto &it : m_observerList) {
-				it->update(this, e, t);
-			}
-		}
 
-		void notifyObserver(Observer<T>* obs, const EventArg& e, T& t) {
-			auto& it = std::find(m_observerList.begin(), m_observerList.end(), obs);
-			if (it != m_observerList.end()) {
-				(*it)->update(this, e, t);
-			}
-		}
+		virtual ~Observable() = default;
 
 	private:
-		std::vector<Observer<T>*> m_observerList;
+		Observer<T, Args...>* m_head;
 	};
 }
-#endif
+

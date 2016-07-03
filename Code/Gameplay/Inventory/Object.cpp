@@ -72,8 +72,8 @@ bool Object::use()
     {
 		WGameCore& wScreen = WGameCore::getInstance();
 
-		if(wScreen.getPokeball().isVisible() || wScreen.getPokemonManager().getPokemonTeamSize() >= POKEMON_TEAM_MAX_SIZE)
-			return false;
+		/*if(wScreen.getPokeball().isVisible() || wScreen.getPokemonManager().getPokemonTeamSize() >= POKEMON_TEAM_MAX_SIZE)
+			return false;*/
 
 		const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
 		ska::Point<int> pos = mousePos;
@@ -96,8 +96,8 @@ bool Object::use(int i)
         if(string::npos != m_action.find("heal"))
         {
             string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
-			if (wScreen.getPokemonManager().getPokemon(i)->isAlive())
-				wScreen.getPokemonManager().getPokemon(i)->setHP(wScreen.getPokemonManager().getPokemon(i)->getHp() + atoi(pv.c_str()));
+			/*if (wScreen.getPokemonManager().getPokemon(i)->isAlive())
+				wScreen.getPokemonManager().getPokemon(i)->setHP(wScreen.getPokemonManager().getPokemon(i)->getHp() + atoi(pv.c_str()));*/
         }
     }
     else

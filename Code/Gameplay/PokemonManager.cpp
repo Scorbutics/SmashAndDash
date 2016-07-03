@@ -10,11 +10,11 @@ using namespace std;
 
 PokemonManager::PokemonManager()
 {
-    m_opponent = NULL;
+    //m_opponent = NULL;
 }
 
 
-
+/*
 unique_ptr<Player>& PokemonManager::getPokemonPtr(unsigned int index)
 {
 	list<unique_ptr<Player>>::iterator iter = m_team.begin();
@@ -129,11 +129,11 @@ void PokemonManager::remove(unsigned int index)
     else
         cerr << "Erreur (classe PokemonManager) : Impossible de supprimer le Pokémon numéro " << index << " de l'équipe" << endl;
 }
-
+*/
 PokemonManager::~PokemonManager()
 {
 }
-
+/*
 void PokemonManager::useFirstUsablePokemon()
 {
 	unsigned int index;
@@ -143,5 +143,5 @@ void PokemonManager::useFirstUsablePokemon()
 	if(iter != m_team.end())
 		swapPokemonOrders(0, index);
 	
-}
+}*/
 

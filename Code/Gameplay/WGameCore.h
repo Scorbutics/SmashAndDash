@@ -63,7 +63,6 @@ public:
 	GUI& getGUI();
 	
 	Pokeball& getPokeball();
-	AI& getAI();
 	Inventory& getInventory();
 	Settings& getSettings();
 	PokemonManager& getPokemonManager();
@@ -96,7 +95,7 @@ protected:
 
 	float m_speedInertie;
 	ska::Animation m_chipsetAni;
-	AI m_ai;
+	//AI m_ai;
 	Pokeball m_pokeball;
 	PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;

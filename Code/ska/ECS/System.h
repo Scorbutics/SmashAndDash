@@ -11,11 +11,11 @@
 namespace ska {
 	
 	template <class Storage, class ... ComponentType>
-	class System : public Observer<EntityData>, virtual public ISystem, virtual protected Refreshable {
+	class System : public Observer<EntityEventType, const EntityComponentsMask&, EntityId>, virtual public ISystem, virtual protected Refreshable {
 	public :
-		System(EntityManager& entityManager) : 
+		System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) { 
-			m_entityManager.addObserver(this);
+			m_entityManager.addObserver(*this);
 			
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
@@ -37,14 +37,12 @@ namespace ska {
 			m_toDelete.emplace(e);
 		}
 
-		void update(Observable<EntityData>* obs, const EventArg& e, EntityData& t) override {
+		void onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
 			
 			/* An entity belongs to the system ONLY IF it has ALL the requiered components of the system */
-			EntityComponentsMask resultMask = *t.first;
-			EntityId entityId = t.second;
-			resultMask &= m_systemComponentMask;
+			EntityComponentsMask resultMask = mask & m_systemComponentMask;
 
-			switch (e.type()) {
+			switch (e) {
 			case EntityEventType::COMPONENT_ADD:
 				if (resultMask == m_systemComponentMask && m_processed.count(entityId) == 0) {
 					m_processed.insert(entityId);
@@ -63,7 +61,7 @@ namespace ska {
 						
 		}
 
-		virtual ~System(){ m_entityManager.removeObserver(this); }
+		virtual ~System(){ m_entityManager.removeObserver(*this); }
 
 	private:
 		std::unordered_set<ska::EntityId> m_toDelete;

@@ -25,12 +25,12 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
     m_index = index;
-    m_pkmn = wScreen.getPokemonManager().getPokemon(index);
+    //m_pkmn = wScreen.getPokemonManager().getPokemon(index);
 	ska::Rectangle rectSrcBuf, buf;
     buf.x = m_relativePos.x;
     buf.y = m_relativePos.y;
     rectSrcBuf.x = 0;
-    rectSrcBuf.y = m_pkmn->getHeight();
+    /*rectSrcBuf.y = m_pkmn->getHeight();
     rectSrcBuf.w = m_pkmn->getWidth();
     rectSrcBuf.h = m_pkmn->getHeight();
 	m_spriteArea = unique_ptr<Image_Area>(new Image_Area(m_parent, buf, &rectSrcBuf, ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_pkmn->getID()), false));
@@ -65,7 +65,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
     buf.x -= rectSrcBuf.w + 4;
     buf.y -= 42;
     buf.w = TAILLEBLOC;
-    buf.h = TAILLEBLOC;
+    buf.h = TAILLEBLOC;*/
 
 }
 

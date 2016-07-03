@@ -30,12 +30,12 @@ typedef std::unique_ptr<ToolBar> ToolBarPtr;
 typedef std::unique_ptr<WindowShop> WindowShopPtr;
 typedef std::unique_ptr<Character> CharacterPtr;
 
-class GUI : public ska::Observer<const int>, public ska::DrawableFixedPriority
+class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriority
 {
     public:
     GUI();
 
-	virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
+	//virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
     void dialogRefresh();
 	int addDialog(IDialogMenuPtr& d);

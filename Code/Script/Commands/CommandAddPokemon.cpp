@@ -21,6 +21,6 @@ std::string CommandAddPokemon::execute(ska::ScriptComponent& script, std::vector
 
 	id = ska::StringUtils::strToInt(args[0]);
 
-	wScreen.getPokemonManager().add(id);
+	//wScreen.getPokemonManager().add(id);
 	return "";
 }

@@ -95,7 +95,7 @@ void SavegameManager::savePokemonTeam()
 	}
 		
 
-	for(unsigned int i = 0; i < wScreen.getPokemonManager().getPokemonTeamSize(); i++)
+	/*for(unsigned int i = 0; i < wScreen.getPokemonManager().getPokemonTeamSize(); i++)
 	{
 		const std::string& id = ska::StringUtils::intToStr(i);
 		ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
@@ -109,7 +109,7 @@ void SavegameManager::savePokemonTeam()
 			reader.set("Stats hp", pkmn->getHp());
 			reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
 		}
-	}
+	}*/
 }
 
 void SavegameManager::loadPokemonTeam()
@@ -118,7 +118,7 @@ void SavegameManager::loadPokemonTeam()
 	unsigned int index = 0;
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	do 
+	/*do 
 	{
 		const std::string& id = ska::StringUtils::intToStr(index);
 		reader.load("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
@@ -130,7 +130,7 @@ void SavegameManager::loadPokemonTeam()
 			pkmn->setHP(reader.getInt("Stats hp"));
 		}
 		index++;
-	} while (reader.isLoaded());
+	} while (reader.isLoaded());*/
 	
 }
 

@@ -126,6 +126,8 @@
   <ItemGroup>
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandAssignSwitch.h" />
+    <ClInclude Include="Code\ska\Utils\Observable.h" />
+    <ClInclude Include="Code\ska\Utils\Observer.h" />
     <ClInclude Include="Code\ska\Utils\FpsCalculator.h" />
     <ClInclude Include="Code\ska\Utils\FpsRenderable.h" />
     <ClInclude Include="Code\ska\World\BlockRenderable.h" />
@@ -218,7 +220,6 @@
     <ClInclude Include="Code\ska\Exceptions\InputException.h" />
     <ClInclude Include="Code\ska\Exceptions\InvalidPathException.h" />
     <ClInclude Include="Code\ska\Exceptions\ScriptNotActivatedException.h" />
-    <ClInclude Include="Code\Gameplay\AI\AI.h" />
     <ClInclude Include="Code\ska\Graphic\Animation.h" />
     <ClInclude Include="Code\Graphic\GUI\Bar.h" />
     <ClInclude Include="Code\ska\Script\ScriptAwareComponent.h" />
@@ -275,9 +276,6 @@
     <ClInclude Include="Code\Graphic\GUI\DialogMenu.h" />
     <ClInclude Include="Code\Graphic\GUI\DynamicWindowArea.h" />
     <ClInclude Include="Code\Gameplay\Fight\EndFightReasonEnum.h" />
-    <ClInclude Include="Code\Gameplay\EntityFactory.h" />
-    <ClInclude Include="Code\ska\Inputs\InputEvents.h" />
-    <ClInclude Include="Code\Gameplay\Fight\Fight.h" />
     <ClInclude Include="Code\ska\Utils\FormalCalculation\FormalCalculator.h" />
     <ClInclude Include="Code\ska\Exceptions\GenericException.h" />
     <ClInclude Include="Code\Script\GlobalScriptVariables.h" />
@@ -297,7 +295,7 @@
     <ClInclude Include="Code\Graphic\GestionAnimations.h" />
     <ClInclude Include="Code\ska\Physic\GravityParticle.h" />
     <ClInclude Include="Code\Graphic\GUI\GUI.h" />
-    <ClInclude Include="Code\Utils\Identity.h" />
+    <ClInclude Include="Code\ska\Utils\Identity.h" />
     <ClInclude Include="Code\Utils\IDs.h" />
     <ClInclude Include="Code\Graphic\GUI\Image_Area.h" />
     <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h" />
@@ -313,14 +311,11 @@
     <ClInclude Include="Code\Graphic\GUI\MovableWindow.h" />
     <ClInclude Include="Code\ska\AI\Node.h" />
     <ClInclude Include="Code\Gameplay\Inventory\Object.h" />
-    <ClInclude Include="Code\ska\Utils\Observable.h" />
-    <ClInclude Include="Code\ska\Utils\Observer.h" />
     <ClInclude Include="Code\ska\Physic\Particle.h" />
     <ClInclude Include="Code\ska\Physic\ParticleManager.h" />
     <ClInclude Include="Code\ska\AI\Path.h" />
     <ClInclude Include="Code\ska\Physic\PhysicObject.h" />
     <ClInclude Include="Code\ska\Physic\PhysicSprite.h" />
-    <ClInclude Include="Code\Gameplay\Player.h" />
     <ClInclude Include="Code\Gameplay\Pokeball.h" />
     <ClInclude Include="Code\Gameplay\Data\PokemonDescriptor.h" />
     <ClInclude Include="Code\Gameplay\PokemonManager.h" />
@@ -430,7 +425,6 @@
     <ClCompile Include="Code\ska\Scene\Scene.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractFunctionCommand.cpp" />
     <ClCompile Include="Code\ska\Script\Command\AbstractCommand.cpp" />
-    <ClCompile Include="Code\Gameplay\AI\AI.cpp" />
     <ClCompile Include="Code\ska\Graphic\Animation.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp" />
     <ClCompile Include="Code\ska\Script\System\ScriptBasicCommandsSystem.cpp" />
@@ -476,8 +470,6 @@
     <ClCompile Include="Code\ska\Script\Command\CommandWait.cpp" />
     <ClCompile Include="Code\Graphic\GUI\DialogMenu.cpp" />
     <ClCompile Include="Code\Graphic\GUI\DynamicWindowArea.cpp" />
-    <ClCompile Include="Code\Gameplay\EntityFactory.cpp" />
-    <ClCompile Include="Code\Gameplay\Fight\Fight.cpp" />
     <ClCompile Include="Code\ska\Utils\FormalCalculation\FormalCalculator.cpp" />
     <ClCompile Include="Code\Script\GlobalScriptVariables.cpp" />
     <ClCompile Include="Code\ska\Exceptions\GenericException.cpp" />
@@ -511,7 +503,6 @@
     <ClCompile Include="Code\ska\AI\Path.cpp" />
     <ClCompile Include="Code\ska\Physic\PhysicObject.cpp" />
     <ClCompile Include="Code\ska\Physic\PhysicSprite.cpp" />
-    <ClCompile Include="Code\Gameplay\Player.cpp" />
     <ClCompile Include="Code\Gameplay\Pokeball.cpp" />
     <ClCompile Include="Code\Gameplay\Data\PokemonDescriptor.cpp" />
     <ClCompile Include="Code\Gameplay\PokemonManager.cpp" />

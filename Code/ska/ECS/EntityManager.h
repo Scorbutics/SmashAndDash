@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <string>
 #include "ECSDefines.h"
 #include "ComponentHandler.h"
 #include "../Exceptions/IllegalStateException.h"
@@ -21,7 +22,7 @@ namespace ska {
 		COMPONENT_REMOVE
 	};
 
-	class EventEntityComponentAdd : public EventArg {
+	/*class EventEntityComponentAdd : public EventArg {
 		int type() const override {
 			return EntityEventType::COMPONENT_ADD;
 		}
@@ -31,9 +32,9 @@ namespace ska {
 		int type() const override {
 			return EntityEventType::COMPONENT_REMOVE;
 		}
-	};
+	};*/
 
-	class EntityManager : public Observable<EntityData> {
+	class EntityManager : public Observable<EntityEventType, const EntityComponentsMask&, EntityId> {
 	public:
 		EntityManager() { m_componentMask.resize(SKA_ECS_MAX_ENTITIES); }
 		EntityId createEntity() {
@@ -68,8 +69,7 @@ namespace ska {
 			/* Reset all components */
 			m_componentMask[entity] &= 0;
 
-			EntityData data = std::make_pair(&m_componentMask[entity], entity);
-			notifyObservers(EventEntityComponentRemove(), data);
+			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
 		}
 
 		void removeEntities(const std::unordered_set<EntityId>& exceptions) {
@@ -82,8 +82,7 @@ namespace ska {
 		}
 
 		void refreshEntity(EntityId entity) {
-			EntityData data = std::make_pair(&m_componentMask[entity], entity);
-			notifyObservers(EventEntityComponentAdd(), data);
+			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 
 		template <class T>
@@ -92,8 +91,7 @@ namespace ska {
 			unsigned int addedComponentMask = components.add(entity, component);
 			m_componentMask[entity][addedComponentMask] = true;
 			
-			EntityData data = std::make_pair(&m_componentMask[entity], entity);
-			notifyObservers(EventEntityComponentAdd(), data);
+			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 
 		template <class T>
@@ -122,8 +120,7 @@ namespace ska {
 			unsigned int removedComponentMask = components.remove(entity);
 			m_componentMask[entity][removedComponentMask] = false;
 
-			EntityData data = std::make_pair(&m_componentMask[entity], entity);
-			notifyObservers(EventEntityComponentRemove(), data);
+			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
 		}
 
 		template <class T>

@@ -527,8 +527,8 @@ void GUI::resetInfoPNJWindow(Character* pnj)
     }
 }
 
-void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
-}
+/*void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
+}*/
 
 void GUI::update() {
 	m_hide = false;
