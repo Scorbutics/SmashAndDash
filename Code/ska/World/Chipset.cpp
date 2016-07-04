@@ -48,7 +48,9 @@ void ska::Chipset::load() {
 	}
 
 	while (std::getline(scriptList, ss)) {
-		fillScript(chipsetFolder, ss, EnumScriptTriggerType::MOVE);
+		fillScript(chipsetFolder, ss, EnumScriptTriggerType::TOUCH);
+		fillScript(chipsetFolder, ss, EnumScriptTriggerType::MOVE_OUT);
+		fillScript(chipsetFolder, ss, EnumScriptTriggerType::MOVE_IN);
 		fillScript(chipsetFolder, ss, EnumScriptTriggerType::ACTION);
 		fillScript(chipsetFolder, ss, EnumScriptTriggerType::AUTO);
 	}

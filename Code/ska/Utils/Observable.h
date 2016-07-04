@@ -38,7 +38,7 @@ namespace ska {
 		}
 
 		void notifyObservers(const T& t, Args... args) {
-			for (auto& it = m_head; it != nullptr; it = it->m_right) {
+			for (auto it = m_head; it != nullptr; it = it->m_right) {
 				it->receive(t, std::forward<Args&>(args)...);
 			}
 		}

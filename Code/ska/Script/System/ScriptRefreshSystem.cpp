@@ -50,7 +50,7 @@ void ska::ScriptRefreshSystem::refresh() {
 					break;
 				}
 				
-			case EnumScriptTriggerType::MOVE:
+			case EnumScriptTriggerType::MOVE_IN:
 				scriptEntity = findNearScriptComponentEntity(entityManager, pc, targets);
 				if (scriptEntity != UINT_MAX) {
 					startScript(scriptEntity, entityId);
@@ -65,6 +65,7 @@ void ska::ScriptRefreshSystem::refresh() {
 		/* World based events */
 		std::vector<ScriptSleepComponent*> worldScripts;
 		std::vector<ScriptTriggerType> reasons;
+		const unsigned int blockSize = m_world.getBlockSize();
 
 		worldScripts = m_world.chipsetScript(centerPos, EnumScriptTriggerType::AUTO);
 		if (iac[InputAction::DoAction]) {
@@ -80,11 +81,21 @@ void ska::ScriptRefreshSystem::refresh() {
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
 				//clog << "Block collision" << std::endl;
 
-				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::MOVE);
+				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::TOUCH);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 			}
 		}
 
+		/* If we are moving to another block, triggers a MOVE_OUT event on previous block and MOVE_IN on the next one */
+		const ska::Point<int> nextCenterPos = centerPos + ska::Point<int>(mc.vx, mc.vy);
+		if (centerPos / blockSize != nextCenterPos / blockSize) {
+
+			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(centerPos, EnumScriptTriggerType::MOVE_OUT);
+			worldScripts.insert(worldScripts.end(), tmpOut.begin(), tmpOut.end());
+
+			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(nextCenterPos, EnumScriptTriggerType::MOVE_IN);
+			worldScripts.insert(worldScripts.end(), tmpIn.begin(), tmpIn.end());
+		}
 
 		for (const ScriptSleepComponent* ssc : worldScripts) {
 			if (ssc != nullptr) {
