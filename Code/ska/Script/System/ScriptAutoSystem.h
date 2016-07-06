@@ -19,6 +19,8 @@ namespace ska {
 		virtual const std::string map(const std::string& key, const std::string& id) const;
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 		void clearNamedScriptedEntities();
+		void removeComponent(const std::string& componentName, const std::string& id) const;
+		void restoreComponent(const std::string& componentName, const std::string& id) const;
 		ska::EntityId getEntityFromName(const std::string& nameEntity);
 
 		/* ScriptComponent methods */

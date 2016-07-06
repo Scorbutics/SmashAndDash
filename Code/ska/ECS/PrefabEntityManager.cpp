@@ -11,6 +11,7 @@
 #include "../Physic/HitboxComponent.h"
 #include "../Graphic/SpritePath.h"
 #include "../Graphic/HasShadowComponent.h"
+#include "../Physic/CollidableComponent.h"
 
 ska::PrefabEntityManager::PrefabEntityManager() {
 }
@@ -44,6 +45,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const ska::Point<int> st
 	hc.width = gc.sprite[0].getWidth() - 2 * hc.xOffset;
 	addComponent<ska::HitboxComponent>(hero, hc);
 
+	addComponent<ska::CollidableComponent>(hero, CollidableComponent());
 	addComponent<ska::HasShadowComponent>(hero, HasShadowComponent());
 	addComponent<ska::GraphicComponent>(hero, gc);
 

@@ -16,12 +16,17 @@ namespace ska {
 			m_mask = m_componentTypeCounter++;
 		}
 
+		unsigned int addEmpty(EntityId entityId) override {
+			/* We can add operations here depending of the ComponentHandler implementation */
+			return m_mask;
+		}
+
 		unsigned int add(EntityId entityId, const T& comp) {
 			m_components[entityId] = comp;
 			return m_mask;
 		}
 		
-		unsigned int remove(EntityId entityId) {
+		unsigned int remove(EntityId entityId) override {
 			/* We can add operations here depending of the ComponentHandler implementation */
 			return m_mask;
 		}
@@ -33,7 +38,7 @@ namespace ska {
 		virtual const std::string getComponentField(const EntityId id, const std::string& field) override {
 			return m_components[id].serialize(m_components[id], field, getClassName());
 		}
-
+		
 		const unsigned int getMask() const {
 			return m_mask;
 		}

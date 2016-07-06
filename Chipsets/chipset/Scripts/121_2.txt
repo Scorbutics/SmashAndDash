@@ -1,6 +1,2 @@
-log tentative de marcher sur l'eau
-if {0} == false
-	assign_switch true, 0
-	block_collision 121, false
-endif
+log marche sur l'eau
 end

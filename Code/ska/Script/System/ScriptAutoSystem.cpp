@@ -42,6 +42,20 @@ const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::
 	return "";
 }
 
+void ska::ScriptAutoSystem::removeComponent(const std::string& componentName, const std::string& id) const {
+	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
+		EntityId entity = m_namedScriptedEntities.at(id);
+		m_entityManager.removeComponent(ska::StringUtils::strToInt(id), componentName);
+	}
+}
+
+void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, const std::string& id) const {
+	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
+		EntityId entity = m_namedScriptedEntities.at(id);
+		m_entityManager.addComponent(ska::StringUtils::strToInt(id), componentName);
+	}
+}
+
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
 const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin) {
 	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {

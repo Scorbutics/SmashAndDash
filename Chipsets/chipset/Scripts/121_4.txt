@@ -1,0 +1,7 @@
+if {0} == false
+	log tentative de marcher sur l'eau
+	assign_switch true, 0
+	remove_component WorldCollisionComponent, 0
+	remove_component CollidableComponent, 0
+endif
+end

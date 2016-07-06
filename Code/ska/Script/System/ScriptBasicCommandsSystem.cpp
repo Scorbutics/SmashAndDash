@@ -13,6 +13,8 @@
 #include "../Command/CommandIf.h"
 #include "../Command/CommandElse.h"
 #include "../Command/CommandElseEnd.h"
+#include "../Command/CommandRemoveComponent.h"
+#include "../Command/CommandRestoreComponent.h"
 
 ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(EntityManager& entityManager, ska::Savegame& saveGame) : ScriptAutoSystem(BasicScriptCommandHelper(entityManager), entityManager, saveGame) {
 
@@ -35,6 +37,8 @@ void ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper::setupCommands(std
 	c["log"] = std::move(ska::CommandPtr(new CommandLog(m_entityManager)));
 	c["script"] = std::move(ska::CommandPtr(new CommandScript(m_entityManager)));
 	c["wait"] = std::move(ska::CommandPtr(new CommandWait(m_entityManager)));
+	c["remove_component"] = std::move(ska::CommandPtr(new CommandRemoveComponent(m_entityManager)));
+	c["restore_component"] = std::move(ska::CommandPtr(new CommandRestoreComponent(m_entityManager)));
 }
 
 

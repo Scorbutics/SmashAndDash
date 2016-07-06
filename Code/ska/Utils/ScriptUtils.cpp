@@ -22,7 +22,7 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}')
 	{
-		if (saveGame.getGameSwitch(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)) - 1)) {
+		if (saveGame.getGameSwitch(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)))) {
 			return "1";
 		} else {
 			return "0";
@@ -182,7 +182,7 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, co
 		return;
 
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}') {
-		saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1, (value == "true"));
+		saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()), (value == "1"));
 	} else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']') {
 		string v = varNumber.substr(1, varNumber.size() - 2);
 		string key = getVariableKey(v);

@@ -1,0 +1,6 @@
+if {0} == true
+	log sortie de l'eau
+	assign_switch false, 0
+	restore_component CollidableComponent, 0
+endif
+end

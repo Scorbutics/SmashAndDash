@@ -125,7 +125,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
+    <ClInclude Include="Code\ska\Physic\CollidableComponent.h" />
+    <ClInclude Include="Code\ska\Script\Command\CommandRestoreComponent.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandAssignSwitch.h" />
+    <ClInclude Include="Code\ska\Script\Command\CommandRemoveComponent.h" />
     <ClInclude Include="Code\ska\Utils\Observable.h" />
     <ClInclude Include="Code\ska\Utils\Observer.h" />
     <ClInclude Include="Code\ska\Utils\FpsCalculator.h" />
@@ -387,7 +390,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
+    <ClCompile Include="Code\ska\Script\Command\CommandRestoreComponent.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssignSwitch.cpp" />
+    <ClCompile Include="Code\ska\Script\Command\CommandRemoveComponent.cpp" />
     <ClCompile Include="Code\ska\Utils\FpsCalculator.cpp" />
     <ClCompile Include="Code\ska\Utils\FpsRenderable.cpp" />
     <ClCompile Include="Code\ska\World\BlockRenderable.cpp" />

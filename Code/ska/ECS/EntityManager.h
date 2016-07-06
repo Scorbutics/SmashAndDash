@@ -88,10 +88,7 @@ namespace ska {
 		template <class T>
 		void addComponent(EntityId entity, const T& component) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
-			unsigned int addedComponentMask = components.add(entity, component);
-			m_componentMask[entity][addedComponentMask] = true;
-			
-			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
+			commonAddComponent(entity, components.add(entity, component));
 		}
 
 		template <class T>
@@ -108,6 +105,20 @@ namespace ska {
 			return "";
 		}
 
+		void removeComponent(const EntityId entity, const std::string& component) {
+			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
+				ComponentSerializer * components = m_nameMappedComponent[component];
+				commonRemoveComponent(entity, *components);
+			}
+		}
+
+		void addComponent(const EntityId entity, const std::string& component) {
+			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
+				ComponentSerializer * components = m_nameMappedComponent[component];
+				commonAddComponent(entity, components->addEmpty(entity));
+			}
+		}
+
 		template <class T>
 		bool hasComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
@@ -117,10 +128,7 @@ namespace ska {
 		template <class T>
 		void removeComponent(EntityId entity) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
-			unsigned int removedComponentMask = components.remove(entity);
-			m_componentMask[entity][removedComponentMask] = false;
-
-			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
+			commonRemoveComponent(entity, components);
 		}
 
 		template <class T>
@@ -148,6 +156,18 @@ namespace ska {
 				m_nameMappedComponent.emplace(m_components.getClassName(), &m_components);
 			}
 			return m_components;
+		}
+
+		void commonRemoveComponent(EntityId entity, ComponentSerializer& components) {
+			unsigned int removedComponentMask = components.remove(entity);
+			m_componentMask[entity][removedComponentMask] = false;
+
+			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
+		}
+
+		void commonAddComponent(EntityId entity, const unsigned int componentMask) {
+			m_componentMask[entity][componentMask] = true;
+			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 		
 	};
