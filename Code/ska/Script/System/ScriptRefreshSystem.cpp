@@ -88,8 +88,7 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		/* If we are moving to another block, triggers a MOVE_OUT event on previous block and MOVE_IN on the next one */
 		const ska::Point<int> nextCenterPos = centerPos + ska::Point<int>(mc.vx, mc.vy);
-		if (centerPos / blockSize != nextCenterPos / blockSize) {
-
+		if (centerPos / blockSize != nextCenterPos / blockSize && !m_world.isSameBlockId(centerPos, nextCenterPos, 0)) {
 			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(centerPos, EnumScriptTriggerType::MOVE_OUT);
 			worldScripts.insert(worldScripts.end(), tmpOut.begin(), tmpOut.end());
 

@@ -1,0 +1,8 @@
+restore_component InputComponent, 0
+if #arg0# == true
+	log surfing out
+	restore_component CollidableComponent, 0
+else
+	log surfing in
+endif
+end

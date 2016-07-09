@@ -1,0 +1,10 @@
+assign [_DirectionalAnimationComponent.direction 0_], |direction_perso|
+remove_component InputComponent, 0
+
+if #arg0# == false
+	remove_component WorldCollisionComponent, 0
+	remove_component CollidableComponent, 0
+endif
+
+move 0, [|direction_perso|], 15, ./Levels/surf_callback.txt, #arg0#
+end

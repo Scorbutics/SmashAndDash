@@ -27,6 +27,27 @@ void ska::World::linkCamera(CameraSystem* cs) {
 	}
 }
 
+bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex) {
+	Layer* l;
+	switch (layerIndex) {
+	case 0:
+		l = &m_lBot;
+		break;
+	case 1:
+		l = &m_lMid;
+		break;
+	case 2:
+		l = &m_lTop;
+	default :
+		l = nullptr;
+		break;
+	}
+
+	Block* b1 = l == nullptr ? getHigherBlock(p1.x / m_blockSize, p1.y / m_blockSize) : l->getBlock(p1.x / m_blockSize, p1.y / m_blockSize);
+	Block* b2 = l == nullptr ? getHigherBlock(p2.x / m_blockSize, p2.y / m_blockSize) : l->getBlock(p2.x / m_blockSize, p2.y / m_blockSize);
+	return (b1 == b2 || b1 != nullptr && b1->getID() == b2->getID());
+}
+
 ska::ChipsetHolder& ska::World::getChipset() {
 	return m_chipset;
 }

@@ -684,12 +684,6 @@
     <ClInclude Include="Code\Gameplay\CustomEntityManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\AI\IAMovementComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\AI\System\IAMovementSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\FightComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -892,6 +886,18 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Physic\CollidableComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\System\IARandomMovementSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\IARandomMovementComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\IADefinedMovementComponent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\AI\System\IADefinedMovementSystem.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1301,9 +1307,6 @@
     <ClCompile Include="Code\Gameplay\CustomEntityManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\AI\System\IAMovementSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\Fight\System\FightStartSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1419,6 +1422,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Script\Command\CommandRestoreComponent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\AI\System\IARandomMovementSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,7 +3,8 @@
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 #include "../../ska/World/Block.h"
-#include "../../ska/AI/IAMovementComponent.h"
+#include "../../ska/AI/IARandomMovementComponent.h"
+#include "../../ska/AI/IADefinedMovementComponent.h"
 #include "WorldScene.h"
 #include "../WGameCore.h"
 #include "../../ska/World/LayerE.h"
@@ -152,14 +153,20 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 			if (spawnAllowed) {
 				int level = rand() % (dataSpawn->getInt("Data level_min") + dataSpawn->getInt("Data level_max") + 1) + dataSpawn->getInt("Data level_min");
 				ska::EntityId mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
-				ska::IAMovementComponent iamc;
-				iamc.delay = 500;
 				/* 0 = Predifined */
 				/* 1 = Random */
 				/* 2 = Fixe */
-				iamc.type = dataSpawn->getInt("Data path_type");
-				if (iamc.type != 2) {
-					m_entityManager.addComponent<ska::IAMovementComponent>(mob, iamc);
+				int type = dataSpawn->getInt("Data path_type");
+				if (type == 1) {
+					ska::IARandomMovementComponent iamc;
+					iamc.delay = 500;
+					m_entityManager.addComponent<ska::IARandomMovementComponent>(mob, iamc);
+				} else if (type == 0) {
+					ska::IADefinedMovementComponent iamc;
+					//TODO predefined paths interpreter (Up Down Left Right => positions)
+					//iamc.directions.push_back()
+					iamc.delay = 500;
+					m_entityManager.addComponent<ska::IADefinedMovementComponent>(mob, iamc);
 				}
 
 				FightComponent fc;

@@ -19,6 +19,12 @@ namespace ska {
 			y = r.y;
 		}
 
+		Point<T>(const int& r) {
+			x = r;
+			y = r;
+		}
+
+
 		template <class U>
 		Point<T>(const Point<U>& p) {
 			*this = p;

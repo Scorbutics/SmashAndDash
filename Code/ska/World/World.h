@@ -51,6 +51,7 @@ namespace ska {
 		Block* getHigherBlock(const unsigned int i, const unsigned int j);
 
 		void getData();
+		bool isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex);
 		bool canMoveToPos(ska::Rectangle pos);
 		bool getCollision(const int i, const int j);
 		bool isBlockDodgeable(const int i, const int j);

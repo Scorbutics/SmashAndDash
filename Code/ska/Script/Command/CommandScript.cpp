@@ -27,8 +27,8 @@ std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std
 	vector<string> extraArgs;
 	string periodStr;
 	
-	if (args.size() < 3) {
-		throw ska::ScriptSyntaxError("Syntax error with command \"script\" : this command needs at least 3 parameters.");
+	if (args.size() < 2) {
+		throw ska::ScriptSyntaxError("Syntax error with command \"script\" : this command needs at least 2 parameters.");
 	}
 
 	scriptName = args[0];
@@ -45,7 +45,8 @@ std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std
 	ssc.context = script.context;
 	ssc.args = extraArgs;
 	ssc.period = period;
-	ssc.triggeringType = 0;
+	ssc.deleteEntityWhenFinished = true;
+	ssc.triggeringType = EnumScriptTriggerType::AUTO;
 	ssc.name = scriptName;
 	m_entityManager.addComponent<ScriptSleepComponent>(newScript, ssc);
 	const ScriptComponent& sc = script.parent->registerScript(&script, newScript, script.getOrigin());

@@ -2,7 +2,8 @@
 #include <memory>
 #include "AbstractSceneMap.h"
 
-#include "../../ska/AI/System/IAMovementSystem.h"
+#include "../../ska/AI/System/IARandomMovementSystem.h"
+#include "../../ska/AI/System/IADefinedMovementSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "../../ska/Script/System/ScriptRefreshSystem.h"
 #include "../../Script/System/ScriptCommandsSystem.h"
@@ -33,11 +34,12 @@ private:
 
 	WorldScene& m_worldScene;
 
-	ska::IAMovementSystem m_iaMovementSystem;
+	ska::IARandomMovementSystem m_iaRandomMovementSystem;
 	MobSpawningSystem m_mobSpawningSystem;
 
 	ska::ScriptRefreshSystem m_scriptSystem;
 	ScriptCommandsSystem m_scriptAutoSystem;
+	ska::IADefinedMovementSystem m_iaDefinedMovementSystem;
 
 	FightStartSystem m_fightStartSystem;
 	ska::CameraFollowSystem m_cameraSystem;

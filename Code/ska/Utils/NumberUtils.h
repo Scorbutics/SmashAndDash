@@ -50,11 +50,7 @@ namespace ska{
 		template <typename T>
 		static PolarPoint<T> polar(const T x, const T y) {
 			PolarPoint<T> result;
-			if (y == 0) {
-				throw ska::IllegalArgumentException("Error while converting cartesian coordinates to polar : slope cannot be infinite (x must be != 0)");
-			}
-
-			result.angle = arctan(x, y);
+			result.angle = (float)arctan(x, y);
 			result.radius = squareroot(x * x + y * y);
 			return result;
 		}
