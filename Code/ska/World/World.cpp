@@ -48,6 +48,26 @@ bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>&
 	return (b1 == b2 || b1 != nullptr && b1->getID() == b2->getID());
 }
 
+bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const {
+	const Layer* l;
+	switch (layerIndex) {
+	case 0:
+		l = &m_lBot;
+		break;
+	case 1:
+		l = &m_lMid;
+		break;
+	case 2:
+		l = &m_lTop;
+	default:
+		l = nullptr;
+		break;
+	}
+	
+	Block* b = l->getBlock(pos.x / m_blockSize, pos.y / m_blockSize);
+	return b != nullptr ? authorizedBlocks.find(b->getID()) != authorizedBlocks.end() : false;
+}
+
 ska::ChipsetHolder& ska::World::getChipset() {
 	return m_chipset;
 }
@@ -56,12 +76,12 @@ std::string ska::World::getFileName() const {
 	return m_fileName;
 }
 
-bool ska::World::isBlockDodgeable(const int i, const int j) {
+bool ska::World::isBlockDodgeable(const int i, const int j) const {
 	Block* b = m_lMid.getBlock(i, j);
 	return (b != nullptr && b->getProperties() == BLOCK_PROP_JUMPWALL);
 }
 
-bool ska::World::getCollision(const int i, const int j) {
+bool ska::World::getCollision(const int i, const int j) const {
 	if (m_lBot.getBlockCollision(i, j) == BLOCK_COL_YES &&
 		(m_lMid.getBlockCollision(i, j) != BLOCK_COL_NO)) {
 		return true;
@@ -80,7 +100,7 @@ void ska::World::update() {
 	m_lTop.getRenderable().update();
 }
 
-bool ska::World::canMoveToPos(ska::Rectangle hitbox) {
+bool ska::World::canMoveToPos(ska::Rectangle hitbox) const {
 	ska::Point<int> chd, chg, cbg;
 
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <bitset>
-#include <vector>
 #include <unordered_set>
+#include <array>
 #include <unordered_map>
 #include <string>
 #include "ECSDefines.h"
@@ -22,21 +22,9 @@ namespace ska {
 		COMPONENT_REMOVE
 	};
 
-	/*class EventEntityComponentAdd : public EventArg {
-		int type() const override {
-			return EntityEventType::COMPONENT_ADD;
-		}
-	};
-
-	class EventEntityComponentRemove : public EventArg {
-		int type() const override {
-			return EntityEventType::COMPONENT_REMOVE;
-		}
-	};*/
-
 	class EntityManager : public Observable<EntityEventType, const EntityComponentsMask&, EntityId> {
 	public:
-		EntityManager() { m_componentMask.resize(SKA_ECS_MAX_ENTITIES); }
+		EntityManager() { }
 		EntityId createEntity() {
 			EntityId newId;
 			if (((int)(m_entities.size() - m_deletedEntities.size())) >= SKA_ECS_MAX_ENTITIES) {
@@ -140,7 +128,7 @@ namespace ska {
 		virtual ~EntityManager() { }
 	
 	private:
-		std::vector<EntityComponentsMask> m_componentMask;
+		std::array<EntityComponentsMask, SKA_ECS_MAX_ENTITIES> m_componentMask;
 		std::unordered_set<EntityId> m_entities;
 		EntityIdContainer m_deletedEntities;
 

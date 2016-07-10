@@ -10,6 +10,8 @@
 #include "../Fight/System/FightStartSystem.h"
 #include "../../ska/Graphic/System/CameraFollowSystem.h"
 #include "../../ska/Physic/System/CollisionSystem.h"
+#include "../../ska/Physic/System/WorldCollisionResponse.h"
+#include "../../ska/Physic/System/EntityCollisionResponse.h"
 
 class WorldScene;
 
@@ -44,5 +46,8 @@ private:
 	FightStartSystem m_fightStartSystem;
 	ska::CameraFollowSystem m_cameraSystem;
 	ska::CollisionSystem m_collisionSystem;
+
+	ska::WorldCollisionResponse m_worldCollisionResponse;
+	ska::EntityCollisionResponse m_entityCollisionResponse;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;

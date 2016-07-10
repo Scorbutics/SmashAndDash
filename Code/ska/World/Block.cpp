@@ -12,7 +12,7 @@ unsigned int ska::Block::getProperties() {
 	return m_properties;
 }
 
-int ska::Block::getCollision() {
+int ska::Block::getCollision() const {
     return m_collision;
 }
 

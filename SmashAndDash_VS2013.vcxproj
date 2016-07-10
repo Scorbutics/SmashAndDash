@@ -124,10 +124,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
     <ClInclude Include="Code\ska\AI\IADefinedMovementComponent.h" />
     <ClInclude Include="Code\ska\AI\System\IADefinedMovementSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollidableComponent.h" />
+    <ClInclude Include="Code\ska\Physic\CollisionEvent.h" />
+    <ClInclude Include="Code\ska\Physic\System\EntityCollisionResponse.h" />
+    <ClInclude Include="Code\ska\Physic\System\WorldCollisionResponse.h" />
+    <ClInclude Include="Code\ska\Script\Command\CommandBlockAuthorize.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandRestoreComponent.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandAssignSwitch.h" />
     <ClInclude Include="Code\ska\Script\Command\CommandRemoveComponent.h" />
@@ -153,7 +158,6 @@
     <ClInclude Include="Code\Gameplay\System\PokeballSystem.h" />
     <ClInclude Include="Code\Graphic\DialogComponent.h" />
     <ClInclude Include="Code\Graphic\GUI\IDialogMenu.h" />
-    <ClInclude Include="Code\Physic\System\SkillCollisionSystem.h" />
     <ClInclude Include="Code\ska\AI\IARandomMovementComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Gameplay\Mobs\System\MobSpawningSystem.h" />
@@ -391,8 +395,12 @@
     <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
     <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp" />
+    <ClCompile Include="Code\ska\Physic\System\EntityCollisionResponse.cpp" />
+    <ClCompile Include="Code\ska\Physic\System\WorldCollisionResponse.cpp" />
+    <ClCompile Include="Code\ska\Script\Command\CommandBlockAuthorize.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandRestoreComponent.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandAssignSwitch.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandRemoveComponent.cpp" />
@@ -407,7 +415,6 @@
     <ClCompile Include="Code\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneHolderCore.cpp" />
     <ClCompile Include="Code\Gameplay\System\PokeballSystem.cpp" />
-    <ClCompile Include="Code\Physic\System\SkillCollisionSystem.cpp" />
     <ClCompile Include="Code\ska\AI\System\IARandomMovementSystem.cpp" />
     <ClCompile Include="Code\ska\ECS\Component.cpp" />
     <ClCompile Include="Code\ska\ECS\PrefabEntityManager.cpp" />

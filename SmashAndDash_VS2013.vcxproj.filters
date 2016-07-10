@@ -771,9 +771,6 @@
     <ClInclude Include="Code\Gameplay\Fight\SkillComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Physic\System\SkillCollisionSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Fight\SkillDescriptor.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -898,6 +895,21 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\AI\System\IADefinedMovementSystem.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\CollisionEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\System\WorldCollisionResponse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Physic\System\EntityCollisionResponse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Script\Command\CommandBlockAuthorize.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1349,9 +1361,6 @@
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Physic\System\SkillCollisionSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\Fight\System\SkillRefreshSystem.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1428,6 +1437,18 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\System\WorldCollisionResponse.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Physic\System\EntityCollisionResponse.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Script\Command\CommandBlockAuthorize.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

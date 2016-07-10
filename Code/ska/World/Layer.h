@@ -30,8 +30,8 @@ namespace ska {
 		void printCollisionProfile();
 		void clear();
 
-		ska::Block* getBlock(unsigned int i, unsigned int j);
-		int getBlockCollision(const unsigned int i, const unsigned int j);
+		ska::Block* getBlock(unsigned int i, unsigned int j) const;
+		int getBlockCollision(const unsigned int i, const unsigned int j) const;
 		int getNbrBlocX();
 		int getNbrBlocY();
 		void getData();

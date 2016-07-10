@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_set>
 #include <memory>
 #include <vector>
 #include "../Inputs/Readers/IniReader.h"
@@ -52,9 +53,11 @@ namespace ska {
 
 		void getData();
 		bool isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex);
-		bool canMoveToPos(ska::Rectangle pos);
-		bool getCollision(const int i, const int j);
-		bool isBlockDodgeable(const int i, const int j);
+		bool canMoveToPos(ska::Rectangle pos) const;
+		bool canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
+
+		bool getCollision(const int i, const int j) const;
+		bool isBlockDodgeable(const int i, const int j) const;
 
 		const unsigned int getBlockSize() const;
 

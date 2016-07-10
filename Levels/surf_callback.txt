@@ -1,7 +1,7 @@
 restore_component InputComponent, 0
 if #arg0# == true
 	log surfing out
-	restore_component CollidableComponent, 0
+	block_authorize 121, 0, true
 else
 	log surfing in
 endif

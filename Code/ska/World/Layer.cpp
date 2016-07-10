@@ -33,7 +33,7 @@ void ska::Layer::clear() {
 	m_block.clear();
 }
 
-ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
+ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j) const
 {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		return m_block[i][j];
@@ -45,7 +45,7 @@ ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j)
 
 
 
-int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) {
+int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) const {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		Block* b = m_block[i][j];
 		if (b == nullptr) {

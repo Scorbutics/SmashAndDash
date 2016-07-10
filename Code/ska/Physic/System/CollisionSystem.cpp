@@ -1,7 +1,6 @@
 #include "CollisionSystem.h"
 #include "../../Utils/RectangleUtils.h"
 #include "../CollisionComponent.h"
-#include "../ForceComponent.h"
 #include "../WorldCollisionComponent.h"
 
 ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager) : System(entityManager), m_world(w) {
@@ -69,43 +68,15 @@ void ska::CollisionSystem::refresh() {
 		}
 
 		if (collided) {
-			handleWorldCollision(wcol, entityId);
+			WorldCollisionObservable::notifyObservers(CollisionEvent(entityId), wcol, m_entityManager.getComponent<CollidableComponent>(entityId));
 		}
 
 		if (entityCollided) {
 			entityCollided = false;
 			/* When collision between entities is detected, we can do things as decreasing health,
 			pushing entities, or any statistic interaction */
-			handleEntityCollision(col);
+			EntityCollisionObservable::notifyObservers(CollisionEvent(entityId), col, m_entityManager.getComponent<CollidableComponent>(entityId));
 		}
-	}
-}
-
-void ska::CollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
-	m_entityManager.addComponent<WorldCollisionComponent>(e, col);
-}
-
-void ska::CollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
-	ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
-	MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
-
-	ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
-	MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(col.origin);
-
-	if (col.xaxis) {
-		ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;
-	}
-
-	if (col.yaxis) {
-		ftarget.y += (moveComponent.vy + moveComponent.ay)*ftarget.weight;
-	}
-
-	if (col.xaxis) {
-		forigin.x = -ftarget.x / 2;
-	}
-
-	if (col.yaxis) {
-		forigin.y = -ftarget.y / 2;
 	}
 }
 

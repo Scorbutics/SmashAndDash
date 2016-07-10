@@ -16,7 +16,9 @@ m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getEntityManager()),
 m_fightStartSystem(sh, ws, ril, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()),
-m_collisionSystem(ws.getWorld(), ws.getEntityManager()) {
+m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
+m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
+m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
 	m_logics.push_back(&m_iaDefinedMovementSystem);
@@ -38,7 +40,9 @@ m_scriptAutoSystem(ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld(), ws.getEntityManager()),
 m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()), 
-m_collisionSystem(ws.getWorld(), ws.getEntityManager()) {
+m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
+m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
+m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
 	m_logics.push_back(&m_iaDefinedMovementSystem);

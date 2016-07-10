@@ -8,8 +8,11 @@
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
-#include "../../Physic/System/SkillCollisionSystem.h"
+#include "../../ska/Physic/System/CollisionSystem.h"
+#include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
+#include "../../ska/Physic/System/WorldCollisionResponse.h"
+#include "../../ska/Physic/System/EntityCollisionResponse.h"
 
 class WorldScene;
 class FightComponent;
@@ -49,6 +52,10 @@ private:
 
 	BattleSystem m_battleSystem;
 	SkillRefreshSystem m_skillRefreshSystem;
-	SkillCollisionSystem m_skillCollisionSystem;
+	ska::CollisionSystem m_collisionSystem;
+
+	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
+	ska::WorldCollisionResponse m_worldCollisionResponse;
+	ska::EntityCollisionResponse m_entityCollisionResponse;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

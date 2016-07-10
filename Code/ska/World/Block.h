@@ -12,7 +12,7 @@ namespace ska {
 		~Block() = default;
 
 		unsigned int getProperties();
-		int getCollision();
+		int getCollision() const;
 		unsigned int getID() const;
 		
 	private:

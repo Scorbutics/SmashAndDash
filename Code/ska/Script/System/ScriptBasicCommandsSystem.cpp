@@ -15,6 +15,7 @@
 #include "../Command/CommandElseEnd.h"
 #include "../Command/CommandRemoveComponent.h"
 #include "../Command/CommandRestoreComponent.h"
+#include "../Command/CommandBlockAuthorize.h"
 
 ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(EntityManager& entityManager, ska::Savegame& saveGame) : ScriptAutoSystem(BasicScriptCommandHelper(entityManager), entityManager, saveGame) {
 
@@ -39,6 +40,7 @@ void ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper::setupCommands(std
 	c["wait"] = std::move(ska::CommandPtr(new CommandWait(m_entityManager)));
 	c["remove_component"] = std::move(ska::CommandPtr(new CommandRemoveComponent(m_entityManager)));
 	c["restore_component"] = std::move(ska::CommandPtr(new CommandRestoreComponent(m_entityManager)));
+	c["block_authorize"] = std::move(ska::CommandPtr(new CommandBlockAuthorize(m_entityManager)));
 }
 
 

@@ -29,13 +29,16 @@ m_pokemon("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::S
 m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
 m_skillRefreshSystem(ws.getEntityManager()),
-m_skillCollisionSystem(ws.getWorld(), ws.getEntityManager()),
-m_sceneLoaded(false) {
+m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
+m_sceneLoaded(false),
+m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
+m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
 	m_logics.push_back(&m_skillRefreshSystem);
-	m_logics.push_back(&m_skillCollisionSystem);
+	m_logics.push_back(&m_collisionSystem);
 	m_logics.push_back(&m_statsSystem);
 
 	//TODO add IA input context

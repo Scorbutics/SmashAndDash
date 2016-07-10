@@ -1,16 +1,19 @@
-#include "SkillCollisionSystem.h"
+#include "SkillEntityCollisionResponse.h"
 #include "../../ska/Physic/CollisionComponent.h"
 #include "../../ska/Physic/WorldCollisionComponent.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 
-SkillCollisionSystem::SkillCollisionSystem(ska::World& w, ska::EntityManager& em) : ska::CollisionSystem(w, em) {
-
+SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, ska::EntityManager& em) : 
+ska::EntityCollisionObserver(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+m_collisionSystem(colSys), m_entityManager(em) {
+	m_collisionSystem.ska::EntityCollisionObservable::addObserver(*this);
 }
 
-void SkillCollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
+
+void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc) {
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
-		CollisionSystem::handleEntityCollision(col);
+		return;
 	}
 
 
@@ -46,21 +49,19 @@ void SkillCollisionSystem::handleEntityCollision(ska::CollisionComponent& col) {
 
 	if (sc->battler != targettedEntity) {
 		bc->hp -= sc->damage;
-		scheduleDeferredRemove(skillEntity);
+		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
 }
 
+/*
 void SkillCollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
-	/*if (m_entityManager.hasComponent<SkillComponent>(e)) {
-		scheduleDeferredRemove(e);
-	}*/
 
 
 	if (!m_entityManager.hasComponent<SkillComponent>(e)) {
 		CollisionSystem::handleWorldCollision(col, e);
 	}
-}
+}*/
 
-SkillCollisionSystem::~SkillCollisionSystem() {
-
+SkillEntityCollisionResponse::~SkillEntityCollisionResponse() {
+	m_collisionSystem.ska::EntityCollisionObservable::removeObserver(*this);
 }
