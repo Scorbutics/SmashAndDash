@@ -11,10 +11,8 @@
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
 #include "./ska/Utils/MessagePopup.h"
-using namespace std;
-typedef unique_ptr<Character> Character_ptr;
 
-WGameCore* wScreen;
+#define SKA_DEBUG
 
 int main (int argc, char *argv[])
 {
@@ -23,28 +21,32 @@ int main (int argc, char *argv[])
 
 	//ECSTest();
     int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
-    string startMapName, startMapChipsetName;
+    std::string startMapName, startMapChipsetName;
 
-	ofstream logFile("stdlog.txt", ios::trunc);
-	clog.rdbuf(logFile.rdbuf());
+	std::ofstream logFile("stdlog.txt", ios::trunc);
+	std::clog.rdbuf(logFile.rdbuf());
 
-	ofstream errFile("stderr.txt", ios::trunc);
-	cerr.rdbuf(errFile.rdbuf());
+	std::ofstream errFile("stderr.txt", ios::trunc);
+	std::cerr.rdbuf(errFile.rdbuf());
 
+	/* TODO : ne plus utiliser srand  */
     srand((unsigned int)time(NULL));
+
+
+	/* TODO : réécrire */
 
     // Chargement de la vidéo, de l'audio et du texte
     if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
-        cerr << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << endl;
+		std::cerr << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
 
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-		cerr << "Impossible d'initialiser SDL_image : " << IMG_GetError() << endl;
+		std::cerr << "Impossible d'initialiser SDL_image : " << IMG_GetError() << std::endl;
 	}
 
     if(TTF_Init() == -1) {
-        cerr << "Erreur d'initialisation de TTF_Init : " << TTF_GetError() << endl;
+		std::cerr << "Erreur d'initialisation de TTF_Init : " << TTF_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -58,10 +60,10 @@ int main (int argc, char *argv[])
 		while (wScreen.refresh()); //boucle principale
 		//wScreen.quitter(false);
 	} catch (ska::TerminateProcessException& tpe) {
-		clog << tpe.what() << endl;
+		std::clog << tpe.what() << std::endl;
 	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
-		cerr << e.what() << endl;
+		std::cerr << e.what() << std::endl;
 		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
 	}
     

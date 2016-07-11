@@ -1,6 +1,13 @@
 #pragma once
 #include <memory>
+#ifndef NDEBUG
+#define AbstractSceneMap_ DebugAbstractSceneMap
+#include "DebugAbstractSceneMap.h"
+#else
+#define AbstractSceneMap_ AbstractSceneMap
 #include "AbstractSceneMap.h"
+#endif
+
 #include "../../ska/Graphic/System/CameraFixedSystem.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
@@ -8,11 +15,8 @@
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
-#include "../../ska/Physic/System/CollisionSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
-#include "../../ska/Physic/System/WorldCollisionResponse.h"
-#include "../../ska/Physic/System/EntityCollisionResponse.h"
 
 class WorldScene;
 class FightComponent;
@@ -20,7 +24,7 @@ class SkillDescriptor;
 class SkillsHolderComponent;
 
 class SceneFight :
-	public AbstractSceneMap
+	public AbstractSceneMap_
 {
 public:
 	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
@@ -28,6 +32,7 @@ public:
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
+	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneFight();
 private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
@@ -35,7 +40,7 @@ private:
 
 	ska::InputContextManager m_iaICM;
 	PokemonDescriptor m_descriptor;
-	WorldScene& m_worldScene;
+	
 	ska::CameraFixedSystem m_cameraSystem;
 	PokeballSystem m_pokeballSystem;
 	StatisticsSystem m_statsSystem;
@@ -52,10 +57,7 @@ private:
 
 	BattleSystem m_battleSystem;
 	SkillRefreshSystem m_skillRefreshSystem;
-	ska::CollisionSystem m_collisionSystem;
 
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
-	ska::WorldCollisionResponse m_worldCollisionResponse;
-	ska::EntityCollisionResponse m_entityCollisionResponse;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

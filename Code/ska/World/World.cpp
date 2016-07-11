@@ -65,7 +65,8 @@ bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered
 	}
 	
 	Block* b = l->getBlock(pos.x / m_blockSize, pos.y / m_blockSize);
-	return b != nullptr ? authorizedBlocks.find(b->getID()) != authorizedBlocks.end() : false;
+	const bool result = b != nullptr ? (authorizedBlocks.find(b->getID()) != authorizedBlocks.end()) : false;
+	return result;
 }
 
 ska::ChipsetHolder& ska::World::getChipset() {
@@ -100,7 +101,7 @@ void ska::World::update() {
 	m_lTop.getRenderable().update();
 }
 
-bool ska::World::canMoveToPos(ska::Rectangle hitbox) const {
+bool ska::World::canMoveToPos(ska::Rectangle hitbox, ska::Point<int>& output) const {
 	ska::Point<int> chd, chg, cbg;
 
 
@@ -122,6 +123,8 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox) const {
 	for (int y = chg.y / m_blockSize; y <= yLimit; y++) {
 		for (int x = chg.x / m_blockSize; x <= xLimit; x++) {
 			if (getCollision(x, y) /*&& !isBlockDodgeable(i, j)*/) {
+				output.x = x;
+				output.y = y;
 				return false;
 			}
 		}

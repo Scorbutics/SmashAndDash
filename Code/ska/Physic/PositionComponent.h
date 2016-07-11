@@ -71,6 +71,7 @@ namespace ska {
 		void operator=(const Point<int>& p) {
 			x = p.x;
 			y = p.y;
+			z = 0;
 		}
 
 		int x;

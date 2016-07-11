@@ -53,18 +53,21 @@ void ska::CollisionSystem::refresh() {
 		bool collided = false;
 		Rectangle nextPosX = { entityHitboxX.x, entityHitboxX.y, entityHitboxX.w, entityHitboxX.h };
 		Rectangle nextPosY = { entityHitboxY.x, entityHitboxY.y, entityHitboxY.w, entityHitboxY.h };
-		if (!m_world.canMoveToPos(nextPosX)){
+
+		ska::Point<int> blockColPosX;
+		if (!m_world.canMoveToPos(nextPosX, blockColPosX)){
 			collided = true;
 			wcol.xaxis = true;
 			wcol.lastBlockColPosX = lastBlockColPosX;
-			wcol.blockColPosX = (ska::Point<int>(nextPosX) / m_world.getBlockSize()) * m_world.getBlockSize();
+			wcol.blockColPosX = blockColPosX * m_world.getBlockSize();
 		}
 
-		if (!m_world.canMoveToPos(nextPosY)){
+		ska::Point<int> blockColPosY;
+		if (!m_world.canMoveToPos(nextPosY, blockColPosY)){
 			collided = true;
 			wcol.yaxis = true;
 			wcol.lastBlockColPosY = lastBlockColPosY;
-			wcol.blockColPosY = (ska::Point<int>(nextPosY) / m_world.getBlockSize()) * m_world.getBlockSize();
+			wcol.blockColPosY = blockColPosY * m_world.getBlockSize();
 		}
 
 		if (collided) {

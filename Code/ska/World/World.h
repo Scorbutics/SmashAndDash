@@ -53,7 +53,7 @@ namespace ska {
 
 		void getData();
 		bool isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex);
-		bool canMoveToPos(ska::Rectangle pos) const;
+		bool canMoveToPos(ska::Rectangle pos, ska::Point<int>& output) const;
 		bool canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
 
 		bool getCollision(const int i, const int j) const;

@@ -140,7 +140,8 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		boxDest.y = dest.y - radius;
 		boxDest.h = boxDest.w = 30;
 
-		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld) && m_world.canMoveToPos(boxDest)) {
+		ska::Point<int> blockColPos;
+		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld) && m_world.canMoveToPos(boxDest, blockColPos)) {
 			bool spawnAllowed = true;
 			for (unsigned int j = 0; j < idBlocks.size(); j++) {
 				const ska::Block* b = m_world.getHigherBlock(dest.x / blockSize, dest.y / blockSize);

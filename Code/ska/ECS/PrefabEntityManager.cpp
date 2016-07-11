@@ -34,7 +34,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const ska::Point<int> st
 	addComponent<ska::ForceComponent>(hero, fc);
 	addComponent<ska::MovementComponent>(hero, mc);
 	ska::GraphicComponent gc;
-	gc.sprite.resize(2);
+	gc.sprite.resize(1);
 	gc.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
 	gc.sprite[0].setDelay(100);
 

@@ -17,7 +17,10 @@ ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& c
 
 void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
 	//TODO Other layers
-	if (col.xaxis && !m_world.canMoveOnBlock(col.blockColPosX, cc.authorizedBlockIds, 0) || col.yaxis && !m_world.canMoveOnBlock(col.blockColPosY, cc.authorizedBlockIds, 0)) {
+	const bool colX = col.xaxis && !m_world.canMoveOnBlock(col.blockColPosX, cc.authorizedBlockIds, 0);
+	const bool colY = col.yaxis && !m_world.canMoveOnBlock(col.blockColPosY, cc.authorizedBlockIds, 0);
+	if ( colX || colY ) {
+		//std::clog << "Entity at " << (pos.x / m_blockSize) << ", " << (pos.y / m_blockSize) << std::endl;
 		m_entityManager.addComponent<WorldCollisionComponent>(e.entity, col);
 	}
 }

@@ -1,6 +1,12 @@
 #pragma once
 #include <memory>
+#ifndef NDEBUG
+#define AbstractSceneMap_ DebugAbstractSceneMap
+#include "DebugAbstractSceneMap.h"
+#else
+#define AbstractSceneMap_ AbstractSceneMap
 #include "AbstractSceneMap.h"
+#endif
 
 #include "../../ska/AI/System/IARandomMovementSystem.h"
 #include "../../ska/AI/System/IADefinedMovementSystem.h"
@@ -9,14 +15,12 @@
 #include "../../Script/System/ScriptCommandsSystem.h"
 #include "../Fight/System/FightStartSystem.h"
 #include "../../ska/Graphic/System/CameraFollowSystem.h"
-#include "../../ska/Physic/System/CollisionSystem.h"
-#include "../../ska/Physic/System/WorldCollisionResponse.h"
-#include "../../ska/Physic/System/EntityCollisionResponse.h"
+
 
 class WorldScene;
 
 class SceneMap :
-	public AbstractSceneMap
+	public AbstractSceneMap_
 {
 public:
 	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName);
@@ -25,16 +29,13 @@ public:
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	void reinit();
-	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(bool movingDisallowed) override;
+	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneMap();
 
 private:
 	
 	const std::string m_fileName;
 	const std::string m_chipsetName;
-
-	WorldScene& m_worldScene;
 
 	ska::IARandomMovementSystem m_iaRandomMovementSystem;
 	MobSpawningSystem m_mobSpawningSystem;
@@ -45,9 +46,5 @@ private:
 
 	FightStartSystem m_fightStartSystem;
 	ska::CameraFollowSystem m_cameraSystem;
-	ska::CollisionSystem m_collisionSystem;
-
-	ska::WorldCollisionResponse m_worldCollisionResponse;
-	ska::EntityCollisionResponse m_entityCollisionResponse;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;
