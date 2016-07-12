@@ -1,8 +1,13 @@
-restore_component InputComponent, 0
-if #arg0# == true
-	log surfing out
+if #arg0# == false
+	restore_component InputComponent, 0
+	log surfing out InputComponent restored
+	log water unauthorized
 	block_authorize 121, 0, true
+	assign_switch false, 0
 else
-	log surfing in
+	restore_component InputComponent, 0
+	log surfing in InputComponent restored
+	assign_switch true, 0
+	animation 0, 2
 endif
 end

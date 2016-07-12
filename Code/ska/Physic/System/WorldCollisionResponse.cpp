@@ -7,6 +7,8 @@
 #include "CollisionSystem.h"
 #include "../../World/World.h"
 
+#include "../../Graphic/DebugCollisionGraphicComponent.h"
+
 ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& colSys, EntityManager& em) :
 	WorldCollisionObserver(std::bind(&WorldCollisionResponse::onWorldCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 	m_entityManager(em),
@@ -16,11 +18,28 @@ ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& c
 }
 
 void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
-	//TODO Other layers
-	const bool colX = col.xaxis && !m_world.canMoveOnBlock(col.blockColPosX, cc.authorizedBlockIds, 0);
-	const bool colY = col.yaxis && !m_world.canMoveOnBlock(col.blockColPosY, cc.authorizedBlockIds, 0);
-	if ( colX || colY ) {
-		//std::clog << "Entity at " << (pos.x / m_blockSize) << ", " << (pos.y / m_blockSize) << std::endl;
+
+	bool colX = false;
+	if (col.xaxis) {
+		for (const auto& p : col.blockColPosX) {
+			colX |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, -1);
+			if (colX) {
+				break;
+			}
+		}
+	}
+	
+	bool colY = false;
+	if (col.yaxis) {
+		for (const auto& p : col.blockColPosY) {
+			colY |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, -1);
+			if (colY) {
+				break;
+			}
+		}
+	}
+
+	if (colX || colY) {
 		m_entityManager.addComponent<WorldCollisionComponent>(e.entity, col);
 	}
 }

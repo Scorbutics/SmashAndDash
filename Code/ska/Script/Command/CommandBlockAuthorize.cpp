@@ -21,7 +21,7 @@ int ska::CommandBlockAuthorize::argumentsNumber() {
 std::string ska::CommandBlockAuthorize::execute(ScriptComponent& script, std::vector<std::string>& args) {
 	int blockId = ska::StringUtils::strToInt(args[0]);
 	int entity = ska::StringUtils::strToInt(args[1]);
-	bool unauth = args[2] != "true";
+	bool unauth = args[2] == "1";
 
 	if (!m_entityManager.hasComponent<CollidableComponent>(entity)) {
 		//TODO Mess

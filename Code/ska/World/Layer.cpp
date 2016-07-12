@@ -51,9 +51,9 @@ int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) co
 		if (b == nullptr) {
 			return BLOCK_COL_VOID;
 		}
-		return b->getCollision(); //m_block : proprietes des blocs (passable fixe, non passable fixe, passable anime, non passable anime)
+		return b->getCollision(); 
 	} 
-	return BLOCK_COL_NO;
+	return BLOCK_COL_YES;
 }
 
 

@@ -13,21 +13,23 @@ void ska::DebugCollisionDrawerSystem::refresh() {
 		WorldCollisionComponent& wcol = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 		DebugCollisionGraphicComponent& dcgc = m_entityManager.getComponent<DebugCollisionGraphicComponent>(entityId);	
 
-		const bool onlyOneAxis = wcol.xaxis ^ wcol.yaxis;
-		if (dcgc.collidedBlocks.size() >= 2) {
-			if (onlyOneAxis) {
-				dcgc.collidedBlocks.pop();
-			} else {
-				return;
-			}
+		if (dcgc.collidedBlocks.size() >= 10) {
+			scheduleDeferredRemove(dcgc.collidedBlocks.front());
+			dcgc.collidedBlocks.pop();
+			scheduleDeferredRemove(dcgc.collidedBlocks.front());
+			dcgc.collidedBlocks.pop();
 		}
 
 		if (wcol.xaxis) {
-			dcgc.collidedBlocks.push(createDebugCollisionEntity(wcol.blockColPosX));
+			for (const auto& p : wcol.blockColPosX) {
+				dcgc.collidedBlocks.push(createDebugCollisionEntity(p));
+			}
 		}
 		
 		if (wcol.yaxis) {
-			dcgc.collidedBlocks.push(createDebugCollisionEntity(wcol.blockColPosY));
+			for (const auto& p : wcol.blockColPosY) {
+				dcgc.collidedBlocks.push(createDebugCollisionEntity(p));
+			}
 		}
 		
 	}

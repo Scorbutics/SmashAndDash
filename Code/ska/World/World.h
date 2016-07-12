@@ -45,15 +45,16 @@ namespace ska {
 
 		ska::LayerRenderable& getLayerRenderable(int level);
 		LayerE& getLayerEvent();
+		unsigned int getNumberLayers() const;
 
 		const ska::Rectangle* getView() const;
 		ska::ChipsetHolder& getChipset();
 
-		Block* getHigherBlock(const unsigned int i, const unsigned int j);
+		Block* getHigherBlock(const unsigned int i, const unsigned int j) const;
 
 		void getData();
 		bool isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex);
-		bool canMoveToPos(ska::Rectangle pos, ska::Point<int>& output) const;
+		bool canMoveToPos(ska::Rectangle pos, std::vector<ska::Point<int>>& output) const;
 		bool canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
 
 		bool getCollision(const int i, const int j) const;

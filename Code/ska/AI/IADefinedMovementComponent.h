@@ -1,4 +1,8 @@
 #pragma once
+#include <limits>
+#ifdef max
+#undef max
+#endif
 #include "../Script/ScriptSleepComponent.h"
 #include "../ECS/Component.h"
 #include "../Graphic/Point.h"
@@ -11,7 +15,7 @@ namespace ska {
 			delay = 0;
 			directionIndex = 0;
 			loop = false;
-			lastDirectionDiff = 0;
+			lastDistance = std::numeric_limits<int>::max();
 			callbackActive = false;
 			lastTimeStarted = ska::TimeUtils::getTicks();
 		}
@@ -21,7 +25,7 @@ namespace ska {
 		std::vector<ska::Point<int>> directions;
 		unsigned int delay;
 		ska::Point<int> origin;
-		ska::Point<int> lastDirectionDiff;
+		unsigned int lastDistance;
 		unsigned int lastTimeStarted;
 
 		bool callbackActive;

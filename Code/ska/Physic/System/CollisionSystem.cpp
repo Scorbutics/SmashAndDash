@@ -12,8 +12,8 @@ void ska::CollisionSystem::refresh() {
 		HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 		
-		ska::Point<int> lastBlockColPosX;
-		ska::Point<int> lastBlockColPosY;
+		std::vector<ska::Point<int>> lastBlockColPosX;
+		std::vector<ska::Point<int>> lastBlockColPosY;
 		if (m_entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
 			const WorldCollisionComponent& wcc = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 			lastBlockColPosX = wcc.blockColPosX;
@@ -54,20 +54,20 @@ void ska::CollisionSystem::refresh() {
 		Rectangle nextPosX = { entityHitboxX.x, entityHitboxX.y, entityHitboxX.w, entityHitboxX.h };
 		Rectangle nextPosY = { entityHitboxY.x, entityHitboxY.y, entityHitboxY.w, entityHitboxY.h };
 
-		ska::Point<int> blockColPosX;
+		std::vector<ska::Point<int>> blockColPosX;
 		if (!m_world.canMoveToPos(nextPosX, blockColPosX)){
 			collided = true;
 			wcol.xaxis = true;
 			wcol.lastBlockColPosX = lastBlockColPosX;
-			wcol.blockColPosX = blockColPosX * m_world.getBlockSize();
+			wcol.blockColPosX = blockColPosX;
 		}
 
-		ska::Point<int> blockColPosY;
+		std::vector<ska::Point<int>> blockColPosY;
 		if (!m_world.canMoveToPos(nextPosY, blockColPosY)){
 			collided = true;
 			wcol.yaxis = true;
 			wcol.lastBlockColPosY = lastBlockColPosY;
-			wcol.blockColPosY = blockColPosY * m_world.getBlockSize();
+			wcol.blockColPosY = blockColPosY;
 		}
 
 		if (collided) {

@@ -2,6 +2,7 @@
 #include "FormalCalculator.h"
 #include <iostream>
 #include "CalculOperators.h"
+#include "../../Utils/StringUtils.h"
 #include "..\..\Exceptions\ScriptSyntaxError.h"
 
 using namespace std;
@@ -95,8 +96,8 @@ float ska::FormalCalculator::interpretSingleCalculation(size_t operatorPos, stri
 	int posStart = positionOfAnyLastOperator(s.substr(0, operatorPos));
 	int posEnd = positionOfAnyFirstOperator(s.substr(operatorPos + 1, s.size() - 1)) + operatorPos;
 
-	float op1 = FormalCalculator::stringToFloat(s.substr(posStart + 1, operatorPos));
-	float op2 = FormalCalculator::stringToFloat(s.substr(operatorPos + 1, posEnd - 1));
+	float op1 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(posStart + 1, operatorPos)));
+	float op2 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(operatorPos + 1, posEnd - 1)));
 
 	if (s[operatorPos] == CalculOperators::divise && abs(op1) < 0.0001 && abs(op2) < 0.0001)
 	{
@@ -123,14 +124,6 @@ int ska::FormalCalculator::positionOfAnyLastOperator(const string& s)
 		&& s[index] != CalculOperators::minus; index--);
 
 	return index;
-}
-
-float ska::FormalCalculator::stringToFloat(const string& s)
-{
-	stringstream ss(s);
-	float f;
-	ss >> f;
-	return f;
 }
 
 int ska::FormalCalculator::positionOfAnyFirstOperator(const string& s)

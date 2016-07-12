@@ -11,6 +11,7 @@ namespace ska {
 	public:
 		static std::string intToStr(const int x);
 		static int strToInt(const std::string& str);
+		static float strToFloat(const std::string& str);
 		static std::string uintToStr(const unsigned int x);
 
 		static std::vector<std::string>& split(const std::string &s, const char delim, std::vector<std::string> &elems);
@@ -24,6 +25,7 @@ namespace ska {
 		static void replaceAll(std::string& str, const std::string& from, const std::string& to);
 		static void replaceAll(std::string& str, const char from, const char to);
 		static bool isInt(const std::string& s, const int base);
+		static bool isDecimal(const std::string& s);
 		~StringUtils();
 	};
 }

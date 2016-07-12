@@ -27,11 +27,12 @@ void ska::IADefinedMovementSystem::refresh() {
 		/* speed */
 		polarVectorMovement.radius = 5;
 
+		const ska::Point<int> targetPoint = targetVector + iamc.origin;
 		const ska::Point<float> finalMovement = ska::NumberUtils::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
-		const ska::Point<int> diff = centerPos - (iamc.origin + targetVector);
 		
-		/* Either the time is up, or the goal is reached (if there is a direction change, goal is reached) */
-		const bool directionChanged = iamc.lastDirectionDiff.x == 0 && iamc.lastDirectionDiff.y == 0 ? false : (diff.x * iamc.lastDirectionDiff.x) <= 0 && (diff.y * iamc.lastDirectionDiff.y) <= 0;
+		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
+		const unsigned int distanceSquaredToTarget = ska::RectangleUtils::distanceSquared(centerPos, targetPoint);
+		const bool directionChanged = iamc.lastDistance < distanceSquaredToTarget;
 		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];
@@ -52,7 +53,7 @@ void ska::IADefinedMovementSystem::refresh() {
 
 			iamc.lastTimeStarted = TimeUtils::getTicks();
 		}
-		iamc.lastDirectionDiff = diff;
+		iamc.lastDistance = distanceSquaredToTarget;
 
 		mc.vx = finalMovement.x;
 		mc.vy = finalMovement.y;

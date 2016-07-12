@@ -10,7 +10,6 @@ namespace ska {
 		static float interpretSimpleCalculation(const std::string& s);
 		static float interpretSingleCalculation(size_t operatorPos, std::string* result);
 		static int positionOfAnyLastOperator(const std::string& s);
-		static float stringToFloat(const std::string& s);
 		static void calculSyntaxError(const std::string& s);
 		static int positionOfAnyFirstOperator(const std::string& s);
 

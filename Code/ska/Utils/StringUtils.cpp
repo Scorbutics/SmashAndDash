@@ -36,6 +36,24 @@ int ska::StringUtils::strToInt(const std::string& str) {
 	return atoi(str.c_str());
 }
 
+bool ska::StringUtils::isDecimal(const std::string& s) {
+	if (s.empty() || std::isspace(s[0])) {
+		return false;
+	}
+	char * p1;
+	char * p2;
+	strtof(s.c_str(), &p1);
+	strtol(s.c_str(), &p2, 10);
+	return (*p1 == 0) && (*p2 == 0);
+}
+
+float ska::StringUtils::strToFloat(const std::string& str) {
+	if (!isDecimal(str)) {
+		throw NumberFormatException(str);
+	}
+	return atof(str.c_str());
+}
+
 string ska::StringUtils::uintToStr(const unsigned int x) {
 	ostringstream oss;
 	oss << x;

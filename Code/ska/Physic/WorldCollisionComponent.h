@@ -8,9 +8,9 @@ namespace ska {
 		WorldCollisionComponent() { xaxis = false; yaxis = false; }
 		bool xaxis;
 		bool yaxis;
-		ska::Point<int> blockColPosX;
-		ska::Point<int> lastBlockColPosX;
-		ska::Point<int> blockColPosY;
-		ska::Point<int> lastBlockColPosY;
+		std::vector<ska::Point<int>> blockColPosX;
+		std::vector<ska::Point<int>> lastBlockColPosX;
+		std::vector<ska::Point<int>> blockColPosY;
+		std::vector<ska::Point<int>> lastBlockColPosY;
 	};
 }

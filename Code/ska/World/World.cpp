@@ -27,6 +27,10 @@ void ska::World::linkCamera(CameraSystem* cs) {
 	}
 }
 
+unsigned int ska::World::getNumberLayers() const {
+	return 3;
+}
+
 bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex) {
 	Layer* l;
 	switch (layerIndex) {
@@ -59,12 +63,13 @@ bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered
 		break;
 	case 2:
 		l = &m_lTop;
+		break;
 	default:
 		l = nullptr;
 		break;
 	}
 	
-	Block* b = l->getBlock(pos.x / m_blockSize, pos.y / m_blockSize);
+	Block* b = layerIndex == -1 ? getHigherBlock(pos.x / m_blockSize, pos.y / m_blockSize) : l->getBlock(pos.x / m_blockSize, pos.y / m_blockSize);
 	const bool result = b != nullptr ? (authorizedBlocks.find(b->getID()) != authorizedBlocks.end()) : false;
 	return result;
 }
@@ -101,7 +106,7 @@ void ska::World::update() {
 	m_lTop.getRenderable().update();
 }
 
-bool ska::World::canMoveToPos(ska::Rectangle hitbox, ska::Point<int>& output) const {
+bool ska::World::canMoveToPos(ska::Rectangle hitbox, std::vector<ska::Point<int>>& output) const {
 	ska::Point<int> chd, chg, cbg;
 
 
@@ -120,16 +125,16 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox, ska::Point<int>& output) co
 	const int yLimit = cbg.y / m_blockSize;
 	const int xLimit = chd.x / m_blockSize;
 
+	bool col = false;
 	for (int y = chg.y / m_blockSize; y <= yLimit; y++) {
 		for (int x = chg.x / m_blockSize; x <= xLimit; x++) {
 			if (getCollision(x, y) /*&& !isBlockDodgeable(i, j)*/) {
-				output.x = x;
-				output.y = y;
-				return false;
+				output.push_back(ska::Point<int>(x * m_blockSize, y * m_blockSize));
+				col = true;
 			}
 		}
 	}
-	return true;
+	return !col;
 }
 
 const ska::Rectangle* ska::World::getView() const {
@@ -229,7 +234,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 }
 
-ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) {
+ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) const {
 	Block* bBot = m_lBot.getBlock(i, j);
 	Block* bMid = m_lMid.getBlock(i, j);
 	Block* bTop = m_lTop.getBlock(i, j);
