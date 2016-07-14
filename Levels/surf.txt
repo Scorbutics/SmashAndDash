@@ -8,12 +8,21 @@ endif
 
 if [|same_value|] == 0
 	remove_component InputComponent, 0
-	log InputComponent disabled
 	if #arg0# == true
-		log water authorized
 		block_authorize 121, 0, false
+		block_authorize 27, 0, false
+		block_authorize 28, 0, false
+		block_authorize 29, 0, false
+		block_authorize 57, 0, false
+		block_authorize 59, 0, false
+		block_authorize 87, 0, false
+		block_authorize 88, 0, false
+		block_authorize 89, 0, false
+		animation 0, 2
+	else
+		animation 0, 2
 	endif
-	move 0, [|direction_perso|], 15, ./Levels/surf_callback.txt, #arg0#
+	move 0, [|direction_perso|], 48, ./Levels/surf_callback.txt, #arg0#
 endif
 
 end

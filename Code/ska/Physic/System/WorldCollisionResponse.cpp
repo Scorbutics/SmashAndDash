@@ -7,8 +7,6 @@
 #include "CollisionSystem.h"
 #include "../../World/World.h"
 
-#include "../../Graphic/DebugCollisionGraphicComponent.h"
-
 ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& colSys, EntityManager& em) :
 	WorldCollisionObserver(std::bind(&WorldCollisionResponse::onWorldCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 	m_entityManager(em),
@@ -22,7 +20,8 @@ void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, Worl
 	bool colX = false;
 	if (col.xaxis) {
 		for (const auto& p : col.blockColPosX) {
-			colX |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, -1);
+			colX |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, 0);
+			//colX |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, 1);
 			if (colX) {
 				break;
 			}
@@ -32,7 +31,8 @@ void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, Worl
 	bool colY = false;
 	if (col.yaxis) {
 		for (const auto& p : col.blockColPosY) {
-			colY |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, -1);
+			colY |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, 0);
+			//colY |= !m_world.canMoveOnBlock(p, cc.authorizedBlockIds, 1);
 			if (colY) {
 				break;
 			}

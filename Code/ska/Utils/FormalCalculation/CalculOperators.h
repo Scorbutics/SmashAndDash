@@ -8,6 +8,7 @@ namespace ska {
 		static const char minus = '-';
 		static const char divise = '/';
 		static const char multiply = '*';
+		static const char modulo = ':';
 
 		static bool isOperator(char c)
 		{
@@ -25,7 +26,7 @@ namespace ska {
 			else if (calcOperator == minus)
 				return op1 - op2;
 
-			return 0.0F;
+			return (int)op1 % (int)op2;
 		}
 
 		static bool containsOperator(const std::string& s)

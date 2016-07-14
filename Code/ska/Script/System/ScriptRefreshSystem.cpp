@@ -8,12 +8,13 @@
 #include "../../Exceptions/InvalidPathException.h"
 #include "../../Physic/WorldCollisionComponent.h"
 #include "../ScriptTriggerType.h"
+#include "../../Graphic/DebugGraphicComponent.h"
 
 using namespace std;
 
 
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
-System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
+System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
 m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem) {
 	
@@ -24,10 +25,9 @@ void ska::ScriptRefreshSystem::refresh() {
 	EntityManager& entityManager = ScriptPositionSystemAccess::m_entityManager;
 	std::vector<EntityId> toDelete;
 
-	for (EntityId entityId : System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
+	for (EntityId entityId : System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
 		ScriptAwareComponent& sac = entityManager.getComponent<ScriptAwareComponent>(entityId);
 		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
-		const MovementComponent& mc = entityManager.getComponent<MovementComponent>(entityId);
 		const ska::HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
 		const ska::DirectionalAnimationComponent& dac = entityManager.getComponent<DirectionalAnimationComponent>(entityId);
 		
@@ -77,9 +77,9 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		if (entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
 			const ska::WorldCollisionComponent& wcc = entityManager.getComponent<ska::WorldCollisionComponent>(entityId);
+			//clog << "Block collision" << std::endl;
 			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
-				//clog << "Block collision" << std::endl;
 
 				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(frontPos, EnumScriptTriggerType::TOUCH);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
@@ -87,14 +87,25 @@ void ska::ScriptRefreshSystem::refresh() {
 		}
 
 		/* If we are moving to another block, triggers a MOVE_OUT event on previous block and MOVE_IN on the next one */
-		const ska::Point<int> nextCenterPos = centerPos + ska::Point<int>(mc.vx, mc.vy);
+		const ska::Point<int> oldCenterPos = ska::Point<int>(sac.lastBlockPos);
+		
 		//TODO Other layers
-		if (centerPos / blockSize != nextCenterPos / blockSize && !m_world.isSameBlockId(centerPos, nextCenterPos, 0)) {
-			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(centerPos, EnumScriptTriggerType::MOVE_OUT);
+		const bool sameBlock = m_world.isSameBlockId(centerPos, oldCenterPos, 0);
+		if (!sameBlock) {
+#ifndef NDEBUG
+			auto& dgc = entityManager.getComponent<DebugGraphicComponent>(entityId);
+			dgc.typeMask = DebugGraphicType::WALK;
+			entityManager.addComponent<DebugGraphicComponent>(entityId, dgc);
+#endif
+			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(oldCenterPos, EnumScriptTriggerType::MOVE_OUT);
 			worldScripts.insert(worldScripts.end(), tmpOut.begin(), tmpOut.end());
 
-			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(nextCenterPos, EnumScriptTriggerType::MOVE_IN);
+			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(centerPos, EnumScriptTriggerType::MOVE_IN);
 			worldScripts.insert(worldScripts.end(), tmpIn.begin(), tmpIn.end());
+		}
+
+		if (oldCenterPos / blockSize != centerPos / blockSize) {
+			sac.lastBlockPos = centerPos;
 		}
 
 		for (const ScriptSleepComponent* ssc : worldScripts) {
@@ -122,7 +133,7 @@ void ska::ScriptRefreshSystem::refresh() {
 }
 
 void ska::ScriptRefreshSystem::update() {
-	System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update();
+	System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update();
 }
 
 void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {

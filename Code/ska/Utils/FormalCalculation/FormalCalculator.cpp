@@ -66,6 +66,7 @@ float ska::FormalCalculator::interpretSimpleCalculation(const string& s)
 	{
 		size_t firstDivision = subStr.find_first_of(CalculOperators::divise);
 		size_t firstMultiply = subStr.find_first_of(CalculOperators::multiply);
+		
 		size_t operatorPos = string::npos;
 
 		if (firstDivision != string::npos)
@@ -74,12 +75,17 @@ float ska::FormalCalculator::interpretSimpleCalculation(const string& s)
 			operatorPos = firstMultiply;
 		else
 		{
-			size_t firstMinus = subStr.find_first_of(CalculOperators::minus);
-			size_t firstPlus = subStr.find_first_of(CalculOperators::plus);
-			if (firstMinus != string::npos)
-				operatorPos = firstMinus;
-			else if (firstPlus != string::npos)
-				operatorPos = firstPlus;
+			size_t firstModulo = subStr.find_first_of(CalculOperators::modulo);
+			if (firstModulo != std::string::npos) {
+				operatorPos = firstModulo;
+			} else {
+				size_t firstMinus = subStr.find_first_of(CalculOperators::minus);
+				size_t firstPlus = subStr.find_first_of(CalculOperators::plus);
+				if (firstMinus != string::npos)
+					operatorPos = firstMinus;
+				else if (firstPlus != string::npos)
+					operatorPos = firstPlus;
+			}
 		}
 
 		result = FormalCalculator::interpretSingleCalculation(operatorPos, &subStr);
@@ -99,8 +105,7 @@ float ska::FormalCalculator::interpretSingleCalculation(size_t operatorPos, stri
 	float op1 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(posStart + 1, operatorPos)));
 	float op2 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(operatorPos + 1, posEnd - 1)));
 
-	if (s[operatorPos] == CalculOperators::divise && abs(op1) < 0.0001 && abs(op2) < 0.0001)
-	{
+	if ((s[operatorPos] == CalculOperators::divise || s[operatorPos] == CalculOperators::modulo) && abs(op2) < 0.0001) {
 		calculSyntaxError(s);
 		return 0.0;
 	}
@@ -121,7 +126,8 @@ int ska::FormalCalculator::positionOfAnyLastOperator(const string& s)
 		&& s[index] != CalculOperators::divise
 		&& s[index] != CalculOperators::multiply
 		&& s[index] != CalculOperators::plus
-		&& s[index] != CalculOperators::minus; index--);
+		&& s[index] != CalculOperators::minus
+		&& s[index] != CalculOperators::modulo; index--);
 
 	return index;
 }
@@ -133,7 +139,8 @@ int ska::FormalCalculator::positionOfAnyFirstOperator(const string& s)
 		&& s[index] != CalculOperators::divise
 		&& s[index] != CalculOperators::multiply
 		&& s[index] != CalculOperators::plus
-		&& s[index] != CalculOperators::minus; index++);
+		&& s[index] != CalculOperators::minus
+		&& s[index] != CalculOperators::modulo; index++);
 
 	return index;
 }

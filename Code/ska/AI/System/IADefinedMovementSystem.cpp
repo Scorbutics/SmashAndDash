@@ -3,6 +3,7 @@
 #include "../../Utils/PhysicUtils.h"
 #include "../../Utils/NumberUtils.h"
 #include "../../Utils/RectangleUtils.h"
+#include "../../Physic/WorldCollisionComponent.h"
 
 ska::IADefinedMovementSystem::IADefinedMovementSystem(ska::EntityManager& entityManager, ska::ScriptAutoSystem* scriptSystem) : System(entityManager), m_scriptSystem(scriptSystem) {
 }
@@ -33,7 +34,7 @@ void ska::IADefinedMovementSystem::refresh() {
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
 		const unsigned int distanceSquaredToTarget = ska::RectangleUtils::distanceSquared(centerPos, targetPoint);
 		const bool directionChanged = iamc.lastDistance < distanceSquaredToTarget;
-		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged) {
+		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];
 			if (iamc.directionIndex+1 < iamc.directions.size()) {

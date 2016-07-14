@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../CollisionEvent.h"
 #include "DebugWorldCollisionResponse.h"
-#include "../../Graphic/DebugCollisionGraphicComponent.h"
+#include "../../Graphic/DebugGraphicComponent.h"
 #include "../WorldCollisionComponent.h"
 #include "../CollidableComponent.h"
 #include "../../ECS/EntityManager.h"
@@ -15,7 +15,9 @@ WorldCollisionObserver(std::bind(&DebugWorldCollisionResponse::onWorldCollision,
 }
 
 void ska::DebugWorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
-	//m_entityManager.addComponent<DebugCollisionGraphicComponent>(e.entity, DebugCollisionGraphicComponent());
+	DebugGraphicComponent dgc;
+	dgc.typeMask = DebugGraphicType::COLLISION;
+	m_entityManager.addComponent<DebugGraphicComponent>(e.entity, dgc);
 }
 
 ska::DebugWorldCollisionResponse::~DebugWorldCollisionResponse() {

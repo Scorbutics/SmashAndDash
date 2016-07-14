@@ -129,7 +129,7 @@
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
     <ClInclude Include="Code\ska\AI\IADefinedMovementComponent.h" />
     <ClInclude Include="Code\ska\AI\System\IADefinedMovementSystem.h" />
-    <ClInclude Include="Code\ska\Graphic\DebugCollisionGraphicComponent.h" />
+    <ClInclude Include="Code\ska\Graphic\DebugGraphicComponent.h" />
     <ClInclude Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.h" />
     <ClInclude Include="Code\ska\Physic\CollidableComponent.h" />
     <ClInclude Include="Code\ska\Physic\CollisionEvent.h" />

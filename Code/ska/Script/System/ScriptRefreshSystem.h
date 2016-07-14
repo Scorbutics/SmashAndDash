@@ -13,7 +13,7 @@ namespace ska {
 	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, PositionComponent, ScriptSleepComponent>;
 
 	class ScriptRefreshSystem : 
-		public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>,
+		public System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>,
 		/* Allows easy access to each entity that contains ScriptSleepComponent and PositionComponent */
 		public ScriptPositionSystemAccess {
 
