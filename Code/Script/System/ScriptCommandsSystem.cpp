@@ -21,14 +21,14 @@
 #include "../Commands/CommandTeleport.h"
 #include "../Commands/CommandThrowPokebal.h"
 #include "../Commands/CommandTranslationCamera.h"
-
-using namespace std;
+#include "../Commands/CommandExpulse.h"
 
 ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::Savegame& saveGame) : ScriptBasicCommandsSystem(ScriptCommandHelper(entityManager), entityManager, saveGame) {
 }
 
 void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const {
 	BasicScriptCommandHelper::setupCommands(c);
+	using std::move;
 	c["move"] = move(ska::CommandPtr(new CommandMove(m_entityManager)));
 	c["message"] = move(ska::CommandPtr(new CommandMessage(m_entityManager)));
 	c["choice"] = move(ska::CommandPtr(new CommandChoice(m_entityManager)));
@@ -51,6 +51,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["add_pokemon"] = move(ska::CommandPtr(new CommandAddPokemon(m_entityManager)));
 	c["throw_pokemon"] = move(ska::CommandPtr(new CommandPokemonOut(m_entityManager)));
 	c["player_presence"] = move(ska::CommandPtr(new CommandPlayerPresence(m_entityManager)));
+	c["expulse"] = move(ska::CommandPtr(new CommandExpulse(m_entityManager)));
 	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager)));
 }
 

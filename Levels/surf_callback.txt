@@ -9,6 +9,7 @@ if #arg0# == false
 	block_authorize 87, 0, true
 	block_authorize 88, 0, true
 	block_authorize 89, 0, true
+	expulse 0
 endif
 assign_switch #arg0#, 0
 end

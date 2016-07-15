@@ -28,6 +28,24 @@ bool ska::RectangleUtils::collisionBoxABoxB(const ska::Rectangle& rectA, const s
 
 }
 
+ska::Rectangle ska::RectangleUtils::intersect(const ska::Rectangle& r1, const ska::Rectangle& r2) {
+	ska::Rectangle output;
+	output.x = ska::NumberUtils::maximum(r1.x, r2.x);
+	output.y = ska::NumberUtils::maximum(r1.y, r2.y);
+	int xmax = ska::NumberUtils::minimum(r1.x + r1.w, r2.x + r2.w);
+	int ymax = ska::NumberUtils::minimum(r1.y + r1.h, r2.y + r2.h);
+	if (xmax >= output.x && ymax >= output.y) {
+		output.w = xmax - output.x;
+		output.h = ymax - output.y;
+	} else {
+		output.x = 0;
+		output.y = 0;
+		output.w = 0;
+		output.h = 0;
+	}
+	return output;
+	
+}
 
 //divise l'écran en 8 directions possibles en fonction de la position de la souris
 int ska::RectangleUtils::getDirectionFromPos(const ska::Point<int>& posHero, const ska::Point<int>& mousePos) {

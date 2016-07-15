@@ -13,7 +13,7 @@ void ska::IADefinedMovementSystem::refresh() {
 
 	for (EntityId entityId : m_processed) {
 		MovementComponent& mc = m_entityManager.getComponent<MovementComponent>(entityId);
-		const PositionComponent& pc = m_entityManager.getComponent<PositionComponent>(entityId);
+		PositionComponent& pc = m_entityManager.getComponent<PositionComponent>(entityId);
 		IADefinedMovementComponent& iamc = m_entityManager.getComponent<IADefinedMovementComponent>(entityId);
 		const HitboxComponent& hc = m_entityManager.getComponent<HitboxComponent>(entityId);
 		const auto& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
@@ -34,7 +34,16 @@ void ska::IADefinedMovementSystem::refresh() {
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
 		const unsigned int distanceSquaredToTarget = ska::RectangleUtils::distanceSquared(centerPos, targetPoint);
 		const bool directionChanged = iamc.lastDistance < distanceSquaredToTarget;
-		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
+		
+		bool collisioned;
+		if (iamc.ghost) {
+			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
+			collisioned = false;
+		} else {
+			collisioned = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
+		}
+		
+		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || !iamc.ghost && collisioned) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];
 			if (iamc.directionIndex+1 < iamc.directions.size()) {
@@ -42,6 +51,8 @@ void ska::IADefinedMovementSystem::refresh() {
 			} else if (iamc.loop) {
 				iamc.directionIndex = 0;
 			} else {
+				pc.x += targetPoint.x - centerPos.x;
+				pc.y += targetPoint.y - centerPos.y;
 				if (m_scriptSystem != nullptr && iamc.callbackActive) {
 					/* triggers callback */
 					ska::EntityId scriptEntity = m_entityManager.createEntity();

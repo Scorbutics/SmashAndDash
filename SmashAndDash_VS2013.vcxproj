@@ -127,6 +127,7 @@
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
+    <ClInclude Include="Code\Script\Commands\CommandExpulse.h" />
     <ClInclude Include="Code\ska\AI\IADefinedMovementComponent.h" />
     <ClInclude Include="Code\ska\AI\System\IADefinedMovementSystem.h" />
     <ClInclude Include="Code\ska\Graphic\DebugGraphicComponent.h" />
@@ -402,6 +403,7 @@
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
+    <ClCompile Include="Code\Script\Commands\CommandExpulse.cpp" />
     <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\DebugWorldCollisionResponse.cpp" />

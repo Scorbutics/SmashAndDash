@@ -4,8 +4,7 @@
 #include "../Graphic/Point.h"
 
 namespace ska {
-	class RectangleUtils
-	{
+	class RectangleUtils {
 	public:
 		static unsigned int distanceSquared(const ska::Point<int>& pos1, const ska::Point<int>& pos2);
 		
@@ -14,6 +13,7 @@ namespace ska {
 			return((pos.x >= box.x) && (pos.x <= box.x + box.w) && (pos.y >= box.y) && (pos.y <= box.y + box.h));	
 		}
 
+		static ska::Rectangle intersect(const ska::Rectangle& r1, const ska::Rectangle& r2);
 		static ska::Rectangle posToCenterPicture(const ska::Rectangle& imageToCenter, const ska::Rectangle& imageBackground);
 		static bool collisionBoxABoxB(const ska::Rectangle& rectA, const ska::Rectangle& rectB);
 		static int getDirectionFromPos(const ska::Point<int>& posHero, const ska::Point<int>& mousePos);

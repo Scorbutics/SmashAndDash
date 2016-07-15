@@ -15,12 +15,14 @@ namespace ska {
 			delay = 0;
 			directionIndex = 0;
 			loop = false;
+			ghost = false;
 			lastDistance = std::numeric_limits<int>::max();
 			callbackActive = false;
 			lastTimeStarted = ska::TimeUtils::getTicks();
 		}
 
 		bool loop;
+		bool ghost;
 		unsigned int directionIndex;
 		std::vector<ska::Point<int>> directions;
 		unsigned int delay;

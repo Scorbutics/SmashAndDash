@@ -72,11 +72,11 @@ namespace ska {
 			return result;
 		}
 
-		void operator+=(const Point<T>& p) const {
+		void operator+=(const Point<T>& p) {
 			*this = operator+(p);
 		}
 
-		void operator-=(const Point<T>& p) const {
+		void operator-=(const Point<T>& p) {
 			*this = operator-(p);
 		}
 	};

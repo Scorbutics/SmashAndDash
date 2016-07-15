@@ -30,6 +30,11 @@ namespace ska{
 			return a > b ? a : b;
 		}
 
+		template <typename T>
+		static T minimum(T a, T b) {
+			return a < b ? a : b;
+		}
+
 		static double cosinus(double angle);
 		static double sinus(double angle);
 

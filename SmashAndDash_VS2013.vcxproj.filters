@@ -924,6 +924,9 @@
     <ClInclude Include="Code\ska\Graphic\DebugGraphicComponent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Script\Commands\CommandExpulse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1470,6 +1473,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Script\Commands\CommandExpulse.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
