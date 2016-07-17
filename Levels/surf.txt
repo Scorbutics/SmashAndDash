@@ -1,4 +1,4 @@
-assign [_DirectionalAnimationComponent.direction 0_], |direction_perso|
+assign #arg1#, |direction_perso|
 assign %calculate {0} + #arg0#%, |same_value|
 if [|same_value|] == 1
 	assign 0, |same_value|

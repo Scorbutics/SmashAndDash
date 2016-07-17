@@ -42,7 +42,7 @@ void ska::IADefinedMovementSystem::refresh() {
 		} else {
 			collisioned = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
 		}
-		
+		bool finished = false;
 		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || !iamc.ghost && collisioned) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];
@@ -51,8 +51,7 @@ void ska::IADefinedMovementSystem::refresh() {
 			} else if (iamc.loop) {
 				iamc.directionIndex = 0;
 			} else {
-				pc.x += targetPoint.x - centerPos.x;
-				pc.y += targetPoint.y - centerPos.y;
+				finished = true;
 				if (m_scriptSystem != nullptr && iamc.callbackActive) {
 					/* triggers callback */
 					ska::EntityId scriptEntity = m_entityManager.createEntity();
@@ -67,8 +66,10 @@ void ska::IADefinedMovementSystem::refresh() {
 		}
 		iamc.lastDistance = distanceSquaredToTarget;
 
-		mc.vx = finalMovement.x;
-		mc.vy = finalMovement.y;
+		if (!finished) {
+			mc.vx = finalMovement.x;
+			mc.vy = finalMovement.y;
+		}
 	}
 
 	for (ska::EntityId id : entityWithComponentsToDelete) {

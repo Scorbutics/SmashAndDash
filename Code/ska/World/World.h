@@ -63,7 +63,9 @@ namespace ska {
 		const unsigned int getBlockSize() const;
 
 		/* TODO classe à part ? */
-		std::vector<ska::ScriptSleepComponent*> chipsetScript(const ska::Point<int>& p, const ScriptTriggerType& reason);
+		std::vector<ska::ScriptSleepComponent*> chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& p, const ScriptTriggerType& reason);
+		ska::Rectangle placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius);
+		ska::Point<int> alignOnBlock(const ska::Rectangle& hitbox);
 
 		void linkCamera(CameraSystem* cs) override;
 		virtual void graphicUpdate(DrawableContainer& drawables) = 0;

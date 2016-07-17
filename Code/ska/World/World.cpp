@@ -203,7 +203,7 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 		
 }
 
-std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Point<int>& posToLookAt, const ScriptTriggerType& reason) {
+std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& posToLookAt, const ScriptTriggerType& reason) {
 	std::vector<ska::ScriptSleepComponent*> result;
 	
 	if (reason == EnumScriptTriggerType::AUTO) {
@@ -219,12 +219,20 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 
 	/* TODO autres layers ??? */
+	const ska::Point<int> newBlock = newPos / m_blockSize;
+	const ska::Point<int> oldBlock = oldPos / m_blockSize;
 	Block* b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
 		for (auto& ssc : tmp) {
 			if (ssc != nullptr) {
+				ssc->args.clear();
+				ssc->args.push_back(ska::StringUtils::intToStr(oldBlock.x));
+				ssc->args.push_back(ska::StringUtils::intToStr(oldBlock.y));
+				ssc->args.push_back(ska::StringUtils::intToStr(newBlock.x));
+				ssc->args.push_back(ska::StringUtils::intToStr(newBlock.y));
+				ssc->args.push_back(ska::StringUtils::intToStr(ska::RectangleUtils::getDirectionFromPos(oldBlock * m_blockSize, newBlock * m_blockSize)));
 				ssc->context = getName();
 				result.push_back(ssc);
 			}
@@ -232,6 +240,78 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	}
 	return result;
 	
+}
+
+ska::Point<int> ska::World::alignOnBlock(const ska::Rectangle& hitbox) {
+	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitbox) / m_blockSize) * m_blockSize;
+	return ska::Point<int>(hitbox) - hitBoxBlock;
+}
+
+ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) {
+	std::vector<ska::Rectangle> blocksPos;
+	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitBox) + ska::Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
+	ska::Rectangle result { 0, 0, 0, 0};
+	
+
+	if (radius == 0) {
+		return result;
+	}
+
+	const unsigned int maxWidth = getNbrBlocX();
+	const unsigned int maxHeight = getNbrBlocY();
+
+	ska::Rectangle blockArea;
+	blockArea.x = hitBoxBlock.x - radius;
+	blockArea.y = hitBoxBlock.y - radius;
+	blockArea.w = (radius << 1) + 1;
+	blockArea.h = (radius << 1) + 1;
+	
+	if (blockArea.x < 0) {
+		blockArea.x = 0;
+	}
+
+	if (blockArea.y < 0) {
+		blockArea.y = 0;
+	}
+
+	if (blockArea.x + 1 > (int) maxWidth) {
+		blockArea.x = maxWidth - 1;
+	}
+
+	if (blockArea.y + 1 > (int) maxHeight) {
+		blockArea.y = maxHeight - 1;
+	}
+
+	if (blockArea.x + blockArea.w > (int) maxWidth) {
+		blockArea.w = maxWidth - blockArea.x;
+	}
+
+	if (blockArea.y + blockArea.h > (int) maxHeight) {
+		blockArea.h = maxHeight - blockArea.y;
+	}
+
+	for (unsigned int x = 0; x != blockArea.w; x++) {
+		for (unsigned int y = 0; y != blockArea.h; y++) {
+			ska::Rectangle rect{ x + blockArea.x, y + blockArea.y, hitBox.w, hitBox.h};
+			blocksPos.push_back(rect);
+		}
+	}
+
+	auto x = *blocksPos.begin();
+	std::sort(blocksPos.begin(), blocksPos.end(), [hitBoxBlock](const decltype(x)& it1, decltype(x)& it2) -> bool {
+		return ska::RectangleUtils::distanceSquared(it1, hitBoxBlock) < ska::RectangleUtils::distanceSquared(it2, hitBoxBlock);
+	});
+
+	for (const auto& r : blocksPos) {
+		if (!getCollision(r.x, r.y)) {
+			result = r;
+			result.x *= m_blockSize;
+			result.y *= m_blockSize;
+			break;
+		}
+	}
+
+	return result;
 }
 
 ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int j) const {

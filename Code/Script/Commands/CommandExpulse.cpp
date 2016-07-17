@@ -4,7 +4,6 @@
 #include "../../Utils\IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Physic/MovementComponent.h"
-#include "../../ska/Physic/WorldCollisionComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
 #include "../../ska/Physic/PositionComponent.h"
 #include "../../ska/Physic/HitboxComponent.h"
@@ -14,8 +13,9 @@
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 #include "../../ska/Utils/RectangleUtils.h"
-
-CommandExpulse::CommandExpulse(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
+#include "../../ska/World/World.h"
+CommandExpulse::CommandExpulse(ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager), 
+m_world(w) {
 }
 
 int CommandExpulse::argumentsNumber() {
@@ -36,37 +36,15 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 		throw ska::ScriptException("The targetted entity cannot move : " + id);
 	}
 
-	if (!m_entityManager.hasComponent<ska::WorldCollisionComponent>(internalEntity)) {
-		return "";
-	}
-
-	m_entityManager.removeComponent<ska::WorldCollisionComponent>(internalEntity);
-	const ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
 	const ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
 	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
 
-
-	const ska::WorldCollisionComponent& wcc = m_entityManager.getComponent<ska::WorldCollisionComponent>(internalEntity);
-	ska::Point<int> diffToMove;
-	ska::Point<int> offsetPCWithCenterPos = ska::Point<int>(pc.x, pc.y) - centerPos;
-	offsetPCWithCenterPos.x = ska::NumberUtils::absolute(offsetPCWithCenterPos.x);
-	offsetPCWithCenterPos.y = ska::NumberUtils::absolute(offsetPCWithCenterPos.y);
-	//TODO blockSize from World
-	for (auto& b : wcc.blockColPosX) {
-		const ska::Rectangle intersection = ska::RectangleUtils::intersect(ska::Rectangle{ b.x, b.y, 48, 48 }, ska::Rectangle{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height });
-		
-		diffToMove += ska::Point<int>(intersection.w /*+ (intersection.w < 0 ? -15 : 15)*/, intersection.h /*+ (intersection.h < 0 ? -15 : 15)*/);
-	}
-	/*for (auto& b : wcc.blockColPosY) {
-		const ska::Rectangle intersection = ska::RectangleUtils::intersect(ska::Rectangle{ b.x, b.y, 48, 48 }, ska::Rectangle{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height });
-		diffToMove += ska::Point<int>(intersection.w, intersection.h);
-	}*/
-	ska::IADefinedMovementComponent iamc;
-	iamc.origin = centerPos;
-	iamc.ghost = true;
-	iamc.delay = -1;
-	iamc.directions.push_back(diffToMove /*+ offsetPCWithCenterPos*/);
-	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, iamc);
+	ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
+	const ska::Point<int> offsetHitboxBlock = m_world.alignOnBlock(hitbox);
+	const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
+	pc.x = targetBlock.x /*+ offsetHitboxBlock.x*/ - hc.xOffset; 
+	pc.y = targetBlock.y /*+ offsetHitboxBlock.y*/ - hc.yOffset;
 
 	return "";
 }

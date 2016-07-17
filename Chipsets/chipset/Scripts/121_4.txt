@@ -1,3 +1,3 @@
 log script chipset surf in
-script ./Levels/surf.txt, 2000, 1
+script ./Levels/surf.txt, 2000, 1, #arg4#
 end

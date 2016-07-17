@@ -8,6 +8,8 @@
 #include "../../ECS/System.h"
 
 namespace ska {
+	class World;
+
 	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent> {
 	public:
 		
@@ -49,12 +51,12 @@ namespace ska {
 	protected:
 		virtual void refresh() override;
 		struct ScriptCommandHelper {
-			ScriptCommandHelper(EntityManager& parent) : m_entityManager(parent) {}
-			virtual void setupCommands(std::unordered_map<std::string, CommandPtr>& commands) const = 0;
+			ScriptCommandHelper(ska::World& w, EntityManager& parent) : m_entityManager(parent) {}
+			virtual void setupCommands(ska::World& w, std::unordered_map<std::string, CommandPtr>& commands) const = 0;
 			EntityManager& m_entityManager;
 		};
 
-		ScriptAutoSystem(const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
+		ScriptAutoSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
 	};
 
 }
