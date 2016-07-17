@@ -1,3 +1,12 @@
+#ifndef NDEBUG
+#define SKA_DEBUG_GRAPHIC
+#define SKA_DEBUG_LOGS
+#endif
+
+/* DEBUG CONF */
+#undef SKA_DEBUG_GRAPHIC
+/* END DEBUG CONF*/
+
 #define FILE_SEPARATOR "/"
 #define NOSUCHFILE "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"nosuchfile.png"
 #define SPRITEBANK_ANIMATION 0

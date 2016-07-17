@@ -36,7 +36,9 @@ m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_skillRefreshSystem);
 	m_logics.push_back(&m_statsSystem);
 
-	//TODO add IA input context
+	m_collisionSystem.ska::EntityCollisionObservable::removeObserver(m_entityCollisionResponse);
+	
+	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
 }
 
@@ -45,12 +47,6 @@ ska::CameraSystem& SceneFight::getCamera() {
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
-	 //WGameCore& core = WGameCore::getInstance();
-	/*ParticleManager& particleManager = core.getParticleManager();
-	MouseCursor& mouseCursor = core.getMouseCursor();
-	Settings& settings = core.getSettings();*/
-
-	m_worldScene.graphicUpdate(drawables);
 	AbstractSceneMap::graphicUpdate(drawables);
 
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
@@ -185,12 +181,17 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
 		   Ajout d'un composant de combat au Pokémon */
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
-
-		/* TODO random position autour de l'ennemi */
-		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
+		
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_opponentId, BattleComponent());
-		
+		auto& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_pokemonId);
+		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
+
+		const ska::Rectangle targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
+		pc.x = targetBlock.x - hc.xOffset;
+		pc.y = targetBlock.y - hc.yOffset;
+		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
+
 		m_sceneLoaded = true;
 		return false;
 	}, *pokeballRawTask));
@@ -255,7 +256,7 @@ bool SceneFight::unload() {
 
 void SceneFight::eventUpdate(bool movingDisallowed) {
 	AbstractSceneMap::eventUpdate(movingDisallowed);
-	m_worldScene.eventUpdate(movingDisallowed);
+	//m_worldScene.eventUpdate(movingDisallowed);
 }
 
 SceneFight::~SceneFight()

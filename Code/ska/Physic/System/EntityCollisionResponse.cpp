@@ -13,6 +13,13 @@ ska::EntityCollisionResponse::EntityCollisionResponse(CollisionSystem& colSys, s
 	m_collisionSystem.EntityCollisionObservable::addObserver(*this);
 }
 
+ska::EntityCollisionResponse::EntityCollisionResponse(std::function<void(const CollisionEvent&, CollisionComponent&, const CollidableComponent&)> onEntityCollision, CollisionSystem& colSys, ska::EntityManager& em) :
+EntityCollisionObserver(onEntityCollision),
+m_entityManager(em),
+m_collisionSystem(colSys) {
+	m_collisionSystem.EntityCollisionObservable::addObserver(*this);
+}
+
 void ska::EntityCollisionResponse::onEntityCollision(const CollisionEvent& e, CollisionComponent& col, const CollidableComponent& cc) {
 	ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
 	MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);

@@ -141,7 +141,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		boxDest.h = boxDest.w = 30;
 
 		std::vector<ska::Point<int>> blockColPos;
-		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld) && m_world.canMoveToPos(boxDest, blockColPos)) {
+		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
 			bool spawnAllowed = true;
 			for (unsigned int j = 0; j < idBlocks.size(); j++) {
 				const ska::Block* b = m_world.getHigherBlock(dest.x / blockSize, dest.y / blockSize);
@@ -174,6 +174,15 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				fc.level = level;
 				fc.opponentScriptId = idMob;
 				m_entityManager.addComponent<FightComponent>(mob, fc);
+
+				ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
+				const ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
+				ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
+
+				const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
+				pc.x = targetBlock.x - hc.xOffset;
+				pc.y = targetBlock.y- hc.yOffset;
+
 				successfulSpawns++;
 			}
 		}

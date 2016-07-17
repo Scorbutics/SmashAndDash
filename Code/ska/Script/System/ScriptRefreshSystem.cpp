@@ -97,7 +97,7 @@ void ska::ScriptRefreshSystem::refresh() {
 		const bool sameBlockBot = m_world.isSameBlockId(centerPos, oldCenterPos, 0);
 		const bool sameBlockMid = m_world.isSameBlockId(centerPos, oldCenterPos, 1);
 		if (!sameBlockBot || !sameBlockMid) {
-#ifndef NDEBUG
+#ifdef SKA_DEBUG_GRAPHIC
 			auto& dgc = entityManager.getComponent<DebugGraphicComponent>(entityId);
 			dgc.typeMask = DebugGraphicType::WALK;
 			entityManager.addComponent<DebugGraphicComponent>(entityId, dgc);

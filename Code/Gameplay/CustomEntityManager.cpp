@@ -7,6 +7,7 @@
 #include "../ska/Physic/PositionComponent.h"
 #include "../ska/Physic/HitboxComponent.h"
 #include "../ska/Physic/ForceComponent.h"
+#include "../ska/Physic/CollidableComponent.h"
 #include "../ska/Inputs/Readers/IniReader.h"
 #include "../ska/Graphic/SpritePath.h"
 #include "./Fight/SkillsHolderComponent.h"
@@ -49,7 +50,7 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	addComponent<ska::ForceComponent>(skill, ska::ForceComponent());
 	addComponent<ska::HitboxComponent>(skill, hc);
 	addComponent<ska::GraphicComponent>(skill, gcSkill);
-
+	addComponent<ska::CollidableComponent>(skill, ska::CollidableComponent());
 	return skill;
 }
 

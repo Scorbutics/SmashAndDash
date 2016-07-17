@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
-#ifndef NDEBUG
+
+#ifdef SKA_DEBUG_GRAPHIC
 #define AbstractSceneMap_ DebugAbstractSceneMap
 #include "DebugAbstractSceneMap.h"
 #else

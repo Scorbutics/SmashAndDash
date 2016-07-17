@@ -5,14 +5,14 @@
 #include "../../Gameplay/Fight/BattleComponent.h"
 
 SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, ska::EntityManager& em) : 
-ska::EntityCollisionObserver(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-m_collisionSystem(colSys), m_entityManager(em) {
+ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), colSys, em){
 	m_collisionSystem.ska::EntityCollisionObservable::addObserver(*this);
 }
 
 
 void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc) {
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
+		EntityCollisionResponse::onEntityCollision(e, col, cc);
 		return;
 	}
 
@@ -51,6 +51,7 @@ void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& 
 		bc->hp -= sc->damage;
 		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
+
 }
 
 /*

@@ -27,7 +27,6 @@ protected:
 	WorldScene& m_worldScene;
 	ska::CollisionSystem m_collisionSystem;
 
-private:
 	ska::WorldCollisionResponse m_worldCollisionResponse;
 	ska::EntityCollisionResponse m_entityCollisionResponse;
 };

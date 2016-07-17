@@ -47,8 +47,14 @@ bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>&
 		break;
 	}
 
-	Block* b1 = l == nullptr ? getHigherBlock(p1.x / m_blockSize, p1.y / m_blockSize) : l->getBlock(p1.x / m_blockSize, p1.y / m_blockSize);
-	Block* b2 = l == nullptr ? getHigherBlock(p2.x / m_blockSize, p2.y / m_blockSize) : l->getBlock(p2.x / m_blockSize, p2.y / m_blockSize);
+	const auto p1Block = p1 / m_blockSize;
+	const auto p2Block = p2 / m_blockSize;
+	if (p1Block.x >= m_nbrBlockX || p2Block.x >= m_nbrBlockX || p1Block.y >= m_nbrBlockY || p2Block.y >= m_nbrBlockY) {
+		return true;
+	}
+
+	Block* b1 = l == nullptr ? getHigherBlock(p1Block.x, p1Block.y) : l->getBlock(p1Block.x, p1Block.y);
+	Block* b2 = l == nullptr ? getHigherBlock(p2Block.x, p2Block.y) : l->getBlock(p2Block.x, p2Block.y);
 	return (b1 == b2 || b1 != nullptr && b2 != nullptr && b1->getID() == b2->getID());
 }
 
@@ -68,8 +74,11 @@ bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered
 		l = nullptr;
 		break;
 	}
-	
-	Block* b = layerIndex == -1 ? getHigherBlock(pos.x / m_blockSize, pos.y / m_blockSize) : l->getBlock(pos.x / m_blockSize, pos.y / m_blockSize);
+	const ska::Point<int> blockPos = pos / m_blockSize;
+	if (blockPos.x >= m_nbrBlockX || blockPos.y >= m_nbrBlockY ) {
+		return true;
+	}
+	Block* b = layerIndex == -1 ? getHigherBlock(blockPos.x, blockPos.y) : l->getBlock(blockPos.x, blockPos.y);
 	const bool result = b != nullptr ? (authorizedBlocks.find(b->getID()) != authorizedBlocks.end()) : false;
 	return result;
 }
@@ -260,7 +269,7 @@ ska::Point<int> ska::World::alignOnBlock(const ska::Rectangle& hitbox) {
 ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) {
 	std::vector<ska::Rectangle> blocksPos;
 	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitBox) + ska::Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
-	ska::Rectangle result { 0, 0, 0, 0};
+	ska::Rectangle result = hitBox;
 	
 
 	if (radius == 0) {
