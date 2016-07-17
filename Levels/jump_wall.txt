@@ -1,0 +1,6 @@
+assign #arg0#, |jump_direction|
+move 0, [|jump_direction|], 48, true
+jump 0, 300
+wait 500
+expulse 0
+end

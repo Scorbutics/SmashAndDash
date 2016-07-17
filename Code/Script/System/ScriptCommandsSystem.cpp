@@ -22,6 +22,7 @@
 #include "../Commands/CommandThrowPokebal.h"
 #include "../Commands/CommandTranslationCamera.h"
 #include "../Commands/CommandExpulse.h"
+#include "../Commands/CommandJump.h"
 
 ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame) : ScriptBasicCommandsSystem(w, ScriptCommandHelper(w, entityManager), entityManager, saveGame) {
 }
@@ -52,6 +53,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std
 	c["throw_pokemon"] = move(ska::CommandPtr(new CommandPokemonOut(m_entityManager)));
 	c["player_presence"] = move(ska::CommandPtr(new CommandPlayerPresence(m_entityManager)));
 	c["expulse"] = move(ska::CommandPtr(new CommandExpulse(m_world, m_entityManager)));
+	c["jump"] = move(ska::CommandPtr(new CommandJump(m_entityManager)));
 	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager)));
 }
 

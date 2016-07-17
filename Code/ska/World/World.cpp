@@ -49,7 +49,7 @@ bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>&
 
 	Block* b1 = l == nullptr ? getHigherBlock(p1.x / m_blockSize, p1.y / m_blockSize) : l->getBlock(p1.x / m_blockSize, p1.y / m_blockSize);
 	Block* b2 = l == nullptr ? getHigherBlock(p2.x / m_blockSize, p2.y / m_blockSize) : l->getBlock(p2.x / m_blockSize, p2.y / m_blockSize);
-	return (b1 == b2 || b1 != nullptr && b1->getID() == b2->getID());
+	return (b1 == b2 || b1 != nullptr && b2 != nullptr && b1->getID() == b2->getID());
 }
 
 bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const {
@@ -203,9 +203,21 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 		
 }
 
-std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& posToLookAt, const ScriptTriggerType& reason) {
+std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& posToLookAt, const ScriptTriggerType& reason, const unsigned int layerIndex) {
 	std::vector<ska::ScriptSleepComponent*> result;
-	
+	Layer* l;
+	switch (layerIndex) {
+	case 0:
+		l = &m_lBot;
+		break;
+	case 1:
+		l = &m_lMid;
+		break;
+	default:
+		l = &m_lTop;
+		break;
+	}
+
 	if (reason == EnumScriptTriggerType::AUTO) {
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript("", reason, m_autoScriptsPlayed);
 		for (auto& ssc : tmp) {
@@ -217,11 +229,9 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 		return result;
 	}
 	
-
-	/* TODO autres layers ??? */
 	const ska::Point<int> newBlock = newPos / m_blockSize;
 	const ska::Point<int> oldBlock = oldPos / m_blockSize;
-	Block* b = m_lBot.getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
+	Block* b = l->getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
 		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);

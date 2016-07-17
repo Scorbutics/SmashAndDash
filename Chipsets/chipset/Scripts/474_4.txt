@@ -1,0 +1,5 @@
+log script chipset jump bot
+if #arg4# == 0
+	script ./Levels/jump_wall.txt, 2000, #arg4#
+endif
+end

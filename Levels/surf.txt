@@ -22,7 +22,7 @@ if [|same_value|] == 0
 	else
 		animation 0, 2
 	endif
-	move 0, [|direction_perso|], 48, ./Levels/surf_callback.txt, #arg0#
+	move 0, [|direction_perso|], 25, false, ./Levels/surf_callback.txt, #arg0#
 endif
 
 end

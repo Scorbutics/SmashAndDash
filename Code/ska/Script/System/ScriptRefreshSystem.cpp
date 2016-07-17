@@ -68,11 +68,14 @@ void ska::ScriptRefreshSystem::refresh() {
 		const unsigned int blockSize = m_world.getBlockSize();
 		const ska::Point<int> oldCenterPos = ska::Point<int>(sac.lastBlockPos);
 		
-		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO);
+		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, -1);
 		if (iac[InputAction::DoAction]) {
 			//clog << "Enter Pressed" << std::endl;
-			std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION);
+			std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
+
+			std::vector<ScriptSleepComponent*>& tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 1);
+			worldScripts.insert(worldScripts.end(), tmp2.begin(), tmp2.end());
 		}
 
 
@@ -82,24 +85,27 @@ void ska::ScriptRefreshSystem::refresh() {
 			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
 
-				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH);
+				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 0);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
+
+				std::vector<ScriptSleepComponent*>& tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 1);
+				worldScripts.insert(worldScripts.end(), tmp2.begin(), tmp2.end());
 			}
 		}
 
 		/* If we are moving to another block, triggers a MOVE_OUT event on previous block and MOVE_IN on the next one */
-		//TODO Other layers
-		const bool sameBlock = m_world.isSameBlockId(centerPos, oldCenterPos, 0);
-		if (!sameBlock) {
+		const bool sameBlockBot = m_world.isSameBlockId(centerPos, oldCenterPos, 0);
+		const bool sameBlockMid = m_world.isSameBlockId(centerPos, oldCenterPos, 1);
+		if (!sameBlockBot || !sameBlockMid) {
 #ifndef NDEBUG
 			auto& dgc = entityManager.getComponent<DebugGraphicComponent>(entityId);
 			dgc.typeMask = DebugGraphicType::WALK;
 			entityManager.addComponent<DebugGraphicComponent>(entityId, dgc);
 #endif
-			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(oldCenterPos, centerPos, oldCenterPos, EnumScriptTriggerType::MOVE_OUT);
+			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(oldCenterPos, centerPos, oldCenterPos, EnumScriptTriggerType::MOVE_OUT, !sameBlockBot ? 0 : 1);
 			worldScripts.insert(worldScripts.end(), tmpOut.begin(), tmpOut.end());
 
-			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::MOVE_IN);
+			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::MOVE_IN, !sameBlockBot ? 0 : 1);
 			worldScripts.insert(worldScripts.end(), tmpIn.begin(), tmpIn.end());
 		}
 

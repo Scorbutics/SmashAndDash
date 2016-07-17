@@ -23,14 +23,14 @@ int CommandMove::argumentsNumber() {
 
 std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
 	
-	if (args.size() < 3) {
-		throw ska::ScriptException("This command needs at least 3 parameters");
+	if (args.size() < 4) {
+		throw ska::ScriptException("This command needs at least 4 parameters");
 	}
 
     const std::string& id = args[0];
 	const int dir = ska::StringUtils::strToInt(args[1]);
 	const int speed = ska::StringUtils::strToInt(args[2]);
-
+	const bool ghost = ska::StringUtils::strToInt(args[3]);
 	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
@@ -45,14 +45,15 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	
 	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, speed);
 	iamc.delay = -1;
-	
+	iamc.ghost = ghost;
+
 	/* if there is a script callback provided */
-	if (args.size() > 3) {
+	if (args.size() > 4) {
 		std::vector<std::string> extraArgs;
 
-		const std::string& scriptName = args[3];
+		const std::string& scriptName = args[4];
 		/* Rebuild an argument string to be read by the new running script */
-		for (unsigned int i = 4; i < args.size(); i++) {
+		for (unsigned int i = 5; i < args.size(); i++) {
 			extraArgs.push_back(args[i]);
 		}
 		ska::ScriptSleepComponent ssc;
