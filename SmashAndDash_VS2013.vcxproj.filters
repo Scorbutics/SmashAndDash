@@ -930,6 +930,9 @@
     <ClInclude Include="Code\Script\Commands\CommandJump.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Physic\System\WorldEntityCollisionResponse.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1482,6 +1485,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandJump.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Physic\System\WorldEntityCollisionResponse.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -29,7 +29,9 @@ m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::
 m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
 m_skillRefreshSystem(ws.getEntityManager()),
 m_sceneLoaded(false),
-m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
+m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_loadState(0),
+m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -37,7 +39,8 @@ m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_statsSystem);
 
 	m_collisionSystem.ska::EntityCollisionObservable::removeObserver(m_entityCollisionResponse);
-	
+	m_collisionSystem.ska::WorldCollisionObservable::removeObserver(m_worldCollisionResponse);
+
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
 }
@@ -120,10 +123,9 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
 	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
-		static bool started = false;
-		static int dialogId = 0;
-		if (!started) {
-			started = true;
+		//static int dialogId = 0;
+		if (m_loadState == 0) {
+			m_loadState++;
 
 			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_trainerId)) {
 				return false;
@@ -146,11 +148,9 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>* pokeballRawTask;
 	ska::RunnablePtr pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>& t, ska::InputComponent ic) {
-		static bool started = false;
 		static ska::EntityId pokeball;
-
-		if (!started) {
-			started = true;
+		if (m_loadState == 1) {
+			m_loadState++;
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			ska::HitboxComponent& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_trainerId);
@@ -193,6 +193,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
 		m_sceneLoaded = true;
+		m_loadState = 0;
 		return false;
 	}, *pokeballRawTask));
 
@@ -211,10 +212,9 @@ bool SceneFight::unload() {
 	const unsigned int delay = 3000;
 
 	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
-		static bool started = false;
 		static int dialogId = 0;
-		if (!started) {
-			started = true;
+		if (m_loadState == 0) {
+			m_loadState++;
 
 			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_pokemonId)) {
 				return false;
@@ -238,7 +238,8 @@ bool SceneFight::unload() {
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
 	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>(
 		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
-
+		
+		m_loadState = 0;
 		m_worldScene.unload();
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
 		//m_worldScene.getEntityManager().removeEntity(m_pokemonId);

@@ -17,6 +17,7 @@
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
+#include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 
 class WorldScene;
@@ -55,10 +56,12 @@ private:
 	const ska::EntityId m_opponentId;
 
 	bool m_sceneLoaded;
+	int m_loadState;
 
 	BattleSystem m_battleSystem;
 	SkillRefreshSystem m_skillRefreshSystem;
 
+	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

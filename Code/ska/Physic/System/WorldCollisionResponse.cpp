@@ -15,6 +15,14 @@ ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& c
 	m_collisionSystem.WorldCollisionObservable::addObserver(*this);
 }
 
+ska::WorldCollisionResponse::WorldCollisionResponse(std::function<void(const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&)> onEntityCollision, World& w, CollisionSystem& colSys, ska::EntityManager& em) :
+WorldCollisionObserver(onEntityCollision),
+m_entityManager(em),
+m_collisionSystem(colSys),
+m_world(w) {
+	m_collisionSystem.WorldCollisionObservable::addObserver(*this);
+}
+
 void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
 
 	bool colX = false;
