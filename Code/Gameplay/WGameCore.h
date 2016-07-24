@@ -74,7 +74,7 @@ public:
 	const ska::InputActionContainer& getActions() const;
 	const ska::InputRangeContainer& getRanges() const;
 	const ska::InputToggleContainer& getToggles() const;
-
+	
 	void setOffsetChipset(int x, int y, int w, int h);
     void setSpeedInertie(float x);
     void setChipset(SDL_Surface* chipset);

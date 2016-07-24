@@ -14,14 +14,17 @@ class AbstractSceneMap :
 	public AbstractNoGUISceneMap
 {
 public:
-	AbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril);
-	AbstractSceneMap(WorldScene& ws, ska::Scene& oldScene);
+	AbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	AbstractSceneMap(WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ska::CameraSystem& getCamera() = 0;
 	virtual ~AbstractSceneMap();
+
+private: 
+	const bool m_sameMap;
 
 protected:
 	WorldScene& m_worldScene;

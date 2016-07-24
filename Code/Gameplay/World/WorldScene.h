@@ -43,6 +43,8 @@ public:
 	const unsigned int getScreenW() const;
 	const unsigned int getScreenH() const;
 
+	const std::string getFileName() const;
+
 private:
 	const unsigned int m_screenW;
 	const unsigned int m_screenH;

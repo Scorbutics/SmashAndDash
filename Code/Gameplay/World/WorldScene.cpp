@@ -48,6 +48,10 @@ m_screenH(screenH) {
 
 }
 
+const std::string WorldScene::getFileName() const {
+	return m_world.getFileName();
+}
+
 void WorldScene::linkCamera(ska::CameraSystem* cs) {
 	if (m_cameraSystem == NULL || cs == NULL) {
 		m_cameraSystem = cs;
@@ -144,9 +148,13 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
 			bool spawnAllowed = true;
 			for (unsigned int j = 0; j < idBlocks.size(); j++) {
-				const ska::Block* b = m_world.getHigherBlock(dest.x / blockSize, dest.y / blockSize);
-				if (b != NULL && b->getID() == idBlocks[i]) {
-					spawnAllowed = false;
+				const unsigned int bX = dest.x / blockSize;
+				const unsigned int bY = dest.y / blockSize;
+				if (bX < m_world.getNbrBlocX() && bY < m_world.getNbrBlocY()) {
+					const ska::Block* b = m_world.getHigherBlock(bX, bY);
+					if (b != NULL && b->getID() == idBlocks[i]) {
+						spawnAllowed = false;
+					}
 				}
 			}
 

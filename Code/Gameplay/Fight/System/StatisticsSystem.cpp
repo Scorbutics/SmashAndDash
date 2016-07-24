@@ -11,9 +11,10 @@ void StatisticsSystem::refresh() {
 		BattleComponent& bc = m_entityManager.getComponent<BattleComponent>(entityId);
 		
 		/* TODO handle more stats effects */
+		/* TODO : observer (eg hp < 0 could mean end trainer battle or end pokémon battle) */
 		if (bc.hp < 0) {
 			scheduleDeferredRemove(entityId);
-			m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, m_worldScene.getWorld().getFileName(), m_worldScene.getWorld().getChipset().getName())));
+			m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, m_worldScene.getFileName(), m_worldScene.getWorld().getChipset().getName(), true)));
 		}
 	}
 }

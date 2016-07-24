@@ -5,8 +5,8 @@
 
 class DebugAbstractSceneMap : public AbstractSceneMap {
 public:
-	DebugAbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril);
-	DebugAbstractSceneMap(WorldScene& ws, ska::Scene& oldScene);
+	DebugAbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	DebugAbstractSceneMap(WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
 	virtual ~DebugAbstractSceneMap() = default;
 
 private:

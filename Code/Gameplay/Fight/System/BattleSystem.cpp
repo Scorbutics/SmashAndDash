@@ -64,8 +64,13 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 		ska::GraphicComponent& gcSkill = m_entityManager.getComponent<ska::GraphicComponent>(skill);
 		sc.origin = skillStartPos - ska::Point<int>(gcSkill.sprite[0].getWidth() / 2, gcSkill.sprite[0].getHeight() / 2);
 		m_entityManager.addComponent<ska::PositionComponent>(skill, sc.origin);
-		ska::PositionComponent& pcTarget = m_entityManager.getComponent<ska::PositionComponent>(from == m_pokemon ? m_opponent : m_pokemon);
-		sc.target = pcTarget;
+
+		const ska::EntityId target = from == m_pokemon ? m_opponent : m_pokemon;
+		const ska::PositionComponent& pcTarget = m_entityManager.getComponent<ska::PositionComponent>(target);
+		const ska::HitboxComponent& hcTarget = m_entityManager.getComponent<ska::HitboxComponent>(target);
+		const ska::Point<int> pTarget = ska::Point<int>(hcTarget.xOffset, hcTarget.yOffset) + pcTarget;
+
+		sc.target = pTarget;
 		sc.battler = from;
 	}
 }

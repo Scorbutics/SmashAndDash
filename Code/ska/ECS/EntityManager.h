@@ -73,6 +73,12 @@ namespace ska {
 			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 
+		void refreshEntities() {
+			for (const auto& entity : m_entities) {
+				notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
+			}
+		}
+
 		template <class T>
 		void addComponent(EntityId entity, const T& component) {
 			ComponentHandler<T>& components = this->template getComponents<T>();

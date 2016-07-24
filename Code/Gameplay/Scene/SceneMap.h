@@ -24,9 +24,9 @@ class SceneMap :
 	public AbstractSceneMap_
 {
 public:
-	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName);
-	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws);
-	SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName);
+	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap);
+	SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	void reinit();
@@ -34,7 +34,7 @@ public:
 	virtual ~SceneMap();
 
 private:
-	
+
 	const std::string m_fileName;
 	const std::string m_chipsetName;
 

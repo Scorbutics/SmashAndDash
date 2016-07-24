@@ -14,7 +14,7 @@
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
-AbstractSceneMap_(ws, sh, ril),
+AbstractSceneMap_(ws, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_statsSystem(ws.getEntityManager(), sh, ril, ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
@@ -178,7 +178,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 	ska::RunnablePtr finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>& t, ska::InputComponent ic, ska::PositionComponent pc) {
 		
 		/* Ajout InputComponent au Pokémon,
-		   Ajout d'un IAMovementComponent au dresseur (m_player),
+		   TODO Ajout d'un IAMovementComponent au dresseur (m_player),
 		   Ajout d'un composant de combat au Pokémon */
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
 		
@@ -257,7 +257,6 @@ bool SceneFight::unload() {
 
 void SceneFight::eventUpdate(bool movingDisallowed) {
 	AbstractSceneMap::eventUpdate(movingDisallowed);
-	//m_worldScene.eventUpdate(movingDisallowed);
 }
 
 SceneFight::~SceneFight()

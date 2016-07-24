@@ -39,7 +39,7 @@ m_chipsetAni(3, 4, true) {
 	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputGUIContext()));
 
 	/* Let's start on the map */
-	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene)));
+	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, false)));
 	m_sceneHolder.update();
 
 	m_speedInertie = 0;

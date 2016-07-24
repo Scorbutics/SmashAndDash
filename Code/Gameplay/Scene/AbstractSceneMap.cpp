@@ -5,7 +5,9 @@
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril) : AbstractNoGUISceneMap(sh, ril),
+AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) : 
+AbstractNoGUISceneMap(sh, ril),
+m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
 m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
@@ -13,8 +15,9 @@ m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
-AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::Scene& oldScene) :
+AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::Scene& oldScene, const bool sameMap) :
 AbstractNoGUISceneMap(oldScene),
+m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
 m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
@@ -30,8 +33,12 @@ void AbstractSceneMap::load(ska::ScenePtr* lastScene) {
 		std::unordered_set<ska::EntityId> toNotDelete;
 		toNotDelete.insert(m_worldScene.getPlayer());
 
-		/* Delete others entities */
-		m_worldScene.getEntityManager().removeEntities(toNotDelete);
+		if (!m_sameMap) {
+			/* If the map changes, we delete all entities (except player) */
+			m_worldScene.getEntityManager().removeEntities(toNotDelete);
+		} else {
+			m_worldScene.getEntityManager().refreshEntities();
+		}
 	}
 
 }
