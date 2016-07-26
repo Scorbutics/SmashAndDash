@@ -9,13 +9,11 @@
 #include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/System/CameraSystem.h"
 
-Bar::Bar(StatisticsChangeObservable& obs, ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
-StatisticsChangeObserver(std::bind(&Bar::onStatisticsChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+Bar::Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
 m_barStyle(barStyleName),
 m_barContent(barContentName),
 m_entityManager(em),
 m_maxValue(maxValue),
-m_observable(obs),
 m_cameraSystem(cam),
 m_entityId(entityId) {
         
@@ -27,7 +25,6 @@ m_entityId(entityId) {
 
     m_visible = true;
 
-	m_observable.addObserver(*this);
 	setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
 }
 
@@ -50,13 +47,6 @@ void Bar::display() const {
 	
 }
 
-void Bar::onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src) {
-	//TODO : observateur = GUI et non pas Bar directement
-	if (m_entityId == target) {
-		setCurrentValue(targetStats.hp);
-	}
-}
-
 void Bar::setCurrentValue(unsigned int v) {
     m_curValue = v;
 
@@ -72,5 +62,4 @@ void Bar::setVisible(bool x) {
 }
 
 Bar::~Bar() {
-	m_observable.removeObserver(*this);
 }

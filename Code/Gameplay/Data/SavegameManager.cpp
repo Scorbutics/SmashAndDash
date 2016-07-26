@@ -1,11 +1,10 @@
+#include <Windows.h>
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
 #include "../../Utils\IDs.h"
 #include "../../Utils\ChargementImages.h"
-#include "..\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
-#include "..\Character.h"
 #include "../../Gameplay\Data\Statistics.h"
 
 using namespace std;
@@ -87,7 +86,7 @@ void SavegameManager::loadGame( std::string pathname )
 void SavegameManager::savePokemonTeam()
 {
 	ska::IniReader reader;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	for (unsigned int i = 0; i < 6; i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);
@@ -116,7 +115,7 @@ void SavegameManager::loadPokemonTeam()
 {
 	ska::IniReader reader;
 	unsigned int index = 0;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	/*do 
 	{
@@ -150,14 +149,16 @@ const std::string& SavegameManager::getPathName() {
 
 void SavegameManager::saveTrainer()
 {
-	Character* hero;
+	//Character* hero;
 	ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	if(of.fail())
 	{
+		//TODO : PORTABILITE !!!
 		CreateDirectory(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname).c_str(),0);
 		CreateDirectory(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team").c_str(),0);
+
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}
 
@@ -175,13 +176,13 @@ void SavegameManager::saveTrainer()
 void SavegameManager::saveItems()
 {
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	for(unsigned int i = 0; i < wScreen.getInventory().getSize(); i++)
 	{
 		const std::string& id = ska::StringUtils::intToStr(i);
 		reader.set("Items " + id + "_id", wScreen.getInventory().getObjectFromIndex(i)->getID());
 		reader.set("Items " + id + "_amount", wScreen.getInventory().getAmountFromIndex(i));
-	}
+	}*/
 	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 }
 
@@ -190,7 +191,7 @@ void SavegameManager::loadTrainer()
 	Character* hero;
 	unsigned int startPosx, startPosy;
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	startPosx = reader.getInt("Trainer start_posx");
 	startPosy = reader.getInt("Trainer start_posy");
@@ -220,8 +221,8 @@ void SavegameManager::loadTrainer()
 
 void SavegameManager::loadItem( int id, unsigned int amount )
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.getInventory().add(id, amount);
+	//WGameCore& wScreen = WGameCore::getInstance();
+	//wScreen.getInventory().add(id, amount);
 }
 
 SavegameManager::~SavegameManager()

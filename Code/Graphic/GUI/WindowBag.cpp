@@ -31,7 +31,7 @@ void WindowBag::reset()
     this->addTextArea("PokéSac", 20, buf);
     buf.x = TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*2;
-    this->addInventory(wScreen.getInventory(), buf);
+    //this->addInventory(wScreen.getInventory(), buf);
 }
 
 int* WindowBag::getBoolUseObject()

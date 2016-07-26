@@ -98,7 +98,7 @@ void WindowShop::reset()
 	buf.h = m_userBar.getRect().h;
 
     m_shopInvArea = m_shopBar.getInventoryArea(0);
-    m_userBar.addInventory(wScreen.getInventory(), buf);
+    //m_userBar.addInventory(wScreen.getInventory(), buf);
     m_userInvArea = m_userBar.getInventoryArea(0);
 
     m_shopInv.clear();
@@ -133,7 +133,7 @@ void WindowShop::refresh()
     //Lors d'un dépot d'objet dans notre inventaire, on achète
     if(mouseCur.getObject() != NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_userBar.getRect()) && m_lastClickInv == "shop")
     {
-        wScreen.getInventory().add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
+        //wScreen.getInventory().add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         m_shopInv.remove(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         m_shopInv.add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         mouseCur.setObjectAmount(0);

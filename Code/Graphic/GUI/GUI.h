@@ -26,10 +26,14 @@ typedef std::unique_ptr<WindowBag> WindowBagPtr;
 typedef std::unique_ptr<ToolBar> ToolBarPtr;
 typedef std::unique_ptr<WindowShop> WindowShopPtr;
 
-class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriority
-{
-    public:
-    GUI();
+namespace ska {
+	class Window;
+}
+
+class GUI :  public ska::DrawableFixedPriority {
+
+public:
+	GUI(const ska::Window& w);
 
 	//virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
@@ -40,7 +44,7 @@ class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriori
 	int isPositionOnButton(const ska::Point<float>& pos);
     bool isMouseOnAWindow();
     bool isVisible() const override;
-    void initButtons();
+	void initButtons(const ska::Window& w);
     void hide(bool x);
     bool isMovingAWindow();
 

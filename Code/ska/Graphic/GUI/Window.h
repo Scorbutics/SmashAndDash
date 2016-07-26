@@ -13,26 +13,21 @@ namespace ska {
 	{
 	public:
 		Window();
-		void pause();
 		SDL_Renderer* getRenderer() const;
 		~Window();
-		unsigned int getWidth();
-		unsigned int getHeight();
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
 		SDL_Window* getHandle();
 		void flip();
-		void setNextFrameFlip(bool b);
 
 	protected:
-		std::string m_wName, m_bFilename;
-		int m_loFenetre, m_laFenetre;
-		bool m_flip;
+		std::string m_wName;
+		unsigned int m_height;
+		unsigned int m_width;
 
-	protected:
 		SDL_Renderer *m_renderer;
 		SDL_Texture* m_texture;
-		SDL_Surface *m_bmp;
 		SDL_Window *m_screen;
-		ska::Rectangle m_positionFond;
 
 	};
 }

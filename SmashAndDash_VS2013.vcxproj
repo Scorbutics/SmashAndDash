@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
+    <ClInclude Include="Code\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Physic\System\WorldEntityCollisionResponse.h" />
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
@@ -400,6 +401,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />

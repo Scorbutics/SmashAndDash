@@ -85,8 +85,8 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.add(m_world.getLayerRenderable(2));
 
 	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.getPokeball().setPriority(m_graphicSystem.getTopLayerPriority() + 1);
-	drawables.add(wScreen.getPokeball());
+	m_pokeball.setPriority(m_graphicSystem.getTopLayerPriority() + 1);
+	drawables.add(m_pokeball);
 
 	/* Hello, world */
 	m_world.graphicUpdate(drawables);

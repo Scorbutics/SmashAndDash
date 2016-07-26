@@ -1,15 +1,10 @@
 #pragma once
-
-#include <windows.h>
-
 #include <iostream>
 #include <string>
 #include <memory>
 #include "../ska/Graphic\GUI\Window.h"
-#include "Pokeball.h"
 #include "Data\Settings.h"
 #include "../Graphic\GUI\MouseCursor.h"
-#include "../ska/Graphic\Rectangle.h"
 #include "../ska/Inputs/RawInputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "Data\SavegameManager.h"
@@ -20,7 +15,7 @@
 #include "World/WorldScene.h"
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
-#include "Inventory\Inventory.h"
+//#include "Inventory\Inventory.h"
 #include "../ska/Task/TaskQueue.h"
 #include "../ska/Utils/FpsCalculator.h"
 
@@ -52,13 +47,13 @@ public:
 	void addTaskToQueue(ska::RunnablePtr& t);
 	bool hasRunningTask();
 
-	float getSpeedInertie();
-	ska::Animation& getChipsetAnimation();
+	//float getSpeedInertie();
+	//ska::Animation& getChipsetAnimation();
 
 	GUI& getGUI();
 	
-	Pokeball& getPokeball();
-	Inventory& getInventory();
+	//Pokeball& getPokeball();
+	//Inventory& getInventory();
 	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
 	MouseCursor& getMouseCursor();
@@ -89,15 +84,15 @@ protected:
 	bool m_ecritureLog;
 
 	float m_speedInertie;
-	ska::Animation m_chipsetAni;
+	//ska::Animation m_chipsetAni;
 	//AI m_ai;
-	Pokeball m_pokeball;
+	//Pokeball m_pokeball;
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
 	MouseCursor m_mouseCursor;
 	GUI m_gui;
 	Settings m_settings;
-	Inventory m_inv;
+	//Inventory m_inv;
 	WorldScene m_worldScene;
 	ska::FpsCalculator m_fpsCalculator;
 

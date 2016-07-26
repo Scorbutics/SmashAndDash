@@ -33,7 +33,8 @@ m_skillRefreshSystem(ws.getEntityManager()),
 m_sceneLoaded(false),
 m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
 m_loadState(0),
-m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()) {
+m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
+m_guiBattle(m_skillEntityCollisionResponse) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -55,13 +56,7 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 	AbstractSceneMap::graphicUpdate(drawables);
 
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
-	if (m_pokemonBar != nullptr) {
-		drawables.add(*m_pokemonBar);
-	}
-
-	if (m_opponentBar != nullptr) {
-		drawables.add(*m_opponentBar);
-	}
+	m_guiBattle.graphicUpdate(drawables);
 }
 
 
@@ -210,12 +205,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		const auto& opponentBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_opponentId);
 		
 		//TODO max hp venant des stats du fichier ini
-		m_pokemonBar = BarPtr(new Bar(m_skillEntityCollisionResponse, m_cameraSystem, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbar.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbarcontent.png", pokemonBc.hp, m_worldScene.getEntityManager(), m_pokemonId));
-		m_opponentBar = BarPtr(new Bar(m_skillEntityCollisionResponse, m_cameraSystem, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbar.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbarcontent.png", opponentBc.hp, m_worldScene.getEntityManager(), m_opponentId));
-
-		m_pokemonBar->setCurrentValue(pokemonBc.hp);
-		m_opponentBar->setCurrentValue(opponentBc.hp);
-
+		m_guiBattle.addHPBar(m_cameraSystem, pokemonBc.hp, pokemonBc.hp, m_worldScene.getEntityManager(), m_pokemonId);
+		m_guiBattle.addHPBar(m_cameraSystem, opponentBc.hp, opponentBc.hp, m_worldScene.getEntityManager(), m_opponentId);
 
 		m_sceneLoaded = true;
 		m_loadState = 0;
@@ -242,8 +233,7 @@ bool SceneFight::unload() {
 			m_loadState++;
 			
 			/* Resets GUI */
-			m_pokemonBar = nullptr;
-			m_opponentBar = nullptr;
+			m_guiBattle.clear();
 
 			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_pokemonId)) {
 				return false;
@@ -289,6 +279,4 @@ void SceneFight::eventUpdate(bool movingDisallowed) {
 }
 
 SceneFight::~SceneFight() {
-	m_opponentBar = nullptr;
-	m_pokemonBar = nullptr;
 }

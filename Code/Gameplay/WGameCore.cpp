@@ -22,11 +22,10 @@ WGameCore::WGameCore():
 Window(), 
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, m_laFenetre, m_loFenetre),
-m_chipsetAni(3, 4, true) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, m_width, m_height),
+m_gui(*this) {
 
 	m_OfChip = { 0, 0 };
-	m_chipsetAni.setOffsetAndFrameSize(m_OfChip);
 
 	/* MAP inputs */
 	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputMapContext()));
@@ -39,14 +38,16 @@ m_chipsetAni(3, 4, true) {
 	m_sceneHolder.update();
 
 	m_speedInertie = 0;
-	m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
+	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 	m_fpsCalculator.setDisplayPriority(INT_MAX);
 }
 
 void WGameCore::resize(unsigned int w, unsigned int h) {
+	//TODO
+	//TODD Move to Window
 	//SDL_RenderSetLogicalSize(m_renderer, w, h);
-	m_laFenetre = w;
-	m_loFenetre = h;
+	m_width = w;
+	m_height = h;
 }
 
 WorldScene& WGameCore::getWorldScene() {
@@ -57,37 +58,12 @@ ska::ScenePtr& WGameCore::getScene() {
 	return m_sceneHolder.getScene();
 }
 
-Pokeball& WGameCore::getPokeball()
-{
-    return m_pokeball;
-}
-
-ska::Animation& WGameCore::getChipsetAnimation()
-{
-    return m_chipsetAni;
-}
-
-TrainerCard& WGameCore::getTrainerCard()
-{
-    return m_trainerCard;
-}
-
 void WGameCore::setOffsetChipset(int x, int y, int w, int h)
 {
     m_OfChip.x = x;
     m_OfChip.y = y;
     m_OfChip.w = w;
     m_OfChip.h = h;
-}
-
-float WGameCore::getSpeedInertie()
-{
-    return m_speedInertie;
-}
-
-void WGameCore::setSpeedInertie(float x)
-{
-    m_speedInertie = x;
 }
 
 
@@ -228,23 +204,16 @@ void WGameCore::waitQuit(DialogMenu* window)
     }*/
 }
 
-Inventory& WGameCore::getInventory()
-{
-    return m_inv;
-}
 
-Settings& WGameCore::getSettings()
-{
+Settings& WGameCore::getSettings() {
     return m_settings;
 }
 
-GUI& WGameCore::getGUI()
-{
+GUI& WGameCore::getGUI() {
     return m_gui;
 }
 
-ska::World& WGameCore::getWorld()
-{
+ska::World& WGameCore::getWorld() {
 	return m_worldScene.getWorld();
 }
 

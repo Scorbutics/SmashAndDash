@@ -19,18 +19,15 @@
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
+#include "../../Graphic/GUI/GUIBattle.h"
 
 class WorldScene;
 class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
 
-class Bar;
-using BarPtr = std::unique_ptr<Bar>;
-
 class SceneFight :
-	public AbstractSceneMap_
-{
+	public AbstractSceneMap_ {
 public:
 	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
 	virtual void load(ska::ScenePtr* lastScene) override;
@@ -68,7 +65,6 @@ private:
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
-	BarPtr m_pokemonBar;
-	BarPtr m_opponentBar;
+	GUIBattle m_guiBattle;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

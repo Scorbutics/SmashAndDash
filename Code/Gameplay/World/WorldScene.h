@@ -13,6 +13,7 @@
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
 #include "../../ska/Graphic/Rectangle.h"
+#include "../../Gameplay/Pokeball.h"
 
 namespace ska {
 	class IniReader;
@@ -70,6 +71,8 @@ private:
 	/* Graphics */
 	GraphicSystem m_graphicSystem;
 	ShadowSystem m_shadowSystem;
+
+	Pokeball m_pokeball;
 
 };
 

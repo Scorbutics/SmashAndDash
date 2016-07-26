@@ -5,7 +5,6 @@
 
 #include "../../Utils\IDs.h"
 #include "GUI.h"
-#include "../../Gameplay\WGameCore.h"
 #include "Window_Area.h"
 #include "Inventory_Area.h"
 #include "MouseCursor.h"
@@ -21,11 +20,12 @@
 #include "WindowShop.h"
 #include "ToolBar.h"
 
+#include "../../ska/Graphic/GUI/Window.h"
+#include "../../Gameplay/WGameCore.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
-GUI::GUI() {
-	WGameCore& wScreen = WGameCore::getInstance();
+GUI::GUI(const ska::Window& w) {
 
     m_refreshCount = REFRESH_PNJWINDOW_COUNT;
     m_lastMouseState = 0;
@@ -46,12 +46,12 @@ GUI::GUI() {
     m_facesetPkmn = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.x = 0;
-    menuPos.y = wScreen.getHeight() - 2*TAILLEBLOCFENETRE;
+    menuPos.y = w.getHeight() - 2*TAILLEBLOCFENETRE;
     menuPos.w = 9*TAILLEBLOCFENETRE;
     menuPos.h = 2*TAILLEBLOCFENETRE;
     m_attackPokemon = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
-    menuPos.x = wScreen.getWidth() - 2*TAILLEBLOCFENETRE;
+    menuPos.x = w.getWidth() - 2*TAILLEBLOCFENETRE;
     m_attackOpponent = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
 
@@ -79,7 +79,7 @@ GUI::GUI() {
     m_wTeam = unique_ptr<WindowTeam>(new WindowTeam("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
     m_wBag = unique_ptr<WindowBag>(new WindowBag("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
 
-	menuPos.x = wScreen.getWidth() - 7*TAILLEBLOCFENETRE;
+	menuPos.x = w.getWidth() - 7*TAILLEBLOCFENETRE;
 	menuPos.y = 0;
 	menuPos.w = 7*TAILLEBLOCFENETRE;
 	menuPos.h = 2*TAILLEBLOCFENETRE;
@@ -92,7 +92,7 @@ GUI::GUI() {
     m_wShop = unique_ptr<WindowShop>(new WindowShop("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
     m_toolBar->hide(false);
 
-    initButtons();
+    initButtons(w);
 
 	setPriority(INT_MAX);
 
@@ -102,17 +102,15 @@ WindowBagPtr& GUI::getWindowBag() {
     return m_wBag;
 }
 
-void GUI::initButtons()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+void GUI::initButtons(const ska::Window& w) {
 	ska::Rectangle buf;
     buf.w = (TAILLEBLOCFENETRE)*2;
     buf.h = (TAILLEBLOCFENETRE)*2;
-    buf.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
+    buf.x = w.getWidth() - 13*TAILLEBLOCFENETRE;
     buf.y = 0;
 
-	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
-		m_buttonList[i]->deleteAll();
+	for (auto& b : m_buttonList) {
+		b->deleteAll();
 	}
 
     m_buttonList.clear();
