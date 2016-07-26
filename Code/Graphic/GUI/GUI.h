@@ -8,8 +8,6 @@
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Graphic/Point.h"
 
-using namespace std;
-
 class WindowSettings;
 class WindowTeam;
 class WindowBag;
@@ -17,7 +15,6 @@ class ToolBar;
 class WindowShop;
 class WGameCore;
 class DialogMenu;
-class Character;
 class IDialogMenu;
 
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
@@ -28,7 +25,6 @@ typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
 typedef std::unique_ptr<ToolBar> ToolBarPtr;
 typedef std::unique_ptr<WindowShop> WindowShopPtr;
-typedef std::unique_ptr<Character> CharacterPtr;
 
 class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriority
 {
@@ -48,10 +44,10 @@ class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriori
     void hide(bool x);
     bool isMovingAWindow();
 
-	void resetInfoPNJWindow(Character* pnj);
+	/*void resetInfoPNJWindow(Character* pnj);
 	void resetInfoPokemonWindow(Character* pokemon);
 	void resetAttackPokemonWindow(Character* pokemon);
-    void resetAttackOpponentWindow(Character* op);
+    void resetAttackOpponentWindow(Character* op);*/
 
     void resetMovableWindowPokemonTeam(std::string action);
     void resetMovableWindowPokemonBag();
@@ -75,21 +71,20 @@ class GUI : /*public ska::Observer<const int>,*/ public ska::DrawableFixedPriori
     size_t getButtonListSize();
 
     void setRefreshPNJWindowCount(int x);
-    void setPNJ(CharacterPtr *pnj);
+    //void setPNJ(CharacterPtr *pnj);
     void setClickMenu();
 	void dialogDisplay() const;
 	void display() const override;
 
 	void update();
 private:
-    vector<DialogMenuPtr> m_buttonList;
-	vector<IDialogMenuPtr> m_extraWindows;
+    std::vector<DialogMenuPtr> m_buttonList;
+	std::vector<IDialogMenuPtr> m_extraWindows;
 	DialogMenuPtr m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
-    vector<int> m_buttonScroll;
+	std::vector<int> m_buttonScroll;
 	ska::Point<int> m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;
     bool m_hide, m_isMovingWindow;
-    Character *m_pnj;
     std::unique_ptr<WindowSettings> m_wSettings;
     std::unique_ptr<WindowTeam> m_wTeam;
     std::unique_ptr<WindowBag> m_wBag;

@@ -3,12 +3,11 @@
 
 #include "Texture.h"
 #include "../Exceptions/IllegalStateException.h"
-
-using namespace std;
+#include "./GUI/Window.h"
 
 ska::Window* ska::Texture::m_window = NULL;
 
-ska::Texture::Texture(string id, int r, int g, int b, int a) : ResourceTemplate() {
+ska::Texture::Texture(std::string id, int r, int g, int b, int a) : ResourceTemplate() {
 	load(id, r, g, b, a);
 }
 
@@ -21,7 +20,7 @@ void ska::Texture::freeAll() {
 }
 
 
-void ska::Texture::load(string id, int r, int g, int b, int a) {
+void ska::Texture::load(std::string id, int r, int g, int b, int a) {
 	checkWindow();
 
 	SDL_Color finalColor;
@@ -85,7 +84,7 @@ void ska::Texture::checkWindow() {
 	}
 }
 
-void ska::Texture::loadFromText(unsigned int fontSize, string text, ska::Color c) {
+void ska::Texture::loadFromText(unsigned int fontSize, std::string text, ska::Color c) {
 	checkWindow();
 
 	m_key = ska::TextureData(*m_window, text, c);

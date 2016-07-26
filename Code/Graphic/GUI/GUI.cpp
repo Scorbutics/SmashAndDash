@@ -12,7 +12,6 @@
 #include "../../Utils/ChargementImages.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
-#include "../../Gameplay/Fight/Skill.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "MouseCursor.h"
 #include "DialogMenu.h"
@@ -31,7 +30,7 @@ GUI::GUI() {
     m_refreshCount = REFRESH_PNJWINDOW_COUNT;
     m_lastMouseState = 0;
     m_side = 0;
-    m_pnj = NULL;
+    //m_pnj = NULL;
     m_isMovingWindow = m_hide = false;
 
 	ska::Rectangle menuPos;
@@ -371,7 +370,8 @@ bool GUI::existDialog(const unsigned int index) const {
 }
 
 //Reset des informations de notre pokémon (à chaque refresh)
-void GUI::resetAttackPokemonWindow(Character* pokemon)
+//TODO
+/*void GUI::resetAttackPokemonWindow(Character* pokemon)
 {
     m_attackPokemon->deleteAll();
 	ska::Rectangle buf, bufNULL;
@@ -380,6 +380,8 @@ void GUI::resetAttackPokemonWindow(Character* pokemon)
     bufNULL.x = 0;
     bufNULL.y = 0;
     vector<Skill_ptr>* v = pokemon->getSkills();
+
+	
     if(v != NULL && v->size() > 0)
     {
         bufNULL.w = (*v)[0]->getIcon()->getWidth();
@@ -416,7 +418,7 @@ void GUI::resetAttackOpponentWindow(Character* op)
 
 		}
 	}
-}
+}*/
 
 DialogMenuPtr& GUI::getAttackPokemonWindow() {
     return m_attackPokemon;
@@ -430,6 +432,7 @@ size_t GUI::getButtonListSize() {
     return m_buttonList.size();
 }
 
+/*
 void GUI::resetInfoPokemonWindow(Character* pokemon)
 {
     int id;
@@ -475,7 +478,8 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
         m_facesetPkmn->addImageArea(ss.str(), true, buf, NULL);
     }
 }
-
+*/
+/*
 void GUI::resetInfoPNJWindow(Character* pnj)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
@@ -499,12 +503,12 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         rectSrcBuf.h = pnj->getSprite()->getHeight()/8;
         m_pnjInfoWindow->addImageArea(pnj->getSprite(), false, buf, &rectSrcBuf);
         buf.x = TAILLEBLOCFENETRE/2;
-        /*
+        
         m_pokeInfoWindow->addTextArea("Type 1 : " + pnj->getType(1), 20, buf);
         buf.x += 3*TAILLEBLOCFENETRE;
         m_pokeInfoWindow->addTextArea("Type 2 : " + pnj->getType(1), 20, buf);
         buf.x -= 3*TAILLEBLOCFENETRE;
-        buf.y = TAILLEBLOCFENETRE/2 + 20;*/
+        buf.y = TAILLEBLOCFENETRE/2 + 20;
         m_pnjInfoWindow->addTextArea(pnj->getDescriptor()->getName(), 20, buf);
         buf.y = TAILLEBLOCFENETRE/2 + 20;
 		m_pnjInfoWindow->addTextArea("Level : " + ska::StringUtils::intToStr(pnj->getStatistics()->getLevel()), 20, buf);
@@ -525,7 +529,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         buf.y = TAILLEBLOCFENETRE/2;
         m_facesetOpponent->addImageArea(ss.str(), false, buf, NULL);
     }
-}
+}*/
 
 /*void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
 }*/
@@ -551,6 +555,7 @@ void GUI::update() {
 	}
 }
 
+//TODO
 void GUI::dialogDisplay() const {
 	WGameCore& wScreen = WGameCore::getInstance();
 
@@ -560,7 +565,7 @@ void GUI::dialogDisplay() const {
 
 
     if(m_attackPokemon->isVisible()) {
-		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
+		//vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 		
 		ska::Rectangle cooldownPos;
         cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE/4;
@@ -570,14 +575,14 @@ void GUI::dialogDisplay() const {
         m_attackPokemon->display();
 
         //On blit les cooldowns par dessus
-        for(unsigned int i = 0; i < v->size(); i++) {
+        /*for(unsigned int i = 0; i < v->size(); i++) {
             if(!(*v)[i]->cooldownOK()) {
 				ska::Texture* cooldownText;
                 cooldownText = (*v)[i]->getSpriteRemainingCD();
 				cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOC / 2 + (i + 1) * (*v)[i]->getIcon()->getWidth();
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
             }
-        }
+        }*/
 
     }
 
@@ -632,7 +637,7 @@ void GUI::dialogRefresh()
 
 
 	if(m_attackPokemon->isVisible()) {
-		vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
+		//vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
 
 		ska::Rectangle cooldownPos;
 		cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE / 4;
@@ -642,7 +647,7 @@ void GUI::dialogRefresh()
 		m_attackPokemon->refresh();
 
 		//On blit les cooldowns par dessus
-		for(unsigned int i = 0; i < v->size(); i++) {
+		/*for(unsigned int i = 0; i < v->size(); i++) {
 			if(!(*v)[i]->cooldownOK()) {
 				ska::Texture* cooldownText;
 				cooldownText = (*v)[i]->getSpriteRemainingCD();
@@ -650,7 +655,7 @@ void GUI::dialogRefresh()
 				cooldownText->render(cooldownPos.x, cooldownPos.y);
 
 			}
-		}
+		}*/
 
 	}
 

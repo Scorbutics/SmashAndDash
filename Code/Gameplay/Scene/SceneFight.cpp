@@ -11,7 +11,9 @@
 #include "../Fight/SkillsHolderComponent.h"
 #include "../Data/Statistics.h"
 
-typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
+#include "../../Graphic/GUI/Bar.h"
+
+using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 
 SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap_(ws, sh, ril, true),
@@ -53,8 +55,13 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 	AbstractSceneMap::graphicUpdate(drawables);
 
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
-	/*fight.setPriority(pokeball.getPriority() + 1);*/
-	/*drawables.add(fight);*/
+	if (m_pokemonBar != nullptr) {
+		drawables.add(*m_pokemonBar);
+	}
+
+	if (m_opponentBar != nullptr) {
+		drawables.add(*m_opponentBar);
+	}
 }
 
 
@@ -103,6 +110,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 	if (m_sceneLoaded) {
 		return;
 	}
+
+	AbstractSceneMap::load(lastScene);
 
 	m_worldScene.linkCamera(&m_cameraSystem);
 	m_worldScene.load(lastScene);
@@ -179,11 +188,14 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		
 		/* Ajout InputComponent au Pokémon,
 		   TODO Ajout d'un IAMovementComponent au dresseur (m_player),
-		   Ajout d'un composant de combat au Pokémon */
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
-		
+		   Ajout d'un composant de combat au Pokémon 
+		   Ajout d'une HP Bar */
+
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
 		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_opponentId, BattleComponent());
+
+		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
+		
 		auto& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_pokemonId);
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
 
@@ -191,6 +203,19 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
+
+		const auto& pokemonPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_pokemonId);
+		const auto& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
+		const auto& pokemonBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_pokemonId);
+		const auto& opponentBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_opponentId);
+		
+		//TODO max hp venant des stats du fichier ini
+		m_pokemonBar = BarPtr(new Bar(m_skillEntityCollisionResponse, m_cameraSystem, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbar.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbarcontent.png", pokemonBc.hp, m_worldScene.getEntityManager(), m_pokemonId));
+		m_opponentBar = BarPtr(new Bar(m_skillEntityCollisionResponse, m_cameraSystem, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbar.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbarcontent.png", opponentBc.hp, m_worldScene.getEntityManager(), m_opponentId));
+
+		m_pokemonBar->setCurrentValue(pokemonBc.hp);
+		m_opponentBar->setCurrentValue(opponentBc.hp);
+
 
 		m_sceneLoaded = true;
 		m_loadState = 0;
@@ -215,6 +240,10 @@ bool SceneFight::unload() {
 		static int dialogId = 0;
 		if (m_loadState == 0) {
 			m_loadState++;
+			
+			/* Resets GUI */
+			m_pokemonBar = nullptr;
+			m_opponentBar = nullptr;
 
 			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_pokemonId)) {
 				return false;
@@ -242,7 +271,7 @@ bool SceneFight::unload() {
 		m_loadState = 0;
 		m_worldScene.unload();
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
-		//m_worldScene.getEntityManager().removeEntity(m_pokemonId);
+		m_worldScene.getEntityManager().removeEntity(m_pokemonId);
 		return false;
 	}, *dialogRawTask));
 
@@ -259,6 +288,7 @@ void SceneFight::eventUpdate(bool movingDisallowed) {
 	AbstractSceneMap::eventUpdate(movingDisallowed);
 }
 
-SceneFight::~SceneFight()
-{
+SceneFight::~SceneFight() {
+	m_opponentBar = nullptr;
+	m_pokemonBar = nullptr;
 }

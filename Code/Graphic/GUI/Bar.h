@@ -1,38 +1,53 @@
-#ifndef DEF_BAR
-#define DEF_BAR
+#pragma once
 
 #include <iostream>
 #include <string>
 #include "../../ska/Graphic/Texture.h"
+#include "../../ska/Utils/Observer.h"
+#include "../../ska/ECS/ECSDefines.h"
+#include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 
 class SpriteBank;
 
+namespace ska {
+	class EntityManager;
+	class CameraSystem;
+}
+
+template <typename T>
+struct RawStatistics;
+
+using StatisticsChangeObserver = ska::Observer<const ska::EntityId&, RawStatistics<int>&, const ska::EntityId&>;
+using StatisticsChangeObservable = ska::Observable<const ska::EntityId&, RawStatistics<int>&, const ska::EntityId&>;
 
 //HP Bar, PP Bar, etc...
-class Bar
-{
-    public:
-		Bar(std::string barStyleName, std::string barContentName, int maxValue, ska::Rectangle pos);
-    Bar();
+class Bar : public StatisticsChangeObserver, public ska::DrawableFixedPriority {
+public:
+	Bar(StatisticsChangeObservable& obs, ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId);
+	~Bar();
 
-    void refresh();
-    bool isVisible();
+    void display() const;
+    bool isVisible() const;
 
-    void setMaxValue(int mv);
-    void setCurrentValue(int v);
-    void setBarStyle(std::string name);
-	void setPos(ska::Rectangle pos);
-    void setBarContent(std::string name);
+	void onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src);
+	void setCurrentValue(unsigned int v);
+
     void setVisible(bool x);
 
-    int getCurrentValue();
-	ska::Rectangle getPos();
-	~Bar();
-    protected:
-		ska::Texture m_barStyle, m_barContent;
-	ska::Rectangle m_pos, m_barSize;
-    int m_maxValue, m_curValue;
+private:
+	ska::EntityManager& m_entityManager;
+	const ska::EntityId& m_entityId;
+	StatisticsChangeObservable& m_observable;
+
+	ska::CameraSystem& m_cameraSystem;
+	ska::Texture m_barStyle;
+	ska::Texture m_barContent;
+	ska::Rectangle m_barSize;
+    unsigned int m_maxValue;
+
+	unsigned int m_curValue;
     bool m_visible;
 };
 
-#endif
+using BarPtr = std::unique_ptr<Bar>;
+

@@ -47,7 +47,7 @@ void WorldImpl::load(const std::string& fileName, const std::string& chipsetName
 	}
 
 	World::load(fileName, chipsetName);
-	const string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + getGenericName() + ""FILE_SEPARATOR"" + getGenericName() + ".ini";
+	const std::string& stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + getGenericName() + ""FILE_SEPARATOR"" + getGenericName() + ".ini";
 	loadWeatherFromData(stringDataFile);
 	loadFogFromData(stringDataFile);
 }

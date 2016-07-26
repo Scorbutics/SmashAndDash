@@ -18,10 +18,6 @@
 #include "../Graphic/GUI/WindowBag.h"
 #include "../Graphic/GUI/ToolBar.h"
 
-using namespace std;
-
-
-
 WGameCore::WGameCore():
 Window(), 
 m_playerICM(m_rawInputListener),
@@ -129,11 +125,6 @@ void WGameCore::transition(int type)  {
 MouseCursor& WGameCore::getMouseCursor()
 {
 	return m_mouseCursor;
-}
-
-PokemonManager& WGameCore::getPokemonManager()
-{
-    return m_pkmnManager;
 }
 
 void WGameCore::addTaskToQueue(ska::RunnablePtr& t) {

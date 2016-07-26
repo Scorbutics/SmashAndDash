@@ -23,10 +23,10 @@ int main (int argc, char *argv[])
     int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
     std::string startMapName, startMapChipsetName;
 
-	std::ofstream logFile("stdlog.txt", ios::trunc);
+	std::ofstream logFile("stdlog.txt", std::ios::trunc);
 	std::clog.rdbuf(logFile.rdbuf());
 
-	std::ofstream errFile("stderr.txt", ios::trunc);
+	std::ofstream errFile("stderr.txt", std::ios::trunc);
 	std::cerr.rdbuf(errFile.rdbuf());
 
 	/* TODO : ne plus utiliser srand  */

@@ -209,7 +209,6 @@
     <ClInclude Include="Code\ska\Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Code\ska\Exceptions\FileException.h" />
     <ClInclude Include="Code\ska\Exceptions\IndexOutOfBoundsException.h" />
-    <ClInclude Include="Code\Graphic\CharacterDrawable.h" />
     <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h" />
     <ClInclude Include="Code\ska\Exceptions\IllegalArgumentException.h" />
     <ClInclude Include="Code\ska\Exceptions\IllegalStateException.h" />
@@ -254,7 +253,6 @@
     <ClInclude Include="Code\ska\Script\Command\CommandElseEnd.h" />
     <ClInclude Include="Code\ska\Script\ScriptState.h" />
     <ClInclude Include="Code\ska\Utils\FormalCalculation\CalculOperators.h" />
-    <ClInclude Include="Code\Gameplay\Character.h" />
     <ClInclude Include="Code\ska\World\Chipset.h" />
     <ClInclude Include="Code\ska\World\ChipsetRenderable.h" />
     <ClInclude Include="Code\ska\World\LayerRenderable.h" />
@@ -334,7 +332,6 @@
     <ClInclude Include="Code\ska\Physic\PhysicSprite.h" />
     <ClInclude Include="Code\Gameplay\Pokeball.h" />
     <ClInclude Include="Code\Gameplay\Data\PokemonDescriptor.h" />
-    <ClInclude Include="Code\Gameplay\PokemonManager.h" />
     <ClInclude Include="Code\ska\Inputs\Readers\Readinifile.h" />
     <ClInclude Include="Code\Utils\resource.h" />
     <ClInclude Include="Code\Gameplay\Data\SavegameManager.h" />
@@ -444,7 +441,6 @@
     <ClCompile Include="Code\ska\Physic\System\GravitySystem.cpp" />
     <ClCompile Include="Code\ska\Inputs\System\InputSystem.cpp" />
     <ClCompile Include="Code\Gameplay\World\WorldImpl.cpp" />
-    <ClCompile Include="Code\Graphic\CharacterDrawable.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\ska\ECS\StaticCounterGlobal.cpp" />
@@ -461,7 +457,6 @@
     <ClCompile Include="Code\Graphic\GUI\Button.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button_Bar.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp" />
-    <ClCompile Include="Code\Gameplay\Character.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandPlayerPresence.cpp" />
     <ClCompile Include="Code\ska\World\Chipset.cpp" />
     <ClCompile Include="Code\ska\World\ChipsetRenderable.cpp" />
@@ -533,7 +528,6 @@
     <ClCompile Include="Code\ska\Physic\PhysicSprite.cpp" />
     <ClCompile Include="Code\Gameplay\Pokeball.cpp" />
     <ClCompile Include="Code\Gameplay\Data\PokemonDescriptor.cpp" />
-    <ClCompile Include="Code\Gameplay\PokemonManager.cpp" />
     <ClCompile Include="Code\ska\Inputs\Readers\Readinifile.cpp" />
     <ClCompile Include="Code\Gameplay\Data\SavegameManager.cpp" />
     <ClCompile Include="Code\Graphic\GUI\Scroll_Text.cpp" />

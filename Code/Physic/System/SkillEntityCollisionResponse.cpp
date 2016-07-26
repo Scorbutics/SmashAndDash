@@ -1,5 +1,6 @@
 #include "SkillEntityCollisionResponse.h"
 #include "../../ska/Physic/CollisionComponent.h"
+#include "../../Gameplay/Data/RawStatistics.h"
 #include "../../ska/Physic/WorldCollisionComponent.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
@@ -49,6 +50,7 @@ void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& 
 
 	if (sc->battler != targettedEntity) {
 		bc->hp -= sc->damage;
+		notifyObservers(targettedEntity, *bc, sc->battler);
 		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
 

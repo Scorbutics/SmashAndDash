@@ -4,6 +4,7 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
+#include "../../ska/Graphic/SpriteAnimation.h"
 
 CommandCinematic::CommandCinematic(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
@@ -25,7 +26,7 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 	unsigned int frameNumber, delay, id_anim, duration;
 	bool continuer = true;
 	ska::Rectangle pos, menuPos;
-	string message;
+	std::string message;
 	ska::SpriteAnimation* cinematic;
 	//ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 

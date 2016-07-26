@@ -8,7 +8,7 @@
 #include "../../ska/Utils/StringUtils.h"
 #include "../../Utils/IDs.h"
 #include "DialogMenu.h"
-
+#include "GUI.h"
 
 MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
 {
@@ -19,10 +19,10 @@ MouseCursor::MouseCursor() : m_aniCursor(3, 3, false), m_hintBox()
     buf.w = 3*TAILLEBLOCFENETRE;
     buf.h = 2*TAILLEBLOCFENETRE;
     m_stockObject = NULL;
-    m_stockPkmn = NULL;
+    //m_stockPkmn = NULL;
 
 	m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"mousec.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-    m_hintBox = unique_ptr<DialogMenu>(new DialogMenu("hintbox", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hintboxmenu.png", buf, 20));
+    m_hintBox = std::unique_ptr<DialogMenu>(new DialogMenu("hintbox", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hintboxmenu.png", buf, 20));
     buf.w = m_sprite.getWidth()/3;
     buf.h = m_sprite.getHeight();
     m_aniCursor.setOffsetAndFrameSize(buf); //initialisation de l'animation
@@ -33,7 +33,7 @@ ska::Animation* MouseCursor::getAnimation()
     return &m_aniCursor;
 }
 
-void MouseCursor::modifyHint(string hint)
+void MouseCursor::modifyHint(const std::string& hint)
 {
     m_hintBox->modifyText(hint);
     m_hintBox->hide(false);
@@ -115,7 +115,7 @@ void MouseCursor::display() const {
 void MouseCursor::displaySelectedPokemon()
 {
 	const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
-	ska::Rectangle rectPkmnSprite;
+	/*ska::Rectangle rectPkmnSprite;
     if(m_stockPkmn != NULL)
     {
 		ska::Texture pkmn(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_stockPkmn->getID()), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -124,7 +124,7 @@ void MouseCursor::displaySelectedPokemon()
         rectPkmnSprite.w = m_stockPkmn->getWidth();
         rectPkmnSprite.h = m_stockPkmn->getHeight();
 		pkmn.render(mousePos.x, mousePos.y, &rectPkmnSprite);
-    }
+    }*/
 }
 
 void MouseCursor::displaySelectedObject()
@@ -158,16 +158,17 @@ Object* MouseCursor::getObject()
 		return NULL;
 }
 
+/*
 Character* MouseCursor::getPokemon()
 {
 	if(m_stockPkmn != NULL)
 		return &(*m_stockPkmn);
 	else
 		return NULL;
-}
+}*/
 
 
-
+/*
 void MouseCursor::setPokemon(Character* pkmn)
 {
 	m_stockPkmn = Character_ptr(new Character(pkmn->getID()));
@@ -195,10 +196,11 @@ void MouseCursor::removePokemon()
 	Character_ptr buf = std::move(m_stockPkmn);
 	m_stockPkmn = NULL;
 }
+*/
 
 void MouseCursor::removeObject()
 {
-	unique_ptr<Object> buf = std::move(m_stockObject);
+	std::unique_ptr<Object> buf = std::move(m_stockObject);
 	m_stockObject = NULL;
 }
 
@@ -210,7 +212,7 @@ unsigned int MouseCursor::getObjectAmount()
 
 void MouseCursor::setObject(Object* object, unsigned int amount)
 {
-	m_stockObject = unique_ptr<Object>(new Object(*object));
+	m_stockObject = std::unique_ptr<Object>(new Object(*object));
 	m_objectAmount = amount;
 }
 

@@ -41,7 +41,7 @@ void GraphicSystem::refresh() {
 
 		if (m_entityManager.hasComponent<DialogComponent>(entityId)) {
 			DialogComponent& dc = m_entityManager.getComponent<DialogComponent>(entityId);
-			dc.dialog.setPos({ static_cast<int>(pos.x - cameraX), static_cast<int>(pos.y - cameraY - 48 * 3) });
+			dc.dialog.setPos({ static_cast<int>(pos.x - cameraX), static_cast<int>(pos.y - cameraY - dc.dialog.getRect().h) });
 			dc.dialog.refresh();
 			if (dc.dialog.isVisible()) {	
 				m_drawables->add(dc.dialog);

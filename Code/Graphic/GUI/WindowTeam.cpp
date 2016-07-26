@@ -25,7 +25,7 @@ void WindowTeam::reset(string action)
     this->deleteAll();
 	ska::Rectangle buf;
 	WGameCore& wScreen = WGameCore::getInstance();
-	PokemonManager& pkmnMng = wScreen.getPokemonManager();
+	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 
     vector<int> vBool;
     vBool.push_back(0);
@@ -70,7 +70,7 @@ void WindowTeam::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-	PokemonManager& pkmnMng = wScreen.getPokemonManager();
+	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 	MouseCursor& mouseCur = wScreen.getMouseCursor();
 
 	for(unsigned int i = 0; i < m_slotPkmn.size(); i++)

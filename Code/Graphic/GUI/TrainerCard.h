@@ -1,8 +1,6 @@
-#ifndef DEF_TRAINER_CARD
-#define DEF_TRAINER_CARD
+#pragma once
 
-class TrainerCard
-{
+class TrainerCard {
     public:
     TrainerCard();
     unsigned int getMoney();
@@ -15,5 +13,3 @@ class TrainerCard
     unsigned int m_money, m_trainerID;
 
 };
-
-#endif

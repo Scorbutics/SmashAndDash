@@ -288,7 +288,7 @@ void DialogMenu::modifyColor(SDL_Color col) {
     
 }
 
-void DialogMenu::modifyText(string texte) {
+void DialogMenu::modifyText(const std::string& texte) {
     m_textImage.clear();
     m_text.clear();
 	m_scrollTextLengthPerLine.clear();

@@ -25,6 +25,9 @@ class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
 
+class Bar;
+using BarPtr = std::unique_ptr<Bar>;
+
 class SceneFight :
 	public AbstractSceneMap_
 {
@@ -63,5 +66,9 @@ private:
 
 	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
+
+	/* TODO GUI Battle specific part with Bars and also skills displayed */
+	BarPtr m_pokemonBar;
+	BarPtr m_opponentBar;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

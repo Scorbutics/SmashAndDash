@@ -4,16 +4,13 @@
 #include <string>
 #include <memory>
 #include "../../Gameplay/Inventory/Object.h"
-#include "GUI.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Inputs/MouseInput.h"
 
-class Character;
+class GUI;
+class DialogMenu;
 
-typedef std::unique_ptr<Character> CharacterPtr;
-
-class MouseCursor : public ska::DrawableFixedPriority
-{
+class MouseCursor : public ska::DrawableFixedPriority {
     public:
     MouseCursor();
     ~MouseCursor();
@@ -22,11 +19,11 @@ class MouseCursor : public ska::DrawableFixedPriority
     DialogMenu* getHintBox();
     Object* getObject();
     unsigned int getObjectAmount();
-    Character* getPokemon();
+    //Character* getPokemon();
 
     void setObjectAmount(unsigned int x);
 	void setObject(Object* object, unsigned int amount);
-	void setPokemon(Character* pkmn);
+	//void setPokemon(Character* pkmn);
 	void setCursorPos(ska::Rectangle pos);
 
 	void display() const override;
@@ -37,7 +34,7 @@ class MouseCursor : public ska::DrawableFixedPriority
 	void removePokemon();
 	void removeObject();
 
-    void modifyHint(string hint);
+	void modifyHint(const std::string& hint);
 	void displaySelectedPokemon();
     void displaySelectedObject();
     void displayHint();
@@ -53,8 +50,8 @@ class MouseCursor : public ska::DrawableFixedPriority
 	ska::Rectangle m_cursorPos;
     std::unique_ptr<DialogMenu> m_hintBox;
     bool m_hideC, m_hideH;
-	CharacterPtr m_stockPkmn;
-    unique_ptr<Object> m_stockObject;
+	//CharacterPtr m_stockPkmn;
+    std::unique_ptr<Object> m_stockObject;
     unsigned int m_objectAmount, m_time, m_delay;
 };
 

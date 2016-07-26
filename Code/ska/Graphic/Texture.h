@@ -8,10 +8,10 @@
 #include "TextureData.h"
 #include "../Utils/SkaConstants.h"
 #include "Rectangle.h"
-#include "./GUI/Window.h"
 #include "Color.h"
 
 namespace ska {
+	class Window;
 	class Texture : public ResourceTemplate<ska::SDLTexture, ska::TextureData> {
 
 	public:

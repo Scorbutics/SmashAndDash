@@ -1,5 +1,4 @@
-#ifndef DEF_WGAMECORE
-#define DEF_WGAMECORE
+#pragma once
 
 #include <windows.h>
 
@@ -8,14 +7,14 @@
 #include <memory>
 #include "../ska/Graphic\GUI\Window.h"
 #include "Pokeball.h"
-#include "AI\AI.h"
 #include "Data\Settings.h"
-#include "PokemonManager.h"
 #include "../Graphic\GUI\MouseCursor.h"
 #include "../ska/Graphic\Rectangle.h"
 #include "../ska/Inputs/RawInputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "Data\SavegameManager.h"
+
+#include "../Graphic/GUI/GUI.h"
 #include "../ska/Utils\Singleton_template.h"
 #include "../ska/Inputs/InputContextManager.h"
 #include "World/WorldScene.h"
@@ -31,12 +30,8 @@ class DialogMenu;
 
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
-//class Character;
 
-//typedef std::unique_ptr<Character> Character_ptr;
-
-class WGameCore : public ska::Window, public ska::Singleton<WGameCore>
-{
+class WGameCore : public ska::Window, public ska::Singleton<WGameCore> {
 	friend class ska::Singleton<WGameCore>;
 
 private:
@@ -65,7 +60,7 @@ public:
 	Pokeball& getPokeball();
 	Inventory& getInventory();
 	Settings& getSettings();
-	PokemonManager& getPokemonManager();
+	//PokemonManager& getPokemonManager();
 	MouseCursor& getMouseCursor();
 	TrainerCard& getTrainerCard();
 	ska::World& getWorld();
@@ -97,7 +92,7 @@ protected:
 	ska::Animation m_chipsetAni;
 	//AI m_ai;
 	Pokeball m_pokeball;
-	PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
+	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
 	MouseCursor m_mouseCursor;
 	GUI m_gui;
@@ -110,5 +105,3 @@ protected:
 
 
 };
-
-#endif

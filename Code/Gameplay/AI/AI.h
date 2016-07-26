@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "..\Character.h"
 #include "..\Fight\Fight.h"
 
 using namespace std;

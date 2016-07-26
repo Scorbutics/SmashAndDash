@@ -26,7 +26,7 @@ public:
 	DialogMenu();
 	~DialogMenu();
     void resize(int w, int h);
-    void modifyText(std::string text);
+	void modifyText(const std::string& text);
     void modifyColor(SDL_Color col);
     
     void hide(bool x);

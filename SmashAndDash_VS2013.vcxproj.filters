@@ -117,9 +117,6 @@
     <ClInclude Include="Code\Graphic\GUI\Button_Quit.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Character.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\ChargementImages.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -282,9 +279,6 @@
     <ClInclude Include="Code\Gameplay\PokeballLaunchReasonEnum.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\PokemonManager.h">
-      <Filter>Fichiers d%27en-tête\Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\WGameCore.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
@@ -310,9 +304,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\CharacterDrawable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Exceptions\CorruptedFileException.h">
@@ -947,9 +938,6 @@
     <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\Character.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Utils\ChargementImages.cpp">
       <Filter>Fichiers sources\Utils</Filter>
     </ClCompile>
@@ -1103,9 +1091,6 @@
     <ClCompile Include="Code\Gameplay\Pokeball.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Gameplay\PokemonManager.cpp">
-      <Filter>Fichiers sources\Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\WGameCore.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>
     </ClCompile>
@@ -1131,9 +1116,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Scene\AbstractNoGUISceneMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\CharacterDrawable.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Exceptions\GenericException.cpp">
