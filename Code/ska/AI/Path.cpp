@@ -13,16 +13,14 @@
 #define UP 2
 #define LEFT 3
 
-using namespace std;
 
-
-void AddToList(vector<Node*> *toList, Node* n, vector<Node*> *fromList);
-void RemoveFromList(vector<Node*> *list, Node* n);
+void AddToList(std::vector<Node*> *toList, Node* n, std::vector<Node*> *fromList);
+void RemoveFromList(std::vector<Node*> *list, Node* n);
 float GetDistance(int col, int line, int nodeStartCol, int nodeStartLine);
-vector<Node*> GetNeighbours(Node *n, vector<vector<Node>> &graphe);
-Node* GetBestNode(vector<Node*> *openList);
+std::vector<Node*> GetNeighbours(Node *n, std::vector<std::vector<Node>> &graphe);
+Node* GetBestNode(std::vector<Node*> *openList);
 Node SetDataToNodeAtPos(int col, int line);
-bool IsOnList(vector<Node*> *list, Node *n);
+bool IsOnList(std::vector<Node*> *list, Node *n);
 bool AreNodesEquals(Node *a, Node *b);
 
 ska::Path::Path()
@@ -56,7 +54,7 @@ int ska::Path::getPathDirection(unsigned int number)
         return -1;
 }
 
-string ska::Path::getPathString()
+std::string ska::Path::getPathString()
 {
     return m_pathDirections;
 }
@@ -111,7 +109,7 @@ bool ska::Path::isPredefined()
         return false;
 }
 
-void ska::Path::setPathString(string path)
+void ska::Path::setPathString(std::string path)
 {
     if(atoi(path.c_str()) == P_FIXED || path.empty())
 	{
@@ -139,7 +137,7 @@ void ska::Path::findPath(ska::Rectangle from, ska::Rectangle to, const unsigned 
 
     Node nodeStart, nodeEnd, *curNode = NULL;
 
-    string finalPath;
+	std::string finalPath;
 
 	nodeStart.setCol(from.x / blockSize);
 	nodeStart.setLine(from.y / blockSize);
@@ -147,8 +145,8 @@ void ska::Path::findPath(ska::Rectangle from, ska::Rectangle to, const unsigned 
 	nodeEnd.setCol(to.x / blockSize);
 	nodeEnd.setLine(to.y / blockSize);
 
-    vector<Node*> openList, closedList;
-    vector<vector<Node>> graphe;
+	std::vector<Node*> openList, closedList;
+	std::vector<std::vector<Node>> graphe;
 
     createGraphe(&graphe);
 
@@ -163,7 +161,7 @@ void ska::Path::findPath(ska::Rectangle from, ska::Rectangle to, const unsigned 
 
         AddToList(&closedList, curNode, &openList);
 
-        vector<Node*> neighbours = GetNeighbours(curNode, graphe);
+		std::vector<Node*> neighbours = GetNeighbours(curNode, graphe);
 
         for(unsigned int i = 0; i < neighbours.size(); i++)
         {
@@ -263,11 +261,11 @@ bool AreNodesEquals(Node *a, Node *b)
 }
 
 
-vector<Node*> GetNeighbours(Node *n, vector<vector<Node>> &graphe)
+std::vector<Node*> GetNeighbours(Node *n, std::vector<std::vector<Node>> &graphe)
 {
     int currentPos[4];
 
-    vector<Node*> neighbours;
+	std::vector<Node*> neighbours;
 
     currentPos[DOWN] = n->getLine() + 1;
     currentPos[RIGHT] = n->getCol() + 1;
@@ -308,15 +306,15 @@ float GetDistance(int col, int line, int nodeStartCol, int nodeStartLine)
 }
 
 
-void AddToList(vector<Node*> *toList, Node* n, vector<Node*> *fromList)
+void AddToList(std::vector<Node*> *toList, Node* n, std::vector<Node*> *fromList)
  {
      RemoveFromList(fromList, n);
      toList->push_back(n);
  }
 
-void RemoveFromList(vector<Node*> *list, Node* n)
+void RemoveFromList(std::vector<Node*> *list, Node* n)
 {
-    vector<Node*> tmp;
+	std::vector<Node*> tmp;
 
     for(unsigned int i = 0; i < list->size(); i++)
         if(!AreNodesEquals((*list)[i], n))
@@ -325,7 +323,7 @@ void RemoveFromList(vector<Node*> *list, Node* n)
     *list = tmp;
 }
 
-void ska::Path::createGraphe(vector<vector<Node>> *graphe)
+void ska::Path::createGraphe(std::vector<std::vector<Node>> *graphe)
 {
     /*for(int i = 0; i < w.getNbrBlocX(); i++)
     {
@@ -344,7 +342,7 @@ void ska::Path::createGraphe(vector<vector<Node>> *graphe)
 
 
 //Cherche le node de la liste ouverte ayant le min de f
-Node* GetBestNode(vector<Node*> *openList)
+Node* GetBestNode(std::vector<Node*> *openList)
 {
   int minF = 1000000; //valeur arbitraire très élevée
   Node* bestNode = NULL;
@@ -361,7 +359,7 @@ Node* GetBestNode(vector<Node*> *openList)
   return bestNode;
 }
 
-bool IsOnList(vector<Node*> *list, Node *n)
+bool IsOnList(std::vector<Node*> *list, Node *n)
 {
 
   for(unsigned int i = 0; i < list->size(); i++)

@@ -1,13 +1,14 @@
-#ifndef DEF_MWINDOW
-#define DEF_MWINDOW
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <memory>
+#include "../../ska/Graphic/Color.h"
 #include "../../ska/Graphic/Texture.h"
 #include "../../ska/Graphic/Point.h"
 #include "IDialogMenu.h"
+#include "HasClickHandler.h"
 
 class World;
 class Character;
@@ -16,7 +17,7 @@ class Button;
 class Window_Area;
 class Inventory_Area;
 
-class DialogMenu : public IDialogMenu
+class DialogMenu : public IDialogMenu, public HasClickHandler
 {
 public:
 	DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
@@ -27,30 +28,33 @@ public:
 	~DialogMenu();
     void resize(int w, int h);
 	void modifyText(const std::string& text);
-    void modifyColor(SDL_Color col);
+    void modifyColor(ska::Color col);
     
     void hide(bool x);
 	void move(ska::Point<int> pos);
     bool isMoving();
 
-    void setActionClic(std::string action);
+	void setClickHandler(std::function<void(void)> const& action) override;
+	void click(const ska::Point<int>& clickPos) override;
 	void setPos(ska::Point<int> pos);
     void setPosImg(int x, int y);
 
     void setAlpha(bool x);
-    const std::string getActionClic() const;
     Window_Area* getCloseButton();
-    Window_Area* getButton(std::string key);
+	Window_Area* getButton(const std::string& key);
     Inventory_Area* getInventoryArea(unsigned int index);
 
-	void addScrollText(std::string buttonAspect, int height, int width, std::vector<std::string> text, int fontSize, ska::Rectangle relativePos);
-	void addButtonClose(std::string imgName, std::string secondImgName, ska::Rectangle pos);
-	void addTextArea(std::string text, int fontSize, ska::Rectangle relativePos);
-	void addImageArea(std::string name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
+	void name(const std::string& name);
+	const std::string& getName() const;
+
+	void addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos);
+	void addButtonClose(const std::string& imgName, const std::string& secondImgName, ska::Rectangle pos);
+	void addTextArea(const std::string&text, int fontSize, ska::Rectangle relativePos);
+	void addImageArea(const std::string& name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
 	void addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
 	void addInventory(Inventory& inv, ska::Rectangle relativePos);
-	void addButton(ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> value, std::vector<std::string> displayedText, int fontSize, std::string key);
-	void addButtonBar(ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key);
+	void addButton(ska::Rectangle relativePos, const std::string& styleName, const std::string& styleNamePressed, int* variable, const std::vector<int>& value, const std::vector<std::string>& displayedText, int fontSize, const std::string& key);
+	void addButtonBar(ska::Rectangle relativePos, const std::string& styleName, int* variable, const std::vector<int>& values, const std::vector<std::string>& displayedText, int fontSize, const std::string& key);
 
     void deleteAll();
 	bool isVisible(bool noScrolling) const;
@@ -72,16 +76,16 @@ protected:
 	ska::Rectangle m_rectImage;
 	ska::Rectangle m_scrollingRect;
     std::vector<std::string> m_text;
+	std::string m_name;
 	std::vector<float> m_scrollTextLengthPerLine;
 
-	std::string m_actionClic;
-    SDL_Color m_color;
+	std::function<void(void)> m_clickHandler;
+    ska::Color m_color;
 	unsigned int m_fontSize, m_size, m_ligne, m_sensScroll;
     
 	/* Define a timeout to the displayed window (after that, it auto hides) */
 	int m_timeout;
 	unsigned int m_t0;
-
 
 	/* m_scroll : true if the dialog CAN scroll (!= m_isScrolling) */
 	bool m_show, m_scroll, m_alpha, m_moving, m_isScrolling;
@@ -90,5 +94,3 @@ protected:
 
 };
 
-
-#endif

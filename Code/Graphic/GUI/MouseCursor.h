@@ -1,23 +1,32 @@
-#ifndef DEF_MOUSECURSOR
-#define DEF_MOUSECURSOR
+#pragma once
 
 #include <string>
 #include <memory>
-#include "../../Gameplay/Inventory/Object.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
-#include "../../ska/Inputs/MouseInput.h"
+#include "../../ska/Graphic/Animation.h"
+#include "../../ska/Graphic/Texture.h"
 
 class GUI;
 class DialogMenu;
 
+class Object;
+using ObjectPtr = std::unique_ptr<Object>;
+
+class DialogMenu;
+using DialogMenuPtr = std::unique_ptr<DialogMenu>;
+
+namespace ska {
+	class InputContextManager;
+}
+
 class MouseCursor : public ska::DrawableFixedPriority {
-    public:
-    MouseCursor();
+public:
+	MouseCursor(const ska::InputContextManager& playerICM);
     ~MouseCursor();
 
-    ska::Animation* getAnimation();
-    DialogMenu* getHintBox();
-    Object* getObject();
+    ska::Animation& getAnimation();
+    DialogMenuPtr& getHintBox();
+	ObjectPtr& getObject();
     unsigned int getObjectAmount();
     //Character* getPokemon();
 
@@ -35,24 +44,23 @@ class MouseCursor : public ska::DrawableFixedPriority {
 	void removeObject();
 
 	void modifyHint(const std::string& hint);
-	void displaySelectedPokemon();
-    void displaySelectedObject();
+	void displaySelectedPokemon() const;
+	void displaySelectedObject() const;
     void displayHint();
     void hideCursor(bool x);
     void hideHint(bool x);
     bool isActiveCursor();
-    bool isActiveHint(GUI *g);
+    bool isActiveHint(const GUI& g);
     void showCursorTime(unsigned int delay);
 
-    private:
+private:
+	const ska::InputContextManager& m_playerICM;
     ska::Animation m_aniCursor;
     ska::Texture m_sprite;
 	ska::Rectangle m_cursorPos;
     std::unique_ptr<DialogMenu> m_hintBox;
     bool m_hideC, m_hideH;
 	//CharacterPtr m_stockPkmn;
-    std::unique_ptr<Object> m_stockObject;
+    ObjectPtr m_stockObject;
     unsigned int m_objectAmount, m_time, m_delay;
 };
-
-#endif

@@ -1,15 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <SDL2/SDL.h>
 
 #include "../../Utils\IDs.h"
 #include "Image_Area.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
-Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, string name, bool alpha) : Window_Area(parent),
+Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha) : 
+Window_Area(parent),
 m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 {
     m_type = BUTTON_IMAGE_AREA;
@@ -48,7 +46,7 @@ Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rect
 	m_name = "";
 }
 
-void Image_Area::setImage(string name, bool alpha)
+void Image_Area::setImage(const std::string& name, bool alpha)
 {
     m_name = name;
 	m_alpha = alpha;

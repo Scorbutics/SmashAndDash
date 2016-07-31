@@ -7,9 +7,7 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "WindowBag.h"
 
-using namespace std;
-
-WindowTeam::WindowTeam(string fichierMenu, ska::Rectangle posFond, int taillePolice) :MovableWindow(fichierMenu, posFond, taillePolice)
+WindowTeam::WindowTeam(std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :MovableWindow(fichierMenu, posFond, taillePolice)
 {
     m_boolUseObjectSelectPkmn.push_back(0);
     m_boolUseObjectSelectPkmn.push_back(0);
@@ -20,14 +18,14 @@ WindowTeam::WindowTeam(string fichierMenu, ska::Rectangle posFond, int taillePol
     m_indexCursor = 0;
 }
 
-void WindowTeam::reset(string action)
+void WindowTeam::reset(std::string action)
 {
     this->deleteAll();
 	ska::Rectangle buf;
 	WGameCore& wScreen = WGameCore::getInstance();
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 
-    vector<int> vBool;
+	std::vector<int> vBool;
     vBool.push_back(0);
     vBool.push_back(1);
     buf.x = 3*TAILLEBLOCFENETRE;
@@ -71,7 +69,7 @@ void WindowTeam::refresh()
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
-	MouseCursor& mouseCur = wScreen.getMouseCursor();
+	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 
 	for(unsigned int i = 0; i < m_slotPkmn.size(); i++)
 	{
@@ -104,7 +102,7 @@ void WindowTeam::refresh()
 
     }
 
-    for(unsigned int i = 0; i < m_boolUseObjectSelectPkmn.size(); i++)
+    /*for(unsigned int i = 0; i < m_boolUseObjectSelectPkmn.size(); i++)
         if(m_boolUseObjectSelectPkmn[i] != 0)
         {
             this->hide(true);
@@ -113,7 +111,7 @@ void WindowTeam::refresh()
             invArea->useObjectAtPos(wScreen.getGUI().getWindowBag()->getCurObjectPos(), i);
             m_boolUseObjectSelectPkmn[i] = 0;
         }
-
+		*/
 }
 
 WindowTeam::~WindowTeam()

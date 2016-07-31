@@ -2,8 +2,6 @@
 #include "SpriteAnimationManager.h"
 #include "SpriteAnimation.h"
 
-using namespace std;
-
 ska::SpriteAnimationManager::SpriteAnimationManager()
 {
 }
@@ -16,7 +14,7 @@ ska::SpriteAnimation* ska::SpriteAnimationManager::play(int type, int id, ska::P
 	
 	if(i != size)
 	{
-		m_sprites[i] = move(SpriteAnimationPtr(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha)));
+		m_sprites[i] = std::move(SpriteAnimationPtr(new SpriteAnimation(type, id, pos, framesNumber, delay, alpha)));
 		m_cycles[i] = cycles;
 	}
 	else

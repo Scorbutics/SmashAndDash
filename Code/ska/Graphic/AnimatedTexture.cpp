@@ -1,6 +1,5 @@
 #include "AnimatedTexture.h"
 
-using namespace std;
 
 ska::AnimatedTexture::AnimatedTexture() {
 

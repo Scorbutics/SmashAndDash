@@ -4,8 +4,6 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
 Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : DynamicWindowArea(parent)
 {
 	m_buttonStyle.load(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
@@ -16,7 +14,7 @@ Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::stri
 	ska::Rectangle buf = relativePos;
     buf.x -= m_cursor.getWidth()/2;
     buf.y += m_buttonStyle.getHeight();
-    m_button = unique_ptr<Button>(new Button(parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
+    m_button = std::unique_ptr<Button>(new Button(parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
 
     m_relativePos = relativePos;
     m_relativePos.w = 2*m_buttonStyle.getWidth();

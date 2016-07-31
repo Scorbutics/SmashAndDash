@@ -1,8 +1,6 @@
 #include "PokemonDescriptor.h"
 #include "../../ska/Inputs\Readers\IniReader.h"
 
-using namespace std;
-
 PokemonDescriptor::PokemonDescriptor()
 {
 	m_name = "mob";

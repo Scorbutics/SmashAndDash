@@ -19,8 +19,10 @@ if [|same_value|] == 0
 		block_authorize 88, 0, false
 		block_authorize 89, 0, false
 		animation 0, 2
+		assign 25, |move_power|
 	else
 		animation 0, 2
+		assign 15, |move_power|
 	endif
 	move 0, [|direction_perso|], 25, false, ./Levels/surf_callback.txt, #arg0#
 endif

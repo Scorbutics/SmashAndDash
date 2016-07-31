@@ -18,8 +18,8 @@ int CommandShop::argumentsNumber() {
 std::string CommandShop::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.getGUI().getWindowShop()->reset();
+	/*wScreen.getGUI().getWindowShop()->reset();
 	wScreen.getGUI().getWindowShop()->hide(false);
-	wScreen.waitQuit(wScreen.getGUI().getWindowShop()->getShopBar());
+	wScreen.waitQuit(wScreen.getGUI().getWindowShop()->getShopBar());*/
 	return "";
 }

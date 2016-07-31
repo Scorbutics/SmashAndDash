@@ -1,10 +1,7 @@
-#ifndef DEF_NODE
-#define DEF_NODE
+#pragma once
 
 #include <string>
 #include <vector>
-
-using namespace std;
 
 class Node
 {
@@ -18,7 +15,7 @@ class Node
     void setCol(int col);
     void setLine(int line);
 
-    Node* getParent(vector<vector<Node>> &graphe);
+	Node* getParent(std::vector<std::vector<Node>> &graphe);
 	bool getWalkable();
 	int getG();
 	int getH();
@@ -33,4 +30,3 @@ class Node
 
 };
 
-#endif

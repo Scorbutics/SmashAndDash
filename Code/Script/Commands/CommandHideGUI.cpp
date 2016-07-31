@@ -23,7 +23,7 @@ std::string CommandHideGUI::execute(ska::ScriptComponent& script, std::vector<st
 
 	b = ska::StringUtils::strToInt(args[0]);
 
-	wScreen.getGUI().getToolbar()->hide(b != 0);
+	//wScreen.getGUI().getToolbar()->hide(b != 0);
 	wScreen.getGUI().hide(b != 0);
 	return "";
 }

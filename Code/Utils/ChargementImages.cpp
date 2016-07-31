@@ -5,19 +5,14 @@
 
 #include "ChargementImages.h"
 #include "../ska/World/World.h"
-#include "../Gameplay/Character.h"
 #include "../ska/Utils/NumberUtils.h"
 #include "../Gameplay/Mobs/MobSpawner.h"
 
-using namespace std;
-
-
-
-int GetRandom(vector<int>& probs)
+int GetRandom(std::vector<int>& probs)
 {
 	int r = rand()%(100);
 	size_t newSize;
-	vector<int> newProbs;
+	std::vector<int> newProbs;
 
 	const size_t size = probs.size();
 	newSize = size;
@@ -37,10 +32,9 @@ int GetRandom(vector<int>& probs)
 	return newProbs[rand()%newSize];
 }
 
-ska::IniReader* GetRandomMobSettings(MobSpawner& w)
-{
+ska::IniReader* GetRandomMobSettings(MobSpawner& w) {
 	ska::IniReader* reader = NULL;
-	vector<int> probs;
+	std::vector<int> probs;
 	const size_t totMobs = w.getMobSettings().size();
 
 	probs.resize(totMobs);
@@ -54,57 +48,11 @@ ska::IniReader* GetRandomMobSettings(MobSpawner& w)
 	return reader;
 }
 
-ska::Rectangle GetCurrentSpritePosOfHero(Character* hero, bool animation)
-{
-    int direction = hero->getDirection();
-	ska::Rectangle spritePos = hero->getAnimation()->getOffsetBase();
-
-
-    switch(direction)
-    {
-        case 0:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*2;
-        break;
-        case 1:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h;
-        break;
-        case 2:
-        spritePos.y = 0;
-        break;
-        case 3:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*3;
-        break;
-        case 4:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*7;
-        break;
-        case 5:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*5;
-        break;
-        case 6:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*4;
-        break;
-        case 7:
-        spritePos.y = hero->getAnimation()->getOffsetAndFrameSize().h*6;
-        break;
-        default:
-        break;
-    }
-
-	hero->getAnimation()->setOffsetAndFrameSize(spritePos);
-
-	if(animation)
-		spritePos = hero->getAnimation()->getRectOfCurrentFrame();
-	else
-		spritePos.x += spritePos.w;
-
-    return spritePos;
-}
-
-void VariablesAcquisition(vector<int> &vect, std::string filename)
+void VariablesAcquisition(std::vector<int> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
 	int var_number = reader.getInt("Game var_number");
-	stringstream ss;
+	std::stringstream ss;
 
 	if(var_number > 0)
 		for(int i = 1; i <= var_number; i++)
@@ -122,11 +70,11 @@ void VariablesAcquisition(vector<int> &vect, std::string filename)
 
 }
 
-void SwitchesAcquisition(vector<bool> &vect, std::string filename)
+void SwitchesAcquisition(std::vector<bool> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
 	int switch_number = reader.getInt("Game switch_number");
-	stringstream ss;
+	std::stringstream ss;
 
 	if(switch_number > 0)
 		for(int i = 1; i <= switch_number; i++)
@@ -144,11 +92,11 @@ void SwitchesAcquisition(vector<bool> &vect, std::string filename)
 
 }
 
-void VariablesWriting(vector<int> &vect, std::string filename)
+void VariablesWriting(const std::vector<int> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
 	reader.set("Game var_number", vect.size());
-	stringstream ss;
+	std::stringstream ss;
 
 	for(int i = 1; i <= vect.size(); i++)
 	{
@@ -165,11 +113,11 @@ void VariablesWriting(vector<int> &vect, std::string filename)
 	reader.save(filename);
 }
 
-void SwitchesWriting(vector<bool> &vect, std::string filename)
+void SwitchesWriting(const std::vector<bool> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
 	reader.set("Game switch_number", vect.size());
-	stringstream ss;
+	std::stringstream ss;
 
 	for(int i = 1; i <= vect.size(); i++)
 	{

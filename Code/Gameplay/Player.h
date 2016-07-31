@@ -2,7 +2,6 @@
 #define DEF_PLAYER
 #include "../ska/Utils\Observer.h"
 #include "../ska/Inputs/InputEvents.h"
-#include "Character.h"
 
 /*class Player :
 	public Character, public ska::Observer<const int>

@@ -23,9 +23,7 @@ Window(),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
 m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, m_width, m_height),
-m_gui(*this) {
-
-	m_OfChip = { 0, 0 };
+m_gui(*this, m_playerICM) {
 
 	/* MAP inputs */
 	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputMapContext()));
@@ -37,7 +35,6 @@ m_gui(*this) {
 	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, false)));
 	m_sceneHolder.update();
 
-	m_speedInertie = 0;
 	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 	m_fpsCalculator.setDisplayPriority(INT_MAX);
 }
@@ -57,15 +54,6 @@ WorldScene& WGameCore::getWorldScene() {
 ska::ScenePtr& WGameCore::getScene() {
 	return m_sceneHolder.getScene();
 }
-
-void WGameCore::setOffsetChipset(int x, int y, int w, int h)
-{
-    m_OfChip.x = x;
-    m_OfChip.y = y;
-    m_OfChip.w = w;
-    m_OfChip.h = h;
-}
-
 
 void WGameCore::transition(int type)  {
 	//type : 1 = entrant, 0 = sortant
@@ -98,11 +86,6 @@ void WGameCore::transition(int type)  {
     }
 }
 
-MouseCursor& WGameCore::getMouseCursor()
-{
-	return m_mouseCursor;
-}
-
 void WGameCore::addTaskToQueue(ska::RunnablePtr& t) {
 	m_taskQueue.queueTask(t);
 }
@@ -120,10 +103,6 @@ bool WGameCore::refresh() {
 	//t et t0 sont les temps pour la gestion des fps
     long t = 0, t0 = 0; 
 
-    m_ecritureLog = false;
-    initNewWorld();
-
-    
 	//Ici, transition entrante
     transition(1);
 	static const int FPS = 63;
@@ -173,35 +152,6 @@ void WGameCore::eventUpdate(bool movingDisallowed) {
 		m_taskQueue.refresh();
 	} catch (ska::SceneDiedException sde) {
 	}
-}
-
-
-void WGameCore::initNewWorld() {
-    // Récupère les zones de combat situées dans le fichier evenement du monde
-    //m_fight.setAreasFromLayerEvent();   
-}
-
-void WGameCore::waitQuit(DialogMenu* window)
-{
-    int t = 0, t0 = 0; //t et t0 sont les temps pour la gestion de la durée (SDL_PollEvent).
-/*    while(window->isVisible())
-    {
-        t = SDL_GetTicks();
-        if (t - t0 > 30) // Si 30 ms se sont écoulées
-        {
-            this->graphicUpdate();
-			m_gui.dialogRefresh();
-
-            //Gère les évènements extérieurs (input)
-            //m_kdListener.updateEvents();
-
-            flip();
-
-            t0 = t; // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
-        }
-        else // Si ça fait moins de 30ms depuis le dernier tour de boucle, on endort le programme le temps qu'il faut
-            SDL_Delay(30 - (t - t0));
-    }*/
 }
 
 

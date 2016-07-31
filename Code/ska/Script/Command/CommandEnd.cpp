@@ -4,8 +4,6 @@
 #include "../../Utils\SkaConstants.h"
 #include "../../Exceptions/ScriptDiedException.h"
 
-using namespace std;
-
 ska::CommandEnd::CommandEnd(EntityManager& e) : AbstractFunctionCommand(e)
 {
 }

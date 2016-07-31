@@ -9,9 +9,10 @@
 
 #define BATTLE_START_TICKS 1000
 #define BATTLE_START_CHANCE 5
-#define BATTLE_START_DISTANCE_SQUARED 20736 //= 3 blocs
+#define BATTLE_START_DISTANCE_SQUARED 20736 // 3 * 48 = 3 blocs
 
-#define BUTTON_CLOSE 0 //Type de boutons pouvant composer une fenêtre
+//Types de boutons pouvant composer une fenêtre
+#define BUTTON_CLOSE 0 
 #define BUTTON_TEXT_AREA 1
 #define BUTTON_IMAGE_AREA 2
 #define BUTTON_SCROLL_TEXT 3

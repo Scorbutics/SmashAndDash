@@ -7,10 +7,7 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
-Button_Quit::Button_Quit(DialogMenu *parent, string imgName, string secondImgName, ska::Rectangle relativePos) : DynamicWindowArea(parent)
-{
+Button_Quit::Button_Quit(DialogMenu *parent, const std::string& imgName, const std::string& secondImgName, ska::Rectangle relativePos) : DynamicWindowArea(parent) {
     m_type = BUTTON_CLOSE;
     m_active = parent->isVisible();
     m_relativePos.x = relativePos.x;

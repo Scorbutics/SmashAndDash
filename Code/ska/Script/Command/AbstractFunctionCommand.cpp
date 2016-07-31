@@ -4,8 +4,6 @@
 #include "../ScriptSymbolsConstants.h"
 #include "../ScriptComponent.h"
 
-using namespace std;
-
 ska::AbstractFunctionCommand::AbstractFunctionCommand(EntityManager& entityManager) : AbstractCommand(entityManager)
 {
 }

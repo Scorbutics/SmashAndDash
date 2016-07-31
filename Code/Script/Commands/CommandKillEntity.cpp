@@ -5,8 +5,6 @@
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include <string>
 
-using namespace std;
-
 CommandKillEntity::CommandKillEntity(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -22,7 +20,7 @@ int CommandKillEntity::argumentsNumber() {
 
 std::string CommandKillEntity::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	const string& id = args[0];
+	const std::string& id = args[0];
 	
 	ska::EntityId internalEntity =  script.parent->getEntityFromName(id);
 	m_entityManager.removeEntity(internalEntity);

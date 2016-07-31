@@ -7,7 +7,6 @@
 #include <memory>
 #include "..\Fight\Fight.h"
 
-using namespace std;
 typedef unique_ptr<Character> Character_ptr;
 
 class AI

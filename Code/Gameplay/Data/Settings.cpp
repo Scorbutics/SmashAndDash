@@ -5,8 +5,7 @@
 #include "../WGameCore.h"
 #include "../Weather.h"
 
-using namespace std;
-Settings::Settings(string file)
+Settings::Settings(std::string file)
 {
     m_fileName = file;
     this->load();
@@ -22,7 +21,7 @@ void Settings::setFog(int b)
     m_fogActive = b;
 }
 
-void Settings::setFileName(string fileName)
+void Settings::setFileName(std::string fileName)
 {
     m_fileName = fileName;
 }
@@ -63,7 +62,7 @@ void Settings::save()
 	reader.save(m_fileName);
 }
 
-string Settings::getFileName()
+std::string Settings::getFileName()
 {
     return m_fileName;
 }

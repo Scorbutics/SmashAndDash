@@ -10,8 +10,6 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
 Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Rectangle relativePos) : DynamicWindowArea(parent)
 {
     m_type = BUTTON_INVENTORY_AREA;
@@ -93,13 +91,13 @@ void Inventory_Area::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-	MouseCursor& mouseCur = wScreen.getMouseCursor();
+	/*MouseCursor& mouseCur = wScreen.getMouseCursor();
 	
 
 	if (in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, buf) && !ska::RectangleUtils::isPositionInBox(mousePos, wScreen.getGUI().getClickMenu()->getRect()))
 	{
 		ska::Rectangle invAreaAbsolutePos = this->getAbsolutePos();
-		wScreen.getGUI().getClickMenu()->hide(true);
+		//wScreen.getGUI().getClickMenu()->hide(true);
 		m_curObjectPos = mousePos;
 		m_curObjectPos.x -= invAreaAbsolutePos.x;
 		m_curObjectPos.y -= invAreaAbsolutePos.y;
@@ -122,7 +120,7 @@ void Inventory_Area::refresh()
 			mouseCur.removeObject();
 		}
 
-	}
+	}*/
 }
 
 Inventory_Area::~Inventory_Area()

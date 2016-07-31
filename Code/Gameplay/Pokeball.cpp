@@ -264,7 +264,7 @@ void Pokeball::update() {
 		return;
 	}
 
-	vector<ska::Rectangle> ids;
+	std::vector<ska::Rectangle> ids;
 
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {

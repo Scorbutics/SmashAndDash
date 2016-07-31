@@ -7,7 +7,6 @@
 #include "TextureData.h"
 #include "../Graphic/GUI/Window.h"
 #include "../Exceptions/FileException.h"
-using namespace std;
 
 ska::SDLTexture::SDLTexture() {
 }
@@ -30,7 +29,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	sprite.load(m_fileName);
 
 	if (sprite.getInstance() == nullptr) {
-		cerr << "Erreur lors du chargement de l'image \"" << m_fileName << "\" : " << SDL_GetError() << endl;
+		std::cerr << "Erreur lors du chargement de l'image \"" << m_fileName << "\" : " << SDL_GetError() << std::endl;
 	} else if (m_r >= 0 && m_g >= 0 && m_b >= 0) {
 		SDL_SetColorKey(sprite.getInstance(), SDL_TRUE, SDL_MapRGBA(sprite.getFormat(), m_r, m_g, m_b, m_alpha));
 	}
@@ -56,7 +55,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	m_h = sprite.getInstance()->h;
 }
 
-void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, const string& text, ska::Color c) {
+void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, const std::string& text, ska::Color c) {
 	SDLSurface buffer;
 	Font f(fontSize);
 

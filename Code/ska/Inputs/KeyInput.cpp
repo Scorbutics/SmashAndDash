@@ -3,8 +3,6 @@
 
 #include "KeyInput.h"
 
-using namespace std;
-
 
 ska::KeyInput::KeyInput() {
 }

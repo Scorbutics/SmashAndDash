@@ -1,28 +1,25 @@
 
 #include "SlotPokemonArea.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "Button.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Utils/IDs.h"
 
-using namespace std;
-
-SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, string styleName, string styleNamePressed, string action, int* boolUseObjectSelectPkmn, int key) :DynamicWindowArea(parent), m_image(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE), m_imagePressed(styleNamePressed, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
-{
+SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key) :
+DynamicWindowArea(parent), 
+m_image(styleName), 
+m_imagePressed(styleNamePressed) {
     m_key = key;
     m_boolUseObjectSelectPkmn = boolUseObjectSelectPkmn;
     m_action = action;
     m_style = styleName;
     m_stylePressed = styleNamePressed;
     m_relativePos = relativePos;
-    m_pkmn = NULL;
 }
 
 void SlotPokemon_Area::setPokemon(unsigned int index)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
     m_index = index;
     //m_pkmn = wScreen.getPokemonManager().getPokemon(index);
 	ska::Rectangle rectSrcBuf, buf;
@@ -74,15 +71,13 @@ void SlotPokemon_Area::display()
     buf.x += m_parent->getRect().x;
 	buf.y += m_parent->getRect().y;
 
-	WGameCore& wScreen = WGameCore::getInstance();
-
-	const ska::InputActionContainer& in = wScreen.getActions();
+	/*const ska::InputActionContainer& in = wScreen.getActions();
 
 	if (in[ska::InputAction::LClic]) {
 		m_imagePressed.render(buf.x, buf.y);
 	} else {
 		m_image.render(buf.x, buf.y);
-	}
+	}*/
         
     m_spriteArea->display();
     m_pvArea->display();
@@ -108,21 +103,10 @@ ska::Rectangle SlotPokemon_Area::getRectSize()
 	ska::Rectangle rect = m_parent->getRect();
     rect.x += m_relativePos.x;
     rect.y += m_relativePos.y;
-    rect.w = m_pkmn->getWidth();
-    rect.h = m_pkmn->getHeight();
+    /*rect.w = m_pkmn->getWidth();
+    rect.h = m_pkmn->getHeight();*/
 
     return rect;
-}
-
-Character* SlotPokemon_Area::getPokemon()
-{
-    if(m_pkmn != NULL)
-        return m_pkmn;
-    else
-    {
-        cerr << "Erreur (classe SlotPokemon_Area) : Slot de Pokémon \""<< m_key <<"\" vide" << endl;
-        return NULL;
-    }
 }
 
 SlotPokemon_Area::~SlotPokemon_Area()

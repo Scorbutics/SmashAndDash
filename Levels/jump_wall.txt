@@ -1,6 +1,6 @@
 assign #arg0#, |jump_direction|
 remove_component InputComponent, 0
-jump 0, 300
-move 0, [|jump_direction|], 48, true, ./Levels/expulse.txt, 0
+jump 0, 250
+move 0, [|jump_direction|], 40, true, ./Levels/expulse.txt, 0
 restore_component InputComponent, 0
 end

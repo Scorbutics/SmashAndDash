@@ -12,15 +12,13 @@
 
 const unsigned int Skill::m_fontSize = 30;
 
-using namespace std;
-
 //Déroulement des combats :
 //Chargement d'un monde type "Arène" dépendant du lieu où se trouve le héro (même fonctionnement que l'affichage d'un monde mais
 //avec pour héro le pokemon qui combat, et pour seules entités : le héro, fixe, le pokémon adverse et notre pokémon).
 bool CollisionBoxABoxB(ska::Rectangle rectA, ska::Rectangle rectB);
 
-Projectile::Projectile(ska::IniReader* data, Character* parent):
-	Skill(data, parent)
+Projectile::Projectile(ska::IniReader* data):
+	Skill(data)
 {
 	if(m_style1 == "Projectile" || m_style2 == "Projectile")
 	{

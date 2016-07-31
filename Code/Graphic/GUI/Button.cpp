@@ -4,8 +4,6 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
 Button::Button(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key, bool bstatic) : DynamicWindowArea(parent)
 {
     m_static = bstatic;

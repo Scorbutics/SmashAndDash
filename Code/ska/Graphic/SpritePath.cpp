@@ -5,8 +5,6 @@
 #include "../Utils\SkaConstants.h"
 #include "../Utils\StringUtils.h"
 
-using namespace std;
-
 ska::SpritePath::SpritePath()
 {
 	

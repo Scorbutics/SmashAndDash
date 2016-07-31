@@ -10,8 +10,6 @@
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 
-using namespace std;
-
 CommandBlockCollision::CommandBlockCollision(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
 }
 

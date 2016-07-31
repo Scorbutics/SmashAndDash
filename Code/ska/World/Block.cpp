@@ -1,7 +1,5 @@
 #include "Block.h"
 
-using namespace std;
-
 ska::Block::Block(int corrFileWidth, ska::Point<int> posChipset, unsigned int properties, int col) {
 	m_properties = properties;
     m_collision = col;

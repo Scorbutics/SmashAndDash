@@ -8,8 +8,6 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 
-using namespace std;
-
 CommandChoice::CommandChoice(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -26,7 +24,7 @@ int CommandChoice::argumentsNumber() {
 std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
-	string fname, texte, buf, var;
+	std::string fname, texte, buf, var;
 	var = args[0];
 	fname = args[1];
 	texte = args[2];

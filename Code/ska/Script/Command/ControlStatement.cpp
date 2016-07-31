@@ -1,8 +1,6 @@
 #include <iostream>
 #include "ControlStatement.h"
 
-using namespace std;
-
 ska::ControlStatement::ControlStatement(EntityManager& e) : AbstractCommand(e)
 {
 }

@@ -6,8 +6,6 @@
 //#include "../Gameplay\WGameCore.h"
 //#include "../Utils\ChargementImages.h"
 
-using namespace std;
-
 //Constructeur classique
 ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber)
 {
@@ -447,10 +445,10 @@ void ska::PhysicObject::jump(unsigned int power)
 }
 
 //bouge dans la direction courante à la vitesse courante
-vector<ska::Rectangle> ska::PhysicObject::move()
+std::vector<ska::Rectangle> ska::PhysicObject::move()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-    vector<ska::Rectangle> ids, ids2, idsEnd;
+	std::vector<ska::Rectangle> ids, ids2, idsEnd;
     ska::Rectangle lastTheoricPos = m_rect;
     ska::Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
@@ -611,7 +609,7 @@ bool ska::PhysicObject::collision(ska::Rectangle targetPos)
 
 bool ska::PhysicObject::collision()
 {
-	vector<ska::Rectangle> ids, ids2;
+	std::vector<ska::Rectangle> ids, ids2;
 	ska::Rectangle lastTheoricPos = m_rect;
 	ska::Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
@@ -639,9 +637,9 @@ bool ska::PhysicObject::collision()
 }
 
 //teste les collisions avec les NPC uniquement
-vector<ska::Rectangle> ska::PhysicObject::collisionNPC()
+std::vector<ska::Rectangle> ska::PhysicObject::collisionNPC()
 {
-    vector<ska::Rectangle> ids, buf;
+	std::vector<ska::Rectangle> ids, buf;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
     /*buf = wScreen.detectEntity(this->getHitbox());
@@ -762,7 +760,7 @@ ska::PhysicObject::~PhysicObject(){}
 
 
 
-bool FindID(vector<ska::Rectangle> &ids, ska::Rectangle id)
+bool FindID(std::vector<ska::Rectangle> &ids, ska::Rectangle id)
 {
     const size_t idSize = ids.size();
     for(size_t i = 0; i < idSize; i++)

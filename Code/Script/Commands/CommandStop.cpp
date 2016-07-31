@@ -3,8 +3,6 @@
 #include "../../Utils\IDs.h"
 #include "../../ska/Script/ScriptComponent.h"
 
-using namespace std;
-
 CommandStop::CommandStop(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }

@@ -25,7 +25,9 @@
 
 #define SCROLL_BUTTON_SPEED 3
 
-GUI::GUI(const ska::Window& w) {
+GUI::GUI(const ska::Window& w, const ska::InputContextManager& playerICM) :
+m_playerICM(playerICM), m_mouseCursor(m_playerICM),
+m_window(w) {
 
     m_refreshCount = REFRESH_PNJWINDOW_COUNT;
     m_lastMouseState = 0;
@@ -38,68 +40,64 @@ GUI::GUI(const ska::Window& w) {
     menuPos.y = 0;
     menuPos.w = 8*TAILLEBLOCFENETRE;
     menuPos.h = 5*TAILLEBLOCFENETRE;
-    m_pokeInfoWindow = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+    m_pokeInfoWindow = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.h = 4*TAILLEBLOCFENETRE;
     menuPos.y = 5*TAILLEBLOCFENETRE;
     menuPos.w = 5*TAILLEBLOCFENETRE;
-    m_facesetPkmn = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_facesetPkmn = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.x = 0;
     menuPos.y = w.getHeight() - 2*TAILLEBLOCFENETRE;
     menuPos.w = 9*TAILLEBLOCFENETRE;
     menuPos.h = 2*TAILLEBLOCFENETRE;
-    m_attackPokemon = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_attackPokemon = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.x = w.getWidth() - 2*TAILLEBLOCFENETRE;
-    m_attackOpponent = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_attackOpponent = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
 
     menuPos.x = 0;
     menuPos.y = 0*TAILLEBLOCFENETRE;
     menuPos.w = 6*TAILLEBLOCFENETRE;
     menuPos.h = 3*TAILLEBLOCFENETRE;
-    m_pnjInfoWindow = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_pnjInfoWindow = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.y = 5*TAILLEBLOCFENETRE;
     menuPos.x += 3*TAILLEBLOCFENETRE;
     menuPos.h = 4*TAILLEBLOCFENETRE;
     menuPos.w = 5*TAILLEBLOCFENETRE;
-    m_facesetOpponent = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_facesetOpponent = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.x = menuPos.y = 0;
     menuPos.w = 4*TAILLEBLOCFENETRE;
     menuPos.h = 2*TAILLEBLOCFENETRE;
-    m_clickMenu = unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
+	m_clickMenu = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
 
     menuPos.w = 10*TAILLEBLOCFENETRE;
     menuPos.h = 5*TAILLEBLOCFENETRE;
-    m_wSettings = unique_ptr<WindowSettings>(new WindowSettings("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-    m_wTeam = unique_ptr<WindowTeam>(new WindowTeam("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-    m_wBag = unique_ptr<WindowBag>(new WindowBag("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wSettings = std::unique_ptr<WindowSettings>(new WindowSettings("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wTeam = std::unique_ptr<WindowTeam>(new WindowTeam("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wBag = std::unique_ptr<WindowBag>(new WindowBag("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
 
 	menuPos.x = w.getWidth() - 7*TAILLEBLOCFENETRE;
 	menuPos.y = 0;
 	menuPos.w = 7*TAILLEBLOCFENETRE;
 	menuPos.h = 2*TAILLEBLOCFENETRE;
-    m_toolBar = unique_ptr<ToolBar>(new ToolBar("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
+	m_toolBar = std::unique_ptr<ToolBar>(new ToolBar("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
 	
 	menuPos.x = 5*TAILLEBLOCFENETRE;
 	menuPos.y = 2*TAILLEBLOCFENETRE;
 	menuPos.w = 10*TAILLEBLOCFENETRE;
 	menuPos.h = 10*TAILLEBLOCFENETRE;
-    m_wShop = unique_ptr<WindowShop>(new WindowShop("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
+	m_wShop = std::unique_ptr<WindowShop>(new WindowShop("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
     m_toolBar->hide(false);
 
     initButtons(w);
 
 	setPriority(INT_MAX);
 
-}
-
-WindowBagPtr& GUI::getWindowBag() {
-    return m_wBag;
 }
 
 void GUI::initButtons(const ska::Window& w) {
@@ -115,23 +113,40 @@ void GUI::initButtons(const ska::Window& w) {
 
     m_buttonList.clear();
     m_buttonList.push_back(DialogMenuPtr (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-    m_buttonList[0]->setActionClic("team");
+	m_buttonList[0]->name("Equipe");
+	m_buttonList[0]->setClickHandler([&] {
+		m_wTeam->setPos(ska::Point<int>());
+		m_wTeam->reset("show");
+		m_wTeam->hide(false);
+	});
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-    m_buttonList[1]->setActionClic("pokedex");
+	m_buttonList[1]->name("Pokédex");
+	//m_buttonList[1]->setActionClic("pokedex");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-    m_buttonList[2]->setActionClic("pokebag");
+	m_buttonList[2]->name("PokéSac");
+	m_buttonList[2]->setClickHandler([&] {
+		m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
+		m_wBag->reset();
+		m_wBag->hide(false);
+	});
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-    m_buttonList[3]->setActionClic("trainer_card");
+    //m_buttonList[3]->setActionClic("trainer_card");
+	m_buttonList[3]->name("Carte dresseur");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-    m_buttonList[4]->setActionClic("options");
+	m_buttonList[4]->name("Paramètres");
+	m_buttonList[4]->setClickHandler([&] {
+		m_wSettings->setPos(ska::Point<int>(m_wTeam->getRect().w + m_wBag->getRect().w, 0));
+		m_wSettings->reset();
+		m_wSettings->hide(false);
+	});
 
     m_buttonScroll.resize(m_buttonList.size());
 	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
@@ -140,30 +155,6 @@ void GUI::initButtons(const ska::Window& w) {
 	}
 
 
-}
-
-DialogMenuPtr& GUI::getFacesetPkmn() {
-    return m_facesetPkmn;
-}
-
-WindowSettingsPtr& GUI::getWindowSettings() {
-    return m_wSettings;
-}
-
-DialogMenuPtr& GUI::getClickMenu() {
-    return m_clickMenu;
-}
-
-WindowTeamPtr& GUI::getWindowTeam() {
-    return m_wTeam;
-}
-
-DialogMenuPtr& GUI::getFacesetOpponent() {
-    return m_facesetOpponent;
-}
-
-WindowShopPtr& GUI::getWindowShop() {
-    return m_wShop;
 }
 
 void GUI::display() const {
@@ -180,25 +171,22 @@ void GUI::display() const {
 		}
 	}
 
-	MouseCursor& mouseCursor = WGameCore::getInstance().getMouseCursor();
-	mouseCursor.displaySelectedPokemon();
-	mouseCursor.displaySelectedObject();
+	m_mouseCursor.displaySelectedPokemon();
+	m_mouseCursor.displaySelectedObject();
 		
 }
 
-void GUI::refresh()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+void GUI::refresh() {
 	
-	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputActionContainer& in = m_playerICM.getActions();
 
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-	const ska::InputRange& lastMousePos = wScreen.getRanges()[ska::InputRangeType::LastMousePos];
+	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputRange& lastMousePos = m_playerICM.getRanges()[ska::InputRangeType::LastMousePos];
 	ska::Rectangle bufButtonPos;
 
     bufButtonPos.w = (TAILLEBLOCFENETRE)*2;
     bufButtonPos.h = (TAILLEBLOCFENETRE)*2;
-    bufButtonPos.x = wScreen.getWidth() - 13*TAILLEBLOCFENETRE;
+	bufButtonPos.x = m_window.getWidth() - 13 * TAILLEBLOCFENETRE;
     bufButtonPos.y = 0;
 
 	if (m_hide) {
@@ -207,58 +195,33 @@ void GUI::refresh()
 
     for(unsigned int i = 0; i < m_buttonList.size(); i++)
     {
-        if(m_buttonList[i] != NULL)
-        {
+        if(m_buttonList[i] != NULL) {
             m_buttonList[i]->refresh();
 			ska::Rectangle buttonPos = m_buttonList[i]->getRect();
-			if (ska::RectangleUtils::isPositionInBox(mousePos, buttonPos))
-            {
-
+			if (ska::RectangleUtils::isPositionInBox(mousePos, buttonPos)) {
 
 				if (m_buttonScroll[i] < buttonPos.h / 2) {
 					m_buttonScroll[i] += SCROLL_BUTTON_SPEED;
 				}
 
-
-                if(in[ska::InputAction::LClic] && !m_wShop->isVisible())
-                {
-
-                    if(m_buttonList[i]->getActionClic() == "options")
-                    {
-						m_wSettings->setPos(ska::Point<int>(m_wTeam->getRect().w + m_wBag->getRect().w, 0));
-                        m_wSettings->reset();
-                        m_wSettings->hide(false);
-
-                    }
-                    else if(m_buttonList[i]->getActionClic() == "pokebag")
-                    {
-						m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
-                        m_wBag->reset();
-                        m_wBag->hide(false);
-                    }
-                    else if(m_buttonList[i]->getActionClic() == "team")
-                    {
-						m_wTeam->setPos(ska::Point<int>());
-                        m_wTeam->reset("show");
-                        m_wTeam->hide(false);
-                    }
-
+                if(in[ska::InputAction::LClic] && !m_wShop->isVisible()) {
+					m_buttonList[i]->click(mousePos);
                 }
 
-				if (!ska::RectangleUtils::isPositionInBox(lastMousePos, buttonPos)) //si on change de bouton de la gui, on actualise le curseur
-				{
-					wScreen.getMouseCursor().modifyHint(m_buttonList[i]->getActionClic());
-					wScreen.getMouseCursor().hideHint(false);
+				//si on change de bouton de la gui, on actualise le curseur
+				if (!ska::RectangleUtils::isPositionInBox(lastMousePos, buttonPos)) {
+					m_mouseCursor.modifyHint(m_buttonList[i]->getName());
+					m_mouseCursor.hideHint(false);
 				}
 
                 
-            }
-            else
-                m_buttonScroll[i] = 0;
+            } else {
+				m_buttonScroll[i] = 0;
+			}
 
-            if(m_side == 0) // GUI disposée en bas à droite de l'écran
-            {
-				m_buttonList[i]->setPos(ska::Point<int>(bufButtonPos.x, (wScreen.getHeight() - m_buttonList[i]->getRect().h / 2) - m_buttonScroll[i]));
+			// GUI disposée en bas à droite de l'écran
+            if(m_side == 0)  {
+				m_buttonList[i]->setPos(ska::Point<int>(bufButtonPos.x, (m_window.getHeight() - m_buttonList[i]->getRect().h / 2) - m_buttonScroll[i]));
 				//m_buttonList[i]->setPosImg(ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), bufButtonPos).x, ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getRect()).y - TAILLEBLOCFENETRE / 4);
                 bufButtonPos.x += 5*TAILLEBLOCFENETRE/2;
             }
@@ -267,13 +230,14 @@ void GUI::refresh()
         }
     }
 
-    if(wScreen.getMouseCursor().isActiveHint(this) )
-        wScreen.getMouseCursor().displayHint();
 
-	if (in[ska::InputAction::RClic])
-        this->setClickMenu();
+	if (m_mouseCursor.isActiveHint(*this)) {
+		m_mouseCursor.displayHint();
+	}
 
-
+	if (in[ska::InputAction::RClic]) {
+		setClickMenu();
+	}
 
 }
 
@@ -282,11 +246,6 @@ int GUI::addDialog(IDialogMenuPtr& d) {
 	m_extraWindows.emplace_back(std::move(d));
 	return (int)(m_extraWindows.size() - 1);
 }
-
-ToolBarPtr& GUI::getToolbar() {
-    return m_toolBar;
-}
-
 
 void GUI::setClickMenu()
 {
@@ -298,7 +257,7 @@ void GUI::setClickMenu()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputRange& lastMousePos = wScreen.getRanges()[ska::InputRangeType::LastMousePos];
 
-    vector<int> vBool;
+    std::vector<int> vBool;
     vBool.push_back(0);
     vBool.push_back(1);
 
@@ -317,7 +276,7 @@ void GUI::setClickMenu()
             m_curObjectPos.y -= invAreaAbsolutePos.y;
             if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
             {
-                vector<string> vUse, vGive, vTrash;
+				std::vector<std::string> vUse, vGive, vTrash;
                 vUse.push_back("Utiliser");
                 vUse.push_back("Ok !");
                 vGive.push_back("Donner");
@@ -417,14 +376,6 @@ void GUI::resetAttackOpponentWindow(Character* op)
 		}
 	}
 }*/
-
-DialogMenuPtr& GUI::getAttackPokemonWindow() {
-    return m_attackPokemon;
-}
-
-DialogMenuPtr& GUI::getAttackOpponentWindow() {
-    return m_attackOpponent;
-}
 
 size_t GUI::getButtonListSize() {
     return m_buttonList.size();
@@ -694,18 +645,9 @@ void GUI::dialogRefresh()
 
 }
 
-DialogMenuPtr& GUI::getInfoPNJWindow() {
-    return m_pnjInfoWindow;
-}
-
-DialogMenuPtr& GUI::getInfoPokemonWindow() {
-    return m_pokeInfoWindow;
-}
-
 //GUI::isPositionOnButton renvoie l'indice du bouton où se situe "pos" dans m_buttonList
 //Renvoie -1 si pos n'est dans aucun bouton
-int GUI::isPositionOnButton(const ska::Point<float>& pos)
-{
+int GUI::isPositionOnButton(const ska::Point<float>& pos) const {
 	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
 		if (ska::RectangleUtils::isPositionInBox(pos, m_buttonList[i]->getRect())) {
 			return i;
@@ -714,8 +656,7 @@ int GUI::isPositionOnButton(const ska::Point<float>& pos)
     return -1;
 }
 
-void GUI::hide(bool x)
-{
+void GUI::hide(bool x) {
     m_hide = x;
 }
 
@@ -727,13 +668,11 @@ DialogMenuPtr& GUI::getButton(unsigned int id) {
     return m_buttonList[id];
 }
 
-bool GUI::isMovingAWindow()
-{
+bool GUI::isMovingAWindow() {
     return ((m_wSettings->isVisible() && m_wSettings->isMoving()) || (m_wBag->isVisible() && m_wBag->isMoving()) || (m_wTeam->isVisible() && m_wTeam->isMoving()) || ( m_toolBar->isVisible() && m_toolBar->isMoving()) );
 }
 
-bool GUI::isMouseOnAWindow()
-{
+bool GUI::isMouseOnAWindow() {
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 
@@ -743,12 +682,10 @@ bool GUI::isMouseOnAWindow()
 		|| (m_toolBar->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_toolBar->getRect())));
 }
 
-int GUI::getRefreshPNJWindowCount()
-{
+int GUI::getRefreshPNJWindowCount() {
     return m_refreshCount;
 }
 
-void GUI::setRefreshPNJWindowCount(int x)
-{
+void GUI::setRefreshPNJWindowCount(int x) {
     m_refreshCount = x;
 }

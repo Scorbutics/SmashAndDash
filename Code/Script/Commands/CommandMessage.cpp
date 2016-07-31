@@ -7,8 +7,6 @@
 #include "../../ska/Graphic/Rectangle.h"
 
 
-using namespace std;
-
 CommandMessage::CommandMessage(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }

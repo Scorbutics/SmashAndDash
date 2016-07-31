@@ -4,7 +4,6 @@
 #include <memory>
 #include "../ska/Graphic\GUI\Window.h"
 #include "Data\Settings.h"
-#include "../Graphic\GUI\MouseCursor.h"
 #include "../ska/Inputs/RawInputListener.h"
 #include "../Graphic\GUI\TrainerCard.h"
 #include "Data\SavegameManager.h"
@@ -43,20 +42,16 @@ public:
 		
 	void initNewWorld();
 	void transition(int type);
-	void waitQuit(DialogMenu* window);
+	
+	
 	void addTaskToQueue(ska::RunnablePtr& t);
 	bool hasRunningTask();
 
-	//float getSpeedInertie();
-	//ska::Animation& getChipsetAnimation();
-
 	GUI& getGUI();
-	
-	//Pokeball& getPokeball();
+
 	//Inventory& getInventory();
 	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
-	MouseCursor& getMouseCursor();
 	TrainerCard& getTrainerCard();
 	ska::World& getWorld();
 	WorldScene& getWorldScene();
@@ -64,10 +59,6 @@ public:
 	const ska::InputActionContainer& getActions() const;
 	const ska::InputRangeContainer& getRanges() const;
 	const ska::InputToggleContainer& getToggles() const;
-	
-	void setOffsetChipset(int x, int y, int w, int h);
-    void setSpeedInertie(float x);
-    void setChipset(SDL_Surface* chipset);
 	
 	ska::ScenePtr& getScene();
 	void nextScene(std::unique_ptr<ska::Scene>& scene);
@@ -80,16 +71,8 @@ protected:
 		
 	SceneHolderCore m_sceneHolder;
 
-	ska::Rectangle m_OfChip;
-	bool m_ecritureLog;
-
-	float m_speedInertie;
-	//ska::Animation m_chipsetAni;
-	//AI m_ai;
-	//Pokeball m_pokeball;
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
-	MouseCursor m_mouseCursor;
 	GUI m_gui;
 	Settings m_settings;
 	//Inventory m_inv;

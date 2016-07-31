@@ -4,8 +4,6 @@
 #include "Window_Area.h"
 #include "DialogMenu.h"
 
-using namespace std;
-
 Window_Area::Window_Area(DialogMenu *parent)
 {
     m_active = false;

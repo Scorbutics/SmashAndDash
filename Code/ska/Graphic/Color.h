@@ -21,7 +21,8 @@ namespace ska {
 		}
 
 		Color() {
-			r = g = b = a = 0;
+			r = g = b = 0;
+			a = 255;
 		}
 
 		Color(const Color& c) {

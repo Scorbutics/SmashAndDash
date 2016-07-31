@@ -9,9 +9,8 @@
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
 
-using namespace std;
-
-Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, int width, vector<string> text, int fontSize, ska::Rectangle relativePos) : DynamicWindowArea(parent)
+Scroll_Text::Scroll_Text(DialogMenu *parent, const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) : 
+DynamicWindowArea(parent)
 {
 
 	m_topArrow.load(buttonAspect + "toparrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
@@ -23,8 +22,9 @@ Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, in
     m_color.g = 0;
     m_color.b = 0;
     m_stext.resize(text.size());
-    for(unsigned int i = 0; i < m_stext.size(); i++)
-        m_stext[i].loadFromText(m_fontSize, text[i], m_color);
+	for (unsigned int i = 0; i < m_stext.size(); i++) {
+		m_stext[i].loadFromText(m_fontSize, text[i], m_color);
+	}
 
     m_linesNumber = height/fontSize;
     m_width = width;
@@ -58,15 +58,13 @@ Scroll_Text::Scroll_Text(DialogMenu *parent, string buttonAspect, int height, in
 
 void Scroll_Text::display()
 {
-    if(!m_parent->isVisible())
-        return;
-    else
-        m_active = true;
-
+	if (!m_parent->isVisible()) {
+		return;
+	}
     
+    m_active = true;
 
-    if(m_parent->isMoving())
-    {
+    if(m_parent->isMoving()) {
 		m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
 		m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
         m_posBotArrow = m_posTopArrow;
@@ -87,10 +85,10 @@ void Scroll_Text::display()
 
     m_posCursor.y = m_posTopArrow.y + m_topArrow.getHeight() + m_start * ((int)m_text.size());
 
-    for(unsigned int i = m_start; i < m_start + m_linesNumber; i++)
-    {
-        if(i < m_stext.size())
+    for(unsigned int i = m_start; i < m_start + m_linesNumber; i++) {
+		if (i < m_stext.size()) {
 			m_stext[i].render(buf.x, buf.y);
+		}
             
 		m_scrollBar.render(bufScrollBar.x, bufScrollBar.y);
         buf.y += m_fontSize;
@@ -104,8 +102,7 @@ void Scroll_Text::display()
 }
 
 
-void Scroll_Text::refresh()
-{
+void Scroll_Text::refresh() {
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
@@ -140,7 +137,7 @@ void Scroll_Text::refresh()
 	{
 		//Si on clique sur la barre du curseur
 		if (in[ska::InputAction::LClic]) {
-			m_start = (mouseClickPos.y - m_posTopArrow.y) / ((int)m_text.size()) - 1;
+			m_start = ((int)mouseClickPos.y - m_posTopArrow.y) / ((int)m_text.size()) - 1;
 
 			if(m_start > (int)m_linesNumber)
 				m_start = m_linesNumber;

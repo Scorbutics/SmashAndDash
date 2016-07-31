@@ -9,8 +9,6 @@
 #include "../../ska/Physic/PositionComponent.h"
 #include "../../ska/Physic/HitboxComponent.h"
 
-using namespace std;
-
 bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs)
 {
 	return lhs.x == rhs.x && lhs.y == rhs.y;
@@ -22,7 +20,7 @@ int CommandPlayerPresence::argumentsNumber() {
 
 std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	string posFromX, posFromY, posToX, posToY;
+	std::string posFromX, posFromY, posToX, posToY;
 	ska::Rectangle collisionRect;
 
 	posFromX = args[0];

@@ -4,8 +4,6 @@
 
 #include "Node.h"
 
-using namespace std;
-
 Node::Node()
 {
     m_walkable = true;
@@ -49,7 +47,7 @@ void Node::setLine(int line)
     m_line = line;
 }
 
-Node* Node::getParent(vector<vector<Node>> &graphe)
+Node* Node::getParent(std::vector<std::vector<Node>> &graphe)
 {
     return &(graphe[m_parentCol][m_parentLine]);
 }

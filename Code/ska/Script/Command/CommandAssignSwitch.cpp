@@ -3,8 +3,6 @@
 #include "../ScriptSymbolsConstants.h"
 #include "../System/ScriptAutoSystem.h"
 
-using namespace std;
-
 ska::CommandAssignSwitch::CommandAssignSwitch(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -19,7 +17,7 @@ int ska::CommandAssignSwitch::argumentsNumber() {
 }
 
 std::string ska::CommandAssignSwitch::execute(ScriptComponent& script, std::vector<std::string>& args) {
-	string valeur, varNumber, line, commandCall;
+	std::string valeur, varNumber, line, commandCall;
 
 	valeur = args[0];
 	varNumber = args[1];

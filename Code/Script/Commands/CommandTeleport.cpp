@@ -10,8 +10,6 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../Gameplay/Scene/SceneMap.h"
 
-using namespace std;
-
 CommandTeleport::CommandTeleport(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -66,13 +64,13 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 	return "";
 }
 
-void CommandTeleport::teleportHeroToMap(string param)
+void CommandTeleport::teleportHeroToMap(std::string param)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 	//Character* hero = wScreen.getHero();
 
-	string fichier, fichier2, fichierD;
+	std::string fichier, fichier2, fichierD;
 	int x = 1, y;
 
 
@@ -82,9 +80,9 @@ void CommandTeleport::teleportHeroToMap(string param)
 	x = ska::StringUtils::strToInt(ska::StringUtils::extractTo(fichier.size() + fichierD.size() + fichier2.size() + 3, param, ':'));
 
 	// créer un flux de sortie
-	ostringstream oss;
+	std::ostringstream oss;
 	oss << x; //on ecrit la valeur de l'entier x dedans
-	string buf; //on le transforme en string
+	std::string buf; //on le transforme en string
 	buf = oss.str();
 	oss.clear();
 	y = atoi(param.substr(param.find_last_of(':') + 1, param.find_last_of('\0')).c_str());
@@ -99,10 +97,11 @@ void CommandTeleport::teleportHeroToMap(string param)
 
 	ska::IniReader mapReader(buf);
 
-	string chipsetName = mapReader.getString("Chipset file");
+	std::string chipsetName = mapReader.getString("Chipset file");
 
-	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA")
-		cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << endl;
+	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
+		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;
+	}
 
 	w.load(fichier, chipsetName);
 	

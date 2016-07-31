@@ -6,7 +6,6 @@
 #include "../../Gameplay/Fight/Skill.h"
 #include "../../ska/Utils/RectangleUtils.h"
 
-using namespace std;
 
 AI::AI()
 {

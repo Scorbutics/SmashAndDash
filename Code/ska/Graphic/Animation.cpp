@@ -2,7 +2,6 @@
 #include <string>
 
 #include "Animation.h"
-using namespace std;
 
 ska::Animation::Animation() {
 	memset(&m_offset, 0, sizeof(m_offset));

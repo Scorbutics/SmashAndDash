@@ -2,7 +2,6 @@
 #include "Font.h"
 #include "../Utils/ResourceTemplate.h"
 
-using namespace std;
 
 ska::Font::Font() : ResourceTemplate() {
 }

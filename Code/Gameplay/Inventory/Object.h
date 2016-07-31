@@ -1,5 +1,4 @@
-#ifndef DEF_OBJECT
-#define DEF_OBJECT
+#pragma once
 
 #include <string>
 #include <vector>
@@ -7,8 +6,7 @@
 #include "../../ska/Graphic/Texture.h"
 #include "../../ska/Graphic/Animation.h"
 
-class Object
-{
+class Object {
     public:
     Object(int id);
 
@@ -20,8 +18,8 @@ class Object
 	
 	template <class T>
 	void setPos(ska::Point<T> pos) {
-		m_pos.x = pos.x;
-		m_pos.y = pos.y;
+		m_pos.x = (int) pos.x;
+		m_pos.y = (int) pos.y;
 	}
 
 	const ska::Point<int>& getPos();
@@ -48,4 +46,5 @@ class Object
 
 };
 
-#endif
+using ObjectPtr = std::unique_ptr<Object>; 
+

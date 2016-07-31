@@ -7,8 +7,6 @@
 #include "../../Gameplay/Inventory/Inventory.h"
 #include "../../ska/Graphic/Rectangle.h"
 
-using namespace std;
-
 class Inventory_Area : public DynamicWindowArea
 {
     public:

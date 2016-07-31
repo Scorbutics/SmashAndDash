@@ -4,9 +4,8 @@
 #include "../../Graphic\GUI\Inventory_Area.h"
 #include "../../Utils/IDs.h"
 
-using namespace std;
-
-ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, string fichierMenu, ska::Rectangle posFond) : MovableWindow(fichierMenu, posFond, 22)
+ToolBar::ToolBar(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : 
+MovableWindow(fichierMenu, posFond, 22)
 {
 	ska::Rectangle pos;
 	pos.x = TAILLEBLOCFENETRE/2;
@@ -15,7 +14,7 @@ ToolBar::ToolBar(string squareSpriteName, string squareSpriteNameHighlight, stri
 	pos.h = posFond.h;
 
 	m_inv.load(squareSpriteName, squareSpriteNameHighlight);
-    this->addInventory(m_inv, pos);
+    addInventory(m_inv, pos);
     m_invArea = this->getInventoryArea(0);
 }
 

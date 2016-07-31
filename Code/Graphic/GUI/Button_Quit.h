@@ -8,14 +8,12 @@
 #include "../../ska/Graphic/Texture.h"
 #include "../../ska/Graphic/Rectangle.h"
 
-using namespace std;
-
 class Button_Quit : public DynamicWindowArea
 {
-    public:
-		Button_Quit(DialogMenu *parent, string imgName, string secondImgName, ska::Rectangle relativePos);
-    string getAction();
-    void setAction(string action);
+public:
+	Button_Quit(DialogMenu *parent, const std::string& imgName, const std::string& secondImgName, ska::Rectangle relativePos);
+    std::string getAction();
+	void setAction(const std::string& action);
     virtual void refresh();
 	virtual void display();
     virtual void forceValue(unsigned int){};

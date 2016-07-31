@@ -199,8 +199,6 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		const auto& pokemonPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_pokemonId);
-		const auto& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
 		const auto& pokemonBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_pokemonId);
 		const auto& opponentBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_opponentId);
 		

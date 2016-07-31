@@ -7,8 +7,6 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../Gameplay\Data\Statistics.h"
 
-using namespace std;
-
 SavegameManager::SavegameManager(std::string pathname)
 {
 	m_pathname = pathname;
@@ -26,7 +24,7 @@ int SavegameManager::getGameVariable(const unsigned int x) const
 		return m_game_variables[x];
 	else
 	{
-		cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << endl;
+		std::cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
 		return 0;
 	}
 }
@@ -37,7 +35,7 @@ bool SavegameManager::getGameSwitch(const unsigned int x) const
 		return m_game_switches[x];
 	else
 	{
-		cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << endl;
+		std::cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
 		return 0;
 	}
 }
@@ -80,7 +78,7 @@ void SavegameManager::loadGame( std::string pathname )
 	SwitchesAcquisition(m_game_switches, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR +m_pathname + FILE_SEPARATOR"switches.ini");
 	VariablesAcquisition(m_game_variables, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"variables.ini");
 
-	ofstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"tmpscripts.data").c_str(), ios::trunc);
+	std::ofstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"tmpscripts.data").c_str(), std::ios::trunc);
 }
 
 void SavegameManager::savePokemonTeam()
@@ -133,12 +131,12 @@ void SavegameManager::loadPokemonTeam()
 	
 }
 
-string SavegameManager::getStartChipsetName()
+std::string SavegameManager::getStartChipsetName()
 {
 	return m_startMapChipsetName;
 }
 
-string SavegameManager::getStartMapName()
+std::string SavegameManager::getStartMapName()
 {
 	return m_startMapName;
 }
@@ -150,7 +148,7 @@ const std::string& SavegameManager::getPathName() {
 void SavegameManager::saveTrainer()
 {
 	//Character* hero;
-	ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	std::ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
 
 	if(of.fail())
@@ -188,7 +186,7 @@ void SavegameManager::saveItems()
 
 void SavegameManager::loadTrainer()
 {
-	Character* hero;
+	
 	unsigned int startPosx, startPosy;
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -197,7 +195,7 @@ void SavegameManager::loadTrainer()
 	startPosy = reader.getInt("Trainer start_posy");
 	m_startMapName = reader.getString("Trainer start_map_name");
 
-	string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
 	buf += m_startMapName;
 	buf +=  FILE_SEPARATOR;
 	buf += m_startMapName;
@@ -207,7 +205,7 @@ void SavegameManager::loadTrainer()
 	m_startMapChipsetName = mapReader.getString("Chipset file");
 
 	if(m_startMapChipsetName == "STRINGNOTFOUND")
-		cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << endl;
+		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;
 
 	/*hero = wScreen.getEntityFactory().getTrainer();
 	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/

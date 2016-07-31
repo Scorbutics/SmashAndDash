@@ -7,23 +7,21 @@
 #include "Readinifile.h"
 
 
-bool isReadable(string fileName)
-{
-    ifstream f(fileName.c_str());
+bool isReadable(const std::string& fileName) {
+	std::ifstream f(fileName.c_str());
     return !f.fail();
 }
 
-int FindInFile(string stringFile, string s)
-{
-    string content, line;
-    stringstream streamContent;
+int FindInFile(const std::string& stringFile, const std::string& s) {
+	std::string content, line;
+	std::stringstream streamContent;
     size_t pos = 0;
 
 
-    ifstream f(stringFile.c_str(), ios::binary);
+	std::ifstream f(stringFile.c_str(), std::ios::binary);
     if(f.fail())
     {
-        cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
         return -1;
     }
 
@@ -33,7 +31,7 @@ int FindInFile(string stringFile, string s)
 
     pos = content.find(s);
 
-    if(pos == string::npos)
+	if (pos == std::string::npos)
         return -1; //pas trouvé
     else
         return (int)(pos + 1); //trouvé
@@ -41,34 +39,16 @@ int FindInFile(string stringFile, string s)
 
 }
 
-int FindInFile(ifstream fbinary, string s)
-{
-	string content, line;
-	stringstream streamContent;
-	size_t pos = 0;
 
-	streamContent << fbinary.rdbuf();
-	content = streamContent.str();
-
-	pos = content.find(s);
-
-	if(pos == string::npos)
-		return -1; //pas trouvé
-	else
-		return (int)(pos + 1); //trouvé
-
-}
-
-string GetINIValueFromFile(string stringFile, string s, string from)
-{
-    string line, data;
+std::string GetINIValueFromFile(const std::string& stringFile, const std::string& s, const std::string& from) {
+	std::string line, data;
     int startPos = FindInFile(stringFile, from);
-    ifstream f(stringFile.c_str(), ios::binary);
+	std::ifstream f(stringFile.c_str(), std::ios::binary);
 
     unsigned int pos;
 
     if(f.fail())
-        cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
 
     if(startPos != -1)
         f.seekg(startPos + from.length());
@@ -79,7 +59,7 @@ string GetINIValueFromFile(string stringFile, string s, string from)
     {
         getline(f, line);
         pos = (unsigned int)line.find(s);
-        if (pos != string::npos)
+		if (pos != std::string::npos)
         {
            data = line.substr(pos + s.length() + 1, line.length()-(pos+ s.length() + 1));
            if(data.size() != 0)
@@ -88,22 +68,21 @@ string GetINIValueFromFile(string stringFile, string s, string from)
             return "EMPTYDATA";
         }
 
-    } while(line.find("[") == string::npos && !f.eof());
+	} while (line.find("[") == std::string::npos && !f.eof());
 
     return "STRINGNOTFOUND";
 
 }
 
-string SetINIValueToFile(string stringFile, string s, string to, string value)
-{
-    string line, data;
+std::string SetINIValueToFile(const std::string& stringFile, const std::string& s, const std::string& to, const std::string& value) {
+	std::string line, data;
     unsigned int pos;
     int startPos = FindInFile(stringFile, to);
-    ifstream fr(stringFile.c_str(), ios::binary);
+	std::ifstream fr(stringFile.c_str(), std::ios::binary);
 
 
     if(fr.fail())
-        cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
 
     if(startPos != -1)
     {
@@ -117,15 +96,15 @@ string SetINIValueToFile(string stringFile, string s, string to, string value)
     {
         getline(fr, line);
         pos = (unsigned int)line.find(s);
-        if (pos != string::npos)
+		if (pos != std::string::npos)
             pos = ((int)fr.tellg()) -2; // se place avant le \n (qui fait 2 caractères sous windows)
 
-    } while(line.find("[") == string::npos && !fr.eof() && pos == string::npos);
+	} while (line.find("[") == std::string::npos && !fr.eof() && pos == std::string::npos);
     fr.close();
 
 
 
-    if(pos != string::npos)
+	if (pos != std::string::npos)
     {
         ReplaceStringInFile(stringFile, pos, value, GetINIValueFromFile(stringFile, s, to));
         return "STRINGFOUND";
@@ -137,21 +116,20 @@ string SetINIValueToFile(string stringFile, string s, string to, string value)
 
 
 
-void ReplaceStringInFile(string fileName, int pos, string value, string oldValue)
-{
+void ReplaceStringInFile(const std::string& fileName, int pos, const std::string& value, const std::string& oldValue) {
     ResetFile(fileName+"tmp");
 
     int fileLength = GetLengthOfFile(fileName);
 
-    ofstream fw((fileName+"tmp").c_str(), ios::binary | ios::app);
+	std::ofstream fw((fileName + "tmp").c_str(), std::ios::binary | std::ios::app);
     fw.seekp(pos);
-    ifstream fr(fileName.c_str(), ios::binary);
-    string line, buf = "";
-    stringstream streamContent;
+	std::ifstream fr(fileName.c_str(), std::ios::binary);
+	std::string line, buf = "";
+	std::stringstream streamContent;
     streamContent << fr.rdbuf();
 
     if(fr.fail())
-        cerr << "Erreur lors de l'ouverture en lecture du fichier " + fileName;
+		std::cerr << "Erreur lors de l'ouverture en lecture du fichier " + fileName;
 
     buf = streamContent.str();
     buf = buf.substr(0, pos - oldValue.size());
@@ -172,55 +150,41 @@ void ReplaceStringInFile(string fileName, int pos, string value, string oldValue
 }
 
 
-int HigherInt(int a, int b)
+void ResetFile(const std::string& fileName)
 {
-    if(a > b)
-        return a;
-    else
-        return b;
-}
-
-int SmallerInt(int a, int b)
-{
-    if(a < b)
-        return a;
-    else
-        return b;
-}
-
-void ResetFile(string fileName)
-{
-    ofstream fw((fileName).c_str(), ios::trunc);//Reset du fichier
+	std::ofstream fw((fileName).c_str(), std::ios::trunc);//Reset du fichier
     fw.close();
 }
 
 
-int GetLengthOfFile(string fileName)
+int GetLengthOfFile(const std::string& fileName)
 {
     int x;
-    ifstream fr(fileName.c_str(), ios::binary);
+	std::ifstream fr(fileName.c_str(), std::ios::binary);
         // get length of file:
-    fr.seekg (0, ios::end);
+	fr.seekg(0, std::ios::end);
     x = (int)fr.tellg();
     return x;
 }
 
 
 // Supprime les espaces à droite de la chaîne.
-string& rtrim(string& s)
+std::string rtrim(const std::string& s)
 {
 	// Parcours à l'envers des caractères de la chaîne, jusqu'à trouver un
 	// caractère qui n'est pas un caractère blanc.
-	string::reverse_iterator it = s.rbegin();
+	std::string::const_reverse_iterator it = s.rbegin();
 	while (it != s.rend())
 	{
 		if (!isspace(*it)) break;
 		++it;
 	}
 	// Différence entre l'itérateur de fin et celui tout juste trouvé.
-	string::difference_type diff = s.rend() - it;
+	std::string::difference_type diff = s.rend() - it;
 	// Effacement des caractères allant du (début + diff) à la fin.
-	s.erase(s.begin() + diff, s.end());
-	return s;
+	
+	std::string result = s; 
+	result.erase(s.begin() + diff, s.end());
+	return result;
 }
 

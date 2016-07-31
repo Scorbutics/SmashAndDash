@@ -1,5 +1,3 @@
-#include <math.h>
-
 #include "DialogMenu.h"
 #include "../../Utils/ChargementImages.h"
 #include "Button_Quit.h"
@@ -18,8 +16,6 @@
 #define F_OUT 2
 #define SCROLL_SPEED 3
 
-//Menu du style "statique"
-//DWindow est le menu du style "dynamique"
 
 ///////////////////////////////////////////////
 //Le menu est géré de même façon qu'un layer. on a une image qui permet la construction des fenêtres du menu (on peut considérer ça comme un chipset à menu),
@@ -28,51 +24,47 @@
 
 
 DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-m_timeout(timeout) {
-	m_moving = false;
-    m_show = false;
-	m_isScrolling = false;
-    m_alpha = false;
-    m_sensScroll = F_OUT;
-    m_scroll = scroll;
-	m_fontSize = fontSize;
+m_timeout(timeout),
+m_moving(false),
+m_show(false),
+m_isScrolling(false), 
+m_alpha(false),
+m_sensScroll(F_OUT), 
+m_scroll(scroll), 
+m_fontSize(fontSize),
+m_t0(0), 
+m_ligne(0),
+m_menuTiles(menuResource) {
 	m_rect = rect;
 	m_rect.w = (m_rect.w / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
 	m_rect.h = (m_rect.h / TAILLEBLOCFENETRE) * TAILLEBLOCFENETRE;
-	
-	m_t0 = 0;
-    m_ligne = 0;
 
 	m_scrollingRect = m_rect;
 	m_scrollingRect.y += m_rect.h;
 
-	m_menuTiles.load(menuResource, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-
 	if (!imageResource.empty()) {
-		m_image.load(imageResource, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+		m_image.load(imageResource);
 	}
 
 	m_rectImage = ska::RectangleUtils::posToCenterPicture(m_rectImage, m_rect);
 	m_rectImage.w = m_image.getWidth();
 	m_rectImage.h = m_image.getHeight();
 
-    m_color.r = 0;
-    m_color.g = 0;
-	m_color.b = 0;
-	m_color.a = 255;
-
 	modifyText(text);
 }
 
-DialogMenu::DialogMenu() : DialogMenu("", "", { 0 }) {
+DialogMenu::DialogMenu() : 
+DialogMenu("", "", { 0 }) {
 
 }
 
-DialogMenu::DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) : DialogMenu(text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) : 
+DialogMenu(text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
 
 }
 
-DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) : DialogMenu(text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) : 
+DialogMenu(text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
 
 }
 
@@ -169,7 +161,7 @@ void DialogMenu::display() const {
 
 void DialogMenu::operator=(const DialogMenu& dm) {
 	/* Do not copy Window Areas */
-	m_actionClic = dm.m_actionClic;
+	m_clickHandler = dm.m_clickHandler;
 	m_alpha = dm.m_alpha;
 	m_color = dm.m_color;
 	m_fontSize = dm.m_fontSize;
@@ -192,9 +184,19 @@ void DialogMenu::operator=(const DialogMenu& dm) {
 	m_timeout = dm.m_timeout;
 }
 
+void DialogMenu::click(const ska::Point<int>& clickPos) {
+	if (m_clickHandler != nullptr) {
+		m_clickHandler();
+	}
+}
+
+const std::string& DialogMenu::getName() const {
+	return m_name;
+}
+
 void DialogMenu::refresh() {
 	if (isVisible(true)) {
-		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= m_timeout) {
+		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= (unsigned int)m_timeout) {
 			hide(true);
 		}
 	}
@@ -248,20 +250,16 @@ void DialogMenu::refresh() {
 	}
 
 	for(unsigned int i = 0; i < m_areaList.size(); i++) {
+		/* TODO : ... AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH */
 		DynamicWindowArea* dynArea = dynamic_cast<DynamicWindowArea*>(&(*m_areaList[i]));
 		if(dynArea != NULL)  {
-			// &(*m_areaList[i]) was safely casted to DynamicWindowArea*
 			dynArea->refresh();
 		}
 	}
 }
 
-void DialogMenu::setActionClic(string action) {
-    m_actionClic = action;
-}
-
-const string DialogMenu::getActionClic() const {
-    return m_actionClic;
+void DialogMenu::setClickHandler(std::function<void(void)> const& action) {
+    m_clickHandler = action;
 }
 
 void DialogMenu::deleteAll() {
@@ -272,15 +270,16 @@ Inventory_Area* DialogMenu::getInventoryArea(unsigned int index) {
     unsigned int i;
     index++;
 	for (i = 0; i < m_areaList.size() && index != 0; i++) {
+		/* TODO : ... AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH */
 		if ((m_areaList[i])->isA(BUTTON_INVENTORY_AREA)) {
 			index--;
 		}
 	}
     
-	return (index == 0) ? &(**(reinterpret_cast<unique_ptr<Inventory_Area>*> (&(m_areaList[i - 1])))) : NULL;    
+	return (index == 0) ? &(**(reinterpret_cast<std::unique_ptr<Inventory_Area>*> (&(m_areaList[i - 1])))) : NULL;    
 }
 
-void DialogMenu::modifyColor(SDL_Color col) {
+void DialogMenu::modifyColor(ska::Color col) {
     m_color = col;
 	for (unsigned int i = 0; i < m_size; i++) {
 		m_textImage[i].loadFromText(m_fontSize, m_text[i], m_color);
@@ -288,9 +287,13 @@ void DialogMenu::modifyColor(SDL_Color col) {
     
 }
 
+void DialogMenu::name(const std::string& name) {
+	m_name = name;
+}
+
 void DialogMenu::modifyText(const std::string& texte) {
     m_textImage.clear();
-    m_text.clear();
+	m_text.clear();
 	m_scrollTextLengthPerLine.clear();
 	
 
@@ -299,7 +302,7 @@ void DialogMenu::modifyText(const std::string& texte) {
         for(unsigned int i = 0; i < texte.size(); i++) {
 			
             if(i == 0 || texte[i] == '¤') {
-                m_text.push_back(string());
+                m_text.push_back("");
                 m_textImage.push_back(ska::Texture());
 				m_scrollTextLengthPerLine.push_back(0);
                 j++;
@@ -366,48 +369,48 @@ void DialogMenu::setAlpha(bool x) {
     m_alpha = x;
 }
 
-void DialogMenu::addButtonClose(string imgName, string secondImgName, ska::Rectangle relativePos) {
+void DialogMenu::addButtonClose(const std::string& imgName, const std::string& secondImgName, ska::Rectangle relativePos) {
 	for (unsigned int i = 0; i < m_areaList.size(); i++) {
 		if ((m_areaList[i])->isA(BUTTON_CLOSE)) {
 			return;
 		}
 	}
 
-    m_areaList.push_back(unique_ptr<Button_Quit>(new Button_Quit(this, imgName, secondImgName, relativePos)));
+    m_areaList.push_back(std::unique_ptr<Button_Quit>(new Button_Quit(this, imgName, secondImgName, relativePos)));
 }
 
-void DialogMenu::addTextArea(string text, int fontSize, ska::Rectangle relativePos) {
-    m_areaList.push_back(unique_ptr<Text_Area>(new Text_Area(this, text, fontSize, relativePos)));
+void DialogMenu::addTextArea(const std::string& text, int fontSize, ska::Rectangle relativePos) {
+	m_areaList.push_back(std::unique_ptr<Text_Area>(new Text_Area(this, text, fontSize, relativePos)));
 }
 
-void DialogMenu::addImageArea(string name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc) {
-    m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, name, alpha)));
+void DialogMenu::addImageArea(const std::string& name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc) {
+	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, name, alpha)));
 }
 
 void DialogMenu::addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc) {
-	m_areaList.push_back(unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, tex, alpha)));
+	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, tex, alpha)));
 }
 
-void DialogMenu::addScrollText(string buttonAspect, int height, int width, vector<string> text, int fontSize, ska::Rectangle relativePos) {
-    m_areaList.push_back(unique_ptr<Scroll_Text>(new Scroll_Text(this, buttonAspect, height, width, text, fontSize, relativePos)));
+void DialogMenu::addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) {
+	m_areaList.push_back(std::unique_ptr<Scroll_Text>(new Scroll_Text(this, buttonAspect, height, width, text, fontSize, relativePos)));
 }
 
-void DialogMenu::addButton(ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, int* variable, vector<int> value, vector<string> displayedText, int fontSize, string key) {
-    m_areaList.push_back(unique_ptr<Button>(new Button(this, relativePos, styleName, styleNamePressed, variable, value, displayedText, fontSize, key, false)));
+void DialogMenu::addButton(ska::Rectangle relativePos, const std::string& styleName, const std::string& styleNamePressed, int* variable, const std::vector<int>& value, const std::vector<std::string>& displayedText, int fontSize, const std::string& key) {
+	m_areaList.push_back(std::unique_ptr<Button>(new Button(this, relativePos, styleName, styleNamePressed, variable, value, displayedText, fontSize, key, false)));
 }
 
-void DialogMenu::addButtonBar(ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, vector<string> displayedText, int fontSize, std::string key) {
-    m_areaList.push_back(unique_ptr<Button_Bar>(new Button_Bar(this, relativePos, styleName, variable, values, displayedText, fontSize, key)));
+void DialogMenu::addButtonBar(ska::Rectangle relativePos, const std::string& styleName, int* variable, const std::vector<int>& values, const std::vector<std::string>& displayedText, int fontSize, const std::string& key) {
+	m_areaList.push_back(std::unique_ptr<Button_Bar>(new Button_Bar(this, relativePos, styleName, variable, values, displayedText, fontSize, key)));
 }
 
-Window_Area* DialogMenu::getButton(string key) {
+Window_Area* DialogMenu::getButton(const std::string& key) {
     const size_t areaListSize = m_areaList.size();
 	for (size_t i = 0; i < areaListSize; i++) {
 		if (m_areaList[i]->getKey() == key) {
 			return &(*(m_areaList[i]));
 		}
 	}
-    cerr << "Erreur (classe DialogMenu) : Dépassement mémoire dans la liste des boutons associés à une fenêtre" << endl;
+	std::cerr << "Erreur (classe DialogMenu) : Dépassement mémoire dans la liste des boutons associés à une fenêtre" << std::endl;
     return &(*(m_areaList[0]));
 }
 
@@ -415,12 +418,13 @@ void DialogMenu::addInventory(Inventory& inv, ska::Rectangle relativePos) {
 	ska::Rectangle buf = relativePos;
 	buf.h = m_rect.h - relativePos.x;
 	buf.w = m_rect.w - relativePos.y;
-    m_areaList.push_back(unique_ptr<Inventory_Area>(new Inventory_Area(this, &inv, buf)));
+	m_areaList.push_back(std::unique_ptr<Inventory_Area>(new Inventory_Area(this, &inv, buf)));
 }
 
 Window_Area* DialogMenu::getCloseButton() {
     unsigned int i;
 	for (i = 0; i < m_areaList.size(); i++) {
+		//TODO : ...
 		if ((m_areaList[i])->isA(BUTTON_CLOSE)) {
 			break;
 		}

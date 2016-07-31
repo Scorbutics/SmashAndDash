@@ -1,8 +1,7 @@
-#ifndef DEF_GUI
-#define DEF_GUI
-
+#pragma once
 #include <vector>
 #include <memory>
+#include "MouseCursor.h"
 #include "../../ska/Utils/Observer.h"
 #include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
@@ -18,13 +17,14 @@ class DialogMenu;
 class IDialogMenu;
 
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
-typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 typedef std::unique_ptr<IDialogMenu> IDialogMenuPtr;
 typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
 typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
 typedef std::unique_ptr<WindowBag> WindowBagPtr;
 typedef std::unique_ptr<ToolBar> ToolBarPtr;
 typedef std::unique_ptr<WindowShop> WindowShopPtr;
+
+using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 
 namespace ska {
 	class Window;
@@ -33,7 +33,7 @@ namespace ska {
 class GUI :  public ska::DrawableFixedPriority {
 
 public:
-	GUI(const ska::Window& w);
+	GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
 
 	//virtual void update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) override;
 
@@ -41,7 +41,7 @@ public:
 	int addDialog(IDialogMenuPtr& d);
 	bool existDialog(const unsigned int index) const;
     void refresh();
-	int isPositionOnButton(const ska::Point<float>& pos);
+	int isPositionOnButton(const ska::Point<float>& pos) const;
     bool isMouseOnAWindow();
     bool isVisible() const override;
 	void initButtons(const ska::Window& w);
@@ -57,30 +57,17 @@ public:
     void resetMovableWindowPokemonBag();
     void resetMovableWindowSettings();
 
-	DialogMenuPtr& getMovableWindow();
-	DialogMenuPtr& getInfoPNJWindow();
-	DialogMenuPtr& getInfoPokemonWindow();
-	DialogMenuPtr& getAttackPokemonWindow();
-	DialogMenuPtr& getAttackOpponentWindow();
-	DialogMenuPtr& getFacesetPkmn();
-	DialogMenuPtr& getClickMenu();
-	DialogMenuPtr& getFacesetOpponent();
-    WindowSettingsPtr& getWindowSettings();
-    WindowTeamPtr& getWindowTeam();
-    WindowBagPtr& getWindowBag();
-	ToolBarPtr& getToolbar();
-    WindowShopPtr& getWindowShop();
     int getRefreshPNJWindowCount();
     DialogMenuPtr& getButton(unsigned int id);
     size_t getButtonListSize();
 
     void setRefreshPNJWindowCount(int x);
-    //void setPNJ(CharacterPtr *pnj);
     void setClickMenu();
 	void dialogDisplay() const;
 	void display() const override;
 
 	void update();
+
 private:
     std::vector<DialogMenuPtr> m_buttonList;
 	std::vector<IDialogMenuPtr> m_extraWindows;
@@ -89,12 +76,14 @@ private:
 	ska::Point<int> m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;
     bool m_hide, m_isMovingWindow;
+	const ska::Window& m_window;
     std::unique_ptr<WindowSettings> m_wSettings;
     std::unique_ptr<WindowTeam> m_wTeam;
     std::unique_ptr<WindowBag> m_wBag;
     std::unique_ptr<ToolBar> m_toolBar;
     std::unique_ptr<WindowShop> m_wShop;
 
-};
+	const ska::InputContextManager& m_playerICM;
+	MouseCursor m_mouseCursor;
 
-#endif
+};

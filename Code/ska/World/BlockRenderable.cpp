@@ -1,7 +1,5 @@
 #include "BlockRenderable.h"
 
-using namespace std;
-
 ska::BlockRenderable::BlockRenderable(const unsigned int blockSize, ska::Point<int> posChipset, bool auto_animation) : 
 	m_anim(375, 4, true, 0, 0, blockSize, blockSize) {
 	m_auto_animation = auto_animation;

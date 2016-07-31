@@ -60,9 +60,9 @@ void WindowBag::refresh()
     {
         Inventory_Area* invArea = this->getInventoryArea(0);
 		ska::Rectangle invAreaAbsolutePos = invArea->getAbsolutePos();
-        gui.getClickMenu()->hide(true);
+        //gui.getClickMenu()->hide(true);
         m_boolUseObject = 0;
-		m_curObjectPos = gui.getClickMenu()->getRect();
+		/*m_curObjectPos = gui.getClickMenu()->getRect();
         m_curObjectPos.x -= invAreaAbsolutePos.x;
         m_curObjectPos.y -= invAreaAbsolutePos.y;
         if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
@@ -77,7 +77,7 @@ void WindowBag::refresh()
             }
             else
                 invArea->useObjectAtPos(m_curObjectPos);
-        }
+        }*/
     }
 
 

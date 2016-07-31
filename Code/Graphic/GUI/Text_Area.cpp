@@ -6,9 +6,8 @@
 
 #include "Text_Area.h"
 #include "../../Utils/IDs.h"
-using namespace std;
 
-Text_Area::Text_Area(DialogMenu *parent, string text, int fontSize, ska::Rectangle relativePos) : Window_Area(parent)
+Text_Area::Text_Area(DialogMenu *parent, const std::string& text, int fontSize, ska::Rectangle relativePos) : Window_Area(parent)
 {
     m_type = BUTTON_TEXT_AREA;
     m_text = text;
@@ -28,13 +27,13 @@ Text_Area::Text_Area(DialogMenu *parent, string text, int fontSize, ska::Rectang
     m_relativePos.h = m_stext.getHeight();
 }
 
-void Text_Area::display()
-{
+void Text_Area::display() {
 
-    if(!m_parent->isVisible())
-        return;
-    else
-        m_active = true;
+	if (!m_parent->isVisible()) {
+		return;
+	}
+    
+    m_active = true;
 
 	ska::Rectangle buf = m_relativePos;
 	buf.x += (m_parent->getRect()).x;

@@ -11,8 +11,6 @@
 #include "WindowBag.h"
 #include "ToolBar.h"
 
-using namespace std;
-
 WindowShop::WindowShop(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : m_dialog(fichierMenu, posFond, 22), m_userBar(fichierMenu, posFond, 22), m_shopBar(fichierMenu, posFond, 22)
 {
 	m_shopInv.load(squareSpriteName, squareSpriteNameHighlight);
@@ -61,16 +59,16 @@ void WindowShop::reset()
     m_userBar.resize(m_pos.w - 4*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE);
 
     gui.hide(true);
-	gui.getWindowBag()->hide(true);
+	/*gui.getWindowBag()->hide(true);
 	gui.getWindowTeam()->hide(true);
 	gui.getWindowSettings()->hide(true);
-	gui.getToolbar()->hide(true);
+	gui.getToolbar()->hide(true);*/
     this->hide(false);
 
-    vector<int> vBool;
+	std::vector<int> vBool;
     vBool.push_back(0);
     vBool.push_back(1);
-    vector<string> vSell, vBuy, vQuit;
+	std::vector<std::string> vSell, vBuy, vQuit;
     vSell.push_back("Vendre");
     vSell.push_back("Vendu !");
     vBuy.push_back("Acheter");
@@ -113,7 +111,7 @@ void WindowShop::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos]; 
 	const ska::InputActionContainer& in = wScreen.getActions();
-	MouseCursor& mouseCur = wScreen.getMouseCursor();
+	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 
     m_pos.x = m_dialog.getRect().x;
     m_pos.y = m_dialog.getRect().y;
@@ -127,11 +125,11 @@ void WindowShop::refresh()
         //m_userInv.clear(); //avant tout, on efface l'inventaire qu'utilisait l'utilisateur pour acheter des objets
         this->hide(true);
         wScreen.getGUI().hide(false);
-        wScreen.getGUI().getToolbar()->hide(false);
+        //wScreen.getGUI().getToolbar()->hide(false);
     }
 
     //Lors d'un dépot d'objet dans notre inventaire, on achète
-    if(mouseCur.getObject() != NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_userBar.getRect()) && m_lastClickInv == "shop")
+    /*if(mouseCur.getObject() != NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mousePos, m_userBar.getRect()) && m_lastClickInv == "shop")
     {
         //wScreen.getInventory().add(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
         m_shopInv.remove(mouseCur.getObject()->getID(), mouseCur.getObjectAmount());
@@ -156,7 +154,7 @@ void WindowShop::refresh()
     {
         m_lastClickInv = "shop";
     }
-
+	*/
     m_userBar.refresh();
     m_shopBar.refresh();
     m_dialog.refresh();

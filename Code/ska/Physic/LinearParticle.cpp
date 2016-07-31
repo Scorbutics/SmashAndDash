@@ -3,8 +3,6 @@
 #include "LinearParticle.h"
 #include "../Utils\SkaConstants.h"
 
-using namespace std;
-
 ska::LinearParticle::LinearParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)
 {

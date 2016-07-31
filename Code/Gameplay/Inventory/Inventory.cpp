@@ -7,8 +7,6 @@
 
 unsigned int Inventory::m_fontSize = 12;
 
-using namespace std;
-
 Inventory::Inventory()
 {
     m_color.r = 128;
@@ -16,15 +14,15 @@ Inventory::Inventory()
     m_color.b = 0;
 }
 
-void Inventory::load(string squareSpriteName, string squareSpriteNameHighlight)
+void Inventory::load(std::string squareSpriteName, std::string squareSpriteNameHighlight)
 {
 	m_squareSprite.load(squareSpriteName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 	m_squareSpriteHighlight.load(squareSpriteNameHighlight, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 }
 
-int Inventory::search(string name)
+int Inventory::search(std::string name)
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     int i = 0;
     for(iter = m_objects.begin(); iter != m_objects.end(); ++iter, i++)
 	if(name == (*iter)->getName())
@@ -35,9 +33,9 @@ int Inventory::search(string name)
 
 void Inventory::swap(unsigned int index1, unsigned int index2)
 {
-    list<unique_ptr<Object>>::iterator iter1 = m_objects.begin(), iter2 = m_objects.begin();
-    list<unsigned int>::iterator iterAmount1 = m_amount.begin(), iterAmount2 = m_amount.begin();
-    list<ska::Texture>::iterator iterAmountS1 = m_amountSurface.begin(), iterAmountS2 = m_amountSurface.begin();
+	std::list<std::unique_ptr<Object>>::iterator iter1 = m_objects.begin(), iter2 = m_objects.begin();
+	std::list<unsigned int>::iterator iterAmount1 = m_amount.begin(), iterAmount2 = m_amount.begin();
+	std::list<ska::Texture>::iterator iterAmountS1 = m_amountSurface.begin(), iterAmountS2 = m_amountSurface.begin();
     for(unsigned int i = 0; i < index1 && iter1 != m_objects.end(); iter1++, i++);
     for(unsigned int i = 0; i < index2 && iter2 != m_objects.end(); iter2++, i++);
     for(unsigned int i = 0; i < index1 && iterAmount1 != m_amount.end(); iterAmount1++, i++);
@@ -56,7 +54,7 @@ void Inventory::swap(unsigned int index1, unsigned int index2)
 
 int Inventory::search(int id)
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     int i = 0;
 	for (auto& iter : m_objects) {
 		if (iter != NULL && id == iter->getID()) {
@@ -69,7 +67,7 @@ int Inventory::search(int id)
 
 unsigned int Inventory::getSize()
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     unsigned int i = 0;
     for(iter = m_objects.begin(); iter != m_objects.end(); ++iter, i++);
     return i;
@@ -79,7 +77,7 @@ void Inventory::clear()
 {
     m_objects.clear();
     m_amount.clear();
-    list<ska::Texture>::iterator iterAmountS;
+	std::list<ska::Texture>::iterator iterAmountS;
     for(iterAmountS = m_amountSurface.begin(); iterAmountS != m_amountSurface.end(); ++iterAmountS)
         (*iterAmountS).free();
     m_amountSurface.clear();
@@ -88,7 +86,7 @@ void Inventory::clear()
 //Obtenir l'objet numéro "index" dans l'inventaire
 Object *Inventory::getObjectFromIndex(int index)
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     int i = 0;
     for(iter = m_objects.begin(); iter != m_objects.end() && i != index; i++ ,++iter);
 	
@@ -98,9 +96,9 @@ Object *Inventory::getObjectFromIndex(int index)
 }
 
 
-list<unique_ptr<Object>>::iterator Inventory::getIteratorFromIndex(int index)
+std::list<std::unique_ptr<Object>>::iterator Inventory::getIteratorFromIndex(int index)
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     int i = 0;
     for(iter = m_objects.begin(); iter != m_objects.end() && i != index; i++ ,++iter);
     return iter;
@@ -108,9 +106,9 @@ list<unique_ptr<Object>>::iterator Inventory::getIteratorFromIndex(int index)
 
 int Inventory::getIndexFromObject(std::list<std::unique_ptr<Object>>::iterator iterIndex)
 {
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
     unsigned int i = 0;
-    for(iter = m_objects.begin(); iter != m_objects.end() && iter != iterIndex; i++ ,++iter);
+	for (iter = m_objects.begin(); iter != m_objects.end() && iter != iterIndex; i++, ++iter);
     if(i != m_objects.size())
         return i;
     else
@@ -118,9 +116,9 @@ int Inventory::getIndexFromObject(std::list<std::unique_ptr<Object>>::iterator i
 }
 
 //Obtenir la quantité numéro "index" dans l'inventaire
-list<unsigned int>::iterator Inventory::getIteratorAmountFromIndex(int index)
+std::list<unsigned int>::iterator Inventory::getIteratorAmountFromIndex(int index)
 {
-    list<unsigned int>::iterator iter;
+	std::list<unsigned int>::iterator iter;
     int i = 0;
     for(iter = m_amount.begin(); iter != m_amount.end() && i != index; i++ ,++iter);
     return iter;
@@ -128,7 +126,7 @@ list<unsigned int>::iterator Inventory::getIteratorAmountFromIndex(int index)
 
 unsigned int Inventory::getAmountFromIndex(int index)
 {
-    list<unsigned int>::iterator iter;
+	std::list<unsigned int>::iterator iter;
     int i = 0;
     for(iter = m_amount.begin(); iter != m_amount.end() && i != index; i++ ,++iter);
     return *iter;
@@ -136,15 +134,15 @@ unsigned int Inventory::getAmountFromIndex(int index)
 
 ska::Texture* Inventory::getAmountSurfaceFromIndex(int index)
 {
-    list<ska::Texture>::iterator iter;
+	std::list<ska::Texture>::iterator iter;
     int i = 0;
     for(iter = m_amountSurface.begin(); iter != m_amountSurface.end() && i != index; i++ ,++iter);
     return (ska::Texture*) &(*iter);
 }
 
-list<ska::Texture>::iterator Inventory::getIteratorAmountSurfaceFromIndex(int index)
+std::list<ska::Texture>::iterator Inventory::getIteratorAmountSurfaceFromIndex(int index)
 {
-    list<ska::Texture>::iterator iter;
+	std::list<ska::Texture>::iterator iter;
     int i = 0;
     for(iter = m_amountSurface.begin(); iter != m_amountSurface.end() && i != index; i++ ,++iter);
     return iter;
@@ -157,13 +155,13 @@ void Inventory::add(int id, unsigned int amount)
     if(index == -1)
     {
         int invSize = this->getSize();
-        list<unique_ptr<Object>>::iterator iter;
+		std::list<std::unique_ptr<Object>>::iterator iter;
         for(iter = m_objects.begin(), index = 0; index < invSize && *iter != NULL; ++iter, index++);
         if(index < invSize)
-            *iter = unique_ptr<Object>(new Object(id));
+			*iter = std::unique_ptr<Object>(new Object(id));
         else
         {
-            m_objects.push_back(unique_ptr<Object>(new Object(id)));
+			m_objects.push_back(std::unique_ptr<Object>(new Object(id)));
             m_amount.push_back(amount);
 			ska::Texture buf;
 			buf.loadFromText(m_fontSize, ska::StringUtils::intToStr(amount), m_color);
@@ -227,7 +225,7 @@ void Inventory::display(ska::Rectangle rect)
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-    list<unique_ptr<Object>>::iterator iter;
+	std::list<std::unique_ptr<Object>>::iterator iter;
 	ska::Rectangle buf, bufcenter;
     int i;
 

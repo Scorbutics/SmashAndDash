@@ -2,7 +2,6 @@
 #include "SpritePath.h"
 
 
-using namespace std;
 
 ska::SpriteAnimation::SpriteAnimation(int type, int id, ska::Point<int> pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
 m_sprite(ska::SpritePath::getInstance().getPath(type, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha)

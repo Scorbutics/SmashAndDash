@@ -1,7 +1,5 @@
 #include "Force.h"
 
-using namespace std;
-
 ska::Force::Force(ska::Rectangle pos, float power, float angle)
 {
 	m_pos = pos;

@@ -8,14 +8,12 @@
 #include <cctype>
 #include <locale>
 
-using namespace std;
-
 ska::StringUtils::StringUtils()
 {
 }
 
-string ska::StringUtils::intToStr(const int x) {
-	ostringstream oss;
+std::string ska::StringUtils::intToStr(const int x) {
+	std::ostringstream oss;
 	oss << x;
 	return oss.str();
 }
@@ -54,13 +52,13 @@ float ska::StringUtils::strToFloat(const std::string& str) {
 	return atof(str.c_str());
 }
 
-string ska::StringUtils::uintToStr(const unsigned int x) {
-	ostringstream oss;
+std::string ska::StringUtils::uintToStr(const unsigned int x) {
+	std::ostringstream oss;
 	oss << x;
 	return oss.str();
 }
 
-vector<string>& ska::StringUtils::split(const std::string &s, const char delim, vector<std::string> &elems) {
+std::vector<std::string>& ska::StringUtils::split(const std::string &s, const char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
 	std::string item;
 	while (std::getline(ss, item, delim)) {
@@ -70,7 +68,7 @@ vector<string>& ska::StringUtils::split(const std::string &s, const char delim, 
 }
 
 
-vector<string> ska::StringUtils::split(const std::string &s, const char delim) {
+std::vector<std::string> ska::StringUtils::split(const std::string &s, const char delim) {
 	std::vector<std::string> elems;
 	split(s, delim, elems);
 	return elems;
@@ -102,15 +100,15 @@ void ska::StringUtils::replaceAll(std::string& str, const std::string& from, con
 }
 
 void ska::StringUtils::replaceAll(std::string& str, const char from, const char to) {
-	replaceAll(str, string(1, from), string(1, to));
+	replaceAll(str, std::string(1, from), std::string(1, to));
 }
 
-string ska::StringUtils::extractTo(const size_t start, const std::string& s, const char to)
+std::string ska::StringUtils::extractTo(const size_t start, const std::string& s, const char to)
 {
 	const std::string subString = s.substr(start);
 	size_t pos = subString.find_first_of(to);
-	string result = "";
-	if (pos != string::npos) {
+	std::string result = "";
+	if (pos != std::string::npos) {
 		result = subString.substr(0, pos - start);
 	}
 

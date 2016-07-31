@@ -1,17 +1,15 @@
 #include <iostream>
 #include "CommandLog.h"
 
-using namespace std;
-
 ska::CommandLog::CommandLog(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
 
 std::string ska::CommandLog::execute(ScriptComponent& script, std::vector<std::string>& args) {
 
-	string& message = args[0];
+	std::string& message = args[0];
 
-	clog << message << endl;
+	std::clog << message << std::endl;
 
 	return "";
 }

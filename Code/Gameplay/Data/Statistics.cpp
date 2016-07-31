@@ -2,7 +2,6 @@
 #include "../../Utils\IDs.h"
 #include "../../ska/Inputs\Readers\IniReader.h"
 
-using namespace std;
 
 Statistics::Statistics(int hp, int attack, int defense, int spe_attack, int spe_defense, int speed)
 {
@@ -27,7 +26,7 @@ const RawStatistics<int>& Statistics::getRawStats() const {
 	return m_stats;
 }
 
-Statistics::Statistics(ska::IniReader* data, string block)
+Statistics::Statistics(ska::IniReader* data, std::string block)
 {
 
 	m_stats.hp = data->getInt(block + " hp");

@@ -6,8 +6,6 @@
 #include "../ScriptSleepComponent.h"
 #include "../../ECS/EntityManager.h"
 
-using namespace std;
-
 ska::CommandScript::CommandScript(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -23,9 +21,9 @@ int ska::CommandScript::argumentsNumber() {
 
 std::string ska::CommandScript::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
-	string scriptName;
-	vector<string> extraArgs;
-	string periodStr;
+	std::string scriptName;
+	std::vector<std::string> extraArgs;
+	std::string periodStr;
 	
 	if (args.size() < 2) {
 		throw ska::ScriptSyntaxError("Syntax error with command \"script\" : this command needs at least 2 parameters.");

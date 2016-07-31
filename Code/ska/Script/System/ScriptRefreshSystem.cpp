@@ -10,8 +10,6 @@
 #include "../ScriptTriggerType.h"
 #include "../../Graphic/DebugGraphicComponent.h"
 
-using namespace std;
-
 
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
 System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),

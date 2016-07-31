@@ -270,9 +270,6 @@
     <ClInclude Include="Code\Gameplay\Data\PokemonDescriptor.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Data</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Gameplay\Fight\Skill.h">
-      <Filter>Fichiers d%27en-tête\Gameplay\Fight</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Pokeball.h">
       <Filter>Fichiers d%27en-tête\Gameplay</Filter>
     </ClInclude>
@@ -927,6 +924,9 @@
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1087,9 +1087,6 @@
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Data\PokemonDescriptor.cpp">
       <Filter>Fichiers sources\Gameplay\Data</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Gameplay\Fight\Skill.cpp">
-      <Filter>Fichiers sources\Gameplay\Fight</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Pokeball.cpp">
       <Filter>Fichiers sources\Gameplay</Filter>

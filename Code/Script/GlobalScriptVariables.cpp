@@ -6,8 +6,6 @@
 #include "../ska/Utils/StringUtils.h"
 #include "../Utils/IDs.h"
 
-using namespace std;
-
 GlobalScriptVariables::GlobalScriptVariables()
 {
 	fillMap();

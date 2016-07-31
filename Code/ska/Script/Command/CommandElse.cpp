@@ -7,8 +7,6 @@
 #include "../ScriptComponent.h"
 #include "../System/ScriptAutoSystem.h"
 
-using namespace std;
-
 
 ska::CommandElse::CommandElse(EntityManager& entityManager) : ControlStatement(entityManager)
 {
@@ -23,13 +21,11 @@ const std::string& ska::CommandElse::getCmdName() {
 	return ControlStatement::getCommandElse();
 }
 
-std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args)
-{
+std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
 	int ifEnd = 1;
-	string lineBuf;
+	std::string lineBuf;
 
-	while (ifEnd > 0 && !script.parent->eof(script))
-	{
+	while (ifEnd > 0 && !script.parent->eof(script)) {
 		lineBuf = script.parent->nextLine(script);
 		ska::StringUtils::ltrim(lineBuf);
 		if (lineBuf.find(ControlStatement::getCommandIf()) == 0)
@@ -37,6 +33,7 @@ std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringst
 		else if (lineBuf == ControlStatement::getCommandEndIf())
 			ifEnd--;
 	}
+
 	if (script.parent->eof(script)) {
 		throw ska::ScriptSyntaxError("Un endif est manquant");
 	}

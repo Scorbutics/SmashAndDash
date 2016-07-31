@@ -17,8 +17,6 @@
 #include "../ScriptTriggerType.h"
 #include "../ScriptSleepComponent.h"
 
-using namespace std;
-
 //Par défaut, un script "permanent" se rafraîchit toutes les 1 ms
 #define SCRIPT_DEFAULT_PERIOD 1
 #define MAX_CONSECUTIVE_COMMANDS_PLAYED 5
@@ -69,17 +67,17 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 
 	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
 	
-	string extendedName;
+	std::string extendedName;
 	std::string validPath;
-	string keyArgs;
+	std::string keyArgs;
 
-	for (string& arg : scriptData.args) {
+	for (std::string& arg : scriptData.args) {
 		keyArgs += arg + " ";
 	}
 
 	ska::StringUtils::rtrim(keyArgs);
 
-	const string& keyScript = scriptData.name + "/\\" + keyArgs;
+	const std::string& keyScript = scriptData.name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + scriptData.context;
 
 	const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
@@ -87,7 +85,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 
 	ScriptComponent sc;
 	if (m_cache.find(validPath) == m_cache.end()) {
-		ifstream fscript(scriptData.name.c_str());
+		std::ifstream fscript(scriptData.name.c_str());
 		if (fscript.fail()) {
 			fscript.open(validPath.c_str());
 			if (fscript.fail()) {
@@ -108,7 +106,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 		sc.key = keyScript;
 		sc.origin = origin;
 
-		ifstream scriptFile(sc.fullPath);
+		std::ifstream scriptFile(sc.fullPath);
 		if (scriptFile.fail()) {
 			throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
 		}
@@ -132,7 +130,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 
 	/* Setup next args for the future script */
 	unsigned int i = 0;
-	for (const string& curArg : sc.extraArgs) {
+	for (const std::string& curArg : sc.extraArgs) {
 		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, sc.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, sc.varMap);
 		i++;
 	}
@@ -178,18 +176,18 @@ void ska::ScriptAutoSystem::refresh() {
 			if (ska::StringUtils::isInt(entityScriptId, 10)) {
 				EntityId scriptEntity = ska::StringUtils::strToInt(entityScriptId);
 				if (!m_entityManager.hasComponent<ScriptComponent>(scriptEntity)) {
-					cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found with id : " << entityScriptId << endl;
+					std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found with id : " << entityScriptId << std::endl;
 				}
 				else {
 					killAndSave(m_entityManager.getComponent<ScriptComponent>(scriptEntity), m_saveGame);
 				}
 			} else {
-				cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " This is not an integer id : " << entityScriptId << endl;
+				std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " This is not an integer id : " << entityScriptId << std::endl;
 			}
 		}
 
 	} catch (ska::ScriptException e) {
-		cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << e.what() << endl;
+		std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << e.what() << std::endl;
 	}
 
 }
@@ -272,7 +270,7 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 
 	/* Read commands */
 	while (!eof(script)) {
-		const string cmd = nextLine(script);
+		const std::string cmd = nextLine(script);
 		if (cmd != "") {
 			script.lastResult = interpret(script, savegame, cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */
@@ -302,8 +300,8 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 }
 
 std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame& savegame, const std::string& cmd) {
-	string cmdName;
-	stringstream streamCmd;
+	std::string cmdName;
+	std::stringstream streamCmd;
 
 	streamCmd << cmd;
 	streamCmd >> cmdName;

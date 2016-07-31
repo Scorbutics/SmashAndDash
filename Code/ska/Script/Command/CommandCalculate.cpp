@@ -4,8 +4,6 @@
 #include "../../Utils\FormalCalculation\FormalCalculator.h"
 #include "../System/ScriptAutoSystem.h"
 
-using namespace std;
-
 ska::CommandCalculate::CommandCalculate(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }

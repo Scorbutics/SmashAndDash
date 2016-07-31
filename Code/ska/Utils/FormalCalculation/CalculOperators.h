@@ -26,7 +26,7 @@ namespace ska {
 			else if (calcOperator == minus)
 				return op1 - op2;
 
-			return (int)op1 % (int)op2;
+			return (float)((int)op1 % (int)op2);
 		}
 
 		static bool containsOperator(const std::string& s)

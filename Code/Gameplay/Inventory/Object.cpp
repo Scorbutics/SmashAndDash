@@ -4,8 +4,6 @@
 #include "../../ska/Utils\StringUtils.h"
 #include "../../Utils/IDs.h"
 
-using namespace std;
-
 Object::Object(int id): m_animation(525, 2, false)
 {
 	m_id = id;
@@ -41,7 +39,7 @@ unsigned int Object::getWidth()
 	return m_width;
 }
 
-string Object::getSpriteName()
+std::string Object::getSpriteName()
 {
     return m_spriteName;
 }
@@ -63,9 +61,9 @@ bool Object::use()
 
     if(m_action[0] == '+')
     {
-        if(string::npos != m_action.find("heal"))
+		if (std::string::npos != m_action.find("heal"))
         {
-            string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
+			std::string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
         }
     }
     else if(m_action == "capture")
@@ -93,9 +91,9 @@ bool Object::use(int i)
 	WGameCore& wScreen = WGameCore::getInstance();
     if(m_action[0] == '+')
     {
-        if(string::npos != m_action.find("heal"))
+		if (std::string::npos != m_action.find("heal"))
         {
-            string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
+			std::string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
 			/*if (wScreen.getPokemonManager().getPokemon(i)->isAlive())
 				wScreen.getPokemonManager().getPokemon(i)->setHP(wScreen.getPokemonManager().getPokemon(i)->getHp() + atoi(pv.c_str()));*/
         }
@@ -122,22 +120,22 @@ ska::Animation* Object::getAnimation()
     return &m_animation;
 }
 
-string Object::getDescription()
+std::string Object::getDescription()
 {
     return m_description;
 }
 
-string Object::getName()
+std::string Object::getName()
 {
     return m_name;
 }
 
-string Object::getEffect()
+std::string Object::getEffect()
 {
     return m_effect;
 }
 
-string Object::getAction()
+std::string Object::getAction()
 {
     return m_action;
 }

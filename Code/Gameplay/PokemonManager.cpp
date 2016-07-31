@@ -1,12 +1,11 @@
 #include <stdint.h>
 #include <sstream>
 #include "PokemonManager.h"
-#include "Character.h"
 #include "Data/Statistics.h"
 #include "../Utils/IDs.h"
 #include "../ska/AI/Path.h"
 
-using namespace std;
+
 
 PokemonManager::PokemonManager()
 {

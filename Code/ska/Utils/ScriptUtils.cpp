@@ -8,14 +8,12 @@
 #include "../Exceptions/NumberFormatException.h"
 #include "../Exceptions/ScriptSyntaxError.h"
 
-using namespace std;
-
 ska::ScriptUtils::ScriptUtils()
 {
 }
 
 /* Récupère la valeur une variable LOCALE (dans varMap) */
-string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& saveGame, const ScriptComponent& script, string varNumber)
+std::string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& saveGame, const ScriptComponent& script, std::string varNumber)
 {
 	int num = -1;
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -30,8 +28,8 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 	}
 	else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']')
 	{
-		string v = varNumber.substr(1, varNumber.size() - 2);
-		string key = getVariableKey(v);
+		std::string v = varNumber.substr(1, varNumber.size() - 2);
+		std::string key = getVariableKey(v);
 		if (!key.empty())
 		{
 			if (script.varMap.find(key) != script.varMap.end()) {
@@ -71,19 +69,19 @@ string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& save
 	return varNumber;
 }
 
-string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const string& line, char varStartSymbol, char varEndSymbol)
+std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& line, char varStartSymbol, char varEndSymbol)
 {
-	string it = line;
+	std::string it = line;
 	size_t posLeft, posRight;
 
-	while ((posLeft = it.find_first_of(varStartSymbol)) != string::npos)
+	while ((posLeft = it.find_first_of(varStartSymbol)) != std::string::npos)
 	{
-		if ((posRight = it.substr(posLeft+1).find_first_of(varEndSymbol)) != string::npos)
+		if ((posRight = it.substr(posLeft + 1).find_first_of(varEndSymbol)) != std::string::npos)
 		{
 			posRight += posLeft + 1;
 
-			string var = it.substr(posLeft, posRight - posLeft + 1);
-			string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, script, var);
+			std::string var = it.substr(posLeft, posRight - posLeft + 1);
+			std::string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, script, var);
 
 			it = it.substr(0, posLeft) + varValue + it.substr(posRight + 1, it.size());
 		}
@@ -98,9 +96,9 @@ string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGam
 
 }
 
-string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const string& line)
+std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& line)
 {
-	string& it = replaceVariablesByNumerics(saveGame, script, line, ScriptSymbolsConstants::VARIABLE_LEFT, ScriptSymbolsConstants::VARIABLE_RIGHT);
+	std::string& it = replaceVariablesByNumerics(saveGame, script, line, ScriptSymbolsConstants::VARIABLE_LEFT, ScriptSymbolsConstants::VARIABLE_RIGHT);
 	it = replaceVariablesByNumerics(saveGame, script, it, ScriptSymbolsConstants::ARG, ScriptSymbolsConstants::ARG);
 	it = replaceVariablesByNumerics(saveGame, script, it, ScriptSymbolsConstants::SWITCH_LEFT, ScriptSymbolsConstants::SWITCH_RIGHT);
 	return it;
@@ -124,9 +122,9 @@ std::string ska::ScriptUtils::getFirstExpressionFromLine(ScriptAutoSystem& syste
 	}
 		
 
-	const string& formattedLine = line.substr(indexFirstChar, line.size());
-	const string& commandCall = ScriptUtils::getCommandCall(formattedLine);
-	string valeur;
+	const std::string& formattedLine = line.substr(indexFirstChar, line.size());
+	const std::string& commandCall = ScriptUtils::getCommandCall(formattedLine);
+	std::string valeur;
 
 	if (outputCommandSize != NULL) {
 		if (!commandCall.empty()) {
@@ -150,7 +148,7 @@ std::string ska::ScriptUtils::getFirstExpressionFromLine(ScriptAutoSystem& syste
 	return valeur;
 }
 
-string ska::ScriptUtils::getCommandCall(const string& s)
+std::string ska::ScriptUtils::getCommandCall(const std::string& s)
 {
 	if (!s.empty() && s[0] == ScriptSymbolsConstants::METHOD)
 	{
@@ -162,20 +160,20 @@ string ska::ScriptUtils::getCommandCall(const string& s)
 	return "";
 }
 
-string ska::ScriptUtils::getVariableKey(const string& v)
+std::string ska::ScriptUtils::getVariableKey(const std::string& v)
 {
 	size_t pipePos = v.find_first_of('|');
 	if (pipePos == 0 && v.find_last_of('|') == v.size() - 1)
 	{
 		//variable temporaire => varMap
-		string key = "[" + v.substr(1, v.size() - 2) + "]";
+		std::string key = "[" + v.substr(1, v.size() - 2) + "]";
 		return key;
 	}
 
 	return "";
 }
 
-void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, const string& scriptExtendedName, string varNumber, string value, std::unordered_map<std::string, std::string>& varMap)
+void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, const std::string& scriptExtendedName, std::string varNumber, std::string value, std::unordered_map<std::string, std::string>& varMap)
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
@@ -185,8 +183,8 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, co
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}') {
 		saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()), (value == "1"));
 	} else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']') {
-		string v = varNumber.substr(1, varNumber.size() - 2);
-		string key = getVariableKey(v);
+		std::string v = varNumber.substr(1, varNumber.size() - 2);
+		std::string key = getVariableKey(v);
 		if (!key.empty()) {
 			varMap[key] = value;
 			return;
@@ -211,8 +209,8 @@ std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, co
 	|variable| : variable utilisateur (créée en script et utilisée en script, morte à la fin du script)
 	*/
 
-	stringstream ss;
-	string cmds[2];
+	std::stringstream ss;
+	std::string cmds[2];
 
 	if (v[0] == '_' && v[v.size()-1] == '_')
 	{
@@ -231,12 +229,12 @@ std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, co
 	return getValueFromVarOrSwitchNumber(saveGame, script, v);
 }
 
-bool ska::ScriptUtils::isScriptActivated(const ska::Savegame& saveGame, const string& scriptName)
+bool ska::ScriptUtils::isScriptActivated(const ska::Savegame& saveGame, const std::string& scriptName)
 {
-	string s;
+	std::string s;
 	//WGameCore& wScreen = WGameCore::getInstance();
-	ifstream scriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveGame.getSaveName() + FILE_SEPARATOR"scripts.data").c_str(), ios::app);
-	ifstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveGame.getSaveName() + FILE_SEPARATOR"tmpscripts.data").c_str(), ios::app);
+	std::ifstream scriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveGame.getSaveName() + FILE_SEPARATOR"scripts.data").c_str(), std::ios::app);
+	std::ifstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + saveGame.getSaveName() + FILE_SEPARATOR"tmpscripts.data").c_str(), std::ios::app);
 
 	if (scriptList.fail())
 		return true;

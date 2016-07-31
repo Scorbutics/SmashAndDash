@@ -126,6 +126,7 @@
   <ItemGroup>
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h" />
+    <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h" />
     <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Physic\System\WorldEntityCollisionResponse.h" />
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
@@ -346,7 +347,6 @@
     <ClInclude Include="Code\Gameplay\Data\Settings.h" />
     <ClInclude Include="Code\Graphic\ShakerManager.h" />
     <ClInclude Include="Code\ska\Utils\Singleton_template.h" />
-    <ClInclude Include="Code\Gameplay\Fight\Skill.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemonArea.h" />
     <ClInclude Include="Code\ska\Graphic\SpriteAnimation.h" />
     <ClInclude Include="Code\ska\Graphic\SpriteAnimationManager.h" />
@@ -536,7 +536,6 @@
     <ClCompile Include="Code\ska\Graphic\SDLTexture.cpp" />
     <ClCompile Include="Code\Gameplay\Data\Settings.cpp" />
     <ClCompile Include="Code\Graphic\ShakerManager.cpp" />
-    <ClCompile Include="Code\Gameplay\Fight\Skill.cpp" />
     <ClCompile Include="Code\Graphic\GUI\SlotPokemonArea.cpp" />
     <ClCompile Include="Code\ska\Graphic\SpriteAnimation.cpp" />
     <ClCompile Include="Code\ska\Graphic\SpriteAnimationManager.cpp" />

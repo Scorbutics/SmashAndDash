@@ -1,12 +1,8 @@
-#ifndef DEF_READINIFILE
-#define DEF_READINIFILE
-
+#pragma once
 #include <iostream>
 
-using namespace std;
-
 //retourne la position de la chaine qu'on a trouvé dans le fichier (1ere occurence)
-int FindInFile(string stringFile, string s);
+int FindInFile(const std::string& stringFile, const std::string& s);
 
 
 //Retour : La valeur de la variable s du bloc from ou "EMPTYDATA" ou "STRINGNOTFOUND"
@@ -14,32 +10,18 @@ int FindInFile(string stringFile, string s);
 //s : variable dont on cherche la valeur
 //from : bloc où on cherche la variable s
 //Exemple d'utilisation : string enable = GetINIValueFromFile("lol.ini", "enable", "[Music]");
-string GetINIValueFromFile(string stringFile, string s, string from);
+std::string GetINIValueFromFile(const std::string& stringFile, const std::string& s, const std::string& from);
 
 //Retour : STRINGFOUND si le bloc "to" et la chaine de caractère "s" a été trouvé, STRINGNOTFOUND sinon
 //stringFile : chaine contenant le nom du fichier ini
 //s : variable dont on cherche à modifier la valeur
 //to : bloc où on cherche la variable s
 //Exemple d'utilisation : SetINIValueToFile("lol.ini", "enable", "[Music]", "true");
-string SetINIValueToFile(string stringFile, string s, string to, string value);
+std::string SetINIValueToFile(const std::string& stringFile, const std::string& s, const std::string& to, const std::string& value);
+bool isReadable(const std::string& fileName);
+int GetLengthOfFile(const std::string& fileName);
+void ResetFile(const std::string& fileName);
+void ReplaceStringInFile(const std::string& fileName, int pos, const std::string& value, const std::string& oldValue);
 
-//
-bool isReadable(string fileName);
+std::string rtrim(const std::string& s);
 
-//
-int GetLengthOfFile(string fileName);
-
-
-//
-void ResetFile(string fileName);
-
-//
-void ReplaceStringInFile(string fileName, int pos, string value, string oldValue);
-
-
-//
-int HigherInt(int a, int b);
-int SmallerInt(int a, int b);
-
-std::string& rtrim(std::string& s);
-#endif

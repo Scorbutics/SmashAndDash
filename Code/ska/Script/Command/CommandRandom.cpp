@@ -2,8 +2,6 @@
 #include "../../Utils\ScriptUtils.h"
 #include "../../Utils\StringUtils.h"
 
-using namespace std;
-
 ska::CommandRandom::CommandRandom(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
 }
@@ -18,7 +16,7 @@ int ska::CommandRandom::argumentsNumber() {
 }
 
 std::string ska::CommandRandom::execute(ScriptComponent& script, std::vector<std::string>& args) {
-	string s, value, commandCall;
+	std::string s, value, commandCall;
 	int valueInt, resultInt;
 
 	value = args[0];

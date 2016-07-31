@@ -5,8 +5,6 @@
 #include "../World/Layer.h"
 #include "../Utils/NumberUtils.h"
 
-using namespace std;
-
 ska::ParticleManager::ParticleManager()
 {
     m_sens = 1;
@@ -45,12 +43,11 @@ void ska::ParticleManager::removeAll()
 }
 
 
-void ska::ParticleManager::stop()
-{
-	for (unique_ptr<Particle>& gp : m_particles)
-	{
-		if (gp != NULL)
+void ska::ParticleManager::stop() {
+	for (std::unique_ptr<Particle>& gp : m_particles) {
+		if (gp != NULL) {
 			gp->setLoop(false);
+		}
 	}
 	m_active = false;
 	m_duration = 0;
@@ -72,9 +69,9 @@ void ska::ParticleManager::remove(unsigned int index)
 	{
 		m_particles[index].reset();
         m_particles[index] = NULL;
-    }
-    else
-        cerr << "Erreur (classe ParticleManager) : impossible d'accéder à l'élément numéro " << index << " des sprites de particules" << endl;
+    } else {
+		std::cerr << "Erreur (classe ParticleManager) : impossible d'accéder à l'élément numéro " << index << " des sprites de particules" << std::endl;
+	}
 
 	if (m_particles.size() == 0)
 	{
@@ -231,7 +228,7 @@ int ska::ParticleManager::collisionNPC()
 	//WGameCore& wScreen = WGameCore::getInstance();
 
     const size_t size = m_particles.size();
-	vector<ska::Rectangle> ids, buf;
+	std::vector<ska::Rectangle> ids, buf;
     size_t i;
 
     for(i = 0; i < size; i++)

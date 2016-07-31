@@ -1,8 +1,6 @@
 #include "Window_Choice.h"
 #include "../../Utils/IDs.h"
 
-using namespace std;
-
 Window_Choice::Window_Choice(DialogMenu* parent) : Window_Area(parent)
 {
     m_type = BUTTON_CHOICE;

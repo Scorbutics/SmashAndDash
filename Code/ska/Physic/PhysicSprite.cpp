@@ -1,7 +1,6 @@
 #include "PhysicSprite.h"
 #include "../Graphic\SpritePath.h"
 #include "../Graphic/Rectangle.h"
-using namespace std;
 
 ska::PhysicSprite::PhysicSprite(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset0, int offset1, int offset2, int offset3) :
 	PhysicObject(id, entityNumber, weight, frictionCoeff, speedLimit, r, offset0, offset1, offset2, offset3), m_anim(150, 3, false),

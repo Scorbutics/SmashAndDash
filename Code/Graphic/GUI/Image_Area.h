@@ -1,5 +1,4 @@
-#ifndef DEF_IMAGE_AREA
-#define DEF_IMAGE_AREA
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -9,15 +8,15 @@
 
 class Image_Area : public Window_Area
 {
-    public:
-		Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, std::string name, bool alpha);
-		Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
+public:
+	Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha);
+	Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
 	virtual void display();
 	std::string getImageName() const;
     virtual std::string getKey(){return "";};
     virtual void forceValue(unsigned int index){index = index;};
     virtual ~Image_Area();
-    void setImage(std::string name, bool alpha);
+	void setImage(const std::string& name, bool alpha);
 
     private:
 	ska::Texture m_image;
@@ -27,5 +26,3 @@ class Image_Area : public Window_Area
 
 };
 
-
-#endif

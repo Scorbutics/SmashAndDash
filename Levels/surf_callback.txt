@@ -1,4 +1,3 @@
-restore_component InputComponent, 0
 if #arg0# == false
 	block_authorize 121, 0, true
 	block_authorize 27, 0, true
@@ -10,6 +9,8 @@ if #arg0# == false
 	block_authorize 88, 0, true
 	block_authorize 89, 0, true
 	expulse 0
+	wait 100
 endif
+restore_component InputComponent, 0
 assign_switch #arg0#, 0
 end
