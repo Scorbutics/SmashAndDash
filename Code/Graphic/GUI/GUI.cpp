@@ -171,6 +171,8 @@ void GUI::display() const {
 		}
 	}
 
+	
+	m_mouseCursor.displayHint();
 	m_mouseCursor.displaySelectedPokemon();
 	m_mouseCursor.displaySelectedObject();
 		
@@ -192,8 +194,9 @@ void GUI::refresh() {
 	if (m_hide) {
 		return;
 	}
-
-    for(unsigned int i = 0; i < m_buttonList.size(); i++)
+	
+	int hideHint = 0;
+	for(unsigned int i = 0; i < m_buttonList.size(); i++)
     {
         if(m_buttonList[i] != NULL) {
             m_buttonList[i]->refresh();
@@ -212,10 +215,11 @@ void GUI::refresh() {
 				if (!ska::RectangleUtils::isPositionInBox(lastMousePos, buttonPos)) {
 					m_mouseCursor.modifyHint(m_buttonList[i]->getName());
 					m_mouseCursor.hideHint(false);
+					
 				}
-
-                
+				                
             } else {
+				hideHint++;
 				m_buttonScroll[i] = 0;
 			}
 
@@ -231,13 +235,15 @@ void GUI::refresh() {
     }
 
 
-	if (m_mouseCursor.isActiveHint(*this)) {
-		m_mouseCursor.displayHint();
-	}
-
 	if (in[ska::InputAction::RClic]) {
 		setClickMenu();
 	}
+
+	if (hideHint == m_buttonScroll.size()) {
+		m_mouseCursor.hideHint(true);
+	}
+
+	m_mouseCursor.update();
 
 }
 

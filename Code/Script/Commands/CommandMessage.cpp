@@ -23,8 +23,8 @@ std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<st
 
 	WGameCore& wScreen = WGameCore::getInstance();
 	
-	std::string talkerId = args[0];
-	const std::string text = args[1];
+	const std::string& talkerId = args[0];
+	const std::string& text = args[1];
 
 	std::string imageId;
 	if (talkerId != "f") {

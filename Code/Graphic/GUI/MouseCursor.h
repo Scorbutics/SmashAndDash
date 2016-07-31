@@ -5,15 +5,13 @@
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Graphic/Animation.h"
 #include "../../ska/Graphic/Texture.h"
+#include "DialogMenu.h"
 
 class GUI;
-class DialogMenu;
 
 class Object;
 using ObjectPtr = std::unique_ptr<Object>;
 
-class DialogMenu;
-using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 
 namespace ska {
 	class InputContextManager;
@@ -25,14 +23,12 @@ public:
     ~MouseCursor();
 
     ska::Animation& getAnimation();
-    DialogMenuPtr& getHintBox();
+    DialogMenu& getHintBox();
 	ObjectPtr& getObject();
     unsigned int getObjectAmount();
-    //Character* getPokemon();
 
     void setObjectAmount(unsigned int x);
 	void setObject(Object* object, unsigned int amount);
-	//void setPokemon(Character* pkmn);
 	void setCursorPos(ska::Rectangle pos);
 
 	void display() const override;
@@ -46,11 +42,11 @@ public:
 	void modifyHint(const std::string& hint);
 	void displaySelectedPokemon() const;
 	void displaySelectedObject() const;
-    void displayHint();
+    void displayHint() const;
     void hideCursor(bool x);
     void hideHint(bool x);
     bool isActiveCursor();
-    bool isActiveHint(const GUI& g);
+    bool isActiveHint() const;
     void showCursorTime(unsigned int delay);
 
 private:
@@ -58,9 +54,9 @@ private:
     ska::Animation m_aniCursor;
     ska::Texture m_sprite;
 	ska::Rectangle m_cursorPos;
-    std::unique_ptr<DialogMenu> m_hintBox;
+    DialogMenu m_hintBox;
     bool m_hideC, m_hideH;
-	//CharacterPtr m_stockPkmn;
+
     ObjectPtr m_stockObject;
     unsigned int m_objectAmount, m_time, m_delay;
 };

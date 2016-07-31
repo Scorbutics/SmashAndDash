@@ -78,13 +78,13 @@ int DialogMenu::getPriority() const {
 
 void DialogMenu::display() const {
 	
-	ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
-	ska::Point<int> backgroundTilePos;
-	ska::Point<int> textPos;
-
 	if (!isVisible()) {
 		return;
 	}
+
+	ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
+	ska::Point<int> backgroundTilePos;
+	ska::Point<int> textPos;
 
 	/* Draw the dialog using menu tiles */
 	for (int i = 0; i < m_rect.w; i += TAILLEBLOCFENETRE) {

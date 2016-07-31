@@ -5,26 +5,23 @@
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../ska/Utils/StringUtils.h"
+#include "../../ska/Utils/TimeUtils.h"
 #include "../../Gameplay/Inventory/Object.h"
 #include "../../ska/Inputs/InputContextManager.h"
 #include "../../Utils/IDs.h"
-#include "DialogMenu.h"
 #include "GUI.h"
 
 MouseCursor::MouseCursor(const ska::InputContextManager& playerICM) :
-m_aniCursor(3, 3, false), m_playerICM(playerICM) {
-    m_hideC = m_hideH = true;
+m_aniCursor(3, 3, false), m_playerICM(playerICM),
+m_hintBox("hintbox", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hintboxmenu.png", { 0, 0, 3 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, 20),
+m_sprite("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"mousec.png") {
+	m_hideC = m_hideH = true;
     m_delay = 0;
     m_time = 0;
+	
+    m_stockObject = nullptr;
 	ska::Rectangle buf = { 0, 0 };
-    buf.w = 3*TAILLEBLOCFENETRE;
-    buf.h = 2*TAILLEBLOCFENETRE;
-    m_stockObject = NULL;
-    //m_stockPkmn = NULL;
-
-	m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"mousec.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-    m_hintBox = std::unique_ptr<DialogMenu>(new DialogMenu("hintbox", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hintboxmenu.png", buf, 20));
-    buf.w = m_sprite.getWidth()/3;
+    buf.w = m_sprite.getWidth() / 3;
     buf.h = m_sprite.getHeight();
     m_aniCursor.setOffsetAndFrameSize(buf); //initialisation de l'animation
 }
@@ -34,8 +31,7 @@ ska::Animation& MouseCursor::getAnimation() {
 }
 
 void MouseCursor::modifyHint(const std::string& hint) {
-    m_hintBox->modifyText(hint);
-    m_hintBox->hide(false);
+    m_hintBox.modifyText(hint);
 }
 
 void MouseCursor::hideCursor(bool x) {
@@ -43,7 +39,8 @@ void MouseCursor::hideCursor(bool x) {
 }
 
 void MouseCursor::hideHint(bool x) {
-    m_hideH = x;
+	m_hintBox.hide(x);
+	m_hideH = x;
 }
 
 void MouseCursor::setObjectAmount(unsigned int x) {
@@ -54,15 +51,12 @@ bool MouseCursor::isActiveCursor() {
     return !m_hideC;
 }
 
-DialogMenuPtr& MouseCursor::getHintBox() {	
+DialogMenu& MouseCursor::getHintBox() {	
 	return m_hintBox;
 }
 
-bool MouseCursor::isActiveHint(const GUI& g) {
-	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-    int ind = g.isPositionOnButton(mousePos);    
-	m_hideH = ind == -1;
-    return !m_hideH;
+bool MouseCursor::isActiveHint() const {
+	return !m_hideH;
 }
 
 void MouseCursor::setCursorPos(ska::Rectangle pos) {
@@ -70,37 +64,33 @@ void MouseCursor::setCursorPos(ska::Rectangle pos) {
 }
 
 void MouseCursor::showCursorTime(unsigned int delay) {
-    m_time = SDL_GetTicks();
+	m_time = ska::TimeUtils::getTicks();
     m_delay = delay;
     m_hideC = false;
 }
 
 bool MouseCursor::isVisible() const {
-	return !m_hideC;
+	return !m_hideC || !m_hideH;
 }
 
 void MouseCursor::update() {
+	m_hintBox.refresh();
+	ska::Point<float> mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
+	mousePos.y -= m_hintBox.getRect().w / 2;
+	m_hintBox.setPos(mousePos);
+	
 	m_aniCursor.getRectOfCurrentFrame();
 }
 
 void MouseCursor::display() const {
-	if (m_hideC) {
+	if (m_hideC && m_hideH) {
 		return;
 	}
 
-	//WGameCore& wScreen = WGameCore::getInstance();
-
-    if(SDL_GetTicks() - m_time < m_delay) {
+    if(ska::TimeUtils::getTicks() - m_time < m_delay) {
 		ska::Rectangle buf = m_aniCursor.getOffsetAndFrameSize();
-		ska::Rectangle relativeMousePos = m_cursorPos;
-/*
-        relativeMousePos.x += wScreen.getORel().x;
-        relativeMousePos.y += wScreen.getORel().y;*/
-
-		m_sprite.render(relativeMousePos.x, relativeMousePos.y, &buf);
+		m_sprite.render(m_cursorPos.x, m_cursorPos.y, &buf);
     }
-
-
 
 }
 
@@ -122,7 +112,7 @@ void MouseCursor::displaySelectedObject() const
 {
 	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	ska::Point<float> pos = mousePos;
-    if(m_stockObject != NULL) {
+    if(m_stockObject != nullptr) {
 		pos.x += 10;
 		m_stockObject->setPos(pos);
         m_stockObject->display();
@@ -131,11 +121,10 @@ void MouseCursor::displaySelectedObject() const
 
 }
 
-void MouseCursor::displayHint() {
-	ska::Point<float> mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-	mousePos.y -= m_hintBox->getRect().w / 2;
-    m_hintBox->setPos(mousePos);
-    m_hintBox->display();
+void MouseCursor::displayHint() const {
+	if (!m_hideH) {
+		m_hintBox.display();
+	}
 }
 
 ObjectPtr& MouseCursor::getObject() {
@@ -182,24 +171,19 @@ void MouseCursor::removePokemon()
 }
 */
 
-void MouseCursor::removeObject()
-{
-	std::unique_ptr<Object> buf = std::move(m_stockObject);
+void MouseCursor::removeObject() {
 	m_stockObject = NULL;
 }
 
-unsigned int MouseCursor::getObjectAmount()
-{
+unsigned int MouseCursor::getObjectAmount() {
     return m_objectAmount;
 }
 
 
-void MouseCursor::setObject(Object* object, unsigned int amount)
-{
+void MouseCursor::setObject(Object* object, unsigned int amount) {
 	m_stockObject = std::unique_ptr<Object>(new Object(*object));
 	m_objectAmount = amount;
 }
 
-MouseCursor::~MouseCursor()
-{
+MouseCursor::~MouseCursor() {
 }
