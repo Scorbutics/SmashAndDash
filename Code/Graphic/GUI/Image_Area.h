@@ -9,8 +9,8 @@
 class Image_Area : public Window_Area
 {
 public:
-	Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha);
-	Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
+	Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha);
+	Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
 	virtual void display();
 	std::string getImageName() const;
     virtual std::string getKey(){return "";};

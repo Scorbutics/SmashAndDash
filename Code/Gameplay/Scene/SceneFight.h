@@ -26,10 +26,16 @@ class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
 
+using BattleStartObservable = ska::Observable<const ska::EntityId&, SkillsHolderComponent&>;
+
+namespace ska {
+	class Window;
+}
+
 class SceneFight :
-	public AbstractSceneMap_ {
+	public AbstractSceneMap_, public BattleStartObservable {
 public:
-	SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
+	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;

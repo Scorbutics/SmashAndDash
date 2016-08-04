@@ -10,12 +10,13 @@
 class Inventory_Area : public DynamicWindowArea
 {
     public:
-		Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Rectangle relativePos);
+		Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Point<int> relativePos);
     virtual void refresh();
     virtual void display();
 	virtual std::string getKey(){return "";};
     virtual void forceValue(unsigned int){};
     Inventory* getInventory();
+	ska::Rectangle getRect() const;
 	unsigned int getAmountAtPos(ska::Point<int> relativePos);
 	Object* getObjectAtPos(ska::Point<int> relativePos);
 	void useObjectAtPos(ska::Point<int> objectPos);

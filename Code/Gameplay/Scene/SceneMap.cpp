@@ -4,7 +4,7 @@
 
 #define MOB_SPAWNING_DELAY 5000
 
-SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(ws, sh, ril, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
@@ -13,7 +13,7 @@ m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
 m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getEntityManager()),
-m_fightStartSystem(sh, ws, ril, ws.getPlayer()),
+m_fightStartSystem(w, sh, ws, ril, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
@@ -27,7 +27,7 @@ ska::CameraSystem& SceneMap::getCamera() {
 	return m_cameraSystem;
 }
 
-SceneMap::SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :  
+SceneMap::SceneMap(ska::Window& w, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(ws, oldScene, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
@@ -36,7 +36,7 @@ m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
 m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
 m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame()),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld(), ws.getEntityManager()),
-m_fightStartSystem(m_holder, ws, m_inputCManager, ws.getPlayer()),
+m_fightStartSystem(w, m_holder, ws, m_inputCManager, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
@@ -46,8 +46,8 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_cameraSystem);
 }
 
-SceneMap::SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap) : 
-SceneMap(sh, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName(), sameMap) {
+SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap) :
+SceneMap(w, sh, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName(), sameMap) {
 
 }
 

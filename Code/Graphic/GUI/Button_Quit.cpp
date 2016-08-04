@@ -14,8 +14,6 @@ Button_Quit::Button_Quit(DialogMenu *parent, const std::string& imgName, const s
     m_relativePos.y = relativePos.y;
     m_sprite.load(imgName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
     m_spriteActive.load(secondImgName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
-    m_relativePos.w = m_sprite.getWidth();
-    m_relativePos.h = m_sprite.getHeight();
 }
 
 void Button_Quit::display()
@@ -28,9 +26,11 @@ void Button_Quit::display()
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 
-	ska::Rectangle buf = m_relativePos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	ska::Rectangle buf;
+	buf.x = m_relativePos.x + (m_parent->getRect()).x;
+	buf.y = m_relativePos.y + (m_parent->getRect()).y;
+	buf.w = m_sprite.getWidth();
+	buf.h = m_sprite.getHeight();
 
 	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
 		m_spriteActive.render(buf.x, buf.y);
@@ -52,9 +52,11 @@ void Button_Quit::refresh()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputActionContainer& in = wScreen.getActions();
 
-	ska::Rectangle buf = m_relativePos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	ska::Rectangle buf;
+	buf.x = m_relativePos.x + (m_parent->getRect()).x;
+	buf.y = m_relativePos.y + (m_parent->getRect()).y;
+	buf.w = m_sprite.getWidth();
+	buf.h = m_sprite.getHeight();
 
 	if (ska::RectangleUtils::isPositionInBox(mousePos, buf)) {
 		if(in[ska::InputAction::LClic]) {

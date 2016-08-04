@@ -67,7 +67,7 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 
 void SlotPokemon_Area::display()
 {
-	ska::Rectangle buf = m_relativePos;
+	ska::Point<int> buf = m_relativePos;
     buf.x += m_parent->getRect().x;
 	buf.y += m_parent->getRect().y;
 

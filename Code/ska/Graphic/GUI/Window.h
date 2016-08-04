@@ -1,6 +1,4 @@
-#ifndef DEF_WINDOW
-#define DEF_WINDOW
-
+#pragma once
 
 #include <windows.h>
 #include <SDL2/SDL_image.h>
@@ -31,4 +29,3 @@ namespace ska {
 
 	};
 }
-#endif

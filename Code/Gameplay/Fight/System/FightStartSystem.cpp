@@ -7,13 +7,14 @@
 #include "../../World/WorldScene.h"
 #include "../../CustomEntityManager.h"
 
-FightStartSystem::FightStartSystem(ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
+FightStartSystem::FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
 ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(ws.getEntityManager()),
 m_worldScene(ws),
 m_icm(icm),
 m_player(player),
 m_cem(ws.getEntityManager()),
-m_sceneHolder(sceneHolder){
+m_sceneHolder(sceneHolder), 
+m_window(w) {
 	m_t0 = ska::TimeUtils::getTicks();
 }
 
@@ -55,7 +56,7 @@ void FightStartSystem::refresh() {
 					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
 					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
-					m_sceneHolder.nextScene(ska::ScenePtr(new SceneFight(m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc)));
+					m_sceneHolder.nextScene(ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc)));
 				}
 				m_t0 = ska::TimeUtils::getTicks();
 				break;

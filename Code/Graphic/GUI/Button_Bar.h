@@ -16,7 +16,7 @@ class Button_Bar : public DynamicWindowArea
 
     private:
     ska::Texture m_leftArrow, m_rightArrow, m_buttonStyle, m_cursor;
-	ska::Rectangle m_leftPos, m_rightPos, m_cursorPos;
+	ska::Point<int> m_leftPos, m_rightPos, m_cursorPos;
     int* m_variable;
     std::vector<int> m_values;
     std::unique_ptr<Button> m_button;

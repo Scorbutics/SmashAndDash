@@ -20,13 +20,17 @@
 
 class WorldScene;
 
+namespace ska {
+	class Window;
+}
+
 class SceneMap :
 	public AbstractSceneMap_
 {
 public:
-	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
-	SceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap);
-	SceneMap(ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap);
+	SceneMap(ska::Window& w, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	void reinit();

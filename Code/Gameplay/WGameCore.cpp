@@ -32,7 +32,7 @@ m_gui(*this, m_playerICM) {
 	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputGUIContext()));
 
 	/* Let's start on the map */
-	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(m_sceneHolder, m_playerICM, m_worldScene, false)));
+	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_playerICM, m_worldScene, false)));
 	m_sceneHolder.update();
 
 	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");

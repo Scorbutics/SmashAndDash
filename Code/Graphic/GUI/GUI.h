@@ -71,7 +71,7 @@ public:
 private:
     std::vector<DialogMenuPtr> m_buttonList;
 	std::vector<IDialogMenuPtr> m_extraWindows;
-	DialogMenuPtr m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackPokemon, m_attackOpponent, m_clickMenu;
+	DialogMenuPtr m_movableWindow, m_pnjInfoWindow, m_pokeInfoWindow, m_facesetPkmn, m_facesetOpponent, m_attackOpponent, m_clickMenu;
 	std::vector<int> m_buttonScroll;
 	ska::Point<int> m_lastMousePos, m_curObjectPos;
     int m_side, m_lastMouseState, m_refreshCount;

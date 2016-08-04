@@ -36,9 +36,7 @@ DynamicWindowArea(parent)
 
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
-    m_relativePos.w = width;
-    m_relativePos.h = height;
-
+    
 	m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
 	m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
     m_posTopArrow.w = m_topArrow.getWidth();
@@ -73,11 +71,13 @@ void Scroll_Text::display()
         m_posCursor.y += m_topArrow.getHeight();
     }
 
-	ska::Rectangle buf = m_relativePos, bufScrollBar;
+	ska::Point<int> buf = m_relativePos;
+		ska::Rectangle bufScrollBar;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 
-    bufScrollBar = buf;
+    bufScrollBar.x = buf.x;
+	bufScrollBar.y = buf.y;
     bufScrollBar.x += m_width;
     bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
     bufScrollBar.w = m_scrollBar.getWidth();
@@ -106,11 +106,13 @@ void Scroll_Text::refresh() {
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();
 	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-	ska::Rectangle buf = m_relativePos, bufScrollBar;
+	ska::Point<int> buf = m_relativePos;
+	ska::Rectangle bufScrollBar;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 
-	bufScrollBar = buf;
+	bufScrollBar.x = buf.x;
+	bufScrollBar.y = buf.y;
 	bufScrollBar.x += m_width;
 	bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
 	bufScrollBar.w = m_scrollBar.getWidth();

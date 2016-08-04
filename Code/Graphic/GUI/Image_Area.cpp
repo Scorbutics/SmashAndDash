@@ -6,7 +6,7 @@
 #include "Image_Area.h"
 #include "DialogMenu.h"
 
-Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha) : 
+Image_Area::Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha) :
 Window_Area(parent),
 m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 {
@@ -28,7 +28,7 @@ m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 	
 }
 
-Image_Area::Image_Area(DialogMenu* parent, ska::Rectangle relativePos, ska::Rectangle *rectSrcBuf, ska::Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
+Image_Area::Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle *rectSrcBuf, ska::Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
 {
 	m_type = BUTTON_IMAGE_AREA;
 	m_active = parent->isVisible();
@@ -65,7 +65,7 @@ void Image_Area::display()
     else
         m_active = true;
 
-	ska::Rectangle buf = m_relativePos;
+	ska::Point<int> buf = m_relativePos;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 

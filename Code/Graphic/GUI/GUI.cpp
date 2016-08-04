@@ -20,8 +20,13 @@
 #include "WindowShop.h"
 #include "ToolBar.h"
 
+
+#include "../../ska/Inputs/InputContextManager.h"
+#include "../../ska/Inputs/InputAction.h"
+#include "../../ska/Inputs/InputRange.h"
+#include "../../ska/Inputs/InputToggle.h"
 #include "../../ska/Graphic/GUI/Window.h"
-#include "../../Gameplay/WGameCore.h"
+//#include "../../Gameplay/WGameCore.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
@@ -46,12 +51,6 @@ m_window(w) {
     menuPos.y = 5*TAILLEBLOCFENETRE;
     menuPos.w = 5*TAILLEBLOCFENETRE;
 	m_facesetPkmn = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-
-    menuPos.x = 0;
-    menuPos.y = w.getHeight() - 2*TAILLEBLOCFENETRE;
-    menuPos.w = 9*TAILLEBLOCFENETRE;
-    menuPos.h = 2*TAILLEBLOCFENETRE;
-	m_attackPokemon = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
 
     menuPos.x = w.getWidth() - 2*TAILLEBLOCFENETRE;
 	m_attackOpponent = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
@@ -253,26 +252,22 @@ int GUI::addDialog(IDialogMenuPtr& d) {
 	return (int)(m_extraWindows.size() - 1);
 }
 
-void GUI::setClickMenu()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+void GUI::setClickMenu() {
 	ska::Rectangle invAreaAbsolutePos, buttonPos;
 
-	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputActionContainer& in = m_playerICM.getActions();
 
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
-	const ska::InputRange& lastMousePos = wScreen.getRanges()[ska::InputRangeType::LastMousePos];
+	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputRange& lastMousePos = m_playerICM.getRanges()[ska::InputRangeType::LastMousePos];
 
     std::vector<int> vBool;
     vBool.push_back(0);
     vBool.push_back(1);
 
     Inventory_Area* invArea = m_wBag->getInventoryArea(0);
-    if(invArea != NULL && m_wBag->isVisible())
-    {
-        invAreaAbsolutePos = invArea->getAbsolutePos();
-		if (ska::RectangleUtils::isPositionInBox(mousePos, invAreaAbsolutePos) && !ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect()))
-        {
+    if(invArea != NULL && m_wBag->isVisible()) {
+        invAreaAbsolutePos = invArea->getRect();
+		if (ska::RectangleUtils::isPositionInBox(mousePos, invAreaAbsolutePos) && !ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
 			ska::Point<int> posClickMenu = mousePos;
             posClickMenu.x -= 5;
             posClickMenu.y -= 5;
@@ -280,8 +275,7 @@ void GUI::setClickMenu()
             m_curObjectPos = m_clickMenu->getRect();
             m_curObjectPos.x -= invAreaAbsolutePos.x;
             m_curObjectPos.y -= invAreaAbsolutePos.y;
-            if(invArea->getObjectAtPos(m_curObjectPos) != NULL)
-            {
+            if(invArea->getObjectAtPos(m_curObjectPos) != NULL) {
 				std::vector<std::string> vUse, vGive, vTrash;
                 vUse.push_back("Utiliser");
                 vUse.push_back("Ok !");
@@ -300,30 +294,20 @@ void GUI::setClickMenu()
                 m_clickMenu->addButton(buttonPos, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenu.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenupressed.png", m_wBag->getBoolTrashObject(), vBool, vTrash, 18, "inventory_menu_trash");
                 m_clickMenu->hide(false);
                 invArea = m_wBag->getInventoryArea(0);
-            }
-            else
-                m_clickMenu->hide(true);
+            } else {
+				m_clickMenu->hide(true);
+			}
 
 
 
-        }
-		else if (!ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect()))
-        {
+        } else if (!ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
             m_clickMenu->hide(true);
             *m_wBag->getBoolUseObject() = 0;
             *m_wBag->getBoolTrashObject() = 0;
             *m_wBag->getBoolGiveObject() = 0;
         }
 
-
-
-
-
     }
-
-
-
-
 
 }
 
@@ -512,34 +496,10 @@ void GUI::update() {
 
 //TODO
 void GUI::dialogDisplay() const {
-	WGameCore& wScreen = WGameCore::getInstance();
-
+	
 	if (m_pnjInfoWindow->isVisible()) {
 		m_pnjInfoWindow->display();
 	}
-
-
-    if(m_attackPokemon->isVisible()) {
-		//vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
-		
-		ska::Rectangle cooldownPos;
-        cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE/4;
-		cooldownPos.y = m_attackPokemon->getRect().y;
-
-        //On blit les sprites d'attaque
-        m_attackPokemon->display();
-
-        //On blit les cooldowns par dessus
-        /*for(unsigned int i = 0; i < v->size(); i++) {
-            if(!(*v)[i]->cooldownOK()) {
-				ska::Texture* cooldownText;
-                cooldownText = (*v)[i]->getSpriteRemainingCD();
-				cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOC / 2 + (i + 1) * (*v)[i]->getIcon()->getWidth();
-				cooldownText->render(cooldownPos.x, cooldownPos.y);
-            }
-        }*/
-
-    }
 
 	if (m_wSettings->isVisible()) {
 		m_wSettings->display();
@@ -554,7 +514,7 @@ void GUI::dialogDisplay() const {
 	}
 
     if(m_clickMenu->isVisible()) {
-		const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+		const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 		if (ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
 			m_clickMenu->display();
 		} else {
@@ -575,9 +535,7 @@ void GUI::dialogDisplay() const {
 }
 
 
-void GUI::dialogRefresh()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+void GUI::dialogRefresh() {
 
 	for (auto& w : m_extraWindows) {
 		if (w->isVisible()) {
@@ -589,32 +547,6 @@ void GUI::dialogRefresh()
 	if (m_pnjInfoWindow->isVisible()) {
 		m_pnjInfoWindow->refresh();
 	}
-
-
-	if(m_attackPokemon->isVisible()) {
-		//vector<Skill_ptr>* v = /*wScreen.getFight().getPokemon()->getSkills()*/ NULL;
-
-		ska::Rectangle cooldownPos;
-		cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOCFENETRE / 4;
-		cooldownPos.y = m_attackPokemon->getRect().y;
-
-		//On blit les sprites d'attaque
-		m_attackPokemon->refresh();
-
-		//On blit les cooldowns par dessus
-		/*for(unsigned int i = 0; i < v->size(); i++) {
-			if(!(*v)[i]->cooldownOK()) {
-				ska::Texture* cooldownText;
-				cooldownText = (*v)[i]->getSpriteRemainingCD();
-				cooldownPos.x = m_attackPokemon->getRect().x + TAILLEBLOC / 2 + (i + 1) * (*v)[i]->getIcon()->getWidth();
-				cooldownText->render(cooldownPos.x, cooldownPos.y);
-
-			}
-		}*/
-
-	}
-
-
 
 	if (m_wSettings->isVisible()) {
 		m_wSettings->refresh();
@@ -629,7 +561,7 @@ void GUI::dialogRefresh()
 	}
 
 	if(m_clickMenu->isVisible()) {
-		const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+		const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 		
 		if (ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
 			m_clickMenu->refresh();
@@ -679,8 +611,7 @@ bool GUI::isMovingAWindow() {
 }
 
 bool GUI::isMouseOnAWindow() {
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 
 	return ((m_wBag->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wBag->getRect())) 
 		|| (m_wSettings->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wSettings->getRect())) 

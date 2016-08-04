@@ -13,8 +13,6 @@ Button::Button(DialogMenu* parent, ska::Rectangle relativePos, std::string style
     m_fontSize = fontSize;
     m_displayedText = displayedText;
     m_relativePos = relativePos;
-    m_relativePos.w = m_buttonStyle.getWidth();
-    m_relativePos.h = m_buttonStyle.getHeight();
     m_couleur.r = m_couleur.g = m_couleur.b = 0;
     m_variable = variable;
     m_values = values;
@@ -50,7 +48,13 @@ void Button::display()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputActionContainer& in = wScreen.getActions();
 
-	ska::Rectangle buf = m_relativePos, textPos = m_relativePos;
+	ska::Rectangle buf;
+	buf.x = m_relativePos.x;
+	buf.y = m_relativePos.y;
+	ska::Rectangle textPos;
+	textPos.x = m_relativePos.x;
+	textPos.y = m_relativePos.y;
+
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
     textPos.w = m_stext.getWidth();
@@ -75,7 +79,14 @@ void Button::refresh()
 	WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputActionContainer& in = wScreen.getActions();
-	ska::Rectangle buf = m_relativePos, textPos = m_relativePos;
+	
+	ska::Rectangle buf;
+	buf.x = m_relativePos.x;
+	buf.y = m_relativePos.y;
+	ska::Rectangle textPos;
+	textPos.x = m_relativePos.x;
+	textPos.y = m_relativePos.y;
+
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 	textPos.w = m_stext.getWidth();

@@ -1,9 +1,8 @@
-#ifndef DEF_WINDOW_AREA
-#define DEF_WINDOW_AREA
+#pragma once
 
 #include <iostream>
 #include <string>
-#include "../../ska/Graphic/Rectangle.h"
+#include "../../ska/Graphic/Point.h"
 
 class DialogMenu;
 class WGameCore;
@@ -17,10 +16,10 @@ public:
 	bool canBeClicked();
     bool isVisible();
     void hide(bool x);
-	ska::Rectangle* getRelativePos();
-	void setRelativePos(ska::Rectangle pos);
+	ska::Point<int>& getRelativePos();
+	void setRelativePos(ska::Point<int> pos);
     DialogMenu* getParent();
-	ska::Rectangle getAbsolutePos();
+	ska::Point<int> getAbsolutePos();
     bool isA(int type);
 
 	virtual void display() = 0;
@@ -29,10 +28,8 @@ public:
 
 protected:
     DialogMenu* m_parent;
-	ska::Rectangle m_relativePos;
+	ska::Point<int> m_relativePos;
     bool m_canBeClicked, m_active;
     int m_type;
 
 };
-
-#endif

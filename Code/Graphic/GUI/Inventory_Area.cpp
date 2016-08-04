@@ -10,15 +10,15 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Rectangle relativePos) : DynamicWindowArea(parent)
+#define SIZE_ICON_ITEM_INVENTORY (TAILLEBLOCFENETRE / 4)
+
+Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Point<int> relativePos) : DynamicWindowArea(parent)
 {
     m_type = BUTTON_INVENTORY_AREA;
     m_inv = inv;
     m_active = parent->isVisible();
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
-    m_relativePos.w = relativePos.w;
-    m_relativePos.h = relativePos.h;
     m_lastObjectPos.x = 0;
 	m_lastObjectPos.y = 0;
 
@@ -48,7 +48,11 @@ unsigned int Inventory_Area::getAmountAtPos(ska::Point<int> relativePos)
 
 unsigned int Inventory_Area::getIndexFromPos(ska::Point<int> relativePos)
 {
-    return (unsigned int) (relativePos.x/m_inv->getSquareSprite()->getWidth() + (relativePos.y/m_inv->getSquareSprite()->getHeight())*m_relativePos.w);
+	return (unsigned int)(relativePos.x / m_inv->getSquareSprite()->getWidth() + (relativePos.y / m_inv->getSquareSprite()->getHeight())*SIZE_ICON_ITEM_INVENTORY);
+}
+
+ska::Rectangle Inventory_Area::getRect() const {
+	return ska::Rectangle { m_relativePos.x, m_relativePos.y, SIZE_ICON_ITEM_INVENTORY, SIZE_ICON_ITEM_INVENTORY };
 }
 
 void Inventory_Area::useObjectAtPos(ska::Point<int> objectPos)
@@ -70,12 +74,16 @@ void Inventory_Area::display()
 
     if(!m_parent->isVisible())
         return;
-    else
-        m_active = true;
 
-	ska::Rectangle buf = m_relativePos;
+    m_active = true;
+
+	ska::Rectangle buf; 
+	buf.x = m_relativePos.x;
+	buf.y = m_relativePos.y;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
+	buf.w = SIZE_ICON_ITEM_INVENTORY;
+	buf.h = SIZE_ICON_ITEM_INVENTORY;
 
     if(m_inv != NULL)
         m_inv->display(buf);
@@ -84,13 +92,13 @@ void Inventory_Area::display()
 
 void Inventory_Area::refresh()
 {
-	ska::Rectangle buf = m_relativePos;
+	ska::Point<int> buf = m_relativePos;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];*/
 	/*MouseCursor& mouseCur = wScreen.getMouseCursor();
 	
 

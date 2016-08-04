@@ -153,8 +153,8 @@ void DialogMenu::display() const {
 	
 
 
-	for (unsigned int i = 0; i < m_areaList.size(); i++){
-		m_areaList[i]->display();
+	for (auto& area : m_areaList){
+		area->display();
 	}
 
 }
@@ -249,9 +249,9 @@ void DialogMenu::refresh() {
 		}
 	}
 
-	for(unsigned int i = 0; i < m_areaList.size(); i++) {
+	for(auto& area : m_areaList) {
 		/* TODO : ... AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH */
-		DynamicWindowArea* dynArea = dynamic_cast<DynamicWindowArea*>(&(*m_areaList[i]));
+		DynamicWindowArea* dynArea = dynamic_cast<DynamicWindowArea*>(area.get());
 		if(dynArea != NULL)  {
 			dynArea->refresh();
 		}
@@ -379,15 +379,15 @@ void DialogMenu::addButtonClose(const std::string& imgName, const std::string& s
     m_areaList.push_back(std::unique_ptr<Button_Quit>(new Button_Quit(this, imgName, secondImgName, relativePos)));
 }
 
-void DialogMenu::addTextArea(const std::string& text, int fontSize, ska::Rectangle relativePos) {
+void DialogMenu::addTextArea(const std::string& text, int fontSize, ska::Point<int> relativePos) {
 	m_areaList.push_back(std::unique_ptr<Text_Area>(new Text_Area(this, text, fontSize, relativePos)));
 }
 
-void DialogMenu::addImageArea(const std::string& name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc) {
+void DialogMenu::addImageArea(const std::string& name, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc) {
 	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, name, alpha)));
 }
 
-void DialogMenu::addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc) {
+void DialogMenu::addImageArea(ska::Texture* tex, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc) {
 	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(this, relativePos, rectSrc, tex, alpha)));
 }
 
@@ -404,14 +404,13 @@ void DialogMenu::addButtonBar(ska::Rectangle relativePos, const std::string& sty
 }
 
 Window_Area* DialogMenu::getButton(const std::string& key) {
-    const size_t areaListSize = m_areaList.size();
-	for (size_t i = 0; i < areaListSize; i++) {
-		if (m_areaList[i]->getKey() == key) {
-			return &(*(m_areaList[i]));
+	for (auto& area : m_areaList) {
+		if (area->getKey() == key) {
+			return area.get();
 		}
 	}
 	std::cerr << "Erreur (classe DialogMenu) : Dépassement mémoire dans la liste des boutons associés à une fenêtre" << std::endl;
-    return &(*(m_areaList[0]));
+    return m_areaList[0].get();
 }
 
 void DialogMenu::addInventory(Inventory& inv, ska::Rectangle relativePos) {

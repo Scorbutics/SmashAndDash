@@ -56,7 +56,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		ska::ScenePtr scene = ska::ScenePtr(new SceneMap(*wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName, wScreen.getWorldScene().getFileName() == fichier));
+		ska::ScenePtr scene = ska::ScenePtr(new SceneMap(wScreen, *wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName, wScreen.getWorldScene().getFileName() == fichier));
 		wScreen.nextScene(scene);
 		
 	}

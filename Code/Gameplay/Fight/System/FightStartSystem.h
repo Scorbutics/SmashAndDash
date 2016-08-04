@@ -10,9 +10,13 @@
 class WorldScene;
 class CustomEntityManager;
 
+namespace ska {
+	class Window;
+}
+
 class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent> {
 public:
-	FightStartSystem(ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
+	FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
 	virtual ~FightStartSystem();
 
 protected:
@@ -25,6 +29,7 @@ private:
 	ska::SceneHolder& m_sceneHolder;
 	const ska::EntityId m_player;
 	unsigned int m_t0;
+	ska::Window& m_window;
 };
 
 

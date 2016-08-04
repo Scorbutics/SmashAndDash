@@ -17,19 +17,11 @@ Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::stri
     m_button = std::unique_ptr<Button>(new Button(parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
 
     m_relativePos = relativePos;
-    m_relativePos.w = 2*m_buttonStyle.getWidth();
-    m_relativePos.h = m_buttonStyle.getHeight();
     m_leftPos.x = m_relativePos.x - m_leftArrow.getWidth();
     m_leftPos.y = m_relativePos.y;
-    m_leftPos.w = m_leftArrow.getWidth();
-    m_leftPos.h = m_leftArrow.getHeight();
     m_rightPos.x = m_relativePos.x + m_buttonStyle.getWidth();
     m_rightPos.y = m_relativePos.y;
-    m_rightPos.w = m_rightArrow.getWidth();
-    m_rightPos.h = m_rightArrow.getHeight();
     m_cursorPos = m_relativePos;
-    m_cursorPos.w = m_cursor.getWidth();
-    m_cursorPos.h = m_cursor.getHeight();
 
     m_variable = variable;
     m_values = values;
@@ -47,7 +39,7 @@ void Button_Bar::display()
     
 
 //Coordonnées relatives -> absolues
-	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
+	ska::Point<int> buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 	absoluteLeftPos.x += (m_parent->getRect()).x;
@@ -74,9 +66,19 @@ void Button_Bar::refresh()
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 
 	//Coordonnées relatives -> absolues
-	ska::Rectangle buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
+	ska::Point<int> buf = m_relativePos, absoluteCursorPos = m_cursorPos;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
+
+	ska::Rectangle absoluteLeftPos;
+	absoluteLeftPos.x = m_leftPos.x;
+	absoluteLeftPos.y = m_leftPos.y;
+
+	ska::Rectangle absoluteRightPos;
+	absoluteRightPos.x = m_rightPos.x;
+	absoluteRightPos.y = m_rightPos.y;
+
+
 	absoluteLeftPos.x += (m_parent->getRect()).x;
 	absoluteLeftPos.y += (m_parent->getRect()).y;
 	absoluteRightPos.x += (m_parent->getRect()).x + m_buttonStyle.getWidth();

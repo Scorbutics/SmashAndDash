@@ -15,10 +15,10 @@
 
 using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 
-SceneFight::SceneFight(ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
+SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap_(ws, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
-m_statsSystem(ws.getEntityManager(), sh, ril, ws),
+m_statsSystem(w, ws.getEntityManager(), sh, ril, ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
 m_opponentScriptId(fc.opponentScriptId),
@@ -34,7 +34,7 @@ m_sceneLoaded(false),
 m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
 m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_guiBattle(m_skillEntityCollisionResponse) {
+m_guiBattle(w, m_skillEntityCollisionResponse, *this) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -203,8 +203,11 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		const auto& opponentBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_opponentId);
 		
 		//TODO max hp venant des stats du fichier ini
+		//TODO addHPBar => à supprimer, et modifier l'observateur de début de combat pour que guibattle crée sa propre HP bar
 		m_guiBattle.addHPBar(m_cameraSystem, pokemonBc.hp, pokemonBc.hp, m_worldScene.getEntityManager(), m_pokemonId);
 		m_guiBattle.addHPBar(m_cameraSystem, opponentBc.hp, opponentBc.hp, m_worldScene.getEntityManager(), m_opponentId);
+
+		notifyObservers(m_pokemonId, m_worldScene.getEntityManager().getComponent<SkillsHolderComponent>(m_pokemonId));
 
 		m_sceneLoaded = true;
 		m_loadState = 0;
@@ -274,6 +277,7 @@ bool SceneFight::unload() {
 
 void SceneFight::eventUpdate(bool movingDisallowed) {
 	AbstractSceneMap::eventUpdate(movingDisallowed);
+	m_guiBattle.eventUpdate(movingDisallowed);
 }
 
 SceneFight::~SceneFight() {

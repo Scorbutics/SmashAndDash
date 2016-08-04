@@ -49,9 +49,9 @@ public:
 
 	void addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos);
 	void addButtonClose(const std::string& imgName, const std::string& secondImgName, ska::Rectangle pos);
-	void addTextArea(const std::string&text, int fontSize, ska::Rectangle relativePos);
-	void addImageArea(const std::string& name, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
-	void addImageArea(ska::Texture* tex, bool alpha, ska::Rectangle relativePos, ska::Rectangle* rectSrc);
+	void addTextArea(const std::string&text, int fontSize, ska::Point<int> relativePos);
+	void addImageArea(const std::string& name, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc);
+	void addImageArea(ska::Texture* tex, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc);
 	void addInventory(Inventory& inv, ska::Rectangle relativePos);
 	void addButton(ska::Rectangle relativePos, const std::string& styleName, const std::string& styleNamePressed, int* variable, const std::vector<int>& value, const std::vector<std::string>& displayedText, int fontSize, const std::string& key);
 	void addButtonBar(ska::Rectangle relativePos, const std::string& styleName, int* variable, const std::vector<int>& values, const std::vector<std::string>& displayedText, int fontSize, const std::string& key);

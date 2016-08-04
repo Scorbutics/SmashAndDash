@@ -7,7 +7,7 @@
 #include "Text_Area.h"
 #include "../../Utils/IDs.h"
 
-Text_Area::Text_Area(DialogMenu *parent, const std::string& text, int fontSize, ska::Rectangle relativePos) : Window_Area(parent)
+Text_Area::Text_Area(DialogMenu *parent, const std::string& text, int fontSize, ska::Point<int> relativePos) : Window_Area(parent)
 {
     m_type = BUTTON_TEXT_AREA;
     m_text = text;
@@ -22,9 +22,6 @@ Text_Area::Text_Area(DialogMenu *parent, const std::string& text, int fontSize, 
 	m_color.a = 255;
 
     m_stext.loadFromText(m_fontSize, m_text, m_color);
-
-    m_relativePos.w = m_stext.getWidth();
-    m_relativePos.h = m_stext.getHeight();
 }
 
 void Text_Area::display() {
@@ -35,7 +32,7 @@ void Text_Area::display() {
     
     m_active = true;
 
-	ska::Rectangle buf = m_relativePos;
+	ska::Point<int> buf = m_relativePos;
 	buf.x += (m_parent->getRect()).x;
 	buf.y += (m_parent->getRect()).y;
 	
