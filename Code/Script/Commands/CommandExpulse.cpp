@@ -36,16 +36,20 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 		throw ska::ScriptException("The targetted entity cannot move : " + id);
 	}
 
-	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	auto& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
 	const ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
 	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
 
 	ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
 	const ska::Point<int> offsetHitboxBlock = m_world.alignOnBlock(hitbox);
 	const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
-	pc.x = targetBlock.x /*+ offsetHitboxBlock.x*/ - hc.xOffset; 
-	pc.y = targetBlock.y /*+ offsetHitboxBlock.y*/ - hc.yOffset;
-
+	pc.x = targetBlock.x /*- offsetHitboxBlock.x*/  - hc.xOffset; 
+	pc.y = targetBlock.y /*- offsetHitboxBlock.y*/  - hc.yOffset;
+	mc.vx = 0;
+	mc.vy = 0;
+	mc.ax = 0;
+	mc.ay = 0;
 	return "";
 }
 

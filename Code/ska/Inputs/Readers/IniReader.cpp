@@ -97,34 +97,11 @@ void ska::IniReader::save(std::string inifilename) {
 
 /* TODO template pour get */
 
-bool ska::IniReader::get(std::string path) const
+bool ska::IniReader::exists(std::string path) const
 {
 	return (m_content.find(path) != m_content.end());
 }
 
-std::string ska::IniReader::getString(std::string path) const
-{
-	if(m_content.find(path) != m_content.end())
-		return m_content.at(path);
-	else
-		return "STRINGNOTFOUND";
-}
-
-int ska::IniReader::getInt(std::string path) const
-{
-	if(m_content.find(path) != m_content.end())
-		return atoi(m_content.at(path).c_str());
-	else
-		return 0;
-}
-
-bool ska::IniReader::getBoolean(std::string path) const
-{
-	if(m_content.find(path) != m_content.end())
-		return (m_content.at(path) == "true");
-	else
-		return false;
-}
 
 bool ska::IniReader::isLoaded() const
 {
@@ -136,19 +113,6 @@ void ska::IniReader::clear()
 	m_content.clear();
 }
 
-float ska::IniReader::getFloat(std::string path) const
-{
-	if(m_content.find(path) != m_content.end())
-	{		
-		std::stringstream ss;
-		float f;
-		ss << m_content.at(path);
-		ss >> f;
-		return f;
-	}
-	else
-		return 0.;
-}
 
 
 //Insère ou modifie (si le chemin existe déjà) le contenu content du chemin path dans la liste lines

@@ -8,7 +8,6 @@
 #include "../../Graphic/DialogComponent.h"
 #include "../../Utils/IDs.h"
 #include "../../Graphic/GUI/DialogMenu.h"
-#include "../Fight/SkillsHolderComponent.h"
 #include "../Data/Statistics.h"
 
 #include "../../Graphic/GUI/Bar.h"
@@ -63,40 +62,40 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) {
 	ska::IniReader skillData(skillPath);
 
-	sd.style1 = skillData.getString("Description style_1");
-	sd.style2 = skillData.getString("Description style_2");
-	sd.description = skillData.getString("Description description");
-	sd.name = skillData.getString("Description name");
-	sd.type = skillData.getString("Description type");
-	sd.context = skillData.getInt("Description context");
-	sd.particleNumber = skillData.getInt("Particle number");
-	sd.speed = skillData.getFloat("Particle speed");
-	sd.knockback = skillData.getInt("Particle knockback");
-	sd.noise = skillData.getInt("Particle noise");
-	sd.amplitude = skillData.getFloat("Particle amplitude");
+	sd.style1 = skillData.get<std::string>("Description style_1");
+	sd.style2 = skillData.get<std::string>("Description style_2");
+	sd.description = skillData.get<std::string>("Description description");
+	sd.name = skillData.get<std::string>("Description name");
+	sd.type = skillData.get<std::string>("Description type");
+	sd.context = skillData.get<int>("Description context");
+	sd.particleNumber = skillData.get<int>("Particle number");
+	sd.speed = skillData.get<float>("Particle speed");
+	sd.knockback = skillData.get<int>("Particle knockback");
+	sd.noise = skillData.get<int>("Particle noise");
+	sd.amplitude = skillData.get<float>("Particle amplitude");
 
 
-	sd.id = skillData.getInt("Description id");
+	sd.id = skillData.get<int>("Description id");
 
 
 	/* TODO put the sprite in the GUI */
 	//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
-	sd.cooldown = skillData.getInt("Stats cooldown");
-	sd.range = skillData.getInt("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
+	sd.cooldown = skillData.get<int>("Stats cooldown");
+	sd.range = skillData.get<int>("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
 
 	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
 		sd.buffAlly = Statistics(&skillData, "BuffsAlly").getRawStats();
 		sd.buffEnemy = Statistics(&skillData, "BuffsEnemy").getRawStats();
-		sd.alterAlly = skillData.getInt("StatusAlter ally");
-		sd.alterEnemy = skillData.getInt("StatusAlter enemy");
+		sd.alterAlly = skillData.get<int>("StatusAlter ally");
+		sd.alterEnemy = skillData.get<int>("StatusAlter enemy");
 	}
 }
 
 void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId entity, SkillsHolderComponent& shc) {
-	for (unsigned int i = 0; reader.get("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
-		if (reader.getInt("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
-			createSkill(shc.skills[i], reader.getString("Skills " + ska::StringUtils::intToStr(i)));
+	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
+		if (reader.get<int>("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
+			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
 		}
 	}
 }
@@ -199,15 +198,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		const auto& pokemonBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_pokemonId);
-		const auto& opponentBc = m_worldScene.getEntityManager().getComponent<BattleComponent>(m_opponentId);
-		
-		//TODO max hp venant des stats du fichier ini
-		//TODO addHPBar => à supprimer, et modifier l'observateur de début de combat pour que guibattle crée sa propre HP bar
-		m_guiBattle.addHPBar(m_cameraSystem, pokemonBc.hp, pokemonBc.hp, m_worldScene.getEntityManager(), m_pokemonId);
-		m_guiBattle.addHPBar(m_cameraSystem, opponentBc.hp, opponentBc.hp, m_worldScene.getEntityManager(), m_opponentId);
-
-		notifyObservers(m_pokemonId, m_worldScene.getEntityManager().getComponent<SkillsHolderComponent>(m_pokemonId));
+		notifyObservers(m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
 
 		m_sceneLoaded = true;
 		m_loadState = 0;

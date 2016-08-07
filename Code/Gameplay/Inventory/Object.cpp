@@ -9,10 +9,10 @@ Object::Object(int id): m_animation(525, 2, false)
 	m_id = id;
 	const std::string& strId = ska::StringUtils::intToStr(m_id);
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Items"FILE_SEPARATOR + strId  + ".ini");
-    m_name = reader.getString("Description name");
-	m_description = reader.getString("Description description");
-	m_effect = reader.getString("Effect target");
-	m_action = reader.getString("Effect action");
+    m_name = reader.get<std::string>("Description name");
+	m_description = reader.get<std::string>("Description description");
+	m_effect = reader.get<std::string>("Effect target");
+	m_action = reader.get<std::string>("Effect action");
 	m_spriteName = "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Inventory"FILE_SEPARATOR + strId + ".png";
 	m_sprite.load(m_spriteName , DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
     

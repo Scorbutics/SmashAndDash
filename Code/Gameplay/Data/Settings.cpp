@@ -43,11 +43,11 @@ void Settings::update() {
 void Settings::load()
 {
     ska::IniReader reader(m_fileName);
-	m_soundVol = reader.getInt("Settings sound_volume");
-	m_fogActive = reader.getInt("Settings fog_active");
-	m_weatherActive = reader.getInt("Settings weather_active");
-	m_guiTransparency = reader.getInt("Settings gui_transparency");
-	m_particles = reader.getInt("Settings particles_active");
+	m_soundVol = reader.get<int>("Settings sound_volume");
+	m_fogActive = reader.get<int>("Settings fog_active");
+	m_weatherActive = reader.get<int>("Settings weather_active");
+	m_guiTransparency = reader.get<int>("Settings gui_transparency");
+	m_particles = reader.get<int>("Settings particles_active");
 	update();
 }
 

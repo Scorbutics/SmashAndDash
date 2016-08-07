@@ -29,20 +29,20 @@ const RawStatistics<int>& Statistics::getRawStats() const {
 Statistics::Statistics(ska::IniReader* data, std::string block)
 {
 
-	m_stats.hp = data->getInt(block + " hp");
-	m_stats.defense = data->getInt(block + " defense");
-	m_stats.speDefense = data->getInt(block + " spe_defense");
-	m_stats.speAttack = data->getInt(block + " spe_attack");
-	m_stats.speed = data->getInt(block + " speed") / 2;
-	m_stats.attack = data->getInt(block + " attack");
-	m_stats.droppedExp = data->getInt("Experience level_1_exp_dropped");
-	m_slopes.hp = (float)((data->getInt(block + " hp_max") - m_stats.hp) / 100.);
-	m_slopes.defense = (float)((data->getInt(block + " spe_defense_max") - m_stats.speDefense) / 100.);
-	m_slopes.speed = (float)((data->getInt(block + " speed_max") - m_stats.speed) / 100.);
-	m_slopes.speAttack = (float)((data->getInt(block + " spe_attack_max") - m_stats.speAttack) / 100.);
-	m_slopes.attack = (float)((data->getInt(block + " attack_max") - m_stats.attack) / 100.);
-	m_slopes.defense = (float)((data->getInt(block + " defense_max") - m_stats.defense) / 100.);
-	m_stats.exp = data->getInt("Experience level_1_exp_needed");
+	m_stats.hp = data->get<int>(block + " hp");
+	m_stats.defense = data->get<int>(block + " defense");
+	m_stats.speDefense = data->get<int>(block + " spe_defense");
+	m_stats.speAttack = data->get<int>(block + " spe_attack");
+	m_stats.speed = data->get<int>(block + " speed") / 2;
+	m_stats.attack = data->get<int>(block + " attack");
+	m_stats.droppedExp = data->get<int>("Experience level_1_exp_dropped");
+	m_slopes.hp = (float)((data->get<int>(block + " hp_max") - m_stats.hp) / 100.);
+	m_slopes.defense = (float)((data->get<int>(block + " spe_defense_max") - m_stats.speDefense) / 100.);
+	m_slopes.speed = (float)((data->get<int>(block + " speed_max") - m_stats.speed) / 100.);
+	m_slopes.speAttack = (float)((data->get<int>(block + " spe_attack_max") - m_stats.speAttack) / 100.);
+	m_slopes.attack = (float)((data->get<int>(block + " attack_max") - m_stats.attack) / 100.);
+	m_slopes.defense = (float)((data->get<int>(block + " defense_max") - m_stats.defense) / 100.);
+	m_stats.exp = data->get<int>("Experience level_1_exp_needed");
 	m_slopes.exp = (float) m_stats.exp;
 
 	m_slopes.droppedExp = (float)(abs((int)(m_slopes.exp - m_stats.droppedExp)) / 3.);

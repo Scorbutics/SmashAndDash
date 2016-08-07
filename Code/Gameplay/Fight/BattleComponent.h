@@ -7,4 +7,6 @@ public:
 	BattleComponent() {
 		hp = 10;
 	}
+
+	RawStatistics<int> variations;
 };

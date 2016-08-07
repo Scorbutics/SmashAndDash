@@ -39,7 +39,7 @@ ska::IniReader* GetRandomMobSettings(MobSpawner& w) {
 
 	probs.resize(totMobs);
 	for(size_t i = 0; i < totMobs; i++)
-		probs[i] = w.getMobSettings()[i].getInt("Spawn probability_percent");
+		probs[i] = w.getMobSettings()[i].get<int>("Spawn probability_percent");
 
 
 	if(totMobs != 0)
@@ -51,7 +51,7 @@ ska::IniReader* GetRandomMobSettings(MobSpawner& w) {
 void VariablesAcquisition(std::vector<int> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
-	int var_number = reader.getInt("Game var_number");
+	int var_number = reader.get<int>("Game var_number");
 	std::stringstream ss;
 
 	if(var_number > 0)
@@ -64,7 +64,7 @@ void VariablesAcquisition(std::vector<int> &vect, const std::string& filename)
 
 			ss << i;
 
-			vect.push_back(reader.getInt("Variable " + ss.str()));
+			vect.push_back(reader.get<int>("Variable " + ss.str()));
 			ss.str("");
 		}
 
@@ -73,7 +73,7 @@ void VariablesAcquisition(std::vector<int> &vect, const std::string& filename)
 void SwitchesAcquisition(std::vector<bool> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
-	int switch_number = reader.getInt("Game switch_number");
+	int switch_number = reader.get<int>("Game switch_number");
 	std::stringstream ss;
 
 	if(switch_number > 0)
@@ -86,7 +86,7 @@ void SwitchesAcquisition(std::vector<bool> &vect, const std::string& filename)
 
 			ss << i;
 
-			vect.push_back(reader.getInt("Switch " + ss.str()) != 0);
+			vect.push_back(reader.get<int>("Switch " + ss.str()) != 0);
 			ss.str("");
 		}
 

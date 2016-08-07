@@ -117,11 +117,11 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	}
 
 	std::vector<unsigned int> idBlocks;
-	for (unsigned int i = 0; dataSpawn->get("Spawn on_blockid_" + ska::StringUtils::intToStr(i)); i++) {
-		idBlocks.push_back(dataSpawn->getInt("Spawn on_blockid_" + ska::StringUtils::intToStr(i)));
+	for (unsigned int i = 0; dataSpawn->exists("Spawn on_blockid_" + ska::StringUtils::intToStr(i)); i++) {
+		idBlocks.push_back(dataSpawn->get<int>("Spawn on_blockid_" + ska::StringUtils::intToStr(i)));
 	}
 
-	const unsigned int idMob = dataSpawn->getInt("Data id");
+	const unsigned int idMob = dataSpawn->get<int>("Data id");
 	const unsigned int blockSize = m_world.getBlockSize();
 
 	int successfulSpawns = 0;
@@ -160,12 +160,12 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 
 			if (spawnAllowed) {
-				int level = rand() % (dataSpawn->getInt("Data level_min") + dataSpawn->getInt("Data level_max") + 1) + dataSpawn->getInt("Data level_min");
+				int level = rand() % (dataSpawn->get<int>("Data level_min") + dataSpawn->get<int>("Data level_max") + 1) + dataSpawn->get<int>("Data level_min");
 				ska::EntityId mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
 				/* 0 = Predifined */
 				/* 1 = Random */
 				/* 2 = Fixe */
-				int type = dataSpawn->getInt("Data path_type");
+				int type = dataSpawn->get<int>("Data path_type");
 				if (type == 1) {
 					ska::IARandomMovementComponent iamc;
 					iamc.delay = 500;
@@ -207,9 +207,9 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
 
 		ska::Point<int> startPos;
-		startPos.x = reader.getInt("Trainer start_posx");
-		startPos.y = reader.getInt("Trainer start_posy");
-		std::string startMapName = reader.getString("Trainer start_map_name");
+		startPos.x = reader.get<int>("Trainer start_posx");
+		startPos.y = reader.get<int>("Trainer start_posy");
+		std::string startMapName = reader.get<std::string>("Trainer start_map_name");
 
 		std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
 		buf += startMapName;
@@ -218,7 +218,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		buf += ".ini";
 
 		ska::IniReader mapReader(buf);
-		std::string startMapChipset = mapReader.getString("Chipset file");
+		std::string startMapChipset = mapReader.get<std::string>("Chipset file");
 		if (startMapChipset == "STRINGNOTFOUND") {
 			throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}

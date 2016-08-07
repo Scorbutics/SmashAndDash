@@ -50,7 +50,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 
 		ska::IniReader mapReader(buf);
 
-		const std::string chipsetName = mapReader.getString("Chipset file");
+		const std::string chipsetName = mapReader.get<std::string>("Chipset file");
 
 		if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
@@ -97,7 +97,7 @@ void CommandTeleport::teleportHeroToMap(std::string param)
 
 	ska::IniReader mapReader(buf);
 
-	std::string chipsetName = mapReader.getString("Chipset file");
+	std::string chipsetName = mapReader.get<std::string>("Chipset file");
 
 	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
 		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;

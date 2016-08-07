@@ -1,0 +1,3 @@
+block_authorize #arg1#, #arg0#, false
+restore_component InputComponent, #arg0#
+end

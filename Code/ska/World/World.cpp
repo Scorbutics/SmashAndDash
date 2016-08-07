@@ -384,10 +384,10 @@ void ska::World::getRainFromData(std::string stringDataFile) {
     int idsprite, acceleration, density;	
 	IniReader reader(stringDataFile);
 
-    if(reader.getString("Rain id_sprite") != "STRINGNOTFOUND") {
-		idsprite = reader.getInt("Rain id_sprite");
-		acceleration = reader.getInt("Rain acceleration");
-		density = reader.getInt("Rain density");
+    if(reader.exists("Rain id_sprite")) {
+		idsprite = reader.get<int>("Rain id_sprite");
+		acceleration = reader.get<int>("Rain acceleration");
+		density = reader.get<int>("Rain density");
 
     } else {
         std::clog << "La pluie est inexistante sur cette map" << std::endl;

@@ -20,11 +20,15 @@ if [|same_value|] == 0
 		block_authorize 89, 0, false
 		animation 0, 2
 		assign 25, |move_power|
+		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, #arg0#
 	else
 		animation 0, 2
-		assign 15, |move_power|
+		remove_component ForceComponent, 0
+		expulse 0
+		restore_component ForceComponent, 0
+		script ./Levels/surf_callback.txt, 1000, #arg0#
 	endif
-	move 0, [|direction_perso|], 25, false, ./Levels/surf_callback.txt, #arg0#
+	
 endif
 
 end

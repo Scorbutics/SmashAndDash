@@ -60,38 +60,40 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 	bool transparency;
 	int alpha;
 
-	const std::string sprite = reader.getString("Fog sprite");
-	xintensity = reader.getInt("Fog xintensity");
-	yintensity = reader.getInt("Fog yintensity");
-	number = reader.getInt("Fog number");
-	transparency = reader.getBoolean("Fog transparency");
+	const std::string& fogSpritePath = "Fog sprite";
+	const bool sprite = reader.exists(fogSpritePath);
+	xintensity = reader.get<int>("Fog xintensity");
+	yintensity = reader.get<int>("Fog yintensity");
+	number = reader.get<int>("Fog number");
+	transparency = reader.get<bool>("Fog transparency");
 
 
-	if(sprite == "STRINGNOTFOUND") {
+	if(!sprite) {
 		std::clog << "Le brouillard est inexistant sur cette map" << std::endl;
 		m_fog.hide(true);
 		return;
 	}
 
 	alpha = transparency ? WEATHER_ALPHA_LVL : 255;
-	m_fog.load(sprite, number, 100, xintensity, yintensity, alpha);
+	m_fog.load(reader.get<std::string>(fogSpritePath), number, 100, xintensity, yintensity, alpha);
 	m_fog.hide(false);
 
 }
 
 void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 	ska::IniReader reader(stringDataFile);
-	const std::string sprite = reader.getString("Weather sprite");
+	const std::string& weatherSpritePath = "Weather sprite";
+	const bool sprite = reader.exists(weatherSpritePath);
 
-	if(sprite != "STRINGNOTFOUND") {
+	if(sprite) {
 		int number, xintensity, yintensity;
 		bool transparency;
-		transparency = reader.getBoolean("Weather transparency");
-		xintensity = reader.getInt("Weather xintensity");
-		yintensity = reader.getInt("Weather yintensity");
-		number = reader.getInt("Weather number");	
+		transparency = reader.get<bool>("Weather transparency");
+		xintensity = reader.get<int>("Weather xintensity");
+		yintensity = reader.get<int>("Weather yintensity");
+		number = reader.get<int>("Weather number");	
 	
-		m_weather.load(sprite, number, 100, xintensity, yintensity, transparency);
+		m_weather.load(reader.get<std::string>(weatherSpritePath), number, 100, xintensity, yintensity, transparency);
 		m_weather.hide(false);
 	} else {
 		std::clog << "Le temps est inexistant sur cette map" << std::endl;

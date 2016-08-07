@@ -19,7 +19,6 @@ int main (int argc, char *argv[])
     argc = argc;
     argv = argv;
 
-	//ECSTest();
     int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
     std::string startMapName, startMapChipsetName;
 
@@ -29,11 +28,11 @@ int main (int argc, char *argv[])
 	std::ofstream errFile("stderr.txt", std::ios::trunc);
 	std::cerr.rdbuf(errFile.rdbuf());
 
-	/* TODO : ne plus utiliser srand  */
+	/* TODO : ne plus utiliser srand...  */
     srand((unsigned int)time(NULL));
 
 
-	/* TODO : réécrire */
+	/* TODO : réécrire dans la classe Core (pour une fois, un singleton, car une seule initialisation par application cliente) */
 
     // Chargement de la vidéo, de l'audio et du texte
     if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
@@ -51,8 +50,8 @@ int main (int argc, char *argv[])
     }
 
 	ska::IniReader reader("gamesettings.ini");
-	widthBlocks = reader.getInt("Settings window_width_blocks");
-	heightBlocks = reader.getInt("Settings window_height_blocks");
+	widthBlocks = reader.get<int>("Settings window_width_blocks");
+	heightBlocks = reader.get<int>("Settings window_height_blocks");
 	    
 	try {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)

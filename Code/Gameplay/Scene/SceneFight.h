@@ -26,7 +26,7 @@ class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
 
-using BattleStartObservable = ska::Observable<const ska::EntityId&, SkillsHolderComponent&>;
+using BattleStartObservable = ska::Observable<ska::CameraSystem&, const ska::EntityId&, const ska::EntityId&, ska::EntityManager&>;
 
 namespace ska {
 	class Window;

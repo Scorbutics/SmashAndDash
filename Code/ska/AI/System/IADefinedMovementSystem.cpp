@@ -43,7 +43,7 @@ void ska::IADefinedMovementSystem::refresh() {
 			collisioned = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
 		}
 		bool finished = false;
-		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || !iamc.ghost && collisioned) {
+		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || collisioned) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];
 			if (iamc.directionIndex+1 < iamc.directions.size()) {
@@ -69,6 +69,9 @@ void ska::IADefinedMovementSystem::refresh() {
 		if (!finished) {
 			mc.vx = finalMovement.x;
 			mc.vy = finalMovement.y;
+		} else {
+			mc.vx = 0;
+			mc.vy = 0;
 		}
 	}
 

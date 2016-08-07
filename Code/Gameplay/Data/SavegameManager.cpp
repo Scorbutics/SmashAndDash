@@ -191,9 +191,9 @@ void SavegameManager::loadTrainer()
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	startPosx = reader.getInt("Trainer start_posx");
-	startPosy = reader.getInt("Trainer start_posy");
-	m_startMapName = reader.getString("Trainer start_map_name");
+	startPosx = reader.get<int>("Trainer start_posx");
+	startPosy = reader.get<int>("Trainer start_posy");
+	m_startMapName = reader.get<std::string>("Trainer start_map_name");
 
 	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
 	buf += m_startMapName;
@@ -202,7 +202,7 @@ void SavegameManager::loadTrainer()
 	buf += ".ini";
 
 	ska::IniReader mapReader(buf);
-	m_startMapChipsetName = mapReader.getString("Chipset file");
+	m_startMapChipsetName = mapReader.get<std::string>("Chipset file");
 
 	if(m_startMapChipsetName == "STRINGNOTFOUND")
 		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;
@@ -210,9 +210,9 @@ void SavegameManager::loadTrainer()
 	/*hero = wScreen.getEntityFactory().getTrainer();
 	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
 	
-	for (unsigned int i = 0; reader.get("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
+	for (unsigned int i = 0; reader.exists("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);
-		loadItem(reader.getInt("Items " + id + "_id"), (unsigned int)reader.getInt("Items " + id + "_amount"));
+		loadItem(reader.get<int>("Items " + id + "_id"), (unsigned int)reader.get<int>("Items " + id + "_amount"));
 	}
 		
 }

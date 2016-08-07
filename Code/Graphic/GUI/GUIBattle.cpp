@@ -1,6 +1,8 @@
 #include "GUIBattle.h"
 #include "Bar.h"
 #include "../../Utils\IDs.h"
+#include "../../ska/ECS/EntityManager.h"
+#include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../Gameplay/Data/RawStatistics.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
@@ -9,7 +11,7 @@
 
 GUIBattle::GUIBattle(ska::Window& w, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1, std::placeholders::_2)),
+BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
 m_statsObservable(statObs),
 m_battleStartObservable(battleStartObs),
 m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false) {
@@ -28,7 +30,8 @@ void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsig
 	m_bars[entityId]->setCurrentValue(currentValue);
 }
 
-void GUIBattle::onBattleStart(const ska::EntityId& target, SkillsHolderComponent& sh) {
+void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em) {
+	const auto& sh = em.getComponent<SkillsHolderComponent>(pokemon);
 	m_moves.deleteAll();
 	m_moves.hide(false);
 	ska::Point<int> buf;
@@ -42,7 +45,13 @@ void GUIBattle::onBattleStart(const ska::EntityId& target, SkillsHolderComponent
 			m_moves.addImageArea(ska::SpritePath::getInstance().getPath(SPRITEBANK_ICONS, v[i].id), false, buf, nullptr);
 		}
 	}
-
+	;
+	const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
+	const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
+	
+	//TODO max hp venant des stats du fichier ini
+	addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
+	addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
 }
 
 void GUIBattle::eventUpdate(bool movingDisallowed) {
