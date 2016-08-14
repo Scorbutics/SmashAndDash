@@ -14,6 +14,15 @@
 
 using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 
+void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
+	stats.hp = data.get<int>(block + " hp");
+	stats.defense = data.get<int>(block + " defense");
+	stats.speDefense = data.get<int>(block + " spe_defense");
+	stats.speAttack = data.get<int>(block + " spe_attack");
+	stats.speed = data.get<int>(block + " speed") / 2;
+	stats.attack = data.get<int>(block + " attack");
+}
+
 SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap_(ws, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
@@ -62,17 +71,28 @@ void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
 void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) {
 	ska::IniReader skillData(skillPath);
 
+	if (!skillData.isLoaded()) {
+		return;
+	}
+
 	sd.style1 = skillData.get<std::string>("Description style_1");
 	sd.style2 = skillData.get<std::string>("Description style_2");
 	sd.description = skillData.get<std::string>("Description description");
 	sd.name = skillData.get<std::string>("Description name");
 	sd.type = skillData.get<std::string>("Description type");
 	sd.context = skillData.get<int>("Description context");
-	sd.particleNumber = skillData.get<int>("Particle number");
-	sd.speed = skillData.get<float>("Particle speed");
-	sd.knockback = skillData.get<int>("Particle knockback");
-	sd.noise = skillData.get<int>("Particle noise");
-	sd.amplitude = skillData.get<float>("Particle amplitude");
+
+	const std::string& particleNumber = "Particle number";
+	const std::string& particleSpeed = "Particle speed";
+	const std::string& particleKnockback = "Particle knockback";
+	const std::string& particleNoise = "Particle noise";
+	const std::string& particleAmplitude = "Particle amplitude";
+
+	sd.particleNumber = skillData.exists(particleNumber) ? skillData.get<int>(particleNumber) : 0;
+	sd.speed = skillData.exists(particleSpeed) ? skillData.get<float>(particleSpeed) : 0;
+	sd.knockback = skillData.exists(particleKnockback) ? skillData.get<float>(particleKnockback) : 0;
+	sd.noise = skillData.exists(particleNoise) ? skillData.get<float>(particleNoise) : 0;;
+	sd.amplitude = skillData.exists(particleAmplitude) ? skillData.get<float>(particleAmplitude) : 0;;
 
 
 	sd.id = skillData.get<int>("Description id");
@@ -85,8 +105,8 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	sd.range = skillData.get<int>("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
 
 	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
-		sd.buffAlly = Statistics(&skillData, "BuffsAlly").getRawStats();
-		sd.buffEnemy = Statistics(&skillData, "BuffsEnemy").getRawStats();
+		LoadRawStatistics(sd.buffAlly, skillData, "BuffsAlly");
+		LoadRawStatistics(sd.buffEnemy, skillData, "BuffsEnemy");
 		sd.alterAlly = skillData.get<int>("StatusAlter ally");
 		sd.alterEnemy = skillData.get<int>("StatusAlter enemy");
 	}
