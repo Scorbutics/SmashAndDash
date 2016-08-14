@@ -33,7 +33,8 @@ void ska::IADefinedMovementSystem::refresh() {
 		
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
 		const unsigned int distanceSquaredToTarget = ska::RectangleUtils::distanceSquared(centerPos, targetPoint);
-		const bool directionChanged = iamc.lastDistance < distanceSquaredToTarget;
+		const unsigned int nextDistanceSquaredToTarget = ska::RectangleUtils::distanceSquared(centerPos + finalMovement, targetPoint);
+		const bool directionChanged = distanceSquaredToTarget < nextDistanceSquaredToTarget;
 		
 		bool collisioned;
 		if (iamc.ghost) {
@@ -64,14 +65,15 @@ void ska::IADefinedMovementSystem::refresh() {
 
 			iamc.lastTimeStarted = TimeUtils::getTicks();
 		}
-		iamc.lastDistance = distanceSquaredToTarget;
 
 		if (!finished) {
 			mc.vx = finalMovement.x;
 			mc.vy = finalMovement.y;
-		} else {
+		} else if (directionChanged) {
 			mc.vx = 0;
 			mc.vy = 0;
+			mc.ay = 0;
+			mc.ax = 0;
 		}
 	}
 

@@ -44,12 +44,24 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 	ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
 	const ska::Point<int> offsetHitboxBlock = m_world.alignOnBlock(hitbox);
 	const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
-	pc.x = targetBlock.x /*- offsetHitboxBlock.x*/  - hc.xOffset; 
-	pc.y = targetBlock.y /*- offsetHitboxBlock.y*/  - hc.yOffset;
+	ska::Point<int> vector;
+	vector.x = targetBlock.x /*- offsetHitboxBlock.x*/ - (pc.x + hc.xOffset);
+	vector.y = targetBlock.y /*- offsetHitboxBlock.y*/ - (pc.y + hc.yOffset);
+
 	mc.vx = 0;
 	mc.vy = 0;
 	mc.ax = 0;
 	mc.ay = 0;
+
+	ska::IADefinedMovementComponent iamc;
+	iamc.origin = centerPos;
+	iamc.delay = -1;
+	iamc.ghost = true;
+
+	iamc.directions.push_back(vector);
+	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, iamc);
+
+
 	return "";
 }
 
