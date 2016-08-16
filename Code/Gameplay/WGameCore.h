@@ -40,8 +40,6 @@ public:
 	void initNewWorld();
 	void transition(int type);
 	
-	GUI& getGUI();
-
 	//Inventory& getInventory();
 	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
@@ -62,7 +60,6 @@ protected:
 
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
-	GUI m_gui;
 	Settings m_settings;
 	//Inventory m_inv;
 	WorldScene m_worldScene;

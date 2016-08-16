@@ -22,8 +22,7 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 Window(title, w, h),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this),
-m_gui(*this, m_playerICM) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this) {
 
 	/* MAP inputs */
 	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputMapContext()));
@@ -146,10 +145,6 @@ void WGameCore::eventUpdate(bool movingDisallowed) {
 
 Settings& WGameCore::getSettings() {
     return m_settings;
-}
-
-GUI& WGameCore::getGUI() {
-    return m_gui;
 }
 
 ska::World& WGameCore::getWorld() {
