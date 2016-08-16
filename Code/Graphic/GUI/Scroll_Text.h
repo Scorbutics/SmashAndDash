@@ -6,13 +6,15 @@
 #include "DynamicWindowArea.h"
 #include "../../ska/Graphic/Texture.h"
 
+namespace ska {
+	class InputContextManager;
+}
+
 class Scroll_Text : public DynamicWindowArea
 {
 public:
-	Scroll_Text(DialogMenu *parent, const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos);
-    virtual void display();
-    virtual std::string getKey(){return "";};
-    virtual void forceValue(unsigned int){};
+	Scroll_Text(const ska::InputContextManager& icm, DialogMenu &parent, const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos);
+    virtual void display() const override;
     virtual ~Scroll_Text();
 	virtual void refresh();
 
@@ -24,4 +26,6 @@ private:
     ska::Texture m_topArrow, m_botArrow, m_cursor, m_scrollBar;
 	ska::Rectangle m_posTopArrow, m_posBotArrow, m_posCursor;
     ska::Color m_color;
+
+	const ska::InputContextManager& m_playerICM;
 };

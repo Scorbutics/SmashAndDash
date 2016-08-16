@@ -1,5 +1,4 @@
 #include "CommandStuckCharacter.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
 CommandStuckCharacter::CommandStuckCharacter(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -17,7 +16,7 @@ int CommandStuckCharacter::argumentsNumber() {
 
 std::string CommandStuckCharacter::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	int id, number, moving;
 
 	id = ska::StringUtils::strToInt(args[0]);

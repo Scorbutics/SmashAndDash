@@ -1,23 +1,22 @@
-#ifndef DEF_MOVABLE_WINDOW
-#define DEF_MOVABLE_WINDOW
-
+#pragma once
 
 #include "DialogMenu.h"
 #include "../../ska/Graphic/Point.h"
 
-class WGameCore;
+namespace ska {
+	class InputContextManager;
+}
 
 class MovableWindow : public DialogMenu
 {
 public:
-	MovableWindow(const std::string& fichierMenu, ska::Rectangle posFond, int taillePolice);
+	MovableWindow(const ska::InputContextManager& icm, const std::string& fichierMenu, ska::Rectangle posFond, int taillePolice);
     virtual void refresh();
-    virtual std::string getKey(){return "";};
-    virtual void forceValue(unsigned int){};
     virtual ~MovableWindow();
 
 private:
 	ska::Point<float> m_mouseLastPos;
+protected:
+	const ska::InputContextManager& m_playerICM;
 };
 
-#endif

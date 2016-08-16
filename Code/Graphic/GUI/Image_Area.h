@@ -9,12 +9,10 @@
 class Image_Area : public Window_Area
 {
 public:
-	Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha);
-	Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
-	virtual void display();
+	Image_Area(DialogMenu& parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha);
+	Image_Area(DialogMenu& parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, ska::Texture* tex, bool alpha);
+	virtual void display() const override;
 	std::string getImageName() const;
-    virtual std::string getKey(){return "";};
-    virtual void forceValue(unsigned int index){index = index;};
     virtual ~Image_Area();
 	void setImage(const std::string& name, bool alpha);
 

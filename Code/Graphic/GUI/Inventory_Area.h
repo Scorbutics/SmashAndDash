@@ -1,5 +1,4 @@
-#ifndef DEF_INVENTORY_AREA
-#define DEF_INVENTORY_AREA
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -9,10 +8,10 @@
 
 class Inventory_Area : public DynamicWindowArea
 {
-    public:
-		Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Point<int> relativePos);
-    virtual void refresh();
-    virtual void display();
+public:
+	Inventory_Area(DialogMenu& parent, Inventory* inv, ska::Point<int> relativePos);
+	virtual void refresh() override;
+    virtual void display() const override;
 	virtual std::string getKey(){return "";};
     virtual void forceValue(unsigned int){};
     Inventory* getInventory();
@@ -31,5 +30,3 @@ class Inventory_Area : public DynamicWindowArea
 
 };
 
-
-#endif

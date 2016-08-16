@@ -2,7 +2,6 @@
 
 #include "Settings.h"
 #include "../../ska/Inputs\Readers\IniReader.h"
-#include "../WGameCore.h"
 #include "../Weather.h"
 
 Settings::Settings(std::string file)
@@ -27,7 +26,7 @@ void Settings::setFileName(std::string fileName)
 }
 
 void Settings::update() {
-	WGameCore& core = WGameCore::getInstance();
+	//WGameCore& core = WGameCore::getInstance();
 	/*Weather* fog = core.getWorld().getFog();
 	if (fog != NULL) {
 		fog->hide(!m_fogActive);

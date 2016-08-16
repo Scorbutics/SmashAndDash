@@ -30,6 +30,7 @@ using BattleStartObservable = ska::Observable<ska::CameraSystem&, const ska::Ent
 
 namespace ska {
 	class Window;
+	class TaskQueue;
 }
 
 class SceneFight :
@@ -72,5 +73,7 @@ private:
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_guiBattle;
+
+	ska::TaskQueue& m_taskQueue;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

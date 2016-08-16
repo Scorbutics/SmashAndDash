@@ -76,21 +76,21 @@ m_window(w) {
 
     menuPos.w = 10*TAILLEBLOCFENETRE;
     menuPos.h = 5*TAILLEBLOCFENETRE;
-	m_wSettings = std::unique_ptr<WindowSettings>(new WindowSettings("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-	m_wTeam = std::unique_ptr<WindowTeam>(new WindowTeam("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-	m_wBag = std::unique_ptr<WindowBag>(new WindowBag("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wSettings = std::unique_ptr<WindowSettings>(new WindowSettings(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wTeam = std::unique_ptr<WindowTeam>(new WindowTeam(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
+	m_wBag = std::unique_ptr<WindowBag>(new WindowBag(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
 
 	menuPos.x = w.getWidth() - 7*TAILLEBLOCFENETRE;
 	menuPos.y = 0;
 	menuPos.w = 7*TAILLEBLOCFENETRE;
 	menuPos.h = 2*TAILLEBLOCFENETRE;
-	m_toolBar = std::unique_ptr<ToolBar>(new ToolBar("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
+	m_toolBar = std::unique_ptr<ToolBar>(new ToolBar(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
 	
 	menuPos.x = 5*TAILLEBLOCFENETRE;
 	menuPos.y = 2*TAILLEBLOCFENETRE;
 	menuPos.w = 10*TAILLEBLOCFENETRE;
 	menuPos.h = 10*TAILLEBLOCFENETRE;
-	m_wShop = std::unique_ptr<WindowShop>(new WindowShop("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
+	m_wShop = std::unique_ptr<WindowShop>(new WindowShop(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
     m_toolBar->hide(false);
 
     initButtons(w);

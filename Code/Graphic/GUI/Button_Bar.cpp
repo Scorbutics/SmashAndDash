@@ -1,20 +1,22 @@
 #include "Button_Bar.h"
 #include "../../Utils\ChargementImages.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../ska/Inputs/InputContextManager.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "DialogMenu.h"
 
-Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : DynamicWindowArea(parent)
+Button_Bar::Button_Bar(const ska::InputContextManager& icm, DialogMenu& parent, ska::Rectangle relativePos, std::string styleName, int* variable, std::vector<int> values, std::vector<std::string> displayedText, int fontSize, std::string key) : 
+DynamicWindowArea(parent),
+m_playerICM(icm)
 {
-	m_buttonStyle.load(styleName, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_leftArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_leftarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_rightArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_rightarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_cursor.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_cursor.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_buttonStyle.load(styleName);
+	m_leftArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_leftarrow.png");
+	m_rightArrow.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_rightarrow.png");
+	m_cursor.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"scroll_cursor.png");
 
 	ska::Rectangle buf = relativePos;
     buf.x -= m_cursor.getWidth()/2;
     buf.y += m_buttonStyle.getHeight();
-    m_button = std::unique_ptr<Button>(new Button(parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
+    m_button = std::unique_ptr<Button>(new Button(m_playerICM, parent, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", variable, values, displayedText, fontSize, key, true));
 
     m_relativePos = relativePos;
     m_leftPos.x = m_relativePos.x - m_leftArrow.getWidth();
@@ -28,26 +30,25 @@ Button_Bar::Button_Bar(DialogMenu* parent, ska::Rectangle relativePos, std::stri
     m_button->forceIndexFromCurrentValue();
 }
 
-void Button_Bar::display()
+void Button_Bar::display() const
 {
 
-    if(!m_parent->isVisible())
+    if(!m_active)
         return;
-    else
-        m_active = true;
+    
 
     
 
 //Coordonnées relatives -> absolues
 	ska::Point<int> buf = m_relativePos, absoluteCursorPos = m_cursorPos, absoluteLeftPos = m_leftPos, absoluteRightPos = m_rightPos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
-	absoluteLeftPos.x += (m_parent->getRect()).x;
-	absoluteLeftPos.y += (m_parent->getRect()).y;
-	absoluteRightPos.x += (m_parent->getRect()).x + m_buttonStyle.getWidth();
-	absoluteRightPos.y += (m_parent->getRect()).y;
-	absoluteCursorPos.x += (m_parent->getRect()).x;
-	absoluteCursorPos.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
+	absoluteLeftPos.x += (m_parent.getRect()).x;
+	absoluteLeftPos.y += (m_parent.getRect()).y;
+	absoluteRightPos.x += (m_parent.getRect()).x + m_buttonStyle.getWidth();
+	absoluteRightPos.y += (m_parent.getRect()).y;
+	absoluteCursorPos.x += (m_parent.getRect()).x;
+	absoluteCursorPos.y += (m_parent.getRect()).y;
 
 
 	m_buttonStyle.render(buf.x, buf.y);
@@ -59,16 +60,19 @@ void Button_Bar::display()
     m_button->display();
 }
 
-void Button_Bar::refresh()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputActionContainer& in = wScreen.getActions();
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+void Button_Bar::refresh() {
+	const ska::InputActionContainer& in = m_playerICM.getActions();
+	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
+
+	if (!m_parent.isVisible())
+		return;
+	else
+		m_active = true;
 
 	//Coordonnées relatives -> absolues
 	ska::Point<int> buf = m_relativePos, absoluteCursorPos = m_cursorPos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
 
 	ska::Rectangle absoluteLeftPos;
 	absoluteLeftPos.x = m_leftPos.x;
@@ -79,12 +83,12 @@ void Button_Bar::refresh()
 	absoluteRightPos.y = m_rightPos.y;
 
 
-	absoluteLeftPos.x += (m_parent->getRect()).x;
-	absoluteLeftPos.y += (m_parent->getRect()).y;
-	absoluteRightPos.x += (m_parent->getRect()).x + m_buttonStyle.getWidth();
-	absoluteRightPos.y += (m_parent->getRect()).y;
-	absoluteCursorPos.x += (m_parent->getRect()).x;
-	absoluteCursorPos.y += (m_parent->getRect()).y;
+	absoluteLeftPos.x += (m_parent.getRect()).x;
+	absoluteLeftPos.y += (m_parent.getRect()).y;
+	absoluteRightPos.x += (m_parent.getRect()).x + m_buttonStyle.getWidth();
+	absoluteRightPos.y += (m_parent.getRect()).y;
+	absoluteCursorPos.x += (m_parent.getRect()).x;
+	absoluteCursorPos.y += (m_parent.getRect()).y;
 
 
 	//Si on clique sur la flèche gauche

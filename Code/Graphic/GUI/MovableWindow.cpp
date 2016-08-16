@@ -1,19 +1,19 @@
 #include "MovableWindow.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
+#include "../../ska/Inputs/InputContextManager.h"
 
-MovableWindow::MovableWindow(const std::string& fichierMenu, ska::Rectangle posFond, int taillePolice) :
-DialogMenu("", "", fichierMenu, posFond, taillePolice, false) {
+MovableWindow::MovableWindow(const ska::InputContextManager& icm, const std::string& fichierMenu, ska::Rectangle posFond, int taillePolice) :
+DialogMenu("", "", fichierMenu, posFond, taillePolice, false),
+m_playerICM(icm) {
     m_mouseLastPos.x = m_mouseLastPos.y = 0;
 }
 
 
 void MovableWindow::refresh() {
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputToggleContainer& in = wScreen.getToggles();
-	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputToggleContainer& in = m_playerICM.getToggles();
+	const ska::InputRange& mouseClickPos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	ska::Rectangle movePos = m_rect;
     movePos.h = TAILLEBLOCFENETRE/2;
 	

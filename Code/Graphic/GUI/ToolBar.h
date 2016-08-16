@@ -1,18 +1,15 @@
-#ifndef DEF_TOOLBAR
-#define DEF_TOOLBAR
-
+#pragma once
 #include <iostream>
 #include "../../Gameplay\Inventory\Inventory.h"
 #include "MovableWindow.h"
 
 
 class Inventory_Area;
-class WGameCore;
 
 class ToolBar : public MovableWindow
 {
-    public:
-		ToolBar(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond);
+public:
+	ToolBar(const ska::InputContextManager& icm, std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond);
     void refresh();
     ~ToolBar();
 
@@ -21,6 +18,5 @@ class ToolBar : public MovableWindow
     Inventory_Area* m_invArea;
 };
 
-typedef std::unique_ptr<ToolBar> ToolBarPtr;
+using ToolBarPtr = std::unique_ptr<ToolBar>;
 
-#endif

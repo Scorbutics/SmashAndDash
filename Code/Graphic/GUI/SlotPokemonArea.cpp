@@ -6,7 +6,7 @@
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Utils/IDs.h"
 
-SlotPokemon_Area::SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key) :
+SlotPokemon_Area::SlotPokemon_Area(DialogMenu& parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key) :
 DynamicWindowArea(parent), 
 m_image(styleName), 
 m_imagePressed(styleNamePressed) {
@@ -65,11 +65,11 @@ void SlotPokemon_Area::setPokemon(unsigned int index)
 
 }
 
-void SlotPokemon_Area::display()
+void SlotPokemon_Area::display() const
 {
 	ska::Point<int> buf = m_relativePos;
-    buf.x += m_parent->getRect().x;
-	buf.y += m_parent->getRect().y;
+    buf.x += m_parent.getRect().x;
+	buf.y += m_parent.getRect().y;
 
 	/*const ska::InputActionContainer& in = wScreen.getActions();
 
@@ -100,7 +100,7 @@ void SlotPokemon_Area::refresh()
 
 ska::Rectangle SlotPokemon_Area::getRectSize()
 {
-	ska::Rectangle rect = m_parent->getRect();
+	ska::Rectangle rect = m_parent.getRect();
     rect.x += m_relativePos.x;
     rect.y += m_relativePos.y;
     /*rect.w = m_pkmn->getWidth();

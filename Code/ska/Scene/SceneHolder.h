@@ -1,9 +1,10 @@
 #pragma once
 #include "SceneType.h"
 #include "Scene.h"
+#include "../Task/TaskQueue.h"
 
 namespace ska {
-	class SceneHolder {
+	class SceneHolder : public TaskQueue {
 	public:
 		SceneHolder() = default;
 		virtual ~SceneHolder() = default;

@@ -30,6 +30,9 @@ void SceneHolderCore::update() {
 			}
 		}
 	}
+
+	/* If exists, an helper that executes current running task once */
+	ska::TaskQueue::refresh();
 }
 
 ska::ScenePtr& SceneHolderCore::getScene() {

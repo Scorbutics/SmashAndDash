@@ -6,9 +6,10 @@ ska::FileUtils::FileUtils()
 {
 }
 
+//TODO : PORTABILITE !!!
 std::string ska::FileUtils::getCurrentDirectory() {
-	TCHAR NPath[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, NPath);
+	CHAR NPath[MAX_PATH];
+	GetCurrentDirectoryA(MAX_PATH, NPath);
 	return std::string(NPath);
 }
 

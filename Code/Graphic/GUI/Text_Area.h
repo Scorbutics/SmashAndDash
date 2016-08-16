@@ -7,11 +7,9 @@
 class Text_Area : public Window_Area
 {
     public:
-		Text_Area(DialogMenu *parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
-		virtual std::string getKey(){return "";};
-		virtual void forceValue(unsigned int){};
+		Text_Area(DialogMenu& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Text_Area();
-		virtual void display();
+		virtual void display() const;
     
 	private:
 		std::string m_text;

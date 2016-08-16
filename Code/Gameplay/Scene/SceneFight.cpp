@@ -1,7 +1,6 @@
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
 #include "../../ska/Task/RepeatableTask.h"
-#include "../WGameCore.h"
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
@@ -9,7 +8,7 @@
 #include "../../Utils/IDs.h"
 #include "../../Graphic/GUI/DialogMenu.h"
 #include "../Data/Statistics.h"
-
+#include "../../ska/Task/TaskQueue.h"
 #include "../../Graphic/GUI/Bar.h"
 
 using DialogMenuPtr = std::unique_ptr<DialogMenu>;
@@ -42,7 +41,8 @@ m_sceneLoaded(false),
 m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
 m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_guiBattle(w, m_skillEntityCollisionResponse, *this) {
+m_guiBattle(w, ril, m_skillEntityCollisionResponse, *this),
+m_taskQueue(sh) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -96,10 +96,6 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 
 
 	sd.id = skillData.get<int>("Description id");
-
-
-	/* TODO put the sprite in the GUI */
-	//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	sd.cooldown = skillData.get<int>("Stats cooldown");
 	sd.range = skillData.get<int>("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
@@ -225,10 +221,10 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		return false;
 	}, *pokeballRawTask));
 
-	WGameCore& wScreen = WGameCore::getInstance();
-	wScreen.addTaskToQueue(dialogTask);
-	wScreen.addTaskToQueue(pokeballTask);
-	wScreen.addTaskToQueue(finalTask);
+	
+	m_taskQueue.queueTask(dialogTask);
+	m_taskQueue.queueTask(pokeballTask);
+	m_taskQueue.queueTask(finalTask);
 	
 }
 
@@ -277,13 +273,12 @@ bool SceneFight::unload() {
 		return false;
 	}, *dialogRawTask));
 
-	WGameCore& wScreen = WGameCore::getInstance();
 	if (m_sceneLoaded) {
 		m_sceneLoaded = false;
-		wScreen.addTaskToQueue(dialogTask);
-		wScreen.addTaskToQueue(finalTask);
+		m_taskQueue.queueTask(dialogTask);
+		m_taskQueue.queueTask(finalTask);
 	}
-	return wScreen.hasRunningTask();
+	return m_taskQueue.hasRunningTask();
 }
 
 void SceneFight::eventUpdate(bool movingDisallowed) {

@@ -6,12 +6,12 @@
 #include "Image_Area.h"
 #include "DialogMenu.h"
 
-Image_Area::Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha) :
+Image_Area::Image_Area(DialogMenu& parent, ska::Point<int> relativePos, ska::Rectangle* rectSrcBuf, const std::string& name, bool alpha) :
 Window_Area(parent),
 m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 {
     m_type = BUTTON_IMAGE_AREA;
-    m_active = parent->isVisible();
+    m_active = parent.isVisible();
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
     
@@ -28,10 +28,10 @@ m_image(name, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1)
 	
 }
 
-Image_Area::Image_Area(DialogMenu* parent, ska::Point<int> relativePos, ska::Rectangle *rectSrcBuf, ska::Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
+Image_Area::Image_Area(DialogMenu& parent, ska::Point<int> relativePos, ska::Rectangle *rectSrcBuf, ska::Texture* tex, bool alpha) : Window_Area(parent), m_image(*tex)
 {
 	m_type = BUTTON_IMAGE_AREA;
-	m_active = parent->isVisible();
+	m_active = parent.isVisible();
 	m_relativePos.x = relativePos.x;
 	m_relativePos.y = relativePos.y;
 	if (rectSrcBuf != NULL)
@@ -58,16 +58,13 @@ std::string Image_Area::getImageName() const
     return m_name;
 }
 
-void Image_Area::display()
-{
-    if(!m_parent->isVisible())
+void Image_Area::display() const {
+    if(!m_parent.isVisible())
         return;
-    else
-        m_active = true;
 
 	ska::Point<int> buf = m_relativePos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
 
 	m_image.render(buf.x, buf.y, &m_rectSrc);
 }

@@ -1,17 +1,16 @@
-#ifndef DEF_DYNAMIC_WINDOW_AREA
-#define DEF_DYNAMIC_WINDOW_AREA
-
+#pragma once
+#include <memory>
 #include "Window_Area.h"
 
 class DialogMenu;
 
-class DynamicWindowArea: public Window_Area
-{
+//TODO va disparaître au profit d'un Observer qui mettra à jour les données lors d'actions
+class DynamicWindowArea: public Window_Area {
 public:
-	DynamicWindowArea(DialogMenu* parent);
+	DynamicWindowArea(DialogMenu& parent);
 	virtual ~DynamicWindowArea();
 	virtual void refresh() = 0;
 
 };
 
-#endif
+using DynamicWindowAreaPtr = std::unique_ptr<DynamicWindowArea>;

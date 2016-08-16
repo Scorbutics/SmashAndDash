@@ -15,7 +15,6 @@
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
 //#include "Inventory\Inventory.h"
-#include "../ska/Task/TaskQueue.h"
 #include "../ska/Utils/FpsCalculator.h"
 
 class LayerE;
@@ -25,14 +24,12 @@ class DialogMenu;
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 
-class WGameCore : public ska::Window, public ska::Singleton<WGameCore> {
-	friend class ska::Singleton<WGameCore>;
-
-private:
-    WGameCore();
-	~WGameCore();
+class WGameCore : public ska::Window {
 
 public:
+	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
+	virtual ~WGameCore();
+
 	void graphicUpdate(void);
 	void eventUpdate(bool movingDisallowed);
 
@@ -43,10 +40,6 @@ public:
 	void initNewWorld();
 	void transition(int type);
 	
-	
-	void addTaskToQueue(ska::RunnablePtr& t);
-	bool hasRunningTask();
-
 	GUI& getGUI();
 
 	//Inventory& getInventory();
@@ -55,10 +48,6 @@ public:
 	TrainerCard& getTrainerCard();
 	ska::World& getWorld();
 	WorldScene& getWorldScene();
-	
-	const ska::InputActionContainer& getActions() const;
-	const ska::InputRangeContainer& getRanges() const;
-	const ska::InputToggleContainer& getToggles() const;
 	
 	ska::ScenePtr& getScene();
 	void nextScene(std::unique_ptr<ska::Scene>& scene);
@@ -78,8 +67,6 @@ protected:
 	//Inventory m_inv;
 	WorldScene m_worldScene;
 	ska::FpsCalculator m_fpsCalculator;
-
-	ska::TaskQueue m_taskQueue;
 
 
 };

@@ -125,8 +125,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
+    <ClInclude Include="Code\Graphic\GUI\ButtonState.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h" />
+    <ClInclude Include="Code\Graphic\GUI\SpriteButton.h" />
     <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Physic\System\WorldEntityCollisionResponse.h" />
     <ClInclude Include="Code\Script\Commands\CommandBlockCollision.h" />
@@ -374,9 +376,7 @@
     <ClInclude Include="Code\ska\Graphic\Draw\DrawableContainer.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\PriorityQueueDrawableContainer.h" />
     <ClInclude Include="Code\ska\Graphic\Draw\VectorDrawableContainer.h" />
-    <ClInclude Include="Code\Physic\RainParticleManager.h" />
     <ClInclude Include="Code\ska\Utils\MessagePopup.h" />
-    <ClInclude Include="Code\Physic\RainParticle.h" />
     <ClInclude Include="Code\ska\Utils\NumberUtils.h" />
     <ClInclude Include="Code\ska\Data\Savegame.h" />
     <ClInclude Include="Code\ska\Utils\RectangleUtils.h" />
@@ -402,6 +402,7 @@
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\SpriteButton.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />
@@ -564,9 +565,7 @@
     <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp" />
     <ClCompile Include="Code\ska\Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
     <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp" />
-    <ClCompile Include="Code\Physic\RainParticleManager.cpp" />
     <ClCompile Include="Code\ska\Utils\MessagePopup.cpp" />
-    <ClCompile Include="Code\Physic\RainParticle.cpp" />
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
     <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />

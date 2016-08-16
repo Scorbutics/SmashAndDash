@@ -2,7 +2,7 @@
 #include "../../Utils\IDs.h"
 #include "WindowShop.h"
 #include "GUI.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../ska/Inputs/InputContextManager.h"
 #include "../../ska/Utils/Singleton_template.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
@@ -11,7 +11,11 @@
 #include "WindowBag.h"
 #include "ToolBar.h"
 
-WindowShop::WindowShop(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : m_dialog(fichierMenu, posFond, 22), m_userBar(fichierMenu, posFond, 22), m_shopBar(fichierMenu, posFond, 22)
+WindowShop::WindowShop(const ska::InputContextManager& icm, std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : 
+m_dialog(icm, fichierMenu, posFond, 22), 
+m_userBar(icm, fichierMenu, posFond, 22), 
+m_shopBar(icm, fichierMenu, posFond, 22),
+m_playerICM(icm)
 {
 	m_shopInv.load(squareSpriteName, squareSpriteNameHighlight);
     m_pos = posFond;
@@ -41,11 +45,7 @@ void WindowShop::hide(bool x)
     m_dialog.hide(x);
 }
 
-void WindowShop::reset()
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	GUI& gui = wScreen.getGUI();
-
+void WindowShop::reset() {
     m_shopBar.deleteAll();
     m_userBar.deleteAll();
 
@@ -58,7 +58,7 @@ void WindowShop::reset()
 	m_userBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
     m_userBar.resize(m_pos.w - 4*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE);
 
-    gui.hide(true);
+    //gui.hide(true);
 	/*gui.getWindowBag()->hide(true);
 	gui.getWindowTeam()->hide(true);
 	gui.getWindowSettings()->hide(true);
@@ -108,9 +108,9 @@ void WindowShop::reset()
 
 void WindowShop::refresh()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos]; 
-	const ska::InputActionContainer& in = wScreen.getActions();
+	
+	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputActionContainer& in = m_playerICM.getActions();
 	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 
     m_pos.x = m_dialog.getRect().x;
@@ -124,7 +124,7 @@ void WindowShop::refresh()
         m_boolQuit = 0;
         //m_userInv.clear(); //avant tout, on efface l'inventaire qu'utilisait l'utilisateur pour acheter des objets
         this->hide(true);
-        wScreen.getGUI().hide(false);
+        //wScreen.getGUI().hide(false);
         //wScreen.getGUI().getToolbar()->hide(false);
     }
 

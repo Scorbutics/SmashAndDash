@@ -1,7 +1,10 @@
 #include "CommandPlayAnimation.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Graphic/SpritePath.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../ska/ECS/EntityManager.h"
+#include "../../ska/Physic/PositionComponent.h"
+#include "../../ska/Graphic/GraphicComponent.h"
+#include "../../ska/Graphic/DeleterComponent.h"
 #include "../../ska/Utils\ScriptUtils.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
@@ -31,7 +34,6 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vec
 		m_entityManager.hasComponent<ska::HitboxComponent>(internalEntity) &&
 		m_entityManager.hasComponent<ska::GraphicComponent>(internalEntity)) {
 
-		WGameCore& wScreen = WGameCore::getInstance();
 		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
 		ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
 		ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(internalEntity);

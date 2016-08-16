@@ -6,7 +6,6 @@
 
 #include "../Utils/IDs.h"
 #include "Pokeball.h"
-#include "../Gameplay\WGameCore.h"
 #include "../Utils\ChargementImages.h"
 #include "Data\Statistics.h"
 #include "Weather.h"
@@ -103,8 +102,8 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 }
 
 void Pokeball::capture(/*Character* pkmn*/) {
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
+//	WGameCore& wScreen = WGameCore::getInstance();
+	//ska::World& w = wScreen.getWorld();
 	ska::Rectangle oRel = { 0 };
 
 
@@ -257,8 +256,8 @@ void Pokeball::update() {
 	Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
 	qui refresh le bon état par polymorphisme. TODO */
 
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
+	//WGameCore& wScreen = WGameCore::getInstance();
+	//ska::World& w = wScreen.getWorld();
 
 	if (!m_show) {
 		return;

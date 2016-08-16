@@ -1,11 +1,11 @@
 #include "ToolBar.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../Gameplay\Inventory\Inventory.h"
 #include "../../Graphic\GUI\Inventory_Area.h"
 #include "../../Utils/IDs.h"
+#include "../../ska/Inputs/InputContextManager.h"
 
-ToolBar::ToolBar(std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) : 
-MovableWindow(fichierMenu, posFond, 22)
+ToolBar::ToolBar(const ska::InputContextManager& icm, std::string squareSpriteName, std::string squareSpriteNameHighlight, std::string fichierMenu, ska::Rectangle posFond) :
+MovableWindow(icm, fichierMenu, posFond, 22)
 {
 	ska::Rectangle pos;
 	pos.x = TAILLEBLOCFENETRE/2;
@@ -21,8 +21,7 @@ MovableWindow(fichierMenu, posFond, 22)
 
 void ToolBar::refresh()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputActionContainer& in = wScreen.getActions();
+	const ska::InputActionContainer& in = m_playerICM.getActions();
 
     MovableWindow::refresh();
     if(m_invArea != NULL)

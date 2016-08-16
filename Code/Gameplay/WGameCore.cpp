@@ -18,11 +18,11 @@
 #include "../Graphic/GUI/WindowBag.h"
 #include "../Graphic/GUI/ToolBar.h"
 
-WGameCore::WGameCore():
-Window(), 
+WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsigned int h):
+Window(title, w, h),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, m_width, m_height),
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this),
 m_gui(*this, m_playerICM) {
 
 	/* MAP inputs */
@@ -58,12 +58,11 @@ ska::ScenePtr& WGameCore::getScene() {
 void WGameCore::transition(int type)  {
 	//type : 1 = entrant, 0 = sortant
 	ska::Texture fondu("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"fondu.png");
-	WGameCore& wScreen = WGameCore::getInstance();
     unsigned int mosaicNumberX, mosaicNumberY;
 	fondu.setBlendMode(SDL_BLENDMODE_BLEND);
 
-    mosaicNumberX = wScreen.getWidth()/fondu.getWidth() + 1;
-    mosaicNumberY = wScreen.getHeight()/fondu.getHeight() + 1;
+    mosaicNumberX = getWidth()/fondu.getWidth() + 1;
+    mosaicNumberY = getHeight()/fondu.getHeight() + 1;
 
 	ska::Rectangle buf;
     for(unsigned int i = 0; i <= 255; i += 50) {
@@ -81,17 +80,9 @@ void WGameCore::transition(int type)  {
         }
 
 
-		wScreen.flip();
+		flip();
         SDL_Delay(30);
     }
-}
-
-void WGameCore::addTaskToQueue(ska::RunnablePtr& t) {
-	m_taskQueue.queueTask(t);
-}
-
-bool WGameCore::hasRunningTask() {
-	return m_taskQueue.hasRunningTask();
 }
 
 void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
@@ -148,8 +139,6 @@ void WGameCore::eventUpdate(bool movingDisallowed) {
 		/* Scene dependent event update */
 		m_sceneHolder.getScene()->eventUpdate(movingDisallowed);
 		m_sceneHolder.update();
-		/* If exists, an helper that executes current running task once */
-		m_taskQueue.refresh();
 	} catch (ska::SceneDiedException sde) {
 	}
 }
@@ -165,18 +154,6 @@ GUI& WGameCore::getGUI() {
 
 ska::World& WGameCore::getWorld() {
 	return m_worldScene.getWorld();
-}
-
-const ska::InputActionContainer& WGameCore::getActions() const {
-	return m_playerICM.getActions();
-}
-
-const ska::InputRangeContainer& WGameCore::getRanges() const {
-	return m_playerICM.getRanges();
-}
-
-const ska::InputToggleContainer& WGameCore::getToggles() const {
-	return m_playerICM.getToggles();
 }
 
 WGameCore::~WGameCore() {

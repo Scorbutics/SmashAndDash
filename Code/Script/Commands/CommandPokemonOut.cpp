@@ -1,5 +1,4 @@
 #include "CommandPokemonOut.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
@@ -21,7 +20,7 @@ std::string CommandPokemonOut::execute(ska::ScriptComponent& script, std::vector
 {
 	int index;
 	unsigned int duree = 2000, t0 = 0;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	index = ska::StringUtils::strToInt(args[0]);
 	//ska::Point<int> launchPos = wScreen.getEntityFactory().getTrainer()->getCenterPos();
@@ -31,7 +30,7 @@ std::string CommandPokemonOut::execute(ska::ScriptComponent& script, std::vector
 
 	t0 = SDL_GetTicks();
 
-	while (SDL_GetTicks() - t0 < duree)
+	/*while (SDL_GetTicks() - t0 < duree)
 	{
 
 		wScreen.graphicUpdate();
@@ -40,7 +39,7 @@ std::string CommandPokemonOut::execute(ska::ScriptComponent& script, std::vector
 		wScreen.flip();
 		SDL_Delay(20);
 
-	}
+	}*/
 	//wScreen.getEntityFactory().addNPC(wScreen.getPokemonManager().getPokemon(index)->getID(), launchPos, "1");
 	return "";
 }

@@ -3,11 +3,11 @@
 #include "WindowShop.h"
 #include "WindowTeam.h"
 #include "WindowBag.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../Utils/IDs.h"
+#include "Button_Quit.h"
 
-WindowSettings::WindowSettings(std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :
-MovableWindow(fichierMenu, posFond, taillePolice)
+WindowSettings::WindowSettings(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :
+MovableWindow(icm, fichierMenu, posFond, taillePolice)
 {
     m_saveSettings = 0;
 	m_saveGame = 0;
@@ -16,15 +16,13 @@ MovableWindow(fichierMenu, posFond, taillePolice)
 void WindowSettings::reset()
 {
     this->deleteAll();
-	WGameCore& wScreen = WGameCore::getInstance();
-	Settings& settings = wScreen.getSettings();
 
 	ska::Rectangle buf;
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
 	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-    this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
+	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
 	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
 	std::vector<int> vbool, vSndVol;
     vbool.push_back(0);
@@ -54,7 +52,7 @@ void WindowSettings::reset()
     buf.y = 2*TAILLEBLOCFENETRE;
     this->addTextArea("Brouillard :", 20, buf);
     buf.x += (int)(6.5*TAILLEBLOCFENETRE);
-
+	/*
     this->addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", settings.getFogActive(), vbool, vOnOff, 20, "fog_settings");
     buf.y += TAILLEBLOCFENETRE;
 	buf.x -= (int)(6.5*TAILLEBLOCFENETRE);
@@ -84,24 +82,25 @@ void WindowSettings::reset()
     this->addTextArea("Save settings :", 20, buf);
     buf.x += 4*TAILLEBLOCFENETRE;
     this->addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", &m_saveSettings, vbool, vSave, 20, "save_settings");
+	*/
 }
 
 void WindowSettings::refresh()
 {
     MovableWindow::refresh();
-	WGameCore& wScreen = WGameCore::getInstance();
-	GUI& gui = wScreen.getGUI();
-	Settings& settings = wScreen.getSettings();
+	
+	
+	//Settings& settings = wScreen.getSettings();
 
     if(m_saveSettings != 0)
     {
-        settings.save();
+        /*settings.save();
         for(unsigned int i = 0; i < gui.getButtonListSize(); i++)
         {
-            gui.getButton(i)->setAlpha((*settings.getGuiTransparency() != 0));
+            //gui.getButton(i)->setAlpha((*settings.getGuiTransparency() != 0));
             //gui.getButton(i)->setAlphaImg((*settings.getGuiTransparency() != 0));
         }
-        this->setAlpha((*settings.getGuiTransparency() != 0));
+        this->setAlpha((*settings.getGuiTransparency() != 0));*/
         /*gui.getAttackPokemonWindow()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getAttackOpponentWindow()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getInfoPokemonWindow()->setAlpha((*settings.getGuiTransparency() != 0));
@@ -114,13 +113,13 @@ void WindowSettings::refresh()
         //gui.getImgDialog()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetPkmn()->setAlpha((*settings.getGuiTransparency() != 0));
         gui.getFacesetOpponent()->setAlpha((*settings.getGuiTransparency() != 0));*/
-        getButton("save_settings")->forceValue(0);
+        //getButton("save_settings")->forceValue(0);
     }
 
 	if (m_saveGame != 0)
 	{
 		//wScreen.getSavegameManager().saveGame("save1");
-		getButton("save_game")->forceValue(0);
+		//getButton("save_game")->forceValue(0);
 	}
 }
 

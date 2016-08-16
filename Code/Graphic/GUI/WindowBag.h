@@ -1,13 +1,12 @@
-#ifndef DEF_WINDOW_BAG
-#define DEF_WINDOW_BAG
+#pragma once
 
 #include "MovableWindow.h"
 
-class WGameCore;
+
 class WindowBag: public MovableWindow
 {
-    public:
-		WindowBag(std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
+public:
+	WindowBag(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
 
     int* getBoolUseObject();
     int* getBoolTrashObject();
@@ -18,11 +17,8 @@ class WindowBag: public MovableWindow
     void refresh();
     ~WindowBag();
 
-    private:
+private:
     int m_boolUseObject, m_boolGiveObject, m_boolTrashObject;
 	ska::Point<int> m_curObjectPos;
 };
 
-//typedef std::unique_ptr<WindowBag> WindowBagPtr;
-
-#endif

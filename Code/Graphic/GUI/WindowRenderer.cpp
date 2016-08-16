@@ -4,8 +4,7 @@ int WindowRenderer::render(ska::Window* win, ska::Texture* tex, int x, int y, sk
 {
 	ska::Rectangle destBuf = { x, y, tex->getWidth(), tex->getHeight() };
 
-	if (clip != NULL)
-	{
+	if (clip != NULL) {
 		destBuf.w = clip->w;
 		destBuf.h = clip->h;
 	}

@@ -1,12 +1,10 @@
 #include "WindowBag.h"
-#include "../../Gameplay\WGameCore.h"
 #include "Inventory_Area.h"
+#include "Button_Quit.h"
 #include "../../Utils/IDs.h"
 #include "WindowTeam.h"
 
-using namespace std;
-
-WindowBag::WindowBag(string fichierMenu, ska::Rectangle posFond, int taillePolice) : MovableWindow(fichierMenu, posFond, taillePolice)
+WindowBag::WindowBag(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) : MovableWindow(icm, fichierMenu, posFond, taillePolice)
 {
     m_boolUseObject = 0;
     m_boolGiveObject = 0;
@@ -21,14 +19,13 @@ ska::Point<int> WindowBag::getCurObjectPos()
 
 void WindowBag::reset()
 {
-    this->deleteAll();
+    deleteAll();
 	ska::Rectangle buf;
-	WGameCore& wScreen = WGameCore::getInstance();
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.x = 9*TAILLEBLOCFENETRE;
-    this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
+	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
     buf.x = 4*TAILLEBLOCFENETRE;
-    this->addTextArea("PokéSac", 20, buf);
+    addTextArea("PokéSac", 20, buf);
     buf.x = TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*2;
     //this->addInventory(wScreen.getInventory(), buf);
@@ -52,8 +49,7 @@ int* WindowBag::getBoolGiveObject()
 void WindowBag::refresh()
 {
     MovableWindow::refresh();
-	WGameCore& wScreen = WGameCore::getInstance();
-	GUI& gui = wScreen.getGUI();
+	//GUI& gui = wScreen.getGUI();
 
     //lors d'un clic sur "Utiliser" du menu contextuel apparaissant apres un clic droit sur un objet
     if(m_boolUseObject != 0)

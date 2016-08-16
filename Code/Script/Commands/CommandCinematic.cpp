@@ -22,18 +22,18 @@ int CommandCinematic::argumentsNumber() {
 /* TODO : faire une scène (héritant de la classe Scene) cinématique */
 std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int frameNumber, delay, id_anim, duration;
 	bool continuer = true;
-	ska::Rectangle pos, menuPos;
+	ska::Rectangle pos, menuPos = { 0 };
 	std::string message;
 	ska::SpriteAnimation* cinematic;
 	//ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
-	menuPos.x = 0;
+	/*menuPos.x = 0;
 	menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE * 4;
 	menuPos.w = wScreen.getWidth();
-	menuPos.h = TAILLEBLOCFENETRE * 4;
+	menuPos.h = TAILLEBLOCFENETRE * 4;*/
 
 	id_anim = ska::StringUtils::strToInt(args[0]);
 	delay = ska::StringUtils::strToInt(args[1]);

@@ -16,6 +16,10 @@ class Inventory;
 class Button;
 class Window_Area;
 class Inventory_Area;
+class Button_Quit;
+
+class DynamicWindowArea;
+using DynamicWindowAreaPtr = std::unique_ptr<DynamicWindowArea>;
 
 class DialogMenu : public IDialogMenu, public HasClickHandler
 {
@@ -47,8 +51,9 @@ public:
 	void name(const std::string& name);
 	const std::string& getName() const;
 
+	void addDynamicArea(DynamicWindowAreaPtr&& area);
 	void addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos);
-	void addButtonClose(const std::string& imgName, const std::string& secondImgName, ska::Rectangle pos);
+	void setButtonClose(std::unique_ptr<Button_Quit>& button);
 	void addTextArea(const std::string&text, int fontSize, ska::Point<int> relativePos);
 	void addImageArea(const std::string& name, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc);
 	void addImageArea(ska::Texture* tex, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc);
@@ -78,6 +83,8 @@ protected:
     std::vector<std::string> m_text;
 	std::string m_name;
 	std::vector<float> m_scrollTextLengthPerLine;
+
+	std::unique_ptr<Button_Quit> m_closeButton;
 
 	std::function<void(void)> m_clickHandler;
     ska::Color m_color;

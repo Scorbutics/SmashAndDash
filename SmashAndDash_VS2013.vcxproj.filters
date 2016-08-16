@@ -468,12 +468,6 @@
     <ClInclude Include="Code\ska\Physic\PhysicSprite.h">
       <Filter>Fichiers d%27en-tête\Physic</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Physic\RainParticleManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Physic\RainParticle.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Utils\RectangleUtils.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -927,6 +921,12 @@
     <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Graphic\GUI\SpriteButton.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\GUI\ButtonState.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1208,12 +1208,6 @@
     <ClCompile Include="Code\ska\Physic\PhysicSprite.cpp">
       <Filter>Fichiers sources\Physic</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Physic\RainParticle.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Physic\RainParticleManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1473,6 +1467,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\GUI\SpriteButton.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

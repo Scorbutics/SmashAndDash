@@ -1,7 +1,6 @@
-#include "../WGameCore.h"
 #include "../Weather.h"
-#include "../../ska/World/World.h"
 #include "../World/WorldScene.h"
+#include "../CustomEntityManager.h"
 #include "../../ska/World/LayerE.h"
 #include "AbstractSceneMap.h"
 
@@ -51,11 +50,6 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	m_worldScene.graphicUpdate(drawables);
 	AbstractNoGUISceneMap::graphicUpdate(drawables);
 
-	WGameCore& core = WGameCore::getInstance();
-	GUI& gui = core.getGUI();
-	//Affiche la GUI
-	drawables.add(gui);
-
 	//Affiche le Pokémon ou l'objet sur le curseur de la souris
 	//mouseCursor.displaySelectedPokemon();
 	//mouseCursor.displaySelectedObject();
@@ -63,18 +57,10 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void AbstractSceneMap::eventUpdate(bool stuck) {
-	WGameCore& core = WGameCore::getInstance();
-	GUI& gui = core.getGUI();
-
 	/* Raw input acquisition */
 	m_inputCManager.refresh();
 
 	AbstractNoGUISceneMap::eventUpdate(stuck);
-
-	//GUI
-	gui.dialogRefresh();
-	gui.refresh();
-
 	m_worldScene.eventUpdate(stuck);
 }
 

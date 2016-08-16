@@ -10,13 +10,13 @@
 #define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
 
-ska::Window::Window() : 
-m_width(TAILLEECRANMINX * 2),
-m_height(TAILLEECRANMINY * 3 / 2) {
+ska::Window::Window(const std::string& title, const unsigned int w, const unsigned int h) : 
+m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w),
+m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h) {
 	Texture::setDefaultWindow(this);
-	m_wName = "Fenetre";
+	m_wName = title;
 
-	m_screen = SDL_CreateWindow("Pokémon Smash&Dash",
+	m_screen = SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		m_width, m_height,

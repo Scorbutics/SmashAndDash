@@ -5,13 +5,13 @@
 #include "Scroll_Text.h"
 #include "../../Utils\IDs.h"
 #include "DialogMenu.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../ska/Inputs/InputContextManager.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
 
-Scroll_Text::Scroll_Text(DialogMenu *parent, const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) : 
-DynamicWindowArea(parent)
-{
+Scroll_Text::Scroll_Text(const ska::InputContextManager& icm, DialogMenu &parent, const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) : 
+DynamicWindowArea(parent),
+m_playerICM(icm) {
 
 	m_topArrow.load(buttonAspect + "toparrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
 	m_botArrow.load(buttonAspect + "botarrow.png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
@@ -32,13 +32,13 @@ DynamicWindowArea(parent)
     m_start = 0;
     m_type = BUTTON_SCROLL_TEXT;
     m_text = text;
-    m_active = parent->isVisible();
+    m_active = parent.isVisible();
 
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
     
-	m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
-	m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
+	m_posTopArrow.x = m_width + (m_parent.getRect()).x + m_relativePos.x;
+	m_posTopArrow.y = (m_parent.getRect()).y + m_relativePos.y;
     m_posTopArrow.w = m_topArrow.getWidth();
     m_posTopArrow.h = m_topArrow.getHeight();
 
@@ -54,27 +54,17 @@ DynamicWindowArea(parent)
 
 }
 
-void Scroll_Text::display()
+void Scroll_Text::display() const
 {
-	if (!m_parent->isVisible()) {
+	if (!m_parent.isVisible()) {
 		return;
 	}
     
-    m_active = true;
-
-    if(m_parent->isMoving()) {
-		m_posTopArrow.x = m_width + (m_parent->getRect()).x + m_relativePos.x;
-		m_posTopArrow.y = (m_parent->getRect()).y + m_relativePos.y;
-        m_posBotArrow = m_posTopArrow;
-        m_posBotArrow.y += m_linesNumber * m_fontSize - m_botArrow.getHeight();
-        m_posCursor = m_posTopArrow;
-        m_posCursor.y += m_topArrow.getHeight();
-    }
 
 	ska::Point<int> buf = m_relativePos;
-		ska::Rectangle bufScrollBar;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	ska::Rectangle bufScrollBar;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
 
     bufScrollBar.x = buf.x;
 	bufScrollBar.y = buf.y;
@@ -82,8 +72,6 @@ void Scroll_Text::display()
     bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
     bufScrollBar.w = m_scrollBar.getWidth();
 
-
-    m_posCursor.y = m_posTopArrow.y + m_topArrow.getHeight() + m_start * ((int)m_text.size());
 
     for(unsigned int i = m_start; i < m_start + m_linesNumber; i++) {
 		if (i < m_stext.size()) {
@@ -103,19 +91,30 @@ void Scroll_Text::display()
 
 
 void Scroll_Text::refresh() {
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputActionContainer& in = wScreen.getActions();
-	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	const ska::InputActionContainer& in = m_playerICM.getActions();
+	const ska::InputRange& mouseClickPos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	ska::Point<int> buf = m_relativePos;
 	ska::Rectangle bufScrollBar;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
 
 	bufScrollBar.x = buf.x;
 	bufScrollBar.y = buf.y;
 	bufScrollBar.x += m_width;
 	bufScrollBar.h = m_posBotArrow.y - m_posTopArrow.y;
 	bufScrollBar.w = m_scrollBar.getWidth();
+
+	m_active = true;
+
+	if (m_parent.isMoving()) {
+		m_posTopArrow.x = m_width + (m_parent.getRect()).x + m_relativePos.x;
+		m_posTopArrow.y = (m_parent.getRect()).y + m_relativePos.y;
+		m_posBotArrow = m_posTopArrow;
+		m_posBotArrow.y += m_linesNumber * m_fontSize - m_botArrow.getHeight();
+		m_posCursor = m_posTopArrow;
+		m_posCursor.y += m_topArrow.getHeight();
+	}
+	m_posCursor.y = m_posTopArrow.y + m_topArrow.getHeight() + m_start * ((int)m_text.size());
 
 	if (ska::RectangleUtils::isPositionInBox(mouseClickPos, m_posTopArrow))
 	{

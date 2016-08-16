@@ -4,7 +4,6 @@
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Exceptions/SceneDiedException.h"
 #include "../../ska/Exceptions/InvalidPathException.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/World/World.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Utils\StringUtils.h"
@@ -23,10 +22,8 @@ int CommandTeleport::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
+std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+	ska::World& w = script.parent->getWorld();
 
 	const std::string& mapName = args[0];	
 	const std::string& id = args[1];
@@ -56,19 +53,15 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		ska::ScenePtr scene = ska::ScenePtr(new SceneMap(wScreen, *wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName, wScreen.getWorldScene().getFileName() == fichier));
-		wScreen.nextScene(scene);
+		/*ska::ScenePtr scene = ska::ScenePtr(new SceneMap(wScreen, *wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName, wScreen.getWorldScene().getFileName() == fichier));
+		wScreen.nextScene(scene);*/
 		
 	}
 
 	return "";
 }
 
-void CommandTeleport::teleportHeroToMap(std::string param)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::World& w = wScreen.getWorld();
-	//Character* hero = wScreen.getHero();
+void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 
 	std::string fichier, fichier2, fichierD;
 	int x = 1, y;

@@ -22,8 +22,14 @@
 #define MAX_CONSECUTIVE_COMMANDS_PLAYED 5
 
 
-ska::ScriptAutoSystem::ScriptAutoSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), m_saveGame(saveGame){
+ska::ScriptAutoSystem::ScriptAutoSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), 
+m_saveGame(saveGame), 
+m_world(w) {
 	sch.setupCommands(w, m_commands);
+}
+
+ska::World& ska::ScriptAutoSystem::getWorld() {
+	return m_world;
 }
 
 const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::string& id) const {

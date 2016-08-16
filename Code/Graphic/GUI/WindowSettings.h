@@ -1,12 +1,10 @@
-#ifndef DEF_WINDOW_SETTINGS
-#define DEF_WINDOW_SETTINGS
-
+#pragma once
 #include "MovableWindow.h"
 
 class WindowSettings: public MovableWindow
 {
-    public:
-		WindowSettings(std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
+public:
+	WindowSettings(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice);
     void reset();
     void refresh();
     ~WindowSettings();
@@ -15,6 +13,3 @@ class WindowSettings: public MovableWindow
     int m_saveSettings, m_saveGame;
 };
 
-//typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
-
-#endif

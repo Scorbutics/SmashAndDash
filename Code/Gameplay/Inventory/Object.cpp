@@ -1,6 +1,6 @@
 #include "Object.h"
-#include "../../Gameplay\WGameCore.h"
 #include <fstream>
+#include "../../ska/Inputs/Readers/IniReader.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../Utils/IDs.h"
 
@@ -68,13 +68,13 @@ bool Object::use()
     }
     else if(m_action == "capture")
     {
-		WGameCore& wScreen = WGameCore::getInstance();
+		//WGameCore& wScreen = WGameCore::getInstance();
 
 		/*if(wScreen.getPokeball().isVisible() || wScreen.getPokemonManager().getPokemonTeamSize() >= POKEMON_TEAM_MAX_SIZE)
 			return false;*/
 
-		const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
-		ska::Point<int> pos = mousePos;
+		/*const ska::InputRange& mousePos = WGameCore::getInstance().getRanges()[ska::InputRangeType::MousePos];
+		ska::Point<int> pos = mousePos;*/
 /*
 		pos.x -= wScreen.getORel().x;
 		pos.y -= wScreen.getORel().y;*/
@@ -88,7 +88,7 @@ bool Object::use()
 //utilisation choisie sur le pokémon numéro i de l'équipe
 bool Object::use(int i)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
     if(m_action[0] == '+')
     {
 		if (std::string::npos != m_action.find("heal"))

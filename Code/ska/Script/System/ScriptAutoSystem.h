@@ -25,6 +25,9 @@ namespace ska {
 		void restoreComponent(const std::string& componentName, const std::string& id) const;
 		ska::EntityId getEntityFromName(const std::string& nameEntity);
 
+		/* Utils */
+		World& getWorld();
+
 		/* ScriptComponent methods */
 		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);
 		bool canBePlayed(ScriptComponent& script);
@@ -42,6 +45,7 @@ namespace ska {
 	private:
 		ska::Savegame& m_saveGame;
 		ScriptComponent* getHighestPriorityScript();
+		World& m_world;
 
 		std::unordered_map<std::string, ScriptComponent> m_cache;
 		std::unordered_map<std::string, CommandPtr> m_commands;

@@ -8,13 +8,15 @@
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Graphic/GUI/Window.h"
+#include "SpriteButton.h"
 
-GUIBattle::GUIBattle(ska::Window& w, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs) :
+GUIBattle::GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
 m_statsObservable(statObs),
 m_battleStartObservable(battleStartObs),
-m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false) {
+m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
+m_playerICM(playerICM) {
 	m_statsObservable.addObserver(*this);
 	m_battleStartObservable.addObserver(*this);
 }
@@ -42,10 +44,11 @@ void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 	if (!v.empty()) {
 		for (unsigned int i = 0; i < v.size(); i++) {
 			buf.x += TAILLEBLOCFENETRE;
-			m_moves.addImageArea(ska::SpritePath::getInstance().getPath(SPRITEBANK_ICONS, v[i].id), false, buf, nullptr);
+			m_moves.addDynamicArea(std::unique_ptr<SpriteButton>(new SpriteButton(m_moves, m_playerICM, buf, "", v[i].id, [&] {
+			})));
 		}
 	}
-	;
+	
 	const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
 	const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
 	
@@ -53,6 +56,9 @@ void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 	addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
 	addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
 }
+
+/* TODO put the sprite in the GUI */
+//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
 
 void GUIBattle::eventUpdate(bool movingDisallowed) {
 	if (m_moves.isVisible()) {

@@ -1,6 +1,5 @@
 #include <fstream>
 #include "Inventory.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
@@ -223,7 +222,7 @@ void Inventory::remove(std::string name, unsigned int amount)
 
 void Inventory::display(ska::Rectangle rect)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	/*WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];
 	std::list<std::unique_ptr<Object>>::iterator iter;
 	ska::Rectangle buf, bufcenter;
@@ -256,7 +255,7 @@ void Inventory::display(ska::Rectangle rect)
             (*iter)->display();
         }
     }
-
+	*/
 }
 
 ska::Texture* Inventory::getSquareSprite()

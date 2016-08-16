@@ -6,23 +6,22 @@
 #include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/Draw/DrawableFixedPriority.h"
 #include "../../ska/Graphic/Point.h"
+#include "WindowSettings.h"
+#include "WindowTeam.h"
+#include "WindowBag.h"
+#include "ToolBar.h"
+#include "WindowShop.h"
 
-class WindowSettings;
-class WindowTeam;
-class WindowBag;
-class ToolBar;
-class WindowShop;
-class WGameCore;
 class DialogMenu;
 class IDialogMenu;
 
-typedef std::unique_ptr<WindowBag> WindowBagPtr;
-typedef std::unique_ptr<IDialogMenu> IDialogMenuPtr;
-typedef std::unique_ptr<WindowSettings> WindowSettingsPtr;
-typedef std::unique_ptr<WindowTeam> WindowTeamPtr;
-typedef std::unique_ptr<WindowBag> WindowBagPtr;
-typedef std::unique_ptr<ToolBar> ToolBarPtr;
-typedef std::unique_ptr<WindowShop> WindowShopPtr;
+using WindowBagPtr = std::unique_ptr<WindowBag>;
+using IDialogMenuPtr = std::unique_ptr<IDialogMenu>;
+using WindowSettingsPtr = std::unique_ptr<WindowSettings>;
+using WindowTeamPtr = std::unique_ptr<WindowTeam>;
+using WindowBagPtr = std::unique_ptr<WindowBag>;
+using ToolBarPtr = std::unique_ptr<ToolBar>;
+using WindowShopPtr = std::unique_ptr<WindowShop>;
 
 using DialogMenuPtr = std::unique_ptr<DialogMenu>;
 

@@ -1,5 +1,4 @@
 #include "CommandShop.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../Graphic/GUI/WindowShop.h"
 
 CommandShop::CommandShop(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -17,7 +16,7 @@ int CommandShop::argumentsNumber() {
 
 std::string CommandShop::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	/*wScreen.getGUI().getWindowShop()->reset();
 	wScreen.getGUI().getWindowShop()->hide(false);
 	wScreen.waitQuit(wScreen.getGUI().getWindowShop()->getShopBar());*/

@@ -6,7 +6,6 @@
 #include "../../ska/AI/IARandomMovementComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
 #include "WorldScene.h"
-#include "../WGameCore.h"
 #include "../../ska/World/LayerE.h"
 #include "../../ska/World/Layer.h"
 #include "../../Utils/IDs.h"
@@ -15,12 +14,13 @@
 #include "../../ska/Exceptions/ScriptSyntaxError.h"
 #include "../Fight/FightComponent.h"
 #include "../CustomEntityManager.h"
+#include "../../ska/Graphic/GUI/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, const unsigned int screenW, const unsigned int screenH) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w) :
 ska::Scene(sh, ril),
 m_entityManager(entityManager),
 m_saveManager("save1"),
-m_world(TAILLEBLOC, screenW, screenH),
+m_world(TAILLEBLOC, w.getWidth(), w.getHeight()),
 m_graphicSystem(NULL, m_entityManager),
 m_shadowSystem(NULL, m_entityManager),
 m_movementSystem(m_entityManager),
@@ -30,8 +30,9 @@ m_daSystem(m_entityManager),
 m_deleterSystem(m_entityManager),
 m_inputSystem(m_inputCManager, m_entityManager),
 m_cameraSystem(NULL),
-m_screenW(screenW),
-m_screenH(screenH) {
+m_screenW(w.getWidth()),
+m_screenH(w.getHeight()),
+m_gui(w, ril) {
 	m_loadedOnce = false;
 
 	m_graphics.push_back(&m_graphicSystem);
@@ -84,16 +85,24 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	m_world.getLayerRenderable(2).setPriority(m_graphicSystem.getTopLayerPriority());
 	drawables.add(m_world.getLayerRenderable(2));
 
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	m_pokeball.setPriority(m_graphicSystem.getTopLayerPriority() + 1);
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
 	m_world.graphicUpdate(drawables);
+
+	//Affiche la GUI
+	drawables.add(m_gui);
 }
 
 void WorldScene::eventUpdate(bool movingDisallowed) {
 	m_world.update();
+	
+	//GUI
+	m_gui.dialogRefresh();
+	m_gui.refresh();
+
 	return Scene::eventUpdate(movingDisallowed);
 }
 

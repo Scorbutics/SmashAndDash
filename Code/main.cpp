@@ -11,6 +11,7 @@
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
 #include "./ska/Utils/MessagePopup.h"
+#include "./Utils/IDs.h"
 
 #define SKA_DEBUG
 
@@ -50,14 +51,17 @@ int main (int argc, char *argv[])
     }
 
 	ska::IniReader reader("gamesettings.ini");
-	widthBlocks = reader.get<int>("Settings window_width_blocks");
-	heightBlocks = reader.get<int>("Settings window_height_blocks");
-	    
+	widthBlocks = reader.get<int>("Window width_blocks");
+	heightBlocks = reader.get<int>("Window height_blocks");
+	const std::string& title = reader.get<std::string>("Window title");
+
 	try {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
-		WGameCore& wScreen = WGameCore::getInstance(); //Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
-		while (wScreen.refresh()); //boucle principale
-		//wScreen.quitter(false);
+		
+		//Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
+		WGameCore wScreen(title, widthBlocks * TAILLEBLOC, heightBlocks * TAILLEBLOC);
+		//boucle principale
+		while (wScreen.refresh()); 
 	} catch (ska::TerminateProcessException& tpe) {
 		std::clog << tpe.what() << std::endl;
 	} catch (ska::GenericException& e) {

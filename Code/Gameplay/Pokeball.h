@@ -1,6 +1,4 @@
-#ifndef DEF_POKEBALL
-#define DEF_POKEBALL
-
+#pragma once
 #include <iostream>
 #include <string>
 #include <memory>
@@ -9,8 +7,6 @@
 #include "../ska/Graphic/Animation.h"
 #include "../ska/Graphic/Texture.h"
 #include "../ska/Graphic/Draw/DrawableFixedPriority.h"
-
-class WGameCore;
 
 class Pokeball : public ska::DrawableFixedPriority {
 
@@ -44,5 +40,3 @@ private:
 };
 
 
-
-#endif

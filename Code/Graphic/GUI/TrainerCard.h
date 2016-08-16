@@ -1,7 +1,7 @@
 #pragma once
 
 class TrainerCard {
-    public:
+public:
     TrainerCard();
     unsigned int getMoney();
     void setMoney(unsigned int x);
@@ -9,7 +9,7 @@ class TrainerCard {
     void generateTrainerID();
     ~TrainerCard();
 
-    private:
+private:
     unsigned int m_money, m_trainerID;
 
 };

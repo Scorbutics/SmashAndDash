@@ -12,11 +12,11 @@
 
 #define SIZE_ICON_ITEM_INVENTORY (TAILLEBLOCFENETRE / 4)
 
-Inventory_Area::Inventory_Area(DialogMenu* parent, Inventory* inv, ska::Point<int> relativePos) : DynamicWindowArea(parent)
+Inventory_Area::Inventory_Area(DialogMenu& parent, Inventory* inv, ska::Point<int> relativePos) : DynamicWindowArea(parent)
 {
     m_type = BUTTON_INVENTORY_AREA;
     m_inv = inv;
-    m_active = parent->isVisible();
+    m_active = parent.isVisible();
     m_relativePos.x = relativePos.x;
     m_relativePos.y = relativePos.y;
     m_lastObjectPos.x = 0;
@@ -69,19 +69,19 @@ void Inventory_Area::useObjectAtPos(ska::Point<int> objectPos, int i)
         m_inv->use(object->getID(), 1, i);
 }
 
-void Inventory_Area::display()
+void Inventory_Area::display() const
 {
 
-    if(!m_parent->isVisible())
+    if(!m_parent.isVisible())
         return;
 
-    m_active = true;
+    
 
 	ska::Rectangle buf; 
 	buf.x = m_relativePos.x;
 	buf.y = m_relativePos.y;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
 	buf.w = SIZE_ICON_ITEM_INVENTORY;
 	buf.h = SIZE_ICON_ITEM_INVENTORY;
 
@@ -93,8 +93,10 @@ void Inventory_Area::display()
 void Inventory_Area::refresh()
 {
 	ska::Point<int> buf = m_relativePos;
-	buf.x += (m_parent->getRect()).x;
-	buf.y += (m_parent->getRect()).y;
+	buf.x += (m_parent.getRect()).x;
+	buf.y += (m_parent.getRect()).y;
+
+	m_active = true;
 
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputActionContainer& in = wScreen.getActions();

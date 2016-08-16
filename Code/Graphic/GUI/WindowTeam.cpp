@@ -1,13 +1,14 @@
 #include "WindowTeam.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../Gameplay\PokemonManager.h"
+#include "../../ska/Inputs/InputContextManager.h"
 #include "Inventory_Area.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "WindowBag.h"
+#include "Button_Quit.h"
 
-WindowTeam::WindowTeam(std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :MovableWindow(fichierMenu, posFond, taillePolice)
+WindowTeam::WindowTeam(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) : MovableWindow(icm, fichierMenu, posFond, taillePolice)
 {
     m_boolUseObjectSelectPkmn.push_back(0);
     m_boolUseObjectSelectPkmn.push_back(0);
@@ -22,7 +23,7 @@ void WindowTeam::reset(std::string action)
 {
     this->deleteAll();
 	ska::Rectangle buf;
-	WGameCore& wScreen = WGameCore::getInstance();
+	
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 
 	std::vector<int> vBool;
@@ -34,7 +35,7 @@ void WindowTeam::reset(std::string action)
     this->addTextArea("Equipe Pokémon", 20, buf);
     this->resize(m_rect.w, /*(int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE*/ + 2*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-    this->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
+	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
     buf.x = TAILLEBLOCFENETRE/3;
     buf.y = TAILLEBLOCFENETRE*5/2;
     m_slotPkmn.clear();
@@ -65,9 +66,9 @@ void WindowTeam::reset(std::string action)
 void WindowTeam::refresh()
 {
     MovableWindow::refresh();
-	WGameCore& wScreen = WGameCore::getInstance();
-	const ska::InputActionContainer& in = wScreen.getActions();
-	const ska::InputRange& mouseClickPos = wScreen.getRanges()[ska::InputRangeType::MousePos];
+	//WGameCore& wScreen = WGameCore::getInstance();
+	const ska::InputActionContainer& in = m_playerICM.getActions();
+	const ska::InputRange& mouseClickPos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 

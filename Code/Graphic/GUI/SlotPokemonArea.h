@@ -1,21 +1,18 @@
+#pragma once
 #include "DynamicWindowArea.h"
 #include "../../ska/Graphic/Texture.h"
 #include "Image_Area.h"
 #include "Text_Area.h"
-#ifndef DEF_SLOT_POKEMON_AREA
-#define DEF_SLOT_POKEMON_AREA
 
 class WGameCore;
 
 class SlotPokemon_Area : DynamicWindowArea
 {
 public:
-	SlotPokemon_Area(DialogMenu* parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key);
+	SlotPokemon_Area(DialogMenu& parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key);
     void setPokemon(unsigned int index);
-    virtual void display();
+    virtual void display() const override;
 	ska::Rectangle getRectSize();
-    virtual std::string getKey(){return "";};
-    virtual void forceValue(unsigned int){};
     virtual ~SlotPokemon_Area();
 	void refresh();
 
@@ -29,4 +26,3 @@ public:
     std::unique_ptr<Button> m_buttonArea;
 
 };
-#endif

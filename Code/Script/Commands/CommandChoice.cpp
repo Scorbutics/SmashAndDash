@@ -1,6 +1,5 @@
 #include <string>
 #include "CommandChoice.h"
-#include "../../Gameplay/WGameCore.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/ScriptUtils.h"
 #include "../../Graphic/GUI/MessageDialogBox.h"
@@ -21,9 +20,7 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
+std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
 	std::string fname, texte, buf, var;
 	var = args[0];
 	fname = args[1];
@@ -38,7 +35,7 @@ std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std
 			buf = "pnj" + ska::StringUtils::intToStr(abs(atoi(fname.c_str())));
 	}
 
-	MessageDialogBox box(texte, (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), wScreen.getHeight(), wScreen.getWidth());
+	/*MessageDialogBox box(texte, (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), wScreen.getHeight(), wScreen.getWidth());
 	ska::Rectangle menuPos = box.getRect();
 
 	choicePos = menuPos;
@@ -52,7 +49,7 @@ std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std
 	}
 
 	DialogMenu choice("Entrée:Oui¤Echap:Non", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", choicePos, 22);
-
+	*/
 	//ska::ScriptUtils::setValueFromVarOrSwitchNumber(script.parent->getSavegame(), script.extendedName, var, doAction ? "1" : "0", script.varMap);
 	
 	return "";

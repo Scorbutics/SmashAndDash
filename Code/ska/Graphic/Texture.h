@@ -1,7 +1,5 @@
-#ifndef DEF_TEXTURE
-#define DEF_TEXTURE
+#pragma once
 
-#include <map>
 #include <memory>
 #include "../Utils\ResourceTemplate.h"
 #include "SDLTexture.h"
@@ -42,5 +40,3 @@ namespace ska {
 
 
 
-
-#endif

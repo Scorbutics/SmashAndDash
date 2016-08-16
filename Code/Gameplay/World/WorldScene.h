@@ -14,16 +14,18 @@
 #include "WorldImpl.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
+#include "../../Graphic/GUI/GUI.h"
 
 namespace ska {
 	class IniReader;
 	class CameraSystem;
+	class Window;
 }
 class CustomEntityManager;
 
 class WorldScene : public ska::Scene, public MobSpawner, public ska::CameraAware {
 public:
-	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, const unsigned int screenW, const unsigned int screenH);
+	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w);
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
@@ -73,6 +75,8 @@ private:
 	ShadowSystem m_shadowSystem;
 
 	Pokeball m_pokeball;
+
+	GUI m_gui;
 
 };
 

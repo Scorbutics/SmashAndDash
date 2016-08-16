@@ -10,7 +10,7 @@ namespace ska {
 	class Window
 	{
 	public:
-		Window();
+		Window(const std::string& title, const unsigned int w, const unsigned int h);
 		SDL_Renderer* getRenderer() const;
 		~Window();
 		unsigned int getWidth() const;

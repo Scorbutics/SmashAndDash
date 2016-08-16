@@ -24,6 +24,7 @@ unsigned int TrainerCard::getTrainerID()
 
 void TrainerCard::generateTrainerID()
 {
+	/* TODO : ... */
     m_trainerID = rand()%(9999999 - 1000000 + 1) + 1000000;
 }
 

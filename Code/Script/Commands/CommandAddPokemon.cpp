@@ -1,5 +1,4 @@
 #include "CommandAddPokemon.h"
-#include "../../Gameplay\WGameCore.h"
 #include "../../ska/Utils\StringUtils.h"
 
 CommandAddPokemon::CommandAddPokemon(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
@@ -17,7 +16,7 @@ int CommandAddPokemon::argumentsNumber() {
 
 std::string CommandAddPokemon::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
 	int id;
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	id = ska::StringUtils::strToInt(args[0]);
 

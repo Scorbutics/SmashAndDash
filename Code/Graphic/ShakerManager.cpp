@@ -1,5 +1,4 @@
 #include "ShakerManager.h"
-#include "../Gameplay\WGameCore.h"
 #include "../ska/Graphic/Rectangle.h"
 
 ShakerManager::ShakerManager()
@@ -13,7 +12,7 @@ ShakerManager::ShakerManager()
 
 void ShakerManager::refresh()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 
 	if(!m_active)
 		return;
@@ -22,10 +21,10 @@ void ShakerManager::refresh()
 	{
 		ska::Rectangle buf = m_oRelBackup;
 
-		if (m_sens < 0)
+		/*if (m_sens < 0)
 			buf.x = rand()%(m_intensity+1) + m_oRelBackup.x;
 		else
-			buf.x = m_oRelBackup.x;
+			buf.x = m_oRelBackup.x;*/
 
 		//wScreen.setORel(buf);
 
@@ -42,7 +41,7 @@ void ShakerManager::refresh()
 
 void ShakerManager::shake(unsigned int intensity, unsigned int duration)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
+	//WGameCore& wScreen = WGameCore::getInstance();
 	//si jamais on n'est PAS déjà en train de secouer l'écran
 	//(évite d'appeler plusieurs fois la fonction pendant sa propre exécution)
 	//(effet de récursivité sinon)

@@ -16,6 +16,7 @@ namespace ska {
 	class CameraSystem;
 	class EntityManager;
 	class Window;
+	class InputContextManager;
 }
 
 template <typename T>
@@ -29,7 +30,7 @@ using BattleStartObservable = ska::Observable<ska::CameraSystem&, const ska::Ent
 
 class GUIBattle : public ska::HasGraphic, public ska::HasLogic, public StatisticsChangeObserver, public BattleStartObserver  {
 public:
-	GUIBattle(ska::Window& w, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs);
+	GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs);
 	~GUIBattle();
 
 	void clear();
@@ -41,6 +42,8 @@ public:
 
 private:
 	void addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId);
+
+	const ska::InputContextManager& m_playerICM;
 
 	std::unordered_map<ska::EntityId, BarPtr> m_bars;
 	StatisticsChangeObservable& m_statsObservable;

@@ -154,8 +154,8 @@ void SavegameManager::saveTrainer()
 	if(of.fail())
 	{
 		//TODO : PORTABILITE !!!
-		CreateDirectory(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname).c_str(),0);
-		CreateDirectory(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team").c_str(),0);
+		CreateDirectoryA(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname).c_str(),0);
+		CreateDirectoryA(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team").c_str(),0);
 
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}
