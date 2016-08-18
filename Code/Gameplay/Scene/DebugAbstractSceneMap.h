@@ -3,10 +3,14 @@
 #include "../../ska/Graphic/System/DebugCollisionDrawerSystem.h"
 #include "../../ska/Physic/System/DebugWorldCollisionResponse.h"
 
+namespace ska {
+	class Window;
+}
+
 class DebugAbstractSceneMap : public AbstractSceneMap {
 public:
-	DebugAbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	DebugAbstractSceneMap(WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
 	virtual ~DebugAbstractSceneMap() = default;
 
 private:

@@ -5,7 +5,7 @@
 #define MOB_SPAWNING_DELAY 5000
 
 SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-AbstractSceneMap_(ws, sh, ril, sameMap),
+AbstractSceneMap_(w, ws, sh, ril, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
 m_iaRandomMovementSystem(ws.getEntityManager()),
@@ -21,6 +21,8 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
 	m_logics.push_back(&m_cameraSystem);	
+
+	m_scriptAutoSystem.addObserver(*this);
 }
 
 ska::CameraSystem& SceneMap::getCamera() {
@@ -28,7 +30,7 @@ ska::CameraSystem& SceneMap::getCamera() {
 }
 
 SceneMap::SceneMap(ska::Window& w, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-AbstractSceneMap_(ws, oldScene, sameMap),
+AbstractSceneMap_(w, ws, oldScene, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
 m_iaRandomMovementSystem(ws.getEntityManager()),
@@ -44,6 +46,8 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
 	m_logics.push_back(&m_cameraSystem);
+
+	m_scriptAutoSystem.addObserver(*this);
 }
 
 SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap) :
@@ -72,6 +76,6 @@ void SceneMap::reinit() {
 }
 
 
-SceneMap::~SceneMap()
-{
+SceneMap::~SceneMap() {
+	m_scriptAutoSystem.removeObserver(*this);
 }

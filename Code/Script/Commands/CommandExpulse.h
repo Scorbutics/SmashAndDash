@@ -9,7 +9,7 @@ class CommandExpulse :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandExpulse(ska::World& w, ska::EntityManager& entityManager);
+	CommandExpulse(const ska::World& w, ska::EntityManager& entityManager);
 	
 	virtual ~CommandExpulse();
 
@@ -17,6 +17,6 @@ public:
 	virtual int argumentsNumber();
 
 private:
-	ska::World& m_world;
+	const ska::World& m_world;
 };
 

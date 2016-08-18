@@ -10,7 +10,8 @@
 namespace ska {
 	class World;
 
-	class ScriptAutoSystem : public System<std::unordered_set<EntityId>, ScriptComponent> {
+	class ScriptAutoSystem : 
+		public System<std::unordered_set<EntityId>, ScriptComponent> {
 	public:
 		
 		Savegame& getSavegame();
@@ -24,9 +25,6 @@ namespace ska {
 		void removeComponent(const std::string& componentName, const std::string& id) const;
 		void restoreComponent(const std::string& componentName, const std::string& id) const;
 		ska::EntityId getEntityFromName(const std::string& nameEntity);
-
-		/* Utils */
-		World& getWorld();
 
 		/* ScriptComponent methods */
 		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);

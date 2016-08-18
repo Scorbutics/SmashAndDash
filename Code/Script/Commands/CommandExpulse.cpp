@@ -14,7 +14,7 @@
 #include "../../ska/Utils/NumberUtils.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/World/World.h"
-CommandExpulse::CommandExpulse(ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager), 
+CommandExpulse::CommandExpulse(const ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager), 
 m_world(w) {
 }
 

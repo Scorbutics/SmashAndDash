@@ -11,7 +11,8 @@ namespace ska {
 		friend class Observable;
 
 	public:
-		Observer(std::function<void(const T&, Args...)> const& handler) : m_handler(handler) {
+		Observer(std::function<void(const T&, Args...)> const& handler) : m_handler(handler), 
+			m_right(nullptr), m_left(nullptr) {
 		}
 
 		virtual ~Observer() = default;
@@ -24,5 +25,6 @@ namespace ska {
 		void receive(const T& evt, Args&... args) {
 			(m_handler)(evt, std::forward<Args&>(args)...);
 		}
+
 	};
 }

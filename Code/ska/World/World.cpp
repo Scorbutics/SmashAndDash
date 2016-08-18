@@ -261,12 +261,12 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 }
 
-ska::Point<int> ska::World::alignOnBlock(const ska::Rectangle& hitbox) {
+ska::Point<int> ska::World::alignOnBlock(const ska::Rectangle& hitbox) const {
 	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitbox) / m_blockSize) * m_blockSize;
 	return ska::Point<int>(hitbox) - hitBoxBlock;
 }
 
-ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) {
+ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) const {
 	std::vector<ska::Rectangle> blocksPos;
 	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitBox) + ska::Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
 	ska::Rectangle result = hitBox;

@@ -28,10 +28,6 @@ m_world(w) {
 	sch.setupCommands(w, m_commands);
 }
 
-ska::World& ska::ScriptAutoSystem::getWorld() {
-	return m_world;
-}
-
 const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::string& id) const {
 	std::vector<std::string> keys = ska::StringUtils::split(key, '.');
 	if (keys.size() != 2) {

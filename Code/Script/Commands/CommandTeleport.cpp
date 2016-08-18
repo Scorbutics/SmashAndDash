@@ -7,15 +7,17 @@
 #include "../../ska/World/World.h"
 #include "../../Utils\IDs.h"
 #include "../../ska/Utils\StringUtils.h"
-#include "../../Gameplay/Scene/SceneMap.h"
 
-CommandTeleport::CommandTeleport(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
+#include "../../Gameplay/Scene/SceneToMapSwitcher.h"
+
+CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager) : 
+AbstractFunctionCommand(entityManager),
+m_sceneChanger(sceneChanger), 
+m_world(w) {
 }
 
 
-CommandTeleport::~CommandTeleport()
-{
+CommandTeleport::~CommandTeleport() {
 }
 
 int CommandTeleport::argumentsNumber() {
@@ -23,8 +25,6 @@ int CommandTeleport::argumentsNumber() {
 }
 
 std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	ska::World& w = script.parent->getWorld();
-
 	const std::string& mapName = args[0];	
 	const std::string& id = args[1];
 	const int x = ska::StringUtils::strToInt(args[2]);
@@ -33,8 +33,8 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
 	/* A script HAS a position component */
 	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
-	pc.x = w.getBlockSize() * x;
-	pc.y = w.getBlockSize() * y;
+	pc.x = m_world.getBlockSize() * x;
+	pc.y = m_world.getBlockSize() * y;
 
 	/* Hero use case */
 	if (id == "0") {
@@ -53,8 +53,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		/*ska::ScenePtr scene = ska::ScenePtr(new SceneMap(wScreen, *wScreen.getScene(), wScreen.getWorldScene(), fichier, chipsetName, wScreen.getWorldScene().getFileName() == fichier));
-		wScreen.nextScene(scene);*/
+		m_sceneChanger.notifyObservers(SceneToMapSwitcher(fichier, chipsetName));
 		
 	}
 

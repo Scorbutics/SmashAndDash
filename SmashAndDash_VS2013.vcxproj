@@ -125,6 +125,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
+    <ClInclude Include="Code\ska\Scene\SceneSwitcher.h" />
+    <ClInclude Include="Code\Gameplay\Scene\SceneToBattleSwitcher.h" />
+    <ClInclude Include="Code\Gameplay\Scene\SceneToMapSwitcher.h" />
     <ClInclude Include="Code\Graphic\GUI\ButtonState.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h" />
@@ -401,6 +404,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneToBattleSwitcher.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneToMapSwitcher.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Graphic\GUI\SpriteButton.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />

@@ -23,7 +23,7 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 }
 
 SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
-AbstractSceneMap_(ws, sh, ril, true),
+AbstractSceneMap_(w, ws, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_statsSystem(w, ws.getEntityManager(), sh, ril, ws),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
@@ -214,7 +214,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		notifyObservers(m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
+		BattleStartObservable::notifyObservers(m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
 
 		m_sceneLoaded = true;
 		m_loadState = 0;

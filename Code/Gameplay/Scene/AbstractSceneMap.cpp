@@ -2,25 +2,30 @@
 #include "../World/WorldScene.h"
 #include "../CustomEntityManager.h"
 #include "../../ska/World/LayerE.h"
+#include "../../ska/Scene/SceneSwitcher.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) : 
+AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) :
 AbstractNoGUISceneMap(sh, ril),
+SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
 m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
+m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_window(w) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
-AbstractSceneMap::AbstractSceneMap(WorldScene& ws, ska::Scene& oldScene, const bool sameMap) :
+AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::Scene& oldScene, const bool sameMap) :
 AbstractNoGUISceneMap(oldScene),
+SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
 m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()) {
+m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_window(w) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
@@ -40,6 +45,10 @@ void AbstractSceneMap::load(ska::ScenePtr* lastScene) {
 		}
 	}
 
+}
+
+void AbstractSceneMap::onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher) {
+	switcher.switchTo(m_window, m_holder, *this, m_inputCManager, m_worldScene);
 }
 
 bool AbstractSceneMap::unload() {

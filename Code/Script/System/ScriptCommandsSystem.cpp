@@ -24,7 +24,9 @@
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
 
-ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame) : ScriptBasicCommandsSystem(w, ScriptCommandHelper(w, entityManager), entityManager, saveGame) {
+ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame) : 
+ScriptBasicCommandsSystem(w, ScriptCommandHelper(*this, w, entityManager), entityManager, saveGame),
+SceneChangeObservable() {
 }
 
 void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std::unordered_map<std::string, ska::CommandPtr>& c) const {
@@ -45,7 +47,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std
 	c["follow_char"] = move(ska::CommandPtr(new CommandFollow(m_entityManager)));
 	c["shop"] = move(ska::CommandPtr(new CommandShop(m_entityManager)));
 	c["hide_gui"] = move(ska::CommandPtr(new CommandHideGUI(m_entityManager)));
-	c["teleport"] = move(ska::CommandPtr(new CommandTeleport(m_entityManager)));
+	c["teleport"] = move(ska::CommandPtr(new CommandTeleport(m_world, m_parent, m_entityManager)));
 	c["cinematic"] = move(ska::CommandPtr(new CommandCinematic(m_entityManager)));
 	c["pokeball"] = move(ska::CommandPtr(new CommandThrowPokebal(m_entityManager)));
 	c["kill"] = move(ska::CommandPtr(new CommandKillEntity(m_entityManager)));
