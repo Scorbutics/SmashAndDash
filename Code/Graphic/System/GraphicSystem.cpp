@@ -3,7 +3,6 @@
 #include "GraphicSystem.h"
 #include "../../ska/Graphic/PositionnedGraphicDrawable.h"
 #include "../DialogComponent.h"
-#include "../GUI/Window_Area.h"
 #include "../../ska/Utils/NumberUtils.h"
 
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;

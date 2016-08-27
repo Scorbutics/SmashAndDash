@@ -6,7 +6,7 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "WindowBag.h"
-#include "Button_Quit.h"
+#include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
 
 WindowTeam::WindowTeam(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) : MovableWindow(icm, fichierMenu, posFond, taillePolice)
 {
@@ -35,10 +35,10 @@ void WindowTeam::reset(std::string action)
     this->addTextArea("Equipe Pokémon", 20, buf);
     this->resize(m_rect.w, /*(int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE*/ + 2*TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
+	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
     buf.x = TAILLEBLOCFENETRE/3;
     buf.y = TAILLEBLOCFENETRE*5/2;
-    m_slotPkmn.clear();
+//    m_slotPkmn.clear();
     /*for(unsigned int i = 0; i < pkmnMng.getPokemonTeamSize(); i++)
     {
         if(pkmnMng.getPokemon(i) != NULL )
@@ -72,7 +72,7 @@ void WindowTeam::refresh()
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
 	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 
-	for(unsigned int i = 0; i < m_slotPkmn.size(); i++)
+/*	for(unsigned int i = 0; i < m_slotPkmn.size(); i++)
 	{
 		m_slotPkmn[i]->display();
 		m_slotPkmn[i]->refresh();
@@ -84,7 +84,7 @@ void WindowTeam::refresh()
     {
  
 		ska::Rectangle rectSlot = m_slotPkmn[i]->getRectSize();
-		/*if (pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
+		if (pkmnMng.getPokemonTeamSize() > 1 && mouseCur.getPokemon() == NULL && in[ska::InputAction::LClic] && ska::RectangleUtils::isPositionInBox(mouseClickPos, rectSlot)) //Si on clique dans la fenetre d'un slot
         {
             mouseCur.setPokemon(pkmnMng.getPokemon(i));
 			pkmnMng.remove(i);
@@ -99,11 +99,11 @@ void WindowTeam::refresh()
             pkmnMng.swapPokemonOrders(i, m_indexCursor);
             this->reset("show");
             break;
-        }*/
+        }
 
     }
 
-    /*for(unsigned int i = 0; i < m_boolUseObjectSelectPkmn.size(); i++)
+    for(unsigned int i = 0; i < m_boolUseObjectSelectPkmn.size(); i++)
         if(m_boolUseObjectSelectPkmn[i] != 0)
         {
             this->hide(true);

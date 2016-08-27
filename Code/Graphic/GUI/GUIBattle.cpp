@@ -8,7 +8,7 @@
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Graphic/GUI/Window.h"
-#include "SpriteButton.h"
+#include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
 GUIBattle::GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
@@ -44,7 +44,7 @@ void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 	if (!v.empty()) {
 		for (unsigned int i = 0; i < v.size(); i++) {
 			buf.x += TAILLEBLOCFENETRE;
-			m_moves.addDynamicArea(std::unique_ptr<SpriteButton>(new SpriteButton(m_moves, m_playerICM, buf, "", v[i].id, [&] {
+			m_moves.addDynamicArea(std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(m_moves, buf, "", v[i].id, [&](const ska::ClickEvent& e) {
 			})));
 		}
 	}

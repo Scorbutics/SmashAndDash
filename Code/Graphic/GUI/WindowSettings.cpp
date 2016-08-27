@@ -4,7 +4,7 @@
 #include "WindowTeam.h"
 #include "WindowBag.h"
 #include "../../Utils/IDs.h"
-#include "Button_Quit.h"
+#include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
 
 WindowSettings::WindowSettings(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :
 MovableWindow(icm, fichierMenu, posFond, taillePolice)
@@ -22,7 +22,7 @@ void WindowSettings::reset()
     buf.y = TAILLEBLOCFENETRE*3/4;
 	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
+	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
 	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
 	std::vector<int> vbool, vSndVol;
     vbool.push_back(0);

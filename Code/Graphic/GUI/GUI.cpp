@@ -5,7 +5,7 @@
 
 #include "../../Utils\IDs.h"
 #include "GUI.h"
-#include "Window_Area.h"
+//#include "Window_Area.h"
 #include "Inventory_Area.h"
 #include "MouseCursor.h"
 #include "../../Utils/ChargementImages.h"
@@ -113,11 +113,11 @@ void GUI::initButtons(const ska::Window& w) {
     m_buttonList.clear();
     m_buttonList.push_back(DialogMenuPtr (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
 	m_buttonList[0]->name("Equipe");
-	m_buttonList[0]->setClickHandler([&] {
+	/*m_buttonList[0]->setClickHandler([&] {
 		m_wTeam->setPos(ska::Point<int>());
 		m_wTeam->reset("show");
 		m_wTeam->hide(false);
-	});
+	});*/
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
@@ -127,11 +127,11 @@ void GUI::initButtons(const ska::Window& w) {
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
 	m_buttonList[2]->name("PokéSac");
-	m_buttonList[2]->setClickHandler([&] {
+	/*m_buttonList[2]->setClickHandler([&] {
 		m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
 		m_wBag->reset();
 		m_wBag->hide(false);
-	});
+	});*/
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
@@ -141,11 +141,11 @@ void GUI::initButtons(const ska::Window& w) {
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
 	m_buttonList[4]->name("Paramètres");
-	m_buttonList[4]->setClickHandler([&] {
+	/*m_buttonList[4]->setClickHandler([&] {
 		m_wSettings->setPos(ska::Point<int>(m_wTeam->getRect().w + m_wBag->getRect().w, 0));
 		m_wSettings->reset();
 		m_wSettings->hide(false);
-	});
+	});*/
 
     m_buttonScroll.resize(m_buttonList.size());
 	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
@@ -206,9 +206,9 @@ void GUI::refresh() {
 					m_buttonScroll[i] += SCROLL_BUTTON_SPEED;
 				}
 
-                if(in[ska::InputAction::LClic] && !m_wShop->isVisible()) {
+                /*if(in[ska::InputAction::LClic] && !m_wShop->isVisible()) {
 					m_buttonList[i]->click(mousePos);
-                }
+                }*/
 
 				//si on change de bouton de la gui, on actualise le curseur
 				if (!ska::RectangleUtils::isPositionInBox(lastMousePos, buttonPos)) {
@@ -264,7 +264,7 @@ void GUI::setClickMenu() {
     vBool.push_back(0);
     vBool.push_back(1);
 
-    Inventory_Area* invArea = m_wBag->getInventoryArea(0);
+    /*Inventory_Area* invArea = m_wBag->getInventoryArea(0);
     if(invArea != NULL && m_wBag->isVisible()) {
         invAreaAbsolutePos = invArea->getRect();
 		if (ska::RectangleUtils::isPositionInBox(mousePos, invAreaAbsolutePos) && !ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
@@ -308,7 +308,7 @@ void GUI::setClickMenu() {
         }
 
     }
-
+	*/
 }
 
 

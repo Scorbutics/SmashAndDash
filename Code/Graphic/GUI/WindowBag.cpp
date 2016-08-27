@@ -1,6 +1,6 @@
 #include "WindowBag.h"
-#include "Inventory_Area.h"
-#include "Button_Quit.h"
+//#include "Inventory_Area.h"
+#include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
 #include "../../Utils/IDs.h"
 #include "WindowTeam.h"
 
@@ -23,7 +23,7 @@ void WindowBag::reset()
 	ska::Rectangle buf;
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<Button_Quit>(new Button_Quit(*this, m_playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf)));
+	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
     buf.x = 4*TAILLEBLOCFENETRE;
     addTextArea("PokéSac", 20, buf);
     buf.x = TAILLEBLOCFENETRE;
@@ -54,8 +54,8 @@ void WindowBag::refresh()
     //lors d'un clic sur "Utiliser" du menu contextuel apparaissant apres un clic droit sur un objet
     if(m_boolUseObject != 0)
     {
-        Inventory_Area* invArea = this->getInventoryArea(0);
-		ska::Point<int> invAreaAbsolutePos = invArea->getAbsolutePos();
+        //Inventory_Area* invArea = this->getInventoryArea(0);
+		//ska::Point<int> invAreaAbsolutePos = invArea->getAbsolutePos();
         //gui.getClickMenu()->hide(true);
         m_boolUseObject = 0;
 		/*m_curObjectPos = gui.getClickMenu()->getRect();

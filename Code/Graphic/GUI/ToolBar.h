@@ -4,7 +4,7 @@
 #include "MovableWindow.h"
 
 
-class Inventory_Area;
+//class Inventory_Area;
 
 class ToolBar : public MovableWindow
 {
@@ -15,7 +15,7 @@ public:
 
     private:
     Inventory m_inv;
-    Inventory_Area* m_invArea;
+    //Inventory_Area* m_invArea;
 };
 
 using ToolBarPtr = std::unique_ptr<ToolBar>;

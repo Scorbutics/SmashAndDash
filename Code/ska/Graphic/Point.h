@@ -30,6 +30,11 @@ namespace ska {
 			*this = p;
 		}
 
+		Point<T>(const ska::Rectangle& r) {
+			x = r.x;
+			y = r.y;
+		}
+
 		template <class U>
 		void operator=(const Point<U>& p) {
 			x = (T)p.x;

@@ -1,6 +1,6 @@
 #include "ToolBar.h"
 #include "../../Gameplay\Inventory\Inventory.h"
-#include "../../Graphic\GUI\Inventory_Area.h"
+//#include "../../Graphic\GUI\Inventory_Area.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Inputs/InputContextManager.h"
 
@@ -15,7 +15,7 @@ MovableWindow(icm, fichierMenu, posFond, 22)
 
 	m_inv.load(squareSpriteName, squareSpriteNameHighlight);
     addInventory(m_inv, pos);
-    m_invArea = this->getInventoryArea(0);
+    //m_invArea = this->getInventoryArea(0);
 }
 
 
@@ -24,7 +24,7 @@ void ToolBar::refresh()
 	const ska::InputActionContainer& in = m_playerICM.getActions();
 
     MovableWindow::refresh();
-    if(m_invArea != NULL)
+    /*if(m_invArea != NULL)
         m_invArea->refresh();
 	else
 		return;
@@ -98,7 +98,7 @@ void ToolBar::refresh()
 				inv->use(obj->getID(), 1);
 		}
     }
-
+	*/
 }
 
 ToolBar::~ToolBar()

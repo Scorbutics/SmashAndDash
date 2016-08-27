@@ -108,15 +108,6 @@
     <ClInclude Include="Code\Graphic\GUI\Bar.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Button.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Button_Bar.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Button_Quit.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Utils\ChargementImages.h">
       <Filter>Fichiers d%27en-tête\Utils</Filter>
     </ClInclude>
@@ -132,22 +123,7 @@
     <ClInclude Include="Code\Graphic\GUI\GUI.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Image_Area.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Inventory_Area.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\MovableWindow.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Scroll_Text.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\SlotPokemonArea.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Text_Area.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\ToolBar.h">
@@ -157,9 +133,6 @@
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\Window_Area.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\Window_Choice.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\WindowBag.h">
@@ -918,15 +891,6 @@
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\HasClickHandler.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\SpriteButton.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\ButtonState.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Scene\SceneToBattleSwitcher.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -936,18 +900,39 @@
     <ClInclude Include="Code\ska\Scene\SceneSwitcher.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonState.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\HasClickHandler.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\HasHoverHandler.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Label.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Image.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonQuit.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonSprite.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Button.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Button_Bar.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Button_Quit.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Utils\ChargementImages.cpp">
@@ -962,22 +947,7 @@
     <ClCompile Include="Code\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Image_Area.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Inventory_Area.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MovableWindow.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Scroll_Text.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\SlotPokemonArea.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Text_Area.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\ToolBar.cpp">
@@ -987,9 +957,6 @@
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\Window_Area.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Window_Choice.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\WindowBag.cpp">
@@ -1478,13 +1445,31 @@
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\SpriteButton.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Gameplay\Scene\SceneToBattleSwitcher.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Scene\SceneToMapSwitcher.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Button.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Label.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonQuit.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

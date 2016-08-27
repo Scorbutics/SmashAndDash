@@ -2,7 +2,7 @@
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../ska/Graphic/Draw/Drawable.h"
 
-class IDialogMenu : public ska::Drawable {
+class IDialogMenu : virtual public ska::Drawable {
 public:
 	IDialogMenu() = default;
 	virtual ~IDialogMenu() = default;

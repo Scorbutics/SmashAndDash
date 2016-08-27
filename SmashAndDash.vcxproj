@@ -140,7 +140,6 @@
     <ClCompile Include="Chargemententitees.cpp" />
     <ClCompile Include="ChargementImages.cpp" />
     <ClCompile Include="DialogMenu.cpp" />
-    <ClCompile Include="DynamicWindowArea.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Fight.cpp" />
     <ClCompile Include="Force.cpp" />
@@ -196,7 +195,6 @@
     <ClCompile Include="WindowSettings.cpp" />
     <ClCompile Include="WindowShop.cpp" />
     <ClCompile Include="WindowTeam.cpp" />
-    <ClCompile Include="Window_Area.cpp" />
     <ClCompile Include="Window_Choice.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -226,7 +224,6 @@
     <ClInclude Include="DialogMenu.h" />
     <ClInclude Include="DisplayLayer.h" />
     <ClInclude Include="DWindow.h" />
-    <ClInclude Include="DynamicWindowArea.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Fight.h" />
     <ClInclude Include="Force.h" />
@@ -293,7 +290,6 @@
     <ClInclude Include="WindowSettings.h" />
     <ClInclude Include="WindowShop.h" />
     <ClInclude Include="WindowTeam.h" />
-    <ClInclude Include="Window_Area.h" />
     <ClInclude Include="Window_Choice.h" />
     <ClInclude Include="WMonde.h" />
     <ClInclude Include="World.h" />

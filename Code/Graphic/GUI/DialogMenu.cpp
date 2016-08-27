@@ -1,6 +1,6 @@
 #include "DialogMenu.h"
 #include "../../Utils/ChargementImages.h"
-#include "Button_Quit.h"
+#include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
 #include "Scroll_Text.h"
 #include "Button.h"
 #include "Button_Bar.h"
@@ -8,14 +8,16 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/Utils/TimeUtils.h"
-#include "Text_Area.h"
+#include "../../ska/Graphic/GUI/Components/Widget.h"
+#include "../../ska/Graphic/GUI/Components/Label.h"
+#include "../../ska/Graphic/GUI/Components/Image.h"
 #include "Image_Area.h"
 
 #define RECT_OFFSET 12
 #define F_IN 1
 #define F_OUT 2
 #define SCROLL_SPEED 3
-
+	
 
 ///////////////////////////////////////////////
 //Le menu est géré de même façon qu'un layer. on a une image qui permet la construction des fenêtres du menu (on peut considérer ça comme un chipset à menu),
@@ -153,7 +155,7 @@ void DialogMenu::display() const {
 	
 
 
-	for (const auto& area : m_areaList){
+	for (const auto& area : m_widgets){
 		area->display();
 	}
 
@@ -164,7 +166,7 @@ void DialogMenu::display() const {
 
 void DialogMenu::operator=(const DialogMenu& dm) {
 	/* Do not copy Window Areas */
-	m_clickHandler = dm.m_clickHandler;
+	//m_clickHandler = dm.m_clickHandler;
 	m_alpha = dm.m_alpha;
 	m_color = dm.m_color;
 	m_fontSize = dm.m_fontSize;
@@ -187,11 +189,12 @@ void DialogMenu::operator=(const DialogMenu& dm) {
 	m_timeout = dm.m_timeout;
 }
 
+/*
 void DialogMenu::click(const ska::Point<int>& clickPos) {
 	if (m_clickHandler != nullptr) {
 		m_clickHandler();
 	}
-}
+}*/
 
 const std::string& DialogMenu::getName() const {
 	return m_name;
@@ -252,25 +255,27 @@ void DialogMenu::refresh() {
 		}
 	}
 
-	for(auto& area : m_areaList) {
-		/* TODO : ... AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH */
-		DynamicWindowArea* dynArea = dynamic_cast<DynamicWindowArea*>(area.get());
-		if(dynArea != NULL)  {
-			dynArea->refresh();
-		}
-	}
+	//TODO determiner les evenements a dispatcher aux widgets contenus
 
-	if (m_closeButton != nullptr) {
-		m_closeButton->refresh();
-	}
+// 	for(auto& area : m_widgets) {
+// 		/* TODO : ... AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH */
+// 		DynamicWindowArea* dynArea = dynamic_cast<DynamicWindowArea*>(area.get());
+// 		if(dynArea != NULL)  {
+// 			dynArea->refresh();
+// 		}
+// 	}
+
+// 	if (m_closeButton != nullptr) {
+// 		m_closeButton->refresh();
+// 	}
 }
 
-void DialogMenu::setClickHandler(std::function<void(void)> const& action) {
-    m_clickHandler = action;
-}
+// void DialogMenu::setClickHandler(std::function<void(void)> const& action) {
+//     m_clickHandler = action;
+// }
 
 void DialogMenu::deleteAll() {
-    m_areaList.clear();
+    m_widgets.clear();
 }
 
 Inventory_Area* DialogMenu::getInventoryArea(unsigned int index) {
@@ -377,20 +382,16 @@ void DialogMenu::setAlpha(bool x) {
     m_alpha = x;
 }
 
-void DialogMenu::setButtonClose(std::unique_ptr<Button_Quit>& button) {
+void DialogMenu::setButtonClose(std::unique_ptr<ska::ButtonQuit>& button) {
 	m_closeButton = std::move(button);
 }
 
 void DialogMenu::addTextArea(const std::string& text, int fontSize, ska::Point<int> relativePos) {
-	m_areaList.push_back(std::unique_ptr<Text_Area>(new Text_Area(*this, text, fontSize, relativePos)));
+	m_widgets.push_back(std::unique_ptr<ska::Label>(new ska::Label(*this, text, fontSize, relativePos)));
 }
 
 void DialogMenu::addImageArea(const std::string& name, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc) {
-	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(*this, relativePos, rectSrc, name, alpha)));
-}
-
-void DialogMenu::addImageArea(ska::Texture* tex, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc) {
-	m_areaList.push_back(std::unique_ptr<Image_Area>(new Image_Area(*this, relativePos, rectSrc, tex, alpha)));
+	m_widgets.push_back(std::unique_ptr<ska::Image>(new ska::Image(*this, name, relativePos, alpha)));
 }
 
 void DialogMenu::addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) {
@@ -405,7 +406,7 @@ void DialogMenu::addButtonBar(ska::Rectangle relativePos, const std::string& sty
 	//m_areaList.push_back(std::unique_ptr<Button_Bar>(new Button_Bar(*this, relativePos, styleName, variable, values, displayedText, fontSize, key)));
 }
 
-Window_Area* DialogMenu::getButton(const std::string& key) {
+ska::Widget* DialogMenu::getButton(const std::string& key) {
 	/* Si c'est pour faire ça, autant faire une unordered_map ....... */
 	/*for (auto& area : m_areaList) {
 		if (area->getKey() == key) {
@@ -413,17 +414,18 @@ Window_Area* DialogMenu::getButton(const std::string& key) {
 		}
 	}*/
 	std::cerr << "Erreur (classe DialogMenu) : Dépassement mémoire dans la liste des boutons associés à une fenêtre" << std::endl;
-    return m_areaList[0].get();
+	return m_widgets[0].get();
 }
 
 void DialogMenu::addInventory(Inventory& inv, ska::Rectangle relativePos) {
 	ska::Rectangle buf = relativePos;
 	buf.h = m_rect.h - relativePos.x;
 	buf.w = m_rect.w - relativePos.y;
-	m_areaList.push_back(std::unique_ptr<Inventory_Area>(new Inventory_Area(*this, &inv, buf)));
+	//m_widgets.push_back(std::unique_ptr<Inventory_Area>(new Inventory_Area(*this, &inv, buf)));
 }
 
-Window_Area* DialogMenu::getCloseButton() {
+ska::ButtonQuit* DialogMenu::getCloseButton()
+{
 	return m_closeButton.get();
 }
 
@@ -444,8 +446,8 @@ void DialogMenu::setPos(ska::Point<int> pos) {
 	m_scrollingRect.y = pos.y;
 }
 
-void DialogMenu::addDynamicArea(DynamicWindowAreaPtr&& area) {
-	m_areaList.push_back(std::move(area));
+void DialogMenu::addDynamicArea(std::unique_ptr<ska::Widget>&& area) {
+	m_widgets.push_back(std::move(area));
 }
 
 void DialogMenu::move(ska::Point<int> delta) {

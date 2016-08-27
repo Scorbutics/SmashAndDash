@@ -1,6 +1,5 @@
 #pragma once
 #include "MovableWindow.h"
-#include "SlotPokemonArea.h"
 
 class WGameCore;
 class WindowTeam: public MovableWindow
@@ -12,7 +11,7 @@ public:
     ~WindowTeam();
 
 private:
-    std::vector<std::unique_ptr<SlotPokemon_Area>> m_slotPkmn;
+    //std::vector<std::unique_ptr<SlotPokemon_Area>> m_slotPkmn;
     std::vector<int> m_boolUseObjectSelectPkmn;
     int m_indexCursor;
 };
