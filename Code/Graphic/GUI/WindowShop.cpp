@@ -1,7 +1,6 @@
 
 #include "../../Utils\IDs.h"
 #include "WindowShop.h"
-#include "GUI.h"
 #include "../../ska/Inputs/InputContextManager.h"
 #include "../../ska/Utils/Singleton_template.h"
 #include "../../Utils\ChargementImages.h"
@@ -20,9 +19,9 @@ m_playerICM(icm)
 	m_shopInv.load(squareSpriteName, squareSpriteNameHighlight);
     m_pos = posFond;
     m_dialog.resize(4*TAILLEBLOCFENETRE, posFond.h);
-    m_shopBar.setPos(ska::Point<int>(posFond.x+4*TAILLEBLOCFENETRE, posFond.y));
+    m_shopBar.move(ska::Point<int>(posFond.x+4*TAILLEBLOCFENETRE, posFond.y));
     m_shopBar.resize(posFond.w-4*TAILLEBLOCFENETRE, posFond.h-4*TAILLEBLOCFENETRE);
-	m_userBar.setPos(ska::Point<int>(posFond.x + 4 * TAILLEBLOCFENETRE, posFond.y + posFond.h - 4 * TAILLEBLOCFENETRE));
+	m_userBar.move(ska::Point<int>(posFond.x + 4 * TAILLEBLOCFENETRE, posFond.y + posFond.h - 4 * TAILLEBLOCFENETRE));
 
 
     m_boolQuit = 0;
@@ -46,16 +45,16 @@ void WindowShop::hide(bool x)
 }
 
 void WindowShop::reset() {
-    m_shopBar.deleteAll();
-    m_userBar.deleteAll();
+    m_shopBar.clear();
+    m_userBar.clear();
 
 
 
-	m_dialog.setPos(ska::Point<int>(m_pos.x, m_pos.y));
+	m_dialog.move(ska::Point<int>(m_pos.x, m_pos.y));
     m_dialog.resize(4*TAILLEBLOCFENETRE, m_pos.h);
-	m_shopBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y));
+	m_shopBar.move(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y));
     m_shopBar.resize(m_pos.w-4*TAILLEBLOCFENETRE, m_pos.h-4*TAILLEBLOCFENETRE);
-	m_userBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
+	m_userBar.move(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
     m_userBar.resize(m_pos.w - 4*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE);
 
     //gui.hide(true);
@@ -78,7 +77,7 @@ void WindowShop::reset() {
 
 	ska::Rectangle buf;
     buf.y = (TAILLEBLOCFENETRE*3)/4;
-	buf.x = m_shopBar.getRect().w/ 2 - TAILLEBLOCFENETRE;
+	/*buf.x = m_shopBar.getRect().w/ 2 - TAILLEBLOCFENETRE;
     m_shopBar.addTextArea("Shop", 20, buf);
 	buf.x = m_userBar.getRect().w / 2 - 2 * TAILLEBLOCFENETRE;
     m_userBar.addTextArea("Utilisateur", 20, buf);
@@ -102,7 +101,7 @@ void WindowShop::reset() {
     m_shopInv.clear();
     m_shopInv.add(0,1);
     m_shopInv.add(1, 1);
-	m_shopInv.add(2, 1);
+	m_shopInv.add(2, 1);*/
 
 }
 
@@ -113,11 +112,11 @@ void WindowShop::refresh()
 	const ska::InputActionContainer& in = m_playerICM.getActions();
 	//MouseCursor& mouseCur = wScreen.getMouseCursor();
 
-    m_pos.x = m_dialog.getRect().x;
+    /*m_pos.x = m_dialog.getBox().x;
     m_pos.y = m_dialog.getRect().y;
 	m_shopBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y));
 	m_userBar.setPos(ska::Point<int>(m_pos.x + 4 * TAILLEBLOCFENETRE, m_pos.y + m_pos.h - 4 * TAILLEBLOCFENETRE));
-
+	*/
     //Lors d'un clic sur "Quitter", on quitte...
     if(m_boolQuit != 0)
     {

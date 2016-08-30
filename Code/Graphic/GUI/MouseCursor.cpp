@@ -9,7 +9,7 @@
 #include "../../Gameplay/Inventory/Object.h"
 #include "../../ska/Inputs/InputContextManager.h"
 #include "../../Utils/IDs.h"
-#include "GUI.h"
+//#include "GUI.h"
 
 MouseCursor::MouseCursor(const ska::InputContextManager& playerICM) :
 m_aniCursor(3, 3, false), m_playerICM(playerICM),
@@ -76,8 +76,8 @@ bool MouseCursor::isVisible() const {
 void MouseCursor::update() {
 	m_hintBox.refresh();
 	ska::Point<float> mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-	mousePos.y -= m_hintBox.getRect().w / 2;
-	m_hintBox.setPos(mousePos);
+	mousePos.y -= m_hintBox.getBox().w / 2;
+	m_hintBox.move(mousePos);
 	
 	m_aniCursor.getRectOfCurrentFrame();
 }

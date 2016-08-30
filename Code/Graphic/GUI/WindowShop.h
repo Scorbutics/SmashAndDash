@@ -21,7 +21,7 @@ private:
     MovableWindow m_dialog, m_userBar, m_shopBar;
 	ska::Rectangle m_pos;
     Inventory m_shopInv;
-    Inventory_Area *m_userInvArea, *m_shopInvArea;
+    //Inventory_Area *m_userInvArea, *m_shopInvArea;
     std::string m_lastClickInv;
 
 	const ska::InputContextManager& m_playerICM;

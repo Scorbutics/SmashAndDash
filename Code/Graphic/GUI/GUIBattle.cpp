@@ -34,7 +34,7 @@ void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsig
 
 void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em) {
 	const auto& sh = em.getComponent<SkillsHolderComponent>(pokemon);
-	m_moves.deleteAll();
+	m_moves.clear();
 	m_moves.hide(false);
 	ska::Point<int> buf;
 	buf.x = TAILLEBLOCFENETRE / 4;
@@ -44,8 +44,9 @@ void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 	if (!v.empty()) {
 		for (unsigned int i = 0; i < v.size(); i++) {
 			buf.x += TAILLEBLOCFENETRE;
-			m_moves.addDynamicArea(std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(m_moves, buf, "", v[i].id, [&](const ska::ClickEvent& e) {
-			})));
+			//TODO
+			//m_moves.addWidget(std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(m_moves, buf, "", v[i].id, [&](const ska::ClickEvent& e) {
+			//})));
 		}
 	}
 	

@@ -77,4 +77,9 @@
 
 #define SPRITE_ID_SHADOW 13
 
+//Taille d'un bloc dans le chipset fenetre (morceau d'une fenetre)
+#define TAILLEBLOCFENETRE 32 
+#define TAILLEECRANMINX TAILLEBLOCFENETRE*15
+#define TAILLEECRANMINY TAILLEBLOCFENETRE*13
+
 #define DEFAULT_FONT_FILE "."FILE_SEPARATOR"Polices"FILE_SEPARATOR"pkmndp.ttf"

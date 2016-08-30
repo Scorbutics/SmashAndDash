@@ -131,12 +131,14 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HasClickHandler.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HasHoverHandler.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\HasWidgets.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\HoverEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Image.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\WindowIG.h" />
     <ClInclude Include="Code\ska\Scene\SceneSwitcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneToBattleSwitcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneToMapSwitcher.h" />
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonState.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Physic\System\WorldEntityCollisionResponse.h" />
@@ -318,7 +320,7 @@
     <ClInclude Include="Code\ska\Physic\Force.h" />
     <ClInclude Include="Code\Graphic\GestionAnimations.h" />
     <ClInclude Include="Code\ska\Physic\GravityParticle.h" />
-    <ClInclude Include="Code\Graphic\GUI\GUI.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\GUI.h" />
     <ClInclude Include="Code\ska\Utils\Identity.h" />
     <ClInclude Include="Code\Utils\IDs.h" />
     <ClInclude Include="Code\ska\Inputs\Readers\IniReader.h" />
@@ -415,8 +417,11 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Button.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\HasWidgets.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\WindowIG.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\DebugWorldCollisionResponse.cpp" />
     <ClCompile Include="Code\ska\Physic\System\EntityCollisionResponse.cpp" />
@@ -513,7 +518,7 @@
     <ClCompile Include="Code\ska\Physic\Force.cpp" />
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp" />
     <ClCompile Include="Code\ska\Physic\GravityParticle.cpp" />
-    <ClCompile Include="Code\Graphic\GUI\GUI.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\GUI.cpp" />
     <ClCompile Include="Code\ska\Inputs\Readers\IniReader.cpp" />
     <ClCompile Include="Code\ska\Inputs\KeyInput.cpp" />
     <ClCompile Include="Code\ska\Inputs\RawInputListener.cpp" />

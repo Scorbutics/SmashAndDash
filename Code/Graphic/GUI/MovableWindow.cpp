@@ -14,7 +14,7 @@ m_playerICM(icm) {
 void MovableWindow::refresh() {
 	const ska::InputToggleContainer& in = m_playerICM.getToggles();
 	const ska::InputRange& mouseClickPos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-	ska::Rectangle movePos = m_rect;
+	auto movePos = getBox();
     movePos.h = TAILLEBLOCFENETRE/2;
 	
 	if (in[ska::InputToggle::MoveWindow] && ska::RectangleUtils::isPositionInBox(mouseClickPos, movePos)) {
@@ -24,11 +24,11 @@ void MovableWindow::refresh() {
 	}
 
     if(isMoving()) {
-		m_rect.x += (int) (mouseClickPos.x - m_mouseLastPos.x);
-		m_rect.y += (int) (mouseClickPos.y - m_mouseLastPos.y);
+		movePos.x += (int)(mouseClickPos.x - m_mouseLastPos.x);
+		movePos.y += (int)(mouseClickPos.y - m_mouseLastPos.y);
     }
 	
-	m_scrollingRect = m_rect;
+	m_scrollingRect = movePos;
 
 	m_mouseLastPos = mouseClickPos;
     DialogMenu::refresh();

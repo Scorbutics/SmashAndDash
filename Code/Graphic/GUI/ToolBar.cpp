@@ -14,7 +14,7 @@ MovableWindow(icm, fichierMenu, posFond, 22)
 	pos.h = posFond.h;
 
 	m_inv.load(squareSpriteName, squareSpriteNameHighlight);
-    addInventory(m_inv, pos);
+    //addInventory(m_inv, pos);
     //m_invArea = this->getInventoryArea(0);
 }
 

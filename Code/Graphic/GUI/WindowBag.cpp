@@ -19,13 +19,13 @@ ska::Point<int> WindowBag::getCurObjectPos()
 
 void WindowBag::reset()
 {
-    deleteAll();
+    clear();
 	ska::Rectangle buf;
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
+	//addWidget(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
     buf.x = 4*TAILLEBLOCFENETRE;
-    addTextArea("PokéSac", 20, buf);
+    //addTextArea("PokéSac", 20, buf);
     buf.x = TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*2;
     //this->addInventory(wScreen.getInventory(), buf);

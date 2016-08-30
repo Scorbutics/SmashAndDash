@@ -15,15 +15,16 @@ MovableWindow(icm, fichierMenu, posFond, taillePolice)
 
 void WindowSettings::reset()
 {
-    this->deleteAll();
+    this->clear();
 
 	ska::Rectangle buf;
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
-	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
+	const auto& box = getBox();
+	this->resize(box.w, 10 * TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
-	this->resize(m_rect.w, 10 * TAILLEBLOCFENETRE);
+	//addWidget(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
+	//this->resize(box.w, 10 * TAILLEBLOCFENETRE);
 	std::vector<int> vbool, vSndVol;
     vbool.push_back(0);
     vbool.push_back(1);
@@ -47,10 +48,10 @@ void WindowSettings::reset()
 
     buf.x = 4*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
-    this->addTextArea("Options", 20, buf);
+    //this->addTextArea("Options", 20, buf);
     buf.x = TAILLEBLOCFENETRE;
     buf.y = 2*TAILLEBLOCFENETRE;
-    this->addTextArea("Brouillard :", 20, buf);
+    //this->addTextArea("Brouillard :", 20, buf);
     buf.x += (int)(6.5*TAILLEBLOCFENETRE);
 	/*
     this->addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", settings.getFogActive(), vbool, vOnOff, 20, "fog_settings");

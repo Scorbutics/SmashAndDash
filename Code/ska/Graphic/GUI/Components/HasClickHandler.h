@@ -9,6 +9,5 @@ namespace ska {
 		virtual ~HasClickHandler() = default;
 
 		virtual void click(const ska::ClickEvent& e) = 0;
-		virtual void release(const ska::ClickEvent& e) = 0;
 	};
 }

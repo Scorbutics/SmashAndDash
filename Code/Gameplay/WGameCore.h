@@ -8,7 +8,6 @@
 #include "../Graphic\GUI\TrainerCard.h"
 #include "Data\SavegameManager.h"
 
-#include "../Graphic/GUI/GUI.h"
 #include "../ska/Utils\Singleton_template.h"
 #include "../ska/Inputs/InputContextManager.h"
 #include "World/WorldScene.h"

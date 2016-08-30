@@ -3,9 +3,6 @@
 #define ENTITEMAX 151 //Nombre d'entités TOTALES dans le jeu ENTIER
 
 #define TAILLEBLOC 48 //Taille d'un bloc dans le chipset du monde courant
-#define TAILLEBLOCFENETRE 32 //Taille d'un bloc dans le chipset fenetre (morceau d'une fenetre)
-#define TAILLEECRANMINX TAILLEBLOCFENETRE*15
-#define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
 #define BATTLE_START_TICKS 1000
 #define BATTLE_START_CHANCE 5

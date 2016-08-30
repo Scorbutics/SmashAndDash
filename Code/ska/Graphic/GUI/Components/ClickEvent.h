@@ -2,13 +2,16 @@
 
 #include "../../Point.h"
 
+#include "HoverEvent.h"
+
 namespace ska {
-	class ClickEvent {
+	class ClickEvent : public HoverEvent {
 	public:
-		ClickEvent(ska::Point<int>& pos);
+		ClickEvent(const ska::MouseEventType& state, ska::Point<int>& pos);
 		const ska::Point<int>& getClickPosition() const;
 		~ClickEvent() = default;
 	private:
 		const ska::Point<int> m_clickPosition;
+		
 	};
 }

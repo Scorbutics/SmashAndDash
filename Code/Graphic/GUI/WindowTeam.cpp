@@ -21,7 +21,7 @@ WindowTeam::WindowTeam(const ska::InputContextManager& icm, std::string fichierM
 
 void WindowTeam::reset(std::string action)
 {
-    this->deleteAll();
+    this->clear();
 	ska::Rectangle buf;
 	
 	//PokemonManager& pkmnMng = wScreen.getPokemonManager();
@@ -32,10 +32,11 @@ void WindowTeam::reset(std::string action)
     buf.x = 3*TAILLEBLOCFENETRE;
     buf.y = TAILLEBLOCFENETRE*3/4;
     buf.h = TAILLEBLOCFENETRE*3;
-    this->addTextArea("Equipe Pokémon", 20, buf);
-    this->resize(m_rect.w, /*(int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE*/ + 2*TAILLEBLOCFENETRE);
+	const auto& box = getBox();
+    //this->addTextArea("Equipe Pokémon", 20, buf);
+	this->resize(box.w, /*(int)pkmnMng.getPokemonTeamSize()*3*TAILLEBLOCFENETRE*/ +2 * TAILLEBLOCFENETRE);
     buf.x = 9*TAILLEBLOCFENETRE;
-	setButtonClose(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
+	//addWidget(std::unique_ptr<ska::ButtonQuit>(new ska::ButtonQuit(*this, buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png")));
     buf.x = TAILLEBLOCFENETRE/3;
     buf.y = TAILLEBLOCFENETRE*5/2;
 //    m_slotPkmn.clear();

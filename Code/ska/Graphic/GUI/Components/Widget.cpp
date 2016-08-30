@@ -29,7 +29,11 @@ void ska::Widget::setHeight(unsigned int h) {
 }
 
 const ska::Point<int> ska::Widget::getAbsolutePosition() const {
-	return m_parent == nullptr ? m_box : (ska::Point<int>(m_parent->m_box) + ska::Point<int>(m_box));
+	if (m_parent == nullptr) {
+		return m_box;
+	}
+
+	return m_parent->getAbsolutePosition() + ska::Point<int>(m_box);
 }
 
 const ska::Point<int> ska::Widget::getRelativePosition() const {

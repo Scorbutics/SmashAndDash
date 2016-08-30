@@ -9,5 +9,5 @@ public:
 
 	virtual void hide(bool x) = 0;
 	virtual void refresh() = 0;
-	virtual const ska::Rectangle getRect() const = 0;
+	//virtual const ska::Rectangle getBox() const = 0;
 };

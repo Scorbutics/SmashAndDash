@@ -21,10 +21,11 @@ namespace ska {
 
 		virtual ~Widget() = default;
 
-	protected:
-		const Point<int> getAbsolutePosition() const;
-		const Point<int> getRelativePosition() const;
 		const ska::Rectangle& getBox() const;
+		const Point<int> getAbsolutePosition() const;
+
+	protected:
+		const Point<int> getRelativePosition() const;
 
 	private:
 		Widget* m_parent;

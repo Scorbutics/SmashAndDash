@@ -37,9 +37,9 @@ bool MessageDialogBox::isVisible() const {
 	return m_dialog.isVisible() || m_talker.isVisible();
 }
 
-const ska::Rectangle MessageDialogBox::getRect() const {
-	return m_dialog.getRect();
-}
+// const ska::Rectangle MessageDialogBox::getRect() const {
+// 	return m_dialog.getRect();
+// }
 
 void MessageDialogBox::hide(bool x) {
 	m_dialog.hide(x);

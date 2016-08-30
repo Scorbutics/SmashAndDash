@@ -100,7 +100,7 @@ void WorldScene::eventUpdate(bool movingDisallowed) {
 	m_world.update();
 	
 	//GUI
-	m_gui.dialogRefresh();
+	//m_gui.dialogRefresh();
 	m_gui.refresh();
 
 	return Scene::eventUpdate(movingDisallowed);

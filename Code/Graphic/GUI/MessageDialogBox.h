@@ -11,7 +11,7 @@ class MessageDialogBox : public IDialogMenu
 {
 public:
 	MessageDialogBox(const ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
-	const ska::Rectangle getRect() const override;
+	//const ska::Rectangle getRect() const override;
 	void refresh() override;
 	void display() const override;
 	void hide(bool x) override;
