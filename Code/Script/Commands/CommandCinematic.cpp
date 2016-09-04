@@ -50,7 +50,9 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 	if (pos.y != -1)
 		pos.y -= wScreen.getORel().y;*/
 
-	DialogMenu messageBox(message, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 21);
+
+	//TODO : notify GUI instead of generating a messageBox...
+	//DialogMenu messageBox(message, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 21);
 
 	//wScreen.getSpriteAnimationManager().reset();
 

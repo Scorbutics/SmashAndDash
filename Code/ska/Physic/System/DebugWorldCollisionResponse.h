@@ -13,7 +13,7 @@ namespace ska {
 		public WorldCollisionObserver {
 	public:
 		DebugWorldCollisionResponse(CollisionSystem& colSys, EntityManager& em);
-		void onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc);
+		bool onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc);
 		~DebugWorldCollisionResponse();
 	private:
 		EntityManager& m_entityManager;

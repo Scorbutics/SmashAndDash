@@ -17,16 +17,17 @@ class Button;
 
 namespace ska {
 	class Widget;
+	class MouseObservable;
 }
 
 class DialogMenu : public IDialogMenu, public ska::WindowIG
 {
 public:
-	DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
-	DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
-	DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
-	DialogMenu(const DialogMenu& dm);
-	DialogMenu();
+	DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
+	DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
+	DialogMenu(ska::MouseObservable& gui, const std::string& text, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
+	DialogMenu(ska::MouseObservable& gui, const DialogMenu& dm);
+	DialogMenu(ska::MouseObservable& gui);
 	~DialogMenu();
     void resize(int w, int h);
 	void modifyText(const std::string& text);
@@ -38,7 +39,7 @@ public:
 
 	/*void setClickHandler(std::function<void(void)> const& action) override;
 	void click(const ska::Point<int>& clickPos) override;*/
-	void move(const ska::Point<int>& pos) override;
+	void move(const ska::Point<int>& pos);
     //void setPosImg(int x, int y);
 
     void setAlpha(bool x);

@@ -11,7 +11,7 @@
 namespace ska {
 	
 	template <class Storage, class ... ComponentType>
-	class System : public Observer<EntityEventType, const EntityComponentsMask&, EntityId>, virtual public ISystem, virtual protected Refreshable {
+	class System : public Observer<const EntityEventType, const EntityComponentsMask&, EntityId>, virtual public ISystem, virtual protected Refreshable {
 	public :
 		System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) { 
@@ -37,7 +37,7 @@ namespace ska {
 			m_toDelete.emplace(e);
 		}
 
-		void onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
+		bool onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
 			
 			/* An entity belongs to the system ONLY IF it has ALL the requiered components of the system */
 			EntityComponentsMask resultMask = mask & m_systemComponentMask;
@@ -58,7 +58,7 @@ namespace ska {
 			default:
 				break;
 			}
-						
+			return true;
 		}
 
 		virtual ~System(){ m_entityManager.removeObserver(*this); }

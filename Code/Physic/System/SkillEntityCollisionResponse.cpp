@@ -11,10 +11,10 @@ ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCo
 }
 
 
-void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc) {
+bool SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc) {
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
 		EntityCollisionResponse::onEntityCollision(e, col, cc);
-		return;
+		return true;
 	}
 
 
@@ -45,7 +45,7 @@ void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& 
 			m_entityManager.removeComponent<SkillComponent>(col.origin);
 			m_entityManager.removeComponent<SkillComponent>(col.target);
 		}
-		return;
+		return true;
 	}
 
 	if (sc->battler != targettedEntity) {
@@ -54,6 +54,7 @@ void SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& 
 		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
 
+	return true;
 }
 
 /*

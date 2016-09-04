@@ -9,15 +9,16 @@ ska::WorldCollisionResponse(std::bind(&WorldEntityCollisionResponse::onWorldColl
 	m_collisionSystem.ska::WorldCollisionObservable::addObserver(*this);
 }
 
-WorldEntityCollisionResponse::WorldEntityCollisionResponse(std::function<void(const ska::CollisionEvent&, ska::WorldCollisionComponent&, const ska::CollidableComponent&)> onWorldCollision, ska::World& w, ska::CollisionSystem& colSys, ska::EntityManager& em) :
+WorldEntityCollisionResponse::WorldEntityCollisionResponse(std::function<bool(const ska::CollisionEvent&, ska::WorldCollisionComponent&, const ska::CollidableComponent&)> onWorldCollision, ska::World& w, ska::CollisionSystem& colSys, ska::EntityManager& em) :
 WorldCollisionResponse(onWorldCollision, w, colSys, em) {
 
 }
 
-void WorldEntityCollisionResponse::onWorldCollision(const ska::CollisionEvent& e, ska::WorldCollisionComponent& col, const ska::CollidableComponent& cc) {
+bool WorldEntityCollisionResponse::onWorldCollision(const ska::CollisionEvent& e, ska::WorldCollisionComponent& col, const ska::CollidableComponent& cc) {
 	if (!m_entityManager.hasComponent<SkillComponent>(e.entity)) {
 		WorldCollisionResponse::onWorldCollision(e, col, cc);
 	}
+	return true;
 }
 
 WorldEntityCollisionResponse::~WorldEntityCollisionResponse() {

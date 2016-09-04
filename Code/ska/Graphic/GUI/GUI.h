@@ -1,11 +1,9 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "../../Utils/Observer.h"
-#include "../../Utils/Observable.h"
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
 #include "../../Graphic/Point.h"
-#include "../../Utils/Observable.h"
+#include "./Components/MouseObservable.h"
 #include "WindowIG.h"
 
 namespace ska {
@@ -14,10 +12,7 @@ namespace ska {
 	class HoverEvent;
 	class InputContextManager;
 
-	using ClickObservable = Observable<ClickEvent>;
-	using HoverObservable = Observable<HoverEvent>;
-
-	class GUI : public ska::DrawableFixedPriority, public ClickObservable, public HoverObservable {
+	class GUI : public ska::DrawableFixedPriority, public MouseObservable {
 
 	public:
 		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);

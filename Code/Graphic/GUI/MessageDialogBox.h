@@ -5,12 +5,13 @@
 
 namespace ska {
 	class InputContextManager;
+	class MouseObservable;
 }
 
 class MessageDialogBox : public IDialogMenu
 {
 public:
-	MessageDialogBox(const ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
+	MessageDialogBox(ska::MouseObservable& gui, ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
 	//const ska::Rectangle getRect() const override;
 	void refresh() override;
 	void display() const override;

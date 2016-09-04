@@ -14,10 +14,11 @@ WorldCollisionObserver(std::bind(&DebugWorldCollisionResponse::onWorldCollision,
 	m_collisionSystem.WorldCollisionObservable::addObserver(*this);
 }
 
-void ska::DebugWorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
+bool ska::DebugWorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
 	DebugGraphicComponent dgc;
 	dgc.typeMask = DebugGraphicType::COLLISION;
 	m_entityManager.addComponent<DebugGraphicComponent>(e.entity, dgc);
+	return true;
 }
 
 ska::DebugWorldCollisionResponse::~DebugWorldCollisionResponse() {

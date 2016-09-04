@@ -15,7 +15,7 @@ ska::WorldCollisionResponse::WorldCollisionResponse(World& w, CollisionSystem& c
 	m_collisionSystem.WorldCollisionObservable::addObserver(*this);
 }
 
-ska::WorldCollisionResponse::WorldCollisionResponse(std::function<void(const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&)> onEntityCollision, World& w, CollisionSystem& colSys, ska::EntityManager& em) :
+ska::WorldCollisionResponse::WorldCollisionResponse(std::function<bool(const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&)> onEntityCollision, World& w, CollisionSystem& colSys, ska::EntityManager& em) :
 WorldCollisionObserver(onEntityCollision),
 m_entityManager(em),
 m_collisionSystem(colSys),
@@ -23,7 +23,7 @@ m_world(w) {
 	m_collisionSystem.WorldCollisionObservable::addObserver(*this);
 }
 
-void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
+bool ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc) {
 
 	bool colX = false;
 	if (col.xaxis) {
@@ -50,6 +50,7 @@ void ska::WorldCollisionResponse::onWorldCollision(const CollisionEvent& e, Worl
 	if (colX || colY) {
 		m_entityManager.addComponent<WorldCollisionComponent>(e.entity, col);
 	}
+	return true;
 }
 
 ska::WorldCollisionResponse::~WorldCollisionResponse() {

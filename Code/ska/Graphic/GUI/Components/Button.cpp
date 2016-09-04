@@ -1,11 +1,10 @@
 #include "Button.h"
 #include "ClickEvent.h"
-#include "../GUI.h"
+#include "../Components/MouseObservable.h"
 
-ska::Button::Button(GUI& guiObservable, Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback) :
+ska::Button::Button(MouseObservable& guiObservable, Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback) :
 Widget(parent),
-ClickObserver(std::bind(&ska::Button::click, this, std::placeholders::_1)),
-HoverObserver(std::bind(&ska::Button::mouseHover, this, std::placeholders::_1)),
+MouseObserver(std::bind(&ska::Button::mouseHover, this, std::placeholders::_1), std::bind(&ska::Button::click, this, std::placeholders::_1)),
 m_placeHolder(placeHolderStyleName + ".png"),
 m_placeHolderHover(placeHolderStyleName + "_hover.png"),
 m_placeHolderPressed(placeHolderStyleName + "_pressed.png"),
@@ -53,24 +52,33 @@ void ska::Button::display() const {
 	}
 }*/
 
-void ska::Button::click(const ska::ClickEvent& e) {
+bool ska::Button::click(ska::ClickEvent& e) {
+	bool handled = false;
 	if (e.getState() == ska::MouseEventType::MOUSE_CLICK && (m_state == ButtonState::HOVER)) {
 		m_state = ButtonState::PRESSED;
 		m_textureSelector = &m_placeHolderPressed;
+		handled = true;
 	} else if (m_state == ButtonState::PRESSED){
 		m_state = ButtonState::NONE;
 		m_callback(e);
 		m_textureSelector = &m_placeHolder;
+		handled = true;
 	}
+	return !handled;
 }
-void ska::Button::mouseHover(const ska::HoverEvent& e) {
+
+bool ska::Button::mouseHover(ska::HoverEvent& e) {
+	bool handled = false;
 	if (e.getState() == ska::MouseEventType::MOUSE_HOVER && m_state == ButtonState::NONE) {
 		m_state = ButtonState::HOVER;
 		m_textureSelector = &m_placeHolderHover;
+		handled = true;
 	} else if (m_state == ButtonState::HOVER) {
 		m_state = ButtonState::NONE;
 		m_textureSelector = &m_placeHolder;
+		handled = true;
 	}
+	return !handled;
 }
 
 ska::Button::~Button() {

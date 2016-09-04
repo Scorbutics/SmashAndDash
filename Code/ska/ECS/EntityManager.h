@@ -22,7 +22,7 @@ namespace ska {
 		COMPONENT_REMOVE
 	};
 
-	class EntityManager : public Observable<EntityEventType, const EntityComponentsMask&, EntityId> {
+	class EntityManager : public Observable<const EntityEventType, const EntityComponentsMask&, EntityId> {
 	public:
 		EntityManager() { }
 		EntityId createEntity() {

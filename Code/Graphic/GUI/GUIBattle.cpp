@@ -15,16 +15,17 @@ StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::pl
 BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
 m_statsObservable(statObs),
 m_battleStartObservable(battleStartObs),
-m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
+//m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
 m_playerICM(playerICM) {
 	m_statsObservable.addObserver(*this);
 	m_battleStartObservable.addObserver(*this);
 }
 
-void GUIBattle::onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src) {
+bool GUIBattle::onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src) {
 	if (m_bars.find(target) != m_bars.end()) {
 		m_bars[target]->setCurrentValue(targetStats.hp);
 	}
+	return true;
 }
 
 void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId) {
@@ -32,10 +33,10 @@ void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsig
 	m_bars[entityId]->setCurrentValue(currentValue);
 }
 
-void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em) {
+bool GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em) {
 	const auto& sh = em.getComponent<SkillsHolderComponent>(pokemon);
-	m_moves.clear();
-	m_moves.hide(false);
+	//m_moves.clear();
+	//m_moves.hide(false);
 	ska::Point<int> buf;
 	buf.x = TAILLEBLOCFENETRE / 4;
 	buf.y = 0;
@@ -56,14 +57,15 @@ void GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 	//TODO max hp venant des stats du fichier ini
 	addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
 	addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
+	return true;
 }
 
 /* TODO put the sprite in the GUI */
 //m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
 
 void GUIBattle::eventUpdate(bool movingDisallowed) {
-	if (m_moves.isVisible()) {
-		m_moves.refresh();
+	//if (m_moves.isVisible()) {
+	//	m_moves.refresh();
 
 		//On blit les cooldowns par dessus
 		/*for(unsigned int i = 0; i < v->size(); i++) {
@@ -75,14 +77,14 @@ void GUIBattle::eventUpdate(bool movingDisallowed) {
 		}
 		}*/
 
-	}
+	//}
 }
 
 void GUIBattle::graphicUpdate(ska::DrawableContainer& drawables) {
 	for (auto& b : m_bars) {
 		drawables.add(*b.second);
 	}
-	drawables.add(m_moves);
+	//drawables.add(m_moves);
 }
 
 void GUIBattle::clear() {

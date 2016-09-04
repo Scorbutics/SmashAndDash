@@ -154,15 +154,16 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_trainerId);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
-			dc.dialog.hide(false);
+			//DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
+			//dc.dialog.hide(false);
 
-			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
+			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
+		//return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
+		return false;
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>* pokeballRawTask;
@@ -251,15 +252,16 @@ bool SceneFight::unload() {
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_pokemonId);
 
 			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
-			dc.dialog.hide(false);
+			//DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
+			//dc.dialog.hide(false);
 
-			m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
+			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
+		//return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
+		return false;
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;

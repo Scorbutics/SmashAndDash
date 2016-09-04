@@ -34,8 +34,8 @@ public:
 	~GUIBattle();
 
 	void clear();
-	void onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em);
-	void onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src);
+	bool onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em);
+	bool onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src);
 	
 	void graphicUpdate(ska::DrawableContainer& drawables) override;
 	void eventUpdate(bool movingDisallowed) override;
@@ -48,5 +48,5 @@ private:
 	std::unordered_map<ska::EntityId, BarPtr> m_bars;
 	StatisticsChangeObservable& m_statsObservable;
 	BattleStartObservable& m_battleStartObservable;
-	DialogMenu m_moves;
+	//DialogMenu m_moves;
 };

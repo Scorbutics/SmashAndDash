@@ -2,6 +2,10 @@
 
 ska::Widget::Widget() :
 	m_parent(nullptr) {
+	m_box.x = 0;
+	m_box.y = 0;
+	m_box.w = 0;
+	m_box.h = 0;
 }
 
 ska::Widget::Widget(Widget& parent) :
@@ -51,6 +55,10 @@ void ska::Widget::move(const ska::Point<int>& pos) {
 
 bool ska::Widget::isVisible() const {
 	return m_visible;
+}
+
+const ska::Widget* ska::Widget::getParent() const {
+	return m_parent;
 }
 
 const ska::Rectangle& ska::Widget::getBox() const {

@@ -11,19 +11,19 @@ namespace ska {
 		friend class Observable;
 
 	public:
-		Observer(std::function<void(const T&, Args...)> const& handler) : m_handler(handler), 
+		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler), 
 			m_right(nullptr), m_left(nullptr) {
 		}
 
 		virtual ~Observer() = default;
 
 	private:
-		std::function<void(const T&, Args...)> m_handler;
+		std::function<bool(T&, Args...)> m_handler;
 		Observer<T, Args...> * m_right;
 		Observer<T, Args...> * m_left;
 
-		void receive(const T& evt, Args&... args) {
-			(m_handler)(evt, std::forward<Args&>(args)...);
+		bool receive(T& evt, Args&... args) {
+			return (m_handler)(evt, std::forward<Args&>(args)...);
 		}
 
 	};

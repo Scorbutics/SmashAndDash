@@ -10,9 +10,9 @@ using StatisticsChangeObservable = ska::Observable<const ska::EntityId&, RawStat
 class SkillEntityCollisionResponse : public ska::EntityCollisionResponse, public StatisticsChangeObservable {
 public:
 	SkillEntityCollisionResponse(ska::CollisionSystem& w, ska::EntityManager& entityManager);
-	SkillEntityCollisionResponse(std::function<void(const ska::CollisionEvent&, ska::CollisionComponent&, const ska::CollidableComponent&)> onEntityCollision, ska::CollisionSystem& w, ska::EntityManager& entityManager);
+	SkillEntityCollisionResponse(std::function<bool(const ska::CollisionEvent&, ska::CollisionComponent&, const ska::CollidableComponent&)> onEntityCollision, ska::CollisionSystem& w, ska::EntityManager& entityManager);
 	~SkillEntityCollisionResponse();
-	void onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc);
+	bool onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc);
 
 };
 

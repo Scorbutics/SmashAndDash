@@ -2,9 +2,10 @@
 #include "../../../Graphic/SpritePath.h"
 #include "../../../Utils/RectangleUtils.h"
 
-ska::ButtonSprite::ButtonSprite(GUI& guiObservable, Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback) :
+ska::ButtonSprite::ButtonSprite(MouseObservable& guiObservable, Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback) :
 Button(guiObservable, parent, relativePos, placeHolderStyleName, callback),
 m_img(ska::SpritePath::getInstance().getPath(SPRITEBANK_ICONS, id)) {
+	move(getRelativePosition() + relativePos);
 }
 
 void ska::ButtonSprite::display() const {

@@ -5,9 +5,9 @@
 
 int MessageDialogBox::m_instanceExists = 0;
 
-MessageDialogBox::MessageDialogBox(const ska::InputContextManager& icm, const std::string& text, const std::string& imageResource, const unsigned int screenH, const unsigned int screenW, const int timeout) :
-m_dialog( text, { 0, screenH - TAILLEBLOCFENETRE * 4, screenW / 2, TAILLEBLOCFENETRE * 4 }, timeout),
-m_talker("", imageResource, { TAILLEBLOCFENETRE, screenH - TAILLEBLOCFENETRE * 9, 4 * TAILLEBLOCFENETRE, 5 * TAILLEBLOCFENETRE }, timeout),
+MessageDialogBox::MessageDialogBox(ska::MouseObservable& gui, ska::InputContextManager& icm, const std::string& text, const std::string& imageResource, const unsigned int screenH, const unsigned int screenW, const int timeout) :
+m_dialog(gui, text, { 0, screenH - TAILLEBLOCFENETRE * 4, screenW / 2, TAILLEBLOCFENETRE * 4 }, timeout),
+m_talker(gui, "", imageResource, { TAILLEBLOCFENETRE, screenH - TAILLEBLOCFENETRE * 9, 4 * TAILLEBLOCFENETRE, 5 * TAILLEBLOCFENETRE }, timeout),
 m_playerICM(icm) {
 	m_instanceExists++;
 }

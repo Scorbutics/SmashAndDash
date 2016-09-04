@@ -8,7 +8,7 @@ namespace ska {
 		HasHoverHandler() = default;
 		virtual ~HasHoverHandler() = default;
 
-		virtual void mouseHover(const HoverEvent& e) = 0;
+		virtual bool mouseHover(HoverEvent& e) = 0;
 		
 	};
 }

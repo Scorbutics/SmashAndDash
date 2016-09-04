@@ -134,6 +134,8 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HasWidgets.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HoverEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Image.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObservable.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\WindowIG.h" />
     <ClInclude Include="Code\ska\Scene\SceneSwitcher.h" />

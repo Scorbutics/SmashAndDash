@@ -4,10 +4,7 @@
 #include "../../Texture.h"
 #include "Widget.h"
 #include "ButtonState.h"
-#include "HasClickHandler.h"
-#include "HasHoverHandler.h"
-#include "../../../Utils/Observer.h"
-
+#include "MouseObserver.h"
 
 
 namespace ska {
@@ -20,30 +17,20 @@ namespace ska {
 		};
 	}
 
-	class GUI;
+	class MouseObservable;
 	class InputContextManager;
-	class ClickEvent;
-	class HoverEvent;
 	using ClickEventHandler = std::function<void(const ska::ClickEvent&)>;
 
-	using ClickObserver = Observer<ClickEvent>;
-	using HoverObserver = Observer<HoverEvent>;
-
-	class Button : 
+	class Button :
 		public Widget, 
-		public HasClickHandler, 
-		public HasHoverHandler,
-		public ClickObserver,
-		public HoverObserver {
-
+		public MouseObserver {
 	public:
-		Button(GUI& guiObservable, Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback);
+		Button(MouseObservable& guiObservable, Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback);
 		virtual void display() const override;
 		virtual ~Button();
 
-		void click(const ska::ClickEvent& e) override;
-
-		void mouseHover(const ska::HoverEvent& e) override;
+		bool click(ska::ClickEvent& e) override;
+		bool mouseHover(ska::HoverEvent& e) override;
 
 	private:
 		ska::ButtonState::Enum m_state;
@@ -54,6 +41,6 @@ namespace ska {
 		ska::Texture* m_textureSelector;
 		bool m_drawStyle;
 		ClickEventHandler m_callback;
-		GUI& m_guiObservable;
+		MouseObservable& m_guiObservable;
 	};
 }

@@ -12,8 +12,8 @@ namespace ska {
 	class EntityCollisionResponse : public EntityCollisionObserver {
 	public:
 		EntityCollisionResponse(CollisionSystem& colSys, EntityManager& em);
-		EntityCollisionResponse(std::function<void(const CollisionEvent&, CollisionComponent&, const CollidableComponent&)> onEntityCollision, CollisionSystem& colSys, ska::EntityManager& em);
-		void onEntityCollision(const CollisionEvent& e, CollisionComponent& col, const CollidableComponent& cc);
+		EntityCollisionResponse(std::function<bool(const CollisionEvent&, CollisionComponent&, const CollidableComponent&)> onEntityCollision, CollisionSystem& colSys, ska::EntityManager& em);
+		bool onEntityCollision(const CollisionEvent& e, CollisionComponent& col, const CollidableComponent& cc);
 		~EntityCollisionResponse();
 	protected:
 		EntityManager& m_entityManager;

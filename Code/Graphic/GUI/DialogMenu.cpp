@@ -25,8 +25,8 @@
 ///////////////////////////////////////////////
 
 
-DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-ska::WindowIG(rect, true),
+DialogMenu::DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
+ska::WindowIG(gui, rect, true),
 m_timeout(timeout),
 m_moving(false),
 m_show(false),
@@ -51,23 +51,23 @@ m_ligne(0) {
 	modifyText(text);
 }
 
-DialogMenu::DialogMenu() : 
-DialogMenu("", "", { 0 }) {
+DialogMenu::DialogMenu(ska::MouseObservable& gui) :
+DialogMenu(gui, "", "", { 0 }) {
 
 }
 
-DialogMenu::DialogMenu(const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) : 
-DialogMenu(text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(ska::MouseObservable& gui, const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) :
+DialogMenu(gui, text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
 
 }
 
-DialogMenu::DialogMenu(const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) : 
-DialogMenu(text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) :
+DialogMenu(gui, text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
 
 }
 
-DialogMenu::DialogMenu(const DialogMenu& dm) :
-ska::WindowIG(dm.getBox(), true) {
+DialogMenu::DialogMenu(ska::MouseObservable& gui, const DialogMenu& dm) :
+ska::WindowIG(gui, dm.getBox(), true) {
 	operator=(dm);
 }
 
@@ -114,7 +114,7 @@ void DialogMenu::display() const {
 }
 
 void DialogMenu::operator=(const DialogMenu& dm) {
-	/* Do not copy Window Areas */
+	/* Do not copy Window Areas and guiObservable */
 	//m_clickHandler = dm.m_clickHandler;
 	m_alpha = dm.m_alpha;
 	//m_color = dm.m_color;
@@ -136,6 +136,7 @@ void DialogMenu::operator=(const DialogMenu& dm) {
 	m_text = dm.m_text;
 	//m_textImage = dm.m_textImage;
 	m_timeout = dm.m_timeout;
+
 }
 
 /*

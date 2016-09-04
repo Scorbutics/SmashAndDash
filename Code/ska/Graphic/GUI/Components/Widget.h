@@ -17,14 +17,14 @@ namespace ska {
 		void setHeight(unsigned int h);
 
 		void show(bool sh);
-		virtual void move(const ska::Point<int>& pos);
+		void move(const ska::Point<int>& pos);
 
 		virtual ~Widget() = default;
 
+		const Widget* getParent() const;
+
 		const ska::Rectangle& getBox() const;
 		const Point<int> getAbsolutePosition() const;
-
-	protected:
 		const Point<int> getRelativePosition() const;
 
 	private:

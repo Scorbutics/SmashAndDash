@@ -47,8 +47,9 @@ void AbstractSceneMap::load(ska::ScenePtr* lastScene) {
 
 }
 
-void AbstractSceneMap::onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher) {
+bool AbstractSceneMap::onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher) {
 	switcher.switchTo(m_window, m_holder, *this, m_inputCManager, m_worldScene);
+	return true;
 }
 
 bool AbstractSceneMap::unload() {
