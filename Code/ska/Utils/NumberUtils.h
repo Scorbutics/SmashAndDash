@@ -44,6 +44,10 @@ namespace ska{
 		static unsigned int squareroot(const unsigned int i);
 		static unsigned int getMax10Pow(const int num);
 
+		static bool isLowValue(double v, double threshold);
+		
+		static int calculateSlopeSign(int dest, int src);
+
 		template <typename T>
 		static Point<T> cartesian(const T radius, const double angle) {
 			Point<T> result;
@@ -82,6 +86,7 @@ namespace ska{
 			/* And we add the origin again */
 			return result + origin;
 		}
+		
 	};
 }
 

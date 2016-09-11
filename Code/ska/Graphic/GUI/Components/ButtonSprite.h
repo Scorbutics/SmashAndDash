@@ -9,11 +9,11 @@ namespace ska {
 		public Button {
 
 	public:
-		ButtonSprite(MouseObservable& guiObservable, Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback);
+		ButtonSprite(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback);
 		virtual ~ButtonSprite() = default;
 
 		virtual void display() const override;
-		void move(const ska::Point<int>& pos);
+		virtual void move(const ska::Point<int>& pos) override;
 
 	private:
 		ska::Texture m_img;

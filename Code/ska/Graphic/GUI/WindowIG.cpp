@@ -1,32 +1,34 @@
 #include "WindowIG.h"
 #include "../../Utils/SkaConstants.h"
+#include "../../Utils/RectangleUtils.h"
 #include "./Components/ClickEvent.h"
 #include "GUI.h"
 
-ska::WindowIG::WindowIG(MouseObservable& guiObservable, ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-	Widget(parent),
-	MouseObserver(std::bind(&ska::WindowIG::mouseHover, this, std::placeholders::_1), std::bind(&ska::WindowIG::click, this, std::placeholders::_1)),
-	m_menuTiles("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png"),
-	m_drawStyle(drawStyle),
-	m_guiObservable(guiObservable) {
+ska::WindowIG::WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
+Button(parent),
+m_menuTiles("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png"),
+m_drawStyle(drawStyle),
+m_guiObservable(nullptr) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
-	m_guiObservable.HoverObservable::addObserver(*this);
-	m_guiObservable.ClickObservable::addObserver(*this);
+	addHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
+	addClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
 }
 
+
 ska::WindowIG::WindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) :
-	Widget(),
-	MouseObserver(std::bind(&ska::WindowIG::mouseHover, this, std::placeholders::_1), std::bind(&ska::WindowIG::click, this, std::placeholders::_1)),
+Button(),
 	m_menuTiles("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png"),
 	m_drawStyle(drawStyle),
-	m_guiObservable(guiObservable) {
+	m_guiObservable(&guiObservable) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
-	m_guiObservable.HoverObservable::addObserver(*this);
-	m_guiObservable.ClickObservable::addObserver(*this);
+	m_guiObservable->HoverObservable::addObserver(*this);
+	m_guiObservable->ClickObservable::addObserver(*this);
+	addHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
+	addClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
 }
 
 void ska::WindowIG::display() const {
@@ -54,29 +56,93 @@ void ska::WindowIG::display() const {
 
 }
 
-bool ska::WindowIG::click(ska::ClickEvent& e) {
-	const auto& affect = e.isOn(*this);
-	if(!affect) {
-		return true;
-	}
-
-	ClickObservable::notifyObservers(e);
-
-	return false;
-}
-
-bool ska::WindowIG::mouseHover(ska::HoverEvent& e) {
-	const auto& affect = e.isOn(*this);
+bool ska::WindowIG::onClick(ska::ClickEvent& e) {
+	auto affect = e.isOn(*this);
 	if (!affect) {
 		return true;
 	}
 
-	HoverObservable::notifyObservers(e);
+	for(auto& w : m_widgets) {
+		if(!w->click(e)) {
+			return false;
+		}
+	}
+	e.setTarget(this);
+	return true;
+}
 
-	return false;
+bool ska::WindowIG::onMouseHover(ska::HoverEvent& e) {
+	auto affect = e.isOn(*this);
+	if (!affect) {
+		return true;
+	}
+
+	for (auto& w : m_widgets) {
+		if(!w->mouseHover(e)) {
+			return false;
+		}
+	}
+	e.setTarget(this);
+	return true;
+}
+
+void ska::WindowIG::refresh() {
+	if (m_speed < 1.0) {
+		m_speed = 0.0;
+		return;
+	}
+	
+	const auto& pos = getRelativePosition();
+
+	bool xdone = false;
+	bool ydone = false;
+	auto nextPos = pos;
+	unsigned int distx = (m_slope.x != 0.0) ? (m_destinationPos.x - pos.x) * (m_destinationPos.x - pos.x) : 0;
+	xdone = distx == 0;
+	if (m_slope.x*m_slope.x < distx) {
+		nextPos.x = m_destinationPos.x;
+		m_slope.x = 0;
+	} else {
+		nextPos.x += m_slope.x;
+	}
+
+	unsigned int disty = (m_slope.y != 0.0) ? (m_destinationPos.y - pos.y) * (m_destinationPos.y - pos.y) : 0;
+	ydone = disty == 0;
+	if (m_slope.y*m_slope.y < disty) {
+		nextPos.y = m_destinationPos.y;
+		m_slope.y = 0;
+	} else {
+		nextPos.y += m_slope.y;
+	}
+
+	if(xdone && ydone) {
+		m_speed = 0.0;
+	}
+
+	move(nextPos);
+}
+
+void ska::WindowIG::scrollTo(const ska::Point<int>& relativeTargetPos, unsigned int steps) {
+	m_destinationPos = relativeTargetPos;
+	m_speed = steps == 0 ? 1.0 : (1.0 / steps);
+	
+	const auto& pos = getRelativePosition();
+	m_slope.y = (m_destinationPos.y - pos.y) * m_speed;
+	m_slope.x = (m_destinationPos.x - pos.x) * m_speed;
+
+	if (ska::NumberUtils::isLowValue(m_slope.x, 1.0) && m_destinationPos.x != pos.x) {
+		m_slope.x = ska::NumberUtils::calculateSlopeSign(m_destinationPos.y, pos.y);
+	}
+
+	if (ska::NumberUtils::isLowValue(m_slope.y, 1.0) && m_destinationPos.y != pos.y) {
+		m_slope.y = ska::NumberUtils::calculateSlopeSign(m_destinationPos.x, pos.x);
+	}
+	
 }
 
 ska::WindowIG::~WindowIG() {
-	m_guiObservable.HoverObservable::removeObserver(*this);
-	m_guiObservable.ClickObservable::removeObserver(*this);
+	if (m_guiObservable != nullptr) {
+		m_guiObservable->HoverObservable::removeObserver(*this);
+		m_guiObservable->ClickObservable::removeObserver(*this);
+	}
 }

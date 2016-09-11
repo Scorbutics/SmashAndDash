@@ -137,6 +137,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObservable.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\WindowIG.h" />
     <ClInclude Include="Code\ska\Scene\SceneSwitcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\SceneToBattleSwitcher.h" />
@@ -423,6 +424,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\WindowIG.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\DebugWorldCollisionResponse.cpp" />

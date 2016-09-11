@@ -1,16 +1,18 @@
 #pragma once
 #include "ButtonState.h"
+#include "WidgetEvent.h"
 #include "../../Point.h"
 
 namespace ska {
 	enum MouseEventType {
-		MOUSE_HOVER,
+		MOUSE_ENTER,
 		MOUSE_OUT,
+		MOUSE_OVER,
 		MOUSE_CLICK,
 		MOUSE_RELEASE
 	};
 	class Widget;
-	class HoverEvent {
+	class HoverEvent : public WidgetEvent {
 	public:
 		HoverEvent(const MouseEventType& state, const Point<int>& pos);
 		const MouseEventType& getState() const;
@@ -22,8 +24,6 @@ namespace ska {
 	private:
 		MouseEventType m_state;
 		Point<int> m_pos;
-
-		bool m_alreadyTriggered;
 
 	};
 }

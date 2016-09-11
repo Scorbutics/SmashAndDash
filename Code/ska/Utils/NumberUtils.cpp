@@ -34,6 +34,14 @@ double ska::NumberUtils::arctan(int x, int y) {
 	return atan2(y, x);
 }
 
+bool ska::NumberUtils::isLowValue(double v, double threshold) {
+	return absolute(v) < threshold;
+}
+
+int ska::NumberUtils::calculateSlopeSign(int dest, int src) {
+	return dest == src ? 0 : ((dest - src) / absolute(dest - src));
+}
+
 double ska::NumberUtils::arctan(double slope) {
 	return atan(slope);
 }

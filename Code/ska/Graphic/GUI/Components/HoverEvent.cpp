@@ -2,7 +2,7 @@
 #include "Widget.h"
 #include "../../../Utils/RectangleUtils.h"
 
-ska::HoverEvent::HoverEvent(const MouseEventType& state, const ska::Point<int>& pos) : m_state(state), m_pos(pos), m_alreadyTriggered(false) {
+ska::HoverEvent::HoverEvent(const MouseEventType& state, const ska::Point<int>& pos) : m_state(state), m_pos(pos) {
 
 }
 

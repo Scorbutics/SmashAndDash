@@ -45,5 +45,8 @@ namespace ska {
 		const ska::Window& m_window;
 
 		const ska::InputContextManager& m_playerICM;
+
+		Widget* m_hovered;
+		Widget* m_clicked;
 	};
 }

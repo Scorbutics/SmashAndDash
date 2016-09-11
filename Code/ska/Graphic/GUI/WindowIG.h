@@ -1,5 +1,5 @@
 #pragma once
-#include "./Components/Widget.h"
+#include "./Components/Button.h"
 #include "./Components/HasWidgets.h"
 #include "./Components/MouseObserver.h"
 #include "./Components/MouseObservable.h"
@@ -8,22 +8,25 @@
 namespace ska{
 	
 	class WindowIG : 
-		public Widget,
-		public HasWidgets,
-		public MouseObserver,
-		public MouseObservable {
+		public Button,
+		public HasWidgets {
 	public:
-		WindowIG(MouseObservable& guiObservable, ska::Widget& parent, const ska::Rectangle& box, bool drawStyle);
 		WindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle);
+		WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle);
 		void display() const override;
-		bool click(ska::ClickEvent& e) override;
-		bool mouseHover(ska::HoverEvent& e) override;
+		bool onClick(ska::ClickEvent& e);
+		bool onMouseHover(ska::HoverEvent& e);
+		void refresh();
+		void scrollTo(const ska::Point<int>& targetPos, unsigned int speed);
 		~WindowIG();
 	
 	private:
 		//ska::ButtonQuit m_closeButton;
 		bool m_drawStyle;
 		Texture m_menuTiles;
-		MouseObservable& m_guiObservable;
+		MouseObservable *const m_guiObservable;
+		ska::Point<int> m_destinationPos;
+		ska::Point<double> m_slope;
+		double m_speed;
 	};
 }

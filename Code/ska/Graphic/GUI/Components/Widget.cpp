@@ -1,7 +1,9 @@
+#include <iostream>
 #include "Widget.h"
 
 ska::Widget::Widget() :
-	m_parent(nullptr) {
+	m_parent(nullptr),
+	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)) {
 	m_box.x = 0;
 	m_box.y = 0;
 	m_box.w = 0;
@@ -9,7 +11,8 @@ ska::Widget::Widget() :
 }
 
 ska::Widget::Widget(Widget& parent) :
-	m_parent(&parent){
+	m_parent(&parent), 
+	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)){
 	m_box.x = 0;
 	m_box.y = 0;
 	m_box.w = 0;
@@ -17,7 +20,8 @@ ska::Widget::Widget(Widget& parent) :
 }
 
 ska::Widget::Widget(Widget& parent, Point<int>& position) : 
-	m_parent(&parent) {
+	m_parent(&parent),
+	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)) {
 	m_box.x = position.x;
 	m_box.y = position.y;
 	m_box.w = 0;
@@ -38,6 +42,60 @@ const ska::Point<int> ska::Widget::getAbsolutePosition() const {
 	}
 
 	return m_parent->getAbsolutePosition() + ska::Point<int>(m_box);
+}
+
+bool ska::Widget::click(ska::ClickEvent& e) {
+	auto affect = e.isOn(*this);
+	if (!affect) {
+		return false;
+	}
+
+	for (auto& ceh : m_clickCallbacks) {
+		if (ceh != nullptr && (ceh)(e)) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+bool ska::Widget::mouseHover(ska::HoverEvent& e) {
+	auto affect = e.isOn(*this);
+	if (!affect) {
+		return false;
+	}
+
+	for(auto& heh : m_hoverCallbacks) {
+		if (heh != nullptr && (heh)(e)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+const std::string& ska::Widget::getName() {
+	return m_name;
+}
+
+bool ska::Widget::isAParent(const ska::Widget& w) const {
+	if(this == &w) {
+		return true;
+	}
+	
+	return w.getParent() == nullptr ? false : isAParent(*w.getParent());
+}
+
+void ska::Widget::setName(const std::string& s) {
+	m_name = s;
+}
+
+void ska::Widget::addClickHandler(const ClickEventHandler& h) {
+	m_clickCallbacks.push_back(h);
+}
+
+void ska::Widget::addHoverHandler(const HoverEventHandler& h) {
+	m_hoverCallbacks.push_back(h);
 }
 
 const ska::Point<int> ska::Widget::getRelativePosition() const {

@@ -10,7 +10,6 @@ namespace ska {
 		HasWidgets() = default;
 		void addWidget(std::unique_ptr<Widget>&& w);
 		void clear();
-		Widget* getElementAtPos(const ska::Point<int>& relativePos) const;
 		virtual ~HasWidgets() = default;
 
 	protected:

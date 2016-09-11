@@ -942,6 +942,9 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1492,6 +1495,9 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetEvent.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
