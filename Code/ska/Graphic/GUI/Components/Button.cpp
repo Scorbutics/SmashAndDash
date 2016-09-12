@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Button.h"
 #include "ClickEvent.h"
 #include "../Components/MouseObservable.h"
@@ -36,36 +37,42 @@ m_drawStyle(false) {
 
 void ska::Button::initHandlers() {
 	addHoverHandler([this](ska::HoverEvent& e) {
-		bool eventPropagation = true;
+		bool stopEventPropagation = false;
+		bool target = false;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_ENTER:
-			if (m_state != ButtonState::HOVER && m_state != ButtonState::PRESSED) {
-				m_state = ButtonState::HOVER;
+			if (m_state != ButtonState::HOVER && m_state != ButtonState::ENTER && m_state != ButtonState::PRESSED) {
+				m_state = ButtonState::ENTER;
+				//std::clog << "ENTER" << getName() << std::endl;
 				m_textureSelector = &m_placeHolderHover;
-				eventPropagation = false;
+				target = true;
+
 			}
 			break;
 
 		case ska::MouseEventType::MOUSE_OUT:
-			if (m_state == ButtonState::HOVER) {
+			if (m_state == ButtonState::HOVER || m_state == ButtonState::ENTER) {
 				m_state = ButtonState::NONE;
 				m_textureSelector = &m_placeHolder;
-				eventPropagation = false;
+				//std::clog << "OUT" << getName() << std::endl;
+				target = true;
 			}
 			break;
 		case ska::MouseEventType::MOUSE_OVER:
-			//m_state = ButtonState::HOVER;
-			eventPropagation = false;
+			m_state = ButtonState::HOVER;
+			//std::clog << "OVER" << getName() << std::endl;
+			target = true;
 			break;
 		default:
+			std::clog << "WTF" << getName() << std::endl;
 			break;
 		}
 
-		if (!eventPropagation) {
+		if (target) {
 			e.setTarget(this);
 		}
 
-		return eventPropagation;
+		return stopEventPropagation;
 	});
 
 	addClickHandler([this](ska::ClickEvent& e) {
@@ -73,11 +80,13 @@ void ska::Button::initHandlers() {
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_CLICK:
 			m_state = ButtonState::PRESSED;
+			std::clog << "CLICK" << getName() << std::endl;
 			//m_textureSelector = &m_placeHolderPressed;
 			eventPropagation = false;
 			break;
 		case ska::MouseEventType::MOUSE_RELEASE:
 			m_state = ButtonState::HOVER;
+			std::clog << "RELEASE" << getName() << std::endl;
 			//m_callback(e);
 			//m_textureSelector = &m_placeHolder;
 			eventPropagation = false;

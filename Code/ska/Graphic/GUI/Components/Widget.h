@@ -13,6 +13,7 @@ namespace ska {
 			NONE,
 			PRESSED,
 			HOVER,
+			ENTER,
 			DISABLED
 		};
 	}
@@ -45,7 +46,7 @@ namespace ska {
 		bool click(ska::ClickEvent& e) override;
 		bool mouseHover(ska::HoverEvent& e) override;
 		
-		const std::string& getName();
+		const std::string& getName() const;
 		bool isAParent(const ska::Widget& w) const;
 		void setName(const std::string& s);
 

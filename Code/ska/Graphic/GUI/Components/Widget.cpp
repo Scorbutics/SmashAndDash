@@ -67,14 +67,15 @@ bool ska::Widget::mouseHover(ska::HoverEvent& e) {
 	}
 
 	for(auto& heh : m_hoverCallbacks) {
+		/* Si un callback renvoie true, on stoppe */
 		if (heh != nullptr && (heh)(e)) {
-			return true;
+			break;
 		}
 	}
-	return false;
+	return true;
 }
 
-const std::string& ska::Widget::getName() {
+const std::string& ska::Widget::getName() const {
 	return m_name;
 }
 

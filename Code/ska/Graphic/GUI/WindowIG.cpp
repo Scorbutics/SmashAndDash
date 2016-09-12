@@ -57,33 +57,23 @@ void ska::WindowIG::display() const {
 }
 
 bool ska::WindowIG::onClick(ska::ClickEvent& e) {
-	auto affect = e.isOn(*this);
-	if (!affect) {
-		return true;
-	}
-
 	for(auto& w : m_widgets) {
 		if(!w->click(e)) {
 			return false;
 		}
 	}
-	e.setTarget(this);
+	//e.setTarget(this);
 	return true;
 }
 
 bool ska::WindowIG::onMouseHover(ska::HoverEvent& e) {
-	auto affect = e.isOn(*this);
-	if (!affect) {
-		return true;
-	}
-
 	for (auto& w : m_widgets) {
 		if(!w->mouseHover(e)) {
-			return false;
+			break;
 		}
 	}
-	e.setTarget(this);
-	return true;
+
+	return false;
 }
 
 void ska::WindowIG::refresh() {
