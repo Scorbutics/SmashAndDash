@@ -12,8 +12,8 @@ m_guiObservable(nullptr) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
-	addHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
-	addClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
+	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
+	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
 }
 
 
@@ -27,8 +27,8 @@ Button(),
 	setHeight(box.h);
 	m_guiObservable->HoverObservable::addObserver(*this);
 	m_guiObservable->ClickObservable::addObserver(*this);
-	addHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
-	addClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
+	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
+	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
 }
 
 void ska::WindowIG::display() const {
@@ -68,11 +68,9 @@ bool ska::WindowIG::onClick(ska::ClickEvent& e) {
 
 bool ska::WindowIG::onMouseHover(ska::HoverEvent& e) {
 	for (auto& w : m_widgets) {
-		if(!w->mouseHover(e)) {
-			break;
-		}
+		w->mouseHover(e);
 	}
-
+	
 	return false;
 }
 

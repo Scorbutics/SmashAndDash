@@ -68,11 +68,11 @@ bool ska::Widget::mouseHover(ska::HoverEvent& e) {
 
 	for(auto& heh : m_hoverCallbacks) {
 		/* Si un callback renvoie true, on stoppe */
-		if (heh != nullptr && (heh)(e)) {
+		if (heh(e)) {
 			break;
 		}
 	}
-	return true;
+	return false;
 }
 
 const std::string& ska::Widget::getName() const {
@@ -103,6 +103,14 @@ const ska::Point<int> ska::Widget::getRelativePosition() const {
 	return m_box;
 }
 
+void ska::Widget::addHeadClickHandler(const ClickEventHandler& h) {
+	m_clickCallbacks.push_front(h);
+}
+
+void ska::Widget::addHeadHoverHandler(const HoverEventHandler& h) {
+	m_hoverCallbacks.push_front(h);
+}
+
 void ska::Widget::show(bool sh) {
 	m_visible = sh;
 }
@@ -116,7 +124,7 @@ bool ska::Widget::isVisible() const {
 	return m_visible;
 }
 
-const ska::Widget* ska::Widget::getParent() const {
+ska::Widget* ska::Widget::getParent() const {
 	return m_parent;
 }
 

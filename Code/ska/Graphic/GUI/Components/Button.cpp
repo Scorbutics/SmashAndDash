@@ -43,10 +43,11 @@ void ska::Button::initHandlers() {
 		case ska::MouseEventType::MOUSE_ENTER:
 			if (m_state != ButtonState::HOVER && m_state != ButtonState::ENTER && m_state != ButtonState::PRESSED) {
 				m_state = ButtonState::ENTER;
-				//std::clog << "ENTER" << getName() << std::endl;
+				//std::clog << ">\tENTER" << getName() << std::endl;
 				m_textureSelector = &m_placeHolderHover;
 				target = true;
-
+			} else {
+				stopEventPropagation = true;
 			}
 			break;
 
@@ -54,21 +55,24 @@ void ska::Button::initHandlers() {
 			if (m_state == ButtonState::HOVER || m_state == ButtonState::ENTER) {
 				m_state = ButtonState::NONE;
 				m_textureSelector = &m_placeHolder;
-				//std::clog << "OUT" << getName() << std::endl;
+				//std::clog << ">\tOUT" << getName() << std::endl;
 				target = true;
+			} else {
+				stopEventPropagation = true;
 			}
 			break;
 		case ska::MouseEventType::MOUSE_OVER:
 			m_state = ButtonState::HOVER;
-			//std::clog << "OVER" << getName() << std::endl;
+			//std::clog << ">\tOVER" << getName() << std::endl;
 			target = true;
+			//stopEventPropagation = true;
 			break;
 		default:
-			std::clog << "WTF" << getName() << std::endl;
+			//std::clog << ">\tWTF" << getName() << std::endl;
 			break;
 		}
 
-		if (target) {
+		if (target && e.getTarget() == nullptr) {
 			e.setTarget(this);
 		}
 

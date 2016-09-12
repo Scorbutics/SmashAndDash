@@ -113,15 +113,11 @@ void ska::GUI::initButtons(const ska::Window& w) {
 	}))));
 	firstButton->setName("POKEBALL MENU");
 	bs->addHoverHandler([](ska::HoverEvent& e) {
-		/* Si aucune cible à l'évènement, on stoppe */
-		if(e.getTarget() == nullptr) {
-			return true;
-		}
 		if(e.getState() == ska::MouseEventType::MOUSE_OUT) {
 			std::clog << "OUT" << std::endl;
 		}
 		else if (e.getState() == ska::MouseEventType::MOUSE_ENTER){
-			std::clog << "ENTER" << (e.getTarget() == nullptr ? " NONE" : e.getTarget()->getName()) << std::endl;
+			std::clog << "ENTER" << std::endl;
 		}
 		else {
 			std::clog << "OVER" << std::endl;
@@ -131,16 +127,11 @@ void ska::GUI::initButtons(const ska::Window& w) {
 	});
 	bs->setName("POKEBALL BUTTON");
 	firstButton->addHoverHandler([](ska::HoverEvent& e) {
-		/* Si aucune cible à l'évènement, on stoppe */
-		if (e.getTarget() == nullptr) {
-			return true;
-		}
-
 		if (e.getState() == ska::MouseEventType::MOUSE_OUT) {
 			std::clog << "PARENT OUT" << std::endl;
 		}
 		else if(e.getState() == ska::MouseEventType::MOUSE_ENTER){
-			std::clog << "PARENT ENTER" << (e.getTarget()== nullptr ? " NONE" : e.getTarget()->getName()) << std::endl;
+			std::clog << "PARENT ENTER" << std::endl;
 		} else {
 			std::clog << "PARENT OVER" << std::endl;
 		}
@@ -239,30 +230,26 @@ void ska::GUI::refresh() {
 	int hideHint = 0;
 
 	if (mousePos != lastMousePos) {	
-		std::clog << "-----------" << std::endl;
+
 		HoverEvent he(MouseEventType::MOUSE_ENTER, mousePos);
 		HoverObservable::notifyObservers(he);
-// 		if (m_hovered != nullptr && (he.getTarget() != nullptr && m_hovered->isAParent(*he.getTarget()))) {
-// 			
-// 		}
 
 		HoverEvent hove(MouseEventType::MOUSE_OVER, mousePos);
 		HoverObservable::notifyObservers(hove);
 
-		if (m_hovered != nullptr) {
-			if (m_hovered != hove.getTarget() /*&& (nextOvered == nullptr || !m_hovered->isAParent(*nextOvered))*/) {
-				HoverEvent heOut(MouseEventType::MOUSE_OUT, m_hovered->getAbsolutePosition());
-				m_hovered->mouseHover(heOut);
-				//std::clog << "OUT " << m_hovered->getName() << std::endl;
-				m_hovered = hove.getTarget();;
+		if (m_hovered != nullptr) {			
+			for (auto it = m_hovered; it != hove.getTarget() && it != nullptr; it = it->getParent()) {
+				if (hove.getTarget() == nullptr || !it->isAParent(*hove.getTarget())) {
+					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition());
+					it->mouseHover(heOut);
+					//std::clog << "GOING OUT FOR " << it->getName() << std::endl;
+				}
 			}
+			m_hovered = hove.getTarget();;
+
 		} else {
 			m_hovered = hove.getTarget();
 		}
-
-// 		if (enteringWidget != nullptr) {
-// 			m_hovered = enteringWidget;
-// 		}
 
 	}
 

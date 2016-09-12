@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <deque>
 #include "../../Point.h"
 #include "../../Draw/DrawableFixedPriority.h"
 #include "MouseObserver.h"
@@ -41,7 +41,7 @@ namespace ska {
 
 		virtual ~Widget() = default;
 
-		const Widget* getParent() const;
+		Widget* getParent() const;
 
 		bool click(ska::ClickEvent& e) override;
 		bool mouseHover(ska::HoverEvent& e) override;
@@ -57,12 +57,16 @@ namespace ska {
 		const Point<int> getAbsolutePosition() const;
 		const Point<int> getRelativePosition() const;
 
+	protected:
+		void addHeadClickHandler(const ClickEventHandler& h);
+		void addHeadHoverHandler(const HoverEventHandler& h);
+
 	private:
 		std::string m_name;
 		Widget* m_parent;
 		ska::Rectangle m_box;
 		bool m_visible;
-		std::vector<ClickEventHandler> m_clickCallbacks;
-		std::vector<HoverEventHandler> m_hoverCallbacks;
+		std::deque<ClickEventHandler> m_clickCallbacks;
+		std::deque<HoverEventHandler> m_hoverCallbacks;
 	};
 }
