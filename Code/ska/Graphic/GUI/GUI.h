@@ -11,6 +11,7 @@ namespace ska {
 	class ClickEvent;
 	class HoverEvent;
 	class InputContextManager;
+	class TimeScrollableWindowIG;
 
 	class GUI : public ska::DrawableFixedPriority, public MouseObservable {
 
@@ -33,6 +34,7 @@ namespace ska {
 
 	private:
 		ska::WindowIG m_wAction;
+		std::vector <ska::TimeScrollableWindowIG*> m_dynamicWindows;
 		std::vector<std::unique_ptr<ska::WindowIG>> m_extraWindows;
 		std::vector<int> m_buttonScroll;
 		ska::Point<int> m_lastMousePos;

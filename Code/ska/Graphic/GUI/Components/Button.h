@@ -21,15 +21,14 @@ namespace ska {
 	protected:
 		Button();
 		Button(Widget& parent);
-	private:
 		
+	private:
+		void initHandlers();
 		ska::Texture m_placeHolder;
 		ska::Texture m_placeHolderHover;
 		ska::Texture m_placeHolderPressed;
 		ska::ButtonState::Enum m_state;
 		ska::Texture* m_textureSelector;
 		bool m_drawStyle;
-
-		void initHandlers();
 	};
 }

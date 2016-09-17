@@ -18,8 +18,10 @@ namespace ska {
 		};
 	}
 	
-	using ClickEventHandler = std::function<bool(ska::ClickEvent&)>;
-	using HoverEventHandler = std::function<bool(ska::HoverEvent&)>;
+	class Widget;
+
+	using ClickEventHandler = std::function<bool(ska::Widget*, ska::ClickEvent&)>;
+	using HoverEventHandler = std::function<bool(ska::Widget*, ska::HoverEvent&)>;
 
 	class Widget : 
 		public DrawableFixedPriority,

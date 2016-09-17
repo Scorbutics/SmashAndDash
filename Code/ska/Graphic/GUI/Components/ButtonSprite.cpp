@@ -10,15 +10,15 @@ m_img(ska::SpritePath::getInstance().getPath(SPRITEBANK_ICONS, id)) {
 
 void ska::ButtonSprite::display() const {
 	ska::Button::display();
-	m_img.render(m_rect.x, m_rect.y);
+
+	const auto& pos = getAbsolutePosition();
+	m_img.render(pos.x + m_rect.x, pos.y + m_rect.y);
 }
 
 void ska::ButtonSprite::move(const ska::Point<int>& pos) {
 	const auto& box = getBox();
-	const auto& absPos = getAbsolutePosition();
-	
-	ska::Rectangle placeHolderRect = ska::Rectangle{ pos.x + absPos.x - box.x, pos.y + absPos.y - box.y, box.w, box.h };
 
+	ska::Rectangle placeHolderRect = ska::Rectangle{ 0, 0, box.w, box.h };
 	m_rect = ska::Rectangle{ 0, 0, m_img.getWidth(), m_img.getHeight() };
 	m_rect = ska::RectangleUtils::posToCenterPicture(m_rect, placeHolderRect);
 	ska::Widget::move(pos);

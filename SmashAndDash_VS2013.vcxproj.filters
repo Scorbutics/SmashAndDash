@@ -945,6 +945,12 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetEvent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\TimeScrollableWindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1497,6 +1503,12 @@
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\TimeScrollableWindowIG.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

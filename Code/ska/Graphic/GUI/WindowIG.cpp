@@ -12,8 +12,8 @@ m_guiObservable(nullptr) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
-	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
-	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
+	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, this, std::placeholders::_2));
+	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, this, std::placeholders::_2));
 }
 
 
@@ -27,8 +27,8 @@ Button(),
 	setHeight(box.h);
 	m_guiObservable->HoverObservable::addObserver(*this);
 	m_guiObservable->ClickObservable::addObserver(*this);
-	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, std::placeholders::_1));
-	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, std::placeholders::_1));
+	addHeadHoverHandler(std::bind(&ska::WindowIG::onMouseHover, this, this, std::placeholders::_2));
+	addHeadClickHandler(std::bind(&ska::WindowIG::onClick, this, this, std::placeholders::_2));
 }
 
 void ska::WindowIG::display() const {
@@ -56,7 +56,7 @@ void ska::WindowIG::display() const {
 
 }
 
-bool ska::WindowIG::onClick(ska::ClickEvent& e) {
+bool ska::WindowIG::onClick(ska::Widget* tthis, ska::ClickEvent& e) {
 	for(auto& w : m_widgets) {
 		if(!w->click(e)) {
 			return false;
@@ -66,66 +66,12 @@ bool ska::WindowIG::onClick(ska::ClickEvent& e) {
 	return true;
 }
 
-bool ska::WindowIG::onMouseHover(ska::HoverEvent& e) {
+bool ska::WindowIG::onMouseHover(ska::Widget* tthis, ska::HoverEvent& e) {
 	for (auto& w : m_widgets) {
 		w->mouseHover(e);
 	}
 	
 	return false;
-}
-
-void ska::WindowIG::refresh() {
-	if (m_speed < 1.0) {
-		m_speed = 0.0;
-		return;
-	}
-	
-	const auto& pos = getRelativePosition();
-
-	bool xdone = false;
-	bool ydone = false;
-	auto nextPos = pos;
-	unsigned int distx = (m_slope.x != 0.0) ? (m_destinationPos.x - pos.x) * (m_destinationPos.x - pos.x) : 0;
-	xdone = distx == 0;
-	if (m_slope.x*m_slope.x < distx) {
-		nextPos.x = m_destinationPos.x;
-		m_slope.x = 0;
-	} else {
-		nextPos.x += m_slope.x;
-	}
-
-	unsigned int disty = (m_slope.y != 0.0) ? (m_destinationPos.y - pos.y) * (m_destinationPos.y - pos.y) : 0;
-	ydone = disty == 0;
-	if (m_slope.y*m_slope.y < disty) {
-		nextPos.y = m_destinationPos.y;
-		m_slope.y = 0;
-	} else {
-		nextPos.y += m_slope.y;
-	}
-
-	if(xdone && ydone) {
-		m_speed = 0.0;
-	}
-
-	move(nextPos);
-}
-
-void ska::WindowIG::scrollTo(const ska::Point<int>& relativeTargetPos, unsigned int steps) {
-	m_destinationPos = relativeTargetPos;
-	m_speed = steps == 0 ? 1.0 : (1.0 / steps);
-	
-	const auto& pos = getRelativePosition();
-	m_slope.y = (m_destinationPos.y - pos.y) * m_speed;
-	m_slope.x = (m_destinationPos.x - pos.x) * m_speed;
-
-	if (ska::NumberUtils::isLowValue(m_slope.x, 1.0) && m_destinationPos.x != pos.x) {
-		m_slope.x = ska::NumberUtils::calculateSlopeSign(m_destinationPos.y, pos.y);
-	}
-
-	if (ska::NumberUtils::isLowValue(m_slope.y, 1.0) && m_destinationPos.y != pos.y) {
-		m_slope.y = ska::NumberUtils::calculateSlopeSign(m_destinationPos.x, pos.x);
-	}
-	
 }
 
 ska::WindowIG::~WindowIG() {

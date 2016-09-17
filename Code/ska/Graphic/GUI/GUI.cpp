@@ -13,7 +13,7 @@
 #include "./Components/Widget.h"
 #include "./Components/HoverEvent.h"
 #include "./Components/ClickEvent.h"
-#include "WindowIG.h"
+#include "GUIScrollButtonWindowIG.h"
 #include "./Components/ButtonSprite.h"
 
 #define SCROLL_BUTTON_SPEED 3
@@ -100,9 +100,11 @@ void ska::GUI::initButtons(const ska::Window& w) {
     m_wAction.clear();
 	m_wAction.move(ska::Point<int>(w.getWidth() - 13 * TAILLEBLOCFENETRE, w.getHeight() - m_wAction.getBox().h / 2));
     //m_buttonList.push_back(DialogMenuPtr (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-	auto& firstButton = std::unique_ptr<ska::WindowIG>(new ska::WindowIG(m_wAction, buf, true));
+	auto rawFirstButton = new GUIScrollButtonWindowIG(m_wAction, buf, true);
+	m_dynamicWindows.push_back(rawFirstButton);
+	auto& firstButton = std::unique_ptr<GUIScrollButtonWindowIG>(rawFirstButton);
 	ButtonSprite* bs;
-	firstButton->addWidget(std::move(std::unique_ptr<ska::Widget>(bs = new ButtonSprite(*firstButton, Point<int>(TAILLEBLOCFENETRE/2, 0), "", 102, [](const ska::ClickEvent& e) {
+	firstButton->addWidget(std::move(std::unique_ptr<ska::Widget>(bs = new ButtonSprite(*firstButton, Point<int>(1, 1), "", 102, [](ska::Widget* tthis, const ska::ClickEvent& e) {
 		if(e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			std::clog << "BOUH !" << std::endl;
 		} else {
@@ -112,7 +114,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		return true;
 	}))));
 	firstButton->setName("POKEBALL MENU");
-	bs->addHoverHandler([](ska::HoverEvent& e) {
+	bs->addHoverHandler([](ska::Widget* tthis, ska::HoverEvent& e) {
 		if(e.getState() == ska::MouseEventType::MOUSE_OUT) {
 			std::clog << "OUT" << std::endl;
 		}
@@ -126,11 +128,13 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		return false;
 	});
 	bs->setName("POKEBALL BUTTON");
-	firstButton->addHoverHandler([](ska::HoverEvent& e) {
+	firstButton->addHoverHandler([](ska::Widget* tthis, ska::HoverEvent& e) {
+		auto target = ((GUIScrollButtonWindowIG*)tthis);
 		if (e.getState() == ska::MouseEventType::MOUSE_OUT) {
 			std::clog << "PARENT OUT" << std::endl;
-		}
-		else if(e.getState() == ska::MouseEventType::MOUSE_ENTER){
+			target->scrollRewind();
+		} else if(e.getState() == ska::MouseEventType::MOUSE_ENTER) {
+			target->scrollTo(target->getRelativePosition() - ska::Point<int>(0, target->getBox().w / 3), 5);
 			std::clog << "PARENT ENTER" << std::endl;
 		} else {
 			std::clog << "PARENT OVER" << std::endl;
@@ -307,8 +311,8 @@ void ska::GUI::refresh() {
 
 
 	//Time-based events
-	m_wAction.refresh();
-	for (auto& w : m_extraWindows) {
+	//m_wAction.refresh();
+	for (auto& w : m_dynamicWindows) {
 		w->refresh();
 	}
 

@@ -36,7 +36,7 @@ m_drawStyle(false) {
 }
 
 void ska::Button::initHandlers() {
-	addHoverHandler([this](ska::HoverEvent& e) {
+	addHoverHandler([this](ska::Widget* tthis, ska::HoverEvent& e) {
 		bool stopEventPropagation = false;
 		bool target = false;
 		switch (e.getState()) {
@@ -79,7 +79,7 @@ void ska::Button::initHandlers() {
 		return stopEventPropagation;
 	});
 
-	addClickHandler([this](ska::ClickEvent& e) {
+	addClickHandler([this](ska::Widget* tthis, ska::ClickEvent& e) {
 		bool eventPropagation = true;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_CLICK:

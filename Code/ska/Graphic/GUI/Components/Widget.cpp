@@ -51,7 +51,7 @@ bool ska::Widget::click(ska::ClickEvent& e) {
 	}
 
 	for (auto& ceh : m_clickCallbacks) {
-		if (ceh != nullptr && (ceh)(e)) {
+		if (ceh != nullptr && (ceh)(this, e)) {
 			return true;
 		}
 	}
@@ -68,7 +68,7 @@ bool ska::Widget::mouseHover(ska::HoverEvent& e) {
 
 	for(auto& heh : m_hoverCallbacks) {
 		/* Si un callback renvoie true, on stoppe */
-		if (heh(e)) {
+		if (heh(this, e)) {
 			break;
 		}
 	}
