@@ -10,9 +10,9 @@ ska::TimeScrollableWindowIG::TimeScrollableWindowIG(ska::Widget& parent, const s
 
 }
 
-void ska::TimeScrollableWindowIG::refresh() {
+bool ska::TimeScrollableWindowIG::refresh() {
 	if (!m_moving) {
-		return;
+		return false;
 	}
 
 	const auto& pos = getRelativePosition();
@@ -45,6 +45,7 @@ void ska::TimeScrollableWindowIG::refresh() {
 	}
 
 	move(nextPos);
+	return true;
 }
 
 bool ska::TimeScrollableWindowIG::scrollTo(const ska::Point<int>& relativeTargetPos, unsigned int steps) {
@@ -75,4 +76,8 @@ bool ska::TimeScrollableWindowIG::scrollTo(const ska::Point<int>& relativeTarget
 void ska::TimeScrollableWindowIG::scrollStop() {
 	m_moving = false;
 	m_destinationPos = getRelativePosition();
+}
+
+bool ska::TimeScrollableWindowIG::isMoving() const {
+	return m_moving;
 }

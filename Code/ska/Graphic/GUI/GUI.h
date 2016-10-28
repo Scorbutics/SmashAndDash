@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <unordered_set>
 #include <memory>
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
 #include "../../Graphic/Point.h"
@@ -34,7 +35,7 @@ namespace ska {
 
 	private:
 		ska::WindowIG m_wAction;
-		std::vector <ska::TimeScrollableWindowIG*> m_dynamicWindows;
+		std::unordered_set<ska::TimeScrollableWindowIG*> m_dynamicWindows;
 		std::vector<std::unique_ptr<ska::WindowIG>> m_extraWindows;
 		std::vector<int> m_buttonScroll;
 		ska::Point<int> m_lastMousePos;

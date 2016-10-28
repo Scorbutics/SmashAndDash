@@ -7,14 +7,16 @@ ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(MouseObservable& guiObserv
 }
 
 bool ska::GUIScrollButtonWindowIG::scrollTo(const ska::Point<int>& targetPos, unsigned int speed) {
-	m_realPos = getRelativePosition();
+	if (!isMoving()) {
+		m_realPos = getRelativePosition();
+	}
 	scrollStop();
 	return TimeScrollableWindowIG::scrollTo(targetPos, speed);
 }
 
-void ska::GUIScrollButtonWindowIG::scrollRewind() {
+bool ska::GUIScrollButtonWindowIG::scrollRewind() {
 	scrollStop();
-	TimeScrollableWindowIG::scrollTo(m_realPos, 5);
+	return TimeScrollableWindowIG::scrollTo(m_realPos, 5);
 }
 
 ska::GUIScrollButtonWindowIG::~GUIScrollButtonWindowIG() {

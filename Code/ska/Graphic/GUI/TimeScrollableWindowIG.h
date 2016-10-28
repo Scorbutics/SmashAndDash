@@ -6,10 +6,13 @@ namespace ska {
 	public:
 		TimeScrollableWindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle);
 		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle);
-		void refresh();
+		bool refresh();
 		virtual bool scrollTo(const ska::Point<int>& targetPos, unsigned int speed);
 		void scrollStop();
 		virtual ~TimeScrollableWindowIG() = default;
+	
+	protected:
+		bool isMoving() const;
 
 	private:
 		Point<int> m_destinationPos;
