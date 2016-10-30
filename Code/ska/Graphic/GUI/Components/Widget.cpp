@@ -3,6 +3,7 @@
 
 ska::Widget::Widget() :
 	m_parent(nullptr),
+	m_visible(false),
 	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)) {
 	m_box.x = 0;
 	m_box.y = 0;
@@ -12,6 +13,7 @@ ska::Widget::Widget() :
 
 ska::Widget::Widget(Widget& parent) :
 	m_parent(&parent), 
+	m_visible(false),
 	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)){
 	m_box.x = 0;
 	m_box.y = 0;
@@ -21,6 +23,7 @@ ska::Widget::Widget(Widget& parent) :
 
 ska::Widget::Widget(Widget& parent, Point<int>& position) : 
 	m_parent(&parent),
+	m_visible(false),
 	MouseObserver(std::bind(&ska::Widget::mouseHover, this, std::placeholders::_1), std::bind(&ska::Widget::click, this, std::placeholders::_1)) {
 	m_box.x = position.x;
 	m_box.y = position.y;

@@ -115,12 +115,11 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		return false;
 	};
 
-    //m_buttonList.push_back(DialogMenuPtr (new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokeball.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
 	auto& firstButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(m_wAction, buf, true));
 	ButtonSprite* bs;
-	firstButton->addWidget(std::move(std::unique_ptr<ska::Widget>(bs = new ButtonSprite(*firstButton, Point<int>(1, 1), "", 102, [](ska::Widget* tthis, const ska::ClickEvent& e) {
+	firstButton->addWidget(std::move(std::unique_ptr<ska::Widget>(bs = new ButtonSprite(*firstButton, Point<int>(1, 1), "", 102, [&](ska::Widget* tthis, const ska::ClickEvent& e) {
 		if(e.getState() == ska::MouseEventType::MOUSE_CLICK) {
-			//std::clog << "BOUH !" << std::endl;
+			m_extraWindows[0]->show(true);
 		} else {
 			//std::clog << "RELEASE" << std::endl;
 		}
@@ -217,6 +216,12 @@ void ska::GUI::display() const {
 
 	m_wAction.display();
 
+	for(const auto& w : m_extraWindows) {
+		if (w->isVisible()) {
+			w->display();
+		}
+	}
+
 // 	m_mouseCursor.displayHint();
 // 	m_mouseCursor.displaySelectedPokemon();
 // 	m_mouseCursor.displaySelectedObject();
@@ -280,6 +285,8 @@ void ska::GUI::refresh() {
 		ClickObservable::notifyObservers(ce);
 	}
 
+	//update();
+
 // 	for(unsigned int i = 0; i < m_buttonList.size(); i++)
 //     {
 //         if(m_buttonList[i] != NULL) {
@@ -341,12 +348,6 @@ void ska::GUI::refresh() {
 
 }
 
-// int ska::GUI::addDialog(IDialogMenuPtr& d) {
-// 	d->hide(false);
-// 	m_extraWindows.emplace_back(std::move(d));
-// 	return (int)(m_extraWindows.size() - 1);
-// }
-
 void ska::GUI::setClickMenu() {
 	//ska::Rectangle invAreaAbsolutePos, buttonPos;
 
@@ -406,10 +407,6 @@ void ska::GUI::setClickMenu() {
 	*/
 }
 
-
-bool ska::GUI::existDialog(const unsigned int index) const {
-	return index < m_extraWindows.size() && m_extraWindows[index] != nullptr;
-}
 
 //Reset des informations de notre pokémon (à chaque refresh)
 //TODO
@@ -713,6 +710,10 @@ bool ska::GUI::isMouseOnAWindow() {
 // 		|| (m_wSettings->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wSettings->getBox())) 
 // 		|| (m_wTeam->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wTeam->getBox()))
 // 		|| (m_toolBar->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_toolBar->getBox())));
+}
+
+void ska::GUI::addWindow(std::unique_ptr<ska::WindowIG>& w) {
+	m_extraWindows.push_back(std::move(w));
 }
 
 // int ska::GUI::getRefreshPNJWindowCount() {

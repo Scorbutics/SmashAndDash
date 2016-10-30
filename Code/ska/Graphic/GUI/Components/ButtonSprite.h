@@ -10,6 +10,7 @@ namespace ska {
 
 	public:
 		ButtonSprite(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback);
+		ButtonSprite(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& imagePath, ClickEventHandler const& callback);
 		virtual ~ButtonSprite() = default;
 
 		virtual void display() const override;

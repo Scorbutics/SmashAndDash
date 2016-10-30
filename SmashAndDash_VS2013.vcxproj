@@ -125,6 +125,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
+    <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
+    <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonQuit.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonSprite.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h" />
@@ -412,6 +414,8 @@
     <ClCompile Include="Code\Gameplay\Scene\SceneToBattleSwitcher.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneToMapSwitcher.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\GUIMap.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\SlotPokemon.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />

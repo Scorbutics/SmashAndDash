@@ -1,25 +1,34 @@
+#include "SlotPokemon.h"
+#include "../../ska/Graphic/SpritePath.h"
+#include "../../ska/Utils\StringUtils.h"
+#include "Button.h"
+#include "../../Gameplay/Data/Statistics.h"
+#include "../../Utils/IDs.h"
+
+
+SlotPokemon::SlotPokemon(ska::WindowIG& parent, ska::Point<int> relativePos, unsigned int pokemonId) :
+ska::WindowIG(parent, ska::Rectangle{ relativePos.x, relativePos.y, 4*TAILLEBLOCFENETRE, 2*TAILLEBLOCFENETRE}, true),
+	m_fontSize(16) {
+	ska::Widget& tthis = *this;
+	m_spriteArea = std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, pokemonId), [](ska::Widget*, ska::ClickEvent&) {
+		//TODO changement d'ordre des Pokémon
+		return false;
+	}),
+	m_nameArea = std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(36, 4));
+	m_levelArea = std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(36, 22));
+	m_pvArea = std::make_unique<ska::Label>(*this, "PVs : ", m_fontSize, ska::Point<int>(72, 22));
+	m_type1Area = std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(36, 40));
+	m_type2Area = std::make_unique<ska::Label>(*this, "Type 2 : ", m_fontSize, ska::Point<int>(72, 40));
+
+	addWidget(std::move(m_spriteArea));
+	addWidget(std::move(m_nameArea));
+	addWidget(std::move(m_levelArea));
+	addWidget(std::move(m_pvArea));
+	addWidget(std::move(m_type1Area));
+	addWidget(std::move(m_type2Area));
+}
 // 
-// #include "SlotPokemonArea.h"
-// #include "../../ska/Graphic/SpritePath.h"
-// #include "../../ska/Utils\StringUtils.h"
-// #include "Button.h"
-// #include "../../Gameplay/Data/Statistics.h"
-// #include "../../Utils/IDs.h"
-// 
-// SlotPokemon_Area::SlotPokemon_Area(DialogMenu& parent, ska::Rectangle relativePos, std::string styleName, std::string styleNamePressed, std::string action, int* boolUseObjectSelectPkmn, int key) :
-// DynamicWindowArea(parent), 
-// m_image(styleName), 
-// m_imagePressed(styleNamePressed) {
-//     m_key = key;
-//     m_boolUseObjectSelectPkmn = boolUseObjectSelectPkmn;
-//     m_action = action;
-//     m_style = styleName;
-//     m_stylePressed = styleNamePressed;
-//     m_relativePos = relativePos;
-// }
-// 
-// void SlotPokemon_Area::setPokemon(unsigned int index)
-// {
+// void SlotPokemon_Area::setPokemon(unsigned int index) {
 //     m_index = index;
 //     //m_pkmn = wScreen.getPokemonManager().getPokemon(index);
 // 	ska::Rectangle rectSrcBuf, buf;
@@ -64,55 +73,21 @@
 //     buf.h = TAILLEBLOC;*/
 // 
 // }
-// 
-// void SlotPokemon_Area::display() const
-// {
+
+// void SlotPokemon_Area::display() const {
 // 	ska::Point<int> buf = m_relativePos;
 //     buf.x += m_parent.getRect().x;
 // 	buf.y += m_parent.getRect().y;
-// 
-// 	/*const ska::InputActionContainer& in = wScreen.getActions();
-// 
-// 	if (in[ska::InputAction::LClic]) {
-// 		m_imagePressed.render(buf.x, buf.y);
-// 	} else {
-// 		m_image.render(buf.x, buf.y);
-// 	}*/
 //         
-//     m_spriteArea->display();
-//     m_pvArea->display();
-//     m_levelArea->display();
-//     m_type1Area->display();
-//     m_type2Area->display();
-//     m_nameArea->display();
+//     
 // 
 // 	if (m_buttonArea != NULL) {
 // 		m_buttonArea->display();
 // 	}
 // 
 // }
-// 
-// void SlotPokemon_Area::refresh()
-// {
-// 	if(m_buttonArea != NULL)
-// 		m_buttonArea->refresh();
-// }
-// 
-// ska::Rectangle SlotPokemon_Area::getRectSize()
-// {
-// 	ska::Rectangle rect = m_parent.getRect();
-//     rect.x += m_relativePos.x;
-//     rect.y += m_relativePos.y;
-//     /*rect.w = m_pkmn->getWidth();
-//     rect.h = m_pkmn->getHeight();*/
-// 
-//     return rect;
-// }
-// 
-// SlotPokemon_Area::~SlotPokemon_Area()
-// {
-// }
-// 
-// 
-// 
-// 
+
+
+
+
+

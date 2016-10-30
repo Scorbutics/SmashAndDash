@@ -8,6 +8,12 @@ m_img(ska::SpritePath::getInstance().getPath(SPRITEBANK_ICONS, id)) {
 	move(getRelativePosition() + relativePos);
 }
 
+ska::ButtonSprite::ButtonSprite(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& imagePath, ClickEventHandler const& callback) :
+Button(parent, relativePos, placeHolderStyleName, callback),
+m_img(imagePath) {
+	move(getRelativePosition() + relativePos);
+}
+
 void ska::ButtonSprite::display() const {
 	ska::Button::display();
 

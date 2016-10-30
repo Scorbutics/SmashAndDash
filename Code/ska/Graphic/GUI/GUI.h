@@ -19,7 +19,7 @@ namespace ska {
 	public:
 		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
 
-		bool existDialog(const unsigned int index) const;
+		//bool existDialog(const unsigned int index) const;
 		void refresh();
 		int isPositionOnButton(const ska::Point<float>& pos) const;
 		bool isMouseOnAWindow();
@@ -51,5 +51,8 @@ namespace ska {
 
 		Widget* m_hovered;
 		Widget* m_clicked;
+
+	protected:
+		void addWindow(std::unique_ptr<ska::WindowIG>& w);
 	};
 }

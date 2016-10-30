@@ -14,7 +14,7 @@
 #include "WorldImpl.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
-#include "../../ska/Graphic/GUI/GUI.h"
+#include "../../Graphic/GUI/GUIMap.h"
 
 namespace ska {
 	class IniReader;
@@ -76,7 +76,7 @@ private:
 
 	Pokeball m_pokeball;
 
-	ska::GUI m_gui;
+	GUIMap m_gui;
 
 };
 
