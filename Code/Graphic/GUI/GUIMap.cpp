@@ -7,6 +7,10 @@
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM) : ska::GUI(w, playerICM) {
 
-	auto& windowTeam = std::unique_ptr<ska::WindowIG>(new WindowTeam(*this, ska::Point<int>(2 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE)));
+	auto rawWindowTeam = new WindowTeam(*this, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	rawWindowTeam->show(false);
+	rawWindowTeam->addPokemon(25);
+
+	auto& windowTeam = std::unique_ptr<ska::WindowIG>(rawWindowTeam);
 	addWindow(std::move(windowTeam));
 }

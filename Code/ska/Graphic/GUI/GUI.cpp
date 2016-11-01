@@ -217,9 +217,7 @@ void ska::GUI::display() const {
 	m_wAction.display();
 
 	for(const auto& w : m_extraWindows) {
-		if (w->isVisible()) {
-			w->display();
-		}
+		w->display();
 	}
 
 // 	m_mouseCursor.displayHint();
