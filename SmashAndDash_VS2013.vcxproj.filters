@@ -951,7 +951,13 @@
     <ClInclude Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\SlotPokemonArea.h">
+    <ClInclude Include="Code\Graphic\GUI\GUIMap.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\MoveableWindow.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1514,7 +1520,13 @@
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\SlotPokemonArea.cpp">
+    <ClCompile Include="Code\Graphic\GUI\GUIMap.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\GUI\SlotPokemon.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\MoveableWindow.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

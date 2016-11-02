@@ -139,6 +139,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObservable.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\MoveableWindow.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\TimeScrollableWindowIG.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetEvent.h" />
@@ -432,6 +433,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\MoveableWindow.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\TimeScrollableWindowIG.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\WindowIG.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.cpp" />

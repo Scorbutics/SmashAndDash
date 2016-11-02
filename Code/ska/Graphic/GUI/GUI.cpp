@@ -119,27 +119,12 @@ void ska::GUI::initButtons(const ska::Window& w) {
 	ButtonSprite* bs;
 	firstButton->addWidget(std::move(std::unique_ptr<ska::Widget>(bs = new ButtonSprite(*firstButton, Point<int>(1, 1), "", 102, [&](ska::Widget* tthis, const ska::ClickEvent& e) {
 		if(e.getState() == ska::MouseEventType::MOUSE_CLICK) {
-			m_extraWindows[0]->show(true);
-		} else {
-			//std::clog << "RELEASE" << std::endl;
-		}
-		
+			m_extraWindows[0]->show(!m_extraWindows[0]->isVisible());
+		} 		
 		return true;
 	}))));
 	firstButton->setName("POKEBALL MENU");
-	bs->addHoverHandler([](ska::Widget* tthis, ska::HoverEvent& e) {
-		if(e.getState() == ska::MouseEventType::MOUSE_OUT) {
-			//std::clog << "OUT" << std::endl;
-		}
-		else if (e.getState() == ska::MouseEventType::MOUSE_ENTER){
-			//std::clog << "ENTER" << std::endl;
-		}
-		else {
-			//std::clog << "OVER" << std::endl;
-		}
-		
-		return false;
-	});
+
 	bs->setName("POKEBALL BUTTON");
 	firstButton->addHoverHandler(scrollButtonLambda);
 	m_wAction.addWidget(std::move(firstButton));
@@ -191,12 +176,6 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		m_wSettings->hide(false);
 	});*/
 
-    /*m_buttonScroll.resize(m_buttonList.size());
-	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
-		m_buttonScroll[i] = 0;
-		m_buttonList[i]->hide(false);
-	}*/
-
 
 }
 
@@ -207,12 +186,6 @@ void ska::GUI::display() const {
 	if (m_hide) {
 		return;
 	}
-
-	/*for (unsigned int i = 0; i < m_buttonList.size(); i++) {
-		if (m_buttonList[i] != NULL) {
-			m_buttonList[i]->display();
-		}
-	}*/
 
 	m_wAction.display();
 
@@ -232,40 +205,32 @@ void ska::GUI::refresh() {
 	}
 
 	const ska::InputActionContainer& in = m_playerICM.getActions();
-
+	const auto& moveWindow = m_playerICM.getToggles()[ska::InputToggle::MoveWindow];
 	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputRange& lastMousePos = m_playerICM.getRanges()[ska::InputRangeType::LastMousePos];
-	ska::Rectangle bufButtonPos;
 
-    bufButtonPos.w = (TAILLEBLOCFENETRE)*2;
-    bufButtonPos.h = (TAILLEBLOCFENETRE)*2;
-	bufButtonPos.x = m_window.getWidth() - 13 * TAILLEBLOCFENETRE;
-    bufButtonPos.y = 0;
-
-
-	int hideHint = 0;
-
+	
 	if (mousePos != lastMousePos) {	
-
-		HoverEvent he(MouseEventType::MOUSE_ENTER, mousePos);
+		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover : 
+		*  on considère mousePos comme la prochaine position de la souris en terme d'évènements. 
+		*  On a donc un retard d'une frame sur tous les évènements déclenchés, mais cela permet de pouvoir réagir
+		*  aux changements brusques de position de souris */
+		HoverEvent he(MouseEventType::MOUSE_ENTER, lastMousePos, mousePos);
 		HoverObservable::notifyObservers(he);
 
-		HoverEvent hove(MouseEventType::MOUSE_OVER, mousePos);
+		HoverEvent hove(MouseEventType::MOUSE_OVER, lastMousePos, mousePos);
 		HoverObservable::notifyObservers(hove);
 
-		if (m_hovered != nullptr) {			
+		if (m_hovered != nullptr) {
 			for (auto it = m_hovered; it != hove.getTarget() && it != nullptr; it = it->getParent()) {
 				if (hove.getTarget() == nullptr || !it->isAParent(*hove.getTarget())) {
-					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition());
+					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition(), mousePos);
 					it->mouseHover(heOut);
-					//std::clog << "GOING OUT FOR " << it->getName() << std::endl;
 				}
 			}
-			m_hovered = hove.getTarget();;
-
-		} else {
-			m_hovered = hove.getTarget();
 		}
+		m_hovered = hove.getTarget();
+		
 
 	}
 
@@ -274,9 +239,9 @@ void ska::GUI::refresh() {
 		ClickObservable::notifyObservers(ce);
 		m_clicked = ce.getTarget();
 	}
-	
 
-	if (m_clicked != nullptr && !in[ska::InputAction::LClic]) {
+
+	if (m_clicked != nullptr && !moveWindow) {
 		ClickEvent ce(MouseEventType::MOUSE_RELEASE, ska::Point<int>(mousePos));
 		ce.setTarget(m_clicked);
 		m_clicked = nullptr;
@@ -284,45 +249,6 @@ void ska::GUI::refresh() {
 	}
 
 	//update();
-
-// 	for(unsigned int i = 0; i < m_buttonList.size(); i++)
-//     {
-//         if(m_buttonList[i] != NULL) {
-//             m_buttonList[i]->refresh();
-// 			ska::Rectangle buttonPos = m_buttonList[i]->getBox();
-// 			if (ska::RectangleUtils::isPositionInBox(mousePos, buttonPos)) {
-// 
-// 				if (m_buttonScroll[i] < buttonPos.h / 2) {
-// 					m_buttonScroll[i] += SCROLL_BUTTON_SPEED;
-// 				}
-// 
-//                 /*if(in[ska::InputAction::LClic] && !m_wShop->isVisible()) {
-// 					m_buttonList[i]->click(mousePos);
-//                 }*/
-// 
-// 				//si on change de bouton de la gui, on actualise le curseur
-// 				if (!ska::RectangleUtils::isPositionInBox(lastMousePos, buttonPos)) {
-// 					//m_mouseCursor.modifyHint(m_buttonList[i]->getName());
-// 					m_mouseCursor.hideHint(false);
-// 					
-// 				}
-// 				                
-//             } else {
-// 				hideHint++;
-// 				m_buttonScroll[i] = 0;
-// 			}
-// 
-// 			// GUI disposée en bas à droite de l'écran
-//             if(m_side == 0)  {
-// 				m_buttonList[i]->move(ska::Point<int>(bufButtonPos.x, (m_window.getHeight() - m_buttonList[i]->getBox().h / 2) - m_buttonScroll[i]));
-// 				//m_buttonList[i]->setPosImg(ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), bufButtonPos).x, ska::RectangleUtils::posToCenterPicture(m_buttonList[i]->getPosImg(), m_buttonList[i]->getRect()).y - TAILLEBLOCFENETRE / 4);
-//                 bufButtonPos.x += 5*TAILLEBLOCFENETRE/2;
-//             }
-// 
-// 
-//         }
-//     }
-
 
 	//Time-based events
 	//m_wAction.refresh();
@@ -560,8 +486,6 @@ void GUI::resetInfoPNJWindow(Character* pnj)
     }
 }*/
 
-/*void GUI::update(ska::Observable<const int>* obs, const ska::EventArg& e, const int& i) {
-}*/
 
 void ska::GUI::update() {
 	m_hide = false;
@@ -691,10 +615,6 @@ void ska::GUI::hide(bool x) {
 bool ska::GUI::isVisible() const {
     return !m_hide;
 }
-
-// DialogMenuPtr& GUI::getButton(unsigned int id) {
-//     return m_buttonList[id];
-// }
 
 bool ska::GUI::isMovingAWindow() {
 	return false;//((m_wSettings->isVisible() && m_wSettings->isMoving()) || (m_wBag->isVisible() && m_wBag->isMoving()) || (m_wTeam->isVisible() && m_wTeam->isMoving()) || ( m_toolBar->isVisible() && m_toolBar->isMoving()) );

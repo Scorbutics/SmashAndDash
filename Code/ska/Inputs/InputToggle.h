@@ -10,7 +10,7 @@ namespace ska {
 		MoveRight,
 		MoveUp,
 		MoveDown,
-		Run
+		Run,
 	};
 
 #define INPUT_MAX_TOGGLE 16

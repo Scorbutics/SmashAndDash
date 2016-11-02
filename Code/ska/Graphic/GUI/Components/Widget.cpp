@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Widget.h"
+#include "../../../Utils/RectangleUtils.h"
 
 ska::Widget::Widget() :
 	m_parent(nullptr),
@@ -54,6 +55,7 @@ bool ska::Widget::click(ska::ClickEvent& e) {
 	}
 
 	for (auto& ceh : m_clickCallbacks) {
+		/* Si un callback renvoie true, on stoppe */
 		if (ceh != nullptr && (ceh)(this, e)) {
 			return true;
 		}
@@ -72,7 +74,7 @@ bool ska::Widget::mouseHover(ska::HoverEvent& e) {
 	for(auto& heh : m_hoverCallbacks) {
 		/* Si un callback renvoie true, on stoppe */
 		if (heh(this, e)) {
-			break;
+			return true;
 		}
 	}
 	return false;
@@ -121,6 +123,11 @@ void ska::Widget::show(bool sh) {
 void ska::Widget::move(const ska::Point<int>& pos) {
 	m_box.x = pos.x;
 	m_box.y = pos.y;
+}
+
+bool ska::Widget::isAffectedBy(const ska::HoverEvent& e) const {
+	const ska::Point<int>& relativeEventPos = e.getPosition() - getAbsolutePosition();
+	return ska::RectangleUtils::isPositionInBox(relativeEventPos, ska::Rectangle{ 0, 0, getBox().w, getBox().h });
 }
 
 bool ska::Widget::isVisible() const {

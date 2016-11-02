@@ -20,7 +20,12 @@ namespace ska {
 	
 	class Widget;
 
+	/* Handler triggered when a click occurs on the widget.
+		The return value must be set to false to avoid blocking event propagation */
 	using ClickEventHandler = std::function<bool(ska::Widget*, ska::ClickEvent&)>;
+	
+	/* Handler triggered when hovering on the widget.
+		The return value must be set to false to avoid blocking event propagation */
 	using HoverEventHandler = std::function<bool(ska::Widget*, ska::HoverEvent&)>;
 
 	class Widget : 
@@ -40,6 +45,8 @@ namespace ska {
 
 		void show(bool sh);
 		virtual void move(const ska::Point<int>& pos);
+		
+		virtual bool isAffectedBy(const ska::HoverEvent& e) const;
 
 		virtual ~Widget() = default;
 

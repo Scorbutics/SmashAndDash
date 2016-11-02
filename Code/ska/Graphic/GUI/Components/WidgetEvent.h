@@ -10,6 +10,7 @@ namespace ska {
 		WidgetEvent();
 		void setTarget(Widget* t);
 		Widget* getTarget();
+		Widget const* getCTarget() const;
 		virtual ~WidgetEvent() = default;
 
 	private:

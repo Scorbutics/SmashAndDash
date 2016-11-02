@@ -2,7 +2,7 @@
 #include "SlotPokemon.h"
 
 WindowTeam::WindowTeam(ska::MouseObservable& guiObservable, const ska::Point<int>& absolutePos) :
-	ska::WindowIG(guiObservable, ska::Rectangle{ absolutePos.x, absolutePos.y, 7*TAILLEBLOCFENETRE, 7*TAILLEBLOCFENETRE }, true) {
+	ska::MoveableWindow(guiObservable, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
 
 
 }

@@ -13,3 +13,7 @@ ska::Widget* ska::WidgetEvent::getTarget() {
 	return m_target;
 }
 
+ska::Widget const* ska::WidgetEvent::getCTarget() const {
+	return m_target;
+}
+

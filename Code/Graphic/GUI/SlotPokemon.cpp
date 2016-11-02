@@ -7,7 +7,7 @@
 
 
 SlotPokemon::SlotPokemon(ska::WindowIG& parent, ska::Point<int> relativePos, unsigned int pokemonId) :
-ska::WindowIG(parent, ska::Rectangle{ relativePos.x, relativePos.y, 4*TAILLEBLOCFENETRE, 2*TAILLEBLOCFENETRE}, false),
+ska::WindowIG(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6*TAILLEBLOCFENETRE, 2*TAILLEBLOCFENETRE}, true),
 	m_fontSize(16) {
 	ska::Widget& tthis = *this;
 	m_spriteArea = std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, pokemonId), ska::Rectangle{ 0, 0, 32, 32 }, [](ska::Widget*, ska::ClickEvent&) {
