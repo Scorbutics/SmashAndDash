@@ -103,6 +103,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 	auto& scrollButtonLambda = [this](ska::Widget* tthis, ska::HoverEvent& e) {
 		auto target = ((GUIScrollButtonWindowIG*)tthis);
 		if (e.getState() == ska::MouseEventType::MOUSE_OUT) {
+			std::clog << "Out pokebutton" << std::endl;
 			if (target->scrollRewind()) {
 				m_dynamicWindows.emplace(target);
 			}
@@ -112,7 +113,6 @@ void ska::GUI::initButtons(const ska::Window& w) {
 			}
 		}
 
-		return false;
 	};
 
 	auto& firstButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(m_wAction, buf, true));
@@ -121,7 +121,6 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		if(e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			m_extraWindows[0]->show(!m_extraWindows[0]->isVisible());
 		} 		
-		return true;
 	}))));
 	firstButton->setName("POKEBALL MENU");
 

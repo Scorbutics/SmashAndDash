@@ -22,7 +22,7 @@ const ska::Point<int> ska::HoverEvent::getPosition(const ska::Widget& w) const {
 	return m_pos - w.getAbsolutePosition();
 }
 
-bool ska::HoverEvent::isOn(const Widget& w) const {
-	return w.isAffectedBy(*this);
+bool ska::HoverEvent::affects(const Widget& w) const {
+	return !stopped() && w.isAffectedBy(*this);
 }
 

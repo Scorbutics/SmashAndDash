@@ -15,10 +15,7 @@ void ska::MoveableWindow::initHandlers() {
 		}
 		else if (e.getState() == ska::MouseEventType::MOUSE_RELEASE) {
 			m_moving = false;
-		} else {
-			return false;
 		}
-		return true;
 	});
 	button->setWidth(getBox().w);
 	button->setHeight(TAILLEBLOCFENETRE / 2);
@@ -27,9 +24,19 @@ void ska::MoveableWindow::initHandlers() {
 			const auto& clickAbsPos = e.getMousePosition();
 			const auto& newPos = clickAbsPos - m_offsetWindowOrigin;
 			move(newPos);
-		}
-		return false;
+		}		
 	});
+
+	/* Avoid focus through window */
+// 	addHoverHandler([&](ska::Widget* tthis, ska::HoverEvent& e) {
+// 		e.stopPropagation();
+// 	});
+
+	/* Avoid clicks through window */
+// 	addClickHandler([&](ska::Widget* tthis, ska::ClickEvent& e) {
+// 		e.stopPropagation();
+// 	});
+
 	addWidget(std::move(button));
 }
 

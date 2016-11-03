@@ -20,13 +20,11 @@ namespace ska {
 	
 	class Widget;
 
-	/* Handler triggered when a click occurs on the widget.
-		The return value must be set to false to avoid blocking event propagation */
-	using ClickEventHandler = std::function<bool(ska::Widget*, ska::ClickEvent&)>;
+	/* Handler triggered when a click occurs on the widget */
+	using ClickEventHandler = std::function<void(ska::Widget*, ska::ClickEvent&)>;
 	
-	/* Handler triggered when hovering on the widget.
-		The return value must be set to false to avoid blocking event propagation */
-	using HoverEventHandler = std::function<bool(ska::Widget*, ska::HoverEvent&)>;
+	/* Handler triggered when hovering on the widget */
+	using HoverEventHandler = std::function<void(ska::Widget*, ska::HoverEvent&)>;
 
 	class Widget : 
 		public DrawableFixedPriority,

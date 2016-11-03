@@ -36,7 +36,7 @@ m_drawStyle(false) {
 
 void ska::Button::initHandlers() {
 	addHoverHandler([this](ska::Widget* tthis, ska::HoverEvent& e) {
-		bool stopEventPropagation = false;
+		bool handled = true;
 		bool target = false;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_ENTER:
@@ -45,7 +45,7 @@ void ska::Button::initHandlers() {
 				m_textureSelector = &m_placeHolderHover;
 				target = true;
 			} else {
-				stopEventPropagation = true;
+				handled = false;
 			}
 			break;
 
@@ -55,46 +55,53 @@ void ska::Button::initHandlers() {
 				m_textureSelector = &m_placeHolder;
 				target = true;
 			} else {
-				stopEventPropagation = true;
+				handled = false;
 			}
 			break;
+
 		case ska::MouseEventType::MOUSE_OVER:
 			m_state = ButtonState::HOVER;
 			target = true;
 			break;
+
 		default:
 			break;
+
+		}
+
+		if (!handled) {
+			/* Refuses the current event (not handled) */
+			e.stopPropagation(ska::StopType::STOP_CALLBACK);
 		}
 
 		if (target && e.getTarget() == nullptr) {
 			e.setTarget(this);
 		}
 
-		return stopEventPropagation;
+		//return stopEventPropagation;
 	});
 
 	addClickHandler([this](ska::Widget* tthis, ska::ClickEvent& e) {
-		bool eventPropagation = true;
+		bool handled = false;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_CLICK:
 			m_state = ButtonState::PRESSED;
 			//m_textureSelector = &m_placeHolderPressed;
-			eventPropagation = false;
+			handled = true;
 			break;
 		case ska::MouseEventType::MOUSE_RELEASE:
 			m_state = ButtonState::HOVER;
-			eventPropagation = false;
+			handled = true;
 			break;
 		default:
 			break;
 		}
 
-		if (!eventPropagation) {
+		if (handled) {
 			e.setTarget(this);
+		} else {
+			e.stopPropagation(ska::StopType::STOP_CALLBACK);
 		}
-
-		return eventPropagation;
-
 	});
 }
 

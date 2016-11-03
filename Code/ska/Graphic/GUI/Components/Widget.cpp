@@ -49,35 +49,42 @@ const ska::Point<int> ska::Widget::getAbsolutePosition() const {
 }
 
 bool ska::Widget::click(ska::ClickEvent& e) {
-	auto affect = e.isOn(*this);
+	auto affect = e.affects(*this);
 	if (!affect) {
 		return false;
 	}
 
 	for (auto& ceh : m_clickCallbacks) {
-		/* Si un callback renvoie true, on stoppe */
-		if (ceh != nullptr && (ceh)(this, e)) {
-			return true;
+		/* Si un callback indique à l'évènement qu'il est totalement stoppé, on stoppe la chaîne des callbacks */
+		(ceh)(this, e);
+		if (e.stopped() == StopType::STOP_CALLBACK) {
+			//e.stopPropagation(StopType::NOT_STOPPED);
+			break;
 		}
 	}
-	
-	return false;
+	/* Evenement géré par le widget. On le stoppe totalement */
+	e.stopPropagation(STOP_WIDGET);
+	return true;
 }
 
 
 bool ska::Widget::mouseHover(ska::HoverEvent& e) {
-	auto affect = e.isOn(*this);
+	auto affect = e.affects(*this);
 	if (!affect) {
 		return false;
 	}
 
 	for(auto& heh : m_hoverCallbacks) {
-		/* Si un callback renvoie true, on stoppe */
-		if (heh(this, e)) {
-			return true;
+		/* Si un callback indique à l'évènement qu'il est totalement stoppé, on stoppe la chaîne des callbacks*/
+		heh(this, e);
+		if (e.stopped() == StopType::STOP_CALLBACK) {
+			//e.stopPropagation(StopType::NOT_STOPPED);
+			break;
 		}
 	}
-	return false;
+	/* Evenement géré par le widget. On le stoppe totalement */
+	e.stopPropagation(STOP_WIDGET);
+	return true;
 }
 
 const std::string& ska::Widget::getName() const {

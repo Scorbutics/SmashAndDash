@@ -38,11 +38,11 @@ namespace ska {
 		}
 
 		bool notifyObservers(T& t, Args... args) {
-			bool result = false;
+			bool hasBeenHandled = false;
 			for (auto it = m_head; it != nullptr; it = it->m_right) {
-				result |= it->receive(t, std::forward<Args&>(args)...);
+				hasBeenHandled |= it->receive(t, std::forward<Args&>(args)...);
 			}
-			return result;
+			return hasBeenHandled;
 		}
 
 

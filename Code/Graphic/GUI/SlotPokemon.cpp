@@ -12,7 +12,7 @@ ska::WindowIG(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6*TAILLEBLOC
 	ska::Widget& tthis = *this;
 	m_spriteArea = std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, pokemonId), ska::Rectangle{ 0, 0, 32, 32 }, [](ska::Widget*, ska::ClickEvent&) {
 		//TODO changement d'ordre des Pokémon
-		return false;
+		//return false;
 	}),
 	m_nameArea = std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(36, 4));
 	m_levelArea = std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(36, 22));
