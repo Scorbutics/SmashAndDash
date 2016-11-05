@@ -133,6 +133,9 @@ void ska::Widget::move(const ska::Point<int>& pos) {
 }
 
 bool ska::Widget::isAffectedBy(const ska::HoverEvent& e) const {
+	if(!m_visible) {
+		return false;
+	}
 	const ska::Point<int>& relativeEventPos = e.getPosition() - getAbsolutePosition();
 	return ska::RectangleUtils::isPositionInBox(relativeEventPos, ska::Rectangle{ 0, 0, getBox().w, getBox().h });
 }

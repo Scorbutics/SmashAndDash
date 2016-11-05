@@ -6,7 +6,7 @@
 
 ska::WindowIG::WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
 Button(parent),
-m_menuTiles("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png"),
+m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 m_drawStyle(drawStyle),
 m_guiObservable(nullptr) {
 	move(box);
@@ -18,7 +18,7 @@ m_guiObservable(nullptr) {
 
 ska::WindowIG::WindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) :
 Button(),
-	m_menuTiles("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png"),
+	m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 	m_drawStyle(drawStyle),
 	m_guiObservable(&guiObservable) {
 	move(box);

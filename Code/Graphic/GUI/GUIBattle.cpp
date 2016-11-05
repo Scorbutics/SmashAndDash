@@ -29,7 +29,7 @@ bool GUIBattle::onStatisticsChange(const ska::EntityId& target, RawStatistics<in
 }
 
 void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId) {
-	m_bars[entityId] = std::move(BarPtr(new Bar(camSys, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbar.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"hpbarcontent.png", maxValue, em, entityId)));
+	m_bars[entityId] = std::move(BarPtr(new Bar(camSys, ska::Button::MENU_DEFAULT_THEME_PATH + "hpbar.png", ska::Button::MENU_DEFAULT_THEME_PATH + "hpbarcontent.png", maxValue, em, entityId)));
 	m_bars[entityId]->setCurrentValue(currentValue);
 }
 

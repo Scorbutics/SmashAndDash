@@ -57,12 +57,12 @@ DialogMenu(gui, "", "", { 0 }) {
 }
 
 DialogMenu::DialogMenu(ska::MouseObservable& gui, const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) :
-DialogMenu(gui, text, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu(gui, text, "", ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
 
 }
 
 DialogMenu::DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) :
-DialogMenu(gui, text, imageResource, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", rect, 22, scroll, timeout) {
+DialogMenu(gui, text, imageResource, ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
 
 }
 

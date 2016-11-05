@@ -188,7 +188,7 @@ void ska::GUI::display() const {
 
 	m_wAction.display();
 
-	for(const auto& w : m_extraWindows) {
+	for (const auto& w : m_extraWindows) {
 		w->display();
 	}
 
@@ -250,7 +250,6 @@ void ska::GUI::refresh() {
 	//update();
 
 	//Time-based events
-	//m_wAction.refresh();
 	for (auto it = std::begin(m_dynamicWindows); it != m_dynamicWindows.end(); )  {
 		if(!(*it)->refresh()) {
 			it = m_dynamicWindows.erase(it);

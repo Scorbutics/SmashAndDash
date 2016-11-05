@@ -7,7 +7,8 @@ public:
 	WindowTeam(ska::MouseObservable& guiObservable, const ska::Point<int>& boxAbsolutePos);
 	void addPokemon(unsigned int pokemonId);
 	~WindowTeam() = default;
-
+private:
+	unsigned int m_pokemonCount;
 };
 
 

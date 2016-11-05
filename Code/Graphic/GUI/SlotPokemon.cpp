@@ -14,11 +14,11 @@ ska::WindowIG(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6*TAILLEBLOC
 		//TODO changement d'ordre des Pokémon
 		//return false;
 	}),
-	m_nameArea = std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(36, 4));
-	m_levelArea = std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(36, 22));
-	m_pvArea = std::make_unique<ska::Label>(*this, "PVs : ", m_fontSize, ska::Point<int>(108, 22));
-	m_type1Area = std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(36, 40));
-	m_type2Area = std::make_unique<ska::Label>(*this, "Type 2 : ", m_fontSize, ska::Point<int>(108, 40));
+	m_nameArea = std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(16, 4));
+	m_levelArea = std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(16, 22));
+	m_pvArea = std::make_unique<ska::Label>(*this, "PVs : ", m_fontSize, ska::Point<int>(96, 22));
+	m_type1Area = std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(16, 40));
+	m_type2Area = std::make_unique<ska::Label>(*this, "Type 2 : ", m_fontSize, ska::Point<int>(96, 40));
 
 	addWidget(std::move(m_spriteArea));
 	addWidget(std::move(m_nameArea));

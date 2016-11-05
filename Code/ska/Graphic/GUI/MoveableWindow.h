@@ -3,16 +3,6 @@
 
 namespace ska {
 
-	class MoveableWindow;
-	class ButtonWindowMover : public Button {
-	public:
-		ButtonWindowMover(MoveableWindow& window, Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback);
-		~ButtonWindowMover() = default;
-		virtual bool isAffectedBy(const ska::HoverEvent& e) const override;
-	private:
-		MoveableWindow& m_window;
-	};
-
 	class MoveableWindow : public WindowIG {
 		friend class ButtonWindowMover;
 	public:

@@ -1,14 +1,21 @@
 #include <iostream>
 #include "MoveableWindow.h"
 #include "Components/Button.h"
+#include "Components/ButtonQuit.h"
 
 ska::MoveableWindow::MoveableWindow(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) : 
 ska::WindowIG(guiObservable, box, drawStyle) {
 	initHandlers();
 }
 
+ska::MoveableWindow::MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
+ska::WindowIG(parent, box, drawStyle) {
+	initHandlers();
+}
+
 void ska::MoveableWindow::initHandlers() {
-	auto button = std::make_unique<ska::ButtonWindowMover>(*this, ska::Point<int>(), "", [&](ska::Widget* tthis, ska::ClickEvent& e) {
+	const auto& clip = ska::Rectangle{ 0, 0, getBox().w, TAILLEBLOCFENETRE / 2 };
+	auto button = std::make_unique<ska::Button>(*this, ska::Point<int>(), ska::Button::MENU_DEFAULT_THEME_PATH + "button", &clip, [&](ska::Widget* tthis, ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			m_moving = true;
 			m_offsetWindowOrigin = e.getPosition(*tthis);
@@ -17,7 +24,7 @@ void ska::MoveableWindow::initHandlers() {
 			m_moving = false;
 		}
 	});
-	button->setWidth(getBox().w);
+	button->setWidth(getBox().w - TAILLEBLOCFENETRE / 2);
 	button->setHeight(TAILLEBLOCFENETRE / 2);
 	button->addHoverHandler([&](ska::Widget* tthis, ska::HoverEvent& e) {
 		if (m_moving && e.getState() != ska::MouseEventType::MOUSE_ENTER) {
@@ -27,34 +34,9 @@ void ska::MoveableWindow::initHandlers() {
 		}		
 	});
 
-	/* Avoid focus through window */
-// 	addHoverHandler([&](ska::Widget* tthis, ska::HoverEvent& e) {
-// 		e.stopPropagation();
-// 	});
-
-	/* Avoid clicks through window */
-// 	addClickHandler([&](ska::Widget* tthis, ska::ClickEvent& e) {
-// 		e.stopPropagation();
-// 	});
+	auto buttonQuit = std::make_unique<ska::ButtonQuit>(*this, ska::Point<int>(getBox().w - TAILLEBLOCFENETRE/2, 0), ska::Button::MENU_DEFAULT_THEME_PATH + "close_button");
 
 	addWidget(std::move(button));
+	addWidget(std::move(buttonQuit));
 }
 
-ska::MoveableWindow::MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-ska::WindowIG(parent, box, drawStyle) {
-	initHandlers();
-}
-
-ska::ButtonWindowMover::ButtonWindowMover(MoveableWindow& window, Point<int> relativePos, const std::string& placeHolderStyleName, ClickEventHandler const& callback) : 
-	ska::Button(window, relativePos, placeHolderStyleName, callback),
-	m_window(window) {
-	
-}
-
-bool ska::ButtonWindowMover::isAffectedBy(const ska::HoverEvent& e) const {
-// 	if(e.getState() == ska::MouseEventType::MOUSE_OVER || e.getState() == ska::MouseEventType::MOUSE_RELEASE) {
-// 		return true;
-// 	}
-
-	return ska::Widget::isAffectedBy(e);
-}
