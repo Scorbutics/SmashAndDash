@@ -26,6 +26,9 @@ int main (int argc, char *argv[])
 	std::ofstream logFile("stdlog.txt", std::ios::trunc);
 	std::clog.rdbuf(logFile.rdbuf());
 
+	std::wofstream wlogFile("wstdlog.txt", std::ios::trunc);
+	std::wclog.rdbuf(wlogFile.rdbuf());
+
 	std::ofstream errFile("stderr.txt", std::ios::trunc);
 	std::cerr.rdbuf(errFile.rdbuf());
 

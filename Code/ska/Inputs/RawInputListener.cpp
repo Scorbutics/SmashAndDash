@@ -1,7 +1,8 @@
+#include <iostream>
 #include "RawInputListener.h"
 #include "../Utils\SkaConstants.h"
 #include "../Exceptions/TerminateProcessException.h"
-
+#include "../Utils/StringUtils.h"
 
 ska::RawInputListener::RawInputListener()
 {
@@ -17,17 +18,20 @@ ska::MouseInput& ska::RawInputListener::getMouseInput() {
 	return m_mouseIn;
 }
 
+const std::wstring& ska::RawInputListener::getTextInput() const {
+	return m_textInput;
+}
+
 void ska::RawInputListener::update() {
     SDL_Event event;
 	m_mouseIn.setMouseLastPos(m_mouseIn.getMousePos());
 
+	m_textInput = L"";
 	m_keyIn.resetTriggers();
 	m_mouseIn.resetTriggers();
 
-	while(SDL_PollEvent(&event))
-	{
-		switch (event.type)
-		{
+	while(SDL_PollEvent(&event)) {
+		switch (event.type) {
             case SDL_KEYDOWN:
                 m_keyIn.setKeyState(event.key.keysym.scancode, 1);
                 break;
@@ -43,6 +47,14 @@ void ska::RawInputListener::update() {
             case SDL_MOUSEBUTTONUP:
 				m_mouseIn.setMouseState(event.button.button, 0);
                 break;
+			case SDL_TEXTEDITING:
+				//m_textInput += ska::StringUtils::toUTF8(event.edit.text);
+				//std::wclog << m_textInput << std::endl;
+				break;
+			case SDL_TEXTINPUT:
+				m_textInput += ska::StringUtils::toUTF8(event.edit.text);
+				//std::wclog << m_textInput << std::endl;
+				break;
             case SDL_QUIT:
 				throw TerminateProcessException("Program quitted");
                 break;
@@ -51,10 +63,8 @@ void ska::RawInputListener::update() {
 		}
 
 
-		if(event.type == SDL_WINDOWEVENT)
-		{
-			switch(event.window.event)
-			{
+		if(event.type == SDL_WINDOWEVENT) {
+			switch(event.window.event) {
 				
 				case SDL_WINDOWEVENT_RESIZED:
 					/*wScreen.resize(event.window.data1, event.window.data2);

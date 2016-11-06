@@ -19,6 +19,7 @@ namespace ska {
 		const InputActionContainer& getActions() const;
 		const InputRangeContainer& getRanges() const;
 		const InputToggleContainer& getToggles() const;
+		const std::wstring& getTextInput() const;
 
 		virtual ~InputContextManager();
 	private:
@@ -26,6 +27,7 @@ namespace ska {
 		InputRangeContainer m_ranges;
 		InputActionContainer m_actions;
 		InputToggleContainer m_toggles;
+		std::wstring m_textInput;
 		RawInputListener& m_ril;
 	};
 }

@@ -42,5 +42,9 @@ void ska::KeyboardInputContext::queryToggles(RawInputListener& ril, InputToggleC
 	}
 }
 
+const std::wstring& ska::KeyboardInputContext::queryText(RawInputListener& ril) {
+	return ril.getTextInput();
+}
+
 ska::KeyboardInputContext::~KeyboardInputContext() {
 }

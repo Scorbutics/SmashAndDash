@@ -12,6 +12,7 @@
 #include "../../Graphic/GUI/Window.h"
 #include "./Components/Widget.h"
 #include "./Components/HoverEvent.h"
+#include "./Components/KeyEvent.h"
 #include "./Components/ClickEvent.h"
 #include "GUIScrollButtonWindowIG.h"
 #include "./Components/ButtonSprite.h"
@@ -23,7 +24,7 @@ m_playerICM(playerICM),
 m_window(w),
 m_hovered(nullptr),
 m_clicked(nullptr),
-m_wAction(*this, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, false) {
+m_wAction(*this, *this, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, false) {
 
     //m_refreshCount = REFRESH_PNJWINDOW_COUNT;
     m_lastMouseState = 0;
@@ -198,20 +199,44 @@ void ska::GUI::display() const {
 		
 }
 
-void ska::GUI::refresh() {
-	if (m_hide) {
-		return;
-	}
+void ska::GUI::refreshKeyboard() {
+	const auto& textTyped = m_playerICM.getTextInput();
+	
+	if (!textTyped.empty()) {
+		
+		KeyEvent ke(KeyEventType::TEXT_TYPED, textTyped);
+		KeyboardObservable::notifyObservers(ke);
 
+		//TODO Focus, Blur
+		//TODO optionnel : Key down et Key up events ?
+
+		/*HoverEvent hove(MouseEventType::MOUSE_OVER, lastMousePos, mousePos);
+		HoverObservable::notifyObservers(hove);
+
+		if (m_hovered != nullptr) {
+			for (auto it = m_hovered; it != hove.getTarget() && it != nullptr; it = it->getParent()) {
+				if (hove.getTarget() == nullptr || !it->isAParent(*hove.getTarget())) {
+					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition(), mousePos);
+					it->mouseHover(heOut);
+				}
+			}
+		}
+		m_hovered = hove.getTarget();
+		*/
+
+	}
+}
+
+void ska::GUI::refreshMouse() {
 	const ska::InputActionContainer& in = m_playerICM.getActions();
 	const auto& moveWindow = m_playerICM.getToggles()[ska::InputToggle::MoveWindow];
 	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
 	const ska::InputRange& lastMousePos = m_playerICM.getRanges()[ska::InputRangeType::LastMousePos];
 
-	
-	if (mousePos != lastMousePos) {	
-		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover : 
-		*  on considère mousePos comme la prochaine position de la souris en terme d'évènements. 
+
+	if (mousePos != lastMousePos) {
+		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover :
+		*  on considère mousePos comme la prochaine position de la souris en terme d'évènements.
 		*  On a donc un retard d'une frame sur tous les évènements déclenchés, mais cela permet de pouvoir réagir
 		*  aux changements brusques de position de souris */
 		HoverEvent he(MouseEventType::MOUSE_ENTER, lastMousePos, mousePos);
@@ -229,7 +254,7 @@ void ska::GUI::refresh() {
 			}
 		}
 		m_hovered = hove.getTarget();
-		
+
 
 	}
 
@@ -246,6 +271,15 @@ void ska::GUI::refresh() {
 		m_clicked = nullptr;
 		ClickObservable::notifyObservers(ce);
 	}
+}
+
+void ska::GUI::refresh() {
+	if (m_hide) {
+		return;
+	}
+
+	refreshMouse();
+	refreshKeyboard();
 
 	//update();
 

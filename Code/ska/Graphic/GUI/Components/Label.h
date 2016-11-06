@@ -10,6 +10,8 @@ namespace ska {
 	public:
 		Label(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Label() = default;
+
+		void modifyText(const std::string& text);
 		void display() const override;
 
 	private:

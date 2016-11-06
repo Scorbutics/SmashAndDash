@@ -115,6 +115,26 @@ std::string ska::StringUtils::extractTo(const size_t start, const std::string& s
 	return result;
 }
 
+std::wstring ska::StringUtils::toUTF8(const std::string& s) {
+	if (s.empty()) {
+		return L"";
+	}
+
+	auto sNat = s.c_str();
+	std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>, wchar_t> converter;
+	return converter.from_bytes(sNat);	
+}
+
 ska::StringUtils::~StringUtils()
 {
+}
+
+std::string ska::StringUtils::toANSI(const std::wstring& ws) {
+	if (ws.empty()) {
+		return "";
+	}
+
+	auto sNat = ws.c_str();
+	std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>, wchar_t> converter;
+	return converter.to_bytes(sNat);
 }

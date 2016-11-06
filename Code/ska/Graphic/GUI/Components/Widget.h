@@ -4,7 +4,7 @@
 #include "../../Point.h"
 #include "../../Draw/DrawableFixedPriority.h"
 #include "MouseObserver.h"
-
+#include "KeyEvent.h"
 
 
 namespace ska {
@@ -26,9 +26,16 @@ namespace ska {
 	/* Handler triggered when hovering on the widget */
 	using HoverEventHandler = std::function<void(ska::Widget*, ska::HoverEvent&)>;
 
+	/* Handler triggered when pressing a key */
+	using KeyEventHandler = std::function<void(ska::Widget*, ska::KeyEvent&)>;
+
+	using KeyObserver = Observer<KeyEvent>;
+
 	class Widget : 
 		public DrawableFixedPriority,
-		public MouseObserver {
+		//TODO : déplacer MouseObserver et KeyboardObserver aux widgets qui nécessitent vraiment (classe de traits ?)
+		public MouseObserver,
+		public KeyObserver {
 		
 	public:
 		Widget();
@@ -44,7 +51,9 @@ namespace ska {
 		void show(bool sh);
 		virtual void move(const ska::Point<int>& pos);
 		
+		//TODO classe de traits ? => typage au compile time donc ça se prête plutôt bien à ça
 		virtual bool isAffectedBy(const ska::HoverEvent& e) const;
+		virtual bool isAffectedBy(const ska::KeyEvent& e) const;
 
 		virtual ~Widget() = default;
 
@@ -53,12 +62,15 @@ namespace ska {
 		bool click(ska::ClickEvent& e) override;
 		bool mouseHover(ska::HoverEvent& e) override;
 		
+		bool keyEvent(ska::KeyEvent& e);
+
 		const std::string& getName() const;
 		bool isAParent(const ska::Widget& w) const;
 		void setName(const std::string& s);
 
 		void addClickHandler(const ClickEventHandler& h);
 		void addHoverHandler(const HoverEventHandler& h);
+		void addKeyHandler(const KeyEventHandler& h);
 
 		const ska::Rectangle& getBox() const;
 		const Point<int> getAbsolutePosition() const;
@@ -67,6 +79,7 @@ namespace ska {
 	protected:
 		void addHeadClickHandler(const ClickEventHandler& h);
 		void addHeadHoverHandler(const HoverEventHandler& h);
+		void addHeadKeyHandler(const KeyEventHandler& h);
 
 	private:
 		std::string m_name;
@@ -75,5 +88,6 @@ namespace ska {
 		bool m_visible;
 		std::deque<ClickEventHandler> m_clickCallbacks;
 		std::deque<HoverEventHandler> m_hoverCallbacks;
+		std::deque<KeyEventHandler> m_keyCallbacks;
 	};
 }

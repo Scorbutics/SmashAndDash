@@ -136,6 +136,9 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HasWidgets.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HoverEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Image.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Input.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyboardObservable.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObservable.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.h" />
@@ -430,6 +433,8 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HasWidgets.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Input.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />

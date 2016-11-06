@@ -6,7 +6,7 @@ namespace ska {
 	class MoveableWindow : public WindowIG {
 		friend class ButtonWindowMover;
 	public:
-		MoveableWindow(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle);
+		MoveableWindow(MouseObservable& guiObservable, KeyboardObservable& keyboardObservable, const ska::Rectangle& box, bool drawStyle);
 		MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle);
 
 	private:

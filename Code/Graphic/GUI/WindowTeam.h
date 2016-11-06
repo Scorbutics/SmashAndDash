@@ -4,7 +4,7 @@
 
 class WindowTeam : public ska::MoveableWindow {
 public:
-	WindowTeam(ska::MouseObservable& guiObservable, const ska::Point<int>& boxAbsolutePos);
+	WindowTeam(ska::MouseObservable& guiObservable, ska::KeyboardObservable& keyboardObs, const ska::Point<int>& boxAbsolutePos);
 	void addPokemon(unsigned int pokemonId);
 	~WindowTeam() = default;
 private:

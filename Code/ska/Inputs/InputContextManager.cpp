@@ -27,6 +27,7 @@ void ska::InputContextManager::refresh() {
 		it->queryActions(m_ril, m_actions);
 		it->queryRanges(m_ril, m_ranges);
 		it->queryToggles(m_ril, m_toggles);
+		m_textInput = it->queryText(m_ril);
 	}
 }
 
@@ -42,6 +43,7 @@ void ska::InputContextManager::operator=(const InputContextManager& icm) {
 	m_ril = icm.m_ril;
 	m_ranges = icm.m_ranges;
 	m_toggles = icm.m_toggles;
+	m_textInput = icm.m_textInput;
 	/* Cannot copy contexts : they are uniques */
 	//m_contexts = icm.m_contexts;
 	m_actions = icm.m_actions;
@@ -57,6 +59,10 @@ const ska::InputActionContainer& ska::InputContextManager::getActions() const {
 
 const ska::InputToggleContainer& ska::InputContextManager::getToggles() const {
 	return m_toggles;
+}
+
+const std::wstring& ska::InputContextManager::getTextInput() const {
+	return m_textInput;
 }
 
 ska::InputContextManager::~InputContextManager()

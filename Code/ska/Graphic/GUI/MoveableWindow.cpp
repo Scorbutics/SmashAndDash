@@ -3,8 +3,8 @@
 #include "Components/Button.h"
 #include "Components/ButtonQuit.h"
 
-ska::MoveableWindow::MoveableWindow(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) : 
-ska::WindowIG(guiObservable, box, drawStyle) {
+ska::MoveableWindow::MoveableWindow(MouseObservable& guiObservable, KeyboardObservable& keyboardObservable, const ska::Rectangle& box, bool drawStyle) : 
+ska::WindowIG(guiObservable, keyboardObservable, box, drawStyle) {
 	initHandlers();
 }
 

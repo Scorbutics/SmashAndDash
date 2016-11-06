@@ -19,7 +19,7 @@ namespace ska {
 		const ska::Point<int>& getPosition() const;
 		const ska::Point<int>& getMousePosition() const;
 		const ska::Point<int> getPosition(const ska::Widget& w) const;
-		bool affects(const Widget& w) const;
+		virtual bool affects(const Widget& w) const override;
 		virtual ~HoverEvent() = default;
 
 	private:

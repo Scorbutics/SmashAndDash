@@ -19,6 +19,7 @@ namespace ska {
 		virtual void queryActions(RawInputListener& ril, InputActionContainer& actions) = 0;
 		virtual void queryRanges(RawInputListener& ril, InputRangeContainer& ranges) = 0;
 		virtual void queryToggles(RawInputListener& ril, InputToggleContainer& toggles) = 0;
+		virtual const std::wstring& queryText(RawInputListener& ril) = 0;
 
 		virtual ~InputContext(){};
 

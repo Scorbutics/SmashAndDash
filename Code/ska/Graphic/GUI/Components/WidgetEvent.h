@@ -19,6 +19,7 @@ namespace ska {
 		StopType stopped() const;
 		Widget* getTarget();
 		Widget const* getCTarget() const;
+		virtual bool affects(const Widget& w) const = 0;
 		virtual ~WidgetEvent() = default;
 
 	private:

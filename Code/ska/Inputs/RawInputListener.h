@@ -16,13 +16,14 @@ namespace ska {
 		RawInputListener();
 		KeyInput& getKeyInput();
 		MouseInput& getMouseInput();
+		const std::wstring& getTextInput() const;
 		void update();
 		virtual ~RawInputListener();
 
 	private:
 		KeyInput m_keyIn;
 		MouseInput m_mouseIn;
-
+		std::wstring m_textInput;
 	};
 }
 #endif

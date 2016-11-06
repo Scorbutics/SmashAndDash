@@ -1,7 +1,7 @@
 #include "GUIScrollButtonWindowIG.h"
 
-ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) : 
-	TimeScrollableWindowIG(guiObservable, box, drawStyle), 
+ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(MouseObservable& guiObservable, KeyboardObservable& keyboardObservable, const ska::Rectangle& box, bool drawStyle) :
+	TimeScrollableWindowIG(guiObservable, keyboardObservable, box, drawStyle),
 	m_realPos(getRelativePosition()){
 	
 }

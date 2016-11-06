@@ -23,11 +23,11 @@ namespace ska {
 class DialogMenu : public IDialogMenu, public ska::WindowIG
 {
 public:
-	DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
-	DialogMenu(ska::MouseObservable& gui, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
-	DialogMenu(ska::MouseObservable& gui, const std::string& text, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
-	DialogMenu(ska::MouseObservable& gui, const DialogMenu& dm);
-	DialogMenu(ska::MouseObservable& gui);
+	DialogMenu(ska::MouseObservable& gui, ska::KeyboardObservable& keyboardObs, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
+	DialogMenu(ska::MouseObservable& gui, ska::KeyboardObservable& keyboardObs, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
+	DialogMenu(ska::MouseObservable& gui, ska::KeyboardObservable& keyboardObs, const std::string& text, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
+	DialogMenu(ska::MouseObservable& gui, ska::KeyboardObservable& keyboardObs, const DialogMenu& dm);
+	DialogMenu(ska::MouseObservable& gui, ska::KeyboardObservable& keyboardObs);
 	~DialogMenu();
     void resize(int w, int h);
 	void modifyText(const std::string& text);

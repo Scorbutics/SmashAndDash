@@ -1,7 +1,7 @@
 #include "TimeScrollableWindowIG.h"
 
-ska::TimeScrollableWindowIG::TimeScrollableWindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) : 
-	WindowIG(guiObservable, box, drawStyle) {
+ska::TimeScrollableWindowIG::TimeScrollableWindowIG(MouseObservable& guiObservable, KeyboardObservable& keyObservable, const ska::Rectangle& box, bool drawStyle) :
+	WindowIG(guiObservable, keyObservable, box, drawStyle) {
 
 }
 

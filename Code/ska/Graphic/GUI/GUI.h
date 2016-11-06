@@ -5,6 +5,7 @@
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
 #include "../../Graphic/Point.h"
 #include "./Components/MouseObservable.h"
+#include "./Components/KeyboardObservable.h"
 #include "WindowIG.h"
 
 namespace ska {
@@ -14,7 +15,7 @@ namespace ska {
 	class InputContextManager;
 	class TimeScrollableWindowIG;
 
-	class GUI : public ska::DrawableFixedPriority, public MouseObservable {
+	class GUI : public ska::DrawableFixedPriority, public MouseObservable, public KeyboardObservable {
 
 	public:
 		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
@@ -34,6 +35,9 @@ namespace ska {
 		void update();
 
 	private:
+		void refreshMouse();
+		void refreshKeyboard();
+
 		ska::WindowIG m_wAction;
 		std::unordered_set<ska::TimeScrollableWindowIG*> m_dynamicWindows;
 		std::vector<std::unique_ptr<ska::WindowIG>> m_extraWindows;

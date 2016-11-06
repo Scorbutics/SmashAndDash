@@ -8,7 +8,8 @@ ska::WindowIG::WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool dra
 Button(parent),
 m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 m_drawStyle(drawStyle),
-m_guiObservable(nullptr) {
+m_guiObservable(nullptr),
+m_keyObservable(nullptr) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
@@ -16,16 +17,22 @@ m_guiObservable(nullptr) {
 }
 
 
-ska::WindowIG::WindowIG(MouseObservable& guiObservable, const ska::Rectangle& box, bool drawStyle) :
+bool ska::WindowIG::isAffectedBy(const ska::KeyEvent& e) const {
+	return true;
+}
+
+ska::WindowIG::WindowIG(MouseObservable& guiObservable, KeyboardObservable& keyObservable, const ska::Rectangle& box, bool drawStyle) :
 Button(),
 	m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 	m_drawStyle(drawStyle),
-	m_guiObservable(&guiObservable) {
+	m_guiObservable(&guiObservable),
+	m_keyObservable(&keyObservable) {
 	move(box);
 	setWidth(box.w);
 	setHeight(box.h);
 	m_guiObservable->HoverObservable::addObserver(*this);
 	m_guiObservable->ClickObservable::addObserver(*this);
+	m_keyObservable->addObserver(*this);
 	initHandlers();
 }
 
@@ -42,6 +49,16 @@ void ska::WindowIG::initHandlers() {
 	addHeadClickHandler([&](ska::Widget* tthis, ska::ClickEvent& e) {
 		for (auto& w : m_widgets) {
 			w->click(e);
+			if (e.stopped() == StopType::STOP_WIDGET) {
+				return;
+			}
+		}
+	});
+
+
+	addHeadKeyHandler([&](ska::Widget* tthis, ska::KeyEvent& e) {
+		for (auto& w : m_widgets) {
+			w->keyEvent(e);
 			if (e.stopped() == StopType::STOP_WIDGET) {
 				return;
 			}
@@ -87,5 +104,9 @@ ska::WindowIG::~WindowIG() {
 	if (m_guiObservable != nullptr) {
 		m_guiObservable->HoverObservable::removeObserver(*this);
 		m_guiObservable->ClickObservable::removeObserver(*this);
+	}
+
+	if (m_keyObservable != nullptr) {
+		m_keyObservable->removeObserver(*this);
 	}
 }

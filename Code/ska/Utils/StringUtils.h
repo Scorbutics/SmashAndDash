@@ -22,10 +22,14 @@ namespace ska {
 
 		static std::string extractTo(const size_t start, const std::string& s, const char to);
 
+		static std::wstring toUTF8(const std::string& s);
+		static std::string toANSI(const std::wstring& ws);
+
 		static void replaceAll(std::string& str, const std::string& from, const std::string& to);
 		static void replaceAll(std::string& str, const char from, const char to);
 		static bool isInt(const std::string& s, const int base);
 		static bool isDecimal(const std::string& s);
 		~StringUtils();
+		
 	};
 }
