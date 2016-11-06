@@ -48,12 +48,9 @@ void ska::RawInputListener::update() {
 				m_mouseIn.setMouseState(event.button.button, 0);
                 break;
 			case SDL_TEXTEDITING:
-				//m_textInput += ska::StringUtils::toUTF8(event.edit.text);
-				//std::wclog << m_textInput << std::endl;
 				break;
 			case SDL_TEXTINPUT:
 				m_textInput += ska::StringUtils::toUTF8(event.edit.text);
-				//std::wclog << m_textInput << std::endl;
 				break;
             case SDL_QUIT:
 				throw TerminateProcessException("Program quitted");

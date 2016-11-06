@@ -201,10 +201,16 @@ void ska::GUI::display() const {
 
 void ska::GUI::refreshKeyboard() {
 	const auto& textTyped = m_playerICM.getTextInput();
-	
+
+	const auto& isDeleting = m_playerICM.getActions()[ska::InputAction::DeleteChar];
+	if (isDeleting) {
+		KeyEvent ke(KeyEventType::KEY_DOWN, L"", SDL_SCANCODE_BACKSPACE);
+		KeyboardObservable::notifyObservers(ke);
+	}
+
 	if (!textTyped.empty()) {
 		
-		KeyEvent ke(KeyEventType::TEXT_TYPED, textTyped);
+		KeyEvent ke(KeyEventType::TEXT_TYPED, textTyped, -1);
 		KeyboardObservable::notifyObservers(ke);
 
 		//TODO Focus, Blur

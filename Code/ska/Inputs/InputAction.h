@@ -19,10 +19,12 @@ namespace ska {
 		UseObject6,
 		PathfindTo,
 		LClic,
-		RClic
+		RClic,
+		//GUI
+		DeleteChar
 	};
 
-#define INPUT_MAX_ACTION 16
+#define INPUT_MAX_ACTION 17
 
 	typedef std::bitset<INPUT_MAX_ACTION> InputActionContainer;
 }
