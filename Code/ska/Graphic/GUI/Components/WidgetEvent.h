@@ -19,7 +19,7 @@ namespace ska {
 			m_target = t;
 		}
 
-		void stopPropagation(StopType st) {
+		void stopPropagation(const StopType& st) {
 			m_stopPropagation = st;
 		}
 

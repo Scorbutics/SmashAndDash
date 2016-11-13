@@ -52,6 +52,9 @@ namespace ska {
 		}
 
 		bool notify(IWidgetEvent& e) override {
+			if (!isVisible()) {
+				return false;
+			}
 			if (m_mask[e.getMask()]) {
 				auto maskIndex = m_maskHandlerIndexes[e.getMask()];
 				HandlerNotifier hn(*this, e);

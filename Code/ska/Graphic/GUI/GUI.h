@@ -22,7 +22,6 @@ namespace ska {
 	public:
 		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
 
-		//bool existDialog(const unsigned int index) const;
 		void refresh();
 		int isPositionOnButton(const ska::Point<float>& pos) const;
 		bool isMouseOnAWindow();

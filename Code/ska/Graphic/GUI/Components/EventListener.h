@@ -39,7 +39,7 @@ namespace ska {
 				/* Si un callback indique à l'évènement qu'il est totalement stoppé, on stoppe la chaîne des callbacks*/
 				eh(&tthis, e);
 				if (e.stopped() == StopType::STOP_CALLBACK) {
-					//e.stopPropagation(StopType::NOT_STOPPED);
+					e.stopPropagation(StopType::NOT_STOPPED);
 					break;
 				}
 			}

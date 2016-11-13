@@ -86,7 +86,7 @@ void ska::Button::resetTexture() {
 
 
 void ska::Button::initHandlers() {
-	addHandler<ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
+	addHeadHandler<ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
 		bool handled = false;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_CLICK:
@@ -105,8 +105,7 @@ void ska::Button::initHandlers() {
 
 		if (handled) {
 			e.setTarget(this);
-		}
-		else {
+		} else {
 			e.stopPropagation(ska::StopType::STOP_CALLBACK);
 		}
 	});

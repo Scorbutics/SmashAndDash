@@ -16,5 +16,6 @@ namespace ska {
 		virtual bool affects(const Widget& w) const = 0;
 		virtual unsigned int getMask() const = 0;
 		virtual StopType stopped() const = 0;
+		virtual void stopPropagation(const StopType& st) = 0;
 	};
 }

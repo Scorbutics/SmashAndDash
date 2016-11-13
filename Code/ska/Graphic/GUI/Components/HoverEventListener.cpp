@@ -8,10 +8,15 @@ ska::EventListener<HoverEvent>(tthis) {
 }
 
 bool ska::HoverEventListener::notify(Widget& tthis, HoverEvent& e) {
+	return EventListener<HoverEvent>::notify(tthis, e);
+
 	/*if (!EventListener<HoverEvent>::notify(tthis, e)) {
 		//Evenement géré par le widget. On le stoppe totalement
 		e.stopPropagation(StopType::STOP_WIDGET);
 	}
 	return true; */
-	return EventListener<HoverEvent>::notify(tthis, e);
+
+	/*auto result = EventListener<HoverEvent>::notify(tthis, e);
+	e.stopPropagation(StopType::STOP_WIDGET);
+	return result;*/
 }

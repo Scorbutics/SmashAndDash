@@ -38,6 +38,9 @@ namespace ska {
 
 		/* Called from GUI */
 		virtual bool notify(IWidgetEvent& e) override {
+			if(!isVisible()) {
+				return false;
+			}
 			bool result = false;
 			for (auto& w : m_handledWidgets) {
 				result |= w->notify(e);
@@ -46,6 +49,10 @@ namespace ska {
 	 			}
 			}
 			result |= directNotify(e);
+			if (result) {
+				/* Handled by Widget */
+				e.stopPropagation(StopType::STOP_WIDGET);
+			}
 			return result;
 		}
 

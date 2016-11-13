@@ -30,7 +30,7 @@ namespace ska {
 			case ska::MouseEventType::MOUSE_ENTER:
 				if (m_state != ButtonState::HOVER && m_state != ButtonState::ENTER && m_state != ButtonState::PRESSED) {
 					m_state = ButtonState::ENTER;
-					std::clog << "Enter " << asW.getName() << std::endl;
+					//std::clog << "Enter " << asW.getName() << std::endl;
 					switchTextureAndMemorize();
 					target = true;
 				}
@@ -42,7 +42,7 @@ namespace ska {
 			case ska::MouseEventType::MOUSE_OUT:
 				if (m_state == ButtonState::HOVER || m_state == ButtonState::ENTER || m_state == ButtonState::PRESSED) {
 					m_state = ButtonState::NONE;
-					std::clog << "Out " << asW.getName() << std::endl;
+					//std::clog << "Out " << asW.getName() << std::endl;
 					switchTextureAndMemorize();
 					target = true;
 				}
