@@ -5,17 +5,19 @@
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
 #include "../../Graphic/Point.h"
 #include "./Components/MouseObservable.h"
-#include "./Components/KeyboardObservable.h"
-#include "WindowIG.h"
+#include "./Components/KeyObservable.h"
+#include "DynamicWindowIG.h"
 
 namespace ska {
 	class Window;
 	class ClickEvent;
 	class HoverEvent;
 	class InputContextManager;
-	class TimeScrollableWindowIG;
 
-	class GUI : public ska::DrawableFixedPriority, public MouseObservable, public KeyboardObservable {
+	class GUI : 
+		public ska::DrawableFixedPriority, 
+		public MouseObservable, 
+		public KeyObservable {
 
 	public:
 		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
@@ -38,9 +40,9 @@ namespace ska {
 		void refreshMouse();
 		void refreshKeyboard();
 
-		ska::WindowIG m_wAction;
-		std::unordered_set<ska::TimeScrollableWindowIG*> m_dynamicWindows;
-		std::vector<std::unique_ptr<ska::WindowIG>> m_extraWindows;
+		DynamicWindowIG<> m_wAction;
+		std::unordered_set<DynamicWindowIG<>*> m_dynamicWindows;
+		std::vector<std::unique_ptr<DynamicWindowIG<>>> m_extraWindows;
 		std::vector<int> m_buttonScroll;
 		ska::Point<int> m_lastMousePos;
 		ska::Point<int> m_curObjectPos;
@@ -57,6 +59,9 @@ namespace ska {
 		Widget* m_clicked;
 
 	protected:
-		void addWindow(std::unique_ptr<ska::WindowIG>& w);
+		template <class Win>
+		void addWindow(std::unique_ptr<Win>& w) {
+			m_extraWindows.push_back(std::move(w));
+		}
 	};
 }

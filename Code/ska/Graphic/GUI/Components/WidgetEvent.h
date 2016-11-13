@@ -1,25 +1,43 @@
 #pragma once
-#include "ButtonState.h"
 #include "../../Point.h"
+#include "IWidgetEvent.h"
 
 namespace ska {
 
-	enum StopType {
-		NOT_STOPPED,
-		STOP_CALLBACK,
-		STOP_WIDGET
-	};
-
 	class Widget;
-	class WidgetEvent {
+
+	template <class ...HL>
+	class HandledWidget;
+
+	template <class E, class L>
+	class WidgetEvent : public IWidgetEvent {
 	public:
-		WidgetEvent();
-		void setTarget(Widget* t);
-		void stopPropagation(StopType s);
-		StopType stopped() const;
-		Widget* getTarget();
-		Widget const* getCTarget() const;
+		WidgetEvent() : m_target(nullptr), m_stopPropagation(NOT_STOPPED) {
+		}
+
+		void setTarget(Widget* t) {
+			m_target = t;
+		}
+
+		void stopPropagation(StopType st) {
+			m_stopPropagation = st;
+		}
+
+		StopType stopped() const {
+			return m_stopPropagation;
+		}
+
+		Widget* getTarget() {
+			return m_target;
+		}
+
+		Widget const* getCTarget() const {
+			return m_target;
+		}
+
+		virtual unsigned int getMask() const = 0;
 		virtual bool affects(const Widget& w) const = 0;
+
 		virtual ~WidgetEvent() = default;
 
 	private:
@@ -27,4 +45,5 @@ namespace ska {
 		StopType m_stopPropagation;
 
 	};
+
 }

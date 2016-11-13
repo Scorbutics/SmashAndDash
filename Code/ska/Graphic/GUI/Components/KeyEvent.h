@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "WidgetEvent.h"
+#include "KeyEventListener.h"
 
 namespace ska {
 	enum KeyEventType {
@@ -11,7 +12,7 @@ namespace ska {
 		KEY_UP
 	};
 	class Widget;
-	class KeyEvent : public WidgetEvent {
+	class KeyEvent : public WidgetEvent<KeyEvent, KeyEventListener> {
 	public:
 		KeyEvent(const KeyEventType& state, const std::wstring& text, const int scanCode);
 		const KeyEventType& getState() const;
@@ -19,6 +20,8 @@ namespace ska {
 		const int getScanCode() const;
 
 		virtual bool affects(const Widget& w) const override;
+		virtual unsigned int getMask() const override;
+
 		virtual ~KeyEvent() = default;
 
 	private:

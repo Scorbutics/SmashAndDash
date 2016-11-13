@@ -6,8 +6,7 @@
 const std::string& ska::Button::MENU_DEFAULT_THEME_PATH = "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"default_theme"FILE_SEPARATOR;
 
 ska::Button::Button(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip, ClickEventHandler const& callback) :
-Widget(parent),
-m_state(ska::ButtonState::NONE),
+Hoverable<ClickEventListener>(parent),
 m_placeHolder(placeHolderStyleName + ".png"),
 m_placeHolderHover(placeHolderStyleName + "_hover.png"),
 m_placeHolderPressed(placeHolderStyleName + "_pressed.png"),
@@ -18,9 +17,9 @@ m_drawStyle(!placeHolderStyleName.empty()) {
 	m_lastTextureSelector = nullptr;
 	setWidth(m_placeHolder.getWidth());
 	setHeight(m_placeHolder.getHeight());
-
+	
 	initHandlers();
-	addClickHandler(callback);
+	addHandler<ClickEventListener>(callback);
 
 	if (clip != nullptr) {
 		m_clip = *clip;
@@ -33,91 +32,71 @@ m_drawStyle(!placeHolderStyleName.empty()) {
 }
 
 ska::Button::Button() : 
-m_state(ska::ButtonState::NONE),
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	initHandlers();
 	memset(&m_clip, 0, sizeof m_clip);
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
+
+	initHandlers();
 }
 
 ska::Button::Button(Widget& parent) : 
-Widget(parent),
-m_state(ska::ButtonState::NONE),
+Hoverable<ClickEventListener>(parent),
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	initHandlers();
 	memset(&m_clip, 0, sizeof m_clip);
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
+
+	initHandlers();
 }
 
-void ska::Button::switchTextureAndMemorize(const ska::Texture& t) {
-	m_lastTextureSelector = m_textureSelector;
-	m_textureSelector = &t;
-}
-
-void ska::Button::initHandlers() {
-	addHoverHandler([this](ska::Widget* tthis, ska::HoverEvent& e) {
-		bool handled = true;
-		bool target = false;
-		switch (e.getState()) {
-		case ska::MouseEventType::MOUSE_ENTER:
-			if (m_state != ButtonState::HOVER && m_state != ButtonState::ENTER && m_state != ButtonState::PRESSED) {
-				m_state = ButtonState::ENTER;
-				switchTextureAndMemorize(m_placeHolderHover);
-				target = true;
-			} else {
-				handled = false;
-			}
+void ska::Button::switchTextureAndMemorize() {
+	ska::Texture* t = nullptr;
+	switch (m_state) {
+		case ska::ButtonState::HOVER:
+		case ska::ButtonState::ENTER:
+			t = &m_placeHolderHover;
 			break;
 
-		case ska::MouseEventType::MOUSE_OUT:
-			if (m_state == ButtonState::HOVER || m_state == ButtonState::ENTER || m_state == ButtonState::PRESSED) {
-				m_state = ButtonState::NONE;
-				switchTextureAndMemorize(m_placeHolder);
-				target = true;
-			} else {
-				handled = false;
-			}
+		case ska::ButtonState::NONE:
+		case ska::ButtonState::DISABLED:
+			t = &m_placeHolder;
 			break;
-
-		case ska::MouseEventType::MOUSE_OVER:
-			m_state = ButtonState::HOVER;
-			target = true;
+		
+		case ska::ButtonState::PRESSED:
+			t = &m_placeHolderPressed;
 			break;
 
 		default:
+			t = &m_placeHolder;
 			break;
 
-		}
+	}
+	m_lastTextureSelector = m_textureSelector;
+	m_textureSelector = t;
+}
 
-		if (!handled) {
-			/* Refuses the current event (not handled) */
-			e.stopPropagation(ska::StopType::STOP_CALLBACK);
-		}
+void ska::Button::resetTexture() {
+	m_textureSelector = m_lastTextureSelector;
+}
 
-		if (target && e.getTarget() == nullptr) {
-			e.setTarget(this);
-		}
 
-		//return stopEventPropagation;
-	});
-
-	addClickHandler([this](ska::Widget* tthis, ska::ClickEvent& e) {
+void ska::Button::initHandlers() {
+	addHandler<ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
 		bool handled = false;
 		switch (e.getState()) {
 		case ska::MouseEventType::MOUSE_CLICK:
 			m_state = ButtonState::PRESSED;
-			switchTextureAndMemorize(m_placeHolderPressed);
+			switchTextureAndMemorize();
 			handled = true;
 			break;
 		case ska::MouseEventType::MOUSE_RELEASE:
 			m_state = ButtonState::HOVER;
-			m_textureSelector = m_lastTextureSelector;
+			resetTexture();
 			handled = true;
 			break;
 		default:
@@ -126,7 +105,8 @@ void ska::Button::initHandlers() {
 
 		if (handled) {
 			e.setTarget(this);
-		} else {
+		}
+		else {
 			e.stopPropagation(ska::StopType::STOP_CALLBACK);
 		}
 	});

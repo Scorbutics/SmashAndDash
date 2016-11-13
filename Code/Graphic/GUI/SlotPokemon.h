@@ -4,9 +4,11 @@
 #include "../../ska/Graphic/GUI/Components/Label.h"
 #include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
-class SlotPokemon : public ska::WindowIG {
+#include "../../ska/Graphic/GUI/Components/HoverEventListener.h"
+
+class SlotPokemon : public ska::WindowIG<ska::HoverEventListener> {
 public:
-	SlotPokemon(ska::WindowIG& parent, ska::Point<int> relativePos, unsigned int pokemonId);
+	SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int pokemonId);
     //void display() const override;
     virtual ~SlotPokemon() = default;
 	

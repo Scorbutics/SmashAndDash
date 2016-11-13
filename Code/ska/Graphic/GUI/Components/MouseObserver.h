@@ -1,7 +1,5 @@
 #pragma once
 #include "../../../Utils/Observer.h"
-#include "HasHoverHandler.h"
-#include "HasClickHandler.h"
 #include "ClickEvent.h"
 
 namespace ska {
@@ -10,8 +8,6 @@ namespace ska {
 	using HoverObserver = Observer<HoverEvent>;
 
 	class MouseObserver : 
-		public HasClickHandler,
-		public HasHoverHandler,
 		public ClickObserver,
 		public HoverObserver {
 	public:

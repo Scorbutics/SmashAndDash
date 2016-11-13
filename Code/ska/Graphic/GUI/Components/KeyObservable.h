@@ -4,5 +4,5 @@
 
 
 namespace ska {
-	using KeyboardObservable = Observable<KeyEvent>;
+	using KeyObservable = Observable<KeyEvent>;
 }

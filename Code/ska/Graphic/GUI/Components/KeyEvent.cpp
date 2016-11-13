@@ -1,6 +1,6 @@
 #include "Widget.h"
 #include "KeyEvent.h"
-
+#include "WidgetMaskHelper.h"
 ska::KeyEvent::KeyEvent(const KeyEventType& state, const std::wstring& text, const int scanCode) :
 	m_text(text),
 	m_state(state),
@@ -21,6 +21,9 @@ const int ska::KeyEvent::getScanCode() const {
 }
 
 bool ska::KeyEvent::affects(const Widget& w) const {
-	return !stopped() && w.isAffectedBy(*this);
+	return stopped() == NOT_STOPPED;
 }
 
+unsigned int ska::KeyEvent::getMask() const {
+	return ska::WidgetMaskHelper::template getMask<KeyEventListener>();
+}

@@ -2,9 +2,9 @@
 #include "../../ska/Graphic/GUI/MoveableWindow.h"
 #include "SlotPokemon.h"
 
-class WindowTeam : public ska::MoveableWindow {
+class WindowTeam : public ska::MoveableWindow<> {
 public:
-	WindowTeam(ska::MouseObservable& guiObservable, ska::KeyboardObservable& keyboardObs, const ska::Point<int>& boxAbsolutePos);
+	WindowTeam(ska::MouseObservable& guiObservable, ska::KeyObservable& keyboardObs, const ska::Point<int>& boxAbsolutePos);
 	void addPokemon(unsigned int pokemonId);
 	~WindowTeam() = default;
 private:

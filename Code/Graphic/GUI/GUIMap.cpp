@@ -11,7 +11,7 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM) : ska::GUI(w
 	rawWindowTeam->show(false);
 	rawWindowTeam->addPokemon(25);
 
-	auto& windowTeam = std::unique_ptr<ska::WindowIG>(rawWindowTeam);
+	auto& windowTeam = std::unique_ptr<WindowTeam>(rawWindowTeam);
 	addWindow(std::move(windowTeam));
 
 
@@ -19,6 +19,6 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM) : ska::GUI(w
 	//rawWindowSettings->show(false);
 	//rawWindowSettings->addPokemon(25);
 
-	auto& windowSettings = std::unique_ptr<ska::WindowIG>(rawWindowSettings);
+	auto& windowSettings = std::unique_ptr<WindowSettings>(rawWindowSettings);
 	addWindow(std::move(windowSettings));
 }

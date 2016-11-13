@@ -7,8 +7,7 @@
 #include "../Rectangle.h"
 
 namespace ska {
-	class Window
-	{
+	class Window {
 	public:
 		Window(const std::string& title, const unsigned int w, const unsigned int h);
 		SDL_Renderer* getRenderer() const;
@@ -19,12 +18,11 @@ namespace ska {
 		void flip();
 
 	protected:
-		std::string m_wName;
+		const std::string& m_wName;
 		unsigned int m_height;
 		unsigned int m_width;
 
 		SDL_Renderer *m_renderer;
-		SDL_Texture* m_texture;
 		SDL_Window *m_screen;
 
 	};

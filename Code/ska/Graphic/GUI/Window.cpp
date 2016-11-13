@@ -12,9 +12,9 @@
 
 ska::Window::Window(const std::string& title, const unsigned int w, const unsigned int h) : 
 m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w),
-m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h) {
+m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h),
+m_wName(title) {
 	Texture::setDefaultWindow(this);
-	m_wName = title;
 
 	m_screen = SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_UNDEFINED,

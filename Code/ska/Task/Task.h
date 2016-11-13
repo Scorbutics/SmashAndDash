@@ -1,22 +1,10 @@
 #pragma once
 #include <functional>
-#include <utility>
 #include <vector>
-#include <functional>
 #include "../Utils/Identity.h"
+#include "../Utils/TupleUtils.h"
 
 namespace ska {
-	template<int ...>
-	struct UnpackSeq { };
-
-	template<int N, int ...S>
-	struct Gens : Gens<N - 1, N - 1, S...> { };
-
-	template<int ...S>
-	struct Gens<0, S...> {
-		typedef UnpackSeq<S...> type;
-	};
-
 
 	template <typename ...T>
 	class TaskReceiver : public std::tuple<T...> {
@@ -40,25 +28,25 @@ namespace ska {
 	class Task<RR, TaskReceiver<RA...>, TaskSender<SA...>> : public ITask<SA...>{
 	public:
 
-		Task(typename Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
+		Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
 			m_f(f) {
 			m_previous = nullptr;
 		}
 
-		Task(typename Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f, ITask<RA...>& previous) :
+		Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f, ITask<RA...>& previous) :
 			Task(f) {
 			m_previous = &previous;
 		}
 
 		template <int ...N>
-		RR run(UnpackSeq<N...> seq) {
+		RR run(meta::SeqList<N...> seq) {
 			return (m_previous != nullptr) ?
 				m_f(*this, std::get<N>(m_previous->m_forwardArgs)...) :
 				m_f(*this, std::get<N>(m_empty)...);
 		}
 
 		RR operator()() {
-			return run(typename Gens<sizeof...(RA)>::type());
+			return run(meta::SeqRange<sizeof...(RA)>());
 		}
 
 		void forward(SA ...args) {

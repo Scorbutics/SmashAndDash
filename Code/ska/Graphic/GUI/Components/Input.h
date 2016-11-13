@@ -4,12 +4,14 @@
 #include "Label.h"
 #include "Button.h"
 
+#include "ClickEventListener.h"
+#include "KeyEventListener.h"
+
 namespace ska {
-	class Input : public Widget {
+	class Input : public HandledWidget<ClickEventListener, KeyEventListener> {
 	public:
 		Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Input() = default;
-		virtual bool isAffectedBy(const ska::KeyEvent& e) const;
 		void display() const override;
 
 	private:

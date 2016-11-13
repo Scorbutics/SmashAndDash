@@ -1,9 +1,9 @@
 #include "GUIScrollButtonWindowIG.h"
 
-ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(MouseObservable& guiObservable, KeyboardObservable& keyboardObservable, const ska::Rectangle& box, bool drawStyle) :
-	TimeScrollableWindowIG(guiObservable, keyboardObservable, box, drawStyle),
-	m_realPos(getRelativePosition()){
-	
+ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
+DynamicWindowIG<>(parent, box, drawStyle),
+m_realPos(0, 0) {
+
 }
 
 bool ska::GUIScrollButtonWindowIG::scrollTo(const ska::Point<int>& targetPos, unsigned int speed) {
@@ -23,9 +23,4 @@ ska::GUIScrollButtonWindowIG::~GUIScrollButtonWindowIG() {
 
 }
 
-ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-	TimeScrollableWindowIG(parent, box, drawStyle),
-	m_realPos(0, 0) {
-
-}
 

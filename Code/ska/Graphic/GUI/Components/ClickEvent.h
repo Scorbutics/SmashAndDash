@@ -8,6 +8,8 @@ namespace ska {
 	class ClickEvent : public HoverEvent {
 	public:
 		ClickEvent(const ska::MouseEventType& state, ska::Point<int>& pos);
-		~ClickEvent() = default;		
+		~ClickEvent() = default;
+
+		virtual unsigned int getMask() const override;
 	};
 }
