@@ -1,10 +1,10 @@
-#include <Windows.h>
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
 #include "../../Utils\IDs.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/FileUtils.h"
 #include "../../Gameplay\Data\Statistics.h"
 
 SavegameManager::SavegameManager(std::string pathname)
@@ -151,11 +151,9 @@ void SavegameManager::saveTrainer()
 	std::ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	if(of.fail())
-	{
-		//TODO : PORTABILITE !!!
-		CreateDirectoryA(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname).c_str(),0);
-		CreateDirectoryA(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team").c_str(),0);
+	if(of.fail()) {
+		ska::FileUtils::createDirectory("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname);
+		ska::FileUtils::createDirectory("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team");
 
 		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	}

@@ -181,6 +181,8 @@
     <ClInclude Include="Code\ska\Utils\Observer.h" />
     <ClInclude Include="Code\ska\Utils\FpsCalculator.h" />
     <ClInclude Include="Code\ska\Utils\FpsRenderable.h" />
+    <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.h" />
+    <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsWin.h" />
     <ClInclude Include="Code\ska\Utils\TupleUtils.h" />
     <ClInclude Include="Code\ska\World\BlockRenderable.h" />
     <ClInclude Include="Code\ska\World\ChipsetHolder.h" />
@@ -459,6 +461,8 @@
     <ClCompile Include="Code\ska\Script\Command\CommandRemoveComponent.cpp" />
     <ClCompile Include="Code\ska\Utils\FpsCalculator.cpp" />
     <ClCompile Include="Code\ska\Utils\FpsRenderable.cpp" />
+    <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.cpp" />
+    <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsWin.cpp" />
     <ClCompile Include="Code\ska\World\BlockRenderable.cpp" />
     <ClCompile Include="Code\ska\World\ChipsetHolder.cpp" />
     <ClCompile Include="Code\Gameplay\Fight\System\BattleSystem.cpp" />
@@ -599,7 +603,6 @@
     <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp" />
     <ClCompile Include="Code\ska\Utils\MessagePopup.cpp" />
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
-    <ClCompile Include="Code\ska\Utils\FileUtils.cpp" />
     <ClCompile Include="Code\ska\Core\GameCore.cpp" />
     <ClCompile Include="Code\Graphic\System\AbstractGraphicSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp" />

@@ -8,8 +8,8 @@ ska::EventListener<ClickEvent>(tthis) {
 }
 
 bool ska::ClickEventListener::notify(Widget& tthis, ClickEvent& e) {
-	EventListener<ClickEvent>::notify(tthis, e);
+	const auto& result = EventListener<ClickEvent>::notify(tthis, e);
 	/* Evenement géré par le widget. On le stoppe totalement */
 	//e.stopPropagation(StopType::STOP_WIDGET);
-	return true;
+	return result;
 }

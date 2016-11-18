@@ -3,6 +3,14 @@
 #define SKA_DEBUG_LOGS
 #endif
 
+#if defined(__linux__)
+#define SKA_PLATFORM_LINUX
+#elif defined(_WIN32) || defined(_WIN64)
+#define SKA_PLATFORM_WIN
+#else
+#define SKA_PLATFORM_UNKNOWN
+#endif
+
 /* DEBUG CONF */
 #undef SKA_DEBUG_GRAPHIC
 /* END DEBUG CONF*/

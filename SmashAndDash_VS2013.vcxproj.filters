@@ -996,6 +996,12 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Hoverable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsWin.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1263,9 +1269,6 @@
       <Filter>Fichiers sources\Script</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Script\Command\ControlStatement.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Utils\FileUtils.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Script\Command\CommandEnd.cpp">
@@ -1566,6 +1569,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEventListener.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsWin.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
