@@ -1,5 +1,5 @@
 #include "CommandDirection.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Script/ScriptComponent.h"
 #include "../../ska/Graphic/DirectionalAnimationComponent.h"
 #include "../../ska/ECS/EntityManager.h"

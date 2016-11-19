@@ -1,7 +1,7 @@
 #include <string>
 #include "CommandMove.h"
 #include "../../ska/Exceptions/ScriptException.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Physic/MovementComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
@@ -9,7 +9,7 @@
 #include "../../ska/Physic/HitboxComponent.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Script/ScriptTriggerType.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 
@@ -22,7 +22,7 @@ int CommandMove::argumentsNumber() {
 }
 
 std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	
+
 	if (args.size() < 4) {
 		throw ska::ScriptException("This command needs at least 4 parameters");
 	}
@@ -37,12 +37,12 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 		throw ska::ScriptException("The targetted entity cannot move : " + id);
 	}
 
-	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(internalEntity), 
+	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(internalEntity),
 																			m_entityManager.getComponent<ska::HitboxComponent>(internalEntity));
 
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
-	
+
 	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, speed);
 	iamc.delay = -1;
 	iamc.ghost = ghost;

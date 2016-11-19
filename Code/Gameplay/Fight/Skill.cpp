@@ -10,7 +10,7 @@
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../Utils/IDs.h"
 
-const unsigned int Skill::m_fontSize = 30;
+/*const unsigned int Skill::m_fontSize = 30;
 
 //Déroulement des combats :
 //Chargement d'un monde type "Arène" dépendant du lieu où se trouve le héro (même fonctionnement que l'affichage d'un monde mais
@@ -22,7 +22,7 @@ Projectile::Projectile(ska::IniReader* data):
 {
 	if(m_style1 == "Projectile" || m_style2 == "Projectile")
 	{
-		m_vitesse = (float)data->getInt("Particle speed"); 
+		m_vitesse = (float)data->getInt("Particle speed");
 		m_degats = data->getInt("Particle damage");
 		m_knockback = data->getInt("Particle knockback");
 		m_nombre = data->getInt("Particle number");
@@ -31,7 +31,7 @@ Projectile::Projectile(ska::IniReader* data):
 	}
 	else
 	{
-		m_vitesse = 0; 
+		m_vitesse = 0;
 		m_degats = 0;
 		m_knockback = 0;
 		m_nombre = 0;
@@ -66,13 +66,13 @@ void Projectile::refresh()
             m_particles[i]->refresh();
             m_particles[i]->addSlopeNoise((float)((rand()%(m_slopeNoise + 1) - m_slopeNoise/2)/10.));
             m_particles[i]->setNoise((int)((m_noise*(cos(m_t+i*M_PI/m_nombre))/10.)));
-			
+
 			particlePos = m_particles[i]->getPos();
 			particleOrigin = m_particles[i]->getOrigin();
 /*
 			particleOrigin.x += wScreen.getORel().x;
 			particleOrigin.y += wScreen.getORel().y;*/
-			distance = ska::RectangleUtils::distanceSquared(particlePos, particleOrigin);
+			/*distance = ska::RectangleUtils::distanceSquared(particlePos, particleOrigin);
 			//Si on dépasse la portée prévue, on détruit la particule
 			if (distance > m_range*TAILLEBLOC*m_range*TAILLEBLOC)
 				m_particles[i]->destroy();
@@ -150,11 +150,11 @@ void AOE::refresh()
 
 				int damages = opponent->getStatistics()->getAttack() - pkmn->getStatistics()->getDefense() -m_statsBuffEnemy->getHpMax();
 				if (m_statsBuffEnemy->getHpMax() != 0)
-					pkmn->damage(opponent, damages);				
-			
+					pkmn->damage(opponent, damages);
 
 
-			
+
+
 			}
 			//pokémon qui tire
 			else if(m_parent->getEntityNumber() == INT16_MAX-1)
@@ -174,10 +174,10 @@ void AOE::refresh()
 				int damages = pkmn->getStatistics()->getAttack() - opponent->getStatistics()->getDefense() - m_statsBuffEnemy->getHpMax();
 				if (m_statsBuffEnemy->getHpMax() != 0)
 					opponent->damage(pkmn, damages);
-				
+
 			}
 		}
-	}*/
+	}
 }
 
 void AOE::display()
@@ -190,9 +190,9 @@ AOE::~AOE()
 
 
 
-/*
 
-Melee::Melee(int id, string skill, string icone, Rectangle *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent): 
+
+Melee::Melee(int id, string skill, string icone, Rectangle *posIcone, int degats, int knockback, string description, string nom, string type, int cooldown, int context, Character* parent):
 	Skill(id, skill, 1, TAILLEBLOC*2, icone, posIcone, degats, knockback, description, nom, type, cooldown, context, parent)
 {
     m_vitesse = 512;
@@ -228,7 +228,7 @@ Melee::~Melee()
 
 
 
-Skill::Skill(ska::IniReader* data, Character* parent)
+/*Skill::Skill(ska::IniReader* data, Character* parent)
 {
 	m_statsBuffAlly = NULL;
 	m_statsBuffEnemy = NULL;
@@ -270,7 +270,7 @@ Skill::Skill(ska::IniReader* data, Character* parent)
 		m_statusAlterEnemy = 0;
 	}
 
-	
+
 }
 
 int Skill::getKnockback()
@@ -306,12 +306,12 @@ void Projectile::launch(ska::Point<int> dest)
     float angle = atan((dest.y - buf.y)/(float)(dest.x - buf.x));
     if((dest.x - buf.x) < 0)
        angle += (float)M_PI;
-	
+
 	m_direction = ska::RectangleUtils::getDirectionFromPos(buf, dest);
 /*
     buf.x -= wScreen.getORel().x;
-    buf.y -= wScreen.getORel().y;*/
-    
+    buf.y -= wScreen.getORel().y;
+
     const size_t particleSize = m_particles.size();
     for(size_t i = 0; i < particleSize; i++)
         m_particles[i]->launch(buf, angle, (unsigned int)m_vitesse);
@@ -398,7 +398,7 @@ void Projectile::collision()
 							return;
 						}
 					}
-					
+
 				}
 			}
 			else
@@ -407,11 +407,11 @@ void Projectile::collision()
 				{
 					if (idChar[j].y == ID_CURRENT_POKEMON && m_particles[i]->isActive() && wScreen.getFight().getPokemon() != NULL && !wScreen.getFight().getPokemon()->isDodging())
 					{
-						
+
 						Character* pkmn = wScreen.getFight().getPokemon();
 						m_particles[i]->destroy();
 						m_particles[i]->resetSlopeNoise();
-						
+
 						if (wScreen.getFight().isFighting())
 						{
 							//speed = wScreen.getFight().getPokemon()->getSpeed();
@@ -431,20 +431,20 @@ void Projectile::collision()
 
 							if (!pkmn->isAlive())
 							{
-								
+
 									wScreen.getFight().end(EndFightReason::Win);
 									return;
-								
+
 							}
 						}
-							
+
 					}
 				}
 
 			}
-		
-	}*/
 
+	}*/
+/*
 }
 
 ska::Particle* Skill::getParticle(unsigned int number)
@@ -515,4 +515,4 @@ void Skill::setType(string type)
 Skill::~Skill()
 {
     //TTF_CloseFont(m_font);
-}
+}*/

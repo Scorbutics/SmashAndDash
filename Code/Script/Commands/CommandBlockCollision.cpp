@@ -1,12 +1,12 @@
 #include <string>
 #include "CommandBlockCollision.h"
 #include "../../ska/Exceptions/ScriptException.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Inputs/InputComponent.h"
 #include "../../ska/Physic/ForceComponent.h"
 #include "../../ska/Physic/PositionComponent.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 

@@ -17,7 +17,7 @@ void ska::PriorityQueueDrawableContainer::clear() {
 
 void ska::PriorityQueueDrawableContainer::draw() {
 	for (const Drawable* d = m_data.top(); !m_data.empty(); m_data.pop()) {
-		if (d != NULL) {
+		if (d != nullptr) {
 			d->display();
 		}
 	}

@@ -5,9 +5,9 @@
 #include "Player.h"
 
 class WGameCore;
-class Character;
+//class Character;
 
-typedef std::unique_ptr<Character> CharacterPtr;
+//typedef std::unique_ptr<Character> CharacterPtr;
 
 //PokemonManager permet de gérer de façon simplifiée les ajouts/modifications à la team Pokémon et aux Pokémon sauvages, ainsi que de les stocker.
 //L'instance est unique et appartient au coeur du moteur de jeu (WGameCore)
@@ -32,11 +32,11 @@ class PokemonManager
 	void add(Character* pkmn);
 	void add(int id);
 	void remove(unsigned int index); //Supprime le Pokémon numéro "index" de la team
-    
-	
+
+
     private:
 	std::unique_ptr<Player>& getPokemonPtr(unsigned int index);
-	
+
 
 	std::list<std::unique_ptr<Player>> m_team;
     CharacterPtr m_opponent;*/

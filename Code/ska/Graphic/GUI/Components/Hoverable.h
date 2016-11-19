@@ -4,8 +4,8 @@
 #include "../../../Utils/SkaConstants.h"
 
 #include "HoverEventListener.h"
-
 #include "HandledWidget.h"
+#include "StopType.h"
 
 namespace ska {
 
@@ -16,10 +16,11 @@ namespace ska {
 	class HoverStateController {
 	public:
 		HoverStateController() : m_state(ska::ButtonState::NONE) {
-			W& asW = (W&)*this;
-			asW.addHeadHandler<HoverEventListener>(std::bind(&HoverStateController<W>::hoverEvent, (W*)this, std::placeholders::_1, std::placeholders::_2));
+			W& asW = static_cast<W&>(*this);
+			asW.template addHeadHandler<HoverEventListener>
+			(std::bind(&HoverStateController<W>::hoverEvent, static_cast<W*>(this), std::placeholders::_1, std::placeholders::_2));
 		}
-	
+
 		virtual ~HoverStateController() = default;
 
 		void hoverEvent(Widget* tthis, HoverEvent& e) {
@@ -63,7 +64,7 @@ namespace ska {
 
 			if (!handled) {
 				/* Refuses the current event (not handled) */
-				e.stopPropagation(ska::StopType::STOP_CALLBACK);
+				e.stopPropagation(StopType::STOP_CALLBACK);
 			}
 
 			if (target && e.getTarget() == nullptr) {
@@ -87,9 +88,9 @@ namespace ska {
 	public:
 		Hoverable(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip) :
 			HandledWidget<HoverEventListener, HL...>(parent) {
-			move(getRelativePosition() + relativePos);
+			this->move(this->getRelativePosition() + relativePos);
 		}
-	
+
 		Hoverable(Widget& parent) :
 			HandledWidget<HoverEventListener, HL...>(parent) {
 			}

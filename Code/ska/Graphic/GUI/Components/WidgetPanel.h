@@ -38,7 +38,7 @@ namespace ska {
 
 		/* Called from GUI */
 		virtual bool notify(IWidgetEvent& e) override {
-			if(!isVisible()) {
+			if(!Widget::isVisible()) {
 				return false;
 			}
 			bool result = false;

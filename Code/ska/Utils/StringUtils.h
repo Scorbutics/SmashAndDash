@@ -16,9 +16,9 @@ namespace ska {
 
 		static std::vector<std::string>& split(const std::string &s, const char delim, std::vector<std::string> &elems);
 		static std::vector<std::string> split(const std::string &s, const char delim);
-		static std::string &ltrim(std::string &s);
-		static std::string &rtrim(std::string &s);
-		static std::string &trim(std::string &s);
+		static std::string ltrim(const std::string &s);
+		static std::string rtrim(const std::string &s);
+		static std::string trim(const std::string &s);
 
 		static std::string extractTo(const size_t start, const std::string& s, const char to);
 
@@ -30,6 +30,6 @@ namespace ska {
 		static bool isInt(const std::string& s, const int base);
 		static bool isDecimal(const std::string& s);
 		~StringUtils();
-		
+
 	};
 }

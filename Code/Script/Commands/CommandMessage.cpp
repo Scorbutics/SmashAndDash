@@ -1,8 +1,8 @@
 #include <string>
 #include "CommandMessage.h"
 #include "../../Graphic/GUI/MessageDialogBox.h"
-#include "../../Utils\IDs.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 
 
@@ -19,7 +19,7 @@ std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<st
 	if (MessageDialogBox::instanceExists()) {
 		return "";
 	}
-	
+
 	const std::string& talkerId = args[0];
 	const std::string& text = args[1];
 
@@ -27,7 +27,7 @@ std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<st
 	if (talkerId != "f") {
 		imageId = atoi(talkerId.c_str()) >= 0 ? talkerId : ("pnj" + ska::StringUtils::intToStr(abs(atoi(talkerId.c_str()))));
 	}
-	
+
 	/* TODO Observer */
 
 	/*IDialogMenuPtr menu = IDialogMenuPtr(new MessageDialogBox(text, (talkerId != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + imageId + ".png" : ""), wScreen.getHeight(), wScreen.getWidth()));

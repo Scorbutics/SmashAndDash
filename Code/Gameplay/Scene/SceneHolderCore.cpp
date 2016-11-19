@@ -19,7 +19,7 @@ void SceneHolderCore::update() {
 		}
 
 		if (triggerChangeScene) {
-			std::unique_ptr<ska::Scene>& lastScene = std::move(firstScene ? std::unique_ptr<ska::Scene>(nullptr) : std::move(m_currentScene));
+			std::unique_ptr<ska::Scene> lastScene = std::move(firstScene ? std::unique_ptr<ska::Scene>(nullptr) : std::move(m_currentScene));
 			m_currentScene = std::move(m_nextScene);
 			m_nextScene = nullptr;
 			m_currentScene->load(firstScene ? nullptr : &lastScene);

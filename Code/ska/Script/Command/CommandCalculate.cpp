@@ -1,7 +1,7 @@
 #include "CommandCalculate.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Utils\ScriptUtils.h"
-#include "../../Utils\FormalCalculation\FormalCalculator.h"
+#include "../../Utils/StringUtils.h"
+#include "../../Utils/ScriptUtils.h"
+#include "../../Utils/FormalCalculation/FormalCalculator.h"
 #include "../System/ScriptAutoSystem.h"
 
 ska::CommandCalculate::CommandCalculate(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

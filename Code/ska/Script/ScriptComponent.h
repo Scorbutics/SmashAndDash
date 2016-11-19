@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <limits>
 #include <unordered_map>
 #include "../ECS/Component.h"
 #include "ScriptState.h"
@@ -9,22 +10,23 @@
 #include "../ECS/ECSDefines.h"
 
 namespace ska {
+    class ScriptAutoSystem;
 	class ScriptComponent : public Component {
 		friend class ScriptAutoSystem;
 
 	public:
-		ScriptComponent::ScriptComponent() {
+		ScriptComponent() {
 			state = EnumScriptState::STOPPED;
 			lastTimeStarted = 0;
 			commandsPlayed = 0;
 			currentLine = 0;
 			lastTimeDelayed = 0;
 			delay = 0;
-			entityId = UINT_MAX;
+			entityId = std::numeric_limits<unsigned int>().max();
 			active = 0;
-			parent = NULL;
+			parent = nullptr;
 		}
-		
+
 		bool deleteEntityWhenFinished;
 		long scriptPeriod;
 		std::string context;

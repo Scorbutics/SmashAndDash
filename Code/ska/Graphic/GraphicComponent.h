@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <limits>
 #include "../ECS/Component.h"
 #include "AnimatedTexture.h"
 
@@ -6,7 +8,7 @@ namespace ska {
 	class GraphicComponent : public ska::Component {
 	public:
 		GraphicComponent() {
-			desiredPriority = INT_MIN;
+			desiredPriority = std::numeric_limits<int>().min();
 		}
 
 		int desiredPriority;

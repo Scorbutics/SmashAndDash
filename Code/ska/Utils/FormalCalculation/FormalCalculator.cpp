@@ -3,7 +3,7 @@
 #include <iostream>
 #include "CalculOperators.h"
 #include "../../Utils/StringUtils.h"
-#include "..\..\Exceptions\ScriptSyntaxError.h"
+#include "../../Exceptions/ScriptSyntaxError.h"
 
 ska::FormalCalculator::FormalCalculator()
 {
@@ -64,7 +64,7 @@ float ska::FormalCalculator::interpretSimpleCalculation(const std::string& s)
 	{
 		size_t firstDivision = subStr.find_first_of(CalculOperators::divise);
 		size_t firstMultiply = subStr.find_first_of(CalculOperators::multiply);
-		
+
 		size_t operatorPos = std::string::npos;
 
 		if (firstDivision != std::string::npos)

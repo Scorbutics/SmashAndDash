@@ -8,6 +8,7 @@
 #include <tuple>
 
 #include "Widget.h"
+#include "IWidgetEvent.h"
 #include "WidgetMaskHelper.h"
 
 #define SKA_GUI_MAX_WIDGET_EVENT_LISTENER 16
@@ -26,7 +27,7 @@ namespace ska {
 	template <class ...HL>
 	class HandledWidget : public Widget, public IHandledWidget {
 	public:
-		HandledWidget() : 
+		HandledWidget() :
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
 			/* Bracket initializer trick */
@@ -34,21 +35,21 @@ namespace ska {
 			(void)_;
 		}
 
-		HandledWidget(Widget& parent)  : 
+		HandledWidget(Widget& parent)  :
 			Widget(parent),
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildMask<HL>(), 0)... };
-			(void)_; 
+			(void)_;
 		}
 
-		HandledWidget(Widget& parent, Point<int>& position) : Widget(parent, position), 
+		HandledWidget(Widget& parent, Point<int>& position) : Widget(parent, position),
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildMask<HL>(), 0)... };
-			(void)_; 
+			(void)_;
 		}
 
 		bool notify(IWidgetEvent& e) override {

@@ -1,6 +1,6 @@
 #include "CommandPlayCrumbling.h"
 //#include "../../Gameplay\WGameCore.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandPlayCrumbling::CommandPlayCrumbling(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

@@ -2,12 +2,12 @@
 #include <sstream>
 
 #include "SpritePath.h"
-#include "../Utils\SkaConstants.h"
-#include "../Utils\StringUtils.h"
+#include "../Utils/SkaConstants.h"
+#include "../Utils/StringUtils.h"
 
 ska::SpritePath::SpritePath()
 {
-	
+
 	m_paths.resize(SPRITEBANK_NUMBER);
 	m_paths[SPRITEBANK_ANIMATION] = SPRITEBANK_PATH_ANIMATION;
 	m_paths[SPRITEBANK_CHARSET] = SPRITEBANK_PATH_CHARSET;

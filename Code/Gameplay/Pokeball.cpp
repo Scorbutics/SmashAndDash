@@ -6,8 +6,8 @@
 
 #include "../Utils/IDs.h"
 #include "Pokeball.h"
-#include "../Utils\ChargementImages.h"
-#include "Data\Statistics.h"
+#include "../Utils/ChargementImages.h"
+#include "Data/Statistics.h"
 #include "Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"
@@ -16,7 +16,7 @@
 Pokeball::Pokeball() :
 m_pokeballPos(0, 0),
 m_finalPos(0 , 0),
-m_gestionAnim(125, 4, false), 
+m_gestionAnim(125, 4, false),
 m_gestionAnimVortex(175, 2, false) {
 	m_gestionAnim.setOffsetAndFrameSize({ 0, 0, 16, 16 });
 	m_gestionAnimVortex.setOffsetAndFrameSize({ 0, 0, 64, 64 });
@@ -28,8 +28,8 @@ m_gestionAnimVortex(175, 2, false) {
     m_isOpenning = m_isInactive = m_show = false;
 
 	setSprites(
-		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", 
-		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", 
+		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png",
+		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png",
 		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
 }
 
@@ -37,23 +37,23 @@ void Pokeball::setSprites(const std::string& spriteName, const std::string& spri
 	if (spriteName.size() != 0) {
 		m_sprite.load(spriteName);
 	}
-    
+
 
 	if (spriteOpenPokeball.size() != 0) {
 		m_openPokeball.load(spriteOpenPokeball);
 	}
-    
+
 
 	if (spritePokeballAura.size() != 0) {
 		m_vortex.load(spritePokeballAura, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
 	}
-    
+
 }
 
 
 void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos, PokeballLaunchReason::Enum launchReason) {
 	m_capture = launchReason;
-    
+
 	/* Si déjà en cours de lancement de la Pokéball, on annule */
 	if (m_show) {
 		return;
@@ -62,7 +62,7 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 	m_pokeballPos = src;
 	m_finalPos = destPos;
 
-	
+
 	ska::Point<int> leftPos;
 	ska::Point<int> rightPos;
 	if (m_pokeballPos.x < m_finalPos.x) {
@@ -83,7 +83,7 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 	} else {
 		p = 100000;
 	}
-	
+
     m_speed = abs(m_finalPos.x - m_pokeballPos.x)/30 + 1; //on adapte la vitesse à la distance à parcourir pour éviter de privilégier les lancers de pokeball courts.
 
 
@@ -108,7 +108,7 @@ void Pokeball::capture(/*Character* pkmn*/) {
 
 
 	/* Oh mon dieu... */
-	
+
 	/*for(unsigned int i = 0; i < TAILLEBLOC; i++)
 	{
 		m_pokeballPos.x++;
@@ -155,14 +155,14 @@ void Pokeball::capture(/*Character* pkmn*/) {
 		ska::VectorDrawableContainer drawables;
 		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
-			
+
 
 		buf.x -= m_vortex.getWidth()/4; //sur 4 parce que l'image est composée de 2 sous-images pour l'animation
 		buf.y -= m_vortex.getHeight()/4;
 
 		ska::Rectangle animVortexPos = m_gestionAnimVortex.getRectOfCurrentFrame();
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
-        
+
 
 		/*wScreen.getParticleManager().refresh();
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
@@ -319,7 +319,7 @@ void Pokeball::update() {
 
 
 	} else if (m_isInactive) {
-		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation) 
+		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
 		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
 
 		m_countOpenned--;
@@ -351,12 +351,12 @@ void Pokeball::display() const {
 		m_openPokeball.render(buf.x, buf.y);
 
 		//sur 4 parce que l'image est composée de 2 sous-images pour l'animation
-        buf.x -= m_vortex.getWidth()/4; 
+        buf.x -= m_vortex.getWidth()/4;
         buf.y -= m_vortex.getHeight()/4;
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
-        
+
     } else if(m_isInactive) {
-		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation) 
+		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
 		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
     }
 

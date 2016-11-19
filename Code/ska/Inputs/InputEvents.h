@@ -1,8 +1,7 @@
-#ifndef DEF_EVENTARG
-#define DEF_EVENTARG
+#pragma once
 
 #include <string>
-#include "../Utils\SkaConstants.h"
+#include "../Utils/SkaConstants.h"
 /*
 namespace ska {
 
@@ -51,4 +50,4 @@ namespace ska {
 		int m_state;
 	};
 }*/
-#endif
+

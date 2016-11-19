@@ -1,8 +1,8 @@
 #include "Player.h"
-#include "../Gameplay\WGameCore.h"
-#include "../Utils\ChargementImages.h"
-#include "../ska/World\LayerE.h"
-#include "../ska/Utils\StringUtils.h"
+#include "../Gameplay/WGameCore.h"
+#include "../Utils/ChargementImages.h"
+#include "../ska/World/LayerE.h"
+#include "../ska/Utils/StringUtils.h"
 #include "../Utils/IDs.h"
 #include "../ska/Utils/RectangleUtils.h"
 #include "../Graphic/GUI/DialogMenu.h"
@@ -46,7 +46,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					dest.y = (dest.y / TAILLEBLOC) * TAILLEBLOC;
 
 					// affichage du curseur pendant 3 secondes
-					wScreen.getMouseCursor().showCursorTime(3000); 
+					wScreen.getMouseCursor().showCursorTime(3000);
 					wScreen.getMouseCursor().setCursorPos(dest);
 
 
@@ -69,7 +69,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 					ska::Point<int> mouseRightClickPos;
 					mouseRightClickPos.x = me->getX();
 					mouseRightClickPos.y = me->getY();
-					
+
 
 					opponentPos.x += wScreen.getORel().x;
 					opponentPos.y += wScreen.getORel().y;
@@ -143,7 +143,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 				run(false);
 			}
 		}
-		
+
 		//////////////////////////////////////////
 		//SAUTER								//
 		//////////////////////////////////////////
@@ -166,7 +166,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 
 			//ska::Rectangle buf;
 			//buf = GetIDmob(); //Fonction qui renvoie l'ID du mob à la position du héro et entite[ID] respectivement dans buf.x et buf.y
-			
+
 
 			//if (buf.y != -ENTITEMAX)
 			{
@@ -176,7 +176,7 @@ void Player::update(ska::Observable<const int>* obs, const ska::EventArg& event,
 				} else {
 					wScreen.getGUI().getImgDialog()->setMessImg("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"pnj" + ska::StringUtils::intToStr(-id) + ".png");
 				}*/
-					
+
 
 				int j = 0, i;
 
@@ -264,7 +264,7 @@ int GetSkillCursorFromKey(const ska::KeyEvent* ke)
 	{
 		switch (ke->getScancode())
 		{
-		
+
 			case SDL_SCANCODE_1:
 				ret = 0;
 				break;

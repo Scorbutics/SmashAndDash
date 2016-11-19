@@ -19,7 +19,7 @@ namespace ska {
 		static std::string getVariableKey(const std::string& v);
 		static void setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, const std::string& scriptExtendedName, std::string varNumber, std::string value, std::unordered_map<std::string, std::string>& varMap);
 
-		static std::string interpretVarName(const ska::Savegame& saveGame, const ScriptComponent& script, std::string& v);
+		static std::string interpretVarName(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& v);
 		static bool isScriptActivated(const ska::Savegame& saveGame, const std::string& script);
 		~ScriptUtils();
 	};

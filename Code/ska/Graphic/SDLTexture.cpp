@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SDL2\SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include "../Utils/SkaConstants.h"
 #include "SDLTexture.h"
 #include "SDLSurface.h"
@@ -47,7 +47,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	if (sprite.getInstance() == nullptr) {
 		throw ska::FileException("Erreur du chargement de l'image " + m_fileName + ". Après tentative de récupération, impossible de charger l'image \""NOSUCHFILE"\" : " + std::string(SDL_GetError()));
 	}
-	
+
 	free();
 	m_fileName = fileName;
 	m_texture = SDL_CreateTextureFromSurface(window.getRenderer(), sprite.getInstance());

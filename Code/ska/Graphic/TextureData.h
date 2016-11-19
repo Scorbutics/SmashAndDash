@@ -30,7 +30,7 @@ namespace std {
 			using std::size_t;
 			using std::hash;
 
-			auto& d = k.getData();
+			auto d = k.getData();
 			std::size_t hashSeed = std::hash<string>()(d.first);
 			ska::NumberUtils::hashCombine<ska::Color>(hashSeed, d.second);
 			return hashSeed;

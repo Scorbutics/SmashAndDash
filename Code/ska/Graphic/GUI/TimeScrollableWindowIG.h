@@ -7,10 +7,10 @@ namespace ska {
 	class TimeScrollableWindowIG : public WindowIG<HL...> {
 	public:
 
-		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) : 
+		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
 			WindowIG<HL...>(parent, box, drawStyle) {
 		}
-		
+
 		TimeScrollableWindowIG(const ska::Rectangle& box, bool drawStyle) :
 			WindowIG<HL...>(box, drawStyle) {
 		}
@@ -20,7 +20,7 @@ namespace ska {
 				return false;
 			}
 
-			const auto& pos = getRelativePosition();
+			const auto& pos = this->getRelativePosition();
 
 			bool xdone = false;
 			bool ydone = false;
@@ -49,7 +49,7 @@ namespace ska {
 				m_moving = false;
 			}
 
-			move(nextPos);
+			this->move(nextPos);
 			return true;
 		}
 
@@ -64,7 +64,7 @@ namespace ska {
 
 			m_moving = true;
 
-			const auto& pos = getRelativePosition();
+			const auto& pos = this->getRelativePosition();
 			m_slope.y = (m_destinationPos.y - pos.y) * speed;
 			m_slope.x = (m_destinationPos.x - pos.x) * speed;
 
@@ -80,12 +80,12 @@ namespace ska {
 
 		void scrollStop() {
 			m_moving = false;
-			m_destinationPos = getRelativePosition();
+			m_destinationPos = this->getRelativePosition();
 		}
 
 
 		virtual ~TimeScrollableWindowIG() = default;
-	
+
 	protected:
 		bool isMoving() const {
 			return m_moving;

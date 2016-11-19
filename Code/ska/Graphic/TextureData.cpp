@@ -1,5 +1,5 @@
 #include "TextureData.h"
-#include "../Utils\StringUtils.h"
+#include "../Utils/StringUtils.h"
 
 ska::TextureData::TextureData(Window& window, std::string texturePath, ska::Color col) : m_window(&window){
 	m_data = std::make_pair(texturePath, col);

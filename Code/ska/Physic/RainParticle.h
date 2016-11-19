@@ -1,6 +1,6 @@
 #pragma once
-#include "../ska/Physic/GravityParticle.h"
-#include "../ska/Graphic/Rectangle.h"
+#include "../../ska/Physic/GravityParticle.h"
+#include "../../ska/Graphic/Rectangle.h"
 
 class RainParticleManager;
 class RainParticle :

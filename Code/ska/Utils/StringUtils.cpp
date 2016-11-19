@@ -3,10 +3,21 @@
 #include <string>
 #include <sstream>
 
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <cctype>
 #include <locale>
+#include <iomanip>
+#include <codecvt>
+
+// utility wrapper to adapt locale-bound facets for wstring/wbuffer convert
+template<class Facet>
+class deletable_facet : Facet {
+    public:
+    template<class ...Args>
+    deletable_facet(Args&& ...args) : Facet(std::forward<Args>(args)...) {}
+    ~deletable_facet() {}
+};
 
 ska::StringUtils::StringUtils()
 {
@@ -75,19 +86,21 @@ std::vector<std::string> ska::StringUtils::split(const std::string &s, const cha
 }
 
 // trim from start
-std::string& ska::StringUtils::ltrim(std::string &s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-	return s;
+std::string ska::StringUtils::ltrim(const std::string &s) {
+	std::string tmp(s.c_str());
+	tmp.erase(tmp.begin(), std::find_if(tmp.begin(), tmp.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	return tmp;
 }
 
 // trim from end
-std::string& ska::StringUtils::rtrim(std::string &s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-	return s;
+std::string ska::StringUtils::rtrim(const std::string &s) {
+	std::string tmp(s.c_str());
+	tmp.erase(std::find_if(tmp.rbegin(), tmp.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), tmp.end());
+	return tmp;
 }
 
 // trim from both ends
-std::string & ska::StringUtils::trim(std::string &s) {
+std::string ska::StringUtils::trim(const std::string &s) {
 	return ltrim(rtrim(s));
 }
 
@@ -121,8 +134,8 @@ std::wstring ska::StringUtils::toUTF8(const std::string& s) {
 	}
 
 	auto sNat = s.c_str();
-	std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>, wchar_t> converter;
-	return converter.from_bytes(sNat);	
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+	return converter.from_bytes(sNat);
 }
 
 ska::StringUtils::~StringUtils()
@@ -135,6 +148,6 @@ std::string ska::StringUtils::toANSI(const std::wstring& ws) {
 	}
 
 	auto sNat = ws.c_str();
-	std::wstring_convert<std::codecvt<wchar_t, char, std::mbstate_t>, wchar_t> converter;
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
 	return converter.to_bytes(sNat);
 }

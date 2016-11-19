@@ -7,10 +7,11 @@
 
 SceneToBattleSwitcher::SceneToBattleSwitcher(const std::string& map, const std::string& chipset, ska::Point<int> fightPos, const FightComponent& fc) :
 SceneSwitcher(map, chipset),
-m_fightComponent(fc), 
+m_fightComponent(fc),
 m_fightPos(fightPos) {
 }
 
 void SceneToBattleSwitcher::switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene& lastScene, ska::InputContextManager& icm, WorldScene& ws) const {
-	holder.nextScene(ska::ScenePtr(ska::ScenePtr(new SceneFight(w, holder, ws, icm, m_fightPos, m_fightComponent))));
+	auto scene = ska::ScenePtr(ska::ScenePtr(new SceneFight(w, holder, ws, icm, m_fightPos, m_fightComponent)));
+	holder.nextScene(scene);
 }

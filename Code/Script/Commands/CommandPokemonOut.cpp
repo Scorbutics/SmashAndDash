@@ -1,5 +1,5 @@
 #include "CommandPokemonOut.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 

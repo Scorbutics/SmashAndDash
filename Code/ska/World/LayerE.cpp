@@ -1,3 +1,4 @@
+#include <limits>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -25,15 +26,15 @@ int ska::LayerE::getBlocX(int ligne) const {
 	return (ligne < m_nbrLignes && ligne >= 0) ? m_coordBX[ligne] : -1;
 }
 
-int ska::LayerE::getBlocY(int ligne) const {    
+int ska::LayerE::getBlocY(int ligne) const {
 	return (ligne < m_nbrLignes && ligne >= 0) ? m_coordBY[ligne] : -1;
 }
 
-int ska::LayerE::getID(int ligne) const {    
+int ska::LayerE::getID(int ligne) const {
 	return (ligne <= m_nbrLignes && ligne >= 0) ? m_ID[ligne] : 0;
 }
 
-std::string ska::LayerE::getParam(int ligne) const {    
+std::string ska::LayerE::getParam(int ligne) const {
 	return (ligne < m_nbrLignes && ligne >= 0) ? m_param[ligne] : "";
 }
 
@@ -41,8 +42,8 @@ int ska::LayerE::getTrigger(int ligne) const {
 	return (ligne < m_nbrLignes && ligne >= 0) ? m_trigger[ligne] : -1;
 }
 
-int ska::LayerE::getSolide(int ligne) const {    
-	return (ligne < m_nbrLignes && ligne >= 0) ? m_solide[ligne] : -1;    
+int ska::LayerE::getSolide(int ligne) const {
+	return (ligne < m_nbrLignes && ligne >= 0) ? m_solide[ligne] : -1;
 }
 
 std::string ska::LayerE::getAction(int ligne) const
@@ -117,7 +118,7 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 				m_ID.push_back(ska::StringUtils::strToInt(id));
 			}
 			else {
-				m_ID.push_back(INT_MIN);
+				m_ID.push_back(std::numeric_limits<int>().min());
 			}
 
 			std::string solide;

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <typeinfo>
 #include <string>
 #include "ECSDefines.h"
 #include "StaticCounterGlobal.h"
@@ -9,7 +10,7 @@ namespace ska {
 	template <typename T>
 	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer
 	{
-		
+
 	public:
 		ComponentHandler() {
 			m_components.resize(SKA_ECS_MAX_ENTITIES);
@@ -25,7 +26,7 @@ namespace ska {
 			m_components[entityId] = comp;
 			return m_mask;
 		}
-		
+
 		unsigned int remove(EntityId entityId) override {
 			/* We can add operations here depending of the ComponentHandler implementation */
 			return m_mask;
@@ -38,7 +39,7 @@ namespace ska {
 		virtual const std::string getComponentField(const EntityId id, const std::string& field) override {
 			return m_components[id].serialize(m_components[id], field, getClassName());
 		}
-		
+
 		const unsigned int getMask() const {
 			return m_mask;
 		}
@@ -57,6 +58,6 @@ namespace ska {
 		std::vector<T> m_components;
 		unsigned int m_mask;
 	};
-	
+
 
 }

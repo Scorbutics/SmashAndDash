@@ -1,7 +1,7 @@
 #include "MobSpawningSystem.h"
-#include "../../../Utils\ChargementImages.h"
-#include "../../../Utils\IDs.h"
-#include "..\../World\WorldImpl.h"
+#include "../../../Utils/ChargementImages.h"
+#include "../../../Utils/IDs.h"
+#include "../../World/WorldImpl.h"
 #include "../../../ska/Utils/TimeUtils.h"
 #include "../MobSpawner.h"
 

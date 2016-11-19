@@ -2,16 +2,19 @@
 #include <string>
 #include <functional>
 
+
 namespace ska {
+    template <typename T, typename ...Args>
+	class Observable;
+
 
 	template <class T, class ...Args>
 	class Observer {
-		
-		template <class T1, class ...Args1>
+    public:
+        template <typename T1, typename ...Args1>
 		friend class Observable;
 
-	public:
-		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler), 
+		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler),
 			m_right(nullptr), m_left(nullptr) {
 		}
 

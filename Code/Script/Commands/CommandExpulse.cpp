@@ -1,7 +1,7 @@
 #include <string>
 #include "CommandExpulse.h"
 #include "../../ska/Exceptions/ScriptException.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Physic/MovementComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
@@ -9,12 +9,12 @@
 #include "../../ska/Physic/HitboxComponent.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Script/ScriptTriggerType.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 #include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/World/World.h"
-CommandExpulse::CommandExpulse(const ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager), 
+CommandExpulse::CommandExpulse(const ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager),
 m_world(w) {
 }
 
@@ -23,7 +23,7 @@ int CommandExpulse::argumentsNumber() {
 }
 
 std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	
+
 	if (args.size() < 1) {
 		throw ska::ScriptException("This command needs at least 3 parameters");
 	}

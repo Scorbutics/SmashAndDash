@@ -28,10 +28,12 @@ void SkillRefreshSystem::refresh() {
 		/* End of example */
 
 		ska::PolarPoint<int> pp = ska::NumberUtils::polar(sc.target.x - sc.origin.x,  sc.target.y - sc.origin.y);
-		ska::Point<float>& directionalPoint = ska::NumberUtils::rotate<float>(ska::Point<float>(), pp.angle, ska::Point<float>(mc.vx, mc.vy));
+		ska::Point<float> emptyFloatPoint;
+		ska::Point<float> velocityPoint(mc.vx, mc.vy);
+		const ska::Point<float>& directionalPoint = ska::NumberUtils::rotate<float>(emptyFloatPoint, pp.angle, velocityPoint);
 		mc.vx = directionalPoint.x;
 		mc.vy = directionalPoint.y;
-		
+
 		/* Max range reached : delete the skill */
 		if (ska::RectangleUtils::distanceSquared(sc.origin, pc) > sc.range*sc.range) {
 			scheduleDeferredRemove(entityId);

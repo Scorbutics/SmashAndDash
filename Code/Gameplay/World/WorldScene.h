@@ -1,9 +1,9 @@
 #pragma once
 #include "../../ska/Scene/Scene.h"
-#include "../../ska/Physic/System\ForceSystem.h"
-#include "../../ska/Physic/System\GravitySystem.h"
+#include "../../ska/Physic/System/ForceSystem.h"
+#include "../../ska/Physic/System/GravitySystem.h"
 #include "../../ska/Inputs/System/InputSystem.h"
-#include "../../ska/Physic/System\MovementSystem.h"
+#include "../../ska/Physic/System/MovementSystem.h"
 #include "../../Graphic/System/GraphicSystem.h"
 #include "../../Graphic/System/ShadowSystem.h"
 #include "../../ska/Graphic/System/DirectionalAnimationSystem.h"

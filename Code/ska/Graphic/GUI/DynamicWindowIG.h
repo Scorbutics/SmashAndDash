@@ -12,18 +12,18 @@
 //#include "./Components/KeyEventListener.h"
 
 namespace ska {
-	
+
 	class KeyEvent;
 	class HoverEvent;
 	class ClickEvent;
 
 	template <class ...HL>
-	class DynamicWindowIG : 
+	class DynamicWindowIG :
 		public TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>,
 		public HoverStateController<DynamicWindowIG<HL...>>,
 		public MouseObserver,
 		public KeyObserver {
-	
+
 	public:
 		DynamicWindowIG(Widget& parent, const Rectangle& box, bool drawStyle) :
 			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, box, drawStyle),
@@ -31,16 +31,16 @@ namespace ska {
 			m_keyObservable(nullptr),
 			MouseObserver(std::bind(&ska::DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&ska::DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
 			KeyObserver(std::bind(&ska::DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)) {
-				move(box);
-				setWidth(box.w);
-				setHeight(box.h);
+				this->move(box);
+				this->setWidth(box.w);
+				this->setHeight(box.h);
 // 				m_button = std::make_unique<Hoverable<>>(*this);
 // 				m_button->setWidth(box.w);
 // 				m_button->setHeight(box.h);
 //				addWidget(m_button);
 		}
 
-		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, bool drawStyle) : 
+		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, bool drawStyle) :
 			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(box, drawStyle),
 			m_guiObservable(guiObservable),
 			m_keyObservable(keyObservable),
@@ -70,17 +70,17 @@ namespace ska {
 
 	protected:
 		bool keyEvent(KeyEvent& e) {
-			return notify(e);
+			return this->notify(e);
 		}
 
 		bool hoverEvent(HoverEvent& e) {
-			return notify(e);
+			return this->notify(e);
 		}
 
 		bool clickEvent(ClickEvent& e) {
-			return notify(e);
+			return this->notify(e);
 		}
-	
+
 	private:
 		MouseObservable *const m_guiObservable;
 		KeyObservable *const m_keyObservable;

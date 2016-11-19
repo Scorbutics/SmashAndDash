@@ -1,7 +1,7 @@
 #include <fstream>
 #include "Inventory.h"
-#include "../../ska/Utils\StringUtils.h"
-#include "../../Utils\ChargementImages.h"
+#include "../../ska/Utils/StringUtils.h"
+#include "../../Utils/ChargementImages.h"
 #include "../../ska/Utils/RectangleUtils.h"
 
 unsigned int Inventory::m_fontSize = 12;
@@ -88,7 +88,7 @@ Object *Inventory::getObjectFromIndex(int index)
 	std::list<std::unique_ptr<Object>>::iterator iter;
     int i = 0;
     for(iter = m_objects.begin(); iter != m_objects.end() && i != index; i++ ,++iter);
-	
+
 	if(i == index && !m_objects.empty())
 		return (Object*) &(**iter);
 	return NULL;
@@ -251,7 +251,7 @@ void Inventory::display(ska::Rectangle rect)
             buf.x += m_squareSprite.getWidth()/2;
             buf.y += m_squareSprite.getHeight()/8;
 			(*this->getIteratorAmountSurfaceFromIndex(i)).render(buf.x, buf.y);
-            
+
             (*iter)->display();
         }
     }

@@ -2,13 +2,13 @@
 #include <sstream>
 #include "ScriptAutoSystem.h"
 #include "../../Exceptions/ScriptDiedException.h"
-#include "../../Exceptions\ScriptUnknownCommandException.h"
+#include "../../Exceptions/ScriptUnknownCommandException.h"
 #include "../../Exceptions/IllegalArgumentException.h"
-#include "../../Utils\ScriptUtils.h"
-#include "../../Exceptions\InvalidPathException.h"
+#include "../../Utils/ScriptUtils.h"
+#include "../../Exceptions/InvalidPathException.h"
 #include "../../Exceptions/NumberFormatException.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
-#include "../../Utils\StringUtils.h"
+#include "../../Utils/StringUtils.h"
 #include "../../Utils/FileUtils.h"
 #include "../../Utils/TimeUtils.h"
 #include "../ScriptSymbolsConstants.h"
@@ -22,8 +22,8 @@
 #define MAX_CONSECUTIVE_COMMANDS_PLAYED 5
 
 
-ska::ScriptAutoSystem::ScriptAutoSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager), 
-m_saveGame(saveGame), 
+ska::ScriptAutoSystem::ScriptAutoSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager),
+m_saveGame(saveGame),
 m_world(w) {
 	sch.setupCommands(w, m_commands);
 }
@@ -68,7 +68,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	}
 
 	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
-	
+
 	std::string extendedName;
 	std::string validPath;
 	std::string keyArgs;
@@ -231,7 +231,7 @@ ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 
 bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	transferActiveToDelay(script);
-	bool cannotBePlayed = 
+	bool cannotBePlayed =
 		EnumScriptState::RUNNING == script.state
 		|| script.active > 0
 		|| (ska::TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay

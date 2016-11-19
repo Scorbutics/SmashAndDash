@@ -1,6 +1,5 @@
-#include "../Utils/IDs.h"
-#include "../ska/Utils/NumberUtils.h"
-#include "../Gameplay/WGameCore.h"
+#include "../../ska/Utils/NumberUtils.h"
+#include "../../Gameplay/WGameCore.h"
 #include "RainParticle.h"
 #include "RainParticleManager.h"
 
@@ -17,7 +16,7 @@ ska::Point<int> RainParticle::getOrigin() const {
 	const unsigned int variant = 20;
 	const unsigned int nbrDisplayedBlocksX = (wScreen.getWidth() + 1) / TAILLEBLOC + variant;
 
-	/* L'id a pour vocation d'être un numéro de bloc. Il n'a pas besoin d'être compris entre 0 
+	/* L'id a pour vocation d'être un numéro de bloc. Il n'a pas besoin d'être compris entre 0
 	et le nombre de colonnes de blocs affichées car le modulo permet de normaliser le chiffre. */
 	const int max = ((m_id % nbrDisplayedBlocksX) - variant/2)*TAILLEBLOC;
 	const int min = (((m_id - 1) % nbrDisplayedBlocksX) - variant / 2)*TAILLEBLOC;

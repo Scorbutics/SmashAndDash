@@ -1,5 +1,5 @@
 #include "CommandFollow.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandFollow::CommandFollow(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

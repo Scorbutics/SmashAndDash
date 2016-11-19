@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Settings.h"
-#include "../../ska/Inputs\Readers\IniReader.h"
+#include "../../ska/Inputs/Readers/IniReader.h"
 #include "../Weather.h"
 
 Settings::Settings(std::string file)

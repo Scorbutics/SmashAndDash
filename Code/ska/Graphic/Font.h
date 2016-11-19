@@ -3,7 +3,7 @@
 
 
 #include "SDLFont.h"
-#include "../Utils\ResourceTemplate.h"
+#include "../Utils/ResourceTemplate.h"
 
 namespace ska {
 	class Font : public ResourceTemplate<SDLFont, int>

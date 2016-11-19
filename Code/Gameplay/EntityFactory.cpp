@@ -1,4 +1,4 @@
-#include "../Gameplay\WGameCore.h"
+/*#include "../Gameplay/WGameCore.h"
 #include "EntityFactory.h"
 #include "../ska/Utils/StringUtils.h"
 #include "../Utils/IDs.h"
@@ -24,7 +24,7 @@ void EntityFactory::createTrainer()
 	//wScreen.getInputListener().addObserver(&(*m_trainer));
 
 	m_currentEntities.push_front(&(*m_trainer));
-	
+
 }
 
 void EntityFactory::setPokemon(Character* pkmn)
@@ -35,7 +35,7 @@ void EntityFactory::setPokemon(Character* pkmn)
 
 	if (iter == m_currentEntities.end())
 		m_currentEntities.push_front(pkmn);
-	
+
 }
 
 void EntityFactory::removePokemon()
@@ -132,7 +132,7 @@ void EntityFactory::addNPC(Character* npc)
 		target = &m_pokemon;
 	else
 		target = &m_characters;
-	
+
 	id = abs(id);
 
 	for(i = 0; i < (*target)[id].size() && (*target)[id][i] != NULL; i++);
@@ -140,7 +140,7 @@ void EntityFactory::addNPC(Character* npc)
 		(*target)[id].push_back(Character_ptr(new Character(target == &m_pokemon ? id : -id)));
 	else
 		(*target)[id][i] = Character_ptr(new Character(target == &m_pokemon ? id : -id));
-	
+
 	(*target)[id][i]->setSpeedLimit(npc->getSpeedLimit());
 	(*target)[id][i]->setDirection(npc->getDirection());
 	(*target)[id][i]->setID(target == &m_pokemon ? id : -id);
@@ -205,8 +205,8 @@ Character* EntityFactory::getNPC(int id, unsigned int number)
     else if(number == ID_CURRENT_OPPONENT)
         return wScreen.getFight().getOpponent();
     else if(number == ID_CURRENT_POKEMON)
-		return wScreen.getFight().getPokemon();*/
-     
+		return wScreen.getFight().getPokemon();
+
 
 
     if(id > 0)
@@ -307,7 +307,7 @@ void EntityFactory::remove(int id, unsigned number)
 		if ((size_t)id < m_pokemon.size() && number < m_pokemon[id].size())
 		{
 			if (m_pokemon[id][number] != NULL)
-			{ 
+			{
 				std::list<Character*>::iterator iter = std::find(m_currentEntities.begin(), m_currentEntities.end(), &(*m_pokemon[id][number]));
 
 				if (iter != m_currentEntities.end())
@@ -317,7 +317,7 @@ void EntityFactory::remove(int id, unsigned number)
 		}
 		else
 			cerr << "Erreur (classe EntityFactory) : Dépassement mémoire lors de la tentative d'accès au pokémon numéro " << number << " d'ID n°" << -id << endl;
-		
+
 	}
 	else
 	{
@@ -334,6 +334,7 @@ void EntityFactory::remove(int id, unsigned number)
 		}
 		else
 			cerr << "Erreur (classe EntityFactory) : Dépassement mémoire lors de la tentative d'accès au personnage numéro " << number << " d'ID en valeur absolue n°" << -id << endl;
-		
+
 	}
 }
+*/

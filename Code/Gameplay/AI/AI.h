@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "..\Fight\Fight.h"
+//#include "..\Fight\Fight.h"
 
 typedef unique_ptr<Character> Character_ptr;
 

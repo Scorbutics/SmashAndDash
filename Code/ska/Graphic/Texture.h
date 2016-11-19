@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "../Utils\ResourceTemplate.h"
+#include "../Utils/ResourceTemplate.h"
 #include "SDLTexture.h"
 #include "TextureData.h"
 #include "../Utils/SkaConstants.h"

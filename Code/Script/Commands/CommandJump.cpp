@@ -1,7 +1,7 @@
 #include <string>
 #include "CommandJump.h"
 #include "../../ska/Exceptions/ScriptException.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Physic/ForceComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
@@ -9,7 +9,7 @@
 #include "../../ska/Physic/HitboxComponent.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Script/ScriptTriggerType.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/PhysicUtils.h"
 #include "../../ska/Utils/NumberUtils.h"
 
@@ -22,7 +22,7 @@ int CommandJump::argumentsNumber() {
 }
 
 std::string CommandJump::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	
+
     const std::string& id = args[0];
 	const int power = ska::StringUtils::strToInt(args[1]);
 	ska::EntityId internalEntity = script.parent->getEntityFromName(id);

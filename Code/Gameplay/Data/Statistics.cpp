@@ -1,6 +1,6 @@
 #include "Statistics.h"
-#include "../../Utils\IDs.h"
-#include "../../ska/Inputs\Readers\IniReader.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Inputs/Readers/IniReader.h"
 
 
 Statistics::Statistics(int hp, int attack, int defense, int spe_attack, int spe_defense, int speed)
@@ -46,7 +46,7 @@ Statistics::Statistics(ska::IniReader* data, std::string block)
 	m_slopes.exp = (float) m_stats.exp;
 
 	m_slopes.droppedExp = (float)(abs((int)(m_slopes.exp - m_stats.droppedExp)) / 3.);
-	
+
 
 	m_type = STATS_TYPE_LINEAR;
 	m_level = 1;
@@ -67,7 +67,7 @@ void Statistics::nextLevel()
 			m_stats.speDefense += (int) m_slopes.speDefense;
 			m_stats.droppedExp += (int) m_slopes.droppedExp;
 			break;
-		
+
 		case STATS_TYPE_SQUARE:
 			//???
 			break;
@@ -161,7 +161,7 @@ bool Statistics::addExperience(int exp)
 	m_stats.exp += exp;
 	setLevel((int)(m_stats.exp / m_slopes.exp));
 	m_stats.exp = lastexp;
-	
+
 	return (m_level != lastlevel);
 }
 

@@ -7,38 +7,38 @@
 #include "./Components/Button.h"
 
 namespace ska{
-	
+
 	template <class ...HL>
-	class WindowIG : 
+	class WindowIG :
 		public WidgetPanel<HL...> {
 	public:
-		WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) : 
+		WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
 			WidgetPanel<HL...>(parent),
 			m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 			m_drawStyle(drawStyle) {
 
-			move(box);
-			setWidth(box.w);
-			setHeight(box.h);
+			this->move(box);
+			this->setWidth(box.w);
+			this->setHeight(box.h);
 		}
 
 		WindowIG(const ska::Rectangle& box, bool drawStyle) :
 			m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
 			m_drawStyle(drawStyle) {
 
-			move(box);
-			setWidth(box.w);
-			setHeight(box.h);
+			this->move(box);
+			this->setWidth(box.w);
+			this->setHeight(box.h);
 		}
 
 		void display() const override {
-			if (!isVisible()) {
+			if (!this->isVisible()) {
 				return;
 			}
 			ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
 			ska::Rectangle maxSizeMenuSprite = { 0, 0, m_menuTiles.getWidth(), m_menuTiles.getHeight() };
-			const auto& box = getBox();
-			const auto& pos = getAbsolutePosition();
+			const auto& box = this->getBox();
+			const auto& pos = this->getAbsolutePosition();
 
 			/* Draw the window using menu tiles */
 			if (m_drawStyle) {
@@ -60,9 +60,9 @@ namespace ska{
 			}
 			WidgetPanel<HL...>::display();
 		}
-		
+
 		virtual ~WindowIG() = default;
-	
+
 	private:
 		bool m_drawStyle;
 		Texture m_menuTiles;

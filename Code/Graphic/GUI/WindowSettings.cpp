@@ -6,7 +6,7 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 16, ska::Point<int>(16, 16)));
-	addWidget(std::move(input));
+	addWidget(input);
 }
 
 // #include "WindowSettings.h"
@@ -16,18 +16,18 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 // #include "WindowBag.h"
 // #include "../../Utils/IDs.h"
 // #include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
-// 
+//
 // WindowSettings::WindowSettings(const ska::InputContextManager& icm, std::string fichierMenu, ska::Rectangle posFond, int taillePolice) :
 // MovableWindow(icm, fichierMenu, posFond, taillePolice)
 // {
 //     m_saveSettings = 0;
 // 	m_saveGame = 0;
 // }
-// 
+//
 // void WindowSettings::reset()
 // {
 //     this->clear();
-// 
+//
 // 	ska::Rectangle buf;
 //     buf.x = 4*TAILLEBLOCFENETRE;
 //     buf.y = TAILLEBLOCFENETRE*3/4;
@@ -56,7 +56,7 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 // 	vSaveGame.push_back("Game saved");
 //     vSave.push_back("Save settings");
 //     vSave.push_back("Saved !");
-// 
+//
 //     buf.x = 4*TAILLEBLOCFENETRE;
 //     buf.y = TAILLEBLOCFENETRE*3/4;
 //     //this->addTextArea("Options", 20, buf);
@@ -96,14 +96,14 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 //     this->addButton(buf, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonpressed.png", &m_saveSettings, vbool, vSave, 20, "save_settings");
 // 	*/
 // }
-// 
+//
 // void WindowSettings::refresh()
 // {
 //     MovableWindow::refresh();
-// 	
-// 	
+//
+//
 // 	//Settings& settings = wScreen.getSettings();
-// 
+//
 //     if(m_saveSettings != 0)
 //     {
 //         /*settings.save();
@@ -127,15 +127,15 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 //         gui.getFacesetOpponent()->setAlpha((*settings.getGuiTransparency() != 0));*/
 //         //getButton("save_settings")->forceValue(0);
 //     }
-// 
+//
 // 	if (m_saveGame != 0)
 // 	{
 // 		//wScreen.getSavegameManager().saveGame("save1");
 // 		//getButton("save_game")->forceValue(0);
 // 	}
 // }
-// 
+//
 // WindowSettings::~WindowSettings()
 // {
 // }
-// 
+//

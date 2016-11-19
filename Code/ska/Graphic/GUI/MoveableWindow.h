@@ -13,16 +13,16 @@ namespace ska {
 			ska::DynamicWindowIG<HL...>(&guiObservable, &keyboardObservable, box, drawStyle) {
 			initHandlers();
 		}
-	
-		MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) : 
+
+		MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
 			ska::DynamicWindowIG<HL...>(parent, box, drawStyle) {
 			initHandlers();
 		}
 
 	private:
 		void initHandlers() {
-			const auto& clip = ska::Rectangle{ 0, 0, getBox().w, TAILLEBLOCFENETRE / 2 };
-			auto button = std::make_unique<ska::Button>(*this, ska::Point<int>(), ska::Button::MENU_DEFAULT_THEME_PATH + "button", &clip, [&](ska::Widget* tthis, ska::ClickEvent& e) {
+			const auto& clip = ska::Rectangle{ 0, 0, this->getBox().w, TAILLEBLOCFENETRE / 2 };
+			auto button = std::unique_ptr<ska::Button>(new Button(*this, ska::Point<int>(), ska::Button::MENU_DEFAULT_THEME_PATH + "button", &clip, [&](ska::Widget* tthis, ska::ClickEvent& e) {
 				if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 					m_moving = true;
 					m_offsetWindowOrigin = e.getPosition(*tthis);
@@ -30,21 +30,21 @@ namespace ska {
 				else if (e.getState() == ska::MouseEventType::MOUSE_RELEASE) {
 					m_moving = false;
 				}
-			});
-			button->setWidth(getBox().w - TAILLEBLOCFENETRE / 2);
+			}));
+			button->setWidth(this->getBox().w - TAILLEBLOCFENETRE / 2);
 			button->setHeight(TAILLEBLOCFENETRE / 2);
 			button->addHandler<HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& e) {
 				if (m_moving && e.getState() != ska::MouseEventType::MOUSE_ENTER) {
 					const auto& clickAbsPos = e.getMousePosition();
 					const auto& newPos = clickAbsPos - m_offsetWindowOrigin;
-					move(newPos);
+					this->move(newPos);
 				}
 			});
 
-			auto buttonQuit = std::make_unique<ska::ButtonQuit>(*this, ska::Point<int>(getBox().w - TAILLEBLOCFENETRE / 2, 0), ska::Button::MENU_DEFAULT_THEME_PATH + "close_button");
+			auto buttonQuit = std::unique_ptr<ska::ButtonQuit>(new ButtonQuit(*this, ska::Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), ska::Button::MENU_DEFAULT_THEME_PATH + "close_button"));
 
-			addWidget(std::move(button));
-			addWidget(std::move(buttonQuit));
+			this->addWidget(button);
+			this->addWidget(buttonQuit);
 		}
 
 		bool m_moving;

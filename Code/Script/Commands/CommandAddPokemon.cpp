@@ -1,5 +1,5 @@
 #include "CommandAddPokemon.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandAddPokemon::CommandAddPokemon(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

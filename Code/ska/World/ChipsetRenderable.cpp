@@ -16,7 +16,8 @@ m_animBlocks(375, 4, true, 0, 0, blockSize, blockSize) {
 }
 
 void ska::ChipsetRenderable::render(Rectangle pos, const BlockRenderable& block) const {
-	Rectangle& chipsetPartRender = block.determineFrame(pos, &m_animBlocks.getOffsetAndFrameSize());
+    auto clip = m_animBlocks.getOffsetAndFrameSize();
+	Rectangle chipsetPartRender = block.determineFrame(pos, &clip);
 	m_chipset.render(pos.x, pos.y, &chipsetPartRender);
 }
 

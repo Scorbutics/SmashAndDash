@@ -5,14 +5,14 @@
 #include "../../ska/Exceptions/SceneDiedException.h"
 #include "../../ska/Exceptions/InvalidPathException.h"
 #include "../../ska/World/World.h"
-#include "../../Utils\IDs.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../Utils/IDs.h"
+#include "../../ska/Utils/StringUtils.h"
 
 #include "../../Gameplay/Scene/SceneToMapSwitcher.h"
 
-CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager) : 
+CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager) :
 AbstractFunctionCommand(entityManager),
-m_sceneChanger(sceneChanger), 
+m_sceneChanger(sceneChanger),
 m_world(w) {
 }
 
@@ -25,7 +25,7 @@ int CommandTeleport::argumentsNumber() {
 }
 
 std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	const std::string& mapName = args[0];	
+	const std::string& mapName = args[0];
 	const std::string& id = args[1];
 	const int x = ska::StringUtils::strToInt(args[2]);
 	const int y = ska::StringUtils::strToInt(args[3]);
@@ -53,8 +53,9 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		m_sceneChanger.notifyObservers(SceneToMapSwitcher(fichier, chipsetName));
-		
+        auto sceneToMapSwitcher = SceneToMapSwitcher(fichier, chipsetName);
+		m_sceneChanger.notifyObservers(sceneToMapSwitcher);
+
 	}
 
 	return "";
@@ -96,5 +97,5 @@ void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 	}
 
 	w.load(fichier, chipsetName);
-	
+
 }

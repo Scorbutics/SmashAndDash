@@ -8,11 +8,11 @@
 #include "Chipset.h"
 #include "../Script/ScriptSleepComponent.h"
 
-ska::Chipset::Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) : 
-	m_blockSize(blockSize), 
-	m_chipsetName(chipsetName), 
-	m_corr(corr), 
-	m_corrFileWidth(corrFileWidth), 
+ska::Chipset::Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) :
+	m_blockSize(blockSize),
+	m_chipsetName(chipsetName),
+	m_corr(corr),
+	m_corrFileWidth(corrFileWidth),
 	m_renderable(corr.size(), blockSize, chipsetName) {
 	load();
 	m_blocks.resize(corr.size());
@@ -38,11 +38,10 @@ void ska::Chipset::load() {
 	m_lightColor = SDL_MapRGB(m_sChipset.getFormat(), 170, 170, 170);
 	m_whiteColor = SDL_MapRGB(m_sChipset.getFormat(), 255, 255, 255);
 
-	std::ifstream scriptList;
-	const std::string& chipsetFolder = m_chipsetName.substr(0, m_chipsetName.find_last_of('.'));
-	scriptList.open(chipsetFolder + ""FILE_SEPARATOR"scripts.txt", std::ios_base::beg);
+    const std::string& chipsetFolder = m_chipsetName.substr(0, m_chipsetName.find_last_of('.'));
+	std::ifstream scriptList((chipsetFolder + ""FILE_SEPARATOR"scripts.txt").c_str(), std::ifstream::in);
 	std::string ss;
-	
+
 	if (scriptList.fail()) {
 		throw ska::FileException("Erreur lors de l'ouverture du fichier \"" + chipsetFolder + ""FILE_SEPARATOR"scripts.txt" + "\", fichier de scripts du chipset. " + std::string(SDL_GetError()));
 	}
@@ -60,7 +59,7 @@ void ska::Chipset::load() {
 void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::string& id, const ska::ScriptTriggerType& type) {
 	std::ifstream currentScript;
 	const std::string fullName = chipsetFolder + ""FILE_SEPARATOR"Scripts"FILE_SEPARATOR"" + id + "_" + (char)(type + '0') + ".txt";
-	currentScript.open(fullName, std::ios_base::beg);
+	currentScript.open(fullName, std::ios_base::in);
 	if (currentScript.fail()) {
 		return;
 	}
@@ -80,7 +79,7 @@ void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::strin
 
 std::vector<ska::ScriptSleepComponent*> ska::Chipset::getScript(const std::string& id, const ska::ScriptTriggerType& reason, bool& autoBlackList) {
 	std::vector<ska::ScriptSleepComponent*> result;
-	
+
 	if (reason == EnumScriptTriggerType::AUTO && !autoBlackList) {
 		for (auto& s : m_autoScripts) {
 			result.push_back(&s.second);
@@ -93,7 +92,7 @@ std::vector<ska::ScriptSleepComponent*> ska::Chipset::getScript(const std::strin
 			result.push_back(&m_triggeredScripts.at(fullName));
 		}
 	}
-	
+
 	return result;
 }
 
@@ -114,8 +113,8 @@ void ska::Chipset::generateBlock(ska::Color& key, Block** outputBlock, BlockRend
 
 			int collision = (col == m_whiteColor || col == m_lightColor) ? BLOCK_COL_NO : BLOCK_COL_YES;
 			bool auto_anim = (col == m_darkColor || col == m_lightColor);
-			
-			const int id = posCorr.x + posCorr.y * m_corrFileWidth;	
+
+			const int id = posCorr.x + posCorr.y * m_corrFileWidth;
 			if (m_blocks[id] == nullptr) {
 				m_blocks[id] = std::move(BlockPtr(new Block(m_corrFileWidth, posCorr, prop, collision)));
 			}

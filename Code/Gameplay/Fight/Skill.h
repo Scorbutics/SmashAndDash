@@ -5,16 +5,16 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "../../ska/Inputs\Readers\IniReader.h"
-#include "../../ska/Graphic\Texture.h"
-#include "../../ska/Physic\Particle.h"
-
+#include "../../ska/Inputs/Readers/IniReader.h"
+#include "../../ska/Graphic/Texture.h"
+#include "../../ska/Physic/Particle.h"
+/*
 
 class Skill
 {
     public:
 	Skill(ska::IniReader* data);
-	
+
 	unsigned int getRange();
 	int getKnockback();
 	void setKnockback(int knockback);

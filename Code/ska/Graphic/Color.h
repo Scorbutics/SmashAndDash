@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 #include "../Utils/NumberUtils.h"
 
 namespace ska {
@@ -28,7 +28,7 @@ namespace ska {
 		Color(const Color& c) {
 			*this = c;
 		}
-			
+
 		Color(const SDL_Color& c) {
 			*this = c;
 		}

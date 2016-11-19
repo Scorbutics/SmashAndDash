@@ -1,7 +1,7 @@
 #include "CommandEnd.h"
-#include "../../Utils\ScriptUtils.h"
-#include "../../Utils\StringUtils.h"
-#include "../../Utils\SkaConstants.h"
+#include "../../Utils/ScriptUtils.h"
+#include "../../Utils/StringUtils.h"
+#include "../../Utils/SkaConstants.h"
 #include "../../Exceptions/ScriptDiedException.h"
 
 ska::CommandEnd::CommandEnd(EntityManager& e) : AbstractFunctionCommand(e)

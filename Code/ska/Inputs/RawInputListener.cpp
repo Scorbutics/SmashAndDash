@@ -1,6 +1,6 @@
 #include <iostream>
 #include "RawInputListener.h"
-#include "../Utils\SkaConstants.h"
+#include "../Utils/SkaConstants.h"
 #include "../Exceptions/TerminateProcessException.h"
 #include "../Utils/StringUtils.h"
 
@@ -62,7 +62,7 @@ void ska::RawInputListener::update() {
 
 		if(event.type == SDL_WINDOWEVENT) {
 			switch(event.window.event) {
-				
+
 				case SDL_WINDOWEVENT_RESIZED:
 					/*wScreen.resize(event.window.data1, event.window.data2);
 					wScreen.flip();*/
@@ -90,9 +90,9 @@ void ska::RawInputListener::update() {
 					wm->getGUI()->getImgDialog()->setPos(0, (*screen)->h - TAILLEBLOCFENETRE*9);
 					wm->getGUI()->getAttackPokemonWindow()->setPos(0, (*screen)->h - TAILLEBLOCFENETRE*2);
 					wm->getGUI()->getToolbar()->setPos((*screen)->w-7*TAILLEBLOCFENETRE, 0);*/
-			
+
 					break;
-					
+
 				default:
 					break;
 			}

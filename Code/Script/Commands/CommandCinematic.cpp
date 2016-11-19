@@ -1,7 +1,7 @@
 #include "CommandCinematic.h"
-#include "../../Gameplay\WGameCore.h"
+#include "../../Gameplay/WGameCore.h"
 #include "../../Graphic/GUI/DialogMenu.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Graphic/SpriteAnimation.h"
@@ -41,7 +41,7 @@ std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<
 	frameNumber = ska::StringUtils::strToInt(args[3]);
 	pos.x = ska::StringUtils::strToInt(args[4]);
 	pos.y = ska::StringUtils::strToInt(args[5]);
-	message = args[6];	
+	message = args[6];
 
 /*
 	if (pos.x != -1)

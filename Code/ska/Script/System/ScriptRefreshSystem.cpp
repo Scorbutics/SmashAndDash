@@ -1,3 +1,4 @@
+#include <limits>
 #include "ScriptRefreshSystem.h"
 #include "../ScriptComponent.h"
 #include "../../Utils/SkaConstants.h"
@@ -15,7 +16,7 @@ ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem
 System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
 m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem) {
-	
+
 }
 
 void ska::ScriptRefreshSystem::refresh() {
@@ -28,15 +29,15 @@ void ska::ScriptRefreshSystem::refresh() {
 		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
 		const ska::HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
 		const ska::DirectionalAnimationComponent& dac = entityManager.getComponent<DirectionalAnimationComponent>(entityId);
-		
+
 		const ska::Point<int>& frontPos = ska::PositionComponent::getFrontPosition(pc, hc, dac);
 		const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
 
 		for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
 			ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
-			
+
 			EntityId scriptEntity;
-			
+
 			switch (scriptData.triggeringType) {
 			case EnumScriptTriggerType::AUTO:
 				startScript(targets, entityId);
@@ -47,10 +48,10 @@ void ska::ScriptRefreshSystem::refresh() {
 				if (!iac[InputAction::DoAction]) {
 					break;
 				}
-				
+
 			case EnumScriptTriggerType::MOVE_IN:
 				scriptEntity = findNearScriptComponentEntity(entityManager, pc, targets);
-				if (scriptEntity != UINT_MAX) {
+				if (scriptEntity != std::numeric_limits<unsigned int>().max()) {
 					startScript(scriptEntity, entityId);
 				}
 				break;
@@ -65,14 +66,14 @@ void ska::ScriptRefreshSystem::refresh() {
 		std::vector<ScriptTriggerType> reasons;
 		const unsigned int blockSize = m_world.getBlockSize();
 		const ska::Point<int> oldCenterPos = ska::Point<int>(sac.lastBlockPos);
-		
+
 		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, -1);
 		if (iac[InputAction::DoAction]) {
 			//clog << "Enter Pressed" << std::endl;
-			std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
+			auto tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 
-			std::vector<ScriptSleepComponent*>& tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 1);
+			auto tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 1);
 			worldScripts.insert(worldScripts.end(), tmp2.begin(), tmp2.end());
 		}
 
@@ -83,10 +84,10 @@ void ska::ScriptRefreshSystem::refresh() {
 			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
 
-				std::vector<ScriptSleepComponent*>& tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 0);
+				auto tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 0);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 
-				std::vector<ScriptSleepComponent*>& tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 1);
+				auto tmp2 = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 1);
 				worldScripts.insert(worldScripts.end(), tmp2.begin(), tmp2.end());
 			}
 		}
@@ -100,10 +101,10 @@ void ska::ScriptRefreshSystem::refresh() {
 			dgc.typeMask = DebugGraphicType::WALK;
 			entityManager.addComponent<DebugGraphicComponent>(entityId, dgc);
 #endif
-			std::vector<ScriptSleepComponent*>& tmpOut = m_world.chipsetScript(oldCenterPos, centerPos, oldCenterPos, EnumScriptTriggerType::MOVE_OUT, !sameBlockBot ? 0 : 1);
+			auto tmpOut = m_world.chipsetScript(oldCenterPos, centerPos, oldCenterPos, EnumScriptTriggerType::MOVE_OUT, !sameBlockBot ? 0 : 1);
 			worldScripts.insert(worldScripts.end(), tmpOut.begin(), tmpOut.end());
 
-			std::vector<ScriptSleepComponent*>& tmpIn = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::MOVE_IN, !sameBlockBot ? 0 : 1);
+			auto tmpIn = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::MOVE_IN, !sameBlockBot ? 0 : 1);
 			worldScripts.insert(worldScripts.end(), tmpIn.begin(), tmpIn.end());
 		}
 
@@ -129,7 +130,7 @@ void ska::ScriptRefreshSystem::refresh() {
 	for (EntityId targets : toDelete) {
 		entityManager.removeComponent<ScriptSleepComponent>(targets);
 	}
-	
+
 
 	m_scriptAutoSystem.update();
 
@@ -153,7 +154,7 @@ void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const En
 
 const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
 	const unsigned int blockSizeSquared = m_world.getBlockSize() * m_world.getBlockSize();
-	
+
 	ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);
 	PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(script);
 
@@ -164,8 +165,8 @@ const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(Enti
 	if (distanceSquared < blockSizeSquared) {
 		return script;
 	}
-	
-	return UINT_MAX;
+
+	return std::numeric_limits<unsigned int>().max();
 }
 
 ska::ScriptRefreshSystem::~ScriptRefreshSystem() {

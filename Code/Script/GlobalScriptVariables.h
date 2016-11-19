@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "../ska/Utils\Singleton_template.h"
+#include "../ska/Utils/Singleton_template.h"
 
 class GlobalScriptVariables : public ska::Singleton<GlobalScriptVariables>
 {
@@ -25,7 +25,7 @@ class GlobalScriptVariables : public ska::Singleton<GlobalScriptVariables>
 		std::string getOpponentHp(int idType, int id);
 		std::string getOpponentHpMax(int idType, int id);
 		std::string getOpponentCaptureRate(int idType, int id);
-			
+
 		std::unordered_map<std::string, script_method_t> globalVarMap;
 };
 

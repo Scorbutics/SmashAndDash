@@ -1,6 +1,6 @@
 #include "GUIBattle.h"
 #include "Bar.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/ECS/EntityManager.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../Gameplay/Data/RawStatistics.h"
@@ -50,10 +50,10 @@ bool GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& po
 			//})));
 		}
 	}
-	
+
 	const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
 	const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
-	
+
 	//TODO max hp venant des stats du fichier ini
 	addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
 	addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);

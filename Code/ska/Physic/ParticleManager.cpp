@@ -51,7 +51,7 @@ void ska::ParticleManager::stop() {
 	}
 	m_active = false;
 	m_duration = 0;
-   
+
 }
 
 void ska::ParticleManager::hide(bool h) {
@@ -83,7 +83,7 @@ void ska::ParticleManager::remove(unsigned int index)
 void ska::ParticleManager::display() const {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	//World& w = wScreen.getWorld();
-		
+
 	if(m_active)
 	{
 		const size_t size2 = m_particles.size();
@@ -115,7 +115,7 @@ void ska::ParticleManager::refresh()
         {
             if(m_particles[j] != NULL)
             {
-				
+
                 if(m_particles[j]->isActive())
                 {
                     m_particles[j]->refresh();
@@ -198,7 +198,8 @@ void ska::ParticleManager::playEffect(int idSprite, float acceleration, float de
     {
         posBuf.x = rect.x + rand()%(rect.w + 1);
         posBuf.y = rect.y + rand()%(rect.h + 1);
-		this->addParticle(ParticlePtr(new GravityParticle(idSprite, posBuf, rand() % ((int)(20 + 1)), 2, acceleration, false, false)));
+        auto particle = ParticlePtr(new GravityParticle(idSprite, posBuf, rand() % ((int)(20 + 1)), 2, acceleration, false, false));
+		this->addParticle(particle);
     }
 
     m_t0 = SDL_GetTicks();

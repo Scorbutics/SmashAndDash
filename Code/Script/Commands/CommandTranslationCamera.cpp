@@ -1,6 +1,6 @@
 #include "CommandTranslationCamera.h"
 #include "../../ska/Graphic/Rectangle.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandTranslationCamera::CommandTranslationCamera(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

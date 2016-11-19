@@ -1,5 +1,5 @@
 #include "CommandStuckCharacter.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandStuckCharacter::CommandStuckCharacter(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

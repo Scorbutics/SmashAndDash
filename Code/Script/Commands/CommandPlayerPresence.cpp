@@ -1,5 +1,5 @@
 #include "CommandPlayerPresence.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/RectangleUtils.h"
@@ -44,12 +44,12 @@ std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::ve
 	pos1.y = ska::StringUtils::strToInt(posFromY);
 	pos2.x = ska::StringUtils::strToInt(posToX);
 	pos2.y = ska::StringUtils::strToInt(posToY);
-	
+
 	collisionRect.x = pos1.x > pos2.x ? pos2.x : pos1.x;
 	collisionRect.y = pos1.y > pos2.y ? pos2.y : pos1.y;
 	collisionRect.w = abs(pos1.x - pos2.x) + 48 - 1;
 	collisionRect.h = abs(pos1.y - pos2.y) + 48 - 1;
-	
+
 	if (ska::RectangleUtils::collisionBoxABoxB(collisionRect, entityPos)) {
 		return "1";
 	}

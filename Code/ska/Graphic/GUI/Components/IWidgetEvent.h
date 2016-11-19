@@ -1,14 +1,8 @@
 #pragma once
 #include "EventListener.h"
-
+#include "StopType.h"
 namespace ska {
 	class Widget;
-
-	enum StopType {
-		NOT_STOPPED,
-		STOP_CALLBACK,
-		STOP_WIDGET
-	};
 
 	class IWidgetEvent {
 	public:

@@ -20,7 +20,7 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_iaDefinedMovementSystem);
 	m_logics.push_back(&m_mobSpawningSystem);
 	m_logics.push_back(&m_fightStartSystem);
-	m_logics.push_back(&m_cameraSystem);	
+	m_logics.push_back(&m_cameraSystem);
 
 	m_scriptAutoSystem.addObserver(*this);
 }
@@ -66,7 +66,7 @@ bool SceneMap::unload() {
 
 void SceneMap::reinit() {
 	m_scriptSystem.clearNamedScriptedEntities();
-	std::unordered_map<std::string, ska::EntityId>& entities = m_worldScene.reinit(m_fileName, m_chipsetName);
+	std::unordered_map<std::string, ska::EntityId> entities = m_worldScene.reinit(m_fileName, m_chipsetName);
 	for (const auto& e : entities) {
 		m_scriptSystem.registerNamedScriptedEntity(e.first, e.second);
 	}

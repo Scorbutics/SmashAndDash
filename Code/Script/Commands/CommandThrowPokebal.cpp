@@ -1,6 +1,6 @@
 #include "CommandThrowPokebal.h"
-#include "../../Gameplay\WGameCore.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../Gameplay/WGameCore.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Graphic/Rectangle.h"
 
 CommandThrowPokebal::CommandThrowPokebal(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

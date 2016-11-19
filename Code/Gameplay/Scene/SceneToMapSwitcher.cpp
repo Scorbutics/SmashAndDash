@@ -9,5 +9,6 @@ SceneSwitcher(map, chipset) {
 }
 
 void SceneToMapSwitcher::switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene& lastScene, ska::InputContextManager& icm, WorldScene& ws) const {
-	holder.nextScene(ska::ScenePtr(new SceneMap(w, lastScene, ws, m_mapName, m_chipsetName, ws.getFileName() == m_mapName)));
+	auto scene = ska::ScenePtr(new SceneMap(w, lastScene, ws, m_mapName, m_chipsetName, ws.getFileName() == m_mapName));
+	holder.nextScene(scene);
 }

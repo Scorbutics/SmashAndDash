@@ -1,6 +1,6 @@
 #include "CommandBlockAuthorize.h"
-#include "../../Utils\ScriptUtils.h"
-#include "../../Utils\StringUtils.h"
+#include "../../Utils/ScriptUtils.h"
+#include "../../Utils/StringUtils.h"
 #include "../../Physic/CollidableComponent.h"
 #include "../System/ScriptAutoSystem.h"
 #include "../../Exceptions/ScriptException.h"
@@ -30,7 +30,7 @@ std::string ska::CommandBlockAuthorize::execute(ScriptComponent& script, std::ve
 
 	CollidableComponent& cc = m_entityManager.getComponent<CollidableComponent>(entity);
 
-	auto& it = cc.authorizedBlockIds.find(blockId);
+	auto it = cc.authorizedBlockIds.find(blockId);
 	if (unauth && it != cc.authorizedBlockIds.end()) {
 		cc.authorizedBlockIds.erase(it);
 	} else {

@@ -9,8 +9,8 @@ ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x,
 }
 
 void WindowTeam::addPokemon(unsigned int pokemonId) {
-	auto& slotPokemon = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (m_pokemonCount) * 2 * TAILLEBLOCFENETRE), pokemonId));
-	addWidget(std::move(slotPokemon));
+	auto slotPokemon = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (m_pokemonCount) * 2 * TAILLEBLOCFENETRE), pokemonId));
+	addWidget(slotPokemon);
 	m_pokemonCount++;
 }
 

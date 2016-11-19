@@ -2,7 +2,7 @@
 #include "../ska/Inputs/InputContext.h"
 #include "../ska/Inputs/KeyboardInputMapContext.h"
 #include "../ska/Inputs/KeyboardInputGUIContext.h"
-#include "../Gameplay\WGameCore.h"
+#include "../Gameplay/WGameCore.h"
 #include "../ska/World/World.h"
 #include "../Gameplay/Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
@@ -25,13 +25,16 @@ m_settings("gamesettings.ini"),
 m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this) {
 
 	/* MAP inputs */
-	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputMapContext()));
+	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());
+	m_playerICM.addContext(mapicp);
 
 	/* GUI inputs */
-	m_playerICM.addContext(ska::InputContextPtr(new ska::KeyboardInputGUIContext()));
+	auto guiicp = ska::InputContextPtr(new ska::KeyboardInputGUIContext());
+	m_playerICM.addContext(guiicp);
 
 	/* Let's start on the map */
-	m_sceneHolder.nextScene(ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_playerICM, m_worldScene, false)));
+	auto scene = ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_playerICM, m_worldScene, false));
+	m_sceneHolder.nextScene(scene);
 	m_sceneHolder.update();
 
 	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
@@ -91,7 +94,7 @@ void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 //Boucle principale gérant évènements et affichages du monde.
 bool WGameCore::refresh() {
 	//t et t0 sont les temps pour la gestion des fps
-    long t = 0, t0 = 0; 
+    long t = 0, t0 = 0;
 
 	//Ici, transition entrante
     transition(1);
@@ -101,9 +104,9 @@ bool WGameCore::refresh() {
     //BOUCLE PRINCIPALE A CHAQUE FRAME
     while (true) {
         t = ska::TimeUtils::getTicks();
-		
+
 		if (t - t0 > TICKS)  {
-			
+
             //Rafraîchissement à chaque frame : graphique puis évènementiel
 			graphicUpdate();
 			eventUpdate(false);
@@ -112,7 +115,7 @@ bool WGameCore::refresh() {
 			SDL_RenderClear(m_renderer);
 			// Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
 			m_fpsCalculator.calculate(t - t0);
-			t0 = t; 
+			t0 = t;
         } else {
 			/* Temporisation entre 2 frames */
 			SDL_Delay(TICKS - (t - t0));

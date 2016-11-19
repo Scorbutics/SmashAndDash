@@ -22,7 +22,7 @@ namespace ska {
 		static void for_each(T&& t, F f, SeqList<Is...> seq) {
 			auto l = { (f(std::get<Is>(t)), 0)... };
 		}
-		
+
 
 		template<typename... Ts, typename F>
 		static void for_each_in_tuple(std::tuple<Ts...>& t, F f) {
@@ -49,7 +49,7 @@ namespace ska {
 		}
 
 		namespace detailindex {
-			template <class EL, class T, std::size_t N>
+			/*template <class EL, class T, std::size_t N>
 			struct get_index_from_tuple_impl {
 
 				static EL& visit(T& t, std::size_t index) {
@@ -66,7 +66,7 @@ namespace ska {
 				static EL& visit(T& t, std::size_t index) {
 					throw std::runtime_error("Cannot find tuple element");
 				}
-			};
+			};*/
 
 
 			template <class F, class T, std::size_t N>
@@ -90,11 +90,11 @@ namespace ska {
 			};
 		}
 
-		template <class T, class... Args>
+		/*template <class T, class... Args>
 		T& get_element_by_index(std::tuple<Args...>& t, std::size_t index) {
 			return detailindex::get_index_from_tuple_impl<T, std::tuple<Args...>, sizeof ...(Args)>::visit(t, index);
 		}
-
+*/
 		template<class F, class ...Args>
 		void visit_element_at_index(std::tuple<Args...>& t, std::size_t index, F& f) {
 			detailindex::visit_index_from_tuple_impl<F, std::tuple<Args...>, sizeof ...(Args)>::visit(f, t, index);

@@ -1,5 +1,5 @@
 #include "Particle.h"
-#include "../Graphic\SpritePath.h"
+#include "../Graphic/SpritePath.h"
 //#include "../Gameplay\WGameCore.h"
 
 ska::Particle::Particle(int idSprite, unsigned int weight, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) : m_anim(300, 2, false),
@@ -23,7 +23,7 @@ m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAU
     m_spriteSize.y = 0;
     m_noise = 0;
 
-	
+
 	m_spriteSize.w = m_sprite.getWidth()/2;
 	m_spriteSize.h = m_sprite.getHeight()/2;
 	m_anim.setOffsetAndFrameSize(m_spriteSize);
@@ -92,7 +92,7 @@ int ska::Particle::getState()
 void ska::Particle::display()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	
+
 	/* Et encore une machine d'état un peu dégueu... */
     if(m_t - (m_lifetime + m_splashTime) >= 0)
     {

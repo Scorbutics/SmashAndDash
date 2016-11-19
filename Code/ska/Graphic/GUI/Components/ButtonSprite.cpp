@@ -1,3 +1,4 @@
+#include <limits>
 #include "ButtonSprite.h"
 #include "../../../Graphic/SpritePath.h"
 #include "../../../Utils/RectangleUtils.h"

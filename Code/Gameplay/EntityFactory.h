@@ -1,4 +1,4 @@
-#ifndef DEF_ENTITY_MANAGER
+/*#ifndef DEF_ENTITY_MANAGER
 #define DEF_ENTITY_MANAGER
 
 #include "../ska/Inputs/Readers/IniReader.h"
@@ -19,8 +19,8 @@ class EntityFactory
 		size_t getNumberOfEntity(int id);												//nombre d'entités d'une même id
 		size_t getNumberOfCharID();														//nombre total de personnages humains d'id différente
 		size_t getNumberOfPkmnID();														//nombre total de pokémon d'id différente
-	
-	
+
+
 		void createTrainer();
 		Character* createOpponent(ska::IniReader* dataMob);
 		void addNPC(int id, ska::Point<int> posEntity, string pathStringEntity);
@@ -44,3 +44,4 @@ class EntityFactory
 };
 
 #endif
+*/

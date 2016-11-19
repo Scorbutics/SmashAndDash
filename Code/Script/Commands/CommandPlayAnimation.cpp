@@ -1,12 +1,12 @@
 #include "CommandPlayAnimation.h"
-#include "../../Utils\IDs.h"
+#include "../../Utils/IDs.h"
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/ECS/EntityManager.h"
 #include "../../ska/Physic/PositionComponent.h"
 #include "../../ska/Graphic/GraphicComponent.h"
 #include "../../ska/Graphic/DeleterComponent.h"
-#include "../../ska/Utils\ScriptUtils.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/ScriptUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Script/System/ScriptAutoSystem.h"
 #include "../../ska/Graphic/Rectangle.h"
 
@@ -25,7 +25,7 @@ int CommandPlayAnimation::argumentsNumber() {
 
 std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
-	
+
 
 	const std::string& id = args[0];
 	const ska::EntityId internalEntity = script.parent->getEntityFromName(id);
@@ -37,10 +37,10 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vec
 		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
 		ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
 		ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(internalEntity);
-		
+
 		const int id_anim = ska::StringUtils::strToInt(args[1]);
 		ska::EntityId animation = m_entityManager.createEntity();
-		
+
 		if (gc.sprite.empty()) {
 			return "";
 		}

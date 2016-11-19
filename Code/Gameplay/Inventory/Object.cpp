@@ -1,7 +1,7 @@
 #include "Object.h"
 #include <fstream>
 #include "../../ska/Inputs/Readers/IniReader.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../Utils/IDs.h"
 
 Object::Object(int id): m_animation(525, 2, false)
@@ -15,16 +15,16 @@ Object::Object(int id): m_animation(525, 2, false)
 	m_action = reader.get<std::string>("Effect action");
 	m_spriteName = "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Inventory"FILE_SEPARATOR + strId + ".png";
 	m_sprite.load(m_spriteName , DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-    
+
     m_pos.x = m_pos.y = 0;
-	
+
 	//2 : nombre d'animations dans une seule image
-    m_width = m_sprite.getWidth()/2; 
+    m_width = m_sprite.getWidth()/2;
     m_height = m_sprite.getHeight();
-    
+
 	//initialisation de l'animation
 	ska::Rectangle tmp = { m_pos.x, m_pos.y, m_width, m_height };
-	m_animation.setOffsetAndFrameSize(tmp); 
+	m_animation.setOffsetAndFrameSize(tmp);
 }
 
 

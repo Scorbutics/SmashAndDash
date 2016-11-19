@@ -1,6 +1,6 @@
 #include "CommandHeal.h"
-#include "../../Gameplay\WGameCore.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../Gameplay/WGameCore.h"
+#include "../../ska/Utils/StringUtils.h"
 
 CommandHeal::CommandHeal(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
@@ -20,10 +20,10 @@ std::string CommandHeal::execute(ska::ScriptComponent& script, std::vector<std::
 	//WGameCore& wScreen = WGameCore::getInstance();
 	int value;
 	unsigned int index;
-	
+
 	index = ska::StringUtils::strToInt(args[0]);
 	value = ska::StringUtils::strToInt(args[1]);
-	
+
 	//if (index >= 0 && index < wScreen.getPokemonManager().getPokemonTeamSize()) {
 		//wScreen.getPokemonManager().getPokemon(index)->setHP(wScreen.getPokemonManager().getPokemon(index)->getHp() + value);
 	//}

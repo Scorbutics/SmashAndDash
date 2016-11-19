@@ -13,7 +13,7 @@ m_worldScene(ws),
 m_icm(icm),
 m_player(player),
 m_cem(ws.getEntityManager()),
-m_sceneHolder(sceneHolder), 
+m_sceneHolder(sceneHolder),
 m_window(w) {
 	m_t0 = ska::TimeUtils::getTicks();
 }
@@ -22,14 +22,14 @@ void FightStartSystem::refresh() {
 	ska::PositionComponent& pcPlayer = m_entityManager.getComponent<ska::PositionComponent>(m_player);
 	ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(m_player);
 	ska::Point<int> pPlayer = { pcPlayer.x, pcPlayer.y };
-	
+
 	if (gc.sprite.empty()) {
 		return;
 	}
 
 	pPlayer.x += gc.sprite[0].getWidth() / 2;
 	pPlayer.y += gc.sprite[0].getHeight() / 2;
-	
+
 
 	const unsigned int currentDelay = ska::TimeUtils::getTicks() - m_t0;
 	for (ska::EntityId entityId : m_processed) {
@@ -56,7 +56,8 @@ void FightStartSystem::refresh() {
 					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
 					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
-					m_sceneHolder.nextScene(ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc)));
+					auto scene = ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc));
+					m_sceneHolder.nextScene(scene);
 				}
 				m_t0 = ska::TimeUtils::getTicks();
 				break;

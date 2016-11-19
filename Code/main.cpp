@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 #include <sstream>
-#include <SDL2\SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include "Gameplay/WGameCore.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
@@ -60,11 +60,11 @@ int main (int argc, char *argv[])
 
 	try {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
-		
+
 		//Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
 		WGameCore wScreen(title, widthBlocks * TAILLEBLOC, heightBlocks * TAILLEBLOC);
 		//boucle principale
-		while (wScreen.refresh()); 
+		while (wScreen.refresh());
 	} catch (ska::TerminateProcessException& tpe) {
 		std::clog << tpe.what() << std::endl;
 	} catch (ska::GenericException& e) {
@@ -72,7 +72,7 @@ int main (int argc, char *argv[])
 		std::cerr << e.what() << std::endl;
 		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
 	}
-    
+
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();

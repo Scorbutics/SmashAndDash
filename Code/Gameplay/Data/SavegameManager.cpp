@@ -1,11 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
-#include "../../Utils\IDs.h"
-#include "../../Utils\ChargementImages.h"
-#include "../../ska/Utils\StringUtils.h"
+#include "../../Utils/IDs.h"
+#include "../../Utils/ChargementImages.h"
+#include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/FileUtils.h"
-#include "../../Gameplay\Data\Statistics.h"
+#include "../../Gameplay/Data/Statistics.h"
 
 SavegameManager::SavegameManager(std::string pathname)
 {
@@ -90,7 +90,7 @@ void SavegameManager::savePokemonTeam()
 		const std::string& id = ska::StringUtils::intToStr(i);
 		remove(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini").c_str());
 	}
-		
+
 
 	/*for(unsigned int i = 0; i < wScreen.getPokemonManager().getPokemonTeamSize(); i++)
 	{
@@ -115,7 +115,7 @@ void SavegameManager::loadPokemonTeam()
 	unsigned int index = 0;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	/*do 
+	/*do
 	{
 		const std::string& id = ska::StringUtils::intToStr(index);
 		reader.load("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
@@ -128,7 +128,7 @@ void SavegameManager::loadPokemonTeam()
 		}
 		index++;
 	} while (reader.isLoaded());*/
-	
+
 }
 
 std::string SavegameManager::getStartChipsetName()
@@ -184,7 +184,7 @@ void SavegameManager::saveItems()
 
 void SavegameManager::loadTrainer()
 {
-	
+
 	unsigned int startPosx, startPosy;
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -207,12 +207,12 @@ void SavegameManager::loadTrainer()
 
 	/*hero = wScreen.getEntityFactory().getTrainer();
 	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
-	
+
 	for (unsigned int i = 0; reader.exists("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);
 		loadItem(reader.get<int>("Items " + id + "_id"), (unsigned int)reader.get<int>("Items " + id + "_amount"));
 	}
-		
+
 }
 
 void SavegameManager::loadItem( int id, unsigned int amount )
