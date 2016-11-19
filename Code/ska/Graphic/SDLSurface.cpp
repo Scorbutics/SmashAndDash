@@ -5,21 +5,22 @@
 #include "SDLSurface.h"
 
 SDL_Surface* LoadImage32(const std::string& fichier_image) {
-	SDL_Surface *result;
-	SDL_Surface *imageRam;
+	SDL_Surface* result = nullptr;
+	SDL_Surface* imageRam;
 	imageRam = IMG_Load(fichier_image.c_str());
+    if(imageRam != nullptr) {
+        result = SDL_CreateRGBSurface(0, imageRam->w, imageRam->h, 32, 0, 0, 0, 0);
+        if (result == nullptr ) {
+            SDL_FreeSurface(imageRam);
+            SDL_FreeSurface(result);
+            return nullptr;
+        }
 
-	result = SDL_CreateRGBSurface(0, imageRam->w, imageRam->h, 32, 0, 0, 0, 0);
-	if (result == nullptr || imageRam == nullptr) {
-		SDL_FreeSurface(imageRam);
-		SDL_FreeSurface(result);
-		return nullptr;
-	}
-
-	/* Copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits */
-	SDL_UpperBlit(imageRam, nullptr, result, nullptr);
-	SDL_FreeSurface(imageRam);
-	imageRam = nullptr;
+        /* Copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits */
+        SDL_UpperBlit(imageRam, nullptr, result, nullptr);
+        SDL_FreeSurface(imageRam);
+        imageRam = nullptr;
+    }
 	return result;
 }
 

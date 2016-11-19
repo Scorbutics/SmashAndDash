@@ -35,7 +35,7 @@ std::string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame&
 			if (script.varMap.find(key) != script.varMap.end()) {
 				return script.varMap.at(key);
 			} else {
-				return varNumber;
+				return v;
 			}
 
 		}

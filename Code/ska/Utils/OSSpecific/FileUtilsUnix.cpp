@@ -1,6 +1,7 @@
 #include "../SkaConstants.h"
 #if defined(SKA_PLATFORM_LINUX)
 
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -12,7 +13,11 @@ ska::FileUtilsUnix::FileUtilsUnix() {
 }
 
 std::string ska::FileUtilsUnix::getCurrentDirectory() {
-
+   char cwd[2048];
+   if (getcwd(cwd, sizeof(cwd)) == NULL) {
+       throw FileException("Unknown error while getting current directory");
+   }
+   return std::string(cwd);
 }
 
 void ska::FileUtilsUnix::createDirectory(const std::string& directoryName) {

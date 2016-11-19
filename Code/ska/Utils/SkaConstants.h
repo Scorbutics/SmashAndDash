@@ -3,7 +3,7 @@
 #define SKA_DEBUG_LOGS
 #endif
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__unix__) || defined(linux) || defined(__linux)
 #define SKA_PLATFORM_LINUX
 #elif defined(_WIN32) || defined(_WIN64)
 #define SKA_PLATFORM_WIN
@@ -16,7 +16,7 @@
 /* END DEBUG CONF*/
 
 #define FILE_SEPARATOR "/"
-#define NOSUCHFILE "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"nosuchfile.png"
+#define NOSUCHFILE "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "nosuchfile.png"
 #define SPRITEBANK_ANIMATION 0
 #define SPRITEBANK_SKILL 1
 #define SPRITEBANK_PHYSIC 2
@@ -26,21 +26,21 @@
 #define SPRITEBANK_ICONS 6
 #define SPRITEBANK_NUMBER 7
 
-#define SPRITEBANK_PATH_DIR "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR
-#define SPRITEBANK_PATH_ANIMATION SPRITEBANK_PATH_DIR"Animations"
-#define SPRITEBANK_PATH_SKILL SPRITEBANK_PATH_DIR"Fight"
-#define SPRITEBANK_PATH_PHYSIC SPRITEBANK_PATH_DIR"Physics"
-#define SPRITEBANK_PATH_FACESET SPRITEBANK_PATH_DIR"Facesets"
-#define SPRITEBANK_PATH_CHARSET SPRITEBANK_PATH_DIR"Charsets"
-#define SPRITEBANK_PATH_PARTICLE SPRITEBANK_PATH_DIR"Particles"
-#define SPRITEBANK_PATH_ICONS SPRITEBANK_PATH_DIR"Icones"
+#define SPRITEBANK_PATH_DIR "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR
+#define SPRITEBANK_PATH_ANIMATION SPRITEBANK_PATH_DIR "Animations"
+#define SPRITEBANK_PATH_SKILL SPRITEBANK_PATH_DIR "Fight"
+#define SPRITEBANK_PATH_PHYSIC SPRITEBANK_PATH_DIR "Physics"
+#define SPRITEBANK_PATH_FACESET SPRITEBANK_PATH_DIR "Facesets"
+#define SPRITEBANK_PATH_CHARSET SPRITEBANK_PATH_DIR "Charsets"
+#define SPRITEBANK_PATH_PARTICLE SPRITEBANK_PATH_DIR "Particles"
+#define SPRITEBANK_PATH_ICONS SPRITEBANK_PATH_DIR "Icones"
 
 #define P_DEFINED 2 //Path défini
 #define P_RANDOM 3//ou aléatoire
 #define P_FIXED 1 //ou encore fixe
 
 //Transparence non alpha (couleur sous forme RVB)
-#define DEFAULT_T_RED 190 
+#define DEFAULT_T_RED 190
 #define DEFAULT_T_GREEN 151
 #define DEFAULT_T_BLUE 255
 
@@ -86,8 +86,8 @@
 #define SPRITE_ID_SHADOW 13
 
 //Taille d'un bloc dans le chipset fenetre (morceau d'une fenetre)
-#define TAILLEBLOCFENETRE 32 
+#define TAILLEBLOCFENETRE 32
 #define TAILLEECRANMINX TAILLEBLOCFENETRE*15
 #define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
-#define DEFAULT_FONT_FILE "."FILE_SEPARATOR"Polices"FILE_SEPARATOR"pkmndp.ttf"
+#define DEFAULT_FONT_FILE "." FILE_SEPARATOR "Polices" FILE_SEPARATOR "pkmndp.ttf"

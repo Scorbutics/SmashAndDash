@@ -4,13 +4,17 @@
 #include "../ska/World/World.h"
 #include "../ska/Utils/NumberUtils.h"
 
-Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) : m_world(w) {
+Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
+    m_world(w),
+    m_number(0) {
 	m_active = false;
 	m_mosaic = false;
 	load(wSprite, number, distance, intensityX, intensityY, alpha);
 }
 
-Weather::Weather(ska::World& w) : m_world(w) {
+Weather::Weather(ska::World& w) :
+    m_world(w),
+    m_number(0) {
 	m_active = false;
 	m_mosaic = false;
 }
@@ -21,7 +25,7 @@ void Weather::load(const std::string& wSprite, int number, int distance, int int
 	m_intensityY = intensityY;
 	setNumber(number);
 	m_active = true;
-	
+
 	if (!wSprite.empty()) {
 		m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha));
 	}
@@ -35,7 +39,7 @@ bool Weather::isVisible() const {
 
 void Weather::setNumber(int number) {
 	m_pos.clear();
-	
+
     m_number = number;
 
 	m_pos.reserve(m_number);
@@ -71,7 +75,7 @@ void Weather::update() {
 
 	const float worldWidth = (float)m_world.getPixelWidth();
 	const float worldHeight = (float)m_world.getPixelHeight();
-	
+
 	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
 
 	for (int i = 0; i < m_number; i++) {

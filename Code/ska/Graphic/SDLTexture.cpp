@@ -8,10 +8,10 @@
 #include "../Graphic/GUI/Window.h"
 #include "../Exceptions/FileException.h"
 
-ska::SDLTexture::SDLTexture() {
+ska::SDLTexture::SDLTexture() : m_texture(nullptr) {
 }
 
-ska::SDLTexture::SDLTexture(TextureData& data) {
+ska::SDLTexture::SDLTexture(TextureData& data) : m_texture(nullptr) {
 	load(data.getWindow(), data.getData().first, data.getData().second.r, data.getData().second.g, data.getData().second.b, data.getData().second.a);
 }
 

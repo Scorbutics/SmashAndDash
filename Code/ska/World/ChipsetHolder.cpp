@@ -11,10 +11,10 @@
 
 ska::ChipsetHolder::ChipsetHolder(const std::string& correspondanceFile) {
 	ska::SDLSurface fichierMCorr;
-	const std::string& corrName = "."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png";
+	const std::string& corrName = "." FILE_SEPARATOR "Chipsets" FILE_SEPARATOR "corr.png";
 	m_corrFileWidth = 0;
 	fichierMCorr.load32(corrName);
-	
+
 	if (fichierMCorr.getInstance() == nullptr) {
 		throw ska::FileException("Erreur lors du chargement de \"" + corrName + "\", fichier de correspondance entre tuiles du monde et position dans le chipset. "
 			"Sans ce fichier, le chargement d'un chipset (et donc d'un monde) est impossible. " + std::string(SDL_GetError()));

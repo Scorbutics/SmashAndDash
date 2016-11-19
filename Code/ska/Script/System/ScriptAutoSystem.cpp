@@ -83,7 +83,7 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	extendedName = keyScript + "_" + scriptData.context;
 
 	const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
-	validPath = (currentDir + "\\" + scriptData.name);
+	validPath = (currentDir + FILE_SEPARATOR "" + scriptData.name);
 
 	ScriptComponent sc;
 	if (m_cache.find(validPath) == m_cache.end()) {
