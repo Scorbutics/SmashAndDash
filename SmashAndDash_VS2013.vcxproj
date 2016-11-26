@@ -133,6 +133,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEventListener.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\EventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HandledWidget.h" />

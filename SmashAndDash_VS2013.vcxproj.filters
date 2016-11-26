@@ -1002,6 +1002,9 @@
     <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">

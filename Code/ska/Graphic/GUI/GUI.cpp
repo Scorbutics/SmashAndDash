@@ -694,8 +694,8 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 			auto priority = tthis->getPriority();
 			firstWidget->setPriority(priority);
 			tthis->setPriority(firstPriority);
-			tthis->focus(false);
-			firstWidget->focus(true);
+			tthis->focus(true);
+			firstWidget->focus(false);
 			m_wMaster.resort();
 		}
 	}
