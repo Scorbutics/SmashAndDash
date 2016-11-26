@@ -47,7 +47,7 @@ namespace ska {
 			return true;
 		}
 
-	void addHeadHandler(const EventHandler<E>& h) {
+		void addHeadHandler(const EventHandler<E>& h) {
 			m_callbacks.push_front(h);
 		}
 

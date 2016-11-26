@@ -43,6 +43,7 @@ namespace ska {
 
 			auto buttonQuit = std::unique_ptr<ska::ButtonQuit>(new ButtonQuit(*this, ska::Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), ska::Button::MENU_DEFAULT_THEME_PATH + "close_button"));
 
+			
 			this->addWidget(button);
 			this->addWidget(buttonQuit);
 		}

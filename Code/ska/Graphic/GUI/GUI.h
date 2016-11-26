@@ -35,13 +35,18 @@ namespace ska {
 
 		void update();
 
+	protected:
+		DynamicWindowIG<> m_wMaster;
+		std::unordered_map<std::string, DynamicWindowIG<>*> m_windowAnnuary;
+
 	private:
 		void refreshMouse();
 		void refreshKeyboard();
-
-		DynamicWindowIG<> m_wAction;
+		void windowSorter(Widget* tthis, ClickEvent& e);
+		
+		DynamicWindowIG<>* m_wAction;
 		std::unordered_set<DynamicWindowIG<>*> m_dynamicWindows;
-		std::vector<std::unique_ptr<DynamicWindowIG<>>> m_extraWindows;
+		std::vector<DynamicWindowIG<>*> m_extraWindows;
 		std::vector<int> m_buttonScroll;
 		ska::Point<int> m_lastMousePos;
 		ska::Point<int> m_curObjectPos;
@@ -57,10 +62,14 @@ namespace ska {
 		Widget* m_hovered;
 		Widget* m_clicked;
 
+
 	protected:
-		template <class Win>
-		void addWindow(std::unique_ptr<Win>& w) {
-			m_extraWindows.push_back(std::move(w));
+		template <class Win, class ...HL>
+		void addWindow(std::unique_ptr<Win>& w, const std::string& name) {
+			m_wMaster.addWidget(w);
+			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
+			m_windowAnnuary[name] = t;
+			t->addHeadHandler<ska::ClickEventListener>(std::bind(&GUI::windowSorter, this, std::placeholders::_1, std::placeholders::_2));
 		}
 	};
 }

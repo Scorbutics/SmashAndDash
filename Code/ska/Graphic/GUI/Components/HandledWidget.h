@@ -76,7 +76,6 @@ namespace ska {
 
 		virtual ~HandledWidget() = default;
 
-	//protected:
 		template<class L, class EH>
 		void addHeadHandler(const EH& eh) {
 			meta::get<L>(m_handlers).addHeadHandler(eh);

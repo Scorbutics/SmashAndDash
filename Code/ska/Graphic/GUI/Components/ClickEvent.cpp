@@ -1,7 +1,9 @@
 #include "ClickEvent.h"
 #include "WidgetMaskHelper.h"
 #include "ClickEventListener.h"
-ska::ClickEvent::ClickEvent(const ska::MouseEventType& state, ska::Point<int>& pos) : HoverEvent(state, pos, pos) {
+ska::ClickEvent::ClickEvent(const ska::MouseEventType& state, ska::Point<int>& pos) : 
+	HoverEvent(state, pos, pos),
+	m_pushToFront(false) {
 }
 
 

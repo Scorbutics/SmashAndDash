@@ -60,11 +60,14 @@ namespace ska {
 
 		virtual ~Widget() = default;
 
+		void focus(bool f);
 	private:
 		std::string m_name;
 		Widget* m_parent;
 		Rectangle m_box;
 		bool m_visible;
+		
+		bool m_focused;
 	};
 
 }

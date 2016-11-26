@@ -93,6 +93,7 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	m_world.graphicUpdate(drawables);
 
 	//Affiche la GUI
+	//m_gui.graphicUpdate(drawables);
 	drawables.add(m_gui);
 }
 

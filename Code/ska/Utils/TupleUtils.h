@@ -30,15 +30,13 @@ namespace ska {
 		}
 
 		template<int Index, class Search, class First, class... Types>
-		struct get_internal
-		{
+		struct get_internal {
 			typedef typename get_internal<Index + 1, Search, Types...>::type type;
 			static const int index = Index;
 		};
 
 		template<int Index, class Search, class... Types>
-		struct get_internal<Index, Search, Search, Types...>
-		{
+		struct get_internal<Index, Search, Search, Types...> {
 			typedef get_internal type;
 			static const int index = Index;
 		};
@@ -76,8 +74,7 @@ namespace ska {
 					if (N - 1 == index) {
 						auto& found = std::get<N - 1>(t);
 						f(found);
-					}
-					else {
+					} else {
 						visit_index_from_tuple_impl<F, T, N - 1>::visit(f, t, index);
 					}
 				}

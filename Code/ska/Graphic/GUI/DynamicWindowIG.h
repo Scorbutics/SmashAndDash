@@ -9,7 +9,7 @@
 
 #include "./Components/ClickEventListener.h"
 #include "./Components/HoverEventListener.h"
-//#include "./Components/KeyEventListener.h"
+
 
 namespace ska {
 
@@ -34,10 +34,6 @@ namespace ska {
 				this->move(box);
 				this->setWidth(box.w);
 				this->setHeight(box.h);
-// 				m_button = std::make_unique<Hoverable<>>(*this);
-// 				m_button->setWidth(box.w);
-// 				m_button->setHeight(box.h);
-//				addWidget(m_button);
 		}
 
 		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, bool drawStyle) :
@@ -50,11 +46,6 @@ namespace ska {
 			m_guiObservable->HoverObservable::addObserver(*this);
 			m_guiObservable->ClickObservable::addObserver(*this);
 			m_keyObservable->addObserver(*this);
-// 			m_button = std::make_unique<Hoverable<>>(*this);
-// 			m_button->setWidth(box.w);
-// 			m_button->setHeight(box.h);
-//			addWidget(m_button);
-
 		}
 
 		virtual ~DynamicWindowIG() {
@@ -84,6 +75,5 @@ namespace ska {
 	private:
 		MouseObservable *const m_guiObservable;
 		KeyObservable *const m_keyObservable;
-		//std::unique_ptr<Hoverable<>> m_button;
 	};
 }

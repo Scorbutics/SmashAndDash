@@ -2,7 +2,9 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <deque>
 #include <functional>
+#include <algorithm>
 #include <bitset>
 #include <tuple>
 
@@ -15,25 +17,31 @@ namespace ska {
 	public:
 		WidgetPanel() = default;
 
-		WidgetPanel(Widget& parent) : HandledWidget<HL...>(parent) {
+		WidgetPanel(Widget& parent) : 
+			HandledWidget<HL...>(parent) {
 		}
 
-		WidgetPanel(Widget& parent, Point<int>& position) : HandledWidget<HL...>(parent, position) {
+		WidgetPanel(Widget& parent, Point<int>& position) : 
+			HandledWidget<HL...>(parent, position) {
 		}
 
 		template <class SubWidget>
 		void addWidget(std::unique_ptr<SubWidget>& w) {
 			bool empty = true;
+			w->setPriority((int)(m_globalList.size()));
 			if (std::is_base_of<IHandledWidget, SubWidget>::value && !(empty = ((IHandledWidget&)(*w.get())).isMaskEmpty())) {
 				m_handledWidgets.push_back(std::move(w));
+				m_globalList.push_back(m_handledWidgets.back().get());
 			} else {
 				m_widgets.push_back(std::move(w));
+				m_globalList.push_back(m_widgets.back().get());
 			}
 		}
 
 		void clear() {
 			m_widgets.clear();
 			m_handledWidgets.clear();
+			m_globalList.clear();
 		}
 
 		/* Called from GUI */
@@ -43,7 +51,8 @@ namespace ska {
 			}
 			bool result = false;
 			for (auto& w : m_handledWidgets) {
-				result |= w->notify(e);
+				const auto nextNotify = w->notify(e);
+				result |= nextNotify;
 				if (e.stopped() == StopType::STOP_WIDGET) {
 					return result;
 	 			}
@@ -60,14 +69,14 @@ namespace ska {
 			return HandledWidget<HL...>::notify(e);
 		}
 
-		void display() const {
-			for (const auto& w : m_widgets) {
-				w->display();
+		void display() const override {
+			for (auto w = m_globalList.begin(); w != m_globalList.end(); w++) {
+				(*w)->display();
 			}
+		}
 
-			for (const auto& w : m_handledWidgets) {
-				w->display();
-			}
+		Widget* backWidget() {
+			return m_globalList.back();
 		}
 
 		virtual ~WidgetPanel() = default;
@@ -75,9 +84,30 @@ namespace ska {
 		void switchTextureAndMemorize() {}
 		void resetTexture() {}
 
+		void resort() {
+			this->sortZIndexWidgets(false);	
+		}
+
 	private:
-		std::vector<std::unique_ptr<Widget>> m_widgets;
-		std::vector<std::unique_ptr<Widget>> m_handledWidgets;
+		void sortZIndexWidgets(bool asc) {
+			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
+				return (w1->getPriority() < w2->getPriority());
+			};
+			auto comparatorDesc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
+				return (w1->getPriority() > w2->getPriority());
+			};
+			if (asc) {
+				std::sort(m_globalList.begin(), m_globalList.end(), ska::Drawable::staticOperatorInf);
+				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
+			} else {
+				std::sort(m_globalList.begin(), m_globalList.end(), ska::Drawable::staticOperatorSup);
+				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
+			}
+		}
+
+		std::deque<std::unique_ptr<Widget>> m_widgets;
+		std::deque<std::unique_ptr<Widget>> m_handledWidgets;
+		std::deque<Widget*> m_globalList;
 
 	};
 }

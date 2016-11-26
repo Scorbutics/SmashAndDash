@@ -1,8 +1,8 @@
 #include "WindowSettings.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 
-WindowSettings::WindowSettings(ska::MouseObservable& guiObservable, ska::KeyObservable& keyboardObs, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<>(guiObservable, keyboardObs, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
+WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
+ska::MoveableWindow<>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
 
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 16, ska::Point<int>(16, 16)));
