@@ -61,6 +61,8 @@ namespace ska {
 		virtual ~Widget() = default;
 
 		void focus(bool f);
+
+		bool isFocused() const;
 	private:
 		std::string m_name;
 		Widget* m_parent;

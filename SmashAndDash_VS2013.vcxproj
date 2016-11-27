@@ -127,12 +127,15 @@
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Hoverable.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonQuit.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonSprite.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEventListener.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseEventType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\EventListener.h" />
@@ -443,6 +446,8 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Button.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEventListener.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\FocusEvent.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\FocusEventListener.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEventListener.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp" />

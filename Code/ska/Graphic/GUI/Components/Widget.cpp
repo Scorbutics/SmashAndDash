@@ -99,3 +99,7 @@ void ska::Widget::focus(bool f) {
 	m_focused = f;
 }
 
+bool ska::Widget::isFocused() const {
+	return m_focused;
+}
+

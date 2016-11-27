@@ -61,7 +61,7 @@ namespace ska {
 
 		Widget* m_hovered;
 		Widget* m_clicked;
-
+		Widget* m_lastFocused;
 
 	protected:
 		template <class Win, class ...HL>

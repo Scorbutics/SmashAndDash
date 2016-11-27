@@ -6,9 +6,10 @@
 
 #include "ClickEventListener.h"
 #include "KeyEventListener.h"
+#include "FocusEventListener.h"
 
 namespace ska {
-	class Input : public HandledWidget<ClickEventListener, KeyEventListener> {
+	class Input : public HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener> {
 	public:
 		Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Input() = default;

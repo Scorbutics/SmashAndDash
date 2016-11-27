@@ -14,6 +14,7 @@
 #include "./Components/Widget.h"
 #include "./Components/HoverEvent.h"
 #include "./Components/KeyEvent.h"
+#include "./Components/FocusEvent.h"
 #include "./Components/ClickEvent.h"
 #include "GUIScrollButtonWindowIG.h"
 #include "./Components/ButtonSprite.h"
@@ -281,10 +282,22 @@ void ska::GUI::refreshMouse() {
 	}
 
 	if (in[ska::InputAction::LClic]) {
-        ska::Point<int> pMp (mousePos);
+		FocusEvent fbe(MouseEventType::MOUSE_BLUR);
+		if (m_lastFocused != nullptr) {
+			m_lastFocused->directNotify(fbe);
+		}
+
+		ska::Point<int> pMp (mousePos);
 		ClickEvent ce(MouseEventType::MOUSE_CLICK, pMp);
 		ClickObservable::notifyObservers(ce);
 		m_clicked = ce.getTarget();
+	
+		if (m_clicked != nullptr) {
+			FocusEvent fe(MouseEventType::MOUSE_FOCUS);
+			m_clicked->directNotify(fe);
+
+			m_lastFocused = m_clicked;
+		}
 	}
 
 

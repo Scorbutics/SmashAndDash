@@ -2,15 +2,9 @@
 #include "WidgetEvent.h"
 #include "../../Point.h"
 #include "HoverEventListener.h"
+#include "MouseEventType.h"
 
 namespace ska {
-	enum MouseEventType {
-		MOUSE_ENTER,
-		MOUSE_OUT,
-		MOUSE_OVER,
-		MOUSE_CLICK,
-		MOUSE_RELEASE
-	};
 
 	class Widget;
 
