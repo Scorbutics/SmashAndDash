@@ -12,11 +12,6 @@ void ska::KeyboardInputGUIContext::buildCodeMap(std::unordered_map<int, ska::Inp
 
 	codeMap[SDL_SCANCODE_BACKSPACE] = InputAction::DeleteChar;
 
-	toggles[SDL_SCANCODE_A] = InputToggle::MoveLeft;
-	toggles[SDL_SCANCODE_W] = InputToggle::MoveUp;
-	toggles[SDL_SCANCODE_S] = InputToggle::MoveDown;
-	toggles[SDL_SCANCODE_D] = InputToggle::MoveRight;
-	
 	/* Mouse click */
 	/* Left */
 	codeMap[SDL_NUM_SCANCODES + 0] = InputAction::LClic;

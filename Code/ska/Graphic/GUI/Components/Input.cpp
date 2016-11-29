@@ -23,6 +23,7 @@ HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener>(parent, 
 
 	addHandler<FocusEventListener>([&](ska::Widget* tthis, ska::FocusEvent& e) {
 		focus(e.getState() == ska::MouseEventType::MOUSE_FOCUS);
+		e.setTarget(this);
 	});
 
 	/* Propagation du handler vers le composant m_field */

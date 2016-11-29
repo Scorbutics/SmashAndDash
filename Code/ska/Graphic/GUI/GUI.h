@@ -20,7 +20,7 @@ namespace ska {
 		public KeyObservable {
 
 	public:
-		GUI(const ska::Window& w, const ska::InputContextManager& playerICM);
+		GUI(const ska::Window& w, ska::InputContextManager& playerICM);
 
 		void refresh();
 		int isPositionOnButton(const ska::Point<float>& pos) const;
@@ -34,7 +34,7 @@ namespace ska {
 		void display() const override;
 
 		void update();
-
+		
 	protected:
 		DynamicWindowIG<> m_wMaster;
 		std::unordered_map<std::string, DynamicWindowIG<>*> m_windowAnnuary;
@@ -43,7 +43,7 @@ namespace ska {
 		void refreshMouse();
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
-		
+
 		DynamicWindowIG<>* m_wAction;
 		std::unordered_set<DynamicWindowIG<>*> m_dynamicWindows;
 		std::vector<DynamicWindowIG<>*> m_extraWindows;
@@ -57,7 +57,7 @@ namespace ska {
 		bool m_isMovingWindow;
 		const ska::Window& m_window;
 
-		const ska::InputContextManager& m_playerICM;
+		ska::InputContextManager& m_playerICM;
 
 		Widget* m_hovered;
 		Widget* m_clicked;
@@ -69,7 +69,9 @@ namespace ska {
 			m_wMaster.addWidget(w);
 			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
 			m_windowAnnuary[name] = t;
-			t->addHeadHandler<ska::ClickEventListener>(std::bind(&GUI::windowSorter, this, std::placeholders::_1, std::placeholders::_2));
+			t->addHeadHandler<ska::ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
+				windowSorter(tthis, e);
+			});
 		}
 	};
 }

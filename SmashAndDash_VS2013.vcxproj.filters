@@ -1595,5 +1595,8 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\FocusEventListener.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ska\Inputs\EnumContextManager.h">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

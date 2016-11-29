@@ -6,15 +6,25 @@
    Contexts should be added depending of the current Scene in order to
    enable or disable inputs in specific Scene */
 ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {	
-	for (InputContextPtr& it : m_contexts) {
-		it->buildCodeMap();
+	for (auto& c : m_contexts) {
+		c.second->buildCodeMap();
 	}
 	m_ranges.resize(INPUT_MAX_RANGE);
 }
 
-void ska::InputContextManager::addContext(InputContextPtr& icp) {
-	m_contexts.push_back(std::move(icp));
-	m_contexts[m_contexts.size() - 1]->buildCodeMap();
+void ska::InputContextManager::addContext(EnumContextManager ecm, InputContextPtr& icp) {
+	icp->buildCodeMap();
+	m_contexts[ecm] = std::move(icp);
+}
+
+void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disable) {
+	if (disable && m_contexts.find(ecm) != m_contexts.end()) {
+		m_disabledContexts[ecm] = std::move(m_contexts[ecm]);
+		m_contexts.erase(ecm);
+	} else if (!disable && m_disabledContexts.find(ecm) != m_disabledContexts.end()) {
+		m_contexts[ecm] = std::move(m_disabledContexts[ecm]);
+		m_disabledContexts.erase(ecm);
+	}
 }
 
 void ska::InputContextManager::refresh() {
@@ -23,11 +33,11 @@ void ska::InputContextManager::refresh() {
 	InputRange empty;
 	std::fill(m_ranges.begin(), m_ranges.end(), empty);
 	m_toggles.reset();
-	for (InputContextPtr& it : m_contexts) {
-		it->queryActions(m_ril, m_actions);
-		it->queryRanges(m_ril, m_ranges);
-		it->queryToggles(m_ril, m_toggles);
-		m_textInput = it->queryText(m_ril);
+	for (auto& c : m_contexts) {
+		c.second->queryActions(m_ril, m_actions);
+		c.second->queryRanges(m_ril, m_ranges);
+		c.second->queryToggles(m_ril, m_toggles);
+		m_textInput = c.second->queryText(m_ril);
 	}
 }
 

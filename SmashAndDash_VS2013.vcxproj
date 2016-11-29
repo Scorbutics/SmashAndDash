@@ -458,6 +458,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />
     <ClCompile Include="Code\ska\Graphic\System\DebugCollisionDrawerSystem.cpp" />
+    <ClCompile Include="Code\ska\Inputs\EnumContextManager.h" />
     <ClCompile Include="Code\ska\Physic\System\DebugWorldCollisionResponse.cpp" />
     <ClCompile Include="Code\ska\Physic\System\EntityCollisionResponse.cpp" />
     <ClCompile Include="Code\ska\Physic\System\WorldCollisionResponse.cpp" />

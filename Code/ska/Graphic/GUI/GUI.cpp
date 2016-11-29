@@ -23,7 +23,7 @@
 
 #define SCROLL_BUTTON_SPEED 3
 
-ska::GUI::GUI(const ska::Window& w, const ska::InputContextManager& playerICM) :
+ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
 m_playerICM(playerICM),
 m_window(w),
 m_hovered(nullptr),
@@ -95,7 +95,7 @@ m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, false
 
 	setPriority(std::numeric_limits<int>().max());
 	m_wAction->setPriority(0);
-	addWindow<DynamicWindowIG<>>(std::unique_ptr<DynamicWindowIG<>>(m_wAction), "actions");
+	addWindow(std::unique_ptr<DynamicWindowIG<>>(m_wAction), "actions");
 }
 
 void ska::GUI::initButtons(const ska::Window& w) {
@@ -287,6 +287,11 @@ void ska::GUI::refreshMouse() {
 			m_lastFocused->directNotify(fbe);
 		}
 
+		if (fbe.getTarget() != nullptr) {
+			//TODO : add map context
+			m_playerICM.disableContext(EnumContextManager::MAP, false);
+		}
+
 		ska::Point<int> pMp (mousePos);
 		ClickEvent ce(MouseEventType::MOUSE_CLICK, pMp);
 		ClickObservable::notifyObservers(ce);
@@ -295,7 +300,11 @@ void ska::GUI::refreshMouse() {
 		if (m_clicked != nullptr) {
 			FocusEvent fe(MouseEventType::MOUSE_FOCUS);
 			m_clicked->directNotify(fe);
-
+			if(fe.getTarget() != nullptr) {
+				//TODO : remove map context
+				m_playerICM.disableContext(EnumContextManager::MAP, true);
+			}
+			
 			m_lastFocused = m_clicked;
 		}
 	}
