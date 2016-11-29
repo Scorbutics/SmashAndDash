@@ -12,7 +12,7 @@
 
 ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) :
 HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
-	m_text(*this, text, fontSize, ska::Point<int>()),
+	m_text(*this, text, fontSize, ska::Point<int>(2, m_field.getBox().h/8)),
 	m_keyFocus(false),
 	m_field(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](ska::Widget* tthis, ska::ClickEvent& e) {
 		if(!m_keyFocus && e.getState() == ska::MouseEventType::MOUSE_CLICK) {
@@ -24,12 +24,8 @@ HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener>(parent, 
 	addHandler<FocusEventListener>([&](ska::Widget* tthis, ska::FocusEvent& e) {
 		auto f = e.getState() == ska::MouseEventType::MOUSE_FOCUS;
 		focus(f);
-		e.setTarget(this);
-		if (f) {
-			m_field.forceState(ButtonState::PRESSED);
-		} else {
-			m_field.forceState(ButtonState::NONE);
-		}
+		e.setTarget(this);	
+		m_field.forceState(f ? ButtonState::PRESSED : ButtonState::NONE);
 	});
 
 	/* Propagation du handler vers le composant m_field */

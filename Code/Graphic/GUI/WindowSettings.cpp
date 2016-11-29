@@ -5,7 +5,7 @@ WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absol
 ska::MoveableWindow<>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
 
 
-	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 16, ska::Point<int>(16, 16)));
+	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
 	addWidget(input);
 }
 
