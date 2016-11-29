@@ -21,7 +21,9 @@ namespace ska {
 		virtual ~Button();
 
 		static const std::string& MENU_DEFAULT_THEME_PATH;
-	
+
+		void forceState(ButtonState::Enum e);
+
 	protected:
 		Button();
 		Button(Widget& parent);
@@ -38,5 +40,6 @@ namespace ska {
 		ska::Texture const* m_lastTextureSelector;
 		bool m_drawStyle;
 		ska::Rectangle m_clip;
+		
 	};
 }
