@@ -38,12 +38,6 @@ namespace ska {
 			}
 		}
 
-		void clear() {
-			m_widgets.clear();
-			m_handledWidgets.clear();
-			m_globalList.clear();
-		}
-
 		/* Called from GUI */
 		virtual bool notify(IWidgetEvent& e) override {
 			/* If the current WidgetPanel doesn't accept the event, neither of his children do. */
@@ -96,6 +90,12 @@ namespace ska {
 		}
 
 	private:
+		void clear() {
+			m_widgets.clear();
+			m_handledWidgets.clear();
+			m_globalList.clear();
+		}
+
 		void sortZIndexWidgets(bool asc) {
 			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
 				return (w1->getPriority() < w2->getPriority());

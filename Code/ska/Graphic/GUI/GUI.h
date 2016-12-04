@@ -34,7 +34,7 @@ namespace ska {
 		
 	protected:
 		DynamicWindowIG<KeyEventListener> m_wMaster;
-		std::unordered_map<std::string, DynamicWindowIG<>*> m_windowAnnuary;
+		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 
 	private:
 		void refreshMouse();

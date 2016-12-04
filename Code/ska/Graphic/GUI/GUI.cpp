@@ -47,7 +47,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
     buf.x = 0;
     buf.y = 0;
 
-	m_wAction->clear();
+	//m_wAction->clear();
 	m_wAction->move(ska::Point<int>(w.getWidth() - 13 * TAILLEBLOCFENETRE, w.getHeight() - m_wAction->getBox().h / 2));
 
 	auto scrollButtonLambda = [this](ska::Widget* tthis, ska::HoverEvent& e) {
