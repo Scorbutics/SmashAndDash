@@ -1,7 +1,6 @@
 #include "SlotPokemon.h"
 #include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Utils/StringUtils.h"
-#include "Button.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Utils/IDs.h"
 
