@@ -46,15 +46,23 @@ namespace ska {
 			}
 
 			bool result = false;
+			bool stopped = false;
 			for (auto& w : m_handledWidgets) {
 				const auto nextNotify = w->notify(e);
 				result |= nextNotify;
 				if (e.stopped() == StopType::STOP_WIDGET) {
-					return result;
+					stopped = true;
+					break;
 	 			}
 			}
+			
+			if (stopped) {
+				e.stopPropagation(StopType::NOT_STOPPED);
+			}
+			
 			result |= directNotify(e);
-			if (result) {
+
+			if (result || stopped) {
 				/* Handled by Widget */
 				e.stopPropagation(StopType::STOP_WIDGET);
 			}
