@@ -2,7 +2,6 @@
 #define DEF_MOUSEINPUT
 
 #include "../Graphic/Point.h"
-#include "InputEvents.h"
 
 namespace ska {
 	class MouseInput

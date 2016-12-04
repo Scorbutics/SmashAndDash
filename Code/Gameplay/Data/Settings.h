@@ -1,11 +1,9 @@
-#ifndef DEF_SETTINGS
-#define DEF_SETTINGS
-
+#pragma once
 #include <fstream>
 
-class Settings
-{
-    public:
+//TODO
+class Settings {
+public:
     Settings(std::string fileName);
 
     void setSoundVolume(int sndVol);
@@ -27,7 +25,7 @@ class Settings
 
     ~Settings();
 
-    private:
+private:
     std::string m_fileName;
     int m_fogActive;
     int m_weatherActive;
@@ -35,4 +33,4 @@ class Settings
     int m_soundVol; //En pourcents (0 = sans son, 100 = volume maximal)
     int m_particles;
 };
-#endif
+

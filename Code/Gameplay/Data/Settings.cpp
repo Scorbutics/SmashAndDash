@@ -4,24 +4,20 @@
 #include "../../ska/Inputs/Readers/IniReader.h"
 #include "../Weather.h"
 
-Settings::Settings(std::string file)
-{
+Settings::Settings(std::string file) {
     m_fileName = file;
     this->load();
 }
 
-void Settings::setSoundVolume(int sndVol)
-{
+void Settings::setSoundVolume(int sndVol) {
     m_soundVol = sndVol;
 }
 
-void Settings::setFog(int b)
-{
+void Settings::setFog(int b) {
     m_fogActive = b;
 }
 
-void Settings::setFileName(std::string fileName)
-{
+void Settings::setFileName(std::string fileName) {
     m_fileName = fileName;
 }
 
@@ -39,8 +35,7 @@ void Settings::update() {
 	//core.getWorld().setBgmVolume(m_soundVol);
 }
 
-void Settings::load()
-{
+void Settings::load() {
     ska::IniReader reader(m_fileName);
 	m_soundVol = reader.get<int>("Settings sound_volume");
 	m_fogActive = reader.get<int>("Settings fog_active");
@@ -50,8 +45,7 @@ void Settings::load()
 	update();
 }
 
-void Settings::save()
-{
+void Settings::save() {
 	ska::IniReader reader(m_fileName);
 	reader.set("Settings sound_volume", m_soundVol);
 	reader.set("Settings fog_active", m_fogActive);
@@ -61,43 +55,35 @@ void Settings::save()
 	reader.save(m_fileName);
 }
 
-std::string Settings::getFileName()
-{
+std::string Settings::getFileName() {
     return m_fileName;
 }
 
-void Settings::setWeather(int b)
-{
+void Settings::setWeather(int b) {
     m_weatherActive = b;
 }
 
-void Settings::setGuiTransparency(int b)
-{
+void Settings::setGuiTransparency(int b) {
     m_guiTransparency = b;
 }
 
-int* Settings::getGuiTransparency()
-{
+int* Settings::getGuiTransparency() {
     return &m_guiTransparency;
 }
 
-int* Settings::getFogActive()
-{
+int* Settings::getFogActive() {
     return &m_fogActive;
 }
 
-int* Settings::getWeatherActive()
-{
+int* Settings::getWeatherActive() {
     return &m_weatherActive;
 }
 
-int* Settings::getSoundVolume()
-{
+int* Settings::getSoundVolume() {
     return &m_soundVol;
 }
 
-int* Settings::getParticles()
-{
+int* Settings::getParticles() {
     return &m_particles;
 }
 

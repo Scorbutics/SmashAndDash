@@ -27,18 +27,16 @@ class WGameCore : public ska::Window {
 
 public:
 	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
-	virtual ~WGameCore();
+	virtual ~WGameCore() = default;
 
 	void graphicUpdate(void);
 	void eventUpdate(bool movingDisallowed);
 
-	void resize(unsigned int w, unsigned int h);
 	bool refresh();
     void activeEcritureLog();
 
 	void initNewWorld();
-	void transition(int type);
-
+	
 	//Inventory& getInventory();
 	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
@@ -63,6 +61,9 @@ protected:
 	//Inventory m_inv;
 	WorldScene m_worldScene;
 	ska::FpsCalculator m_fpsCalculator;
+
+private:
+	bool refreshInternal();
 
 
 };

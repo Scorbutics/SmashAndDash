@@ -1,3 +1,4 @@
+#include <cstring>
 #include "MouseInput.h"
 
 ska::MouseInput::MouseInput() {

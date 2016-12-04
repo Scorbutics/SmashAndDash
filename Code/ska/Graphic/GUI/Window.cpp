@@ -57,6 +57,11 @@ void ska::Window::flip() {
 }
 
 
+void ska::Window::resize(unsigned int w, unsigned int h) {
+	m_width = w;
+	m_height = h;
+}
+
 SDL_Window* ska::Window::getHandle() {
 	return m_screen;
 }

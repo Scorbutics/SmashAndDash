@@ -15,12 +15,14 @@ namespace ska {
 		unsigned int getHeight() const;
 		SDL_Window* getHandle();
 		void flip();
+		void resize(unsigned int w, unsigned int h);
 
-	protected:
+	private:
 		const std::string& m_wName;
 		unsigned int m_height;
 		unsigned int m_width;
-
+	
+	protected:
 		SDL_Renderer *m_renderer;
 		SDL_Window *m_screen;
 
