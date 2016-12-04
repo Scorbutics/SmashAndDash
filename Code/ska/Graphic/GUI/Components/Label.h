@@ -12,6 +12,7 @@ namespace ska {
 		virtual ~Label() = default;
 
 		void modifyText(const std::string& text);
+		void setClip(ska::Rectangle* r);
 		void display() const override;
 
 	private:
@@ -19,5 +20,6 @@ namespace ska {
 		unsigned int m_fontSize;
 		ska::Texture m_stext;
 		ska::Color m_color;
+		ska::Rectangle* m_clip;
 	};
 }

@@ -31,65 +31,7 @@ m_clicked(nullptr),
 m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, false) {
 
 	m_wAction = new DynamicWindowIG<>(m_wMaster, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, false);
-
-    //m_refreshCount = REFRESH_PNJWINDOW_COUNT;
-    m_lastMouseState = 0;
-    m_side = 0;
-    //m_pnj = NULL;
-    m_isMovingWindow = m_hide = false;
-
-// 	ska::Rectangle menuPos;
-// 	menuPos.x = 0;
-//     menuPos.y = 0;
-//     menuPos.w = 8*TAILLEBLOCFENETRE;
-//     menuPos.h = 5*TAILLEBLOCFENETRE;
-//     m_pokeInfoWindow = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//     menuPos.h = 4*TAILLEBLOCFENETRE;
-//     menuPos.y = 5*TAILLEBLOCFENETRE;
-//     menuPos.w = 5*TAILLEBLOCFENETRE;
-// 	m_facesetPkmn = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//     menuPos.x = w.getWidth() - 2*TAILLEBLOCFENETRE;
-// 	m_attackOpponent = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//
-//     menuPos.x = 0;
-//     menuPos.y = 0*TAILLEBLOCFENETRE;
-//     menuPos.w = 6*TAILLEBLOCFENETRE;
-//     menuPos.h = 3*TAILLEBLOCFENETRE;
-// 	m_pnjInfoWindow = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//     menuPos.y = 5*TAILLEBLOCFENETRE;
-//     menuPos.x += 3*TAILLEBLOCFENETRE;
-//     menuPos.h = 4*TAILLEBLOCFENETRE;
-//     menuPos.w = 5*TAILLEBLOCFENETRE;
-// 	m_facesetOpponent = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//     menuPos.x = menuPos.y = 0;
-//     menuPos.w = 4*TAILLEBLOCFENETRE;
-//     menuPos.h = 2*TAILLEBLOCFENETRE;
-// 	m_clickMenu = std::unique_ptr<DialogMenu>(new DialogMenu("", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22, false));
-//
-//
-//     menuPos.w = 10*TAILLEBLOCFENETRE;
-//     menuPos.h = 5*TAILLEBLOCFENETRE;
-// 	m_wSettings = std::unique_ptr<WindowSettings>(new WindowSettings(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-// 	m_wTeam = std::unique_ptr<WindowTeam>(new WindowTeam(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-// 	m_wBag = std::unique_ptr<WindowBag>(new WindowBag(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 22));
-//
-// 	menuPos.x = w.getWidth() - 7*TAILLEBLOCFENETRE;
-// 	menuPos.y = 0;
-// 	menuPos.w = 7*TAILLEBLOCFENETRE;
-// 	menuPos.h = 2*TAILLEBLOCFENETRE;
-// 	m_toolBar = std::unique_ptr<ToolBar>(new ToolBar(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
-//
-// 	menuPos.x = 5*TAILLEBLOCFENETRE;
-// 	menuPos.y = 2*TAILLEBLOCFENETRE;
-// 	menuPos.w = 10*TAILLEBLOCFENETRE;
-// 	menuPos.h = 10*TAILLEBLOCFENETRE;
-// 	m_wShop = std::unique_ptr<WindowShop>(new WindowShop(playerICM, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos));
-//     m_toolBar->hide(false);
+    m_hide = false;
 
     initButtons(w);
 
@@ -177,42 +119,14 @@ void ska::GUI::initButtons(const ska::Window& w) {
 	}));
 	fifthButton->addWidget(std::move(bsFifth));
 	m_wAction->addWidget(fifthButton);
-	//m_buttonList[4]->name("Paramètres");
-	/*m_buttonList[4]->setClickHandler([&] {
-		m_wSettings->setPos(ska::Point<int>(m_wTeam->getRect().w + m_wBag->getRect().w, 0));
-		m_wSettings->reset();
-		m_wSettings->hide(false);
-	});*/
-
-
 }
 
 void ska::GUI::display() const {
-
-	//dialogDisplay();
-
 	if (m_hide) {
 		return;
 	}
 
-	//m_wAction.display();
 	m_wMaster.display();
-	/*if (!m_extraWindows.empty()) {
-		std::vector<DynamicWindowIG<>*> drawables(m_extraWindows.size());
-		for(auto& w : m_extraWindows) {
-			drawables.push_back(w.get());
-		}
-
-		std::sort(drawables.begin(), drawables.end(), ska::Drawable::staticOperatorInf);
-
-		for (const auto& w : drawables) {
-			w->display();
-		}
-	}*/
-// 	m_mouseCursor.displayHint();
-// 	m_mouseCursor.displaySelectedPokemon();
-// 	m_mouseCursor.displaySelectedObject();
-
 }
 
 void ska::GUI::refreshKeyboard() {
@@ -225,27 +139,8 @@ void ska::GUI::refreshKeyboard() {
 	}
 
 	if (!textTyped.empty()) {
-
 		KeyEvent ke(KeyEventType::TEXT_TYPED, textTyped, -1);
 		KeyObservable::notifyObservers(ke);
-
-		//TODO Focus, Blur
-		//TODO optionnel : Key down et Key up events ?
-
-		/*HoverEvent hove(MouseEventType::MOUSE_OVER, lastMousePos, mousePos);
-		HoverObservable::notifyObservers(hove);
-
-		if (m_hovered != nullptr) {
-			for (auto it = m_hovered; it != hove.getTarget() && it != nullptr; it = it->getParent()) {
-				if (hove.getTarget() == nullptr || !it->isAParent(*hove.getTarget())) {
-					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition(), mousePos);
-					it->mouseHover(heOut);
-				}
-			}
-		}
-		m_hovered = hove.getTarget();
-		*/
-
 	}
 }
 
@@ -288,7 +183,6 @@ void ska::GUI::refreshMouse() {
 		}
 
 		if (fbe.getTarget() != nullptr) {
-			//TODO : add map context
 			m_playerICM.disableContext(EnumContextManager::MAP, false);
 		}
 
@@ -301,7 +195,6 @@ void ska::GUI::refreshMouse() {
 			FocusEvent fe(MouseEventType::MOUSE_FOCUS);
 			m_clicked->directNotify(fe);
 			if(fe.getTarget() != nullptr) {
-				//TODO : remove map context
 				m_playerICM.disableContext(EnumContextManager::MAP, true);
 			}
 			
@@ -338,75 +231,6 @@ void ska::GUI::refresh() {
 		}
 	}
 
-// 	if (in[ska::InputAction::RClic]) {
-// 		setClickMenu();
-// 	}
-
-// 	if (hideHint == m_buttonScroll.size()) {
-// 		m_mouseCursor.hideHint(true);
-// 	}
-//
-// 	m_mouseCursor.update();
-
-}
-
-void ska::GUI::setClickMenu() {
-	//ska::Rectangle invAreaAbsolutePos, buttonPos;
-
-	const ska::InputActionContainer& in = m_playerICM.getActions();
-
-	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-	const ska::InputRange& lastMousePos = m_playerICM.getRanges()[ska::InputRangeType::LastMousePos];
-
-    std::vector<int> vBool;
-    vBool.push_back(0);
-    vBool.push_back(1);
-
-    /*Inventory_Area* invArea = m_wBag->getInventoryArea(0);
-    if(invArea != NULL && m_wBag->isVisible()) {
-        invAreaAbsolutePos = invArea->getRect();
-		if (ska::RectangleUtils::isPositionInBox(mousePos, invAreaAbsolutePos) && !ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
-			ska::Point<int> posClickMenu = mousePos;
-            posClickMenu.x -= 5;
-            posClickMenu.y -= 5;
-            m_clickMenu->setPos(posClickMenu);
-            m_curObjectPos = m_clickMenu->getRect();
-            m_curObjectPos.x -= invAreaAbsolutePos.x;
-            m_curObjectPos.y -= invAreaAbsolutePos.y;
-            if(invArea->getObjectAtPos(m_curObjectPos) != NULL) {
-				std::vector<std::string> vUse, vGive, vTrash;
-                vUse.push_back("Utiliser");
-                vUse.push_back("Ok !");
-                vGive.push_back("Donner");
-                vGive.push_back("Ok !");
-                vTrash.push_back("Jeter");
-                vTrash.push_back("Ok !");
-
-                m_clickMenu->deleteAll();
-                buttonPos.x = 32;
-                buttonPos.y = 16;
-                m_clickMenu->addButton(buttonPos, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenu.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenupressed.png", m_wBag->getBoolUseObject(), vBool, vUse, 18, "inventory_menu_use");
-                buttonPos.y += 15;
-                m_clickMenu->addButton(buttonPos, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenu.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenupressed.png", m_wBag->getBoolGiveObject(), vBool, vGive, 18, "inventory_menu_give");
-                buttonPos.y += 15;
-                m_clickMenu->addButton(buttonPos, "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenu.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"buttonclickmenupressed.png", m_wBag->getBoolTrashObject(), vBool, vTrash, 18, "inventory_menu_trash");
-                m_clickMenu->hide(false);
-                invArea = m_wBag->getInventoryArea(0);
-            } else {
-				m_clickMenu->hide(true);
-			}
-
-
-
-        } else if (!ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getRect())) {
-            m_clickMenu->hide(true);
-            *m_wBag->getBoolUseObject() = 0;
-            *m_wBag->getBoolTrashObject() = 0;
-            *m_wBag->getBoolGiveObject() = 0;
-        }
-
-    }
-	*/
 }
 
 
@@ -586,126 +410,12 @@ void ska::GUI::update() {
 	}*/
 }
 
-//TODO
-// void ska::GUI::dialogDisplay() const {
-//
-// 	if (m_pnjInfoWindow->isVisible()) {
-// 		m_pnjInfoWindow->display();
-// 	}
-//
-// 	if (m_wSettings->isVisible()) {
-// 		m_wSettings->display();
-// 	}
-//
-// 	if (m_wBag->isVisible()) {
-// 		m_wBag->display();
-// 	}
-//
-// 	if (m_wTeam->isVisible()) {
-// 		m_wTeam->display();
-// 	}
-//
-//     if(m_clickMenu->isVisible()) {
-// 		const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-// 		if (ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getBox())) {
-// 			m_clickMenu->display();
-// 		} else {
-//             m_clickMenu->move(ska::Point<int>());
-//             m_clickMenu->hide(true);
-//         }
-//
-//     }
-//
-// 	if (m_toolBar->isVisible()) {
-// 		m_toolBar->display();
-// 	}
-//
-// 	if (m_wShop->isVisible()) {
-// 		m_wShop->display();
-// 	}
-//
-// }
-
-//
-// void ska::GUI::dialogRefresh() {
-//
-// 	for (auto& w : m_extraWindows) {
-// 		if (w->isVisible()) {
-// 			//m_hide = true;
-// 			w->refresh();
-// 		}
-// 	}
-//
-// 	if (m_pnjInfoWindow->isVisible()) {
-// 		m_pnjInfoWindow->refresh();
-// 	}
-//
-// 	if (m_wSettings->isVisible()) {
-// 		m_wSettings->refresh();
-// 	}
-//
-// 	if (m_wBag->isVisible()) {
-// 		m_wBag->refresh();
-// 	}
-//
-// 	if (m_wTeam->isVisible()) {
-// 		m_wTeam->refresh();
-// 	}
-//
-// 	if(m_clickMenu->isVisible()) {
-// 		const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-//
-// 		if (ska::RectangleUtils::isPositionInBox(mousePos, m_clickMenu->getBox())) {
-// 			m_clickMenu->refresh();
-// 		} else {
-// 			m_clickMenu->move(ska::Point<int>());
-// 			m_clickMenu->hide(true);
-// 		}
-//
-// 	}
-//
-//
-// 	if (m_toolBar->isVisible()) {
-// 		m_toolBar->refresh();
-// 	}
-//
-// 	if (m_wShop->isVisible()) {
-// 		m_wShop->refresh();
-// 	}
-
-//}
-
-//GUI::isPositionOnButton renvoie l'indice du bouton où se situe "pos" dans m_buttonList
-//Renvoie -1 si pos n'est dans aucun bouton
-int ska::GUI::isPositionOnButton(const ska::Point<float>& pos) const {
-// 	for (unsigned int i = 0; i < m_buttonList.size(); i++) {
-// 		if (ska::RectangleUtils::isPositionInBox(pos, m_buttonList[i]->getBox())) {
-// 			return i;
-// 		}
-// 	}
-    return -1;
-}
-
 void ska::GUI::hide(bool x) {
     m_hide = x;
 }
 
 bool ska::GUI::isVisible() const {
     return !m_hide;
-}
-
-bool ska::GUI::isMovingAWindow() {
-	return false;//((m_wSettings->isVisible() && m_wSettings->isMoving()) || (m_wBag->isVisible() && m_wBag->isMoving()) || (m_wTeam->isVisible() && m_wTeam->isMoving()) || ( m_toolBar->isVisible() && m_toolBar->isMoving()) );
-}
-
-bool ska::GUI::isMouseOnAWindow() {
-	const ska::InputRange& mousePos = m_playerICM.getRanges()[ska::InputRangeType::MousePos];
-
-	return false;
-// 	return ((m_wBag->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wBag->getBox()))
-// 		|| (m_wSettings->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wSettings->getBox()))
-// 		|| (m_wTeam->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_wTeam->getBox()))
-// 		|| (m_toolBar->isVisible() && ska::RectangleUtils::isPositionInBox(mousePos, m_toolBar->getBox())));
 }
 
 void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
@@ -722,11 +432,3 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 		}
 	}
 }
-
-// int ska::GUI::getRefreshPNJWindowCount() {
-//     return m_refreshCount;
-// }
-//
-// void ska::GUI::setRefreshPNJWindowCount(int x) {
-//     m_refreshCount = x;
-// }

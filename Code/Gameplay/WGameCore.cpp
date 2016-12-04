@@ -97,7 +97,7 @@ bool WGameCore::refresh() {
     long t = 0, t0 = 0;
 
 	//Ici, transition entrante
-    transition(1);
+    //transition(1);
 	static const int FPS = 63;
 	static const int TICKS = 1000 / FPS;
 

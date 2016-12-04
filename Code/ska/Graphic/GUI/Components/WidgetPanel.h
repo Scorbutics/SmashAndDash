@@ -46,9 +46,11 @@ namespace ska {
 
 		/* Called from GUI */
 		virtual bool notify(IWidgetEvent& e) override {
-			if(!Widget::isVisible()) {
+			/* If the current WidgetPanel doesn't accept the event, neither of his children do. */
+			if (!HandledWidget<HL...>::accept(e)) {
 				return false;
 			}
+
 			bool result = false;
 			for (auto& w : m_handledWidgets) {
 				const auto nextNotify = w->notify(e);
@@ -87,6 +89,11 @@ namespace ska {
 		void resort() {
 			this->sortZIndexWidgets(false);	
 		}
+	
+	protected:
+		Widget* getWidget(size_t index) {
+			return m_globalList[index];
+		}
 
 	private:
 		void sortZIndexWidgets(bool asc) {
@@ -105,9 +112,9 @@ namespace ska {
 			}
 		}
 
-		std::deque<std::unique_ptr<Widget>> m_widgets;
-		std::deque<std::unique_ptr<Widget>> m_handledWidgets;
-		std::deque<Widget*> m_globalList;
+		std::vector<std::unique_ptr<Widget>> m_widgets;
+		std::vector<std::unique_ptr<Widget>> m_handledWidgets;
+		std::vector<Widget*> m_globalList;
 
 	};
 }

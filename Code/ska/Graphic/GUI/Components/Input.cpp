@@ -11,35 +11,43 @@
 #include "../../../Utils/StringUtils.h"
 
 ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) :
-HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
-	m_text(*this, text, fontSize, ska::Point<int>(2, m_field.getBox().h/8)),
-	m_keyFocus(false),
-	m_field(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](ska::Widget* tthis, ska::ClickEvent& e) {
-		if(!m_keyFocus && e.getState() == ska::MouseEventType::MOUSE_CLICK) {
+	WidgetPanel<ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
+	m_keyFocus(false) {
+
+	auto& button = std::make_unique<Button>(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](ska::Widget* tthis, ska::ClickEvent& e) {
+		if (!m_keyFocus && e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			m_keyFocus = true;
 			SDL_StartTextInput();
 		}
-	}) {
+		e.setTarget(this);
+		auto b = reinterpret_cast<Button*>(tthis);
+		b->forceState(ButtonState::PRESSED);
+	});
+
+	auto& label = std::make_unique<Label>(*this, text, fontSize, ska::Point<int>(2, button->getBox().h / 2 - fontSize/2));
+	setWidth(button->getBox().w);
+	setHeight(button->getBox().h);
+
+	m_clip.y = 0;
+	m_clip.w = getBox().w - 10;
+	adaptDisplayWithText(*label);
+
+	addWidget(std::move(button));
+	addWidget(std::move(label));
 
 	addHandler<FocusEventListener>([&](ska::Widget* tthis, ska::FocusEvent& e) {
 		auto f = e.getState() == ska::MouseEventType::MOUSE_FOCUS;
 		focus(f);
 		e.setTarget(this);	
-		m_field.forceState(f ? ButtonState::PRESSED : ButtonState::NONE);
-	});
-
-	/* Propagation du handler vers le composant m_field */
-	//TODO Input = WidgetPanel en fait...
-	addHandler<ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
-		m_field.notify(e);
-		e.setTarget(this);
-		m_field.forceState(ButtonState::PRESSED);
+		auto b = reinterpret_cast<Button*>(getWidget(0));
+		b->forceState(f ? ButtonState::PRESSED : ButtonState::NONE);
 	});
 
 	addHandler<KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& e) {
 		if (!isFocused()) {
 			return;
 		}
+		auto l = reinterpret_cast<Label*>(getWidget(1));
 		if(e.getState() == ska::KeyEventType::KEY_DOWN) {
 			if (m_rawText.size() > 1 && e.getScanCode() == SDL_SCANCODE_BACKSPACE) {
 				m_rawText.pop_back();
@@ -49,15 +57,25 @@ HandledWidget<ClickEventListener, KeyEventListener, FocusEventListener>(parent, 
 		} else {
 			m_rawText += e.getText();
 		}
-		m_text.modifyText(ska::StringUtils::toANSI(m_rawText));
+
+		l->modifyText(ska::StringUtils::toANSI(m_rawText));
+		adaptDisplayWithText(*l);
 	});
 
-	setWidth(m_field.getBox().w);
-	setHeight(m_field.getBox().h);
+
 }
 
-void ska::Input::display() const {
-	m_field.display();
-	m_text.display();
+void ska::Input::adaptDisplayWithText(Label& l) {
+	auto xLimit = getBox().w - 10;
+	if (l.getBox().w > xLimit) {
+		m_clip.x = l.getBox().w - xLimit;
+		m_clip.h = l.getBox().h;
+		l.setClip(&m_clip);
+	} else {
+		m_clip.x = 0;
+		m_clip.h = l.getBox().h;
+		l.setClip(nullptr);
+	}
+	
 }
 

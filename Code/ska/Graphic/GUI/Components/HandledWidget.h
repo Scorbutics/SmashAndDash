@@ -53,16 +53,14 @@ namespace ska {
 		}
 
 		bool notify(IWidgetEvent& e) override {
-			if (!isVisible()) {
+			if (!accept(e)) {
 				return false;
 			}
-			if (m_mask[e.getMask()]) {
-				auto maskIndex = m_maskHandlerIndexes[e.getMask()];
-				HandlerNotifier hn(*this, e);
-				meta::visit_element_at_index(m_handlers, maskIndex, hn);
-				return hn.hasBeenNotified();
-			}
-			return false;
+
+			auto maskIndex = m_maskHandlerIndexes[e.getMask()];
+			HandlerNotifier hn(*this, e);
+			meta::visit_element_at_index(m_handlers, maskIndex, hn);
+			return hn.hasBeenNotified();
 		}
 
 		template<class L, class EH>
@@ -79,6 +77,15 @@ namespace ska {
 		template<class L, class EH>
 		void addHeadHandler(const EH& eh) {
 			meta::get<L>(m_handlers).addHeadHandler(eh);
+		}
+
+	protected:
+		bool accept(IWidgetEvent& e) {
+			if (!isVisible()) {
+				return false;
+			}
+
+			return m_mask[e.getMask()];
 		}
 
 	private:
@@ -137,6 +144,10 @@ namespace ska {
 
 		virtual	bool isMaskEmpty() const override {
 			return true;
+		}
+
+		bool accept(IWidgetEvent& e) {
+			return !isVisible();
 		}
 	};
 }
