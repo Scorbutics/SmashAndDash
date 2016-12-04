@@ -1,5 +1,6 @@
 #include "WindowSettings.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
+#include "../../ska/Graphic/GUI/Components/CheckBox.h"
 
 WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
 ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
@@ -7,6 +8,9 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
 	addWidget(input);
+
+	auto checkBox = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 64), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
+	addWidget(checkBox);
 }
 
 // #include "WindowSettings.h"

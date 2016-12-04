@@ -127,6 +127,7 @@
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Hoverable.h" />
@@ -443,6 +444,7 @@
     <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonQuit.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\CheckBox.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Button.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEventListener.cpp" />
