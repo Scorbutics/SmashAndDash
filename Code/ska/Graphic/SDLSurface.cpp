@@ -10,17 +10,19 @@ SDL_Surface* LoadImage32(const std::string& fichier_image) {
 	imageRam = IMG_Load(fichier_image.c_str());
     if(imageRam != nullptr) {
         result = SDL_CreateRGBSurface(0, imageRam->w, imageRam->h, 32, 0, 0, 0, 0);
-        if (result == nullptr ) {
-            SDL_FreeSurface(imageRam);
-            SDL_FreeSurface(result);
-            return nullptr;
+        if (result == nullptr) {
+			goto loadImage32Free;
         }
 
         /* Copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits */
-        SDL_UpperBlit(imageRam, nullptr, result, nullptr);
-        SDL_FreeSurface(imageRam);
-        imageRam = nullptr;
-    }
+        SDL_UpperBlit(imageRam, nullptr, result, nullptr);        
+
+		/* Clean up phase */
+		loadImage32Free:
+		SDL_FreeSurface(imageRam);
+		imageRam = nullptr;
+	}
+
 	return result;
 }
 
