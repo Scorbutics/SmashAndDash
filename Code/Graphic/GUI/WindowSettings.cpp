@@ -1,6 +1,8 @@
 #include "WindowSettings.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 #include "../../ska/Graphic/GUI/Components/CheckBox.h"
+#include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
+#include "../../ska/Graphic/GUI/Components/RadioButton.h"
 
 WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
 ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
@@ -11,6 +13,14 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 
 	auto checkBox = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 64), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
 	addWidget(checkBox);
+
+	std::shared_ptr<ska::RadioButtonGroup> group = std::make_shared<ska::RadioButtonGroup>();
+	auto radioButton1 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(16, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
+	auto radioButton2 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(16, 128), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
+	auto radioButton3 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(48, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
+	addWidget(radioButton1);
+	addWidget(radioButton2);
+	addWidget(radioButton3);
 }
 
 // #include "WindowSettings.h"

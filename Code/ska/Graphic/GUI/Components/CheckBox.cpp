@@ -7,7 +7,7 @@ ska::CheckBox::CheckBox(Widget& parent, ska::Point<int> relativePos, const std::
 		}
 	}),
 	m_value(false),
-	m_check(MENU_DEFAULT_THEME_PATH + "/check.png") {
+	m_check(placeHolderStyleName + "_check.png") {
 }
 
 void ska::CheckBox::display() const {
@@ -20,5 +20,9 @@ void ska::CheckBox::display() const {
 
 bool ska::CheckBox::getValue() const {
 	return m_value;
+}
+
+void ska::CheckBox::forceValue(bool b) {
+	m_value = b;
 }
 

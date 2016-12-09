@@ -137,6 +137,8 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseEventType.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButton.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\EventListener.h" />
@@ -456,6 +458,8 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Input.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEventListener.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />
