@@ -26,7 +26,7 @@ namespace ska {
 		}
 
 		template <class SubWidget>
-		void addWidget(std::unique_ptr<SubWidget>& w) {
+		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
 			bool empty = true;
 			w->setPriority((int)(m_globalList.size()));
 			if (std::is_base_of<IHandledWidget, SubWidget>::value && !(empty = ((IHandledWidget&)(*w.get())).isMaskEmpty())) {
@@ -36,6 +36,7 @@ namespace ska {
 				m_widgets.push_back(std::move(w));
 				m_globalList.push_back(m_widgets.back().get());
 			}
+			return reinterpret_cast<SubWidget*>(m_globalList.back());
 		}
 
 		/* Called from GUI */
@@ -91,19 +92,19 @@ namespace ska {
 		void resort() {
 			this->sortZIndexWidgets(false);	
 		}
-	
-	protected:
-		Widget* getWidget(size_t index) {
-			return m_globalList[index];
-		}
 
-	private:
 		void clear() {
 			m_widgets.clear();
 			m_handledWidgets.clear();
 			m_globalList.clear();
 		}
 
+	protected:
+		Widget* getWidget(size_t index) {
+			return m_globalList[index];
+		}
+
+	private:
 		void sortZIndexWidgets(bool asc) {
 			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
 				return (w1->getPriority() < w2->getPriority());

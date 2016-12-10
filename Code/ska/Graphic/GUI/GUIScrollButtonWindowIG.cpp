@@ -1,7 +1,7 @@
 #include "GUIScrollButtonWindowIG.h"
 
-ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-DynamicWindowIG<>(parent, box, drawStyle),
+ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+DynamicWindowIG<>(parent, box, styleName),
 m_realPos(0, 0) {
 
 }

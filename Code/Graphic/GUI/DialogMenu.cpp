@@ -24,7 +24,7 @@
 
 
 DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-ska::WindowIG<>(rect, true),
+ska::WindowIG<>(rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_timeout(timeout),
 m_moving(false),
 m_show(false),
@@ -65,7 +65,7 @@ DialogMenu(gui, keyboardObs, text, imageResource, ska::Button::MENU_DEFAULT_THEM
 }
 
 DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const DialogMenu& dm) :
-ska::WindowIG<>(dm.getBox(), true) {
+ska::WindowIG<>(dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	operator=(dm);
 }
 

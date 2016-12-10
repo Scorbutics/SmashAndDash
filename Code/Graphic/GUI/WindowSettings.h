@@ -4,11 +4,12 @@
 
 namespace ska {
 	class Widget;
+	class GUI;
 }
 
 class WindowSettings : public ska::MoveableWindow<ska::KeyEventListener> {
 public:
-	WindowSettings(ska::Widget& parent, const ska::Point<int>& boxAbsolutePos);
+	WindowSettings(ska::GUI & gui, ska::Widget& parent, const ska::Point<int>& boxAbsolutePos);
     ~WindowSettings() = default;
 };
 

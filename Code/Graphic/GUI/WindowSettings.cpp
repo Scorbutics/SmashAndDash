@@ -1,11 +1,13 @@
 #include "WindowSettings.h"
+#include "../../ska/Graphic/GUI/GUI.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 #include "../../ska/Graphic/GUI/Components/CheckBox.h"
 #include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
 #include "../../ska/Graphic/GUI/Components/RadioButton.h"
+#include "../../ska/Graphic/GUI/Components/ListBox.h"
 
-WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true) {
+WindowSettings::WindowSettings(ska::GUI& gui, ska::Widget& parent, const ska::Point<int>& absolutePos) :
+ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
@@ -21,6 +23,15 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	addWidget(radioButton1);
 	addWidget(radioButton2);
 	addWidget(radioButton3);
+
+	auto listbox = std::unique_ptr<ska::ListBox<int>>(new ska::ListBox<int>(gui, *this, ska::Point<int>(16, 160), ska::Button::MENU_DEFAULT_THEME_PATH + "listbox", ska::Button::MENU_DEFAULT_THEME_PATH + "listbox", nullptr));
+	std::vector<int> vals;
+	vals.push_back(0);
+	vals.push_back(7);
+	vals.push_back(25);
+	vals.push_back(82);
+	listbox->load(std::move(vals));
+	addWidget(listbox);
 }
 
 // #include "WindowSettings.h"

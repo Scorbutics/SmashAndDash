@@ -29,8 +29,6 @@ namespace ska {
 		void hide(bool x);
 
 		void display() const override;
-
-		void update();
 		
 	protected:
 		DynamicWindowIG<KeyEventListener> m_wMaster;

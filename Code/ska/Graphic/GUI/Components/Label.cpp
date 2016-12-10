@@ -5,10 +5,9 @@
 #include "Label.h"
 
 ska::Label::Label(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) : 
-	Widget(parent, relativePos) {
-
-    m_text = text;
-    m_fontSize = fontSize;
+	Widget(parent, relativePos), 
+	m_fontSize(fontSize),
+	m_text(text) {
 
     m_color.r = 0;
     m_color.g = 0;

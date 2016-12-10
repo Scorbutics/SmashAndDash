@@ -9,13 +9,13 @@ namespace ska {
 	template <class ...HL>
 	class MoveableWindow : public DynamicWindowIG<HL...> {
 	public:
-		MoveableWindow(MouseObservable& guiObservable, KeyObservable& keyboardObservable, const ska::Rectangle& box, bool drawStyle) :
-			ska::DynamicWindowIG<HL...>(&guiObservable, &keyboardObservable, box, drawStyle) {
+		MoveableWindow(MouseObservable& guiObservable, KeyObservable& keyboardObservable, const ska::Rectangle& box, const std::string& styleName) :
+			ska::DynamicWindowIG<HL...>(&guiObservable, &keyboardObservable, box, styleName) {
 			initHandlers();
 		}
 
-		MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-			ska::DynamicWindowIG<HL...>(parent, box, drawStyle) {
+		MoveableWindow(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+			ska::DynamicWindowIG<HL...>(parent, box, styleName) {
 			initHandlers();
 		}
 

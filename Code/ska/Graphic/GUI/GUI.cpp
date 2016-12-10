@@ -28,9 +28,9 @@ m_playerICM(playerICM),
 m_window(w),
 m_hovered(nullptr),
 m_clicked(nullptr),
-m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, false) {
+m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
 
-	m_wAction = new DynamicWindowIG<>(m_wMaster, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, false);
+	m_wAction = new DynamicWindowIG<>(m_wMaster, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
     m_hide = false;
 
     initButtons(w);
@@ -64,7 +64,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 
 	};
 
-	auto firstButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, true));	
+	auto firstButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	std::unique_ptr<ButtonSprite> bs = std::unique_ptr<ButtonSprite>(new ButtonSprite(*firstButton, Point<int>(1, 1), "", 102, [&](ska::Widget* tthis, const ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			auto w = m_windowAnnuary["team"];
@@ -81,7 +81,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-	auto secondButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, true));
+	auto secondButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	secondButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(secondButton);
 	//m_buttonList[1]->name("Pokédex");
@@ -89,7 +89,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-	auto thirdButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, true));
+	auto thirdButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	thirdButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(thirdButton);
 	//m_buttonList[2]->name("PokéSac");
@@ -101,7 +101,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-	auto fourthButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, true));
+	auto fourthButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	fourthButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(fourthButton);
     //m_buttonList[3]->setActionClic("trainer_card");
@@ -109,7 +109,7 @@ void ska::GUI::initButtons(const ska::Window& w) {
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
 	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
-	auto fifthButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, true));
+	auto fifthButton = std::unique_ptr<GUIScrollButtonWindowIG>(new GUIScrollButtonWindowIG(*m_wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	fifthButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	std::unique_ptr<ButtonSprite> bsFifth = std::unique_ptr<ButtonSprite>(new ButtonSprite(*fifthButton, Point<int>(1, 1), "", 104, [&](ska::Widget* tthis, const ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
@@ -183,7 +183,7 @@ void ska::GUI::refreshMouse() {
 		}
 
 		if (fbe.getTarget() != nullptr) {
-			m_playerICM.disableContext(EnumContextManager::MAP, false);
+			m_playerICM.disableContext(EnumContextManager::CONTEXT_MAP, false);
 		}
 
 		ska::Point<int> pMp (mousePos);
@@ -195,7 +195,7 @@ void ska::GUI::refreshMouse() {
 			FocusEvent fe(MouseEventType::MOUSE_FOCUS);
 			m_clicked->directNotify(fe);
 			if(fe.getTarget() != nullptr) {
-				m_playerICM.disableContext(EnumContextManager::MAP, true);
+				m_playerICM.disableContext(EnumContextManager::CONTEXT_MAP, true);
 			}
 			
 			m_lastFocused = m_clicked;
@@ -219,8 +219,6 @@ void ska::GUI::refresh() {
 
 	refreshMouse();
 	refreshKeyboard();
-
-	//update();
 
 	//Time-based events
 	for (auto it = std::begin(m_dynamicWindows); it != m_dynamicWindows.end(); )  {
@@ -387,28 +385,6 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         m_facesetOpponent->addImageArea(ss.str(), false, buf, NULL);
     }
 }*/
-
-
-void ska::GUI::update() {
-	m_hide = false;
-
-	std::vector<std::vector<std::unique_ptr<DynamicWindowIG<>>>::iterator> toDelete;
-	unsigned int index = 0;
-	/*for (auto w = m_extraWindows.begin(); w != m_extraWindows.end(); w++) {
-		if ((*w)->isVisible()) {
-			//m_hide = true;
-			(*w)->display();
-		}
-		else {
-			toDelete.push_back(w);
-		}
-		index++;
-	}
-
-	for (auto& d : toDelete) {
-		m_extraWindows.erase(d);
-	}*/
-}
 
 void ska::GUI::hide(bool x) {
     m_hide = x;

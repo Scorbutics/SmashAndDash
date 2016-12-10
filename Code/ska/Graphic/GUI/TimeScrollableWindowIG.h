@@ -7,12 +7,12 @@ namespace ska {
 	class TimeScrollableWindowIG : public WindowIG<HL...> {
 	public:
 
-		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
-			WindowIG<HL...>(parent, box, drawStyle) {
+		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+			WindowIG<HL...>(parent, box, styleName) {
 		}
 
-		TimeScrollableWindowIG(const ska::Rectangle& box, bool drawStyle) :
-			WindowIG<HL...>(box, drawStyle) {
+		TimeScrollableWindowIG(const ska::Rectangle& box, const std::string& styleName) :
+			WindowIG<HL...>(box, styleName) {
 		}
 
 		bool refresh() {

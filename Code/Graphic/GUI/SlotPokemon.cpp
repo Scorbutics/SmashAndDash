@@ -6,7 +6,7 @@
 
 
 SlotPokemon::SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int pokemonId) :
-ska::WindowIG<ska::HoverEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, true),
+ska::WindowIG<ska::HoverEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 	m_fontSize(16) {
 	ska::Widget& tthis = *this;
 	m_spriteArea = std::unique_ptr<ska::ButtonSprite>(

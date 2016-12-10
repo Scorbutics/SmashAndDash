@@ -6,7 +6,7 @@
 namespace ska {
 	class GUIScrollButtonWindowIG : public DynamicWindowIG<> {
 	public:
-		GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle);
+		GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName);
 		virtual bool scrollTo(const ska::Point<int>& targetPos, unsigned int speed);
 		bool scrollRewind();
 		virtual ~GUIScrollButtonWindowIG();

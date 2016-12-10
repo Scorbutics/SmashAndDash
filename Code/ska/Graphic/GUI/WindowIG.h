@@ -12,19 +12,19 @@ namespace ska{
 	class WindowIG :
 		public WidgetPanel<HL...> {
 	public:
-		WindowIG(ska::Widget& parent, const ska::Rectangle& box, bool drawStyle) :
+		WindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
 			WidgetPanel<HL...>(parent),
-			m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
-			m_drawStyle(drawStyle) {
+			m_menuTiles(styleName + ".png"),
+			m_drawStyle(!styleName.empty()) {
 
 			this->move(box);
 			this->setWidth(box.w);
 			this->setHeight(box.h);
 		}
 
-		WindowIG(const ska::Rectangle& box, bool drawStyle) :
-			m_menuTiles(ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png"),
-			m_drawStyle(drawStyle) {
+		WindowIG(const ska::Rectangle& box, const std::string& styleName) :
+			m_menuTiles(styleName + ".png"),
+			m_drawStyle(!styleName.empty()) {
 
 			this->move(box);
 			this->setWidth(box.w);

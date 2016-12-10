@@ -136,6 +136,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEventListener.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ListBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseEventType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButton.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />

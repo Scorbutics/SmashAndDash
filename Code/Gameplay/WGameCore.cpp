@@ -26,11 +26,11 @@ m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this) {
 
 	/* MAP inputs */
 	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());
-	m_playerICM.addContext(ska::EnumContextManager::MAP, mapicp);
+	m_playerICM.addContext(ska::EnumContextManager::CONTEXT_MAP, mapicp);
 
 	/* GUI inputs */
 	auto guiicp = ska::InputContextPtr(new ska::KeyboardInputGUIContext());
-	m_playerICM.addContext(ska::EnumContextManager::GUI, guiicp);
+	m_playerICM.addContext(ska::EnumContextManager::CONTEXT_GUI, guiicp);
 
 	/* Let's start on the map */
 	auto scene = ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_playerICM, m_worldScene, false));

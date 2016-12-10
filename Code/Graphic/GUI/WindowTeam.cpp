@@ -2,7 +2,7 @@
 #include "SlotPokemon.h"
 
 WindowTeam::WindowTeam(ska::Widget& parent, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, true),
+ska::MoveableWindow<>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 	m_pokemonCount(0) {
 
 

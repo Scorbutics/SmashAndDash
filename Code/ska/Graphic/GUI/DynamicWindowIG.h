@@ -25,8 +25,8 @@ namespace ska {
 		public KeyObserver {
 
 	public:
-		DynamicWindowIG(Widget& parent, const Rectangle& box, bool drawStyle) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, box, drawStyle),
+		DynamicWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
+			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, box, styleName),
 			m_guiObservable(nullptr),
 			m_keyObservable(nullptr),
 			MouseObserver(std::bind(&ska::DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&ska::DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
@@ -36,8 +36,8 @@ namespace ska {
 				this->setHeight(box.h);
 		}
 
-		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, bool drawStyle) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(box, drawStyle),
+		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
+			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(box, styleName),
 			m_guiObservable(guiObservable),
 			m_keyObservable(keyObservable),
 			MouseObserver(std::bind(&ska::DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&ska::DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
