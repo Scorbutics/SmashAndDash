@@ -117,7 +117,7 @@ void ska::Button::forceState(ButtonState::Enum e) {
 }
 
 void ska::Button::display() const {
-	if (!m_drawStyle) {
+	if (!m_drawStyle || m_textureSelector == nullptr) {
 		return;
 	}
 

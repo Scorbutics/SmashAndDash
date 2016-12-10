@@ -3,9 +3,14 @@
 #include "WidgetMaskHelper.h"
 #include "FocusEventListener.h"
 
-ska::FocusEvent::FocusEvent(const MouseEventType& state) : 
-	m_state(state) {
+ska::FocusEvent::FocusEvent(Widget* clickedTarget, const MouseEventType& state) : 
+	m_state(state),
+	m_clickedTarget(clickedTarget) {
 
+}
+
+const ska::Widget* ska::FocusEvent::getClickedTarget() const {
+	return m_clickedTarget;
 }
 
 ska::MouseEventType ska::FocusEvent::getState() const {

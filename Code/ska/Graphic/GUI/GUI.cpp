@@ -176,29 +176,33 @@ void ska::GUI::refreshMouse() {
 
 	}
 
-	if (in[ska::InputAction::LClic]) {
-		FocusEvent fbe(MouseEventType::MOUSE_BLUR);
-		if (m_lastFocused != nullptr) {
-			m_lastFocused->directNotify(fbe);
-		}
+	
 
-		if (fbe.getTarget() != nullptr) {
-			m_playerICM.disableContext(EnumContextManager::CONTEXT_MAP, false);
-		}
-
+	auto click = in[ska::InputAction::LClic];
+	if (click) {
 		ska::Point<int> pMp (mousePos);
 		ClickEvent ce(MouseEventType::MOUSE_CLICK, pMp);
 		ClickObservable::notifyObservers(ce);
 		m_clicked = ce.getTarget();
 	
+		auto lastFocused = m_lastFocused;
 		if (m_clicked != nullptr) {
-			FocusEvent fe(MouseEventType::MOUSE_FOCUS);
+			FocusEvent fe(m_clicked, MouseEventType::MOUSE_FOCUS);
 			m_clicked->directNotify(fe);
 			if(fe.getTarget() != nullptr) {
 				m_playerICM.disableContext(EnumContextManager::CONTEXT_MAP, true);
 			}
 			
 			m_lastFocused = m_clicked;
+		}
+
+		FocusEvent fbe(m_clicked, MouseEventType::MOUSE_BLUR);
+		if (lastFocused != nullptr) {
+			lastFocused->directNotify(fbe);
+		}
+
+		if (fbe.getTarget() != nullptr) {
+			m_playerICM.disableContext(EnumContextManager::CONTEXT_MAP, false);
 		}
 	}
 

@@ -10,7 +10,10 @@ namespace ska {
 
 	class FocusEvent : public WidgetEvent<FocusEvent, FocusEventListener> {
 	public:
-		FocusEvent(const MouseEventType& state);
+		FocusEvent(Widget* clickedTarget, const MouseEventType& state);
+
+		const Widget* getClickedTarget() const;
+
 		MouseEventType getState() const;
 		virtual unsigned int getMask() const override;
 		virtual bool affects(const Widget& w) const override;
@@ -18,5 +21,6 @@ namespace ska {
 	
 	private:
 		MouseEventType m_state;
+		Widget* m_clickedTarget;
 	};
 }
