@@ -197,7 +197,7 @@ void ska::GUI::refreshMouse() {
 		}
 
 		FocusEvent fbe(m_clicked, MouseEventType::MOUSE_BLUR);
-		if (lastFocused != nullptr) {
+		if (lastFocused != nullptr && lastFocused != m_clicked) {
 			lastFocused->directNotify(fbe);
 		}
 
