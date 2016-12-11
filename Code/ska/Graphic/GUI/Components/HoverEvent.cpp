@@ -2,8 +2,8 @@
 #include "Widget.h"
 #include "WidgetMaskHelper.h"
 
-ska::HoverEvent::HoverEvent(const MouseEventType& state, const ska::Point<int>& pos, const ska::Point<int>& mousePos) : 
-	m_state(state), m_pos(pos), m_mousePos(mousePos) {
+ska::HoverEvent::HoverEvent(const MouseEventType& state, const Point<int>& pos, const Point<int>& mousePos, const Point<int>& relativeMousePos) : 
+	m_state(state), m_pos(pos), m_mousePos(mousePos), m_relativeMousePos(relativeMousePos) {
 
 }
 
@@ -13,6 +13,10 @@ const ska::MouseEventType& ska::HoverEvent::getState() const {
 
 const ska::Point<int>& ska::HoverEvent::getPosition() const {
 	return m_pos;
+}
+
+const ska::Point<int>& ska::HoverEvent::getRelativeMousePosition() const {
+	return m_relativeMousePos;
 }
 
 const ska::Point<int>& ska::HoverEvent::getMousePosition() const {

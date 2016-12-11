@@ -156,16 +156,16 @@ void ska::GUI::refreshMouse() {
 		*  on considère mousePos comme la prochaine position de la souris en terme d'évènements.
 		*  On a donc un retard d'une frame sur tous les évènements déclenchés, mais cela permet de pouvoir réagir
 		*  aux changements brusques de position de souris */
-		HoverEvent he(MouseEventType::MOUSE_ENTER, lastMousePos, mousePos);
+		HoverEvent he(MouseEventType::MOUSE_ENTER, lastMousePos, mousePos, mousePos - lastMousePos);
 		HoverObservable::notifyObservers(he);
 
-		HoverEvent hove(MouseEventType::MOUSE_OVER, lastMousePos, mousePos);
+		HoverEvent hove(MouseEventType::MOUSE_OVER, lastMousePos, mousePos, mousePos - lastMousePos);
 		HoverObservable::notifyObservers(hove);
 
 		if (m_hovered != nullptr) {
 			for (auto it = m_hovered; it != hove.getTarget() && it != nullptr; it = it->getParent()) {
 				if (hove.getTarget() == nullptr || !it->isAParent(*hove.getTarget())) {
-					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition(), mousePos);
+					HoverEvent heOut(MouseEventType::MOUSE_OUT, it->getAbsolutePosition(), mousePos, mousePos - lastMousePos);
 					it->directNotify(heOut);
 				}
 			}

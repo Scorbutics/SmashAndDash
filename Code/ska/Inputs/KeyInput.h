@@ -1,5 +1,4 @@
-#ifndef DEF_KEYINPUT
-#define DEF_KEYINPUT
+#pragma once
 
 #include <SDL2/SDL.h>
 #include <bitset>
@@ -9,7 +8,7 @@ namespace ska {
 	{
 
 	public:
-		KeyInput();
+		KeyInput() = default;
 
 		bool trigger(int key);
 		bool toggle(int key);
@@ -19,7 +18,7 @@ namespace ska {
 
 		void resetTriggers();
 
-		~KeyInput();
+		~KeyInput() = default;
 
 	private:
 		std::bitset<SDL_NUM_SCANCODES> m_keys;
@@ -27,4 +26,4 @@ namespace ska {
 
 	};
 }
-#endif
+

@@ -4,12 +4,6 @@
 #include "KeyInput.h"
 
 
-ska::KeyInput::KeyInput() {
-}
-
-ska::KeyInput::~KeyInput() {
-}
-
 void ska::KeyInput::setKeyState(int key, bool state) {
 	m_toggle[key] = state;
 	m_keys[key] = state;

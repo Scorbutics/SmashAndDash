@@ -10,9 +10,11 @@ namespace ska {
 
 	class HoverEvent : public WidgetEvent<HoverEvent, HoverEventListener> {
 	public:
-		HoverEvent(const MouseEventType& state, const Point<int>& pos, const Point<int>& mousePos);
+		HoverEvent(const MouseEventType& state, const Point<int>& pos, const Point<int>& mousePos, const Point<int>& relativeMousePos);
 		const MouseEventType& getState() const;
 		const ska::Point<int>& getPosition() const;
+
+		const ska::Point<int>& getRelativeMousePosition() const;
 		const ska::Point<int>& getMousePosition() const;
 		const ska::Point<int> getPosition(const ska::Widget& w) const;
 		
@@ -25,6 +27,7 @@ namespace ska {
 		MouseEventType m_state;
 		Point<int> m_pos;
 		Point<int> m_mousePos;
+		Point<int> m_relativeMousePos;
 
 	};
 }

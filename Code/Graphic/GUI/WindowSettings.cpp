@@ -5,6 +5,7 @@
 #include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
 #include "../../ska/Graphic/GUI/Components/RadioButton.h"
 #include "../../ska/Graphic/GUI/Components/ListBox.h"
+#include "../../ska/Graphic/GUI/Components/HorizontalSlider.h"
 
 WindowSettings::WindowSettings(ska::GUI& gui, ska::Widget& parent, const ska::Point<int>& absolutePos) :
 ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
@@ -35,6 +36,9 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 
 	auto checkBox2 = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 192), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
 	addWidget(checkBox2);
+
+	auto hSlider = std::unique_ptr<ska::HorizontalSlider>(new ska::HorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 100));
+	addWidget(hSlider);
 
 	resort();
 }
