@@ -24,7 +24,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 		b->forceState(ButtonState::PRESSED);
 	});
 
-	auto& label = std::make_unique<Label>(*this, text, fontSize, ska::Point<int>(2, button->getBox().h / 2 - fontSize/2));
+	auto& label = std::make_unique<Label>(*this, text, fontSize, ska::Point<int>(5, button->getBox().h / 2 - fontSize/2));
 	setWidth(button->getBox().w);
 	setHeight(button->getBox().h);
 
@@ -55,6 +55,9 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 				m_rawText = L" ";
 			}
 		} else {
+			if (m_rawText.size() == 1 && m_rawText[0] == ' ') {
+				m_rawText.pop_back();
+			}
 			m_rawText += e.getText();
 		}
 
