@@ -128,6 +128,7 @@
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Hoverable.h" />
@@ -465,6 +466,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonList.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />

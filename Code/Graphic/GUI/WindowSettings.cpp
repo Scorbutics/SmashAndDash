@@ -1,14 +1,17 @@
+#include <iostream>
+
 #include "WindowSettings.h"
 #include "../../ska/Graphic/GUI/GUI.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 #include "../../ska/Graphic/GUI/Components/CheckBox.h"
 #include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
 #include "../../ska/Graphic/GUI/Components/RadioButton.h"
+#include "../../ska/Graphic/GUI/Components/RadioButtonList.h"
 #include "../../ska/Graphic/GUI/Components/ListBox.h"
 #include "../../ska/Graphic/GUI/Components/HorizontalSlider.h"
 
 WindowSettings::WindowSettings(ska::GUI& gui, ska::Widget& parent, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 7 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
@@ -17,13 +20,20 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	auto checkBox = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 64), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
 	addWidget(checkBox);
 
-	std::shared_ptr<ska::RadioButtonGroup> group = std::make_shared<ska::RadioButtonGroup>();
-	auto radioButton1 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(16, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
-	auto radioButton2 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(16, 128), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
-	auto radioButton3 = std::unique_ptr<ska::RadioButton>(new ska::RadioButton(*this, group, ska::Point<int>(48, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
-	addWidget(radioButton1);
-	addWidget(radioButton2);
-	addWidget(radioButton3);
+	auto question = std::unique_ptr<ska::Label>(new ska::Label(*this, "Comment aimes-tu le chocolat ?", 14, ska::Point<int>(16, 96)));
+	addWidget(question);
+
+	auto radioList = std::unique_ptr<ska::RadioButtonList<std::string>>(new ska::RadioButtonList<std::string>(*this, ska::Point<int>(176, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
+	std::vector<std::string> radioVals;
+	radioVals.push_back("Blanc");
+	radioVals.push_back("Lait");
+	radioVals.push_back("Noir");
+	radioList->load(std::move(radioVals));
+	radioList->addHandler<ska::ValueChangedEventListener<std::string*>>([](ska::Widget* tthis, ska::ValueChangedEvent<std::string*>& e) {
+		std::clog << "Radio value : " << *e.getValue() << std::endl;
+	});
+	addWidget(radioList);
+
 
 	auto listbox = std::unique_ptr<ska::ListBox<int>>(new ska::ListBox<int>(gui, *this, ska::Point<int>(16, 160), ska::Button::MENU_DEFAULT_THEME_PATH + "listbox", ska::Button::MENU_DEFAULT_THEME_PATH + "listbox-clean", nullptr));
 	std::vector<int> vals;

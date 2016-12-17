@@ -1,10 +1,12 @@
 #include "RadioButtonGroup.h"
 
-ska::RadioButtonGroup::RadioButtonGroup() {	
+ska::RadioButtonGroup::RadioButtonGroup() : 
+	m_uniqueIndexCursor(0) {
 }
 
-void ska::RadioButtonGroup::addRadioButton(RadioButton& rb) {
+std::size_t ska::RadioButtonGroup::addRadioButton(RadioButton& rb) {
 	m_buttons.emplace(&rb);
+	return m_uniqueIndexCursor++;
 }
 
 void ska::RadioButtonGroup::select(RadioButton& rb) {
@@ -15,6 +17,11 @@ void ska::RadioButtonGroup::select(RadioButton& rb) {
 	}
 }
 
+std::size_t ska::RadioButtonGroup::getSize() const {
+	return m_buttons.size();
+}
+
 void ska::RadioButtonGroup::removeRadioButton(RadioButton& rb) {
 	m_buttons.erase(&rb);
 }
+

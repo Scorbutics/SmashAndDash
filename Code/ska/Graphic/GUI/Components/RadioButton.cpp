@@ -4,7 +4,7 @@
 ska::RadioButton::RadioButton(Widget& parent, std::shared_ptr<RadioButtonGroup>& group, ska::Point<int> relativePos, const std::string& placeHolderStyleName) :
 	CheckBox(parent, relativePos, placeHolderStyleName, nullptr),
 	m_group(group) {
-	m_group->addRadioButton(*this);
+	m_indexInGroup = m_group->addRadioButton(*this);
 
 	addHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 		if (e.getState() == MouseEventType::MOUSE_RELEASE) {

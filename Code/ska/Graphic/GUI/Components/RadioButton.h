@@ -11,5 +11,6 @@ namespace ska {
 		virtual ~RadioButton();
 	private:
 		std::shared_ptr<RadioButtonGroup> m_group;
+		std::size_t m_indexInGroup;
 	};
 }
