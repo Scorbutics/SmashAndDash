@@ -41,6 +41,11 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 		e.setTarget(this);	
 		auto b = reinterpret_cast<Button*>(getWidget(0));
 		b->forceState(f ? ButtonState::PRESSED : ButtonState::NONE);
+
+		if(!f) {
+			ValueChangedEvent<std::wstring> vce(m_lastRawText, m_rawText);
+			directNotify(vce);
+		}
 	});
 
 	addHandler<KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& e) {
@@ -48,7 +53,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 			return;
 		}
 		auto l = reinterpret_cast<Label*>(getWidget(1));
-		const auto lastText = m_rawText;
+		m_lastRawText = m_rawText;
 		if(e.getState() == ska::KeyEventType::KEY_DOWN) {
 			if (m_rawText.size() > 1 && e.getScanCode() == SDL_SCANCODE_BACKSPACE) {
 				m_rawText.pop_back();
@@ -64,9 +69,6 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 
 		l->modifyText(ska::StringUtils::toANSI(m_rawText));
 		adaptDisplayWithText(*l);
-
-		ValueChangedEvent<std::wstring> vce(lastText, m_rawText);
-		directNotify(vce);
 	});
 
 

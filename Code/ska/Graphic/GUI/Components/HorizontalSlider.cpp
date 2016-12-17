@@ -11,7 +11,10 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 			m_sliding = (e.getState() == MouseEventType::MOUSE_CLICK);
 		}));
 
-	auto img = std::unique_ptr<Image>(new Image(*this, styleName + "_bar.png", ska::Point<int>(0, 0), false));
+	ska::Rectangle clipImage{ 0 };
+	clipImage.w = pixelWidth;
+	clipImage.h = std::numeric_limits<int>::max();
+	auto img = std::unique_ptr<Image>(new Image(*this, styleName + "_bar.png", ska::Point<int>(0, 0), false, &clipImage));
 	img->setWidth(pixelWidth);
 	setWidth(pixelWidth);
 	setHeight(img->getBox().h);

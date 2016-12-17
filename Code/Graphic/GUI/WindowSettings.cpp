@@ -15,6 +15,9 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
+	input->addHandler<ska::ValueChangedEventListener<std::wstring>>([](ska::Widget* tthis, ska::ValueChangedEvent<std::wstring>& e) {
+		std::wclog << "Typed :" << e.getValue() << std::endl;
+	});
 	addWidget(input);
 
 	auto checkBox = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 64), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
@@ -55,7 +58,7 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	});
 	addWidget(checkBox2);
 
-	auto hSlider = std::unique_ptr<ska::HorizontalSlider>(new ska::HorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 100));
+	auto hSlider = std::unique_ptr<ska::HorizontalSlider>(new ska::HorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 160));
 	addWidget(hSlider);
 
 	resort();

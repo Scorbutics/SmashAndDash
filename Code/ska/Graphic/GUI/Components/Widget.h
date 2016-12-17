@@ -29,9 +29,9 @@ namespace ska {
 
 		bool isVisible() const override;
 
-		void setWidth(unsigned int w);
+		virtual void setWidth(unsigned int w);
 
-		void setHeight(unsigned int h);
+		virtual void setHeight(unsigned int h);
 
 		void show(bool sh);
 

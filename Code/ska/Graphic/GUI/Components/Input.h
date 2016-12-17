@@ -23,5 +23,6 @@ namespace ska {
 		ska::Rectangle m_clip;
 		bool m_keyFocus;
 		std::wstring m_rawText;
+		std::wstring m_lastRawText;
 	};
 }
