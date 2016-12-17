@@ -32,9 +32,17 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	vals.push_back(25);
 	vals.push_back(82);
 	listbox->load(std::move(vals));
+	listbox->addHandler<ska::ValueChangedEventListener<int*>>([](ska::Widget* tthis, ska::ValueChangedEvent<int*>& e) {
+		int a;
+		std::clog << "Listbox choice" << std::endl;
+	});
 	addWidget(listbox);
 
 	auto checkBox2 = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 192), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
+	checkBox2->addHandler<ska::ValueChangedEventListener<bool>>([](ska::Widget* tthis, ska::ValueChangedEvent<bool>& e) {
+		int a;
+		std::clog << "Checkbox" << std::endl;
+	});
 	addWidget(checkBox2);
 
 	auto hSlider = std::unique_ptr<ska::HorizontalSlider>(new ska::HorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 100));

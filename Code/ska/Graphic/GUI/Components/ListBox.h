@@ -3,6 +3,9 @@
 #include <sstream>
 #include <limits>
 #include <algorithm>
+
+#include "ValueChangedEvent.h"
+#include "ValueChangedEventListener.h"
 #include "WidgetPanel.h"
 #include "Button.h"
 #include "Label.h"
@@ -11,10 +14,10 @@
 namespace ska {
 	
 	template <class T>
-	class ListBox : public WidgetPanel<HoverEventListener, ClickEventListener> {
+	class ListBox : public WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener> {
 	public:
 		ListBox(GUI& g, Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& buttonStyleName, const ska::Rectangle* clip) : 
-			WidgetPanel<HoverEventListener, ClickEventListener>(parent, relativePos),
+			WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener>(parent, relativePos),
 			m_gui(g),
 			m_styleName(buttonStyleName),
 			m_selected(nullptr) {
@@ -58,8 +61,12 @@ namespace ska {
 		}
 
 		void clearValue() {
+			const auto lastValue = m_selected;
 			m_selected = nullptr;
 			m_label->modifyText(" ");
+
+			ValueChangedEvent<T*> vce(lastValue, nullptr);
+			directNotify(vce);
 		}
 
 		void load(std::vector<T>&& values) {
@@ -71,7 +78,6 @@ namespace ska {
 			auto b1 = std::make_unique<Button>(wListbox, ska::Point<int>(0, getBox().h), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
 				e.stopPropagation(StopType::STOP_WIDGET);
 				if (e.getState() != MouseEventType::MOUSE_RELEASE) {
-
 					return;
 				}
 				auto button = reinterpret_cast<Button*> (tthis);
@@ -81,8 +87,7 @@ namespace ska {
 				clearValue();
 			});
 
-			wListbox.addWidget(std::make_unique<Label>(wListbox, " " , 12, 
-				ska::Point<int>(10, getBox().h)));
+			wListbox.addWidget(std::make_unique<Label>(wListbox, " " , 12, ska::Point<int>(10, getBox().h)));
 			wListbox.addWidget(b1);
 			
 			size_t index = 1;
@@ -90,7 +95,6 @@ namespace ska {
 				auto b = std::make_unique<Button>(wListbox, ska::Point<int>(0, getBox().h + buttonHeight * (int)index), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
 					e.stopPropagation(StopType::STOP_WIDGET);
 					if (e.getState() != MouseEventType::MOUSE_RELEASE) {
-
 						return;
 					}
 					auto button = reinterpret_cast<Button*> (tthis);
@@ -117,11 +121,15 @@ namespace ska {
 		}
 
 		void forceValue(T& v) {
+			const auto lastValue = m_selected;
 			m_selected = &v;
 			std::stringstream ss;
 			ss << *m_selected;
 			auto str = ss.str();
 			m_label->modifyText(str.empty() ? " " : str);
+			
+			ValueChangedEvent<T*> vce(lastValue, m_selected);
+			directNotify(vce);
 		}
 
 	private:

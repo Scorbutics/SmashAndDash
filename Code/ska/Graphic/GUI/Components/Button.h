@@ -6,6 +6,8 @@
 #include "MouseObserver.h"
 #include "../../../Utils/SkaConstants.h"
 #include "ClickEventListener.h"
+#include "ValueChangedEvent.h"
+#include "ValueChangedEventListener.h"
 #include "Hoverable.h"
 
 namespace ska {
@@ -14,7 +16,7 @@ namespace ska {
 	class InputContextManager;
 
 	class Button :
-		public Hoverable<ClickEventListener> {
+		public Hoverable<ValueChangedEventListener<bool>, ClickEventListener> {
 	public:
 		Button(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip, ClickEventHandler const& callback);
 		virtual void display() const override;

@@ -142,6 +142,8 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEvent.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\EventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HandledWidget.h" />

@@ -8,9 +8,11 @@
 #include "ClickEventListener.h"
 #include "KeyEventListener.h"
 #include "FocusEventListener.h"
+#include "ValueChangedEvent.h"
+#include "ValueChangedEventListener.h"
 
 namespace ska {
-	class Input : public WidgetPanel<ClickEventListener, KeyEventListener, FocusEventListener> {
+	class Input : public WidgetPanel<ValueChangedEventListener<std::wstring>, ClickEventListener, KeyEventListener, FocusEventListener> {
 	public:
 		Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Input() = default;

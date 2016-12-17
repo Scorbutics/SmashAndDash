@@ -4,7 +4,7 @@
 #include "HorizontalSlider.h"
 
 ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& styleName, Point<int> relativePos, const unsigned int pixelWidth) : 
-	WidgetPanel<HoverEventListener, ClickEventListener>(parent, relativePos),
+WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventListener>(parent, relativePos),
 	m_sliding(false), 
 	m_percents(0) {
 		auto b = std::unique_ptr<Button>(new Button(*this, ska::Point<int>(0, 0), styleName, nullptr, [this](Widget* tthis, ClickEvent& e) {
@@ -18,6 +18,7 @@ ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& style
 
 	addHandler<HoverEventListener>([this](Widget* tthis, HoverEvent& e) {
 		if(e.getState() == MouseEventType::MOUSE_OVER && m_sliding) {
+			const auto lastValue = m_percents;
 			m_percents = ((e.getMousePosition().x - getAbsolutePosition().x) / (float)getBox().w);
 
 			if (m_percents > 100.0) {
@@ -30,6 +31,9 @@ ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& style
 			const auto& buttonPos = button->getRelativePosition();
 			auto newPos = ska::Point<int>(m_percents * getBox().w - button->getBox().w / 2, buttonPos.y);
 			button->move(newPos);
+			
+			ValueChangedEvent<float> vce(lastValue, m_percents);
+			directNotify(vce);
 		}
 	});
 

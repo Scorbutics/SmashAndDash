@@ -1,9 +1,14 @@
+
+#include "ValueChangedEvent.h"
 #include "CheckBox.h"
 
 ska::CheckBox::CheckBox(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip) :
 	Button(parent, relativePos, placeHolderStyleName, clip, [&](Widget* tthis, ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_RELEASE) {
 			m_value = !m_value;
+			
+			ValueChangedEvent<bool> vce(!m_value, m_value);
+			directNotify(vce);
 		}
 	}),
 	m_value(false),
@@ -23,6 +28,9 @@ bool ska::CheckBox::getValue() const {
 }
 
 void ska::CheckBox::forceValue(bool b) {
+	bool oldValue = m_value;
 	m_value = b;
+	ValueChangedEvent<bool> vce(oldValue, m_value);
+	directNotify(vce);
 }
 

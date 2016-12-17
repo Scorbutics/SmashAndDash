@@ -11,7 +11,7 @@
 #include "../../../Utils/StringUtils.h"
 
 ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) :
-	WidgetPanel<ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
+	WidgetPanel<ValueChangedEventListener<std::wstring>, ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
 	m_keyFocus(false) {
 
 	auto& button = std::make_unique<Button>(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](ska::Widget* tthis, ska::ClickEvent& e) {
@@ -48,6 +48,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 			return;
 		}
 		auto l = reinterpret_cast<Label*>(getWidget(1));
+		const auto lastText = m_rawText;
 		if(e.getState() == ska::KeyEventType::KEY_DOWN) {
 			if (m_rawText.size() > 1 && e.getScanCode() == SDL_SCANCODE_BACKSPACE) {
 				m_rawText.pop_back();
@@ -63,6 +64,9 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 
 		l->modifyText(ska::StringUtils::toANSI(m_rawText));
 		adaptDisplayWithText(*l);
+
+		ValueChangedEvent<std::wstring> vce(lastText, m_rawText);
+		directNotify(vce);
 	});
 
 

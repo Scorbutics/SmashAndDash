@@ -6,7 +6,7 @@
 const std::string& ska::Button::MENU_DEFAULT_THEME_PATH = "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"default_theme"FILE_SEPARATOR;
 
 ska::Button::Button(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip, ClickEventHandler const& callback) :
-Hoverable<ClickEventListener>(parent),
+Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),
 m_placeHolder(placeHolderStyleName + ".png"),
 m_placeHolderHover(placeHolderStyleName + "_hover.png"),
 m_placeHolderPressed(placeHolderStyleName + "_pressed.png"),
@@ -43,7 +43,7 @@ m_drawStyle(false) {
 }
 
 ska::Button::Button(Widget& parent) : 
-Hoverable<ClickEventListener>(parent),
+Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
