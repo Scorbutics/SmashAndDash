@@ -18,6 +18,7 @@ namespace ska {
 
 	private:
 		float m_percents;
+		float m_lastPercents;
 		bool m_sliding;
 	};
 }

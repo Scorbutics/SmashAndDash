@@ -1,36 +1,33 @@
 #pragma once
 #include <fstream>
 
-//TODO
 class Settings {
 public:
-    Settings(std::string fileName);
+    Settings(const std::string& fileName);
 
-    void setSoundVolume(int sndVol);
-    void setFog(int b);
-    void setWeather(int b);
-    void setGuiTransparency(int b);
-    void setFileName(std::string fileName);
+    void setSoundVolume(float sndVol);
+    void setFog(bool b);
+    void setWeather(bool b);
+    void setGuiTransparency(bool b);
 
-	void update();
     void load();
     void save();
 
-    std::string getFileName();
-    int* getGuiTransparency();
-    int* getFogActive();
-    int* getWeatherActive();
-    int* getSoundVolume();
-    int* getParticles();
+    const std::string& getFileName() const;
+    bool getGuiTransparency() const;
+    bool getFogActive() const;
+    bool getWeatherActive() const;
+    float getSoundVolume() const;
+    //int* getParticles();
 
-    ~Settings();
+    ~Settings() = default;
 
 private:
-    std::string m_fileName;
-    int m_fogActive;
-    int m_weatherActive;
-    int m_guiTransparency;
-    int m_soundVol; //En pourcents (0 = sans son, 100 = volume maximal)
-    int m_particles;
+    const std::string m_fileName;
+    bool m_fogActive;
+	bool m_weatherActive;
+	bool m_guiTransparency;
+    float m_soundVol;
+    //int m_particles;
 };
 

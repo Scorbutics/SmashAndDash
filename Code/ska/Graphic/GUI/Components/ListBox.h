@@ -9,16 +9,14 @@
 #include "WidgetPanel.h"
 #include "Button.h"
 #include "Label.h"
-#include "../GUI.h"
 
 namespace ska {
 	
 	template <class T>
 	class ListBox : public WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener> {
 	public:
-		ListBox(GUI& g, Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& buttonStyleName, const ska::Rectangle* clip) : 
+		ListBox(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& buttonStyleName, const ska::Rectangle* clip) : 
 			WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener>(parent, relativePos),
-			m_gui(g),
 			m_styleName(buttonStyleName),
 			m_selected(nullptr) {
 				auto button = std::make_unique<Button>(*this, ska::Point<int>(0, 0), placeHolderStyleName, clip, [this] (Widget* tthis, ClickEvent& e) {
@@ -138,6 +136,5 @@ namespace ska {
 		const std::string m_styleName;
 		std::vector<T> m_values;
 		T* m_selected;
-		GUI& m_gui;
 	};
 }

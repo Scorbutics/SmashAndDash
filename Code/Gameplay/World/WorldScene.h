@@ -25,7 +25,7 @@ class CustomEntityManager;
 
 class WorldScene : public ska::Scene, public MobSpawner, public ska::CameraAware {
 public:
-	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w);
+	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings);
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
@@ -46,12 +46,15 @@ public:
 	const unsigned int getScreenW() const;
 	const unsigned int getScreenH() const;
 
-	const std::string getFileName() const;
+	const std::string& getFileName() const;
 
 private:
 	const unsigned int m_screenW;
 	const unsigned int m_screenH;
 	bool m_loadedOnce;
+
+	Settings& m_settings;
+
 	ska::EntityId m_player;
 	SavegameManager m_saveManager;
 

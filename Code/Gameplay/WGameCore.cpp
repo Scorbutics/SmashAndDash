@@ -22,7 +22,7 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 Window(title, w, h),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings) {
 
 	/* MAP inputs */
 	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());

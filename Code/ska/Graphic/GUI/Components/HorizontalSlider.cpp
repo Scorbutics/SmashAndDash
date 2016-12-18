@@ -9,6 +9,12 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 	m_percents(0) {
 		auto b = std::unique_ptr<Button>(new Button(*this, ska::Point<int>(0, 0), styleName, nullptr, [this](Widget* tthis, ClickEvent& e) {
 			m_sliding = (e.getState() == MouseEventType::MOUSE_CLICK);
+			if(m_sliding) {
+				m_lastPercents = m_percents;
+			} else {
+				ValueChangedEvent<float> vce(m_lastPercents, m_percents);
+				directNotify(vce);
+			}
 		}));
 
 	ska::Rectangle clipImage{ 0 };
@@ -21,7 +27,6 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 
 	addHandler<HoverEventListener>([this](Widget* tthis, HoverEvent& e) {
 		if(e.getState() == MouseEventType::MOUSE_OVER && m_sliding) {
-			const auto lastValue = m_percents;
 			m_percents = ((e.getMousePosition().x - getAbsolutePosition().x) / (float)getBox().w);
 
 			if (m_percents > 100.0) {
@@ -35,7 +40,9 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 			auto newPos = ska::Point<int>(m_percents * getBox().w - button->getBox().w / 2, buttonPos.y);
 			button->move(newPos);
 			
-			ValueChangedEvent<float> vce(lastValue, m_percents);
+		}
+		if(e.getState() == MouseEventType::MOUSE_OUT) {
+			ValueChangedEvent<float> vce(m_lastPercents, m_percents);
 			directNotify(vce);
 		}
 	});

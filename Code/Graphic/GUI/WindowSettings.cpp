@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "WindowSettings.h"
+#include "../../Gameplay/Data/Settings.h"
+
 #include "../../ska/Graphic/GUI/GUI.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 #include "../../ska/Graphic/GUI/Components/CheckBox.h"
@@ -8,11 +10,10 @@
 #include "../../ska/Graphic/GUI/Components/RadioButton.h"
 #include "../../ska/Graphic/GUI/Components/RadioButtonList.h"
 #include "../../ska/Graphic/GUI/Components/ListBox.h"
-#include "../../ska/Graphic/GUI/Components/HorizontalSlider.h"
+#include "../../ska/Graphic/GUI/Components/LabeledHorizontalSlider.h"
 
-WindowSettings::WindowSettings(ska::GUI& gui, ska::Widget& parent, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
-
+WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
+ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 7 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {	
 
 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
 	input->addHandler<ska::ValueChangedEventListener<std::wstring>>([](ska::Widget* tthis, ska::ValueChangedEvent<std::wstring>& e) {
@@ -37,8 +38,7 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	});
 	addWidget(radioList);
 
-
-	auto listbox = std::unique_ptr<ska::ListBox<int>>(new ska::ListBox<int>(gui, *this, ska::Point<int>(16, 160), ska::Button::MENU_DEFAULT_THEME_PATH + "listbox", ska::Button::MENU_DEFAULT_THEME_PATH + "listbox-clean", nullptr));
+	auto listbox = std::unique_ptr<ska::ListBox<int>>(new ska::ListBox<int>(*this, ska::Point<int>(16, 160), ska::Button::MENU_DEFAULT_THEME_PATH + "listbox", ska::Button::MENU_DEFAULT_THEME_PATH + "listbox-clean", nullptr));
 	std::vector<int> vals;
 	vals.push_back(0);
 	vals.push_back(7);
@@ -58,10 +58,14 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 	});
 	addWidget(checkBox2);
 
-	auto hSlider = std::unique_ptr<ska::HorizontalSlider>(new ska::HorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 160));
-	addWidget(hSlider);
+	auto hSlider = std::unique_ptr<ska::LabeledHorizontalSlider>(new ska::LabeledHorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(48, 192), 160));
+	m_volController = addWidget(hSlider);
 
 	resort();
+}
+
+void WindowSettings::bind(Settings& sets) {
+	m_volumeBinder.bind(*m_volController, std::bind(&Settings::setSoundVolume, &sets, std::placeholders::_1));
 }
 
 // #include "WindowSettings.h"

@@ -128,6 +128,7 @@
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\UiBinder.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEventListener.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h" />
@@ -463,6 +465,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Input.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEventListener.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp" />

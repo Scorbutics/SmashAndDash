@@ -1038,6 +1038,12 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\UiBinder.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1635,6 +1641,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonList.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

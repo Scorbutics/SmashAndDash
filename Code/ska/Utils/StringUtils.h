@@ -13,6 +13,7 @@ namespace ska {
 		static int strToInt(const std::string& str);
 		static float strToFloat(const std::string& str);
 		static std::string uintToStr(const unsigned int x);
+		static std::string floatToStr(const float f);
 
 		static std::vector<std::string>& split(const std::string &s, const char delim, std::vector<std::string> &elems);
 		static std::vector<std::string> split(const std::string &s, const char delim);

@@ -15,10 +15,15 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM) : ska::GUI(w
 	addWindow<WindowTeam> (windowTeam, "team");
 
 
-	auto rawWindowSettings = new WindowSettings(*this, m_wMaster, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	auto rawWindowSettings = new WindowSettings(m_wMaster, ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	rawWindowSettings->show(false);
-	//rawWindowSettings->addPokemon(25);
 
 	auto windowSettings = std::unique_ptr<WindowSettings>(rawWindowSettings);
 	addWindow<WindowSettings, ska::KeyEventListener>(windowSettings, "settings");
 }
+
+void GUIMap::bind(Settings& sets) {
+	auto wsettings = reinterpret_cast<WindowSettings*>(getWindow("settings"));
+	wsettings->bind(sets);
+}
+

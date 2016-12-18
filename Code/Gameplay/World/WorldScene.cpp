@@ -16,7 +16,7 @@
 #include "../CustomEntityManager.h"
 #include "../../ska/Graphic/GUI/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings) :
 ska::Scene(sh, ril),
 m_entityManager(entityManager),
 m_saveManager("save1"),
@@ -32,7 +32,8 @@ m_inputSystem(m_inputCManager, m_entityManager),
 m_cameraSystem(NULL),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
-m_gui(w, ril) {
+m_gui(w, ril),
+m_settings(settings) {
 	m_loadedOnce = false;
 
 	m_graphics.push_back(&m_graphicSystem);
@@ -46,10 +47,10 @@ m_gui(w, ril) {
 	m_logics.push_back(&m_deleterSystem);
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
-
+	m_gui.bind(m_settings);
 }
 
-const std::string WorldScene::getFileName() const {
+const std::string& WorldScene::getFileName() const {
 	return m_world.getFileName();
 }
 
@@ -93,7 +94,6 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	m_world.graphicUpdate(drawables);
 
 	//Affiche la GUI
-	//m_gui.graphicUpdate(drawables);
 	drawables.add(m_gui);
 }
 
@@ -101,7 +101,6 @@ void WorldScene::eventUpdate(bool movingDisallowed) {
 	m_world.update();
 	
 	//GUI
-	//m_gui.dialogRefresh();
 	m_gui.refresh();
 
 	return Scene::eventUpdate(movingDisallowed);

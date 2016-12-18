@@ -30,9 +30,6 @@ namespace ska {
 
 		void display() const override;
 		
-	protected:
-		DynamicWindowIG<KeyEventListener> m_wMaster;
-		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 
 	private:
 		void refreshMouse();
@@ -61,5 +58,12 @@ namespace ska {
 				windowSorter(tthis, e);
 			});
 		}
+
+		Widget* getWindow(const std::string& name) {
+			return m_windowAnnuary[name];
+		}
+
+		DynamicWindowIG<KeyEventListener> m_wMaster;
+		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 	};
 }
