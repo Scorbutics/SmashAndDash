@@ -20,9 +20,10 @@
 
 WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsigned int h):
 Window(title, w, h),
+Game(),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, getSoundManager()) {
 
 	/* MAP inputs */
 	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());
@@ -39,6 +40,7 @@ m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings) {
 
 	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
 	m_fpsCalculator.setDisplayPriority(INT_MAX);
+
 }
 
 WorldScene& WGameCore::getWorldScene() {

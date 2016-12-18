@@ -91,7 +91,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -127,6 +127,11 @@
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
+    <ClInclude Include="Code\ska\Audio\Music.h" />
+    <ClInclude Include="Code\ska\Audio\SDLMusic.h" />
+    <ClInclude Include="Code\ska\Audio\SDLSound.h" />
+    <ClInclude Include="Code\ska\Audio\SoundEvent.h" />
+    <ClInclude Include="Code\ska\Audio\SoundManager.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
@@ -420,7 +425,7 @@
     <ClInclude Include="Code\ska\Data\Savegame.h" />
     <ClInclude Include="Code\ska\Utils\RectangleUtils.h" />
     <ClInclude Include="Code\ska\Utils\FileUtils.h" />
-    <ClInclude Include="Code\ska\Core\GameCore.h" />
+    <ClInclude Include="Code\ska\Core\Game.h" />
     <ClInclude Include="Code\ska\Physic\PositionComponent.h" />
     <ClInclude Include="Code\Graphic\System\AbstractGraphicSystem.h" />
     <ClInclude Include="Code\ska\ECS\EntityManager.h" />
@@ -451,6 +456,11 @@
     <ClCompile Include="Code\Script\Commands\CommandExpulse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandJump.cpp" />
     <ClCompile Include="Code\ska\AI\System\IADefinedMovementSystem.cpp" />
+    <ClCompile Include="Code\ska\Audio\Music.cpp" />
+    <ClCompile Include="Code\ska\Audio\SDLMusic.cpp" />
+    <ClCompile Include="Code\ska\Audio\SDLSound.cpp" />
+    <ClCompile Include="Code\ska\Audio\SoundEvent.cpp" />
+    <ClCompile Include="Code\ska\Audio\SoundManager.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonQuit.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\CheckBox.cpp" />
@@ -626,7 +636,7 @@
     <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp" />
     <ClCompile Include="Code\ska\Utils\MessagePopup.cpp" />
     <ClCompile Include="Code\ska\Utils\RectangleUtils.cpp" />
-    <ClCompile Include="Code\ska\Core\GameCore.cpp" />
+    <ClCompile Include="Code\ska\Core\Game.cpp" />
     <ClCompile Include="Code\Graphic\System\AbstractGraphicSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\MovementSystem.cpp" />
     <ClCompile Include="Code\ska\Physic\System\CollisionSystem.cpp" />

@@ -15,6 +15,7 @@
 #include "Scene/SceneHolderCore.h"
 //#include "Inventory\Inventory.h"
 #include "../ska/Utils/FpsCalculator.h"
+#include "../ska/Core/Game.h"
 
 class LayerE;
 class Layer;
@@ -23,7 +24,7 @@ class DialogMenu;
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
 
-class WGameCore : public ska::Window {
+class WGameCore : public ska::Window, public ska::Game {
 
 public:
 	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);

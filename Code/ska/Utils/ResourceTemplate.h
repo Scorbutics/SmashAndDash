@@ -1,5 +1,4 @@
-#ifndef DEF_RESOURCETEMPLATE
-#define DEF_RESOURCETEMPLATE
+#pragma once
 
 #include <memory>
 #include <unordered_map>
@@ -10,10 +9,9 @@ namespace ska {
 	{
 
 	public:
-
 		virtual void load(K key) {
 			m_key = key;
-			if (m_container.find(m_key) == m_container.end() || m_container[m_key].lock() == NULL) {
+			if (m_container.find(m_key) == m_container.end() || m_container[m_key].lock() == nullptr) {
 				m_value = std::shared_ptr<V>(new V(m_key));
 				m_container[m_key] = m_value;
 			} else {
@@ -21,7 +19,7 @@ namespace ska {
 			}
 		}
 
-		virtual void free() { m_value = NULL; }
+		virtual void free() { m_value = nullptr; }
 
 		virtual ~ResourceTemplate() { free(); }
 
@@ -32,6 +30,7 @@ namespace ska {
 
 		K m_key;
 		std::shared_ptr<V> m_value;
+	
 		static std::unordered_map<K, std::weak_ptr<V>> m_container;
 
 	};
@@ -39,5 +38,4 @@ namespace ska {
 	template<class V, class K>
 	std::unordered_map<K, std::weak_ptr<V>> ResourceTemplate<V, K>::m_container;
 }
-#endif
 

@@ -19,7 +19,8 @@
 WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
 ska::World(tailleBloc, wWidth, wHeight),
 m_fog(*this),
-m_weather(*this) {m_fog.setMosaicEffect(true);
+m_weather(*this) {
+	m_fog.setMosaicEffect(true);
 	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohérence */
 	m_weather.setPriority(INT_MAX - 3);
 	m_fog.setPriority(INT_MAX - 4);
@@ -47,7 +48,7 @@ void WorldImpl::load(const std::string& fileName, const std::string& chipsetName
 	}
 
 	World::load(fileName, chipsetName);
-	const std::string& stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + getGenericName() + ""FILE_SEPARATOR"" + getGenericName() + ".ini";
+	const std::string& stringDataFile = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + getGenericName() + "" FILE_SEPARATOR "" + getGenericName() + ".ini";
 	loadWeatherFromData(stringDataFile);
 	loadFogFromData(stringDataFile);
 }

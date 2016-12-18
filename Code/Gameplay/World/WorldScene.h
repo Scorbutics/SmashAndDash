@@ -12,9 +12,12 @@
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
+#include "../../ska/Audio/SoundEvent.h"
+#include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
 #include "../../Graphic/GUI/GUIMap.h"
+#include "../../ska/Audio/Music.h"
 
 namespace ska {
 	class IniReader;
@@ -23,9 +26,13 @@ namespace ska {
 }
 class CustomEntityManager;
 
-class WorldScene : public ska::Scene, public MobSpawner, public ska::CameraAware {
+class WorldScene : public ska::Scene, 
+	public MobSpawner, 
+	public ska::CameraAware, 
+	public ska::Observable<ska::SoundEvent> {
+
 public:
-	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings);
+	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, ska::Observer<ska::SoundEvent>& soundEventQueue);
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
@@ -54,6 +61,7 @@ private:
 	bool m_loadedOnce;
 
 	Settings& m_settings;
+	ska::Observer<ska::SoundEvent>& m_soundEvents;
 
 	ska::EntityId m_player;
 	SavegameManager m_saveManager;
@@ -80,6 +88,8 @@ private:
 	Pokeball m_pokeball;
 
 	GUIMap m_gui;
+
+	ska::Music m_worldBGM;
 
 };
 

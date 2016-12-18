@@ -6,8 +6,7 @@
 #include "../Utils/Singleton_template.h"
 
 namespace ska {
-	class SpritePath : public Singleton<SpritePath>
-	{
+	class SpritePath : public Singleton<SpritePath> {
 		friend class Singleton<SpritePath>;
 
 	private:

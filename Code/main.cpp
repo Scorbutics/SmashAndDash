@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include "Gameplay/WGameCore.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
@@ -48,6 +49,10 @@ int main (int argc, char *argv[])
 		std::cerr << "Impossible d'initialiser SDL_image : " << IMG_GetError() << std::endl;
 	}
 
+	if (!(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))) {
+		std::cerr << "Impossible d'initialiser SDL_mixer : " << SDL_GetError() << std::endl;
+	}
+
     if(TTF_Init() == -1) {
 		std::cerr << "Erreur d'initialisation de TTF_Init : " << TTF_GetError() << std::endl;
         exit(EXIT_FAILURE);
@@ -74,8 +79,12 @@ int main (int argc, char *argv[])
 	}
 
 	IMG_Quit();
+	Mix_CloseAudio();
+	Mix_Quit();
 	TTF_Quit();
+
 	SDL_Quit();
+	
 
     return 0;
 
