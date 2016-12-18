@@ -7,6 +7,7 @@ namespace ska {
 	class Widget;
 	class GUI;
 	class LabeledHorizontalSlider;
+	class CheckBox;
 }
 
 class Settings;
@@ -19,6 +20,8 @@ public:
 
 private:
 	ska::LabeledHorizontalSlider* m_volController;
+	ska::CheckBox* m_fogTController;
+	ska::CheckBox* m_weatherController;
 	ska::UiBinder<float> m_volumeBinder;
 };
 

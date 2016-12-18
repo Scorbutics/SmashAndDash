@@ -40,7 +40,7 @@ SDL_Surface* ska::SDLSurface::getInstance() const {
 
 void ska::SDLSurface::loadFromText(const ska::Font& font, const std::string& text, ska::Color c) {
 	free();
-	m_surface = TTF_RenderText_Solid(font.getInstance(), text.c_str(), c.toNative());
+	m_surface = TTF_RenderText_Blended(font.getInstance(), text.c_str(), c.toNative());
 }
 
 void ska::SDLSurface::load(const std::string& file) {

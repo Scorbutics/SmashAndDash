@@ -18,7 +18,8 @@ namespace ska {
 		ListBox(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const std::string& buttonStyleName, const ska::Rectangle* clip) : 
 			WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener>(parent, relativePos),
 			m_styleName(buttonStyleName),
-			m_selected(nullptr) {
+			m_selected(nullptr),
+			m_fontSize(11) {
 				auto button = std::make_unique<Button>(*this, ska::Point<int>(0, 0), placeHolderStyleName, clip, [this] (Widget* tthis, ClickEvent& e) {
 					auto w = m_wListBox;
 					if(e.getState() != MouseEventType::MOUSE_RELEASE) {
@@ -53,7 +54,7 @@ namespace ska {
 				m_wListBox->setHeight(getBox().h);
 				m_wListBox->setPriority(1);
 				addWidget(button)->setPriority(3);
-				m_label = addWidget(std::make_unique<Label>(*this, " ", 12, ska::Point<int>(5, 3)));
+				m_label = addWidget(std::make_unique<Label>(*this, " ", m_fontSize, ska::Point<int>(5, 1)));
 				m_label->setPriority(2);
 				
 		}
@@ -85,7 +86,7 @@ namespace ska {
 				clearValue();
 			});
 
-			wListbox.addWidget(std::make_unique<Label>(wListbox, " " , 12, ska::Point<int>(10, getBox().h)));
+			wListbox.addWidget(std::make_unique<Label>(wListbox, " ", m_fontSize, ska::Point<int>(10, getBox().h)));
 			wListbox.addWidget(b1);
 			
 			size_t index = 1;
@@ -107,7 +108,7 @@ namespace ska {
 				ss << v;
 				auto str = ss.str();
 				wListbox.addWidget(b);
-				wListbox.addWidget(std::make_unique<Label>(wListbox, str.empty() ? " " : str, 12, ska::Point<int>(10, getBox().h + buttonHeight * (int)index + 2)));
+				wListbox.addWidget(std::make_unique<Label>(wListbox, str.empty() ? " " : str, m_fontSize, ska::Point<int>(10, getBox().h + buttonHeight * (int)index)));
 
 				index++;
 			}
@@ -136,5 +137,7 @@ namespace ska {
 		const std::string m_styleName;
 		std::vector<T> m_values;
 		T* m_selected;
+
+		const unsigned int m_fontSize;
 	};
 }

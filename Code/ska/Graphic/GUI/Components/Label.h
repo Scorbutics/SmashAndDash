@@ -11,6 +11,7 @@ namespace ska {
 		Label(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
 		virtual ~Label() = default;
 
+		void setFontColor(int r, int g, int b, int a);
 		void modifyText(const std::string& text);
 		void setClip(ska::Rectangle* r);
 		void display() const override;

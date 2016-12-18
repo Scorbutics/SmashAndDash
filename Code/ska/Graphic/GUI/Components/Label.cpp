@@ -19,6 +19,14 @@ ska::Label::Label(Widget& parent, const std::string& text, int fontSize, ska::Po
 	setHeight(m_stext.getHeight());
 }
 
+void ska::Label::setFontColor(int r, int g, int b, int a) {
+	m_color.r = r;
+	m_color.g = g;
+	m_color.b = b;
+	m_color.a = a;
+	m_stext.loadFromText(m_fontSize, m_text, m_color);
+}
+
 void ska::Label::modifyText(const std::string& text) {
 	m_text = text;
 	m_stext.loadFromText(m_fontSize, m_text, m_color);

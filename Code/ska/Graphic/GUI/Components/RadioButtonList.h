@@ -21,7 +21,7 @@ namespace ska {
 			m_value(nullptr),
 			m_xpadding(4),
 			m_ypadding(4),
-			m_fontSize(14) {
+			m_fontSize(11) {
 
 		}
 		

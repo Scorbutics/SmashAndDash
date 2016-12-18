@@ -29,8 +29,8 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 		if(e.getState() == MouseEventType::MOUSE_OVER && m_sliding) {
 			m_percents = ((e.getMousePosition().x - getAbsolutePosition().x) / (float)getBox().w);
 
-			if (m_percents > 100.0) {
-				m_percents = 100.0;
+			if (m_percents > 1.0) {
+				m_percents = 1.0;
 			} else if (m_percents < 0) {
 				m_percents = 0;
 			}
