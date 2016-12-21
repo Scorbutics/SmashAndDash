@@ -23,7 +23,9 @@ Window(title, w, h),
 Game(),
 m_playerICM(m_rawInputListener),
 m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, getSoundManager()) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher) {
+
+	m_eventDispatcher.template addMultipleObservers<ska::SoundEvent, ska::WorldEvent>(getSoundManager(), getSoundManager());
 
 	/* MAP inputs */
 	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());
@@ -34,7 +36,7 @@ m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, get
 	m_playerICM.addContext(ska::EnumContextManager::CONTEXT_GUI, guiicp);
 
 	/* Let's start on the map */
-	auto scene = ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_playerICM, m_worldScene, false));
+	auto scene = ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_eventDispatcher, m_playerICM, m_worldScene, false));
 	m_sceneHolder.nextScene(scene);
 	m_sceneHolder.update();
 

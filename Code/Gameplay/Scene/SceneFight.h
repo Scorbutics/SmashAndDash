@@ -36,7 +36,7 @@ namespace ska {
 class SceneFight :
 	public AbstractSceneMap_, public BattleStartObservable {
 public:
-	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc);
+	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, ska::GameEventDispatcher& ged);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;

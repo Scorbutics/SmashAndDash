@@ -2,18 +2,22 @@
 #include "../../ska/Physic/CollisionComponent.h"
 #include "../../Gameplay/Data/RawStatistics.h"
 #include "../../ska/Physic/WorldCollisionComponent.h"
+#include "../../ska/Physic/System/CollisionSystem.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
+#include "../../ska/ECS/EntityManager.h"
 
-SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, ska::EntityManager& em) : 
-ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), colSys, em){
-	m_collisionSystem.ska::EntityCollisionObservable::addObserver(*this);
+SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
+ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1), ged, em), 
+m_collisionSystem(colSys){
+	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 
 
-bool SkillEntityCollisionResponse::onEntityCollision(const ska::CollisionEvent& e, ska::CollisionComponent& col, const ska::CollidableComponent& cc) {
+bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
+	auto col = *e.collisionComponent;
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
-		EntityCollisionResponse::onEntityCollision(e, col, cc);
+		EntityCollisionResponse::onEntityCollision(e);
 		return true;
 	}
 
@@ -67,5 +71,5 @@ void SkillCollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& co
 }*/
 
 SkillEntityCollisionResponse::~SkillEntityCollisionResponse() {
-	m_collisionSystem.ska::EntityCollisionObservable::removeObserver(*this);
+	m_ged.ska::Observable<ska::CollisionEvent>::removeObserver(*this);
 }

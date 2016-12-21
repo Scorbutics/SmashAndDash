@@ -2,6 +2,7 @@
 #include "AbstractSceneMap.h"
 #include "../../ska/Graphic/System/DebugCollisionDrawerSystem.h"
 #include "../../ska/Physic/System/DebugWorldCollisionResponse.h"
+#include "../../ska/Core/GameEventDispatcher.h"
 
 namespace ska {
 	class Window;
@@ -9,8 +10,8 @@ namespace ska {
 
 class DebugAbstractSceneMap : public AbstractSceneMap {
 public:
-	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap);
 	virtual ~DebugAbstractSceneMap() = default;
 
 private:

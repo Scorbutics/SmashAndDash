@@ -8,23 +8,20 @@
 #include "../Graphic/GUI/TrainerCard.h"
 #include "Data/SavegameManager.h"
 
+#include "../ska/Core/EventDispatcher.h"
 #include "../ska/Utils/Singleton_template.h"
 #include "../ska/Inputs/InputContextManager.h"
 #include "World/WorldScene.h"
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
+#include "../ska/Core/GameEventDispatcher.h"
 //#include "Inventory\Inventory.h"
 #include "../ska/Utils/FpsCalculator.h"
 #include "../ska/Core/Game.h"
 
-class LayerE;
-class Layer;
-class DialogMenu;
-
-typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
-
-
-class WGameCore : public ska::Window, public ska::Game {
+class WGameCore : 
+	public ska::Window, 
+	public ska::Game {
 
 public:
 	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
@@ -48,7 +45,9 @@ public:
 	ska::ScenePtr& getScene();
 	void nextScene(std::unique_ptr<ska::Scene>& scene);
 
-protected:
+private:
+	
+	ska::GameEventDispatcher m_eventDispatcher;
 	ska::RawInputListener m_rawInputListener;
 	ska::InputContextManager m_playerICM;
 
@@ -62,8 +61,7 @@ protected:
 	//Inventory m_inv;
 	WorldScene m_worldScene;
 	ska::FpsCalculator m_fpsCalculator;
-
-private:
+	
 	bool refreshInternal();
 
 

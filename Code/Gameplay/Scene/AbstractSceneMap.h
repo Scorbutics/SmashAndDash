@@ -4,6 +4,7 @@
 #include "../../ska/Physic/System/WorldCollisionResponse.h"
 #include "../../ska/Physic/System/EntityCollisionResponse.h"
 #include "../../ska/Graphic/Point.h"
+#include "../../ska/Core/GameEventDispatcher.h"
 
 class WorldScene;
 class FightComponent;
@@ -22,8 +23,8 @@ class AbstractSceneMap :
 	public AbstractNoGUISceneMap, public SceneChangeObserver
 {
 public:
-	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::Scene& oldScene, const bool sameMap);
+	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap);
 	bool onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;

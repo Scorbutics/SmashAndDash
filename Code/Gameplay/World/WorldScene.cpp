@@ -16,7 +16,7 @@
 #include "../CustomEntityManager.h"
 #include "../../ska/Graphic/GUI/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, ska::Observer<ska::SoundEvent>& soundEventQueue) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, ska::GameEventDispatcher& eventDispatcher) :
 ska::Scene(sh, ril),
 m_entityManager(entityManager),
 m_saveManager("save1"),
@@ -35,7 +35,7 @@ m_screenH(w.getHeight()),
 m_gui(w, ril),
 m_settings(settings),
 m_worldBGM(DEFAULT_BGM),
-m_soundEvents(soundEventQueue) {
+m_eventDispatcher(eventDispatcher) {
 	m_loadedOnce = false;
 
 	m_graphics.push_back(&m_graphicSystem);
@@ -51,10 +51,7 @@ m_soundEvents(soundEventQueue) {
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_gui.bind(m_settings);
 	m_worldBGM.setVolume(20.0);
-	addObserver(m_soundEvents);
-
-	ska::SoundEvent se(&m_worldBGM, ska::SoundEventType::PLAY_MUSIC);
-	notifyObservers(se);
+	
 }
 
 const std::string& WorldScene::getFileName() const {
@@ -118,7 +115,9 @@ ska::World& WorldScene::getWorld() {
 }
 
 void WorldScene::load(ska::ScenePtr* lastScene) {
-	
+	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
+	we.setBgm(m_worldBGM);
+	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
 }
 
 bool WorldScene::unload() {
@@ -327,5 +326,5 @@ SavegameManager& WorldScene::getSaveGame() {
 }
 
 WorldScene::~WorldScene() {
-	removeObserver(m_soundEvents);
+	//removeObserver(m_soundEvents);
 }

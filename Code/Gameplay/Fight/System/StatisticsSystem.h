@@ -13,7 +13,7 @@ namespace ska {
 
 class StatisticsSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, BattleComponent> {
 public:
-	StatisticsSystem(ska::Window& w, ska::EntityManager& em, ska::SceneHolder& sceneHolder, ska::InputContextManager& icm, WorldScene& ws);
+	StatisticsSystem(ska::Window& w, ska::EntityManager& em, ska::SceneHolder& sceneHolder, ska::InputContextManager& icm, WorldScene& ws, ska::GameEventDispatcher& ged);
 	virtual ~StatisticsSystem();
 
 protected:
@@ -24,4 +24,5 @@ private:
 	ska::InputContextManager& m_playerICM;
 	WorldScene& m_worldScene;
 	ska::Window& m_window;
+	ska::GameEventDispatcher& m_ged;
 };

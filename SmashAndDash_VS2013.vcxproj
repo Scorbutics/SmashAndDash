@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\ska\Core\GameEventDispatcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h" />
@@ -132,6 +133,7 @@
     <ClInclude Include="Code\ska\Audio\SDLSound.h" />
     <ClInclude Include="Code\ska\Audio\SoundEvent.h" />
     <ClInclude Include="Code\ska\Audio\SoundManager.h" />
+    <ClInclude Include="Code\ska\Core\EventDispatcher.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
@@ -309,6 +311,7 @@
     <ClInclude Include="Code\ska\World\Chipset.h" />
     <ClInclude Include="Code\ska\World\ChipsetRenderable.h" />
     <ClInclude Include="Code\ska\World\LayerRenderable.h" />
+    <ClInclude Include="Code\ska\World\WorldEvent.h" />
     <ClInclude Include="Code\Utils\ChargementImages.h" />
     <ClInclude Include="Code\ska\Script\Command\Command.h" />
     <ClInclude Include="Code\Script\Commands\CommandAddPokemon.h" />

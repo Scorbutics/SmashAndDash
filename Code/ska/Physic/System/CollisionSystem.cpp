@@ -3,7 +3,10 @@
 #include "../CollisionComponent.h"
 #include "../WorldCollisionComponent.h"
 
-ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager) : System(entityManager), m_world(w) {
+ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged) : 
+	System(entityManager), 
+	m_world(w),
+	m_ged(ged) {
 }
 
 void ska::CollisionSystem::refresh() {
@@ -69,14 +72,14 @@ void ska::CollisionSystem::refresh() {
 		}
 
 		if (collided) {
-			WorldCollisionObservable::notifyObservers(CollisionEvent(entityId), wcol, m_entityManager.getComponent<CollidableComponent>(entityId));
+			m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(CollisionEvent(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId)));
 		}
 
 		if (entityCollided) {
 			entityCollided = false;
 			/* When collision between entities is detected, we can do things as decreasing health,
 			pushing entities, or any statistic interaction */
-			EntityCollisionObservable::notifyObservers(CollisionEvent(entityId), col, m_entityManager.getComponent<CollidableComponent>(entityId));
+			m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(CollisionEvent(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId)));
 		}
 	}
 }

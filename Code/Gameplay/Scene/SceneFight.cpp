@@ -11,7 +11,8 @@
 #include "../../ska/Task/TaskQueue.h"
 #include "../../Graphic/GUI/Bar.h"
 
-using DialogMenuPtr = std::unique_ptr<DialogMenu>;
+#include "../../ska/Core/GameEventDispatcher.h"
+#include "../../ska/Physic/CollisionEvent.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
 	stats.hp = data.get<int>(block + " hp");
@@ -22,10 +23,10 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 	stats.attack = data.get<int>(block + " attack");
 }
 
-SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc) :
-AbstractSceneMap_(w, ws, sh, ril, true),
+SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, ska::GameEventDispatcher& ged) :
+AbstractSceneMap_(w, ws, ged, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
-m_statsSystem(w, ws.getEntityManager(), sh, ril, ws),
+m_statsSystem(w, ws.getEntityManager(), sh, ril, ws, ged),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
 m_opponentScriptId(fc.opponentScriptId),
@@ -38,9 +39,9 @@ m_opponent("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::
 m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
 m_skillRefreshSystem(ws.getEntityManager()),
 m_sceneLoaded(false),
-m_skillEntityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_skillEntityCollisionResponse(m_collisionSystem, ged, ws.getEntityManager()),
 m_loadState(0),
-m_worldEntityCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
+m_worldEntityCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
 m_guiBattle(w, ril, m_skillEntityCollisionResponse, *this),
 m_taskQueue(sh) {
 	m_logics.push_back(&m_cameraSystem);
@@ -48,9 +49,9 @@ m_taskQueue(sh) {
 	m_logics.push_back(&m_battleSystem);
 	m_logics.push_back(&m_skillRefreshSystem);
 	m_logics.push_back(&m_statsSystem);
-
-	m_collisionSystem.ska::EntityCollisionObservable::removeObserver(m_entityCollisionResponse);
-	m_collisionSystem.ska::WorldCollisionObservable::removeObserver(m_worldCollisionResponse);
+	
+	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
+	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -230,7 +231,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 }
 
 bool SceneFight::unload() {
-	
+	m_worldScene.unload();
 	
 	/* Triggers end fight cinematic to the next scene */
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;

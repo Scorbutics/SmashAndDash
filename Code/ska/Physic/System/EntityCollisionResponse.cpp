@@ -6,21 +6,26 @@
 #include "../../ECS/EntityManager.h"
 #include "../CollisionComponent.h"
 
-ska::EntityCollisionResponse::EntityCollisionResponse(CollisionSystem& colSys, ska::EntityManager& em) :
-	EntityCollisionObserver(std::bind(&EntityCollisionResponse::onEntityCollision, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+ska::EntityCollisionResponse::EntityCollisionResponse(GameEventDispatcher& ged, ska::EntityManager& em) :
+	EntityCollisionObserver(std::bind(&EntityCollisionResponse::onEntityCollision, this, std::placeholders::_1)),
 	m_entityManager(em), 
-	m_collisionSystem(colSys) {
-	m_collisionSystem.EntityCollisionObservable::addObserver(*this);
+	m_ged(ged) {
+	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 
-ska::EntityCollisionResponse::EntityCollisionResponse(std::function<bool(const CollisionEvent&, CollisionComponent&, const CollidableComponent&)> onEntityCollision, CollisionSystem& colSys, ska::EntityManager& em) :
+ska::EntityCollisionResponse::EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& ged, ska::EntityManager& em) :
 EntityCollisionObserver(onEntityCollision),
 m_entityManager(em),
-m_collisionSystem(colSys) {
-	m_collisionSystem.EntityCollisionObservable::addObserver(*this);
+m_ged(ged) {
+	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 
-bool ska::EntityCollisionResponse::onEntityCollision(const CollisionEvent& e, CollisionComponent& col, const CollidableComponent& cc) {
+bool ska::EntityCollisionResponse::onEntityCollision(CollisionEvent& e) {
+	if (e.collisionComponent == nullptr) {
+		return false;
+	}
+
+	auto col = *e.collisionComponent;
 	ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
 	MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
 
@@ -46,5 +51,5 @@ bool ska::EntityCollisionResponse::onEntityCollision(const CollisionEvent& e, Co
 }
 
 ska::EntityCollisionResponse::~EntityCollisionResponse() {
-	m_collisionSystem.EntityCollisionObservable::removeObserver(*this);
+	m_ged.ska::Observable<ska::CollisionEvent>::removeObserver(*this);
 }

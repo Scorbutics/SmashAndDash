@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "../../Core/GameEventDispatcher.h"
 #include "../../Utils/Observer.h"
 
 namespace ska {
@@ -8,20 +8,20 @@ namespace ska {
 	class CollidableComponent;
 	class WorldCollisionComponent;
 	class World;
-	using WorldCollisionObserver = Observer<const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&>;
+	using WorldCollisionObserver = Observer<CollisionEvent>;
 	class EntityManager;
 	class CollisionSystem;
 
 	class WorldCollisionResponse : 
 		public WorldCollisionObserver {
 	public:
-		WorldCollisionResponse(World& w, CollisionSystem& colSys, EntityManager& em);
-		WorldCollisionResponse(std::function<bool(const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&)> onEntityCollision, World& w, CollisionSystem& colSys, ska::EntityManager& em);
-		bool onWorldCollision(const CollisionEvent& e, WorldCollisionComponent& col, const CollidableComponent& cc);
+		WorldCollisionResponse(World& w, GameEventDispatcher& ged, EntityManager& em);
+		WorldCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, World& w, GameEventDispatcher& colSys, ska::EntityManager& em);
+		bool onWorldCollision(CollisionEvent& e);
 		~WorldCollisionResponse();
 	protected:
 		EntityManager& m_entityManager;
-		CollisionSystem& m_collisionSystem;
+		GameEventDispatcher& m_ged;
 		World& m_world;
 	};
 }

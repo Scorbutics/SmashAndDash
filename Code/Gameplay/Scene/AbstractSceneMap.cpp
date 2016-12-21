@@ -5,28 +5,30 @@
 #include "../../ska/Scene/SceneSwitcher.h"
 #include "AbstractSceneMap.h"
 
-AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) :
+AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) :
 AbstractNoGUISceneMap(sh, ril),
 SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
-m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
-m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
+m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
+m_entityCollisionResponse(ged, ws.getEntityManager()),
 m_window(w) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
-AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::Scene& oldScene, const bool sameMap) :
+AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap) :
 AbstractNoGUISceneMap(oldScene),
 SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
-m_collisionSystem(ws.getWorld(), ws.getEntityManager()),
-m_worldCollisionResponse(ws.getWorld(), m_collisionSystem, ws.getEntityManager()),
-m_entityCollisionResponse(m_collisionSystem, ws.getEntityManager()),
+m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
+m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
+m_entityCollisionResponse(ged, ws.getEntityManager()),
 m_window(w) {
 	m_logics.push_back(&m_collisionSystem);
+	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
 }
 
 void AbstractSceneMap::load(ska::ScenePtr* lastScene) {

@@ -1,23 +1,23 @@
 #pragma once
 #include "../../Utils/Observer.h"
+#include "../../Core/GameEventDispatcher.h"
 
 namespace ska {
 	struct CollisionEvent;
-	class CollisionSystem;
 	class CollisionComponent;
 	class CollidableComponent;
 	class EntityManager;
-	using EntityCollisionObserver = Observer<const CollisionEvent&, CollisionComponent&, const CollidableComponent&>;
+	using EntityCollisionObserver = Observer<CollisionEvent>;
 
 	class EntityCollisionResponse : public EntityCollisionObserver {
 	public:
-		EntityCollisionResponse(CollisionSystem& colSys, EntityManager& em);
-		EntityCollisionResponse(std::function<bool(const CollisionEvent&, CollisionComponent&, const CollidableComponent&)> onEntityCollision, CollisionSystem& colSys, ska::EntityManager& em);
-		bool onEntityCollision(const CollisionEvent& e, CollisionComponent& col, const CollidableComponent& cc);
+		EntityCollisionResponse(GameEventDispatcher& colSys, EntityManager& em);
+		EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& colSys, ska::EntityManager& em);
+		bool onEntityCollision(CollisionEvent&);
 		~EntityCollisionResponse();
 	protected:
 		EntityManager& m_entityManager;
-		CollisionSystem& m_collisionSystem;
+		GameEventDispatcher& m_ged;
 
 	};
 }

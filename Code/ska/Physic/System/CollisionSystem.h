@@ -8,24 +8,22 @@
 #include "../../Graphic/Rectangle.h"
 #include "../../ECS/System.h"
 #include "../../World/World.h"
+#include "../../Core/GameEventDispatcher.h"
 
 namespace ska {
 	class CollisionComponent;
 	class WorldCollisionComponent;
 
-	using WorldCollisionObservable = Observable<const CollisionEvent&, WorldCollisionComponent&, const CollidableComponent&>;
-	using EntityCollisionObservable = Observable<const CollisionEvent&, CollisionComponent&, const CollidableComponent&>;
 
-	class CollisionSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MovementComponent, HitboxComponent, CollidableComponent>,
-		public WorldCollisionObservable,
-		public EntityCollisionObservable {
+	class CollisionSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MovementComponent, HitboxComponent, CollidableComponent> {
 	public:
-		CollisionSystem(ska::World& w, ska::EntityManager& entityManager);
+		CollisionSystem(ska::World& w, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged);
 		virtual ~CollisionSystem();
 	protected:
 		virtual void refresh() override;
 	private:
 		inline const ska::Rectangle createHitBox(ska::EntityId entityId, bool xaxis);
 		World& m_world;
+		ska::GameEventDispatcher& m_ged;
 	};
 }

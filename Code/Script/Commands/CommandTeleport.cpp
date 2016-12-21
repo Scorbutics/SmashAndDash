@@ -10,10 +10,11 @@
 
 #include "../../Gameplay/Scene/SceneToMapSwitcher.h"
 
-CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager) :
+CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged) :
 AbstractFunctionCommand(entityManager),
 m_sceneChanger(sceneChanger),
-m_world(w) {
+m_world(w),
+m_ged(ged) {
 }
 
 
@@ -53,7 +54,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-        auto sceneToMapSwitcher = SceneToMapSwitcher(fichier, chipsetName);
+		auto sceneToMapSwitcher = SceneToMapSwitcher(fichier, chipsetName, m_ged);
 		m_sceneChanger.notifyObservers(sceneToMapSwitcher);
 
 	}
