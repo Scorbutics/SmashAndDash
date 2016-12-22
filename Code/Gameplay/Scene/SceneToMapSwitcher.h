@@ -1,14 +1,14 @@
 #pragma once
 #include "../../ska/Scene/SceneSwitcher.h"
-#include "../../ska/Core/GameEventDispatcher.h"
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 class WorldScene;
 
 class SceneToMapSwitcher : public ska::SceneSwitcher<WorldScene&> {
 public:
-	SceneToMapSwitcher(const std::string& map, const std::string& chipset, ska::GameEventDispatcher& ged);
+	SceneToMapSwitcher(const std::string& map, const std::string& chipset, PokemonGameEventDispatcher& ged);
 	virtual ~SceneToMapSwitcher() = default;
 	void switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene& lastScene, ska::InputContextManager& icm, WorldScene& ws) const override;
 private:
-	ska::GameEventDispatcher& m_ged;
+	PokemonGameEventDispatcher& m_ged;
 };

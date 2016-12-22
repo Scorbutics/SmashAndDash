@@ -10,7 +10,7 @@
 
 #include "../../Gameplay/Scene/SceneToMapSwitcher.h"
 
-CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged) :
+CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
 AbstractFunctionCommand(entityManager),
 m_sceneChanger(sceneChanger),
 m_world(w),

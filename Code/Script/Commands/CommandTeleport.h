@@ -4,8 +4,7 @@
 #include "../../Gameplay/World/WorldScene.h"
 #include "../../ska/Scene/SceneSwitcher.h"
 #include "../../ska/Utils/Observable.h"
-
-//class WorldScene;
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 namespace ska {
 	class World;
@@ -17,7 +16,7 @@ class CommandTeleport :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged);
+	CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
 	virtual ~CommandTeleport();
 
 	static void teleportHeroToMap(ska::World& w, std::string param);
@@ -28,6 +27,6 @@ public:
 private:
 	SceneChangeObservable& m_sceneChanger;
 	const ska::World& m_world;
-	ska::GameEventDispatcher& m_ged;
+	PokemonGameEventDispatcher& m_ged;
 };
 

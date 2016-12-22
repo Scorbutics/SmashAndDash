@@ -4,11 +4,8 @@
 #include "../Exceptions/TerminateProcessException.h"
 #include "../Utils/StringUtils.h"
 
-ska::RawInputListener::RawInputListener()
-{
-}
-
-
+// int GetDirectionFromChar(char directionChar);
+// char GetCharFromDirection(int dir);
 
 ska::KeyInput& ska::RawInputListener::getKeyInput() {
     return m_keyIn;
@@ -60,6 +57,7 @@ void ska::RawInputListener::update() {
 		}
 
 
+		/* TODO : WindowEvent pour notifier la GUI */
 		if(event.type == SDL_WINDOWEVENT) {
 			switch(event.window.event) {
 
@@ -104,76 +102,47 @@ void ska::RawInputListener::update() {
 
 }
 
-ska::RawInputListener::~RawInputListener(){}
-
-
-
-
-
-int GetDirectionFromChar(char directionChar)
-{
-    int buf = 0;
-    if(directionChar == 'b')
-        buf = 0;
-    else if (directionChar == 'd')
-        buf = 1;
-    else if (directionChar == 'h')
-        buf = 2;
-    else if(directionChar == 'g')
-        buf = 3;
-    return buf;
-
-}
-
-/*ska::Rectangle MovementManagerSouris(ska::MouseInput *in, Character_ptr& hero)
-{
-	ska::Rectangle mousePos = in->getMousePos(), direction;
-
-    if(in->getMouseState(SDL_BUTTON_LEFT) == 1)
-    {
-        if(mousePos.x - (hero->getPos().x + hero->getOffsetAndFrameSize().w/2) < 0)
-            direction.x = -1;
-        else
-            direction.x = 1;
-
-        if(mousePos.y - (hero->getPos().y + hero->getOffsetAndFrameSize().h/2) < 0)
-            direction.y = -1;
-        else
-            direction.y = 1;
-    }
-    else
-    {
-        direction.x = 0;
-        direction.y = 0;
-    }
-
-    return direction;
-
-}*/
-
-char GetCharFromDirection(int dir)
-{
-    char c;
-    switch(dir)
-    {
-        case 0:
-        c = 'b';
-        break;
-
-        case 1:
-        c = 'd';
-        break;
-
-        case 2:
-        c = 'h';
-        break;
-
-        case 3:
-        default:
-        c = 'g';
-        break;
-    }
-    return c;
-}
+// 
+// int GetDirectionFromChar(char directionChar) {    
+// 	switch (directionChar) {
+// 	case 'b':
+// 		return 0;
+// 	
+// 	case 'd':
+// 		return 1;
+// 
+// 	case 'h':
+// 		return 2;
+// 
+// 	case 'g':
+// 	default:
+// 		return 3;
+// 	}
+// }
+// 
+// char GetCharFromDirection(int dir)
+// {
+//     char c;
+//     switch(dir)
+//     {
+//         case 0:
+//         c = 'b';
+//         break;
+// 
+//         case 1:
+//         c = 'd';
+//         break;
+// 
+//         case 2:
+//         c = 'h';
+//         break;
+// 
+//         case 3:
+//         default:
+//         c = 'g';
+//         break;
+//     }
+//     return c;
+// }
 
 

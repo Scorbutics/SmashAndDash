@@ -8,13 +8,12 @@
 #include "../Graphic/GUI/TrainerCard.h"
 #include "Data/SavegameManager.h"
 
-#include "../ska/Core/EventDispatcher.h"
-#include "../ska/Utils/Singleton_template.h"
 #include "../ska/Inputs/InputContextManager.h"
+#include "../Audio/PokemonSoundRenderer.h"
 #include "World/WorldScene.h"
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
-#include "../ska/Core/GameEventDispatcher.h"
+#include "PokemonGameEventDispatcher.h"
 //#include "Inventory\Inventory.h"
 #include "../ska/Utils/FpsCalculator.h"
 #include "../ska/Core/Game.h"
@@ -46,8 +45,9 @@ public:
 	void nextScene(std::unique_ptr<ska::Scene>& scene);
 
 private:
-	
-	ska::GameEventDispatcher m_eventDispatcher;
+	PokemonGameEventDispatcher m_eventDispatcher;
+	PokemonSoundRenderer m_soundManager;
+
 	ska::RawInputListener m_rawInputListener;
 	ska::InputContextManager m_playerICM;
 

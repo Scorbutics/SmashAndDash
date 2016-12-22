@@ -5,7 +5,7 @@
 #include "../../ska/Scene/SceneHolder.h"
 #include "../Fight/FightComponent.h"
 
-SceneToBattleSwitcher::SceneToBattleSwitcher(const std::string& map, const std::string& chipset, ska::GameEventDispatcher& ged, ska::Point<int> fightPos, const FightComponent& fc) :
+SceneToBattleSwitcher::SceneToBattleSwitcher(const std::string& map, const std::string& chipset, PokemonGameEventDispatcher& ged, ska::Point<int> fightPos, const FightComponent& fc) :
 SceneSwitcher(map, chipset),
 m_fightComponent(fc),
 m_fightPos(fightPos), 

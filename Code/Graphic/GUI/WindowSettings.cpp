@@ -74,4 +74,18 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 
 void WindowSettings::bind(Settings& sets) {
 	m_volumeBinder.bind(*m_volController, std::bind(&Settings::setSoundVolume, &sets, std::placeholders::_1));
+	m_fogBinder.bind(*m_fogTController, std::bind(&Settings::setFog, &sets, std::placeholders::_1));
+	m_weatherBinder.bind(*m_weatherController, std::bind(&Settings::setWeather, &sets, std::placeholders::_1));
+}
+
+void WindowSettings::setMusicVolume(float volPcts) {
+	m_volController->forceValue(volPcts);
+}
+
+void WindowSettings::setWeather(bool b) {
+	m_weatherController->forceValue(b);
+}
+
+void WindowSettings::setFog(bool b) {
+	m_fogTController->forceValue(b);
 }

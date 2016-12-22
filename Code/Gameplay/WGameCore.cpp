@@ -22,10 +22,11 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 Window(title, w, h),
 Game(),
 m_playerICM(m_rawInputListener),
-m_settings("gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher) {
+m_settings(m_eventDispatcher, "gamesettings.ini"),
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher),
+m_soundManager(m_eventDispatcher) {
 
-	m_eventDispatcher.template addMultipleObservers<ska::SoundEvent, ska::WorldEvent>(getSoundManager(), getSoundManager());
+	m_eventDispatcher.addMultipleObservers<ska::SoundEvent, ska::WorldEvent>(m_soundManager, m_soundManager);
 
 	/* MAP inputs */
 	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());

@@ -28,9 +28,6 @@ bool ska::CheckBox::getValue() const {
 }
 
 void ska::CheckBox::forceValue(bool b) {
-	bool oldValue = m_value;
 	m_value = b;
-	ValueChangedEvent<bool> vce(oldValue, m_value);
-	directNotify(vce);
 }
 

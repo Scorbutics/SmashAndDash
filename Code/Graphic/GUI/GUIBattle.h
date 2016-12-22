@@ -7,6 +7,10 @@
 #include "../../ska/ECS/ECSDefines.h"
 #include "../../ska/Scene/HasGraphic.h"
 #include "../../ska/Scene/HasLogic.h"
+
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
+#include "../../Gameplay/Fight/BattleEvent.h"
+#include "../../Gameplay/Fight/StatisticsChangeEvent.h"
 #include "DialogMenu.h"
 
 class Bar;
@@ -19,23 +23,17 @@ namespace ska {
 	class InputContextManager;
 }
 
-template <typename T>
-struct RawStatistics;
-
-using StatisticsChangeObserver = ska::Observer<const ska::EntityId&, RawStatistics<int>&, const ska::EntityId&>;
-using StatisticsChangeObservable = ska::Observable<const ska::EntityId&, RawStatistics<int>&, const ska::EntityId&>;
-
-using BattleStartObserver = ska::Observer<ska::CameraSystem&, const ska::EntityId&, const ska::EntityId&, ska::EntityManager&>;
-using BattleStartObservable = ska::Observable<ska::CameraSystem&, const ska::EntityId&, const ska::EntityId&, ska::EntityManager&>;
+using StatisticsChangeObserver = ska::Observer<StatisticsChangeEvent>;
+using BattleStartObserver = ska::Observer<BattleEvent>;
 
 class GUIBattle : public ska::HasGraphic, public ska::HasLogic, public StatisticsChangeObserver, public BattleStartObserver  {
 public:
-	GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs);
+	GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
 	~GUIBattle();
 
 	void clear();
-	bool onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em);
-	bool onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src);
+	bool onBattleStart(BattleEvent& be);
+	bool onStatisticsChange(StatisticsChangeEvent& sce);
 	
 	void graphicUpdate(ska::DrawableContainer& drawables) override;
 	void eventUpdate(bool movingDisallowed) override;
@@ -46,7 +44,6 @@ private:
 	const ska::InputContextManager& m_playerICM;
 
 	std::unordered_map<ska::EntityId, BarPtr> m_bars;
-	StatisticsChangeObservable& m_statsObservable;
-	BattleStartObservable& m_battleStartObservable;
+	PokemonGameEventDispatcher& m_ged;
 	//DialogMenu m_moves;
 };

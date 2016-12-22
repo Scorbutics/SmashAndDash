@@ -24,7 +24,7 @@
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
 
-ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame, ska::GameEventDispatcher& ged) : 
+ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged) :
 ScriptBasicCommandsSystem(w, ScriptCommandHelper(*this, w, entityManager, ged), entityManager, saveGame),
 SceneChangeObservable() {
 }

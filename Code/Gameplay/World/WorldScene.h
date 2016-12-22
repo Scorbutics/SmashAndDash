@@ -17,7 +17,7 @@
 #include "../../Gameplay/Pokeball.h"
 #include "../../Graphic/GUI/GUIMap.h"
 #include "../../ska/Audio/Music.h"
-#include "../../ska/Core/GameEventDispatcher.h"
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 namespace ska {
 	class IniReader;
@@ -31,7 +31,7 @@ class WorldScene : public ska::Scene,
 	public ska::CameraAware {
 
 public:
-	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, ska::GameEventDispatcher& eventDispatcher);
+	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged);
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
@@ -59,7 +59,7 @@ private:
 	const unsigned int m_screenH;
 	bool m_loadedOnce;
 
-	ska::GameEventDispatcher& m_eventDispatcher;
+	PokemonGameEventDispatcher& m_ged;
 	Settings& m_settings;
 
 	ska::EntityId m_player;

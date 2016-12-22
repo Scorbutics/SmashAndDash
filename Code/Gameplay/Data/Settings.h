@@ -1,16 +1,19 @@
 #pragma once
 #include <fstream>
 
+#include "SettingsChangeEvent.h"
+#include "../PokemonGameEventDispatcher.h"
+
 class Settings {
 public:
-    Settings(const std::string& fileName);
+    Settings(PokemonGameEventDispatcher& ged, const std::string& fileName);
 
     void setSoundVolume(float sndVol);
     void setFog(bool b);
     void setWeather(bool b);
     void setGuiTransparency(bool b);
 
-    void load();
+    
     void save();
 
     const std::string& getFileName() const;
@@ -23,11 +26,15 @@ public:
     ~Settings() = default;
 
 private:
+	void load();
+	void sendEvent(SettingsChangeEventType scet) const;
+
     const std::string m_fileName;
     bool m_fogActive;
 	bool m_weatherActive;
 	bool m_guiTransparency;
     float m_soundVol;
     //int m_particles;
+	PokemonGameEventDispatcher& m_ged;
 };
 

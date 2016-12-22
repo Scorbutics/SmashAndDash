@@ -12,5 +12,6 @@ namespace ska {
 
 	private:
 		Mix_Music* m_instance;
+		float m_volume;
 	};
 }

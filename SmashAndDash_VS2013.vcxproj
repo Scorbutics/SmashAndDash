@@ -124,6 +124,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Audio\PokemonSoundRenderer.h" />
+    <ClInclude Include="Code\Gameplay\Fight\BattleEvent.h" />
+    <ClInclude Include="Code\Gameplay\Fight\StatisticsChangeEvent.h" />
+    <ClInclude Include="Code\Gameplay\PokemonGameEventDispatcher.h" />
+    <ClInclude Include="Code\Graphic\GUI\AbstractGameGUI.h" />
     <ClInclude Include="Code\ska\Core\GameEventDispatcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
@@ -132,8 +137,9 @@
     <ClInclude Include="Code\ska\Audio\SDLMusic.h" />
     <ClInclude Include="Code\ska\Audio\SDLSound.h" />
     <ClInclude Include="Code\ska\Audio\SoundEvent.h" />
-    <ClInclude Include="Code\ska\Audio\SoundManager.h" />
+    <ClInclude Include="Code\ska\Audio\SoundRenderer.h" />
     <ClInclude Include="Code\ska\Core\EventDispatcher.h" />
+    <ClInclude Include="Code\Gameplay\Data\SettingsChangeEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
@@ -447,9 +453,11 @@
     <ClInclude Include="Code\ska\Task\TaskQueue.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Audio\PokemonSoundRenderer.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneToBattleSwitcher.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneToMapSwitcher.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\AbstractGameGUI.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIMap.cpp" />
     <ClCompile Include="Code\Graphic\GUI\SlotPokemon.cpp" />
@@ -463,7 +471,7 @@
     <ClCompile Include="Code\ska\Audio\SDLMusic.cpp" />
     <ClCompile Include="Code\ska\Audio\SDLSound.cpp" />
     <ClCompile Include="Code\ska\Audio\SoundEvent.cpp" />
-    <ClCompile Include="Code\ska\Audio\SoundManager.cpp" />
+    <ClCompile Include="Code\ska\Audio\SoundRenderer.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonQuit.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\CheckBox.cpp" />

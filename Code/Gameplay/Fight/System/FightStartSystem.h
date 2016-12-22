@@ -6,7 +6,7 @@
 #include "../../../ska/Scene/SceneHolder.h"
 #include "../../../ska/Inputs/InputContextManager.h"
 #include "../../../ska/Graphic/GraphicComponent.h"
-#include "../../../ska/Core/GameEventDispatcher.h"
+#include "../../../Gameplay/PokemonGameEventDispatcher.h"
 
 class WorldScene;
 class CustomEntityManager;
@@ -17,7 +17,7 @@ namespace ska {
 
 class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent> {
 public:
-	FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, ska::GameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
+	FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player);
 	virtual ~FightStartSystem();
 
 protected:
@@ -31,7 +31,7 @@ private:
 	const ska::EntityId m_player;
 	unsigned int m_t0;
 	ska::Window& m_window;
-	ska::GameEventDispatcher& m_ged;
+	PokemonGameEventDispatcher& m_ged;
 };
 
 

@@ -40,6 +40,7 @@ m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
 	addWindow(std::unique_ptr<DynamicWindowIG<>>(m_wAction), "actions");
 }
 
+//TODO : move to GUIMap
 void ska::GUI::initButtons(const ska::Window& w) {
 	ska::Rectangle buf;
     buf.w = (TAILLEBLOCFENETRE)*2;
@@ -173,10 +174,7 @@ void ska::GUI::refreshMouse() {
 		}
 		m_hovered = hove.getTarget();
 
-
 	}
-
-	
 
 	auto click = in[ska::InputAction::LClic];
 	if (click) {

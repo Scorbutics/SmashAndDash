@@ -15,8 +15,11 @@ namespace ska {
 		EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& colSys, ska::EntityManager& em);
 		bool onEntityCollision(CollisionEvent&);
 		~EntityCollisionResponse();
+	
 	protected:
 		EntityManager& m_entityManager;
+	
+	private:
 		GameEventDispatcher& m_ged;
 
 	};

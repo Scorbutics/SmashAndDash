@@ -16,6 +16,9 @@ class WindowSettings : public ska::MoveableWindow<ska::KeyEventListener> {
 public:
 	WindowSettings(ska::Widget& parent, const ska::Point<int>& boxAbsolutePos);
 	void bind(Settings& sets);
+	void setMusicVolume(float volPcts);
+	void setWeather(bool b);
+	void setFog(bool b);
     ~WindowSettings() = default;
 
 private:
@@ -23,5 +26,7 @@ private:
 	ska::CheckBox* m_fogTController;
 	ska::CheckBox* m_weatherController;
 	ska::UiBinder<float> m_volumeBinder;
+	ska::UiBinder<bool> m_weatherBinder;
+	ska::UiBinder<bool> m_fogBinder;
 };
 

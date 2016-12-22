@@ -6,6 +6,7 @@
 #include "../../ska/AI/IARandomMovementComponent.h"
 #include "../../ska/AI/IADefinedMovementComponent.h"
 #include "WorldScene.h"
+#include "../Data/Settings.h"
 #include "../../ska/World/LayerE.h"
 #include "../../ska/World/Layer.h"
 #include "../../Utils/IDs.h"
@@ -16,11 +17,11 @@
 #include "../CustomEntityManager.h"
 #include "../../ska/Graphic/GUI/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, ska::GameEventDispatcher& eventDispatcher) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 ska::Scene(sh, ril),
 m_entityManager(entityManager),
 m_saveManager("save1"),
-m_world(TAILLEBLOC, w.getWidth(), w.getHeight()),
+m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
 m_graphicSystem(nullptr, m_entityManager),
 m_shadowSystem(nullptr, m_entityManager),
 m_movementSystem(m_entityManager),
@@ -32,10 +33,10 @@ m_inputSystem(m_inputCManager, m_entityManager),
 m_cameraSystem(nullptr),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
-m_gui(w, ril),
+m_gui(w, ril, ged),
 m_settings(settings),
 m_worldBGM(DEFAULT_BGM),
-m_eventDispatcher(eventDispatcher) {
+m_ged(ged) {
 	m_loadedOnce = false;
 
 	m_graphics.push_back(&m_graphicSystem);
@@ -49,9 +50,8 @@ m_eventDispatcher(eventDispatcher) {
 	m_logics.push_back(&m_deleterSystem);
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
+	m_worldBGM.setVolume(m_settings.getSoundVolume());
 	m_gui.bind(m_settings);
-	m_worldBGM.setVolume(20.0);
-	
 }
 
 const std::string& WorldScene::getFileName() const {
@@ -117,7 +117,10 @@ ska::World& WorldScene::getWorld() {
 void WorldScene::load(ska::ScenePtr* lastScene) {
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
-	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
+	m_ged.ska::Observable<ska::WorldEvent>::notifyObservers(we);
+
+	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
+	m_ged.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 }
 
 bool WorldScene::unload() {

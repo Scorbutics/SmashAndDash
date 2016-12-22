@@ -5,18 +5,19 @@
 #include "SoundEvent.h"
 
 namespace ska {
-	class SoundManager : 
+	class SoundRenderer : 
 		public Observer<SoundEvent>,
 		public Observer<ska::WorldEvent> {
 	public:
-		SoundManager(unsigned int channels);
+		SoundRenderer(unsigned int channels);
 		void play(Mix_Music* m_instance);
+		void setMusicVolume(float volPcts);
 		bool handleSoundEvent(SoundEvent& se);
 		bool handleWorldEvent(ska::WorldEvent& we);
-		virtual ~SoundManager() = default;
+		virtual ~SoundRenderer() = default;
 
 	private:
-		
+		Mix_Music* m_currentPlayed;
 	};
 
 }

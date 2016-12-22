@@ -4,7 +4,7 @@
 
 #define MOB_SPAWNING_DELAY 5000
 
-SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::GameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(w, ws, ged, sh, ril, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
@@ -29,7 +29,7 @@ ska::CameraSystem& SceneMap::getCamera() {
 	return m_cameraSystem;
 }
 
-SceneMap::SceneMap(ska::Window& w, ska::GameEventDispatcher& ged, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+SceneMap::SceneMap(ska::Window& w, PokemonGameEventDispatcher& ged, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(w, ws, ged, oldScene, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
@@ -50,7 +50,7 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_scriptAutoSystem.addObserver(*this);
 }
 
-SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, ska::GameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap) :
+SceneMap::SceneMap(ska::Window& w, ska::SceneHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap) :
 SceneMap(w, sh, ged, ril, ws, ws.getSaveGame().getStartMapName(), ws.getSaveGame().getStartChipsetName(), sameMap) {
 
 }

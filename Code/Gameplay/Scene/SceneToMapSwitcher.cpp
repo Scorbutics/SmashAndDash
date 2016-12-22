@@ -4,7 +4,7 @@
 #include "../../ska/Graphic/GUI/Window.h"
 #include "../../ska/Scene/SceneHolder.h"
 
-SceneToMapSwitcher::SceneToMapSwitcher(const std::string& map, const std::string& chipset, ska::GameEventDispatcher& ged) :
+SceneToMapSwitcher::SceneToMapSwitcher(const std::string& map, const std::string& chipset, PokemonGameEventDispatcher& ged) :
 SceneSwitcher(map, chipset),
 m_ged(ged) {
 }

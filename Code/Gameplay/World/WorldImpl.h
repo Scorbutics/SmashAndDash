@@ -1,5 +1,8 @@
 #pragma once
 #include "../../ska/World/World.h"
+#include "../../ska/Utils/Observer.h"
+#include "../Data/SettingsChangeEvent.h"
+#include "../PokemonGameEventDispatcher.h"
 #include "../Weather.h"
 
 namespace ska {
@@ -7,20 +10,25 @@ namespace ska {
 	class PrefabEntityManager;
 }
 
-class WorldImpl : public ska::World {
+class WorldImpl : 
+	public ska::World, 
+	public ska::Observer<SettingsChangeEvent> {
 	
 public:
-	WorldImpl(unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 	~WorldImpl();
 	void load(const std::string& fileName, const std::string& chipsetName) override;
 	
 	void loadWeatherFromData(const std::string& stringDataFile);
 	void loadFogFromData(const std::string& stringDataFile);
 
+	bool onSettingsChange(SettingsChangeEvent& sce);
+
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 
 private:
 	Weather m_fog;
 	Weather m_weather;
+	PokemonGameEventDispatcher& m_ged;
 	
 };

@@ -10,18 +10,19 @@
 #include "../../ska/Graphic/GUI/Window.h"
 #include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
-GUIBattle::GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, StatisticsChangeObservable& statObs, BattleStartObservable& battleStartObs) :
-StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4)),
-m_statsObservable(statObs),
-m_battleStartObservable(battleStartObs),
+GUIBattle::GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
+StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1)),
+BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1)),
+m_ged(ged),
 //m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
 m_playerICM(playerICM) {
-	m_statsObservable.addObserver(*this);
-	m_battleStartObservable.addObserver(*this);
+	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
+	m_ged.ska::Observable<StatisticsChangeEvent>::addObserver(*this);
 }
 
-bool GUIBattle::onStatisticsChange(const ska::EntityId& target, RawStatistics<int>& targetStats, const ska::EntityId& src) {
+bool GUIBattle::onStatisticsChange(StatisticsChangeEvent& sce) {
+	const ska::EntityId& target = sce.getEntity();
+	RawStatistics<int>& targetStats = sce.getStats();
 	if (m_bars.find(target) != m_bars.end()) {
 		m_bars[target]->setCurrentValue(targetStats.hp);
 	}
@@ -33,31 +34,40 @@ void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsig
 	m_bars[entityId]->setCurrentValue(currentValue);
 }
 
-bool GUIBattle::onBattleStart(ska::CameraSystem& camSys, const ska::EntityId& pokemon, const ska::EntityId& opponent, ska::EntityManager& em) {
-	const auto& sh = em.getComponent<SkillsHolderComponent>(pokemon);
-	//m_moves.clear();
-	//m_moves.hide(false);
-	ska::Point<int> buf;
-	buf.x = TAILLEBLOCFENETRE / 4;
-	buf.y = 0;
-	auto& v = sh.skills;
+bool GUIBattle::onBattleStart(BattleEvent& be) {
+	if (be.getEventType() == BattleEventType::BATTLE_START) {
+		ska::CameraSystem& camSys = be.getCameraSystem();
+		const ska::EntityId& pokemon = be.getBattler();
+		const ska::EntityId& opponent = be.getOpponent();
+		ska::EntityManager& em = be.getEntityManager();
 
-	if (!v.empty()) {
-		for (unsigned int i = 0; i < v.size(); i++) {
-			buf.x += TAILLEBLOCFENETRE;
-			//TODO
-			//m_moves.addWidget(std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(m_moves, buf, "", v[i].id, [&](const ska::ClickEvent& e) {
-			//})));
+		const auto& sh = em.getComponent<SkillsHolderComponent>(pokemon);
+		//m_moves.clear();
+		//m_moves.hide(false);
+		ska::Point<int> buf;
+		buf.x = TAILLEBLOCFENETRE / 4;
+		buf.y = 0;
+		auto& v = sh.skills;
+
+		if (!v.empty()) {
+			for (unsigned int i = 0; i < v.size(); i++) {
+				buf.x += TAILLEBLOCFENETRE;
+				//TODO
+				//m_moves.addWidget(std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(m_moves, buf, "", v[i].id, [&](const ska::ClickEvent& e) {
+				//})));
+			}
 		}
+
+		const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
+		const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
+
+		//TODO max hp venant des stats du fichier ini
+		addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
+		addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
+		return true;
+	} else {
+		return true;
 	}
-
-	const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
-	const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
-
-	//TODO max hp venant des stats du fichier ini
-	addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
-	addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
-	return true;
 }
 
 /* TODO put the sprite in the GUI */
@@ -92,7 +102,7 @@ void GUIBattle::clear() {
 }
 
 GUIBattle::~GUIBattle() {
-	m_statsObservable.removeObserver(*this);
-	m_battleStartObservable.removeObserver(*this);
+	m_ged.ska::Observable<StatisticsChangeEvent>::removeObserver(*this);
+	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);
 	clear();
 }

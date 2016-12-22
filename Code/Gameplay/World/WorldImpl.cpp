@@ -16,16 +16,20 @@
 
 #define WEATHER_ALPHA_LVL 85
 
-WorldImpl::WorldImpl(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
+WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
 ska::World(tailleBloc, wWidth, wHeight),
+ska::Observer<SettingsChangeEvent>(std::bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1)),
 m_fog(*this),
-m_weather(*this) {
+m_weather(*this),
+m_ged(ged) {
 	m_fog.setMosaicEffect(true);
 	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohérence */
 	m_weather.setPriority(INT_MAX - 3);
 	m_fog.setPriority(INT_MAX - 4);
 	m_fog.resetPos();
 	m_fog.setMosaicEffect(true);
+
+	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 }
 
 void WorldImpl::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -103,5 +107,18 @@ void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 
 }
 
+bool WorldImpl::onSettingsChange(SettingsChangeEvent& sce) {
+	if ((sce.eventType & SettingsChangeEventType::WEATHER) == SettingsChangeEventType::WEATHER) {
+		m_weather.hide(!sce.settings.getWeatherActive());
+	}
+	
+	if ((sce.eventType & SettingsChangeEventType::FOG) == SettingsChangeEventType::FOG) {
+		m_fog.hide(!sce.settings.getFogActive());
+	}
+
+	return true;
+}
+
 WorldImpl::~WorldImpl() {
+	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 }

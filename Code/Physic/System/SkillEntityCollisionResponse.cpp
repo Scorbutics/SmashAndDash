@@ -7,9 +7,10 @@
 #include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../ska/ECS/EntityManager.h"
 
-SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
+SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, PokemonGameEventDispatcher& ged, ska::EntityManager& em) :
 ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1), ged, em), 
-m_collisionSystem(colSys){
+m_collisionSystem(colSys), 
+m_ged(ged) {
 	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 
@@ -54,7 +55,8 @@ bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
 
 	if (sc->battler != targettedEntity) {
 		bc->hp -= sc->damage;
-		notifyObservers(targettedEntity, *bc, sc->battler);
+		StatisticsChangeEvent sce(targettedEntity, *bc, sc->battler);
+		m_ged.ska::Observable<StatisticsChangeEvent>::notifyObservers(sce);
 		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
 

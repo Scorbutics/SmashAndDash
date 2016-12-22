@@ -26,17 +26,15 @@ class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
 
-using BattleStartObservable = ska::Observable<ska::CameraSystem&, const ska::EntityId&, const ska::EntityId&, ska::EntityManager&>;
-
 namespace ska {
 	class Window;
 	class TaskQueue;
 }
 
 class SceneFight :
-	public AbstractSceneMap_, public BattleStartObservable {
+	public AbstractSceneMap_ {
 public:
-	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, ska::GameEventDispatcher& ged);
+	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, PokemonGameEventDispatcher& ged);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
@@ -47,6 +45,7 @@ private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
 	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc);
 
+	PokemonGameEventDispatcher& m_ged;
 	ska::InputContextManager m_iaICM;
 	PokemonDescriptor m_descriptor;
 	
@@ -73,7 +72,6 @@ private:
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_guiBattle;
-
 	ska::TaskQueue& m_taskQueue;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

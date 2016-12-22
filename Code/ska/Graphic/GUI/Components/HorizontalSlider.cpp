@@ -27,19 +27,7 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 
 	addHandler<HoverEventListener>([this](Widget* tthis, HoverEvent& e) {
 		if(e.getState() == MouseEventType::MOUSE_OVER && m_sliding) {
-			m_percents = ((e.getMousePosition().x - getAbsolutePosition().x) / (float)getBox().w);
-
-			if (m_percents > 1.0) {
-				m_percents = 1.0;
-			} else if (m_percents < 0) {
-				m_percents = 0;
-			}
-
-			auto button = getWidget(1);
-			const auto& buttonPos = button->getRelativePosition();
-			auto newPos = ska::Point<int>(m_percents * getBox().w - button->getBox().w / 2, buttonPos.y);
-			button->move(newPos);
-			
+			forceValue(((e.getMousePosition().x - getAbsolutePosition().x) / (float)getBox().w));
 		}
 		if(e.getState() == MouseEventType::MOUSE_OUT) {
 			ValueChangedEvent<float> vce(m_lastPercents, m_percents);
@@ -53,4 +41,19 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 
 float ska::HorizontalSlider::getValue() const {
 	return m_percents;
+}
+
+void ska::HorizontalSlider::forceValue(float v) {
+	m_percents = v;
+	
+	if (m_percents > 1.0) {
+		m_percents = 1.0;
+	} else if (m_percents < 0) {
+		m_percents = 0;
+	}
+
+	auto button = getWidget(1);
+	const auto& buttonPos = button->getRelativePosition();
+	auto newPos = ska::Point<int>(m_percents * getBox().w - button->getBox().w / 2, buttonPos.y);
+	button->move(newPos);
 }

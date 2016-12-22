@@ -13,6 +13,7 @@ namespace ska {
 		HorizontalSlider(Widget& parent, const std::string& styleName, Point<int> relativePos, const unsigned int pixelWidth);
 		
 		float getValue() const;
+		virtual void forceValue(float v);
 
 		virtual ~HorizontalSlider() = default;
 

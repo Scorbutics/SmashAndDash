@@ -11,7 +11,7 @@
 #include "../../ska/Task/TaskQueue.h"
 #include "../../Graphic/GUI/Bar.h"
 
-#include "../../ska/Core/GameEventDispatcher.h"
+#include "../PokemonGameEventDispatcher.h"
 #include "../../ska/Physic/CollisionEvent.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
@@ -23,7 +23,7 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 	stats.attack = data.get<int>(block + " attack");
 }
 
-SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, ska::GameEventDispatcher& ged) :
+SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, PokemonGameEventDispatcher& ged) :
 AbstractSceneMap_(w, ws, ged, sh, ril, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_statsSystem(w, ws.getEntityManager(), sh, ril, ws, ged),
@@ -42,8 +42,9 @@ m_sceneLoaded(false),
 m_skillEntityCollisionResponse(m_collisionSystem, ged, ws.getEntityManager()),
 m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_guiBattle(w, ril, m_skillEntityCollisionResponse, *this),
-m_taskQueue(sh) {
+m_guiBattle(w, ril, ged),
+m_taskQueue(sh),
+m_ged(ged) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);
@@ -216,7 +217,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		BattleStartObservable::notifyObservers(m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
+		BattleEvent be(BattleEventType::BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
+		m_ged.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		m_sceneLoaded = true;
 		m_loadState = 0;

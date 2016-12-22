@@ -1,24 +1,18 @@
-#ifndef DEF_KEYBOARD_LISTENER
-#define DEF_KEYBOARD_LISTENER
+#pragma once
 
 #include "KeyInput.h"
 #include "MouseInput.h"
 #include "../Graphic/Rectangle.h"
 
-int GetDirectionFromChar(char directionChar);
-char GetCharFromDirection(int dir);
-
 namespace ska {
-	class RawInputListener
-	{
+	class RawInputListener {
 	public:
-
-		RawInputListener();
+		RawInputListener() = default;
 		KeyInput& getKeyInput();
 		MouseInput& getMouseInput();
 		const std::wstring& getTextInput() const;
 		void update();
-		virtual ~RawInputListener();
+		virtual ~RawInputListener() = default;
 
 	private:
 		KeyInput m_keyIn;
@@ -26,4 +20,4 @@ namespace ska {
 		std::wstring m_textInput;
 	};
 }
-#endif
+
