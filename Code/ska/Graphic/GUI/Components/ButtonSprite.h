@@ -14,6 +14,8 @@ namespace ska {
 		virtual ~ButtonSprite() = default;
 
 		void replaceWith(const std::string& path, const ska::Rectangle& clip);
+		void clear();
+
 		virtual void display() const override;
 		virtual void move(const ska::Point<int>& pos) override;
 

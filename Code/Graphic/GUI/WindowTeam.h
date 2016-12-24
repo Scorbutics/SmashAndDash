@@ -1,16 +1,22 @@
 #pragma once
+#include <list>
 #include "../../ska/Graphic/GUI/MoveableWindow.h"
 #include "SlotPokemon.h"
 
-class WindowTeam : public ska::MoveableWindow<ska::ValueChangedEventListener<SlotPokemonData>> {
+class WindowMouseCursor;
+class WindowTeam : public ska::MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>> {
 public:
-	WindowTeam(ska::Widget& parent, const ska::Point<int>& boxAbsolutePos);
-	void loadPokemon(unsigned int slot, unsigned int pokemonId);
-	void unloadPokemon(unsigned int slot);
+	WindowTeam(ska::Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& boxAbsolutePos);
+	SlotPokemon* insertPokemon(SlotPokemon* before, SlotPokemonDataPtr spd);
+	void organizeSlots();
 	~WindowTeam() = default;
+
 private:
-	unsigned int m_pokemonCount;
+	void unloadPokemon(SlotPokemon* slot);
+
+	WindowMouseCursor* m_mouseCursor;
 	std::vector<SlotPokemon*> m_slots;
+	std::list<SlotPokemon*> m_visibleSlots;
 };
 
 

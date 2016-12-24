@@ -15,7 +15,8 @@ namespace ska {
 		void modifyText(const std::string& text);
 		void setClip(ska::Rectangle* r);
 		void display() const override;
-
+		void clear();
+			
 	private:
 		std::string m_text;
 		unsigned int m_fontSize;

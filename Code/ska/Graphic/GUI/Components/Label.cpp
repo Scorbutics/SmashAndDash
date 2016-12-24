@@ -47,3 +47,8 @@ void ska::Label::display() const {
 	m_stext.render(pos.x, pos.y, m_clip);
 }
 
+void ska::Label::clear() {
+	m_stext.free();
+	m_text = " ";
+}
+
