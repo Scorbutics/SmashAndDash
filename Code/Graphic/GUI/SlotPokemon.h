@@ -15,7 +15,6 @@ class StatisticsChangeEvent;
 class SlotPokemon : public ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener> {
 public:
 	SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos);
-    //void display() const override;
 	bool onStatisticsChangeEvent(StatisticsChangeEvent& sce);
 	void load(SlotPokemonDataPtr& spd);
 	void unload();
@@ -24,10 +23,6 @@ public:
     virtual ~SlotPokemon() = default;
 	
 private:
-    //int m_key, m_index;
-    //int* m_boolUseObjectSelectPkmn;
-	//ska::Texture m_image, m_imagePressed;
-	//std::string m_action, m_style, m_stylePressed;;
 	const unsigned int m_fontSize;
 	SlotPokemonDataPtr m_data;
 	
@@ -37,6 +32,5 @@ private:
 	ska::Label* m_hp;
 	ska::Label* m_type1;
 	ska::Label* m_type2;
-	//std::unique_ptr<Button> m_buttonArea;
 
 };
