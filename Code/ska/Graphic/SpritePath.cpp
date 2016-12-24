@@ -16,6 +16,7 @@ ska::SpritePath::SpritePath()
 	m_paths[SPRITEBANK_PHYSIC] = SPRITEBANK_PATH_PHYSIC;
 	m_paths[SPRITEBANK_FACESET] = SPRITEBANK_PATH_FACESET;
 	m_paths[SPRITEBANK_ICONS] = SPRITEBANK_PATH_ICONS;
+	m_paths[SPRITEBANK_INVENTORY] = SPRITEBANK_PATH_INVENTORY;
 }
 
 std::string ska::SpritePath::getPath(unsigned int spriteType, int id)

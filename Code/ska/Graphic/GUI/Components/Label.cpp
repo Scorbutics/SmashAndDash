@@ -39,8 +39,11 @@ void ska::Label::setClip(ska::Rectangle* r) {
 }
 
 void ska::Label::display() const {
+	if (!isVisible()) {
+		return;
+	}
+
 	const ska::Point<int>& pos = getAbsolutePosition();
 	m_stext.render(pos.x, pos.y, m_clip);
-
 }
 

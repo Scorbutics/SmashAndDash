@@ -55,11 +55,11 @@ void ska::GUI::initButtons(const ska::Window& w) {
 		auto target = ((GUIScrollButtonWindowIG*)tthis);
 		if (e.getState() == ska::MouseEventType::MOUSE_OUT) {
 			if (target->scrollRewind()) {
-				m_dynamicWindows.emplace(target);
+				m_bottomButtons.emplace(target);
 			}
 		} else if (e.getState() == ska::MouseEventType::MOUSE_ENTER) {
 			if (target->scrollTo(ska::Point<int>(target->getRelativePosition().x, -target->getBox().w / 3), 5)) {
-				m_dynamicWindows.emplace(target);
+				m_bottomButtons.emplace(target);
 			}
 		}
 
@@ -128,6 +128,10 @@ void ska::GUI::display() const {
 	}
 
 	m_wMaster.display();
+
+	for (auto& w : m_topWindowWidgets) {
+		w->display();
+	}
 }
 
 void ska::GUI::refreshKeyboard() {
@@ -223,9 +227,9 @@ void ska::GUI::refresh() {
 	refreshKeyboard();
 
 	//Time-based events
-	for (auto it = std::begin(m_dynamicWindows); it != m_dynamicWindows.end(); )  {
+	for (auto it = std::begin(m_bottomButtons); it != m_bottomButtons.end(); )  {
 		if(!(*it)->refresh()) {
-			it = m_dynamicWindows.erase(it);
+			it = m_bottomButtons.erase(it);
 		} else {
 			it++;
 		}
@@ -398,15 +402,24 @@ bool ska::GUI::isVisible() const {
 
 void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 	if (e.getState() == MouseEventType::MOUSE_CLICK) {
-		auto firstWidget = m_wMaster.backWidget();
-		if (tthis != firstWidget) {
-			auto firstPriority = firstWidget->getPriority();
-			auto priority = tthis->getPriority();
-			firstWidget->setPriority(priority);
-			tthis->setPriority(firstPriority);
-			tthis->focus(true);
-			firstWidget->focus(false);
-			m_wMaster.resort();
-		}
+		pushWindowToFront(tthis);
 	}
+}
+
+void ska::GUI::pushWindowToFront(Widget* w) {
+	auto firstWidget = m_wMaster.backWidget();
+	if (w != firstWidget) {
+		auto firstPriority = firstWidget->getPriority();
+		auto priority = w->getPriority();
+		firstWidget->setPriority(priority);
+		w->setPriority(firstPriority);
+		w->focus(true);
+		firstWidget->focus(false);
+		m_wMaster.resort();
+	}
+}
+
+ska::Widget* ska::GUI::addTopWidget(std::unique_ptr<Widget>& w) {
+	m_topWindowWidgets.push_back(std::move(w));
+	return m_topWindowWidgets.back().get();
 }

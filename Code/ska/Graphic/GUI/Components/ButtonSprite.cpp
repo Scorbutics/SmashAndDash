@@ -19,7 +19,15 @@ m_clip(clip) {
 	move(getRelativePosition() + relativePos);
 }
 
+void ska::ButtonSprite::replaceWith(const std::string& path, const ska::Rectangle& clip) {
+	m_img.load(path);
+	m_clip = clip;
+}
+
 void ska::ButtonSprite::display() const {
+	if(!isVisible()) {
+		return;
+	}
 	ska::Button::display();
 
 	const auto& pos = getAbsolutePosition();

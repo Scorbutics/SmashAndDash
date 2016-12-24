@@ -129,6 +129,8 @@
     <ClInclude Include="Code\Gameplay\Fight\StatisticsChangeEvent.h" />
     <ClInclude Include="Code\Gameplay\PokemonGameEventDispatcher.h" />
     <ClInclude Include="Code\Graphic\GUI\AbstractGameGUI.h" />
+    <ClInclude Include="Code\Graphic\GUI\SlotPokemonData.h" />
+    <ClInclude Include="Code\Graphic\GUI\WindowMouseCursor.h" />
     <ClInclude Include="Code\ska\Core\GameEventDispatcher.h" />
     <ClInclude Include="Code\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h" />
@@ -461,6 +463,7 @@
     <ClCompile Include="Code\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Graphic\GUI\GUIMap.cpp" />
     <ClCompile Include="Code\Graphic\GUI\SlotPokemon.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\WindowMouseCursor.cpp" />
     <ClCompile Include="Code\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Script\Commands\CommandBlockCollision.cpp" />

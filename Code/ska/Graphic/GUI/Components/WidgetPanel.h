@@ -70,6 +70,12 @@ namespace ska {
 			return result;
 		}
 
+		void showWidgets(bool b) {
+			for(auto w : m_globalList) {
+				w->show(b);
+			}
+		}
+
 		virtual bool directNotify(IWidgetEvent& e) override {
 			return HandledWidget<HL...>::notify(e);
 		}

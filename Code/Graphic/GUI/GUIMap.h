@@ -2,8 +2,10 @@
 #include "AbstractGameGUI.h"
 #include "../../ska/Utils/Observer.h"
 #include "../../Gameplay/Data/SettingsChangeEvent.h"
+#include "WindowMouseCursor.h"
 
 class Settings;
+class WindowTeam;
 
 class GUIMap : 
 	public AbstractGameGUI, 
@@ -16,5 +18,8 @@ public:
 	void bind(Settings& sets);
 
 	~GUIMap();
+private:
+	WindowMouseCursor* m_attachedToCursor;
+	WindowTeam* m_team;
 
 };

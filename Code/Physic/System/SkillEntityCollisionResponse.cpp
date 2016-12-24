@@ -16,6 +16,9 @@ m_ged(ged) {
 
 
 bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
+	if (e.collisionComponent == nullptr) {
+		return false;
+	}
 	auto col = *e.collisionComponent;
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
 		EntityCollisionResponse::onEntityCollision(e);

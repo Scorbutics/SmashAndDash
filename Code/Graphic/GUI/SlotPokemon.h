@@ -5,11 +5,19 @@
 #include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
 #include "../../ska/Graphic/GUI/Components/HoverEventListener.h"
+#include "../../ska/Graphic/GUI/Components/ClickEventListener.h"
+#include "../../ska/Graphic/GUI/Components/ValueChangedEventListener.h"
 
-class SlotPokemon : public ska::WindowIG<ska::HoverEventListener> {
+#include "SlotPokemonData.h"
+
+class StatisticsChangeEvent;
+
+class SlotPokemon : public ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonData>, ska::HoverEventListener, ska::ClickEventListener> {
 public:
-	SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int pokemonId);
+	SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int slot, unsigned int pokemonId);
     //void display() const override;
+	bool onStatisticsChangeEvent(StatisticsChangeEvent& sce);
+	void load(SlotPokemonData& spd);
     virtual ~SlotPokemon() = default;
 	
 private:
@@ -18,12 +26,8 @@ private:
 	//ska::Texture m_image, m_imagePressed;
 	//std::string m_action, m_style, m_stylePressed;;
 	const unsigned int m_fontSize;
-	std::unique_ptr<ska::ButtonSprite> m_spriteArea;
-	std::unique_ptr<ska::Label> m_pvArea;
-	std::unique_ptr<ska::Label> m_levelArea;
-	std::unique_ptr<ska::Label> m_type1Area;
-	std::unique_ptr<ska::Label> m_type2Area;
-	std::unique_ptr<ska::Label> m_nameArea;
-    //std::unique_ptr<Button> m_buttonArea;
+	SlotPokemonData m_data;
+	ska::ButtonSprite* m_sprite;
+	//std::unique_ptr<Button> m_buttonArea;
 
 };

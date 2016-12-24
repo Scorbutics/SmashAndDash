@@ -21,7 +21,7 @@ ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x
 // 	});
 // 	addWidget(input);
 	
-	auto title = std::unique_ptr<ska::Label>(new ska::Label(*this, "Paramètres", 11, ska::Point<int>(90, 0)));
+	auto title = std::unique_ptr<ska::Label>(new ska::Label(*this, "Paramètres", 11, ska::Point<int>(95, 0)));
 	title->setPriority(std::numeric_limits<int>::max());
 	title->setFontColor(255, 255, 255, 255);
 	addWidget(title);

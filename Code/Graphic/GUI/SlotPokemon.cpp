@@ -1,32 +1,52 @@
 #include "SlotPokemon.h"
 #include "../../ska/Graphic/SpritePath.h"
+#include "../../Gameplay/Fight/StatisticsChangeEvent.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "../../Utils/IDs.h"
 
 
-SlotPokemon::SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int pokemonId) :
-ska::WindowIG<ska::HoverEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 6 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
-	m_fontSize(16) {
+SlotPokemon::SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos, unsigned int slot, unsigned int pokemonId) :
+ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonData>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+	m_fontSize(11){
+	m_data.id = pokemonId;
+	m_data.slotNumber = slot;
+	
 	ska::Widget& tthis = *this;
-	m_spriteArea = std::unique_ptr<ska::ButtonSprite>(
-                                                   new ska::ButtonSprite(tthis, ska::Point<int>(4, 4), "", ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, pokemonId), ska::Rectangle{ 0, 0, 32, 32 }, [](ska::Widget*, ska::ClickEvent&) {
-		//TODO changement d'ordre des Pokémon
-		//return false;
+	auto spriteArea = std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(tthis, ska::Point<int>(4, 4), "", ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_data.id), ska::Rectangle{ 64, 64, 2 * 64, 2 * 64 }, [&](ska::Widget*, ska::ClickEvent& e) {
 	}));
-	m_nameArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Nom : ", m_fontSize, ska::Point<int>(16, 4)));
-	m_levelArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Niveau : ", m_fontSize, ska::Point<int>(16, 22)));
-	m_pvArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "PVs : ", m_fontSize, ska::Point<int>(96, 22)));
-	m_type1Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 1 : ", m_fontSize, ska::Point<int>(16, 40)));
-	m_type2Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 2 : ", m_fontSize, ska::Point<int>(96, 40)));
+	auto nameArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4)));
+	auto levelArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22)));
+	auto type1Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 1 : ", m_fontSize, ska::Point<int>(112, 40)));
+	auto pvArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "PVs : ", m_fontSize, ska::Point<int>(208, 22)));
+	auto type2Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 2 : ", m_fontSize, ska::Point<int>(208, 40)));
 
-	addWidget(m_spriteArea);
-	addWidget(m_nameArea);
-	addWidget(m_levelArea);
-	addWidget(m_pvArea);
-	addWidget(m_type1Area);
-	addWidget(m_type2Area);
+	m_sprite = addWidget(spriteArea);
+	addWidget(nameArea);
+	addWidget(levelArea);
+	addWidget(pvArea);
+	addWidget(type1Area);
+	addWidget(type2Area);
+
+	addHandler<ska::ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
+		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
+			ska::ValueChangedEvent<SlotPokemonData> vce(m_data, m_data);
+			directNotify(vce);
+		}
+	});
+
 }
+
+bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent& sce) {
+	return true;
+}
+
+void SlotPokemon::load(SlotPokemonData& spd) {
+	m_data = spd;
+	
+	m_sprite->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_data.id), ska::Rectangle{ 64, 64, 2 * 64, 2 * 64 });
+}
+
 //
 // void SlotPokemon_Area::setPokemon(unsigned int index) {
 //     m_index = index;

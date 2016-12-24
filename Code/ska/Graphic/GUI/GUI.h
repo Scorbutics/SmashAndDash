@@ -37,8 +37,8 @@ namespace ska {
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
 		DynamicWindowIG<>* m_wAction;
-		std::unordered_set<DynamicWindowIG<>*> m_dynamicWindows;
-		std::vector<DynamicWindowIG<>*> m_extraWindows;
+		std::unordered_set<DynamicWindowIG<>*> m_bottomButtons;
+		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
 		const ska::Window& m_window;
 
@@ -50,14 +50,19 @@ namespace ska {
 
 	protected:
 		template <class Win, class ...HL>
-		void addWindow(std::unique_ptr<Win>& w, const std::string& name) {
-			m_wMaster.addWidget(w);
+		Win* addWindow(std::unique_ptr<Win>& w, const std::string& name) {
+			auto result = m_wMaster.addWidget(w);
 			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
 			m_windowAnnuary[name] = t;
 			t->addHeadHandler<ska::ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
+			return result;
 		}
+
+		void pushWindowToFront(Widget* w);
+		Widget* addTopWidget(std::unique_ptr<Widget>& w);
+
 
 		Widget* getWindow(const std::string& name) {
 			return m_windowAnnuary[name];
