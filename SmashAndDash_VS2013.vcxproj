@@ -144,6 +144,7 @@
     <ClInclude Include="Code\Gameplay\Data\SettingsChangeEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseCursor.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h" />
@@ -490,6 +491,7 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEventListener.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\MouseCursor.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp" />

@@ -28,7 +28,8 @@ m_playerICM(playerICM),
 m_window(w),
 m_hovered(nullptr),
 m_clicked(nullptr),
-m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
+m_wMaster(this, this, ska::Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, ""),
+m_mouseCursor(ska::Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"){
 
 	m_wAction = new DynamicWindowIG<>(m_wMaster, ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
     m_hide = false;
@@ -132,6 +133,8 @@ void ska::GUI::display() const {
 	for (auto& w : m_topWindowWidgets) {
 		w->display();
 	}
+
+	m_mouseCursor.display();
 }
 
 void ska::GUI::refreshKeyboard() {
@@ -157,6 +160,8 @@ void ska::GUI::refreshMouse() {
 
 
 	if (mousePos != lastMousePos) {
+		m_mouseCursor.move(mousePos);
+
 		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover :
 		*  on considère mousePos comme la prochaine position de la souris en terme d'évènements.
 		*  On a donc un retard d'une frame sur tous les évènements déclenchés, mais cela permet de pouvoir réagir

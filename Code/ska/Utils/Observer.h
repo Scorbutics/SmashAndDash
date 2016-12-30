@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
+#include "../Exceptions/IllegalArgumentException.h"
 
 
 namespace ska {
@@ -16,6 +17,9 @@ namespace ska {
 
 		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler),
 			m_right(nullptr), m_left(nullptr) {
+			if(m_handler == nullptr) {
+				throw IllegalArgumentException("Function cannot be null", "Error");
+			}
 		}
 
 		virtual ~Observer() = default;

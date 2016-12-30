@@ -8,6 +8,7 @@
 #include "./Components/KeyObservable.h"
 #include "DynamicWindowIG.h"
 #include "./Components/KeyEventListener.h"
+#include "Components/MouseCursor.h"
 
 namespace ska {
 	class Window;
@@ -47,6 +48,7 @@ namespace ska {
 		Widget* m_hovered;
 		Widget* m_clicked;
 		Widget* m_lastFocused;
+		MouseCursor m_mouseCursor;
 
 	protected:
 		template <class Win, class ...HL>
