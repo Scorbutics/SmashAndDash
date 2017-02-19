@@ -1,14 +1,12 @@
-#ifndef DEF_STATISTICS
-#define DEF_STATISTICS
+#pragma once
 #include <string>
 #include "RawStatistics.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 
 
-class Statistics
-{
+class Statistics {
 
-	public:
+public:
 	Statistics(ska::IniReader* data, std::string block);
 	Statistics(int hp, int attack, int defense, int spe_attack, int spe_defense, int speed);
 	void nextLevel();
@@ -18,16 +16,16 @@ class Statistics
 	void setExperience(int exp);
 	
 	const RawStatistics<int>& getRawStats() const;
-	int getAttack();
-	int getDefense();
-	int getSpeAttack();
-	int getSpeDefense();
-	int getSpeed();
-	int getHpMax();
-	int getLevel();
-	int getExperience();
-	int getMaxSpeed();
-	int getDroppedExperience();
+	int getAttack() const;
+	int getDefense() const;
+	int getSpeAttack() const;
+	int getSpeDefense() const;
+	int getSpeed() const;
+	int getHpMax() const;
+	int getLevel() const;
+	int getExperience() const;
+	int getMaxSpeed() const;
+	int getDroppedExperience() const;
 
 	~Statistics();
 	
@@ -38,5 +36,3 @@ private:
 	int m_level;
 	RawStatistics<float> m_slopes;
 };
-
-#endif

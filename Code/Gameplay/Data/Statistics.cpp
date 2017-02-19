@@ -52,12 +52,10 @@ Statistics::Statistics(ska::IniReader* data, std::string block)
 	m_level = 1;
 }
 
-void Statistics::nextLevel()
-{
+void Statistics::nextLevel() {
 	m_level++;
 	m_stats.exp += (int) m_slopes.exp;
-	switch(m_type)
-	{
+	switch(m_type) {
 		case STATS_TYPE_LINEAR:
 			m_stats.hp += (int) m_slopes.hp;
 			m_stats.attack += (int) m_slopes.attack;
@@ -77,8 +75,7 @@ void Statistics::nextLevel()
 	}
 }
 
-void Statistics::setLevel(unsigned int level)
-{
+void Statistics::setLevel(unsigned int level) {
 	if(m_level != level) {
 		m_stats.hp -= (int)m_slopes.hp;
 		m_stats.attack -= (int)m_slopes.attack;
@@ -100,52 +97,52 @@ void Statistics::setLevel(unsigned int level)
 	}
 }
 
-int Statistics::getMaxSpeed()
+int Statistics::getMaxSpeed() const
 {
 	return (int)(m_stats.speed + 21 * m_slopes.speed);
 }
 
-int Statistics::getLevel()
+int Statistics::getLevel() const
 {
 	return m_level;
 }
 
-int Statistics::getHpMax()
+int Statistics::getHpMax() const
 {
 	return m_stats.hp;
 }
 
-int Statistics::getAttack()
+int Statistics::getAttack() const
 {
 	return m_stats.attack;
 }
 
-int Statistics::getDefense()
+int Statistics::getDefense() const
 {
 	return m_stats.defense;
 }
 
-int Statistics::getSpeAttack()
+int Statistics::getSpeAttack() const
 {
 	return m_stats.speAttack;
 }
 
-int Statistics::getSpeDefense()
+int Statistics::getSpeDefense() const
 {
 	return m_stats.speDefense;
 }
 
-int Statistics::getSpeed()
+int Statistics::getSpeed() const
 {
 	return m_stats.speed;
 }
 
-int Statistics::getExperience()
+int Statistics::getExperience() const
 {
 	return m_stats.exp;
 }
 
-int Statistics::getDroppedExperience()
+int Statistics::getDroppedExperience() const
 {
 	return m_stats.droppedExp;
 }

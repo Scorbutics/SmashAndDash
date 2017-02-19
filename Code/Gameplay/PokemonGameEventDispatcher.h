@@ -3,6 +3,7 @@
 #include "../ska/Core/GameEventDispatcher.h"
 #include "./Fight/StatisticsChangeEvent.h"
 #include "./Fight/BattleEvent.h"
+#include "./Data/EntityLoadEvent.h"
 #include "./Data/SettingsChangeEvent.h"
 
 template <class ...ET>
@@ -16,4 +17,4 @@ public:
 private:
 
 };
-using PokemonGameEventDispatcher = SEventDispatcher<BattleEvent, StatisticsChangeEvent, SettingsChangeEvent>;
+using PokemonGameEventDispatcher = SEventDispatcher<BattleEvent, StatisticsChangeEvent, SettingsChangeEvent, EntityLoadEvent>;

@@ -20,7 +20,7 @@
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 ska::Scene(sh, ril),
 m_entityManager(entityManager),
-m_saveManager("save1"),
+m_saveManager(ged, "save1"),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
 m_graphicSystem(nullptr, m_entityManager),
 m_shadowSystem(nullptr, m_entityManager),
@@ -257,8 +257,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 	const ska::LayerE& layerE = m_world.getLayerEvent();
 
 	//Chargement des NPC sur la map (personnages & pokémon)
-	for (int i = 0; i < layerE.getNbrLignes(); i++)
-	{
+	for (int i = 0; i < layerE.getNbrLignes(); i++) {
 		posEntityId.y = layerE.getBlocY(i);
 		posEntityId.x = layerE.getBlocX(i);
 		int id = layerE.getID(i);
@@ -275,12 +274,10 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 			pc.z = 0;
 			m_entityManager.addComponent<ska::PositionComponent>(script, pc);
 
-		}
-		else {
+		} else {
 			if (abs(id) <= ENTITEMAX) {
 				script = m_entityManager.createCharacter(posEntityId, id, blockSize);
-			}
-			else {
+			} else {
 				throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
 			}
 		}
@@ -294,8 +291,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 			for (unsigned int i = 1; i < totalArgs.size(); i++) {
 				ssc.args.push_back(ska::StringUtils::trim(totalArgs[i]));
 			}
-		}
-		else {
+		} else {
 			throw ska::ScriptSyntaxError("Error while reading a script in the event layer file (l." + ska::StringUtils::intToStr(i) + ") : no arguments supplied to the script cmd");
 		}
 		ssc.name = ska::StringUtils::trim(totalArgs[0]);

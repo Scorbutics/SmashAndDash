@@ -39,10 +39,19 @@ bool ska::StringUtils::isInt(const std::string& s, const int base) {
 }
 
 int ska::StringUtils::strToInt(const std::string& str) {
-	if (!isInt(str, 10)) {
-		throw NumberFormatException(str);
+	const std::string& sTrimed = trim(str);
+	if (!isInt(sTrimed, 10)) {
+		throw NumberFormatException(sTrimed);
 	}
-	return atoi(str.c_str());
+	return atoi(sTrimed.c_str());
+}
+
+int ska::StringUtils::strToUint(const std::string& str) {
+	const std::string& sTrimed = trim(str);
+	if (!isInt(sTrimed, 10)) {
+		throw NumberFormatException(sTrimed);
+	}
+	return std::stoul(sTrimed);
 }
 
 bool ska::StringUtils::isDecimal(const std::string& s) {

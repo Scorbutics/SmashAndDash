@@ -7,7 +7,8 @@
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) : 
 	AbstractGameGUI(w, playerICM, ged),
-	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)) {
+	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)), 
+	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
 
 	auto attachedToCursor = std::unique_ptr<ska::Widget>(new WindowMouseCursor(this, this, ska::Rectangle{ 0, 0, 64, 96 }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	m_attachedToCursor = static_cast<WindowMouseCursor*>(addTopWidget(attachedToCursor));
@@ -19,25 +20,6 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 	auto rawWindowTeam = new WindowTeam(m_wMaster, m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team = rawWindowTeam;
 	rawWindowTeam->show(false);
-	/* Data Set Test */
-	auto spd1 = std::make_unique<SlotPokemonData>();
-	spd1->id = 25;
-	spd1->hp = "25/25";
-	spd1->name = "Pikachu";
-	spd1->level = "5";
-	spd1->type1 = "ELCTK";
-	spd1->type2 = "";
-	auto spd2 = std::make_unique<SlotPokemonData>();
-	spd2->id = 1;
-	spd2->hp = "20/20";
-	spd2->name = "Bulbizarre";
-	spd2->level = "4";
-	spd2->type1 = "PLT";
-	spd2->type2 = "";
-
-	auto slot1 = rawWindowTeam->insertPokemon(nullptr, std::move(spd1));
-	rawWindowTeam->insertPokemon(slot1, std::move(spd2));
-	/* End Data Set Test */
 
 	auto windowTeam = std::unique_ptr<WindowTeam>(rawWindowTeam);
 	addWindow<WindowTeam, ska::ValueChangedEventListener<int>>(windowTeam, "team");
@@ -49,6 +31,7 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 	addWindow<WindowSettings, ska::KeyEventListener>(windowSettings, "settings");
 
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
+	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 }
 
 void GUIMap::bind(Settings& sets) {
@@ -74,7 +57,26 @@ bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
 	return true;
 }
 
+bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
+	/* add a Pokemon to the team (from the event) */
+	auto& wTeam = static_cast<WindowTeam&>(*getWindow("team"));
+
+	auto spd1 = std::make_unique<SlotPokemonData>();
+	/* TODO data from Pkmn Database */
+	spd1->id = ele.id;
+	spd1->hp = ska::StringUtils::uintToStr(ele.currentHp);
+	spd1->name = ele.description.name;
+	spd1->level = ska::StringUtils::intToStr(ele.stats.getLevel());
+	spd1->type1 = ele.description.type1;
+	spd1->type2 = ele.description.type2;
+
+	auto slot1 = wTeam.insertPokemon(nullptr, std::move(spd1));
+	
+	return true;
+}
+
 GUIMap::~GUIMap() {
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
+	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);
 }
 

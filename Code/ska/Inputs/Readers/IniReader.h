@@ -78,6 +78,11 @@ namespace ska {
 	}
 
 	template<>
+	inline unsigned int IniReader::get(const std::string& path) const {
+		return ska::StringUtils::strToUint(get<std::string>(path));
+	}
+
+	template<>
 	inline bool IniReader::get(const std::string& path) const {
 		return get<std::string>(path) == "true";
 	}

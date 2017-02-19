@@ -1,18 +1,16 @@
-#ifndef DEF_SAVEGAMEMANAGER
-#define DEF_SAVEGAMEMANAGER
+#pragma once
 
 #include <vector>
-#include <string>
-#include <iostream>
+#include "../PokemonGameEventDispatcher.h"
 #include "../../ska/Data/Savegame.h"
 
-class SavegameManager : public ska::Savegame
-{
-	public:
-		SavegameManager(std::string filename);
-		void newGame();
-		void loadGame(std::string filename);
-		void saveGame(std::string filename);
+class SavegameManager : public ska::Savegame {
+public:
+	explicit SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename);
+	SavegameManager(const std::string& pathname);
+	void newGame();
+		void loadGame(const std::string& filename);
+		void saveGame(const std::string& filename);
 		
 		virtual std::string getSaveName() const override;
 		virtual int getGameVariable(const unsigned int x) const override;
@@ -21,9 +19,9 @@ class SavegameManager : public ska::Savegame
 		virtual void setGameVariable(const unsigned int x, const int value) override;
 		virtual void setGameSwitch(const unsigned int x, const bool value) override;
 
-		std::string getStartChipsetName();
+		const std::string& getStartChipsetName();
 		const std::string& getPathName();
-		std::string getStartMapName();
+		const std::string& getStartMapName();
 		~SavegameManager();
 
 	private:
@@ -33,10 +31,12 @@ class SavegameManager : public ska::Savegame
 		void saveItems();
 		void savePokemonTeam();
 		void loadPokemonTeam();
+
+		PokemonGameEventDispatcher& m_ged;
+
 		std::string m_pathname, m_startMapChipsetName, m_startMapName;
 		std::vector<int> m_game_variables;
 		std::vector<bool> m_game_switches;
 
 };
 
-#endif

@@ -1,61 +1,59 @@
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
-#include "../../Utils/IDs.h"
 #include "../../Utils/ChargementImages.h"
 #include "../../ska/Utils/StringUtils.h"
 #include "../../ska/Utils/FileUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 
-SavegameManager::SavegameManager(std::string pathname)
-{
-	m_pathname = pathname;
+SavegameManager::SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename): 
+	m_ged(ged) {
+	m_pathname = filename;
 }
 
-void SavegameManager::newGame()
-{
+
+void SavegameManager::newGame() {
 	m_pathname = "new_game.ini";
 }
 
 
-int SavegameManager::getGameVariable(const unsigned int x) const
-{
-	if(x < m_game_variables.size())
+int SavegameManager::getGameVariable(const unsigned int x) const {
+	if (x < m_game_variables.size()) {
 		return m_game_variables[x];
-	else
-	{
-		std::cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
+	} else {
+		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
 		return 0;
 	}
 }
 
-bool SavegameManager::getGameSwitch(const unsigned int x) const
-{
-	if(x < m_game_switches.size())
+bool SavegameManager::getGameSwitch(const unsigned int x) const {
+	if (x < m_game_switches.size()) {
 		return m_game_switches[x];
-	else
-	{
-		std::cerr << "Erreur (classe WGameCore) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
+	} else {
+		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
 		return 0;
 	}
 }
 
-void SavegameManager::setGameVariable(const unsigned int x, const int value)
-{
-	if(x < m_game_variables.size())
+void SavegameManager::setGameVariable(const unsigned int x, const int value) {
+	if (x < m_game_variables.size()) {
 		m_game_variables[x] = value;
+	} else {
+		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
+	}
 
 }
 
-void SavegameManager::setGameSwitch(const unsigned int x, const bool value)
-{
-	if(x < m_game_switches.size())
+void SavegameManager::setGameSwitch(const unsigned int x, const bool value) {
+	if (x < m_game_switches.size()) {
 		m_game_switches[x] = value;
+	} else {
+		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
+	}
 
 }
 
-void SavegameManager::saveGame( std::string pathname )
-{
+void SavegameManager::saveGame(const std::string& pathname) {
 	m_pathname = pathname;
 	saveTrainer();
 	savePokemonTeam();
@@ -64,13 +62,11 @@ void SavegameManager::saveGame( std::string pathname )
 	VariablesWriting(m_game_variables, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"variables.ini");
 }
 
-std::string SavegameManager::getSaveName() const
-{
+std::string SavegameManager::getSaveName() const {
 	return m_pathname;
 }
 
-void SavegameManager::loadGame( std::string pathname )
-{
+void SavegameManager::loadGame(const std::string& pathname) {
 	m_pathname = pathname;
 	loadTrainer();
 	loadPokemonTeam();
@@ -81,8 +77,7 @@ void SavegameManager::loadGame( std::string pathname )
 	std::ofstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"tmpscripts.data").c_str(), std::ios::trunc);
 }
 
-void SavegameManager::savePokemonTeam()
-{
+void SavegameManager::savePokemonTeam() {
 	ska::IniReader reader;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
@@ -109,35 +104,39 @@ void SavegameManager::savePokemonTeam()
 	}*/
 }
 
-void SavegameManager::loadPokemonTeam()
-{
-	ska::IniReader reader;
+void SavegameManager::loadPokemonTeam() {
+	ska::IniReader pkmnReader;
 	unsigned int index = 0;
-	//WGameCore& wScreen = WGameCore::getInstance();
 
-	/*do
-	{
+	const auto basePath = "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR;
+
+	do {
 		const std::string& id = ska::StringUtils::intToStr(index);
-		reader.load("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
-		if(reader.isLoaded())
-		{
-			wScreen.getPokemonManager().add(reader.getInt("Data id"));
-			Character* pkmn = wScreen.getPokemonManager().getLastPokemon();
-			pkmn->getStatistics()->setExperience(reader.getInt("Data experience"));
-			pkmn->setHP(reader.getInt("Stats hp"));
+		pkmnReader.load(basePath + id + ".ini");
+		if(pkmnReader.isLoaded()) {
+			
+
+			const auto charId = pkmnReader.get<int>("Data id");
+			const auto charExp = pkmnReader.get<unsigned int>("Data experience");
+			const auto charHp = pkmnReader.get<unsigned int>("Stats hp");
+			
+			const auto pokemonDBPath = "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(charId) + ".ini";
+			ska::IniReader detailsReader(pokemonDBPath);
+			EntityLoadEvent ele(detailsReader, charId, charHp);
+			ele.stats.setExperience(charExp);
+			ele.stats.setExperience(charExp);
+			m_ged.ska::Observable<EntityLoadEvent>::notifyObservers(ele);
 		}
 		index++;
-	} while (reader.isLoaded());*/
+	} while (pkmnReader.isLoaded());
 
 }
 
-std::string SavegameManager::getStartChipsetName()
-{
+const std::string& SavegameManager::getStartChipsetName() {
 	return m_startMapChipsetName;
 }
 
-std::string SavegameManager::getStartMapName()
-{
+const std::string& SavegameManager::getStartMapName() {
 	return m_startMapName;
 }
 
@@ -145,8 +144,7 @@ const std::string& SavegameManager::getPathName() {
 	return m_pathname;
 }
 
-void SavegameManager::saveTrainer()
-{
+void SavegameManager::saveTrainer() {
 	//Character* hero;
 	std::ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -169,8 +167,7 @@ void SavegameManager::saveTrainer()
 	saveItems();
 }
 
-void SavegameManager::saveItems()
-{
+void SavegameManager::saveItems() {
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	for(unsigned int i = 0; i < wScreen.getInventory().getSize(); i++)
@@ -182,8 +179,7 @@ void SavegameManager::saveItems()
 	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
 }
 
-void SavegameManager::loadTrainer()
-{
+void SavegameManager::loadTrainer() {
 
 	unsigned int startPosx, startPosy;
 	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
@@ -215,14 +211,12 @@ void SavegameManager::loadTrainer()
 
 }
 
-void SavegameManager::loadItem( int id, unsigned int amount )
-{
+void SavegameManager::loadItem( int id, unsigned int amount ) {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	//wScreen.getInventory().add(id, amount);
 }
 
-SavegameManager::~SavegameManager()
-{
+SavegameManager::~SavegameManager() {
 
 }
 

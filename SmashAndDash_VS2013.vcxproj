@@ -125,6 +125,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Audio\PokemonSoundRenderer.h" />
+    <ClInclude Include="Code\Gameplay\Data\EntityLoadEvent.h" />
+    <ClInclude Include="Code\Gameplay\Data\MonsterDescription.h" />
     <ClInclude Include="Code\Gameplay\Fight\BattleEvent.h" />
     <ClInclude Include="Code\Gameplay\Fight\StatisticsChangeEvent.h" />
     <ClInclude Include="Code\Gameplay\PokemonGameEventDispatcher.h" />
@@ -383,7 +385,7 @@
     <ClInclude Include="Code\ska\World\Layer.h" />
     <ClInclude Include="Code\ska\World\LayerE.h" />
     <ClInclude Include="Code\ska\Physic\LinearParticle.h" />
-    <ClInclude Include="Code\Graphic\GUI\MouseCursor.h" />
+    <ClInclude Include="Code\Graphic\GUI\MapMouseCursor.h" />
     <ClInclude Include="Code\ska\Inputs\MouseInput.h" />
     <ClInclude Include="Code\Graphic\GUI\MovableWindow.h" />
     <ClInclude Include="Code\ska\AI\Node.h" />
@@ -607,7 +609,7 @@
     <ClCompile Include="Code\ska\World\LayerE.cpp" />
     <ClCompile Include="Code\ska\Physic\LinearParticle.cpp" />
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp" />
+    <ClCompile Include="Code\Graphic\GUI\MapMouseCursor.cpp" />
     <ClCompile Include="Code\ska\Inputs\MouseInput.cpp" />
     <ClCompile Include="Code\Graphic\GUI\MovableWindow.cpp" />
     <ClCompile Include="Code\ska\AI\Node.cpp" />

@@ -222,9 +222,6 @@
     <ClInclude Include="Code\Script\Commands\CommandTranslationCamera.h">
       <Filter>Fichiers d%27en-tête\Script</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Graphic\GUI\MouseCursor.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Inventory\Object.h">
       <Filter>Fichiers d%27en-tête\Gameplay\Inventory</Filter>
     </ClInclude>
@@ -1095,6 +1092,15 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseCursor.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Gameplay\Data\EntityLoadEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Graphic\GUI\MapMouseCursor.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Gameplay\Data\MonsterDescription.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1207,9 +1213,6 @@
     </ClCompile>
     <ClCompile Include="Code\Script\Commands\CommandTranslationCamera.cpp">
       <Filter>Fichiers sources\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\MouseCursor.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\Gameplay\Inventory\Object.cpp">
       <Filter>Fichiers sources\Gameplay\Inventory</Filter>
@@ -1723,6 +1726,9 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\MouseCursor.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Graphic\GUI\MapMouseCursor.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
