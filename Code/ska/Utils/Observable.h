@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <algorithm>
+#include <unordered_set>
 #include "Observer.h"
 
 namespace ska {
@@ -10,37 +10,22 @@ namespace ska {
 	class Observable
 	{
 	public:
-		Observable() : m_head(nullptr) {
+		Observable() {
 
 		}
 
 		void addObserver(Observer<T, Args...>& obs) {
-			if (m_head != nullptr) {
-				m_head->m_left = &obs;
-			}
-			obs.m_left = nullptr;
-			obs.m_right = m_head;		
-			m_head = &obs;
+			m_head.emplace(&obs);
 		}
 
 		void removeObserver(Observer<T, Args...>& obs) {
-			if (m_head == &obs) {
-				m_head = obs.m_right;
-			}
-
-			if (obs.m_left != nullptr) {
-				obs.m_left->m_right = obs.m_right;
-			}
-
-			if (obs.m_right != nullptr) {
-				obs.m_right->m_left = obs.m_left;
-			}
+			m_head.erase(&obs);
 		}
 
 		bool notifyObservers(T& t, Args... args) {
 			bool hasBeenHandled = false;
-			for (auto it = m_head; it != nullptr; it = it->m_right) {
-				hasBeenHandled |= it->receive(t, std::forward<Args&>(args)...);
+			for (auto& obs : m_head) {
+				hasBeenHandled |= obs->receive(t, std::forward<Args&>(args)...);
 			}
 			return hasBeenHandled;
 		}
@@ -49,7 +34,7 @@ namespace ska {
 		virtual ~Observable() = default;
 
 	private:
-		Observer<T, Args...>* m_head;
+		std::unordered_set<Observer<T, Args...>*> m_head;
 	};
 }
 

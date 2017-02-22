@@ -123,8 +123,7 @@ void SavegameManager::loadPokemonTeam() {
 			const auto pokemonDBPath = "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(charId) + ".ini";
 			ska::IniReader detailsReader(pokemonDBPath);
 			EntityLoadEvent ele(detailsReader, charId, charHp);
-			ele.stats.setExperience(charExp);
-			ele.stats.setExperience(charExp);
+			ele.stats->setExperience(charExp);
 			m_ged.ska::Observable<EntityLoadEvent>::notifyObservers(ele);
 		}
 		index++;

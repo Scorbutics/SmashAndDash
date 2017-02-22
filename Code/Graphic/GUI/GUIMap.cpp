@@ -58,17 +58,17 @@ bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
 }
 
 bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
-	/* add a Pokemon to the team (from the event) */
+	/* add a Pokemon to the GUI team (from the event) */
 	auto& wTeam = static_cast<WindowTeam&>(*getWindow("team"));
 
 	auto spd1 = std::make_unique<SlotPokemonData>();
 	/* TODO data from Pkmn Database */
 	spd1->id = ele.id;
 	spd1->hp = ska::StringUtils::uintToStr(ele.currentHp);
-	spd1->name = ele.description.name;
-	spd1->level = ska::StringUtils::intToStr(ele.stats.getLevel());
-	spd1->type1 = ele.description.type1;
-	spd1->type2 = ele.description.type2;
+	spd1->name = ele.description->name;
+	spd1->level = ska::StringUtils::intToStr(ele.stats->getLevel());
+	spd1->type1 = ele.description->type1;
+	spd1->type2 = ele.description->type2;
 
 	auto slot1 = wTeam.insertPokemon(nullptr, std::move(spd1));
 	
