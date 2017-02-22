@@ -31,7 +31,7 @@ namespace ska {
 		std::vector<IniReader>& getMobSettings();
 		std::string getGenericName() const;
 		std::string getName() const;
-		std::string getFileName() const;
+		const std::string& getFileName() const;
 
 		unsigned int getPixelWidth() const;
 		unsigned int getPixelHeight() const;

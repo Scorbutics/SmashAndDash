@@ -87,7 +87,7 @@ ska::ChipsetHolder& ska::World::getChipset() {
 	return m_chipset;
 }
 
-std::string ska::World::getFileName() const {
+const std::string& ska::World::getFileName() const {
 	return m_fileName;
 }
 
