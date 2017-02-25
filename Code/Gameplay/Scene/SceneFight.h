@@ -20,6 +20,7 @@
 #include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 #include "../../Graphic/GUI/GUIBattle.h"
+#include "../../ska/AI/System/IARandomMovementSystem.h"
 
 class WorldScene;
 class FightComponent;
@@ -42,8 +43,8 @@ public:
 	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneFight();
 private:
-	void createSkill(SkillDescriptor& sd, const std::string& skillPath);
-	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc);
+	void createSkill(SkillDescriptor& sd, const std::string& skillPath) const;
+	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;
 
 	PokemonGameEventDispatcher& m_ged;
 	ska::InputContextManager m_iaICM;
@@ -69,6 +70,8 @@ private:
 
 	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
+
+	ska::IARandomMovementSystem m_randomMovementSystem;
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_guiBattle;

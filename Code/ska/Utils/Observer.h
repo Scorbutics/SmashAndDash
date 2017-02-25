@@ -15,8 +15,7 @@ namespace ska {
         template <typename T1, typename ...Args1>
 		friend class Observable;
 
-		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler),
-			m_right(nullptr), m_left(nullptr) {
+		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler) {
 			if(m_handler == nullptr) {
 				throw IllegalArgumentException("Function cannot be null", "Error");
 			}
@@ -26,8 +25,6 @@ namespace ska {
 
 	private:
 		std::function<bool(T&, Args...)> m_handler;
-		Observer<T, Args...> * m_right;
-		Observer<T, Args...> * m_left;
 
 		bool receive(T& evt, Args&... args) {
 			return (m_handler)(evt, std::forward<Args&>(args)...);
