@@ -1,14 +1,11 @@
-#ifndef DEF_SINGLETON_TEMPLATE
-#define DEF_SINGLETON_TEMPLATE
+#pragma once
 
-//Pattern Singleton :
 namespace ska {
 	template<typename T>
-	class Singleton
-	{
+	class Singleton {
 	protected:
-		Singleton(){}
-		~Singleton(){}
+		Singleton() = default;
+		~Singleton() = default;
 
 	public:
 		static T& getInstance() { static T w; return w; }
@@ -16,4 +13,3 @@ namespace ska {
 		//cela évite l'appel au constructeur possible plusieurs fois).
 	};
 }
-#endif

@@ -10,7 +10,7 @@
 #include "../Exceptions/FileException.h"
 
 //Constructeur ouvrant un monde déjà créé
-ska::Layer::Layer(ska::World& w, std::string pathFile, std::string chipsetName, Layer* parent) : m_world(w), m_renderable(w) {
+ska::Layer::Layer(World& w, std::string pathFile, std::string chipsetName, Layer* parent) : m_world(w), m_renderable(w) {
 	m_block.reserve(20);
 	m_parent = parent;
 	m_fileWidth = 0; 
@@ -18,7 +18,7 @@ ska::Layer::Layer(ska::World& w, std::string pathFile, std::string chipsetName, 
     reset(pathFile, chipsetName);
 }
 
-ska::Layer::Layer(ska::World& w, Layer* parent) : m_world(w), m_renderable(w) {
+ska::Layer::Layer(World& w, Layer* parent) : m_world(w), m_renderable(w) {
 }
 
 ska::Layer* ska::Layer::getParent() const {
@@ -38,7 +38,7 @@ ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j) con
 	if (i < m_block.size() && j < m_block[i].size()) {
 		return m_block[i][j];
 	} else {
-		throw ska::IndexOutOfBoundsException("block at coordinates (" + ska::StringUtils::intToStr(i) + "; " + ska::StringUtils::intToStr(j) + ") cannot be accessed");
+		throw IndexOutOfBoundsException("block at coordinates (" + StringUtils::intToStr(i) + "; " + StringUtils::intToStr(j) + ") cannot be accessed");
     }
 
 }
@@ -62,15 +62,15 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
     m_nomFichier = pathFile.substr(pathFile.find_last_of('/')+1, pathFile.size());
     m_name = m_nomFichier.substr(0, m_nomFichier.find_last_of('.'));
 
-    ska::SDLSurface fichierMPng;
+    SDLSurface fichierMPng;
     
     fichierMPng.load32(pathFile);
 	if (fichierMPng.getInstance() == nullptr) {
-		throw ska::FileException("Erreur lors du chargement de la couche " + m_name + " : " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors du chargement de la couche " + m_name + " : " + std::string(SDL_GetError()));
 	}
 
-	m_fileHeight = fichierMPng.getInstance()->h;
-	m_fileWidth = fichierMPng.getInstance()->w;
+	m_fileHeight = static_cast<unsigned int>(fichierMPng.getInstance()->h);
+	m_fileWidth = static_cast<unsigned int>(fichierMPng.getInstance()->w);
 
 	/* Layer coherence check */
 	checkSize(m_fileWidth, m_fileHeight);
@@ -84,11 +84,11 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 	std::vector<std::vector<BlockRenderable*>> renderableBlocks;
 	m_block.resize(m_fileWidth);
 	renderableBlocks.resize(m_fileWidth);
-	for (int i = 0; i < m_fileWidth; i++) {
+	for (auto i = 0U; i < m_fileWidth; i++) {
 		m_block.reserve(m_fileHeight);
 		renderableBlocks.reserve(m_fileHeight);
-		for (int j = 0; j < m_fileHeight; j++) {
-			ska::Color c = fichierMPng.getPixel32Color(i, j);
+		for (auto j = 0U; j < m_fileHeight; j++) {
+			Color c = fichierMPng.getPixel32Color(i, j);
 			BlockRenderable* brp = nullptr;
 			Block* bp = nullptr;
 			chipset.generateBlock(c, &bp, &brp);
@@ -101,17 +101,15 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 
 }
 
-void ska::Layer::checkSize(int nbrBlocX, int nbrBlocY) {
+void ska::Layer::checkSize(unsigned int nbrBlocX, unsigned int nbrBlocY) const{
 	if (m_fileWidth != nbrBlocX || m_fileHeight != nbrBlocY) {
-		throw ska::CorruptedFileException("Layer " + m_name + " has a wrong size dimension in his file " + m_nomFichier);
+		throw CorruptedFileException("Layer " + m_name + " has a wrong size dimension in his file " + m_nomFichier);
 	}
 
-	if (m_parent != NULL) {
+	if (m_parent != nullptr) {
 		m_parent->checkSize(nbrBlocX, nbrBlocY);
 	}
 }
 
-void ska::Layer::printCollisionProfile() {
-}
 
 

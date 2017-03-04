@@ -1,11 +1,9 @@
-#include <cstdint>
 
 #include "World.h"
 #include "Layer.h"
 #include "Block.h"
 #include "../Utils/StringUtils.h"
 #include "../Utils/RectangleUtils.h"
-#include "../Physic/PhysicObject.h"
 #include "LayerE.h"
 #include "../Script/ScriptSleepComponent.h"
 #include "../Graphic/System/CameraSystem.h"
@@ -31,7 +29,7 @@ unsigned int ska::World::getNumberLayers() const {
 	return 3;
 }
 
-bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex) {
+bool ska::World::isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex) {
 	Layer* l;
 	switch (layerIndex) {
 	case 0:
@@ -58,7 +56,7 @@ bool ska::World::isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>&
 	return (b1 == b2 || b1 != nullptr && b2 != nullptr && b1->getID() == b2->getID());
 }
 
-bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const {
+bool ska::World::canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const {
 	const Layer* l;
 	switch (layerIndex) {
 	case 0:
@@ -74,7 +72,7 @@ bool ska::World::canMoveOnBlock(const ska::Point<int>& pos, const std::unordered
 		l = nullptr;
 		break;
 	}
-	const ska::Point<int> blockPos = pos / m_blockSize;
+	const Point<int> blockPos = pos / m_blockSize;
 	if (blockPos.x >= m_nbrBlockX || blockPos.y >= m_nbrBlockY ) {
 		return true;
 	}
@@ -115,8 +113,8 @@ void ska::World::update() {
 	m_lTop.getRenderable().update();
 }
 
-bool ska::World::canMoveToPos(ska::Rectangle hitbox, std::vector<ska::Point<int>>& output) const {
-	ska::Point<int> chd, chg, cbg;
+bool ska::World::canMoveToPos(Rectangle hitbox, std::vector<Point<int>>& output) const {
+	Point<int> chd, chg, cbg;
 
 
 	//position coin haut droit hitbox
@@ -138,7 +136,7 @@ bool ska::World::canMoveToPos(ska::Rectangle hitbox, std::vector<ska::Point<int>
 	for (int y = chg.y / m_blockSize; y <= yLimit; y++) {
 		for (int x = chg.x / m_blockSize; x <= xLimit; x++) {
 			if (getCollision(x, y) /*&& !isBlockDodgeable(i, j)*/) {
-				output.push_back(ska::Point<int>(x * m_blockSize, y * m_blockSize));
+				output.push_back(Point<int>(x * m_blockSize, y * m_blockSize));
 				col = true;
 			}
 		}
@@ -212,8 +210,8 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 		
 }
 
-std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& posToLookAt, const ScriptTriggerType& reason, const unsigned int layerIndex) {
-	std::vector<ska::ScriptSleepComponent*> result;
+std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const Point<int>& oldPos, const Point<int>& newPos, const Point<int>& posToLookAt, const ScriptTriggerType& reason, const unsigned int layerIndex) {
+	std::vector<ScriptSleepComponent*> result;
 	Layer* l;
 	switch (layerIndex) {
 	case 0:
@@ -228,7 +226,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	}
 
 	if (reason == EnumScriptTriggerType::AUTO) {
-		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript("", reason, m_autoScriptsPlayed);
+		std::vector<ScriptSleepComponent*> tmp = m_chipset.getScript("", reason, m_autoScriptsPlayed);
 		for (auto& ssc : tmp) {
 			if (ssc != nullptr) {
 				ssc->context = getName();
@@ -238,20 +236,20 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 		return result;
 	}
 	
-	const ska::Point<int> newBlock = newPos / m_blockSize;
-	const ska::Point<int> oldBlock = oldPos / m_blockSize;
+	const Point<int> newBlock = newPos / m_blockSize;
+	const Point<int> oldBlock = oldPos / m_blockSize;
 	Block* b = l->getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
 	if (b != nullptr) {
 		const unsigned int id = b->getID();
-		std::vector<ska::ScriptSleepComponent*> tmp = m_chipset.getScript(ska::StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
+		std::vector<ScriptSleepComponent*> tmp = m_chipset.getScript(StringUtils::intToStr(id), reason, m_autoScriptsPlayed);
 		for (auto& ssc : tmp) {
 			if (ssc != nullptr) {
 				ssc->args.clear();
-				ssc->args.push_back(ska::StringUtils::intToStr(oldBlock.x));
-				ssc->args.push_back(ska::StringUtils::intToStr(oldBlock.y));
-				ssc->args.push_back(ska::StringUtils::intToStr(newBlock.x));
-				ssc->args.push_back(ska::StringUtils::intToStr(newBlock.y));
-				ssc->args.push_back(ska::StringUtils::intToStr(ska::RectangleUtils::getDirectionFromPos(oldBlock * m_blockSize, newBlock * m_blockSize)));
+				ssc->args.push_back(StringUtils::intToStr(oldBlock.x));
+				ssc->args.push_back(StringUtils::intToStr(oldBlock.y));
+				ssc->args.push_back(StringUtils::intToStr(newBlock.x));
+				ssc->args.push_back(StringUtils::intToStr(newBlock.y));
+				ssc->args.push_back(StringUtils::intToStr(RectangleUtils::getDirectionFromPos(oldBlock * m_blockSize, newBlock * m_blockSize)));
 				ssc->context = getName();
 				result.push_back(ssc);
 			}
@@ -261,15 +259,15 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const ska::Poi
 	
 }
 
-ska::Point<int> ska::World::alignOnBlock(const ska::Rectangle& hitbox) const {
-	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitbox) / m_blockSize) * m_blockSize;
-	return ska::Point<int>(hitbox) - hitBoxBlock;
+ska::Point<int> ska::World::alignOnBlock(const Rectangle& hitbox) const {
+	Point<int> hitBoxBlock = (Point<int>(hitbox) / m_blockSize) * m_blockSize;
+	return Point<int>(hitbox) - hitBoxBlock;
 }
 
-ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) const {
-	std::vector<ska::Rectangle> blocksPos;
-	ska::Point<int> hitBoxBlock = (ska::Point<int>(hitBox) + ska::Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
-	ska::Rectangle result = hitBox;
+ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBox, const unsigned int radius) const {
+	std::vector<Rectangle> blocksPos;
+	Point<int> hitBoxBlock = (Point<int>(hitBox) + Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
+	Rectangle result = hitBox;
 	
 
 	if (radius == 0) {
@@ -279,7 +277,7 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& 
 	const unsigned int maxWidth = getNbrBlocX();
 	const unsigned int maxHeight = getNbrBlocY();
 
-	ska::Rectangle blockArea;
+	Rectangle blockArea;
 	blockArea.x = hitBoxBlock.x - radius;
 	blockArea.y = hitBoxBlock.y - radius;
 	blockArea.w = (radius << 1) + 1;
@@ -311,14 +309,14 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const ska::Rectangle& 
 
 	for (unsigned int x = 0; x != blockArea.w; x++) {
 		for (unsigned int y = 0; y != blockArea.h; y++) {
-			ska::Rectangle rect{ x + blockArea.x, y + blockArea.y, hitBox.w, hitBox.h};
+			Rectangle rect{ x + blockArea.x, y + blockArea.y, hitBox.w, hitBox.h};
 			blocksPos.push_back(rect);
 		}
 	}
 
 	auto x = *blocksPos.begin();
 	std::sort(blocksPos.begin(), blocksPos.end(), [hitBoxBlock](const decltype(x)& it1, decltype(x)& it2) -> bool {
-		return ska::RectangleUtils::distanceSquared(it1, hitBoxBlock) < ska::RectangleUtils::distanceSquared(it2, hitBoxBlock);
+		return RectangleUtils::distanceSquared(it1, hitBoxBlock) < RectangleUtils::distanceSquared(it2, hitBoxBlock);
 	});
 
 	for (const auto& r : blocksPos) {
@@ -350,7 +348,7 @@ ska::Block* ska::World::getHigherBlock(const unsigned int i, const unsigned int 
 }
 
 
-int ska::World::getNbrBlocX() const {
+unsigned ska::World::getNbrBlocX() const{
     return m_nbrBlockX;
 }
 
@@ -358,7 +356,7 @@ unsigned int ska::World::getPixelWidth() const {
 	return m_nbrBlockX*m_blockSize;
 }
 
-int ska::World::getNbrBlocY() const {
+unsigned ska::World::getNbrBlocY() const{
 	return m_nbrBlockY;
 }
 
@@ -366,21 +364,21 @@ unsigned int ska::World::getPixelHeight() const {
 	return m_nbrBlockY*m_blockSize;
 }
 
-const unsigned int ska::World::getBlockSize() const {
+unsigned int ska::World::getBlockSize() const {
 	return m_blockSize;
 }
 
-void ska::World::setNbrBlocX(int nbrBlockX) {
+void ska::World::setNbrBlocX(unsigned int nbrBlockX) {
 	m_nbrBlockX = nbrBlockX;
 }
 
-void ska::World::setNbrBlocY(int nbrBlockY) {
+void ska::World::setNbrBlocY(unsigned int nbrBlockY) {
 	m_nbrBlockY = nbrBlockY;
 }
 
 
 
-void ska::World::getRainFromData(std::string stringDataFile) {
+void ska::World::getRainFromData(std::string stringDataFile){
     int idsprite, acceleration, density;	
 	IniReader reader(stringDataFile);
 
@@ -388,7 +386,6 @@ void ska::World::getRainFromData(std::string stringDataFile) {
 		idsprite = reader.get<int>("Rain id_sprite");
 		acceleration = reader.get<int>("Rain acceleration");
 		density = reader.get<int>("Rain density");
-
     } else {
         std::clog << "La pluie est inexistante sur cette map" << std::endl;
     }
@@ -399,7 +396,7 @@ void ska::World::getMobSettingsFromData() {
 
 	unsigned int i = 0;
 	do  {
-		m_mobSettings.push_back(IniReader( "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"Monsters"FILE_SEPARATOR"" + ska::StringUtils::intToStr(i) + ".ini"));
+		m_mobSettings.push_back(IniReader( "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"Monsters"FILE_SEPARATOR"" + StringUtils::intToStr(i) + ".ini"));
 		i++;
 	} while(m_mobSettings[i-1].isLoaded());
 

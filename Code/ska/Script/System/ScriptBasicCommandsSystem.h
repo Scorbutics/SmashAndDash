@@ -6,14 +6,15 @@ namespace ska {
 	class ScriptBasicCommandsSystem : public ScriptAutoSystem {
 		friend class BasicScriptCommandHelper;
 	public :
-		ScriptBasicCommandsSystem(World& w, EntityManager& entityManager, ska::Savegame& saveGame);
+		ScriptBasicCommandsSystem(World& w, EntityManager& entityManager, Savegame& saveGame);
 		virtual ~ScriptBasicCommandsSystem();
 
 	protected:
-		ScriptBasicCommandsSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
-		struct BasicScriptCommandHelper : public ska::ScriptAutoSystem::ScriptCommandHelper {
-			BasicScriptCommandHelper(ska::World& w, EntityManager& entityManager) : ScriptAutoSystem::ScriptCommandHelper(w, entityManager) {}
-			virtual void setupCommands(ska::World& w, std::unordered_map<std::string, CommandPtr>& c) const override;
+		ScriptBasicCommandsSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame);
+		struct BasicScriptCommandHelper : public ScriptCommandHelper {
+			BasicScriptCommandHelper(World& w, EntityManager& entityManager) : ScriptCommandHelper(w, entityManager) {}
+			void operator=(const BasicScriptCommandHelper&) = delete;
+			virtual void setupCommands(World& w, std::unordered_map<std::string, CommandPtr>& c) const override;
 		};
 	};
 

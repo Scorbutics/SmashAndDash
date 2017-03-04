@@ -4,7 +4,7 @@
 
 #include "Image.h"
 
-ska::Image::Image(Widget& parent, const std::string& imagePath, ska::Point<int> relativePos, bool alpha, ska::Rectangle* clip) :
+ska::Image::Image(Widget& parent, const std::string& imagePath, Point<int> relativePos, bool alpha, Rectangle* clip) :
 	Widget(parent, relativePos),
 	m_img(imagePath, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha ? 128 : -1) {
 	if(clip == nullptr) {
@@ -41,14 +41,14 @@ void ska::Image::replaceWith(const std::string& imagePath, const unsigned int pa
 }
 
 void ska::Image::setWidth(unsigned int w) {
-	ska::Widget::setWidth(w);
+	Widget::setWidth(w);
 	if (m_clip.w == std::numeric_limits<int>::max()) {
 		m_clip.w = m_img.getWidth();
 	}
 }
 
 void ska::Image::setHeight(unsigned int h) {
-	ska::Widget::setHeight(h);
+	Widget::setHeight(h);
 	if (m_clip.h == std::numeric_limits<int>::max()) {
 		m_clip.h = m_img.getHeight();
 	}
@@ -58,7 +58,7 @@ void ska::Image::display() const {
 	if(!isVisible()) {
 		return;
 	}
-	const ska::Point<int>& pos = getAbsolutePosition();
+	const Point<int>& pos = getAbsolutePosition();
 	m_img.render(pos.x, pos.y, m_clip.w == std::numeric_limits<int>::max() ? nullptr : &m_clip);
 }
 

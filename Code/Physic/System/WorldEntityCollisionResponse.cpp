@@ -7,7 +7,7 @@
 #include "../../Gameplay/Fight/BattleComponent.h"
 
 WorldEntityCollisionResponse::WorldEntityCollisionResponse(ska::World& w, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
-ska::WorldCollisionResponse(std::bind(&WorldEntityCollisionResponse::onWorldCollision, this, std::placeholders::_1), w, ged, em){
+WorldCollisionResponse(bind(&WorldEntityCollisionResponse::onWorldCollision, this, std::placeholders::_1), w, ged, em){
 	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 

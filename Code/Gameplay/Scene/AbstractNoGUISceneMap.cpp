@@ -9,7 +9,7 @@ Scene(sh, ril)
 {
 }
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::Scene& oldScene) : 
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(Scene& oldScene) : 
 Scene(oldScene) {
 
 }
@@ -23,7 +23,7 @@ bool AbstractNoGUISceneMap::unload() {
 }
 
 void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
-	ska::Scene::graphicUpdate(drawables);
+	Scene::graphicUpdate(drawables);
 	
 	/*
 	WGameCore& core = WGameCore::getInstance();
@@ -52,7 +52,7 @@ void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
-	ska::Scene::eventUpdate(movingDisallowed);
+	Scene::eventUpdate(movingDisallowed);
 
 	//WGameCore& core = WGameCore::getInstance();
 	//ska::World& world = core.getWorld();

@@ -27,11 +27,11 @@ void ska::ScriptRefreshSystem::refresh() {
 	for (EntityId entityId : System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
 		ScriptAwareComponent& sac = entityManager.getComponent<ScriptAwareComponent>(entityId);
 		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
-		const ska::HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
-		const ska::DirectionalAnimationComponent& dac = entityManager.getComponent<DirectionalAnimationComponent>(entityId);
+		const HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
+		const DirectionalAnimationComponent& dac = entityManager.getComponent<DirectionalAnimationComponent>(entityId);
 
-		const ska::Point<int>& frontPos = ska::PositionComponent::getFrontPosition(pc, hc, dac);
-		const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
+		const Point<int>& frontPos = PositionComponent::getFrontPosition(pc, hc, dac);
+		const Point<int>& centerPos = PositionComponent::getCenterPosition(pc, hc);
 
 		for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
 			ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
@@ -45,7 +45,7 @@ void ska::ScriptRefreshSystem::refresh() {
 				break;
 
 			case EnumScriptTriggerType::ACTION:
-				if (!iac[InputAction::DoAction]) {
+				if (!iac[DoAction]) {
 					break;
 				}
 
@@ -65,10 +65,10 @@ void ska::ScriptRefreshSystem::refresh() {
 		std::vector<ScriptSleepComponent*> worldScripts;
 		std::vector<ScriptTriggerType> reasons;
 		const unsigned int blockSize = m_world.getBlockSize();
-		const ska::Point<int> oldCenterPos = ska::Point<int>(sac.lastBlockPos);
+		const Point<int> oldCenterPos = Point<int>(sac.lastBlockPos);
 
 		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, -1);
-		if (iac[InputAction::DoAction]) {
+		if (iac[DoAction]) {
 			//clog << "Enter Pressed" << std::endl;
 			auto tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
@@ -78,8 +78,8 @@ void ska::ScriptRefreshSystem::refresh() {
 		}
 
 
-		if (entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
-			const ska::WorldCollisionComponent& wcc = entityManager.getComponent<ska::WorldCollisionComponent>(entityId);
+		if (entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
+			const WorldCollisionComponent& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
 			//clog << "Block collision" << std::endl;
 			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
 				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
@@ -114,7 +114,7 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		for (const ScriptSleepComponent* ssc : worldScripts) {
 			if (ssc != nullptr) {
-				ska::EntityId script = entityManager.createEntity();
+				EntityId script = entityManager.createEntity();
 				entityManager.addComponent<PositionComponent>(script, pc);
 				entityManager.addComponent<ScriptSleepComponent>(script, *ssc);
 				entityManager.getComponent<ScriptSleepComponent>(script).deleteEntityWhenFinished = true;

@@ -7,8 +7,8 @@ namespace ska {
 	public:
 		PrefabEntityManager();
 		virtual ~PrefabEntityManager();
-		virtual ska::EntityId createCharacter(const ska::Point<int> startPos, const int id, const unsigned int worldBlockSize);
-		virtual ska::EntityId createTrainer(const ska::Point<int> startPos, const unsigned int worldBlockSize);
+		virtual EntityId createCharacter(const Point<int> startPos, const int id, const unsigned int worldBlockSize);
+		virtual EntityId createTrainer(const Point<int> startPos, const unsigned int worldBlockSize);
 
 	};
 }

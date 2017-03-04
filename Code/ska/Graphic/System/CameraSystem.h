@@ -9,7 +9,7 @@ namespace ska {
 	template <class T>
 	struct Point;
 
-	class CameraSystem : public System<std::unordered_set<ska::EntityId>, PositionComponent, CameraFocusedComponent> {
+	class CameraSystem : public System<std::unordered_set<EntityId>, PositionComponent, CameraFocusedComponent> {
 	public:
 		CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH);
 

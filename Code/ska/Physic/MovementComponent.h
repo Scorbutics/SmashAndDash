@@ -1,7 +1,7 @@
 #pragma once
 #include "../ECS/Component.h"
 namespace ska {
-	struct MovementComponent : public ska::Component {
+	struct MovementComponent : public Component {
 		MovementComponent() {
 			ax = 0;
 			ay = 0;

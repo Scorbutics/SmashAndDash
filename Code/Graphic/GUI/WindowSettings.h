@@ -14,7 +14,7 @@ class Settings;
 
 class WindowSettings : public ska::MoveableWindow<ska::KeyEventListener> {
 public:
-	WindowSettings(ska::Widget& parent, const ska::Point<int>& boxAbsolutePos);
+	WindowSettings(Widget& parent, const ska::Point<int>& boxAbsolutePos);
 	void bind(Settings& sets);
 	void setMusicVolume(float volPcts);
 	void setWeather(bool b);

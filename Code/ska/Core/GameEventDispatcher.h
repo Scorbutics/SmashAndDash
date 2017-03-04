@@ -5,5 +5,5 @@
 #include "../World/WorldEvent.h"
 
 namespace ska {
-	using GameEventDispatcher = ska::EventDispatcher<ska::SoundEvent, ska::WorldEvent, ska::CollisionEvent>;
+	using GameEventDispatcher = EventDispatcher<SoundEvent, WorldEvent, CollisionEvent>;
 }

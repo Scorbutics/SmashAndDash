@@ -15,15 +15,15 @@ namespace ska {
 	class WorldCollisionComponent;
 
 
-	class CollisionSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MovementComponent, HitboxComponent, CollidableComponent> {
+	class CollisionSystem : public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, HitboxComponent, CollidableComponent> {
 	public:
-		CollisionSystem(ska::World& w, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged);
+		CollisionSystem(World& w, EntityManager& entityManager, GameEventDispatcher& ged);
 		virtual ~CollisionSystem();
 	protected:
 		virtual void refresh() override;
 	private:
-		inline const ska::Rectangle createHitBox(ska::EntityId entityId, bool xaxis);
+		inline const Rectangle createHitBox(EntityId entityId, bool xaxis) const;
 		World& m_world;
-		ska::GameEventDispatcher& m_ged;
+		GameEventDispatcher& m_ged;
 	};
 }

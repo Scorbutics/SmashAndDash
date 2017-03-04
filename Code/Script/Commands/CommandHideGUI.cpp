@@ -16,7 +16,7 @@ int CommandHideGUI::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandHideGUI::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandHideGUI::execute(ska::ScriptComponent&, std::vector<std::string>& args)
 {
 	int b;
 	//WGameCore& wScreen = WGameCore::getInstance();

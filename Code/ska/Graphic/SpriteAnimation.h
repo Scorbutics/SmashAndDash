@@ -12,10 +12,10 @@ namespace ska {
 	{
 	public:
 		SpriteAnimation(int type, int id, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
-		SpriteAnimation(int type, int id, ska::Point<int> pos, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
+		SpriteAnimation(int type, int id, Point<int> pos, unsigned int framesNumber = 4, unsigned int delay = 300, int alpha = -1);
 		void refresh();
 
-		void setPos(ska::Point<int> pos);
+		void setPos(Point<int> pos);
 		void setID(int id);
 		void setType(int type);
 
@@ -29,8 +29,8 @@ namespace ska {
 		Animation m_anim;
 		Texture m_sprite;
 		int m_type, m_id;
-		ska::Point<int> m_pos;
-		ska::Rectangle m_offset;
+		Point<int> m_pos;
+		Rectangle m_offset;
 	};
 	typedef std::unique_ptr<SpriteAnimation> SpriteAnimationPtr;
 }

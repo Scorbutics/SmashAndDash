@@ -2,10 +2,10 @@
 #include "AbstractCommand.h"
 namespace ska {
 	class AbstractFunctionCommand :
-		public AbstractCommand
-	{
+		public AbstractCommand {
 	public:
-		AbstractFunctionCommand(EntityManager& entityManager);
+		explicit AbstractFunctionCommand(EntityManager& entityManager);
+		void operator=(const AbstractFunctionCommand&) = delete;
 		virtual ~AbstractFunctionCommand();
 
 	protected:

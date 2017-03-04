@@ -8,22 +8,22 @@
 #include "../../World/World.h"
 
 ska::WorldCollisionResponse::WorldCollisionResponse(World& w, GameEventDispatcher& ged, EntityManager& em) :
-	WorldCollisionObserver(std::bind(&WorldCollisionResponse::onWorldCollision, this, std::placeholders::_1)),
+	WorldCollisionObserver(bind(&WorldCollisionResponse::onWorldCollision, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged),
 	m_world(w) {
-	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
+	m_ged.Observable<CollisionEvent>::addObserver(*this);
 }
 
-ska::WorldCollisionResponse::WorldCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, World& w, GameEventDispatcher& ged, ska::EntityManager& em) :
+ska::WorldCollisionResponse::WorldCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, World& w, GameEventDispatcher& ged, EntityManager& em) :
 WorldCollisionObserver(onEntityCollision),
 m_entityManager(em),
 m_ged(ged),
 m_world(w) {
-	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
+	m_ged.Observable<CollisionEvent>::addObserver(*this);
 }
 
-bool ska::WorldCollisionResponse::onWorldCollision(ska::CollisionEvent& colE) {
+bool ska::WorldCollisionResponse::onWorldCollision(CollisionEvent& colE) {
 	if (colE.wcollisionComponent == nullptr) {
 		return false;
 	}
@@ -58,5 +58,5 @@ bool ska::WorldCollisionResponse::onWorldCollision(ska::CollisionEvent& colE) {
 }
 
 ska::WorldCollisionResponse::~WorldCollisionResponse() {
-	m_ged.ska::Observable<ska::CollisionEvent>::removeObserver(*this);
+	m_ged.Observable<CollisionEvent>::removeObserver(*this);
 }

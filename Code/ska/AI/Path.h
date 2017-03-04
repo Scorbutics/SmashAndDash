@@ -16,7 +16,7 @@ namespace ska {
 		bool isPredefined();
 		bool isMotionless();
 		bool isRandom();
-		void findPath(ska::Rectangle from, ska::Rectangle to, const unsigned int blockSize);
+		void findPath(Rectangle from, Rectangle to, const unsigned int blockSize);
 
 		void createGraphe(std::vector<std::vector<Node>> *graphe);
 

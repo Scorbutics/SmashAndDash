@@ -3,8 +3,8 @@
 #include "SoundRenderer.h"
 
 ska::SoundRenderer::SoundRenderer(unsigned int channels) : 
-	Observer<SoundEvent>(std::bind(&SoundRenderer::handleSoundEvent, this, std::placeholders::_1)),
-	Observer<ska::WorldEvent>(std::bind(&SoundRenderer::handleWorldEvent, this, std::placeholders::_1)),
+	ska::Observer<SoundEvent>(bind(&SoundRenderer::handleSoundEvent, this, std::placeholders::_1)),
+	ska::Observer<WorldEvent>(bind(&SoundRenderer::handleWorldEvent, this, std::placeholders::_1)),
 	m_currentPlayed(nullptr) {
 
 	if(Mix_AllocateChannels(channels) != channels) {
@@ -22,24 +22,24 @@ void ska::SoundRenderer::play(Mix_Music* m_instance) {
 	}
 }
 
-void ska::SoundRenderer::setMusicVolume(float volPcts) {
+void ska::SoundRenderer::setMusicVolume(float volPcts) const{
 	if (m_currentPlayed != nullptr) {
-		Mix_VolumeMusic((volPcts * MIX_MAX_VOLUME)/100);
+		Mix_VolumeMusic(static_cast<int>((volPcts * MIX_MAX_VOLUME) / 100));
 	}
 }
 
 bool ska::SoundRenderer::handleSoundEvent(SoundEvent& se) {
 	auto music = se.getMusic();
-	if (se.getEventType() == ska::SoundEventType::PLAY_MUSIC) {
+	if (se.getEventType() == PLAY_MUSIC) {
 		music->play(*this);
 	}
 	return false;
 }
 
-bool ska::SoundRenderer::handleWorldEvent(ska::WorldEvent& we) {
+bool ska::SoundRenderer::handleWorldEvent(WorldEvent& we) {
 	auto music = we.getBgm();
-	if (we.getEventType() == ska::WorldEventType::WORLD_CREATE || 
-		we.getEventType() == ska::WorldEventType::WORLD_CHANGE) {
+	if (we.getEventType() == WORLD_CREATE || 
+		we.getEventType() == WORLD_CHANGE) {
 		music->play(*this);
 	}
 	return false;

@@ -12,7 +12,7 @@ namespace ska {
 		ChipsetRenderable(const unsigned int corrFileSize, const int blockSize, const std::string& chipsetName);
 		void render(Rectangle pos, const BlockRenderable& block) const;
 		void update(BlockRenderable& block);
-		BlockRenderablePtr& generateBlock(const int id, const int blockSize, ska::Point<int> posCorr, bool auto_anim);
+		BlockRenderablePtr& generateBlock(const int id, const int blockSize, Point<int> posCorr, bool auto_anim);
 		const Texture& getTexture() const;
 		~ChipsetRenderable() = default;
 

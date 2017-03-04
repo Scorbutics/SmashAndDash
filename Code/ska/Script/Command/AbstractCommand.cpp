@@ -9,20 +9,20 @@
 ska::AbstractCommand::AbstractCommand(EntityManager& entityManager) : Command(entityManager) {
 }
 
-std::string ska::AbstractCommand::process(ska::ScriptAutoSystem& system, ScriptComponent& script, std::stringstream& streamCmd) {
+std::string ska::AbstractCommand::process(ScriptAutoSystem& system, ScriptComponent& script, std::stringstream& streamCmd) {
 
 	std::string line;
 	getline(streamCmd, line);
 
-	line = ska::StringUtils::trim(line);
+	line = StringUtils::trim(line);
 
 	/* Avant tout traitement, effectue toutes les exécutions des sous-commandes possibles */
 	interpretSubCommands(system, line, script);
 
-	std::vector<std::string> args = ska::StringUtils::split(line, getSeparator());
+	std::vector<std::string> args = StringUtils::split(line, getSeparator());
 
 	for (std::string& arg : args) {
-		arg = ska::StringUtils::trim(arg);
+		arg = StringUtils::trim(arg);
 		/* Pour chaque argument, explicite les valeurs des variables */
 		arg = ScriptUtils::getValueFromVarOrSwitchNumber(system.getSavegame(), script, arg);
 	}
@@ -37,7 +37,7 @@ std::string ska::AbstractCommand::interpretSubCommands(ScriptAutoSystem& system,
 	std::string parsedArg;
 
 	/* Conservation de tout ce qui se trouve sur la ligne avant l'appel à la sous-commande */
-	size_t offsetLineCmd = line.find_first_of(ska::ScriptSymbolsConstants::METHOD);
+	size_t offsetLineCmd = line.find_first_of(ScriptSymbolsConstants::METHOD);
 	std::string firstLinePart = (offsetLineCmd == std::string::npos ? "" : line.substr(0, offsetLineCmd));
 	parsedArg += firstLinePart;
 
@@ -48,7 +48,7 @@ std::string ska::AbstractCommand::interpretSubCommands(ScriptAutoSystem& system,
 		parsedArg += " ";
 		outputCommandSize += offset;
 	} while (offset != 0 && outputCommandSize < line.size());
-	line = ska::StringUtils::rtrim(parsedArg);
+	line = StringUtils::rtrim(parsedArg);
 	return "";
 }
 

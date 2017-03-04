@@ -11,9 +11,11 @@ namespace ska {
 	class World;
 	class LayerE : public Refreshable {
 	public:
+		LayerE(World& world);
+		void operator=(const LayerE&) = delete;
+
 		virtual void refresh() override;
 
-		LayerE(ska::World& world);
 		int getBlocX(int ligne) const;
 		int getBlocY(int ligne) const;
 		int getID(int ligne) const;

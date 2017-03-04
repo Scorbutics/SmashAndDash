@@ -2,7 +2,7 @@
 #include "../ECS/Component.h"
 
 namespace ska {
-	struct HitboxComponent : public ska::Component {
+	struct HitboxComponent : public Component {
 	public:
 		int xOffset;
 		int yOffset;

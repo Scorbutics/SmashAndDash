@@ -38,34 +38,34 @@ namespace ska {
 		
 		void update();
 
-		int getNbrBlocX() const;
-		int getNbrBlocY() const;
-		void setNbrBlocX(int nbrBlockX);
-		void setNbrBlocY(int nbrBlockY);
+		unsigned int getNbrBlocX() const;
+		unsigned int getNbrBlocY() const;
+		void setNbrBlocX(unsigned int nbrBlockX);
+		void setNbrBlocY(unsigned int nbrBlockY);
 
-		ska::LayerRenderable& getLayerRenderable(int level);
+		LayerRenderable& getLayerRenderable(int level);
 		LayerE& getLayerEvent();
 		unsigned int getNumberLayers() const;
 
-		const ska::Rectangle* getView() const;
-		ska::ChipsetHolder& getChipset();
+		const Rectangle* getView() const;
+		ChipsetHolder& getChipset();
 
 		Block* getHigherBlock(const unsigned int i, const unsigned int j) const;
 
 		void getData();
-		bool isSameBlockId(const ska::Point<int>& p1, const ska::Point<int>& p2, int layerIndex);
-		bool canMoveToPos(ska::Rectangle pos, std::vector<ska::Point<int>>& output) const;
-		bool canMoveOnBlock(const ska::Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
+		bool isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex);
+		bool canMoveToPos(Rectangle pos, std::vector<Point<int>>& output) const;
+		bool canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
 
 		bool getCollision(const int i, const int j) const;
 		bool isBlockDodgeable(const int i, const int j) const;
 
-		const unsigned int getBlockSize() const;
+		unsigned int getBlockSize() const;
 
 		/* TODO classe à part ? */
-		std::vector<ska::ScriptSleepComponent*> chipsetScript(const ska::Point<int>& oldPos, const ska::Point<int>& newPos, const ska::Point<int>& p, const ScriptTriggerType& reason, const unsigned int layerIndex);
-		ska::Rectangle placeOnNearestPracticableBlock(const ska::Rectangle& hitBox, const unsigned int radius) const;
-		ska::Point<int> alignOnBlock(const ska::Rectangle& hitbox) const;
+		std::vector<ScriptSleepComponent*> chipsetScript(const Point<int>& oldPos, const Point<int>& newPos, const Point<int>& p, const ScriptTriggerType& reason, const unsigned int layerIndex);
+		Rectangle placeOnNearestPracticableBlock(const Rectangle& hitBox, const unsigned int radius) const;
+		Point<int> alignOnBlock(const Rectangle& hitbox) const;
 
 		void linkCamera(CameraSystem* cs) override;
 		virtual void graphicUpdate(DrawableContainer& drawables) override = 0;
@@ -73,7 +73,7 @@ namespace ska {
 		virtual ~World() = default;
 
 	private:
-		void getRainFromData(std::string stringDataFile);
+		static void getRainFromData(std::string stringDataFile);
 		void getMobSettingsFromData();
 
 		int m_windDirection;

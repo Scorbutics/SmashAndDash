@@ -18,7 +18,7 @@
 #include "../../ska/Graphic/GUI/Window.h"
 
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
-ska::Scene(sh, ril),
+Scene(sh, ril),
 m_entityManager(entityManager),
 m_saveManager(ged, "save1"),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
@@ -84,7 +84,7 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Deuxième couche
 	drawables.addHead(m_world.getLayerRenderable(1));
 
-	ska::Scene::graphicUpdate(drawables);
+	Scene::graphicUpdate(drawables);
 	
 	/* We use the maximum drawing priority of characters to draw the top layer */
 	m_world.getLayerRenderable(2).setPriority(m_graphicSystem.getTopLayerPriority());
@@ -296,7 +296,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		}
 		ssc.name = ska::StringUtils::trim(totalArgs[0]);
 		ssc.context = m_world.getName();
-		ssc.triggeringType = layerE.getTrigger(i);
+		ssc.triggeringType = static_cast<ska::ScriptTriggerType>(layerE.getTrigger(i));
 		ssc.period = 1000;
 		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
 		result[ska::StringUtils::intToStr(i + 2)] = script;

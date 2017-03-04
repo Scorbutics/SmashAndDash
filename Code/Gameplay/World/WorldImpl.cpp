@@ -17,8 +17,8 @@
 #define WEATHER_ALPHA_LVL 85
 
 WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :
-ska::World(tailleBloc, wWidth, wHeight),
-ska::Observer<SettingsChangeEvent>(std::bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1)),
+World(tailleBloc, wWidth, wHeight),
+Observer<SettingsChangeEvent>(bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1)),
 m_fog(*this),
 m_weather(*this),
 m_ged(ged) {

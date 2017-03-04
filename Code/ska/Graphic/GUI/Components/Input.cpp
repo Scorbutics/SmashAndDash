@@ -10,12 +10,12 @@
 #include "Input.h"
 #include "../../../Utils/StringUtils.h"
 
-ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) :
+ska::Input::Input(Widget& parent, const std::string& text, int fontSize, Point<int> relativePos) :
 	WidgetPanel<ValueChangedEventListener<std::wstring>, ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
 	m_keyFocus(false) {
 
-	auto& button = std::make_unique<Button>(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](ska::Widget* tthis, ska::ClickEvent& e) {
-		if (!m_keyFocus && e.getState() == ska::MouseEventType::MOUSE_CLICK) {
+	auto button = std::make_unique<Button>(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](Widget* tthis, ClickEvent& e) {
+		if (!m_keyFocus && e.getState() == MOUSE_CLICK) {
 			m_keyFocus = true;
 			SDL_StartTextInput();
 		}
@@ -24,7 +24,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 		b->forceState(ButtonState::PRESSED);
 	});
 
-	auto& label = std::make_unique<Label>(*this, text, fontSize, ska::Point<int>(5, button->getBox().h / 2 - fontSize/2));
+	auto label = std::make_unique<Label>(*this, text, fontSize, Point<int>(5, button->getBox().h / 2 - fontSize/2));
 	setWidth(button->getBox().w);
 	setHeight(button->getBox().h);
 
@@ -32,11 +32,11 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 	m_clip.w = getBox().w - 10;
 	adaptDisplayWithText(*label);
 
-	addWidget(std::move(button));
-	addWidget(std::move(label));
+	addWidget(button);
+	addWidget(label);
 
-	addHandler<FocusEventListener>([&](ska::Widget* tthis, ska::FocusEvent& e) {
-		auto f = e.getState() == ska::MouseEventType::MOUSE_FOCUS;
+	addHandler<FocusEventListener>([&](Widget*, FocusEvent& e) {
+		auto f = e.getState() == MOUSE_FOCUS;
 		focus(f);
 		e.setTarget(this);	
 		auto b = reinterpret_cast<Button*>(getWidget(0));
@@ -48,13 +48,13 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 		}
 	});
 
-	addHandler<KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& e) {
+	addHandler<KeyEventListener>([&](Widget*, KeyEvent& e) {
 		if (!isFocused()) {
 			return;
 		}
 		auto l = reinterpret_cast<Label*>(getWidget(1));
 		m_lastRawText = m_rawText;
-		if(e.getState() == ska::KeyEventType::KEY_DOWN) {
+		if(e.getState() == KEY_DOWN) {
 			if (m_rawText.size() > 1 && e.getScanCode() == SDL_SCANCODE_BACKSPACE) {
 				m_rawText.pop_back();
 			} else {
@@ -67,7 +67,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, ska::Po
 			m_rawText += e.getText();
 		}
 
-		l->modifyText(ska::StringUtils::toANSI(m_rawText));
+		l->modifyText(StringUtils::toANSI(m_rawText));
 		adaptDisplayWithText(*l);
 	});
 

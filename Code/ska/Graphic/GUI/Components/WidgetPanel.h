@@ -27,9 +27,8 @@ namespace ska {
 
 		template <class SubWidget>
 		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
-			bool empty = true;
-			w->setPriority((int)(m_globalList.size()));
-			if (std::is_base_of<IHandledWidget, SubWidget>::value && !(empty = ((IHandledWidget&)(*w.get())).isMaskEmpty())) {
+			w->setPriority(static_cast<int>(m_globalList.size()));
+			if (std::is_base_of<IHandledWidget, SubWidget>::value && !reinterpret_cast<IHandledWidget&>(*w.get()).isMaskEmpty()) {
 				m_handledWidgets.push_back(std::move(w));
 				m_globalList.push_back(m_handledWidgets.back().get());
 			} else {
@@ -51,21 +50,21 @@ namespace ska {
 			for (auto& w : m_handledWidgets) {
 				const auto nextNotify = w->notify(e);
 				result |= nextNotify;
-				if (e.stopped() == StopType::STOP_WIDGET) {
+				if (e.stopped() == STOP_WIDGET) {
 					stopped = true;
 					break;
 	 			}
 			}
 			
 			if (stopped) {
-				e.stopPropagation(StopType::NOT_STOPPED);
+				e.stopPropagation(NOT_STOPPED);
 			}
 			
 			result |= directNotify(e);
 
 			if (result || stopped) {
 				/* Handled by Widget */
-				e.stopPropagation(StopType::STOP_WIDGET);
+				e.stopPropagation(STOP_WIDGET);
 			}
 			return result;
 		}
@@ -119,10 +118,10 @@ namespace ska {
 				return (w1->getPriority() > w2->getPriority());
 			};
 			if (asc) {
-				std::sort(m_globalList.begin(), m_globalList.end(), ska::Drawable::staticOperatorInf);
+				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorInf);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
 			} else {
-				std::sort(m_globalList.begin(), m_globalList.end(), ska::Drawable::staticOperatorSup);
+				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorSup);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
 			}
 		}

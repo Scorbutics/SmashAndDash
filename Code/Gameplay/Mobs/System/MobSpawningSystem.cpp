@@ -5,7 +5,7 @@
 #include "../../../ska/Utils/TimeUtils.h"
 #include "../MobSpawner.h"
 
-MobSpawningSystem::MobSpawningSystem(MobSpawner& ms, ska::EntityManager& entityManager, const unsigned int delay) : ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MobSpawnAreaComponent>(entityManager), m_mobSpawner(ms) {
+MobSpawningSystem::MobSpawningSystem(MobSpawner& ms, ska::EntityManager& entityManager, const unsigned int delay) : System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MobSpawnAreaComponent>(entityManager), m_mobSpawner(ms) {
 	m_t0 = ska::TimeUtils::getTicks();
 	m_duration = delay;
 	m_rmin = 8 * TAILLEBLOC;

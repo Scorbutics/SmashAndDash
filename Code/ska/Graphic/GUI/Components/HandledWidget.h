@@ -94,6 +94,8 @@ namespace ska {
 			HandlerNotifier(HandledWidget<HL...>& tthis, IWidgetEvent& e) : m_event(e), m_this(tthis), m_result(false) {
 			}
 
+			void operator=(const HandlerNotifier&) = delete;
+
 			template<class T>
 			void operator() (T&& t) {
 				m_result |= t.notifyGeneric(m_this, m_event);
@@ -121,7 +123,7 @@ namespace ska {
 			const MaskUnit& mu = WidgetMaskHelper::template getMask<T>();
 			m_maskHandlerIndexes[mu] = m_currentMaskIndex;
 			m_currentMaskIndex--;
-			return T((Widget&)*this);
+			return T(static_cast<Widget&>(*this));
 		}
 
 		template <class T>
@@ -138,7 +140,7 @@ namespace ska {
 	template <>
 	class HandledWidget<> : public Widget, public IHandledWidget {
 	public:
-		bool notify(IWidgetEvent& e) override {
+		bool notify(IWidgetEvent&) override {
 			return false;
 		}
 
@@ -146,7 +148,7 @@ namespace ska {
 			return true;
 		}
 
-		bool accept(IWidgetEvent& e) {
+		bool accept(IWidgetEvent&) {
 			return !isVisible();
 		}
 	};

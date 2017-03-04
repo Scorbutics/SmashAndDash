@@ -29,7 +29,7 @@ void ska::Texture::load(std::string id, int r, int g, int b, int a) {
 	finalColor.g = g;
 	finalColor.r = r;
 
-	ResourceTemplate::load(ska::TextureData(*m_window, id, finalColor));
+	ResourceTemplate::load(TextureData(*m_window, id, finalColor));
 }
 
 void ska::Texture::setColor(Uint8 r, Uint8 g, Uint8 b)
@@ -45,7 +45,7 @@ void ska::Texture::setBlendMode(SDL_BlendMode blending) {
 	}
 }
 
-void ska::Texture::operator=(const ska::Texture& text) {
+void ska::Texture::operator=(const Texture& text) {
 	m_key = text.m_key;
 	m_value = text.m_value;
 }
@@ -57,7 +57,7 @@ void ska::Texture::setAlpha(Uint8 alpha) {
 	}
 }
 
-void ska::Texture::setDefaultWindow(ska::Window* w) {
+void ska::Texture::setDefaultWindow(Window* w) {
 	m_window = w;
 }
 
@@ -68,7 +68,7 @@ int ska::Texture::render(int x, int y, const Rectangle* clip) const {
 
 	checkWindow();
 
-	ska::Rectangle destBuf = { x, y, m_value->m_w, m_value->m_h };
+	Rectangle destBuf = { x, y, m_value->m_w, m_value->m_h };
 
 	if( clip != NULL ) {
 		destBuf.w = clip->w;
@@ -84,13 +84,13 @@ void ska::Texture::checkWindow() {
 	}
 }
 
-void ska::Texture::loadFromText(unsigned int fontSize, std::string text, ska::Color c) {
+void ska::Texture::loadFromText(unsigned int fontSize, std::string text, Color c) {
 	checkWindow();
 
-	m_key = ska::TextureData(*m_window, text, c);
+	m_key = TextureData(*m_window, text, c);
 	m_value = NULL;
 	if (m_container.find(m_key) == m_container.end() || m_container[m_key].lock() == NULL) {
-		m_value = std::shared_ptr<ska::SDLTexture>(new ska::SDLTexture());
+		m_value = std::shared_ptr<SDLTexture>(new SDLTexture());
 		m_container[m_key] = m_value;
 		m_value->loadFromText(*m_window, fontSize, text, c);
 	} else {

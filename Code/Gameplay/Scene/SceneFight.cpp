@@ -95,8 +95,8 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 
 	sd.particleNumber = skillData.exists(particleNumber) ? skillData.get<int>(particleNumber) : 0;
 	sd.speed = skillData.exists(particleSpeed) ? skillData.get<float>(particleSpeed) : 0;
-	sd.knockback = skillData.exists(particleKnockback) ? skillData.get<float>(particleKnockback) : 0;
-	sd.noise = skillData.exists(particleNoise) ? skillData.get<float>(particleNoise) : 0;;
+	sd.knockback = static_cast<int>(skillData.exists(particleKnockback) ? skillData.get<float>(particleKnockback) : 0);
+	sd.noise = static_cast<int>(skillData.exists(particleNoise) ? skillData.get<float>(particleNoise) : 0);
 	sd.amplitude = skillData.exists(particleAmplitude) ? skillData.get<float>(particleAmplitude) : 0;;
 
 
@@ -115,7 +115,7 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 
 void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId entity, SkillsHolderComponent& shc) const{
 	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
-		if (reader.get<int>("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
+		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
 			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
 		}
 	}
@@ -212,7 +212,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 		ska::IARandomMovementComponent iarmc;
 		iarmc.emitter = m_pokemonId;
-		iarmc.delay = 2000;
+		iarmc.delay = 300;
 		iarmc.type = ska::RandomMovementType::CIRCLE_AROUND;
 
 		m_worldScene.getEntityManager().addComponent<ska::IARandomMovementComponent>(m_trainerId, iarmc);

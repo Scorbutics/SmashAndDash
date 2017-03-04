@@ -3,12 +3,12 @@
 #include "../../Utils/NumberUtils.h"
 #include "../WorldCollisionComponent.h"
 
-ska::MovementSystem::MovementSystem(ska::EntityManager& entityManager) : System(entityManager) {
+ska::MovementSystem::MovementSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
 void ska::MovementSystem::refresh() {
-	for (ska::EntityId entityId : m_processed) {
-		ska::PositionComponent& posComponent = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+	for (EntityId entityId : m_processed) {
+		PositionComponent& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
@@ -44,9 +44,9 @@ void ska::MovementSystem::refresh() {
 		moveComponent.az = 0;*/
 
 		//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
-		posComponent.x += moveComponent.vx + 0.5;
-		posComponent.y += moveComponent.vy + 0.5;
-		posComponent.z += moveComponent.vz + 0.5;
+		posComponent.x += static_cast<int>(moveComponent.vx + 0.5);
+		posComponent.y += static_cast<int>(moveComponent.vy + 0.5);
+		posComponent.z += static_cast<int>(moveComponent.vz + 0.5);
 
 
 		/* Ignore low values */

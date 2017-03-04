@@ -3,13 +3,13 @@
 
 namespace ska {
 	class CommandAssignSwitch :
-		public ska::AbstractFunctionCommand
-	{
+		public AbstractFunctionCommand {
 	public:
-		CommandAssignSwitch(EntityManager& entityManager);
+		explicit CommandAssignSwitch(EntityManager& entityManager);
+		void operator=(const CommandAssignSwitch&) = delete;
 		virtual ~CommandAssignSwitch();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;
-		virtual int argumentsNumber();
+		virtual int argumentsNumber() override;
 	};
 }

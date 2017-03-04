@@ -14,16 +14,16 @@ namespace ska {
 	public:
 		ChipsetHolder(const std::string& correspondanceFile);
 		bool attach(const unsigned int blockSize, const std::string& chipsetName);
-		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
+		std::vector<ScriptSleepComponent*> getScript(const std::string& id, const ScriptTriggerType& type, bool& autoBlackList);
 		void render(Rectangle pos, const BlockRenderable& block) const;
 		void update(BlockRenderable& block);
 		const std::string& getName() const;
-		void generateBlock(ska::Color& key, Block** outputBlock, BlockRenderable** outputRenderable);
+		void generateBlock(Color& key, Block** outputBlock, BlockRenderable** outputRenderable);
 		~ChipsetHolder() = default;
 
 	private:
-		void buildCorrMap(const ska::SDLSurface& fichierMCorr);
-		std::unordered_map<ska::Color, ska::Point<int>> m_corr;
+		void buildCorrMap(const SDLSurface& fichierMCorr);
+		std::unordered_map<Color, Point<int>> m_corr;
 		ChipsetPtr m_chipset;
 		unsigned int m_corrFileWidth;
 		std::string m_currentChipsetName;

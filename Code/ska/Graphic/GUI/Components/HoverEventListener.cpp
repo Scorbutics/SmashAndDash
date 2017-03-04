@@ -3,7 +3,7 @@
 #include "ClickEvent.h"
 
 ska::HoverEventListener::HoverEventListener(Widget& tthis) :
-ska::EventListener<HoverEvent>(tthis) {
+EventListener<HoverEvent>(tthis) {
 
 }
 

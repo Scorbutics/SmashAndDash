@@ -18,7 +18,7 @@ ska::Animation::Animation() {
 	m_cycles = 0;
 }
 
-ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, ska::Rectangle offsetAndFrameSize) {
+ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, Rectangle offsetAndFrameSize) {
     m_offset = offsetAndFrameSize;
     m_offsetBase = m_offset;
     m_frameWidth = offsetAndFrameSize.w;
@@ -36,7 +36,7 @@ ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, 
 }
 
 ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, int x, int y, unsigned int width, unsigned int height) {
-	ska::Rectangle r;
+	Rectangle r;
 	r.x = x;
 	r.y = y;
 	r.w = width;

@@ -7,11 +7,11 @@ namespace ska {
 	class LinearParticle : public Particle
 	{
 	public:
-		LinearParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative);
+		LinearParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative);
 		virtual void refresh();
 		virtual void addSlopeNoise(float x);
 		virtual void resetSlopeNoise();
-		virtual void launch(ska::Rectangle origin, float angle, unsigned int power);
+		virtual void launch(Rectangle origin, float angle, unsigned int power);
 		~LinearParticle();
 
 

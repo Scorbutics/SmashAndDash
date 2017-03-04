@@ -7,7 +7,7 @@
 
 AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) :
 AbstractNoGUISceneMap(sh, ril),
-SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
+SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
@@ -17,9 +17,9 @@ m_window(w) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
-AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap) :
+AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, Scene& oldScene, const bool sameMap) :
 AbstractNoGUISceneMap(oldScene),
-SceneChangeObserver(std::bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
+SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),

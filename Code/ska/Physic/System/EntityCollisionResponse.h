@@ -12,7 +12,8 @@ namespace ska {
 	class EntityCollisionResponse : public EntityCollisionObserver {
 	public:
 		EntityCollisionResponse(GameEventDispatcher& colSys, EntityManager& em);
-		EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& colSys, ska::EntityManager& em);
+		EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& colSys, EntityManager& em);
+		EntityCollisionResponse& operator=(const EntityCollisionResponse&) = delete;
 		bool onEntityCollision(CollisionEvent&);
 		~EntityCollisionResponse();
 	

@@ -1,8 +1,6 @@
 #pragma once
-#include <iostream>
 #include <unordered_set>
 #include "ECSDefines.h"
-#include "Component.h"
 #include "EntityManager.h"
 #include "ISystem.h"
 #include "../Utils/Observer.h"
@@ -13,7 +11,7 @@ namespace ska {
 	template <class Storage, class ... ComponentType>
 	class System : public Observer<const EntityEventType, const EntityComponentsMask&, EntityId>, virtual public ISystem, virtual protected Refreshable {
 	public :
-		System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+		explicit System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) { 
 			m_entityManager.addObserver(*this);
 			
@@ -23,17 +21,19 @@ namespace ska {
 
 		}
 
+		void operator=(const System<Storage, ComponentType...>& sys) = delete;
+
 		void update() override {
 			refresh();
 			if (!m_toDelete.empty()) {
-				for (EntityId entity : m_toDelete) {
+				for (auto entity : m_toDelete) {
 					m_entityManager.removeEntity(entity);
 				}
 				m_toDelete.clear();
 			}
 		}
 
-		void scheduleDeferredRemove(ska::EntityId e) {
+		void scheduleDeferredRemove(EntityId e) {
 			m_toDelete.emplace(e);
 		}
 
@@ -43,13 +43,13 @@ namespace ska {
 			EntityComponentsMask resultMask = mask & m_systemComponentMask;
 
 			switch (e) {
-			case EntityEventType::COMPONENT_ADD:
+			case COMPONENT_ADD:
 				if (resultMask == m_systemComponentMask && m_processed.count(entityId) == 0) {
 					m_processed.insert(entityId);
 				}
 				break;
 			
-			case EntityEventType::COMPONENT_REMOVE:
+			case COMPONENT_REMOVE:
 				if (resultMask != m_systemComponentMask && m_processed.count(entityId) > 0) {
 					m_processed.erase(entityId);
 				}
@@ -64,7 +64,7 @@ namespace ska {
 		virtual ~System(){ m_entityManager.removeObserver(*this); }
 
 	private:
-		std::unordered_set<ska::EntityId> m_toDelete;
+		std::unordered_set<EntityId> m_toDelete;
 		EntityComponentsMask m_systemComponentMask;
 		
 

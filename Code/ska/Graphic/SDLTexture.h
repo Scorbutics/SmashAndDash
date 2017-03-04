@@ -15,7 +15,7 @@ namespace ska {
 		SDLTexture();
 		SDLTexture(TextureData& p);
 		void load(const Window& w, const std::string& id, int r = -1, int g = -1, int b = -1, int a = -1);
-		void loadFromText(const Window& w, unsigned int fontSize, const std::string& text, ska::Color c);
+		void loadFromText(const Window& w, unsigned int fontSize, const std::string& text, Color c);
 		void free();
 		~SDLTexture();
 

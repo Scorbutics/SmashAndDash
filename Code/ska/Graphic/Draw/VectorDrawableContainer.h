@@ -11,10 +11,10 @@ namespace ska {
 	public:
 		VectorDrawableContainer();
 		virtual void reserve(const unsigned int size);
-		std::vector<const ska::Drawable*>::iterator begin();
-		std::vector<const ska::Drawable*>::iterator end();
-		std::vector<const ska::Drawable*>::const_iterator cbegin() const;
-		std::vector<const ska::Drawable*>::const_iterator cend() const;
+		std::vector<const Drawable*>::iterator begin();
+		std::vector<const Drawable*>::iterator end();
+		std::vector<const Drawable*>::const_iterator cbegin() const;
+		std::vector<const Drawable*>::const_iterator cend() const;
 
 
 		virtual void clear() override;

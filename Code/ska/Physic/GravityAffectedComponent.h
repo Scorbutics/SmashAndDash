@@ -1,7 +1,7 @@
 #pragma once
 #include "../ECS/Component.h"
 namespace ska {
-	class GravityAffectedComponent : public ska::Component {
+	class GravityAffectedComponent : public Component {
 	public:
 		float friction;
 	};

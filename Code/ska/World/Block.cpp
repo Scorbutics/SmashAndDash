@@ -1,6 +1,6 @@
 #include "Block.h"
 
-ska::Block::Block(int corrFileWidth, ska::Point<int> posChipset, unsigned int properties, int col) {
+ska::Block::Block(int corrFileWidth, Point<int> posChipset, unsigned int properties, int col) {
 	m_properties = properties;
     m_collision = col;
 	m_id = posChipset.x + posChipset.y * corrFileWidth;

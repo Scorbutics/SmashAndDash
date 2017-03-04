@@ -47,7 +47,7 @@ void ska::RawInputListener::update() {
 			case SDL_TEXTEDITING:
 				break;
 			case SDL_TEXTINPUT:
-				m_textInput += ska::StringUtils::toUTF8(event.edit.text);
+				m_textInput += StringUtils::toUTF8(event.edit.text);
 				break;
             case SDL_QUIT:
 				throw TerminateProcessException("Program quitted");

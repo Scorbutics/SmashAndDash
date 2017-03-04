@@ -14,13 +14,13 @@
 namespace ska {
 	class Input : public WidgetPanel<ValueChangedEventListener<std::wstring>, ClickEventListener, KeyEventListener, FocusEventListener> {
 	public:
-		Input(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
+		Input(Widget& parent, const std::string& text, int fontSize, Point<int> relativePos);
 		virtual ~Input() = default;
 
 	private:
 		void adaptDisplayWithText(Label& l);
 
-		ska::Rectangle m_clip;
+		Rectangle m_clip;
 		bool m_keyFocus;
 		std::wstring m_rawText;
 		std::wstring m_lastRawText;

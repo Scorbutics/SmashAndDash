@@ -20,12 +20,12 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandChoice::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandChoice::execute(ska::ScriptComponent&, std::vector<std::string>& args) {
 	std::string fname, texte, buf, var;
 	var = args[0];
 	fname = args[1];
 	texte = args[2];
-	ska::Rectangle choicePos;
+	//ska::Rectangle choicePos;
 
 	if (fname != "f")
 	{

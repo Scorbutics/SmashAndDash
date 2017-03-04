@@ -18,14 +18,14 @@ int ska::CommandBlockAuthorize::argumentsNumber() {
 	return 3;
 }
 
-std::string ska::CommandBlockAuthorize::execute(ScriptComponent& script, std::vector<std::string>& args) {
-	int blockId = ska::StringUtils::strToInt(args[0]);
-	int entity = ska::StringUtils::strToInt(args[1]);
+std::string ska::CommandBlockAuthorize::execute(ScriptComponent&, std::vector<std::string>& args) {
+	int blockId = StringUtils::strToInt(args[0]);
+	int entity = StringUtils::strToInt(args[1]);
 	bool unauth = args[2] == "1";
 
 	if (!m_entityManager.hasComponent<CollidableComponent>(entity)) {
 		//TODO Mess
-		throw ska::ScriptException("");
+		throw ScriptException("");
 	}
 
 	CollidableComponent& cc = m_entityManager.getComponent<CollidableComponent>(entity);

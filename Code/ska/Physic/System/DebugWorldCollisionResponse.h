@@ -12,11 +12,12 @@ namespace ska {
 	class DebugWorldCollisionResponse :
 		public WorldCollisionObserver {
 	public:
-		DebugWorldCollisionResponse(ska::GameEventDispatcher& ged, EntityManager& em);
+		DebugWorldCollisionResponse(GameEventDispatcher& ged, EntityManager& em);
+		DebugWorldCollisionResponse& operator=(const DebugWorldCollisionResponse&) = delete;
 		bool onWorldCollision(CollisionEvent& e);
 		~DebugWorldCollisionResponse();
 	private:
 		EntityManager& m_entityManager;
-		ska::GameEventDispatcher& m_ged;
+		GameEventDispatcher& m_ged;
 	};
 }

@@ -42,7 +42,7 @@ public:
     //void setPosImg(int x, int y);
 
     void setAlpha(bool x);
-	ska::Widget* getButton(const std::string& key);
+	Widget* getButton(const std::string& key);
     //Inventory_Area* getInventoryArea(unsigned int index);
 
 	//void name(const std::string& name);

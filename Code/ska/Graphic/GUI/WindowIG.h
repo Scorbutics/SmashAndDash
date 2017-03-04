@@ -12,7 +12,7 @@ namespace ska{
 	class WindowIG :
 		public WidgetPanel<HL...> {
 	public:
-		WindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+		WindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
 			WidgetPanel<HL...>(parent),
 			m_menuTiles(styleName + ".png"),
 			m_drawStyle(!styleName.empty()) {
@@ -22,7 +22,7 @@ namespace ska{
 			this->setHeight(box.h);
 		}
 
-		WindowIG(const ska::Rectangle& box, const std::string& styleName) :
+		WindowIG(const Rectangle& box, const std::string& styleName) :
 			m_menuTiles(styleName + ".png"),
 			m_drawStyle(!styleName.empty()) {
 
@@ -35,16 +35,16 @@ namespace ska{
 			if (!this->isVisible()) {
 				return;
 			}
-			ska::Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
-			ska::Rectangle maxSizeMenuSprite = { 0, 0, m_menuTiles.getWidth(), m_menuTiles.getHeight() };
+			Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
+			//Rectangle maxSizeMenuSprite = { 0, 0, m_menuTiles.getWidth(), m_menuTiles.getHeight() };
 			const auto& box = this->getBox();
 			const auto& pos = this->getAbsolutePosition();
 
 			/* Draw the window using menu tiles */
 			if (m_drawStyle) {
-				for (int i = 0; i < box.w; i += backgroundTileClip.w) {
-					for (int j = 0; j < box.h; j += backgroundTileClip.h) {
-						const ska::Point<int> backgroundTilePos(pos.x + i, pos.y + j);
+				for (auto i = 0; i < box.w; i += backgroundTileClip.w) {
+					for (auto j = 0; j < box.h; j += backgroundTileClip.h) {
+						const Point<int> backgroundTilePos(pos.x + i, pos.y + j);
 						const int xcondition1 = (i / backgroundTileClip.w >= 1);
 						const int xcondition2 = ((box.w != backgroundTileClip.w) && (i / (box.w - backgroundTileClip.w) >= 1));
 

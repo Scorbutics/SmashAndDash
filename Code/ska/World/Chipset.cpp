@@ -8,12 +8,12 @@
 #include "Chipset.h"
 #include "../Script/ScriptSleepComponent.h"
 
-ska::Chipset::Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) :
+ska::Chipset::Chipset(const std::unordered_map<Color, Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) :
 	m_blockSize(blockSize),
 	m_chipsetName(chipsetName),
 	m_corr(corr),
 	m_corrFileWidth(corrFileWidth),
-	m_renderable(corr.size(), blockSize, chipsetName) {
+	m_renderable(static_cast<const unsigned int>(corr.size()), blockSize, chipsetName) {
 	load();
 	m_blocks.resize(corr.size());
 }
@@ -21,17 +21,17 @@ ska::Chipset::Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& cor
 void ska::Chipset::load() {
 	m_sChipset.load32(m_chipsetName);
 	if (m_sChipset.getInstance() == nullptr) {
-		throw ska::FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + "\", fichier du chipset. " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + "\", fichier du chipset. " + std::string(SDL_GetError()));
 	}
 
 	m_sCol.load32(m_chipsetName + ".col");
 	if (m_sCol.getInstance() == nullptr) {
-		throw ska::FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + ".col\", fichier de collsions du chipset. " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + ".col\", fichier de collsions du chipset. " + std::string(SDL_GetError()));
 	}
 
 	m_sProperties.load32(m_chipsetName + ".prop");
 	if (m_sProperties.getInstance() == nullptr) {
-		throw ska::FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + ".prop\", fichier de propriétés du chipset. " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors de l'ouverture du fichier \"" + m_chipsetName + ".prop\", fichier de propriétés du chipset. " + std::string(SDL_GetError()));
 	}
 
 	m_darkColor = SDL_MapRGB(m_sChipset.getFormat(), 70, 70, 70);
@@ -43,10 +43,10 @@ void ska::Chipset::load() {
 	std::string ss;
 
 	if (scriptList.fail()) {
-		throw ska::FileException("Erreur lors de l'ouverture du fichier \"" + chipsetFolder + ""FILE_SEPARATOR"scripts.txt" + "\", fichier de scripts du chipset. " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors de l'ouverture du fichier \"" + chipsetFolder + ""FILE_SEPARATOR"scripts.txt" + "\", fichier de scripts du chipset. " + std::string(SDL_GetError()));
 	}
 
-	while (std::getline(scriptList, ss)) {
+	while (getline(scriptList, ss)) {
 		fillScript(chipsetFolder, ss, EnumScriptTriggerType::TOUCH);
 		fillScript(chipsetFolder, ss, EnumScriptTriggerType::MOVE_OUT);
 		fillScript(chipsetFolder, ss, EnumScriptTriggerType::MOVE_IN);
@@ -56,7 +56,7 @@ void ska::Chipset::load() {
 
 }
 
-void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::string& id, const ska::ScriptTriggerType& type) {
+void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::string& id, const ScriptTriggerType& type) {
 	std::ifstream currentScript;
 	const std::string fullName = chipsetFolder + ""FILE_SEPARATOR"Scripts"FILE_SEPARATOR"" + id + "_" + (char)(type + '0') + ".txt";
 	currentScript.open(fullName, std::ios_base::in);
@@ -64,21 +64,21 @@ void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::strin
 		return;
 	}
 
-	ska::ScriptSleepComponent ssc;
+	ScriptSleepComponent ssc;
 	ssc.triggeringType = type;
 	ssc.name = fullName;
 	ssc.period = 1000;
 
 	if (type == EnumScriptTriggerType::AUTO) {
-		m_autoScripts.insert(std::make_pair(ska::StringUtils::strToInt(id), ssc));
+		m_autoScripts.insert(std::make_pair(StringUtils::strToInt(id), ssc));
 	} else {
-		m_triggeredScripts.insert(std::make_pair(fullName, ssc));
+		m_triggeredScripts.insert(make_pair(fullName, ssc));
 	}
 
 }
 
-std::vector<ska::ScriptSleepComponent*> ska::Chipset::getScript(const std::string& id, const ska::ScriptTriggerType& reason, bool& autoBlackList) {
-	std::vector<ska::ScriptSleepComponent*> result;
+std::vector<ska::ScriptSleepComponent*> ska::Chipset::getScript(const std::string& id, const ScriptTriggerType& reason, bool& autoBlackList) {
+	std::vector<ScriptSleepComponent*> result;
 
 	if (reason == EnumScriptTriggerType::AUTO && !autoBlackList) {
 		for (auto& s : m_autoScripts) {
@@ -104,10 +104,10 @@ ska::ChipsetRenderable& ska::Chipset::getRenderable() {
 	return m_renderable;
 }
 
-void ska::Chipset::generateBlock(ska::Color& key, Block** outputBlock, BlockRenderable** outputRenderable) {
+void ska::Chipset::generateBlock(Color& key, Block** outputBlock, BlockRenderable** outputRenderable) {
 	if (key.r != 255 || key.g != 255 || key.b != 255) {
 		if (m_corr.find(key) != m_corr.end()) {
-			ska::Point<int> posCorr = m_corr.at(key);
+			Point<int> posCorr = m_corr.at(key);
 			Uint8 prop = m_sProperties.getPixel32Color(posCorr.x, posCorr.y).r;
 			Uint16 col = m_sCol.getPixel32(posCorr.x, posCorr.y);
 
@@ -123,7 +123,7 @@ void ska::Chipset::generateBlock(ska::Color& key, Block** outputBlock, BlockRend
 			*outputRenderable = m_renderable.generateBlock(id, m_blockSize, posCorr, auto_anim).get();
 		}
 		else {
-			throw ska::CorruptedFileException("Impossible de trouver la correspondance en pixel (fichier niveau corrompu)");
+			throw CorruptedFileException("Impossible de trouver la correspondance en pixel (fichier niveau corrompu)");
 		}
 	}
 	else {

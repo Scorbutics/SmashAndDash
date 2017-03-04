@@ -16,7 +16,7 @@ namespace ska{
 		static double random(double min, double max);
 		static double random();
 		template<typename T>
-		static void hashCombine(std::size_t& seed, T& value) {
+		static void hashCombine(size_t& seed, T& value) {
 			seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 		}
 
@@ -51,15 +51,15 @@ namespace ska{
 		template <typename T>
 		static Point<T> cartesian(const T radius, const double angle) {
 			Point<T> result;
-			result.x = radius * (float) cosinus(angle);
-			result.y = radius * (float) sinus(angle);
+			result.x = radius * static_cast<float>(cosinus(angle));
+			result.y = radius * static_cast<float>(sinus(angle));
 			return result;
 		}
 
 		template <typename T>
 		static PolarPoint<T> polar(const T x, const T y) {
 			PolarPoint<T> result;
-			result.angle = (float)arctan(x, y);
+			result.angle = static_cast<float>(arctan(x, y));
 			result.radius = squareroot(x * x + y * y);
 			return result;
 		}
@@ -78,8 +78,8 @@ namespace ska{
 			
 			/* Then we apply the multiplication with the rotation matrix with angle "angle" */
 			Point<T> result = diff;
-			result.x = diff.x * cosinus(angle) + diff.y * sinus(angle);
-			result.y = - diff.x * sinus(angle) + diff.y * cosinus(angle);
+			result.x = static_cast<T>(diff.x * cosinus(angle) + diff.y * sinus(angle));
+			result.y = static_cast<T>(- diff.x * sinus(angle) + diff.y * cosinus(angle));
 
 			result.y = -result.y;
 

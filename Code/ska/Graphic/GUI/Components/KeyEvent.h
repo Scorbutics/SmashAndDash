@@ -15,6 +15,9 @@ namespace ska {
 	class KeyEvent : public WidgetEvent<KeyEvent, KeyEventListener> {
 	public:
 		KeyEvent(const KeyEventType& state, const std::wstring& text, const int scanCode);
+
+		void operator=(const KeyEvent&) = delete;
+
 		const KeyEventType& getState() const;
 		const std::wstring& getText() const;
 		const int getScanCode() const;

@@ -7,20 +7,20 @@
 #include "../../ECS/EntityManager.h"
 #include "CollisionSystem.h"
 
-ska::DebugWorldCollisionResponse::DebugWorldCollisionResponse(ska::GameEventDispatcher& ged, EntityManager& em) :
-WorldCollisionObserver(std::bind(&DebugWorldCollisionResponse::onWorldCollision, this, std::placeholders::_1)),
+ska::DebugWorldCollisionResponse::DebugWorldCollisionResponse(GameEventDispatcher& ged, EntityManager& em) :
+WorldCollisionObserver(bind(&DebugWorldCollisionResponse::onWorldCollision, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged) {
-	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
+	m_ged.Observable<CollisionEvent>::addObserver(*this);
 }
 
 bool ska::DebugWorldCollisionResponse::onWorldCollision(CollisionEvent& e) {
 	DebugGraphicComponent dgc;
-	dgc.typeMask = DebugGraphicType::COLLISION;
+	dgc.typeMask = COLLISION;
 	m_entityManager.addComponent<DebugGraphicComponent>(e.entity, dgc);
 	return true;
 }
 
 ska::DebugWorldCollisionResponse::~DebugWorldCollisionResponse() {
-	m_ged.ska::Observable<ska::CollisionEvent>::removeObserver(*this);
+	m_ged.Observable<CollisionEvent>::removeObserver(*this);
 }

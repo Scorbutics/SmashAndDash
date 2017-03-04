@@ -8,9 +8,9 @@
 #include "../InputContextManager.h"
 
 namespace ska {
-	class InputSystem : public ska::System<std::unordered_set<ska::EntityId>, PositionComponent, InputComponent, ForceComponent> {
+	class InputSystem : public System<std::unordered_set<EntityId>, PositionComponent, InputComponent, ForceComponent> {
 	public:
-		InputSystem(const InputContextManager& icm, ska::EntityManager& entityManager);
+		InputSystem(const InputContextManager& icm, EntityManager& entityManager);
 		virtual ~InputSystem();
 	protected:
 		virtual void refresh() override;

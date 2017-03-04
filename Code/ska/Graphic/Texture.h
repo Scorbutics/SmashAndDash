@@ -10,15 +10,15 @@
 
 namespace ska {
 	class Window;
-	class Texture : public ResourceTemplate<ska::SDLTexture, ska::TextureData> {
+	class Texture : public ResourceTemplate<SDLTexture, TextureData> {
 
 	public:
 		Texture(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
-		Texture(std::string id, ska::Color finalColor);
+		Texture(std::string id, Color finalColor);
 		Texture();
-		void loadFromText(unsigned int fontSize, std::string text, ska::Color c);
+		void loadFromText(unsigned int fontSize, std::string text, Color c);
 		void load(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
-		static void setDefaultWindow(ska::Window* w);
+		static void setDefaultWindow(Window* w);
 		static void freeAll();
 		virtual ~Texture();
 
@@ -33,7 +33,7 @@ namespace ska {
 
 	private:
 		static void checkWindow();
-		static ska::Window* m_window;
+		static Window* m_window;
 	};
 	typedef std::unique_ptr<Texture> TexturePtr;
 }

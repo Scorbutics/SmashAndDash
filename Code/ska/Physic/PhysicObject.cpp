@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 #include <algorithm>    // std::find
 #include "PhysicObject.h"
 #include" ../../../Utils/RectangleUtils.h"
@@ -32,7 +32,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber)
 }
 
 //Constructeur détaillé
-ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset[4])
+ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, Rectangle r, int offset[4])
 {
     m_id = id;
     m_weight = weight;
@@ -60,7 +60,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
 }
 
 //Variante constructeur détaillé
-ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r)
+ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, Rectangle r)
 {
     m_id = id;
     m_weight = weight;
@@ -88,7 +88,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
 		m_offset[i] = 0;
 }
 
-ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, ska::Rectangle r, int offset0, int offset1, int offset2, int offset3)
+ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight, float frictionCoeff, unsigned int speedLimit, Rectangle r, int offset0, int offset1, int offset2, int offset3)
 {
     m_id = id;
 
@@ -199,7 +199,7 @@ int ska::PhysicObject::getID()
 
 ska::Rectangle ska::PhysicObject::getHitboxCenterPos() const
 {
-    ska::Rectangle buf;
+    Rectangle buf;
 
     buf.x = m_rect.x + (m_rect.w - m_offset[1] + m_offset[3])/2;
     buf.y = m_rect.y + (m_rect.h - m_offset[0] + m_offset[2])/2;
@@ -267,11 +267,11 @@ void ska::PhysicObject::teleport(int x, int y)
     m_rect.y = y;
 }
 
-void ska::PhysicObject::applyForce(ska::Rectangle dest, float power)
+void ska::PhysicObject::applyForce(Rectangle dest, float power)
 {
 	Force f;
 	float slope, angle;
-    ska::Rectangle hitboxPos = this->getHitboxCenterPos();
+    Rectangle hitboxPos = this->getHitboxCenterPos();
 
 	if(hitboxPos.x == dest.x)
 		angle = (float)M_PI / 2;
@@ -324,7 +324,7 @@ ska::Rectangle& ska::PhysicObject::getPos() {
 
 ska::Point<int> ska::PhysicObject::getCenterPos()
 {
-	ska::Point<int> r = { m_rect.x, m_rect.y };
+	Point<int> r = { m_rect.x, m_rect.y };
 	r.x += m_rect.w / 2;
 	r.y += m_rect.h / 2;
 
@@ -394,10 +394,10 @@ void ska::PhysicObject::reset()
 }
 
 //bouge dans la direction déterminée par "dest" et à la vitesse "speed"
-void ska::PhysicObject::move(ska::Rectangle dest, float speed)
+void ska::PhysicObject::move(Rectangle dest, float speed)
 {
 	float slope, angle;
-    ska::Rectangle hitboxPos = this->getHitboxCenterPos();
+    Rectangle hitboxPos = this->getHitboxCenterPos();
 
 	if(hitboxPos.x == dest.x)
 	{
@@ -430,7 +430,7 @@ void ska::PhysicObject::move(ska::Rectangle dest, float speed)
 }
 
 //bouge dans une direction vers "dest", à la vitesse courante de l'objet
-void ska::PhysicObject::move(ska::Rectangle dest)
+void ska::PhysicObject::move(Rectangle dest)
 {
 	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
 		this->move(dest, sqrt(m_speedx*m_speedx + m_speedy*m_speedy));
@@ -448,9 +448,9 @@ void ska::PhysicObject::jump(unsigned int power)
 std::vector<ska::Rectangle> ska::PhysicObject::move()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	std::vector<ska::Rectangle> ids, ids2, idsEnd;
-    ska::Rectangle lastTheoricPos = m_rect;
-    ska::Rectangle rectOrigin = m_rect;
+	std::vector<Rectangle> ids, ids2, idsEnd;
+    Rectangle lastTheoricPos = m_rect;
+    Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
 
 
@@ -471,7 +471,7 @@ std::vector<ska::Rectangle> ska::PhysicObject::move()
     lastTheoricPos.x += (int)(m_speedx + 0.5);
 	lastTheoricPos.y += (int)(m_speedy + 0.5);
     if(lastTheoricPos.x != rectOrigin.x || lastTheoricPos.y != rectOrigin.y)
-        m_direction = ska::RectangleUtils::getDirectionFromPos(rectOrigin, lastTheoricPos);
+        m_direction = RectangleUtils::getDirectionFromPos(rectOrigin, lastTheoricPos);
 	
 
 
@@ -493,7 +493,7 @@ std::vector<ska::Rectangle> ska::PhysicObject::move()
 
 
 	//puis on recommence selon les y maintenant
-	ska::Rectangle buf = m_rect;
+	Rectangle buf = m_rect;
 	m_rect.y += (int)(m_speedy + 0.5);
     ids2 = this->collisionNPC();
 
@@ -591,9 +591,9 @@ std::vector<ska::Rectangle> ska::PhysicObject::move()
     return idsEnd;
 }
 
-bool ska::PhysicObject::collision(ska::Rectangle targetPos)
+bool ska::PhysicObject::collision(Rectangle targetPos)
 {
-	ska::Rectangle lastPos = m_rect;
+	Rectangle lastPos = m_rect;
 	bool result;
 
 	m_rect = targetPos;
@@ -609,9 +609,9 @@ bool ska::PhysicObject::collision(ska::Rectangle targetPos)
 
 bool ska::PhysicObject::collision()
 {
-	std::vector<ska::Rectangle> ids, ids2;
-	ska::Rectangle lastTheoricPos = m_rect;
-	ska::Rectangle rectOrigin = m_rect;
+	std::vector<Rectangle> ids, ids2;
+	Rectangle lastTheoricPos = m_rect;
+	Rectangle rectOrigin = m_rect;
 	float currentSpeed = getSpeed();
 
 	//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
@@ -625,7 +625,7 @@ bool ska::PhysicObject::collision()
 		return true;       
 
 	//puis on recommence selon les y maintenant
-	ska::Rectangle buf = m_rect;
+	Rectangle buf = m_rect;
 	m_rect.y += (int)(m_speedy + 0.5);
 	ids2 = this->collisionNPC();
 
@@ -639,7 +639,7 @@ bool ska::PhysicObject::collision()
 //teste les collisions avec les NPC uniquement
 std::vector<ska::Rectangle> ska::PhysicObject::collisionNPC()
 {
-	std::vector<ska::Rectangle> ids, buf;
+	std::vector<Rectangle> ids, buf;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
     /*buf = wScreen.detectEntity(this->getHitbox());
@@ -664,7 +664,7 @@ unsigned int ska::PhysicObject::getEntityNumber()
 
 ska::Rectangle ska::PhysicObject::getHitbox()
 {
-    ska::Rectangle hitbox;
+    Rectangle hitbox;
     hitbox.x = m_rect.x + m_offset[3];
     hitbox.y = m_rect.y + m_offset[2];
     hitbox.w = m_rect.w - m_offset[3] - m_offset[1] -1;
@@ -678,7 +678,7 @@ bool ska::PhysicObject::collisionWorld()
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();*/
-	ska::Rectangle chd, chg, cbg;
+	Rectangle chd, chg, cbg;
 
 
 	//position coin haut droit hitbox

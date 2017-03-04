@@ -1,4 +1,6 @@
 #pragma once
+#include <utility>
+
 #include "ScriptBasicCommandsSystem.h"
 
 #include "../Command/CommandEnd.h"
@@ -17,30 +19,30 @@
 #include "../Command/CommandRestoreComponent.h"
 #include "../Command/CommandBlockAuthorize.h"
 
-ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(ska::World& w, EntityManager& entityManager, ska::Savegame& saveGame) : ScriptAutoSystem(w, BasicScriptCommandHelper(w, entityManager), entityManager, saveGame) {
+ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(World& w, EntityManager& entityManager, Savegame& saveGame) : ScriptAutoSystem(w, BasicScriptCommandHelper(w, entityManager), entityManager, saveGame) {
 
 }
 
-ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : ScriptAutoSystem(w, sch, entityManager, saveGame) {
+ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame) : ScriptAutoSystem(w, sch, entityManager, saveGame) {
 
 }
 
-void ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper::setupCommands(ska::World& w, std::unordered_map<std::string, CommandPtr>& c) const {
-	c[CommandEnd::getCmdName()] = std::move(ska::CommandPtr(new CommandEnd(m_entityManager)));
-	c[ControlStatement::getCommandIf()] = std::move(ska::CommandPtr(new CommandIf(m_entityManager)));
-	c[ControlStatement::getCommandElse()] = std::move(ska::CommandPtr(new CommandElse(m_entityManager)));
-	c[ControlStatement::getCommandEndIf()] = std::move(ska::CommandPtr(new CommandElseEnd(m_entityManager)));
-	c["end_script"] = std::move(ska::CommandPtr(new CommandEndScript(m_entityManager)));
-	c["calculate"] = std::move(ska::CommandPtr(new CommandCalculate(m_entityManager)));
-	c["assign"] = std::move(ska::CommandPtr(new CommandAssign(m_entityManager)));
-	c["assign_switch"] = std::move(ska::CommandPtr(new CommandAssignSwitch(m_entityManager)));
-	c["random"] = std::move(ska::CommandPtr(new CommandRandom(m_entityManager)));
-	c["log"] = std::move(ska::CommandPtr(new CommandLog(m_entityManager)));
-	c["script"] = std::move(ska::CommandPtr(new CommandScript(m_entityManager)));
-	c["wait"] = std::move(ska::CommandPtr(new CommandWait(m_entityManager)));
-	c["remove_component"] = std::move(ska::CommandPtr(new CommandRemoveComponent(m_entityManager)));
-	c["restore_component"] = std::move(ska::CommandPtr(new CommandRestoreComponent(m_entityManager)));
-	c["block_authorize"] = std::move(ska::CommandPtr(new CommandBlockAuthorize(m_entityManager)));
+void ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper::setupCommands(World&, std::unordered_map<std::string, CommandPtr>& c) const {
+	c[CommandEnd::getCmdName()] = std::move(CommandPtr(new CommandEnd(m_entityManager)));
+	c[ControlStatement::getCommandIf()] = std::move(CommandPtr(new CommandIf(m_entityManager)));
+	c[ControlStatement::getCommandElse()] = std::move(CommandPtr(new CommandElse(m_entityManager)));
+	c[ControlStatement::getCommandEndIf()] = std::move(CommandPtr(new CommandElseEnd(m_entityManager)));
+	c["end_script"] = std::move(CommandPtr(new CommandEndScript(m_entityManager)));
+	c["calculate"] = std::move(CommandPtr(new CommandCalculate(m_entityManager)));
+	c["assign"] = std::move(CommandPtr(new CommandAssign(m_entityManager)));
+	c["assign_switch"] = std::move(CommandPtr(new CommandAssignSwitch(m_entityManager)));
+	c["random"] = std::move(CommandPtr(new CommandRandom(m_entityManager)));
+	c["log"] = std::move(CommandPtr(new CommandLog(m_entityManager)));
+	c["script"] = std::move(CommandPtr(new CommandScript(m_entityManager)));
+	c["wait"] = std::move(CommandPtr(new CommandWait(m_entityManager)));
+	c["remove_component"] = std::move(CommandPtr(new CommandRemoveComponent(m_entityManager)));
+	c["restore_component"] = std::move(CommandPtr(new CommandRestoreComponent(m_entityManager)));
+	c["block_authorize"] = std::move(CommandPtr(new CommandBlockAuthorize(m_entityManager)));
 }
 
 

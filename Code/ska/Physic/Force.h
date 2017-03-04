@@ -8,20 +8,20 @@ namespace ska {
 	{
 	public:
 		Force();
-		Force(ska::Rectangle pos, float power, float angle);
+		Force(Rectangle pos, float power, float angle);
 
-		ska::Rectangle getPos();
+		Rectangle getPos();
 		float getPower() const;
 		float getAngle() const;
 
-		void setPos(ska::Rectangle pos);
+		void setPos(Rectangle pos);
 		void setPower(float power);
 		void setAngle(float angle);
 
 		~Force();
 
 	protected:
-		ska::Rectangle m_pos;
+		Rectangle m_pos;
 		float m_angle, m_power;
 
 	};

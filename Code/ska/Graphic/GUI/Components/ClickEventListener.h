@@ -7,7 +7,7 @@
 namespace ska {
 
 	/* Handler triggered when a click occurs on the widget */
-	using ClickEventHandler = std::function<void(ska::Widget*, ska::ClickEvent&)>;
+	using ClickEventHandler = std::function<void(Widget*, ClickEvent&)>;
 	class ClickEventListener : public EventListener<ClickEvent> {
 	public:
 		ClickEventListener(Widget& tthis);

@@ -7,7 +7,7 @@ namespace ska {
 	class Widget;
 
 	/* Handler triggered when a key is pressed */
-	using FocusEventHandler = std::function<void(ska::Widget*, ska::FocusEvent&)>;
+	using FocusEventHandler = std::function<void(Widget*, FocusEvent&)>;
 
 	class FocusEventListener : public EventListener<FocusEvent> {
 	public:

@@ -25,27 +25,27 @@ float ska::FormalCalculator::interpretFormalCalculation(const std::string& s)
 
 		if (lParenthesisPos != std::string::npos)
 		{
-			result = FormalCalculator::interpretFormalCalculation(subStr.substr(lParenthesisPos + 1, frParenthesisPos - lParenthesisPos - 1));
+			result = interpretFormalCalculation(subStr.substr(lParenthesisPos + 1, frParenthesisPos - lParenthesisPos - 1));
 			std::stringstream ss;
 			ss << result;
-			result = FormalCalculator::interpretFormalCalculation(subStr.substr(0, lParenthesisPos) + " " + ss.str() + " " + subStr.substr(frParenthesisPos + 1, subStr.size() - 1));
+			result = interpretFormalCalculation(subStr.substr(0, lParenthesisPos) + " " + ss.str() + " " + subStr.substr(frParenthesisPos + 1, subStr.size() - 1));
 		}
 		else
 		{
-			FormalCalculator::calculSyntaxError(subStr);
+			calculSyntaxError(subStr);
 			return 0.0F;
 		}
 
 	}
 	else if (s.find_first_of('(') != std::string::npos)
 	{
-		FormalCalculator::calculSyntaxError(subStr);
+		calculSyntaxError(subStr);
 		return 0.0F;
 	}
 	else
 	{
 		//On se trouve ici si la chaîne entrée ne contient plus de parenthèse
-		result = FormalCalculator::interpretSimpleCalculation(subStr);
+		result = interpretSimpleCalculation(subStr);
 
 	}
 
@@ -86,7 +86,7 @@ float ska::FormalCalculator::interpretSimpleCalculation(const std::string& s)
 			}
 		}
 
-		result = FormalCalculator::interpretSingleCalculation(operatorPos, &subStr);
+		result = interpretSingleCalculation(operatorPos, &subStr);
 	}
 
 	return result;
@@ -100,8 +100,8 @@ float ska::FormalCalculator::interpretSingleCalculation(size_t operatorPos, std:
 	size_t posStart = positionOfAnyLastOperator(s.substr(0, operatorPos));
 	size_t posEnd = positionOfAnyFirstOperator(s.substr(operatorPos + 1, s.size() - 1)) + operatorPos;
 
-	float op1 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(posStart + 1, operatorPos)));
-	float op2 = ska::StringUtils::strToFloat(ska::StringUtils::trim(s.substr(operatorPos + 1, posEnd - 1)));
+	float op1 = StringUtils::strToFloat(StringUtils::trim(s.substr(posStart + 1, operatorPos)));
+	float op2 = StringUtils::strToFloat(StringUtils::trim(s.substr(operatorPos + 1, posEnd - 1)));
 
 	if ((s[operatorPos] == CalculOperators::divise || s[operatorPos] == CalculOperators::modulo) && abs(op2) < 0.0001) {
 		calculSyntaxError(s);
@@ -130,8 +130,7 @@ int ska::FormalCalculator::positionOfAnyLastOperator(const std::string& s)
 	return index;
 }
 
-int ska::FormalCalculator::positionOfAnyFirstOperator(const std::string& s)
-{
+int ska::FormalCalculator::positionOfAnyFirstOperator(const std::string& s) {
 	size_t index;
 	for (index = 0; index < s.size()
 		&& s[index] != CalculOperators::divise
@@ -140,12 +139,12 @@ int ska::FormalCalculator::positionOfAnyFirstOperator(const std::string& s)
 		&& s[index] != CalculOperators::minus
 		&& s[index] != CalculOperators::modulo; index++);
 
-	return index;
+	return static_cast<int>(index);
 }
 
 void ska::FormalCalculator::calculSyntaxError(const std::string& s)
 {
-	throw ska::ScriptSyntaxError("La ligne suivante est impossible à traduire en calcul formel : \"" + s + "\"");
+	throw ScriptSyntaxError("La ligne suivante est impossible à traduire en calcul formel : \"" + s + "\"");
 }
 
 ska::FormalCalculator::~FormalCalculator()

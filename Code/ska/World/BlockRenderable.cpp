@@ -1,6 +1,6 @@
 #include "BlockRenderable.h"
 
-ska::BlockRenderable::BlockRenderable(const unsigned int blockSize, ska::Point<int> posChipset, bool auto_animation) : 
+ska::BlockRenderable::BlockRenderable(const unsigned int blockSize, Point<int> posChipset, bool auto_animation) : 
 	m_anim(375, 4, true, 0, 0, blockSize, blockSize) {
 	m_auto_animation = auto_animation;
 
@@ -22,11 +22,11 @@ void ska::BlockRenderable::refresh() {
 	}
 }
 
-ska::Rectangle ska::BlockRenderable::determineFrame(ska::Rectangle pos, const ska::Rectangle* rectAnim) const {
-	ska::Rectangle buf = m_spritePosInChipset;
+ska::Rectangle ska::BlockRenderable::determineFrame(Rectangle pos, const Rectangle* rectAnim) const {
+	Rectangle buf = m_spritePosInChipset;
 
 	if (m_auto_animation) {
-		ska::Rectangle bufRectAnim;
+		Rectangle bufRectAnim;
 
 		if (rectAnim != NULL) {
 			bufRectAnim = *rectAnim;

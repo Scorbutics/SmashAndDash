@@ -5,7 +5,7 @@
 
 const std::string& ska::Button::MENU_DEFAULT_THEME_PATH = "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"default_theme"FILE_SEPARATOR;
 
-ska::Button::Button(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip, ClickEventHandler const& callback) :
+ska::Button::Button(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const Rectangle* clip, ClickEventHandler const& callback) :
 Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),
 m_placeHolder(placeHolderStyleName + ".png"),
 m_placeHolderHover(placeHolderStyleName + "_hover.png"),
@@ -55,19 +55,19 @@ m_drawStyle(false) {
 }
 
 void ska::Button::switchTextureAndMemorize() {
-	ska::Texture* t = nullptr;
+	Texture* t = nullptr;
 	switch (m_state) {
-		case ska::ButtonState::HOVER:
-		case ska::ButtonState::ENTER:
+		case ButtonState::HOVER:
+		case ButtonState::ENTER:
 			t = &m_placeHolderHover;
 			break;
 
-		case ska::ButtonState::NONE:
-		case ska::ButtonState::DISABLED:
+		case ButtonState::NONE:
+		case ButtonState::DISABLED:
 			t = &m_placeHolder;
 			break;
 		
-		case ska::ButtonState::PRESSED:
+		case ButtonState::PRESSED:
 			t = &m_placeHolderPressed;
 			break;
 
@@ -86,15 +86,15 @@ void ska::Button::resetTexture() {
 
 
 void ska::Button::initHandlers() {
-	addHeadHandler<ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
+	addHeadHandler<ClickEventListener>([this](Widget*, ClickEvent& e) {
 		bool handled = false;
 		switch (e.getState()) {
-		case ska::MouseEventType::MOUSE_CLICK:
+		case MOUSE_CLICK:
 			m_state = ButtonState::PRESSED;
 			switchTextureAndMemorize();
 			handled = true;
 			break;
-		case ska::MouseEventType::MOUSE_RELEASE:
+		case MOUSE_RELEASE:
 			m_state = ButtonState::HOVER;
 			resetTexture();
 			handled = true;
@@ -106,7 +106,7 @@ void ska::Button::initHandlers() {
 		if (handled) {
 			e.setTarget(this);
 		} else {
-			e.stopPropagation(ska::StopType::STOP_CALLBACK);
+			e.stopPropagation(STOP_CALLBACK);
 		}
 	});
 }

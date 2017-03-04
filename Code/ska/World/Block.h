@@ -8,7 +8,7 @@ namespace ska {
 
 	class Block {
 	public:
-		Block(int corrFileWidth, ska::Point<int> posChipset, unsigned int properties, int col);
+		Block(int corrFileWidth, Point<int> posChipset, unsigned int properties, int col);
 		~Block() = default;
 
 		unsigned int getProperties();

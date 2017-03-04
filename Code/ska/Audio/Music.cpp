@@ -3,7 +3,7 @@
 
 ska::Music::Music(const std::string& musicName) {
 	if (!musicName.empty()) {
-		ska::ResourceTemplate<SDLMusic, std::string>::load(musicName);
+		ResourceTemplate<SDLMusic, std::string>::load(musicName);
 	}
 }
 

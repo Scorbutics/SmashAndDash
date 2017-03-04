@@ -83,7 +83,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <CompileAs>CompileAsCpp</CompileAs>
@@ -649,7 +649,9 @@
     <ClCompile Include="Code\ska\Script\Command\CommandLog.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandEndScript.cpp" />
     <ClCompile Include="Code\Gameplay\Scene\SceneMap.cpp" />
-    <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp" />
+    <ClCompile Include="Code\Gameplay\Scene\SceneFight.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">EnableAllWarnings</WarningLevel>
+    </ClCompile>
     <ClCompile Include="Code\ska\Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
     <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp" />
     <ClCompile Include="Code\ska\Utils\MessagePopup.cpp" />

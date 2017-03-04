@@ -9,15 +9,15 @@
 
 
 namespace ska {
-	class IADefinedMovementSystem : public ska::System<std::unordered_set<ska::EntityId>, IADefinedMovementComponent, MovementComponent, PositionComponent, HitboxComponent>
+	class IADefinedMovementSystem : public System<std::unordered_set<EntityId>, IADefinedMovementComponent, MovementComponent, PositionComponent, HitboxComponent>
 	{
 	public:
-		IADefinedMovementSystem(ska::EntityManager& entityManager, ska::ScriptAutoSystem* scriptSystem = nullptr);
+		IADefinedMovementSystem(EntityManager& entityManager, ScriptAutoSystem* scriptSystem = nullptr);
 		virtual ~IADefinedMovementSystem();
 	protected:
 		virtual void refresh() override;
 	private:
-		ska::ScriptAutoSystem* m_scriptSystem;
+		ScriptAutoSystem* m_scriptSystem;
 	};
 }
 

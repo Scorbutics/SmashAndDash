@@ -21,8 +21,8 @@ public:
 	virtual ~ScriptCommandsSystem();
 
 protected:
-	struct ScriptCommandHelper : public ska::ScriptBasicCommandsSystem::BasicScriptCommandHelper {
-		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::World& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) : ScriptBasicCommandsSystem::BasicScriptCommandHelper(w, e), m_world(w), m_parent(parent), m_ged(ged) {}
+	struct ScriptCommandHelper : public BasicScriptCommandHelper {
+		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::World& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) : BasicScriptCommandHelper(w, e), m_world(w), m_parent(parent), m_ged(ged) {}
 		virtual void setupCommands(ska::World& w, std::unordered_map<std::string, ska::CommandPtr>& c) const override;
 	private:
 		ska::World& m_world;

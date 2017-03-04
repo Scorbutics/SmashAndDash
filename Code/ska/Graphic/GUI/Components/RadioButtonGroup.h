@@ -6,14 +6,14 @@ namespace ska {
 	class RadioButtonGroup {
 	public:
 		RadioButtonGroup();
-		std::size_t addRadioButton(RadioButton& rb);
+		size_t addRadioButton(RadioButton& rb);
 		void select(RadioButton& rb);
-		std::size_t getSize() const;
+		size_t getSize() const;
 		void removeRadioButton(RadioButton& rb);
 		~RadioButtonGroup() = default;
 
 	private:
 		std::unordered_set<RadioButton*> m_buttons;
-		std::size_t m_uniqueIndexCursor;
+		size_t m_uniqueIndexCursor;
 	};
 }

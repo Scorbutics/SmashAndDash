@@ -29,7 +29,7 @@ ska::CameraSystem& SceneMap::getCamera() {
 	return m_cameraSystem;
 }
 
-SceneMap::SceneMap(ska::Window& w, PokemonGameEventDispatcher& ged, ska::Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+SceneMap::SceneMap(ska::Window& w, PokemonGameEventDispatcher& ged, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(w, ws, ged, oldScene, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),

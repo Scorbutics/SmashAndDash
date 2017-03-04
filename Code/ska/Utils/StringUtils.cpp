@@ -51,7 +51,7 @@ int ska::StringUtils::strToUint(const std::string& str) {
 	if (!isInt(sTrimed, 10)) {
 		throw NumberFormatException(sTrimed);
 	}
-	return std::stoul(sTrimed);
+	return stoul(sTrimed);
 }
 
 bool ska::StringUtils::isDecimal(const std::string& s) {
@@ -69,7 +69,7 @@ float ska::StringUtils::strToFloat(const std::string& str) {
 	if (!isDecimal(str)) {
 		throw NumberFormatException(str);
 	}
-	return atof(str.c_str());
+	return static_cast<float>(atof(str.c_str()));
 }
 
 std::string ska::StringUtils::uintToStr(const unsigned int x) {
@@ -81,7 +81,7 @@ std::string ska::StringUtils::uintToStr(const unsigned int x) {
 std::vector<std::string>& ska::StringUtils::split(const std::string &s, const char delim, std::vector<std::string> &elems) {
 	std::stringstream ss(s);
 	std::string item;
-	while (std::getline(ss, item, delim)) {
+	while (getline(ss, item, delim)) {
 		elems.push_back(item);
 	}
 	return elems;
@@ -97,14 +97,14 @@ std::vector<std::string> ska::StringUtils::split(const std::string &s, const cha
 // trim from start
 std::string ska::StringUtils::ltrim(const std::string &s) {
 	std::string tmp(s.c_str());
-	tmp.erase(tmp.begin(), std::find_if(tmp.begin(), tmp.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	tmp.erase(tmp.begin(), find_if(tmp.begin(), tmp.end(), not1(std::ptr_fun<int, int>(std::isspace))));
 	return tmp;
 }
 
 // trim from end
 std::string ska::StringUtils::rtrim(const std::string &s) {
 	std::string tmp(s.c_str());
-	tmp.erase(std::find_if(tmp.rbegin(), tmp.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), tmp.end());
+	tmp.erase(find_if(tmp.rbegin(), tmp.rend(), not1(std::ptr_fun<int, int>(std::isspace))).base(), tmp.end());
 	return tmp;
 }
 

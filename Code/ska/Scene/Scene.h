@@ -8,11 +8,13 @@ namespace ska {
 	class InputContextManager;
 	class ISystem;
 	class IGraphicSystem;
-	class Scene : public HasGraphic, public HasLogic
-	{
+	
+	class Scene : public HasGraphic, public HasLogic {
 	public:
 		Scene(SceneHolder& sh, InputContextManager& ril);
 		Scene(Scene& oldScene);
+
+		void operator=(const Scene&) = delete;
 
 		virtual void load(std::unique_ptr<Scene>* lastScene) = 0;
 		virtual bool unload() = 0;
@@ -24,8 +26,8 @@ namespace ska {
 	protected:
 		InputContextManager& m_inputCManager;
 		SceneHolder& m_holder;
-		std::vector<ska::ISystem*> m_logics;
-		std::vector<ska::IGraphicSystem*> m_graphics;
+		std::vector<ISystem*> m_logics;
+		std::vector<IGraphicSystem*> m_graphics;
 
 	};
 

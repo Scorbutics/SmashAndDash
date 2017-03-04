@@ -7,14 +7,14 @@ ska::RectangleUtils::RectangleUtils()
 }
 
 
-unsigned int ska::RectangleUtils::distanceSquared(const ska::Point<int>& pos1, const ska::Point<int>& pos2)
+unsigned int ska::RectangleUtils::distanceSquared(const Point<int>& pos1, const Point<int>& pos2)
 {
 	return (((pos1.x - pos2.x) * (pos1.x - pos2.x)) + ((pos1.y - pos2.y) * (pos1.y - pos2.y)));
 }
 
 
 
-bool ska::RectangleUtils::collisionBoxABoxB(const ska::Rectangle& rectA, const ska::Rectangle& rectB) {
+bool ska::RectangleUtils::collisionBoxABoxB(const Rectangle& rectA, const Rectangle& rectB) {
 
 	if (rectA.x > rectB.x + rectB.w || rectA.x + rectA.w < rectB.x) {
 		return false;
@@ -28,12 +28,12 @@ bool ska::RectangleUtils::collisionBoxABoxB(const ska::Rectangle& rectA, const s
 
 }
 
-ska::Rectangle ska::RectangleUtils::intersect(const ska::Rectangle& r1, const ska::Rectangle& r2) {
-	ska::Rectangle output;
-	output.x = ska::NumberUtils::maximum(r1.x, r2.x);
-	output.y = ska::NumberUtils::maximum(r1.y, r2.y);
-	int xmax = ska::NumberUtils::minimum(r1.x + r1.w, r2.x + r2.w);
-	int ymax = ska::NumberUtils::minimum(r1.y + r1.h, r2.y + r2.h);
+ska::Rectangle ska::RectangleUtils::intersect(const Rectangle& r1, const Rectangle& r2) {
+	Rectangle output;
+	output.x = NumberUtils::maximum(r1.x, r2.x);
+	output.y = NumberUtils::maximum(r1.y, r2.y);
+	int xmax = NumberUtils::minimum(r1.x + r1.w, r2.x + r2.w);
+	int ymax = NumberUtils::minimum(r1.y + r1.h, r2.y + r2.h);
 	if (xmax >= output.x && ymax >= output.y) {
 		output.w = xmax - output.x;
 		output.h = ymax - output.y;
@@ -48,11 +48,11 @@ ska::Rectangle ska::RectangleUtils::intersect(const ska::Rectangle& r1, const sk
 }
 
 //divise l'écran en 8 directions possibles en fonction de la position de la souris
-int ska::RectangleUtils::getDirectionFromPos(const ska::Point<int>& posHero, const ska::Point<int>& mousePos) {
+int ska::RectangleUtils::getDirectionFromPos(const Point<int>& posHero, const Point<int>& mousePos) {
 	double pente;
 
 	if (mousePos.x != posHero.x) {
-		pente = ska::NumberUtils::absolute((mousePos.y - posHero.y) / ((double)mousePos.x - posHero.x));
+		pente = NumberUtils::absolute((mousePos.y - posHero.y) / ((double)mousePos.x - posHero.x));
 	} else {
 		if (mousePos.y > posHero.y){
 			return 0;
@@ -102,9 +102,9 @@ int ska::RectangleUtils::getDirectionFromPos(const ska::Point<int>& posHero, con
 }
 
 
-ska::Rectangle ska::RectangleUtils::posToCenterPicture(const ska::Rectangle& imageToCenter, const ska::Rectangle& imageBackground)
+ska::Rectangle ska::RectangleUtils::posToCenterPicture(const Rectangle& imageToCenter, const Rectangle& imageBackground)
 {
-	ska::Rectangle posCenter;
+	Rectangle posCenter;
 	posCenter.x = imageBackground.x + (imageBackground.w + 1) / 2 - (imageToCenter.w + 1) / 2;
 	posCenter.y = imageBackground.y + (imageBackground.h + 1) / 2 - (imageToCenter.h + 1) / 2;
 	posCenter.h = imageToCenter.h;

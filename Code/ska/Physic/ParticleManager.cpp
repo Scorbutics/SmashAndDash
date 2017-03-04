@@ -127,7 +127,7 @@ void ska::ParticleManager::refresh()
                         this->remove((unsigned int)j); //On la supprime
                     else//Sinon, on la replace à sa position d'origine
                     {
-						ska::Point<int> posBuf;
+						Point<int> posBuf;
 						posBuf = m_particles[j]->getOrigin();
 
                         if(m_particles[j]->isRelative())
@@ -180,13 +180,13 @@ void ska::ParticleManager::playCrumbling(int idSprite, float acceleration, float
     m_t0 = SDL_GetTicks();
 }
 
-void ska::ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect)
+void ska::ParticleManager::playEffect(int idSprite, float acceleration, float density, unsigned int duration, Rectangle rect)
 {
     m_duration = duration;
     m_active = true;
 	//removeAll();
 
-	ska::Rectangle posBuf;
+	Rectangle posBuf;
 	if (density < 1 && density > 0) {
 		/* Aucun affichage si on a une densité trop faible et pas de chance ;) */
 		if (density < NumberUtils::random()) {
@@ -229,7 +229,7 @@ int ska::ParticleManager::collisionNPC()
 	//WGameCore& wScreen = WGameCore::getInstance();
 
     const size_t size = m_particles.size();
-	std::vector<ska::Rectangle> ids, buf;
+	std::vector<Rectangle> ids, buf;
     size_t i;
 
     for(i = 0; i < size; i++)

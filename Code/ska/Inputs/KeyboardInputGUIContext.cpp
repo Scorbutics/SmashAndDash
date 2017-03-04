@@ -5,20 +5,20 @@
 ska::KeyboardInputGUIContext::KeyboardInputGUIContext() {
 }
 
-void ska::KeyboardInputGUIContext::buildCodeMap(std::unordered_map<int, ska::InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {
+void ska::KeyboardInputGUIContext::buildCodeMap(std::unordered_map<int, InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {
 	
-	codeMap[SDL_SCANCODE_ESCAPE] = InputAction::Quit;
-	codeMap[SDL_SCANCODE_RETURN] = InputAction::DoAction;
+	codeMap[SDL_SCANCODE_ESCAPE] = Quit;
+	codeMap[SDL_SCANCODE_RETURN] = DoAction;
 
-	codeMap[SDL_SCANCODE_BACKSPACE] = InputAction::DeleteChar;
+	codeMap[SDL_SCANCODE_BACKSPACE] = DeleteChar;
 
 	/* Mouse click */
 	/* Left */
-	codeMap[SDL_NUM_SCANCODES + 0] = InputAction::LClic;
-	toggles[SDL_NUM_SCANCODES + 0] = InputToggle::MoveWindow;
+	codeMap[SDL_NUM_SCANCODES + 0] = LClic;
+	toggles[SDL_NUM_SCANCODES + 0] = MoveWindow;
 
 	/* Right */
-	codeMap[SDL_NUM_SCANCODES + 1] = InputAction::RClic;
+	codeMap[SDL_NUM_SCANCODES + 1] = RClic;
 }
 
 ska::KeyboardInputGUIContext::~KeyboardInputGUIContext() {

@@ -5,9 +5,10 @@
 #include "../ForceComponent.h"
 
 namespace ska {
-	class ForceSystem : public ska::System<std::unordered_set<ska::EntityId>, ForceComponent, MovementComponent> {
+	class ForceSystem : public System<std::unordered_set<EntityId>, ForceComponent, MovementComponent> {
 	public:
-		ForceSystem(ska::EntityManager& entityManager);
+		explicit ForceSystem(EntityManager& entityManager);
+		void operator=(const ForceSystem& fs) = delete;
 		virtual ~ForceSystem();
 	protected:
 		virtual void refresh() override;

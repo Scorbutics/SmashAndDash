@@ -8,11 +8,13 @@ namespace ska {
 	class MouseObservable;
 }
 
-class MessageDialogBox : public IDialogMenu
-{
+class MessageDialogBox : public IDialogMenu {
 public:
 	MessageDialogBox(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
 	//const ska::Rectangle getRect() const override;
+
+	void operator=(const MessageDialogBox&) = delete;
+
 	void refresh() override;
 	void display() const override;
 	void hide(bool x) override;

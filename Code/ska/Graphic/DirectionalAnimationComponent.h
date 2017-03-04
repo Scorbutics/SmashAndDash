@@ -9,7 +9,7 @@ namespace ska {
 			if (!initialized) {
 				initialized = true;
 				const std::string className = getClassName(this);
-				addFieldSerializer(DirectionalAnimationComponent::serializeDirection, "direction", className);
+				addFieldSerializer(serializeDirection, "direction", className);
 			}
 			direction = 0;
 		}

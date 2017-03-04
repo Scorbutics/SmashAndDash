@@ -11,7 +11,6 @@ namespace ska {
 	{
 	public:
 		Observable() {
-
 		}
 
 		void addObserver(Observer<T, Args...>& obs) {

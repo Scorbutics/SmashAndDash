@@ -4,7 +4,7 @@
 
 #include "Label.h"
 
-ska::Label::Label(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos) : 
+ska::Label::Label(Widget& parent, const std::string& text, int fontSize, Point<int> relativePos) : 
 	Widget(parent, relativePos), 
 	m_fontSize(fontSize),
 	m_text(text) {
@@ -34,7 +34,7 @@ void ska::Label::modifyText(const std::string& text) {
 	setHeight(m_stext.getHeight());
 }
 
-void ska::Label::setClip(ska::Rectangle* r) {
+void ska::Label::setClip(Rectangle* r) {
 	m_clip = r;
 }
 
@@ -43,7 +43,7 @@ void ska::Label::display() const {
 		return;
 	}
 
-	const ska::Point<int>& pos = getAbsolutePosition();
+	const Point<int>& pos = getAbsolutePosition();
 	m_stext.render(pos.x, pos.y, m_clip);
 }
 

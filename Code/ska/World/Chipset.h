@@ -20,18 +20,20 @@ namespace ska {
 
 	class Chipset {
 	public:
-		Chipset(const std::unordered_map<ska::Color, ska::Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName);
-		void generateBlock(ska::Color& key, Block** outputBlock, BlockRenderable** outputRenderable);
+		Chipset(const std::unordered_map<Color, Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName);
+		void generateBlock(Color& key, Block** outputBlock, BlockRenderable** outputRenderable);
 		const std::string& getName() const;
 		ChipsetRenderable& getRenderable();
-		std::vector<ska::ScriptSleepComponent*> getScript(const std::string& id, const ska::ScriptTriggerType& type, bool& autoBlackList);
+		std::vector<ScriptSleepComponent*> getScript(const std::string& id, const ScriptTriggerType& type, bool& autoBlackList);
 		~Chipset() = default;
+
+		void operator=(const Chipset&) = delete;
 
 	private:
 		void load();
-		void fillScript(const std::string& chipsetFolder, const std::string& id, const ska::ScriptTriggerType& type);
+		void fillScript(const std::string& chipsetFolder, const std::string& id, const ScriptTriggerType& type);
 
-		const std::unordered_map<ska::Color, ska::Point<int>>& m_corr;
+		const std::unordered_map<Color, Point<int>>& m_corr;
 		std::unordered_map<std::string, ScriptSleepComponent> m_triggeredScripts;
 		std::unordered_map<int, ScriptSleepComponent> m_autoScripts;
 		

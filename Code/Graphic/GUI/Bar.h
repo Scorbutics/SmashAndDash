@@ -18,8 +18,10 @@ public:
 	Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId);
 	~Bar();
 
-    void display() const;
-    bool isVisible() const;
+	Bar& operator=(const Bar&) = delete;
+
+    void display() const override;
+	bool isVisible() const override;
 
 	void setCurrentValue(unsigned int v);
     void setVisible(bool x);

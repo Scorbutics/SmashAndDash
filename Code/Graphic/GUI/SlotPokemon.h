@@ -14,7 +14,7 @@ class StatisticsChangeEvent;
 
 class SlotPokemon : public ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener> {
 public:
-	SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos);
+	SlotPokemon(Widget& parent, ska::Point<int> relativePos);
 	bool onStatisticsChangeEvent(StatisticsChangeEvent& sce);
 	void load(SlotPokemonDataPtr& spd);
 	void unload();

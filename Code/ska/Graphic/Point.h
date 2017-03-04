@@ -14,31 +14,26 @@ namespace ska {
 		Point<T>(){ x = 0; y = 0; }
 
 		template <class U>
-		Point<T>(const U& r) {
+		Point(const U& r) {
 			x = r.x;
 			y = r.y;
 		}
 
-		Point<T>(const int& r) {
-			x = r;
-			y = r;
-		}
+		Point<T>(const int& r);
 
 
 		template <class U>
-		Point<T>(const Point<U>& p) {
-			*this = p;
-		}
+		Point(const Point<U>& p);
 
-		Point<T>(const ska::Rectangle& r) {
+		Point<T>(const Rectangle& r) {
 			x = r.x;
 			y = r.y;
 		}
 
 		template <class U>
 		void operator=(const Point<U>& p) {
-			x = (T)p.x;
-			y = (T)p.y;
+			x = static_cast<T>(p.x);
+			y = static_cast<T>(p.y);
 		}
 
 		bool operator==(const Point<T>& p) const {
@@ -97,22 +92,42 @@ namespace ska {
 		PolarPoint<T>(){ radius = 0; angle = 0; }
 
 		template <class U>
-		PolarPoint<T>(const U& r) {
-			radius = r.radius;
-			angle = r.angle;
-		}
+		PolarPoint(const U& r);
 
 		template <class U>
-		PolarPoint<T>(const PolarPoint<U>& p) {
-			*this = p;
-		}
+		PolarPoint(const PolarPoint<U>& p);
 
 		template <class U>
 		void operator=(const PolarPoint<U>& p) {
-			radius = (T) p.radius;
+			radius = static_cast<T>(p.radius);
 			angle = p.angle;
 		}
 
 	};
+
+	template <class T>
+	Point<T>::Point(const int& r){
+		x = r;
+		y = r;
+	}
+
+	template <class T>
+	template <class U>
+	Point<T>::Point(const Point<U>& p){
+		*this = p;
+	}
+
+	template <class T>
+	template <class U>
+	PolarPoint<T>::PolarPoint(const U& r){
+		radius = r.radius;
+		angle = r.angle;
+	}
+
+	template <class T>
+	template <class U>
+	PolarPoint<T>::PolarPoint(const PolarPoint<U>& p){
+		*this = p;
+	}
 }
 

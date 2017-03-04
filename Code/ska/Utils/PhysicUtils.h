@@ -7,7 +7,7 @@ namespace ska {
 	private:
 		PhysicUtils();
 	public:
-		static const ska::Force getMovement(const int direction, const float speed);
+		static const Force getMovement(const int direction, const float speed);
 		~PhysicUtils();
 	};
 }

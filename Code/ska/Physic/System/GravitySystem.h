@@ -6,9 +6,9 @@
 #include "../MovementComponent.h"
 
 namespace ska {
-	class GravitySystem : public ska::System<std::unordered_set<ska::EntityId>, ForceComponent, GravityAffectedComponent, MovementComponent> {
+	class GravitySystem : public System<std::unordered_set<EntityId>, ForceComponent, GravityAffectedComponent, MovementComponent> {
 	public:
-		GravitySystem(ska::EntityManager& entityManager);
+		GravitySystem(EntityManager& entityManager);
 		virtual ~GravitySystem();
 	protected:
 		virtual void refresh() override;

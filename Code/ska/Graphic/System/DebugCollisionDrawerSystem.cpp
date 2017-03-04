@@ -10,10 +10,10 @@ ska::DebugCollisionDrawerSystem::DebugCollisionDrawerSystem(EntityManager& em) :
 
 void ska::DebugCollisionDrawerSystem::refresh() {
 	std::vector<EntityId> removeComponents;
-	for (ska::EntityId entityId : m_processed) {
+	for (EntityId entityId : m_processed) {
 
 		DebugGraphicComponent& dcgc = m_entityManager.getComponent<DebugGraphicComponent>(entityId);
-		if (((dcgc.typeMask & DebugGraphicType::COLLISION) == DebugGraphicType::COLLISION) && m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
+		if (((dcgc.typeMask & COLLISION) == COLLISION) && m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			WorldCollisionComponent& wcol = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 
 			if (dcgc.collidedBlocks.size() >= 10) {
@@ -35,8 +35,8 @@ void ska::DebugCollisionDrawerSystem::refresh() {
 				}
 			}
 		}
-		if ((dcgc.typeMask & DebugGraphicType::WALK) == DebugGraphicType::WALK) {
-			createDebugCollisionEntity(ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<PositionComponent>(entityId), m_entityManager.getComponent<HitboxComponent>(entityId)), 1);
+		if ((dcgc.typeMask & WALK) == WALK) {
+			createDebugCollisionEntity(PositionComponent::getCenterPosition(m_entityManager.getComponent<PositionComponent>(entityId), m_entityManager.getComponent<HitboxComponent>(entityId)), 1);
 		}
 		removeComponents.push_back(entityId);
 	}
@@ -46,11 +46,11 @@ void ska::DebugCollisionDrawerSystem::refresh() {
 	}
 }
 
-ska::EntityId ska::DebugCollisionDrawerSystem::createDebugCollisionEntity(const ska::Point<int>& p, int offset) const {
-	ska::EntityId e = m_entityManager.createEntity();
-	ska::GraphicComponent gc;
+ska::EntityId ska::DebugCollisionDrawerSystem::createDebugCollisionEntity(const Point<int>& p, int offset) const {
+	EntityId e = m_entityManager.createEntity();
+	GraphicComponent gc;
 	gc.sprite.resize(1);
-	gc.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 18 + offset), 2, 1, 2, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, offset == 0 ? 40 : 100);
+	gc.sprite[0].load(SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 18 + offset), 2, 1, 2, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, offset == 0 ? 40 : 100);
 	gc.sprite[0].setDelay(500);
 	m_entityManager.addComponent<GraphicComponent>(e, gc);
 	DeleterComponent dc;

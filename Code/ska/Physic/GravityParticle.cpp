@@ -3,7 +3,7 @@
 #include "GravityParticle.h"
 #include "../Utils/SkaConstants.h"
 
-ska::GravityParticle::GravityParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) :
+ska::GravityParticle::GravityParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)
 {
     m_type = PARTICLE_GRAVITY;
@@ -13,7 +13,7 @@ ska::GravityParticle::GravityParticle(int idSprite, ska::Rectangle pos, double l
     m_countWind = 0;
 }
 
-void ska::GravityParticle::launch(ska::Point<int> origin, float angle, unsigned int power)
+void ska::GravityParticle::launch(Point<int> origin, float angle, unsigned int power)
 {
     Particle::launch(origin, angle, power);
     m_by = power*sin(angle);

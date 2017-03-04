@@ -1,7 +1,7 @@
 #include "DirectionalAnimationSystem.h"
 #include "../../Utils/RectangleUtils.h"
 
-ska::DirectionalAnimationSystem::DirectionalAnimationSystem(ska::EntityManager& entityManager) : System(entityManager) {
+ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
 void ska::DirectionalAnimationSystem::refresh() {
@@ -15,7 +15,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 		}
 
 		//ska::Rectangle base de l'animation
-		ska::AnimatedTexture& texture = gc.sprite[0];
+		AnimatedTexture& texture = gc.sprite[0];
 		Rectangle spritePos = texture.getOffsetBase();
 		const int spriteHeight = texture.getHeight();
 		

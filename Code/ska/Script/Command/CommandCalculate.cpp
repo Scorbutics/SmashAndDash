@@ -20,5 +20,5 @@ int ska::CommandCalculate::argumentsNumber() {
 std::string ska::CommandCalculate::execute(ScriptComponent& script, std::vector<std::string>& args)
 {
 	float f = FormalCalculator::interpretFormalCalculation(ScriptUtils::replaceVariablesByNumerics(script.parent->getSavegame(), script, args[0]));
-	return ska::StringUtils::intToStr((int)f);
+	return StringUtils::intToStr((int)f);
 }

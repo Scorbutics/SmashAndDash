@@ -7,7 +7,7 @@
 namespace ska {
 	class ClickEvent : public HoverEvent {
 	public:
-		ClickEvent(const ska::MouseEventType& state, ska::Point<int>& pos);
+		ClickEvent(const MouseEventType& state, Point<int>& pos);
 		~ClickEvent() = default;
 
 		void pushWidgetToFront();

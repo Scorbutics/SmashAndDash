@@ -15,10 +15,10 @@ ska::CommandIf::~CommandIf()
 }
 
 const std::string& ska::CommandIf::getCmdName() {
-	return ControlStatement::getCommandIf();
+	return getCommandIf();
 }
 
-std::string ska::CommandIf::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+std::string ska::CommandIf::analyzeLine(ScriptComponent& script, std::stringstream&, std::vector<std::string>& args) {
 	int ifEnd = 1, num1, num2;
 	std::string varNumber, op, valeur, line;
 	std::stringstream ss;
@@ -27,8 +27,8 @@ std::string ska::CommandIf::analyzeLine(ScriptComponent& script, std::stringstre
 	op = args[1];
 	valeur = args[2];
 
-	num1 = ska::StringUtils::strToInt(varNumber);
-	num2 = ska::StringUtils::strToInt(valeur);
+	num1 = StringUtils::strToInt(varNumber);
+	num2 = StringUtils::strToInt(valeur);
 
 	if (!((op == "==" && num1 == num2) || (op == "<" && num1 < num2) || (op == ">" && num1 > num2) || (op == "<=" && num1 <= num2) || (op == ">=" && num1 >= num2)))
 	{
@@ -39,16 +39,16 @@ std::string ska::CommandIf::analyzeLine(ScriptComponent& script, std::stringstre
 			std::stringstream ss;
 			ss << line;
 			ss >> line;
-			ska::StringUtils::trim(line);
+			StringUtils::trim(line);
 
-			if (line == ControlStatement::getCommandIf())
+			if (line == getCommandIf())
 				ifEnd++;
-			else if (line == ControlStatement::getCommandEndIf() || line == ControlStatement::getCommandElse())
+			else if (line == getCommandEndIf() || line == getCommandElse())
 				ifEnd--;
 		}
 
 		if (script.parent->eof(script)) {
-			throw ska::ScriptSyntaxError("Un " + ControlStatement::getCommandEndIf() + " est manquant");
+			throw ScriptSyntaxError("Un " + getCommandEndIf() + " est manquant");
 		}
 
 	}

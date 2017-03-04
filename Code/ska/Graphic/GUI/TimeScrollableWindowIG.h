@@ -7,11 +7,11 @@ namespace ska {
 	class TimeScrollableWindowIG : public WindowIG<HL...> {
 	public:
 
-		TimeScrollableWindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+		TimeScrollableWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
 			WindowIG<HL...>(parent, box, styleName) {
 		}
 
-		TimeScrollableWindowIG(const ska::Rectangle& box, const std::string& styleName) :
+		TimeScrollableWindowIG(const Rectangle& box, const std::string& styleName) :
 			WindowIG<HL...>(box, styleName) {
 		}
 
@@ -53,7 +53,7 @@ namespace ska {
 			return true;
 		}
 
-		bool scrollTo(const ska::Point<int>& relativeTargetPos, unsigned int steps) {
+		bool scrollTo(const Point<int>& relativeTargetPos, unsigned int steps) {
 			/* If we're already scrolling, do not scroll. First, wait to finish the current scroll. */
 			if (m_moving) {
 				return false;
@@ -68,12 +68,12 @@ namespace ska {
 			m_slope.y = (m_destinationPos.y - pos.y) * speed;
 			m_slope.x = (m_destinationPos.x - pos.x) * speed;
 
-			if (ska::NumberUtils::isLowValue(m_slope.x, 1.0) && m_destinationPos.x != pos.x) {
-				m_slope.x = ska::NumberUtils::calculateSlopeSign(m_destinationPos.x, pos.x);
+			if (NumberUtils::isLowValue(m_slope.x, 1.0) && m_destinationPos.x != pos.x) {
+				m_slope.x = NumberUtils::calculateSlopeSign(m_destinationPos.x, pos.x);
 			}
 
-			if (ska::NumberUtils::isLowValue(m_slope.y, 1.0) && m_destinationPos.y != pos.y) {
-				m_slope.y = ska::NumberUtils::calculateSlopeSign(m_destinationPos.y, pos.y);
+			if (NumberUtils::isLowValue(m_slope.y, 1.0) && m_destinationPos.y != pos.y) {
+				m_slope.y = NumberUtils::calculateSlopeSign(m_destinationPos.y, pos.y);
 			}
 			return true;
 		}
@@ -93,7 +93,7 @@ namespace ska {
 
 	private:
 		Point<int> m_destinationPos;
-		ska::Point<double> m_slope;
+		Point<double> m_slope;
 		bool m_moving;
 
 	};

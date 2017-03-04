@@ -3,7 +3,7 @@
 #include "../../ska/ECS/Component.h"
 
 namespace ska {
-	class CollidableComponent : public ska::Component {
+	class CollidableComponent : public Component {
 	public:
 		CollidableComponent() = default;
 		~CollidableComponent() = default;

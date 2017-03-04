@@ -15,6 +15,8 @@ namespace ska {
 			m_positiony = posy; 
 		}
 
+		void operator=(const PositionnedGraphicDrawable&) = delete;
+
 		virtual void display() const override {
 			m_graphic.render(m_positionx, m_positiony);
 		}

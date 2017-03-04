@@ -20,10 +20,10 @@ const int ska::KeyEvent::getScanCode() const {
 	return m_scanCode;
 }
 
-bool ska::KeyEvent::affects(const Widget& w) const {
+bool ska::KeyEvent::affects(const Widget&) const {
 	return stopped() == NOT_STOPPED;
 }
 
 unsigned int ska::KeyEvent::getMask() const {
-	return ska::WidgetMaskHelper::template getMask<KeyEventListener>();
+	return WidgetMaskHelper::template getMask<KeyEventListener>();
 }

@@ -6,18 +6,18 @@ namespace ska {
 	class Window;
 	class TextureData {
 	public:
-		TextureData(Window& window, std::string, ska::Color c);
+		TextureData(Window& window, std::string, Color c);
 		TextureData();
 
 		void operator=(const TextureData& t2);
 
-		std::pair<std::string, ska::Color> getData() const;
+		std::pair<std::string, Color> getData() const;
 		const Window& getWindow() const;
 
 		virtual ~TextureData();
 
 	private:
-		std::pair<std::string, ska::Color> m_data;
+		std::pair<std::string, Color> m_data;
 		Window* m_window;
 	};
 }
@@ -26,12 +26,12 @@ namespace ska {
 namespace std {
 	template <>
 	struct hash<ska::TextureData> {
-		std::size_t operator()(const ska::TextureData& k) const {
+		size_t operator()(const ska::TextureData& k) const {
 			using std::size_t;
 			using std::hash;
 
 			auto d = k.getData();
-			std::size_t hashSeed = std::hash<string>()(d.first);
+			size_t hashSeed = hash<string>()(d.first);
 			ska::NumberUtils::hashCombine<ska::Color>(hashSeed, d.second);
 			return hashSeed;
 		}

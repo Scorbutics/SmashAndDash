@@ -13,54 +13,46 @@ ska::ScriptUtils::ScriptUtils()
 }
 
 /* Récupère la valeur une variable LOCALE (dans varMap) */
-std::string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame& saveGame, const ScriptComponent& script, std::string varNumber)
-{
-	int num = -1;
+std::string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const Savegame& saveGame, const ScriptComponent& script, std::string varNumber) {
+	//int num = -1;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}')
-	{
-		if (saveGame.getGameSwitch(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)))) {
+	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}') {
+		if (saveGame.getGameSwitch(StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)))) {
 			return "1";
 		} else {
 			return "0";
 		}
-	}
-	else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']')
-	{
-		std::string v = varNumber.substr(1, varNumber.size() - 2);
-		std::string key = getVariableKey(v);
-		if (!key.empty())
-		{
+	} else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']') {
+		auto v = varNumber.substr(1, varNumber.size() - 2);
+		auto key = getVariableKey(v);
+		if (!key.empty()) {
 			if (script.varMap.find(key) != script.varMap.end()) {
 				return script.varMap.at(key);
 			} else {
 				return v;
 			}
 
-		}
-		else {
+		} else {
 			unsigned int varNum;
 			try {
-				varNum = ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2));
+				varNum = StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2));
 			}
-			catch (ska::NumberFormatException nfe) {
+			catch (NumberFormatException nfe) {
 				return interpretVarName(saveGame, script, varNumber.substr(1, varNumber.size() - 2));
 			}
 
-			return ska::StringUtils::intToStr(saveGame.getGameVariable(varNum - 1));
+			return StringUtils::intToStr(saveGame.getGameVariable(varNum - 1));
 		}
 
 	} else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {
-		const std::string& key = varNumber + script.extendedName;
+		const auto& key = varNumber + script.extendedName;
 		if (script.varMap.find(key) != script.varMap.end()) {
 			return script.varMap.at(key);
-		}
-		else {
+		} else {
 			return varNumber;
 		}
-	}
-	else if (varNumber == "true") {
+	} else if (varNumber == "true") {
 		return "1";
 	} else if (varNumber == "false") {
 		return "0";
@@ -69,7 +61,7 @@ std::string ska::ScriptUtils::getValueFromVarOrSwitchNumber(const ska::Savegame&
 	return varNumber;
 }
 
-std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& line, char varStartSymbol, char varEndSymbol)
+std::string ska::ScriptUtils::replaceVariablesByNumerics(const Savegame& saveGame, const ScriptComponent& script, const std::string& line, char varStartSymbol, char varEndSymbol)
 {
 	std::string it = line;
 	size_t posLeft, posRight;
@@ -81,7 +73,7 @@ std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& sa
 			posRight += posLeft + 1;
 
 			std::string var = it.substr(posLeft, posRight - posLeft + 1);
-			std::string varValue = ScriptUtils::getValueFromVarOrSwitchNumber(saveGame, script, var);
+			std::string varValue = getValueFromVarOrSwitchNumber(saveGame, script, var);
 
 			it = it.substr(0, posLeft) + varValue + it.substr(posRight + 1, it.size());
 		}
@@ -96,7 +88,7 @@ std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& sa
 
 }
 
-std::string ska::ScriptUtils::replaceVariablesByNumerics(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& line)
+std::string ska::ScriptUtils::replaceVariablesByNumerics(const Savegame& saveGame, const ScriptComponent& script, const std::string& line)
 {
 	std::string it = replaceVariablesByNumerics(saveGame, script, line, ScriptSymbolsConstants::VARIABLE_LEFT, ScriptSymbolsConstants::VARIABLE_RIGHT);
 	it = replaceVariablesByNumerics(saveGame, script, it, ScriptSymbolsConstants::ARG, ScriptSymbolsConstants::ARG);
@@ -123,7 +115,7 @@ std::string ska::ScriptUtils::getFirstExpressionFromLine(ScriptAutoSystem& syste
 
 
 	const std::string& formattedLine = line.substr(indexFirstChar, line.size());
-	const std::string& commandCall = ScriptUtils::getCommandCall(formattedLine);
+	const std::string& commandCall = getCommandCall(formattedLine);
 	std::string valeur;
 
 	if (outputCommandSize != NULL) {
@@ -173,7 +165,7 @@ std::string ska::ScriptUtils::getVariableKey(const std::string& v)
 	return "";
 }
 
-void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, const std::string& scriptExtendedName, std::string varNumber, std::string value, std::unordered_map<std::string, std::string>& varMap)
+void ska::ScriptUtils::setValueFromVarOrSwitchNumber(Savegame& saveGame, const std::string& scriptExtendedName, std::string varNumber, std::string value, std::unordered_map<std::string, std::string>& varMap)
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
@@ -200,7 +192,7 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(ska::Savegame& saveGame, co
 }
 
 /* Récupère la valeur d'une variable GLOBALE en utilisant potentiellement des sous-variables locales en paramètres */
-std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, const ScriptComponent& script, const std::string& v)
+std::string ska::ScriptUtils::interpretVarName(const Savegame& saveGame, const ScriptComponent& script, const std::string& v)
 {
 	/*
 	_variable_ : variable "constante" (intégrée au jeu)
@@ -220,7 +212,7 @@ std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, co
 		for (i = 0; ss >> cmds[i] && i < 2; i++);
 
 		if (!ss.eof()) {
-			throw ska::ScriptSyntaxError("Error while interpreting global var (not enough arguments) : " + v);
+			throw ScriptSyntaxError("Error while interpreting global var (not enough arguments) : " + v);
 		}
 
 		return script.parent->map(cmds[0], getValueFromVarOrSwitchNumber(saveGame, script, cmds[1]));
@@ -229,7 +221,7 @@ std::string ska::ScriptUtils::interpretVarName(const ska::Savegame& saveGame, co
 	return getValueFromVarOrSwitchNumber(saveGame, script, v);
 }
 
-bool ska::ScriptUtils::isScriptActivated(const ska::Savegame& saveGame, const std::string& scriptName)
+bool ska::ScriptUtils::isScriptActivated(const Savegame& saveGame, const std::string& scriptName)
 {
 	std::string s;
 	//WGameCore& wScreen = WGameCore::getInstance();

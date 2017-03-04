@@ -33,7 +33,7 @@ namespace ska {
 			}
 
 			if (m_deletedEntities.empty()) {
-				newId = (EntityId)m_entities.size();
+				newId = static_cast<EntityId>(m_entities.size());
 				m_entities.insert(newId);
 			} else {
 				newId = m_deletedEntities[m_deletedEntities.size() - 1];
@@ -46,7 +46,7 @@ namespace ska {
 		
 		void removeEntity(EntityId entity) {
 			if (m_entities.find(entity) == m_entities.end() || m_entities.count(entity) <= 0) {
-				std::string startMessage = ("Unable to delete entity #" + ska::StringUtils::intToStr(entity));
+				auto startMessage = ("Unable to delete entity #" + StringUtils::intToStr(static_cast<int>(entity)));
 				throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
 			}
 
@@ -57,7 +57,7 @@ namespace ska {
 			/* Reset all components */
 			m_componentMask[entity] &= 0;
 
-			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
+			notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
 		}
 
 		void removeEntities(const std::unordered_set<EntityId>& exceptions) {
@@ -70,12 +70,12 @@ namespace ska {
 		}
 
 		void refreshEntity(EntityId entity) {
-			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
+			notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 
 		void refreshEntities() {
 			for (const auto& entity : m_entities) {
-				notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
+				notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
 			}
 		}
 
@@ -156,12 +156,12 @@ namespace ska {
 			unsigned int removedComponentMask = components.remove(entity);
 			m_componentMask[entity][removedComponentMask] = false;
 
-			notifyObservers(EntityEventType::COMPONENT_REMOVE, m_componentMask[entity], entity);
+			notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
 		}
 
 		void commonAddComponent(EntityId entity, const unsigned int componentMask) {
 			m_componentMask[entity][componentMask] = true;
-			notifyObservers(EntityEventType::COMPONENT_ADD, m_componentMask[entity], entity);
+			notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
 		}
 		
 	};

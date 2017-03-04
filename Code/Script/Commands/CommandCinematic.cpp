@@ -6,13 +6,11 @@
 #include "../../Utils/IDs.h"
 #include "../../ska/Graphic/SpriteAnimation.h"
 
-CommandCinematic::CommandCinematic(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
+CommandCinematic::CommandCinematic(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
 }
 
 
-CommandCinematic::~CommandCinematic()
-{
+CommandCinematic::~CommandCinematic() {
 }
 
 int CommandCinematic::argumentsNumber() {
@@ -20,12 +18,11 @@ int CommandCinematic::argumentsNumber() {
 }
 
 /* TODO : faire une scène (héritant de la classe Scene) cinématique */
-std::string CommandCinematic::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
-{
+std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::string>& args) {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int frameNumber, delay, id_anim, duration;
-	bool continuer = true;
-	ska::Rectangle pos, menuPos = { 0 };
+	//bool continuer = true;
+	ska::Rectangle pos;
 	std::string message;
 	ska::SpriteAnimation* cinematic;
 	//ska::KeyInput* in = wScreen.getInputListener().getKeyInput();

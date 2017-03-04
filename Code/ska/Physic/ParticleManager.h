@@ -19,7 +19,7 @@ namespace ska {
 		virtual ~ParticleManager();
 
 		void playCrumbling(int idSprite, float acceleration, float density, unsigned int duration);
-		void playEffect(int idSprite, float acceleration, float density, unsigned int duration, ska::Rectangle rect);
+		void playEffect(int idSprite, float acceleration, float density, unsigned int duration, Rectangle rect);
 		void removeAll();
 		void stop();
 		void hide(bool h);

@@ -16,6 +16,8 @@ struct SettingsChangeEvent {
 		settings(s) {
 	}
 
+	void operator=(const SettingsChangeEvent&) = delete;
+
 	const Settings& settings;
 	const SettingsChangeEventType eventType;
 

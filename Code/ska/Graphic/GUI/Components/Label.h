@@ -8,20 +8,20 @@
 namespace ska {
 	class Label : public Widget {
 	public:
-		Label(Widget& parent, const std::string& text, int fontSize, ska::Point<int> relativePos);
+		Label(Widget& parent, const std::string& text, int fontSize, Point<int> relativePos);
 		virtual ~Label() = default;
 
 		void setFontColor(int r, int g, int b, int a);
 		void modifyText(const std::string& text);
-		void setClip(ska::Rectangle* r);
+		void setClip(Rectangle* r);
 		void display() const override;
 		void clear();
 			
 	private:
 		std::string m_text;
 		unsigned int m_fontSize;
-		ska::Texture m_stext;
-		ska::Color m_color;
-		ska::Rectangle* m_clip;
+		Texture m_stext;
+		Color m_color;
+		Rectangle* m_clip;
 	};
 }

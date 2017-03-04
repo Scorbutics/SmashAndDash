@@ -5,14 +5,14 @@
 #include "AnimatedTexture.h"
 
 namespace ska {
-	class GraphicComponent : public ska::Component {
+	class GraphicComponent : public Component {
 	public:
 		GraphicComponent() {
 			desiredPriority = std::numeric_limits<int>().min();
 		}
 
 		int desiredPriority;
-		std::vector<ska::AnimatedTexture> sprite;
+		std::vector<AnimatedTexture> sprite;
 		void operator=(const GraphicComponent& gc) {
 			sprite = gc.sprite;
 			desiredPriority = gc.desiredPriority;

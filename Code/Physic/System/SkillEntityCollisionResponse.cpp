@@ -8,7 +8,7 @@
 #include "../../ska/ECS/EntityManager.h"
 
 SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, PokemonGameEventDispatcher& ged, ska::EntityManager& em) :
-ska::EntityCollisionResponse(std::bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1), ged, em), 
+EntityCollisionResponse(bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1), ged, em), 
 m_collisionSystem(colSys), 
 m_ged(ged) {
 	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);

@@ -1,12 +1,12 @@
 #include "GUIScrollButtonWindowIG.h"
 
-ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(ska::Widget& parent, const ska::Rectangle& box, const std::string& styleName) :
+ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
 DynamicWindowIG<>(parent, box, styleName),
 m_realPos(0, 0) {
 
 }
 
-bool ska::GUIScrollButtonWindowIG::scrollTo(const ska::Point<int>& targetPos, unsigned int speed) {
+bool ska::GUIScrollButtonWindowIG::scrollTo(const Point<int>& targetPos, unsigned int speed) {
 	if (!isMoving()) {
 		m_realPos = getRelativePosition();
 	}

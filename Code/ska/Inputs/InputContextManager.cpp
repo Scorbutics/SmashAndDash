@@ -5,7 +5,7 @@
 /* Default InputContextManager settings.
    Contexts should be added depending of the current Scene in order to
    enable or disable inputs in specific Scene */
-ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ril(ril) {	
+ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril) {	
 	for (auto& c : m_contexts) {
 		c.second->buildCodeMap();
 	}
@@ -14,15 +14,15 @@ ska::InputContextManager::InputContextManager(ska::RawInputListener& ril) : m_ri
 
 void ska::InputContextManager::addContext(EnumContextManager ecm, InputContextPtr& icp) {
 	icp->buildCodeMap();
-	m_contexts[ecm] = std::move(icp);
+	m_contexts[ecm] = move(icp);
 }
 
 void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disable) {
 	if (disable && m_contexts.find(ecm) != m_contexts.end()) {
-		m_disabledContexts[ecm] = std::move(m_contexts[ecm]);
+		m_disabledContexts[ecm] = move(m_contexts[ecm]);
 		m_contexts.erase(ecm);
 	} else if (!disable && m_disabledContexts.find(ecm) != m_disabledContexts.end()) {
-		m_contexts[ecm] = std::move(m_disabledContexts[ecm]);
+		m_contexts[ecm] = move(m_disabledContexts[ecm]);
 		m_disabledContexts.erase(ecm);
 	}
 }
@@ -31,7 +31,7 @@ void ska::InputContextManager::refresh() {
 	m_ril.update();
 	m_actions.reset();
 	InputRange empty;
-	std::fill(m_ranges.begin(), m_ranges.end(), empty);
+	fill(m_ranges.begin(), m_ranges.end(), empty);
 	m_toggles.reset();
 	for (auto& c : m_contexts) {
 		c.second->queryActions(m_ril, m_actions);
@@ -41,11 +41,11 @@ void ska::InputContextManager::refresh() {
 	}
 }
 
-ska::InputContextManager ska::InputContextManager::instantiateEmpty(ska::InputContextManager& icm) {
-	return ska::InputContextManager(icm.m_ril);
+ska::InputContextManager ska::InputContextManager::instantiateEmpty(InputContextManager& icm) {
+	return InputContextManager(icm.m_ril);
 }
 
-ska::InputContextManager::InputContextManager(const ska::InputContextManager& icm) : m_ril(icm.m_ril) {
+ska::InputContextManager::InputContextManager(const InputContextManager& icm) : m_ril(icm.m_ril) {
 	*this = icm;
 }
 

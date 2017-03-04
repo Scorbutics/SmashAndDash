@@ -67,10 +67,10 @@ namespace ska {
 			};*/
 
 
-			template <class F, class T, std::size_t N>
+			template <class F, class T, size_t N>
 			struct visit_index_from_tuple_impl {
 
-				static void visit(F& f, T& t, std::size_t index) {
+				static void visit(F& f, T& t, size_t index) {
 					if (N - 1 == index) {
 						auto& found = std::get<N - 1>(t);
 						f(found);
@@ -82,7 +82,7 @@ namespace ska {
 
 			template <class F, class T>
 			struct visit_index_from_tuple_impl<F, T, 0> {
-				static void visit(F& f, T& t, std::size_t index) {
+				static void visit(F&, T&, size_t) {
 				}
 			};
 		}
@@ -93,7 +93,7 @@ namespace ska {
 		}
 */
 		template<class F, class ...Args>
-		void visit_element_at_index(std::tuple<Args...>& t, std::size_t index, F& f) {
+		void visit_element_at_index(std::tuple<Args...>& t, size_t index, F& f) {
 			detailindex::visit_index_from_tuple_impl<F, std::tuple<Args...>, sizeof ...(Args)>::visit(f, t, index);
 		}
 	}

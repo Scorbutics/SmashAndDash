@@ -2,10 +2,10 @@
 #include "ControlStatement.h"
 namespace ska {
 	class CommandElse :
-		public ControlStatement
-	{
+		public ControlStatement {
 	public:
-		CommandElse(EntityManager& e);
+		explicit CommandElse(EntityManager& e);
+		void operator=(const CommandElse&) = delete;
 		virtual ~CommandElse();
 
 		virtual std::string analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) override;

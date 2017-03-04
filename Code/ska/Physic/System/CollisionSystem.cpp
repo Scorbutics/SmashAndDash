@@ -3,33 +3,33 @@
 #include "../CollisionComponent.h"
 #include "../WorldCollisionComponent.h"
 
-ska::CollisionSystem::CollisionSystem(ska::World& w, ska::EntityManager& entityManager, ska::GameEventDispatcher& ged) : 
+ska::CollisionSystem::CollisionSystem(World& w, EntityManager& entityManager, GameEventDispatcher& ged) : 
 	System(entityManager), 
 	m_world(w),
 	m_ged(ged) {
 }
 
 void ska::CollisionSystem::refresh() {
-	for (ska::EntityId entityId : m_processed) {
+	for (EntityId entityId : m_processed) {
 		PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 		HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 		
-		std::vector<ska::Point<int>> lastBlockColPosX;
-		std::vector<ska::Point<int>> lastBlockColPosY;
-		if (m_entityManager.hasComponent<ska::WorldCollisionComponent>(entityId)) {
+		std::vector<Point<int>> lastBlockColPosX;
+		std::vector<Point<int>> lastBlockColPosY;
+		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			const WorldCollisionComponent& wcc = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 			lastBlockColPosX = wcc.blockColPosX;
 			lastBlockColPosY = wcc.blockColPosY;
 			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
 		}
 
-		const ska::Rectangle entityHitboxX = createHitBox(entityId, true);
-		const ska::Rectangle entityHitboxY = createHitBox(entityId, false);
+		const Rectangle entityHitboxX = createHitBox(entityId, true);
+		const Rectangle entityHitboxY = createHitBox(entityId, false);
 		
 		bool entityCollided = false;
 		CollisionComponent col;
-		for (ska::EntityId itEntity : m_processed) {
+		for (EntityId itEntity : m_processed) {
 			if (itEntity != entityId) {
 				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, true))) {
 					col.origin = entityId;
@@ -72,26 +72,26 @@ void ska::CollisionSystem::refresh() {
 		}
 
 		if (collided) {
-			m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(CollisionEvent(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId)));
+			m_ged.Observable<CollisionEvent>::notifyObservers(CollisionEvent(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId)));
 		}
 
 		if (entityCollided) {
 			entityCollided = false;
 			/* When collision between entities is detected, we can do things as decreasing health,
 			pushing entities, or any statistic interaction */
-			m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(CollisionEvent(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId)));
+			m_ged.Observable<CollisionEvent>::notifyObservers(CollisionEvent(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId)));
 		}
 	}
 }
 
-const ska::Rectangle ska::CollisionSystem::createHitBox(ska::EntityId entityId, bool xaxis) {
+const ska::Rectangle ska::CollisionSystem::createHitBox(EntityId entityId, bool xaxis) const{
 	PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 	HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 	MovementComponent& movementComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
-	ska::Rectangle hitBox;
-	hitBox.x = positionComponent.x + (xaxis ? (movementComponent.vx + movementComponent.ax) : 0) + hitboxComponent.xOffset + 0.5;
-	hitBox.y = positionComponent.y + (!xaxis ? (movementComponent.vy + movementComponent.ay) : 0) + hitboxComponent.yOffset + 0.5;
+	Rectangle hitBox;
+	hitBox.x = static_cast<int>(positionComponent.x + (xaxis ? (movementComponent.vx + movementComponent.ax) : 0) + hitboxComponent.xOffset + 0.5);
+	hitBox.y = static_cast<int>(positionComponent.y + (!xaxis ? (movementComponent.vy + movementComponent.ay) : 0) + hitboxComponent.yOffset + 0.5);
 	hitBox.w = hitboxComponent.width;
 	hitBox.h = hitboxComponent.height;
 	return hitBox;

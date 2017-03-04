@@ -17,7 +17,7 @@ namespace ska {
 			m_mask = m_componentTypeCounter++;
 		}
 
-		unsigned int addEmpty(EntityId entityId) override {
+		unsigned int addEmpty(EntityId) override {
 			/* We can add operations here depending of the ComponentHandler implementation */
 			return m_mask;
 		}
@@ -27,7 +27,7 @@ namespace ska {
 			return m_mask;
 		}
 
-		unsigned int remove(EntityId entityId) override {
+		unsigned int remove(EntityId) override {
 			/* We can add operations here depending of the ComponentHandler implementation */
 			return m_mask;
 		}

@@ -5,14 +5,14 @@ namespace ska {
 	class CommandElseEnd : public ControlStatement {
 
 	public:
-		CommandElseEnd(EntityManager& e) : ControlStatement(e) { }
-		virtual const std::string& getCmdName() {
-			return ControlStatement::getCommandEndIf();
+		explicit CommandElseEnd(EntityManager& e) : ControlStatement(e) { }
+		void operator=(const CommandElseEnd&) = delete;
+		virtual const std::string& getCmdName() override{
+			return getCommandEndIf();
 		}
 
 	protected:
-		virtual std::string analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) override
-		{
+		virtual std::string analyzeLine(ScriptComponent&, std::stringstream&, std::vector<std::string>&) override {
 			return "";
 		}
 

@@ -12,12 +12,12 @@ Settings::Settings(PokemonGameEventDispatcher& ged, const std::string& file) :
 
 void Settings::setSoundVolume(float sndVol) {
     m_soundVol = sndVol*100;
-	sendEvent(SettingsChangeEventType::MUSIC_VOLUME);
+	sendEvent(MUSIC_VOLUME);
 }
 
 void Settings::setFog(bool b) {
     m_fogActive = b;
-	sendEvent(SettingsChangeEventType::FOG);
+	sendEvent(FOG);
 }
 
 void Settings::load() {
@@ -41,12 +41,12 @@ void Settings::save() {
 
 void Settings::setWeather(bool b) {
     m_weatherActive = b;
-	sendEvent(SettingsChangeEventType::WEATHER);
+	sendEvent(WEATHER);
 }
 
 void Settings::setGuiTransparency(bool b) {
     m_guiTransparency = b;
-	sendEvent(SettingsChangeEventType::GUI_TRANSPARENCY);
+	sendEvent(GUI_TRANSPARENCY);
 }
 
 bool Settings::getGuiTransparency() const {

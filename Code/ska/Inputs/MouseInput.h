@@ -9,16 +9,16 @@ namespace ska {
 	public:
 		MouseInput();
 
-		void setMouseLastPos(ska::Point<int> mouselastpos);
+		void setMouseLastPos(Point<int> mouselastpos);
 		void setMousePos(SDL_Event event);
 
 		void setMouseState(int touche, int x);
 		bool mouseClick(int touche);
 
-		ska::Point<int> getMouseClickPos();
-		ska::Point<int> getMouseLastPos();
-		ska::Point<int> getMousePos();
-		ska::Point<int> getMouseTranslation();
+		Point<int> getMouseClickPos();
+		Point<int> getMouseLastPos();
+		Point<int> getMousePos();
+		Point<int> getMouseTranslation();
 		int trigger(int touche);
 		int toggle(int touche);
 		
@@ -33,7 +33,7 @@ namespace ska {
 		
 		int m_mouseState[8];
 		int m_mouseToggle[8];
-		ska::Point<int> m_clickPos, m_mouseLastPos;
+		Point<int> m_clickPos, m_mouseLastPos;
 	};
 }
 #endif

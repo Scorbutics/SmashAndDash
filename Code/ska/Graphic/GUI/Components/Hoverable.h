@@ -15,7 +15,7 @@ namespace ska {
 	template <class W>
 	class HoverStateController {
 	public:
-		HoverStateController() : m_state(ska::ButtonState::NONE) {
+		HoverStateController() : m_state(ButtonState::NONE) {
 			W& asW = static_cast<W&>(*this);
 			asW.template addHeadHandler<HoverEventListener>
 			(std::bind(&HoverStateController<W>::hoverEvent, static_cast<W*>(this), std::placeholders::_1, std::placeholders::_2));
@@ -23,36 +23,34 @@ namespace ska {
 
 		virtual ~HoverStateController() = default;
 
-		void hoverEvent(Widget* tthis, HoverEvent& e) {
-			W& asW = (W&)*this;
-			bool handled = true;
-			bool target = false;
+		void hoverEvent(Widget*, HoverEvent& e) {
+			W& asW = static_cast<W&>(*this);
+			auto handled = true;
+			auto target = false;
 			switch (e.getState()) {
-			case ska::MouseEventType::MOUSE_ENTER:
+			case MOUSE_ENTER:
 				if (m_state != ButtonState::HOVER && m_state != ButtonState::ENTER && m_state != ButtonState::PRESSED) {
 					m_state = ButtonState::ENTER;
 					//std::clog << "Enter " << asW.getName() << std::endl;
 					switchTextureAndMemorize();
 					target = true;
-				}
-				else {
+				} else {
 					handled = false;
 				}
 				break;
 
-			case ska::MouseEventType::MOUSE_OUT:
+			case MOUSE_OUT:
 				if (m_state == ButtonState::HOVER || m_state == ButtonState::ENTER || m_state == ButtonState::PRESSED) {
 					m_state = ButtonState::NONE;
 					//std::clog << "Out " << asW.getName() << std::endl;
 					switchTextureAndMemorize();
 					target = true;
-				}
-				else {
+				} else {
 					handled = false;
 				}
 				break;
 
-			case ska::MouseEventType::MOUSE_OVER:
+			case MOUSE_OVER:
 				m_state = ButtonState::HOVER;
 				target = true;
 				break;
@@ -64,7 +62,7 @@ namespace ska {
 
 			if (!handled) {
 				/* Refuses the current event (not handled) */
-				e.stopPropagation(StopType::STOP_CALLBACK);
+				e.stopPropagation(STOP_CALLBACK);
 			}
 
 			if (target && e.getTarget() == nullptr) {
@@ -76,7 +74,7 @@ namespace ska {
 		virtual void resetTexture() {}
 
 	protected:
-		ska::ButtonState::Enum m_state;
+		ButtonState::Enum m_state;
 	};
 
 
@@ -86,12 +84,12 @@ namespace ska {
 		public HoverStateController<Hoverable<HL...>> {
 		friend class HoverStateController<Hoverable<HL...>>;
 	public:
-		Hoverable(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip) :
+		Hoverable(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const Rectangle* clip) :
 			HandledWidget<HoverEventListener, HL...>(parent) {
 			this->move(this->getRelativePosition() + relativePos);
 		}
 
-		Hoverable(Widget& parent) :
+		explicit Hoverable(Widget& parent) :
 			HandledWidget<HoverEventListener, HL...>(parent) {
 			}
 

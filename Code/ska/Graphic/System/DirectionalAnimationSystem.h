@@ -10,10 +10,10 @@
 #include "../PositionnedGraphicDrawable.h"
 
 namespace ska {
-	class DirectionalAnimationSystem : public ska::System<std::unordered_set<ska::EntityId>, GraphicComponent, MovementComponent, DirectionalAnimationComponent>
+	class DirectionalAnimationSystem : public System<std::unordered_set<EntityId>, GraphicComponent, MovementComponent, DirectionalAnimationComponent>
 	{
 	public:
-		DirectionalAnimationSystem(ska::EntityManager& entityManager);
+		DirectionalAnimationSystem(EntityManager& entityManager);
 		virtual ~DirectionalAnimationSystem();
 		virtual void refresh() override;
 

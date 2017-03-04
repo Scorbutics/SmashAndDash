@@ -3,13 +3,14 @@
 
 namespace ska {
 	class CommandLog :
-		public ska::AbstractFunctionCommand
+		public AbstractFunctionCommand
 	{
 	public:
-		CommandLog(EntityManager& e);
+		explicit CommandLog(EntityManager& e);
+		void operator=(const CommandLog&) = delete;
 		virtual ~CommandLog();
 
 		virtual std::string execute(ScriptComponent& script, std::vector<std::string>& args) override;
-		virtual int argumentsNumber();
+		virtual int argumentsNumber() override;
 	};
 }

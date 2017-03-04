@@ -24,7 +24,7 @@ class AbstractSceneMap :
 {
 public:
 	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap);
+	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, Scene& oldScene, const bool sameMap);
 	bool onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;

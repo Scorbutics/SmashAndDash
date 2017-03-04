@@ -17,16 +17,18 @@ namespace ska {
 	class InputContextManager;
 
 	class GUI : 
-		public ska::DrawableFixedPriority, 
+		public DrawableFixedPriority, 
 		public MouseObservable, 
 		public KeyObservable {
 
 	public:
-		GUI(const ska::Window& w, ska::InputContextManager& playerICM);
+		GUI(const Window& w, InputContextManager& playerICM);
+
+		GUI& operator=(const GUI&) = delete;
 
 		void refresh();
 		bool isVisible() const override;
-		void initButtons(const ska::Window& w);
+		void initButtons(const Window& w);
 		void hide(bool x);
 
 		void display() const override;
@@ -41,9 +43,9 @@ namespace ska {
 		std::unordered_set<DynamicWindowIG<>*> m_bottomButtons;
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
-		const ska::Window& m_window;
+		const Window& m_window;
 
-		ska::InputContextManager& m_playerICM;
+		InputContextManager& m_playerICM;
 
 		Widget* m_hovered;
 		Widget* m_clicked;
@@ -56,7 +58,7 @@ namespace ska {
 			auto result = m_wMaster.addWidget(w);
 			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
 			m_windowAnnuary[name] = t;
-			t->addHeadHandler<ska::ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
+			t->addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
 			return result;

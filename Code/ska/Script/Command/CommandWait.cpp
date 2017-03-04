@@ -16,10 +16,9 @@ int ska::CommandWait::argumentsNumber() {
 	return 1;
 }
 
-std::string ska::CommandWait::execute(ScriptComponent& script, std::vector<std::string>& args)
-{
-	unsigned int duree = 0, t0 = 0;
-	duree = ska::StringUtils::strToInt(args[0]);
+std::string ska::CommandWait::execute(ScriptComponent& script, std::vector<std::string>& args) {
+	unsigned int duree = 0;
+	duree = StringUtils::strToInt(args[0]);
 
 	/* Delay the script : assign an uint value > 1 */
 	script.active = duree;

@@ -11,7 +11,7 @@ namespace ska {
 class DebugAbstractSceneMap : public AbstractSceneMap {
 public:
 	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::Scene& oldScene, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, Scene& oldScene, const bool sameMap);
 	virtual ~DebugAbstractSceneMap() = default;
 
 private:

@@ -16,7 +16,7 @@ m_holder(oldScene.m_holder) {
 
 }
 
-void ska::Scene::graphicUpdate(ska::DrawableContainer& drawables) {
+void ska::Scene::graphicUpdate(DrawableContainer& drawables) {
 	/* Graphics */
 	for (auto& s : m_graphics) {
 		s->setDrawables(drawables);

@@ -2,7 +2,7 @@
 #include "../ECS/Component.h"
 
 namespace ska {
-	class ForceComponent : public ska::Component{
+	class ForceComponent : public Component{
 	public:
 		ForceComponent() {
 			x = 0;

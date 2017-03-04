@@ -3,13 +3,13 @@
 #include "KeyEvent.h"
 
 ska::KeyEventListener::KeyEventListener(Widget& tthis) : 
-	ska::EventListener<KeyEvent>(tthis) {
+	EventListener<KeyEvent>(tthis) {
 
 }
 
 bool ska::KeyEventListener::notify(Widget& tthis, KeyEvent& e) {
 	EventListener<KeyEvent>::notify(tthis, e);
 	/* Evenement géré par le widget. On le stoppe totalement */
-	e.stopPropagation(StopType::STOP_WIDGET);
+	e.stopPropagation(STOP_WIDGET);
 	return true;
 }

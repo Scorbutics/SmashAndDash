@@ -15,7 +15,7 @@ namespace ska {
 	public:
 		
 		Savegame& getSavegame();
-		const ska::ScriptComponent registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
+		ScriptComponent registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);
@@ -24,24 +24,26 @@ namespace ska {
 		void clearNamedScriptedEntities();
 		void removeComponent(const std::string& componentName, const std::string& id) const;
 		void restoreComponent(const std::string& componentName, const std::string& id) const;
-		ska::EntityId getEntityFromName(const std::string& nameEntity);
+		EntityId getEntityFromName(const std::string& nameEntity);
 
 		/* ScriptComponent methods */
 		float getPriority(ScriptComponent& script, const unsigned int currentTimeMillis);
 		bool canBePlayed(ScriptComponent& script);
 		bool transferActiveToDelay(ScriptComponent& script);
 		bool play(ScriptComponent& script, Savegame& savegame);
-		void killAndSave(ScriptComponent& script, const Savegame& savegame);
+		void killAndSave(ScriptComponent& script, const Savegame& savegame) const;
 		ScriptState manageCurrentState(ScriptComponent& script);
 		std::string nextLine(ScriptComponent& script);
 		std::string interpret(ScriptComponent& script, Savegame& savegame, const std::string& cmd);
 		void stop(ScriptComponent& script);
 		bool eof(ScriptComponent& script);
 
+		void operator=(const ScriptAutoSystem&) = delete;
+
 		virtual ~ScriptAutoSystem();
 
 	private:
-		ska::Savegame& m_saveGame;
+		Savegame& m_saveGame;
 		ScriptComponent* getHighestPriorityScript();
 		World& m_world;
 
@@ -53,12 +55,13 @@ namespace ska {
 	protected:
 		virtual void refresh() override;
 		struct ScriptCommandHelper {
-			ScriptCommandHelper(ska::World& w, EntityManager& parent) : m_entityManager(parent) {}
-			virtual void setupCommands(ska::World& w, std::unordered_map<std::string, CommandPtr>& commands) const = 0;
+			ScriptCommandHelper(World&, EntityManager& parent) : m_entityManager(parent) {}
+			void operator=(const ScriptCommandHelper&) = delete;
+			virtual void setupCommands(World& w, std::unordered_map<std::string, CommandPtr>& commands) const = 0;
 			EntityManager& m_entityManager;
 		};
 
-		ScriptAutoSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame);
+		ScriptAutoSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame);
 	};
 
 }

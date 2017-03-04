@@ -3,8 +3,8 @@
 
 
 
-ska::SpriteAnimation::SpriteAnimation(int type, int id, ska::Point<int> pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
-m_sprite(ska::SpritePath::getInstance().getPath(type, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha)
+ska::SpriteAnimation::SpriteAnimation(int type, int id, Point<int> pos, unsigned int framesNumber, unsigned int delay, int alpha) : m_anim(delay, framesNumber, false),
+m_sprite(SpritePath::getInstance().getPath(type, id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha)
 {
 	m_type = type;
 	m_id = id;
@@ -35,7 +35,7 @@ ska::SpriteAnimation::SpriteAnimation(int type, int id, unsigned int framesNumbe
 	m_pos.x = 0;
 	m_pos.y = 0;
 
-	m_sprite.load(ska::SpritePath::getInstance().getPath(m_type, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha);
+	m_sprite.load(SpritePath::getInstance().getPath(m_type, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha);
 	m_offset.x = 0;
 	m_offset.y = 0;
 	m_offset.w = static_cast<Uint16>(m_sprite.getWidth()/m_anim.getNumberFrames());
@@ -51,7 +51,7 @@ void ska::SpriteAnimation::refresh() {
 }
 
 
-void ska::SpriteAnimation::setPos(ska::Point<int> pos)
+void ska::SpriteAnimation::setPos(Point<int> pos)
 {
     m_pos = pos;
 }
@@ -64,7 +64,7 @@ ska::Animation* ska::SpriteAnimation::getAnimation()
 void ska::SpriteAnimation::setID(int id)
 {
     m_id = id;
-	m_sprite.load(ska::SpritePath::getInstance().getPath(m_type, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_sprite.load(SpritePath::getInstance().getPath(m_type, m_id), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 	m_offset.x = 0;
 	m_offset.y = 0;
 	m_offset.w = static_cast<Uint16>(m_sprite.getWidth()/m_anim.getNumberFrames());
@@ -98,7 +98,7 @@ unsigned int ska::SpriteAnimation::getWidth()
 void ska::SpriteAnimation::display() const
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();*/
-	const ska::Point<int>& pos = m_pos;
+	const Point<int>& pos = m_pos;
     /*pos.x += wScreen.getORel().x;
     pos.y += wScreen.getORel().y;*/
 

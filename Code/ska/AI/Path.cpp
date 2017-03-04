@@ -132,7 +132,7 @@ void ska::Path::setPathString(std::string path)
 //Code inspiré de celui page http://forums.mediabox.fr/wiki/tutoriaux/flashplatform/jeux/pathfinder_algorithme_astar_pratique
 //Merci à eux
 
-void ska::Path::findPath(ska::Rectangle from, ska::Rectangle to, const unsigned int blockSize) //Pathfinding A*
+void ska::Path::findPath(Rectangle from, Rectangle to, const unsigned int blockSize) //Pathfinding A*
 {
 
     Node nodeStart, nodeEnd, *curNode = NULL;

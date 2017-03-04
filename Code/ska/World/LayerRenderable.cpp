@@ -8,13 +8,13 @@
 #include "World.h"
 #include "LayerRenderable.h"
 
-ska::LayerRenderable::LayerRenderable(ska::World& w) : m_world(w) {
+ska::LayerRenderable::LayerRenderable(World& w) : m_world(w) {
 	m_block.reserve(20);
 }
 
 void ska::LayerRenderable::update() {
-	ska::Rectangle absoluteCurrentPos;
-	const ska::Rectangle* cameraPos = m_world.getView();
+	Rectangle absoluteCurrentPos;
+	const Rectangle* cameraPos = m_world.getView();
 
 	if (cameraPos == NULL) {
 		return;
@@ -51,8 +51,8 @@ void ska::LayerRenderable::update() {
 
 void ska::LayerRenderable::display() const {
 
-	ska::Rectangle absoluteCurrentPos;
-	const ska::Rectangle* cameraPos = m_world.getView();
+	Rectangle absoluteCurrentPos;
+	const Rectangle* cameraPos = m_world.getView();
 
 	if (cameraPos == NULL) {
 		return;
@@ -101,12 +101,12 @@ ska::BlockRenderable* ska::LayerRenderable::getBlock(const unsigned int i, const
 		return m_block[i][j];
 	}
 	else {
-		throw ska::IndexOutOfBoundsException("block at coordinates (" + ska::StringUtils::intToStr(i) + "; " + ska::StringUtils::intToStr(j) + ") cannot be accessed");
+		throw IndexOutOfBoundsException("block at coordinates (" + StringUtils::intToStr(i) + "; " + StringUtils::intToStr(j) + ") cannot be accessed");
 	}
 
 }
 
 void ska::LayerRenderable::reset(std::vector<std::vector<BlockRenderable*>>& block) {
-	m_block = std::move(block);
+	m_block = move(block);
 }
 

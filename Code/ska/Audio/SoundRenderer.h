@@ -7,13 +7,13 @@
 namespace ska {
 	class SoundRenderer : 
 		public Observer<SoundEvent>,
-		public Observer<ska::WorldEvent> {
+		public Observer<WorldEvent> {
 	public:
 		SoundRenderer(unsigned int channels);
 		void play(Mix_Music* m_instance);
-		void setMusicVolume(float volPcts);
+		void setMusicVolume(float volPcts) const;
 		bool handleSoundEvent(SoundEvent& se);
-		bool handleWorldEvent(ska::WorldEvent& we);
+		bool handleWorldEvent(WorldEvent& we);
 		virtual ~SoundRenderer() = default;
 
 	private:

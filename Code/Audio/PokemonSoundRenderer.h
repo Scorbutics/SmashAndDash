@@ -10,7 +10,8 @@ class PokemonSoundRenderer :
 	public ska::Observer<SettingsChangeEvent> {
 
 public:
-	PokemonSoundRenderer(PokemonGameEventDispatcher& ged);
+	explicit PokemonSoundRenderer(PokemonGameEventDispatcher& ged);
+	void operator=(const PokemonSoundRenderer&) = delete;
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	virtual ~PokemonSoundRenderer();
 

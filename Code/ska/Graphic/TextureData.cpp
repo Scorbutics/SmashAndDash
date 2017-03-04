@@ -1,15 +1,15 @@
 #include "TextureData.h"
 #include "../Utils/StringUtils.h"
 
-ska::TextureData::TextureData(Window& window, std::string texturePath, ska::Color col) : m_window(&window){
-	m_data = std::make_pair(texturePath, col);
+ska::TextureData::TextureData(Window& window, std::string texturePath, Color col) : m_window(&window){
+	m_data = make_pair(texturePath, col);
 }
 
 ska::TextureData::TextureData() {
-	m_data = std::make_pair("-1", ska::Color());
+	m_data = std::make_pair("-1", Color());
 }
 
-void ska::TextureData::operator=(const ska::TextureData& t2) {
+void ska::TextureData::operator=(const TextureData& t2) {
 	m_data = t2.m_data;
 	m_window = t2.m_window;
 }

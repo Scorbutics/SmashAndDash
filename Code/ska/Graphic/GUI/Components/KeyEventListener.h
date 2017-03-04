@@ -8,7 +8,7 @@ namespace ska {
 	class Widget;
 
 	/* Handler triggered when a key is pressed */
-	using KeyEventHandler = std::function<void(ska::Widget*, ska::KeyEvent&)>;
+	using KeyEventHandler = std::function<void(Widget*, KeyEvent&)>;
 
 	class KeyEventListener : public EventListener<KeyEvent> {
 	public:

@@ -7,7 +7,7 @@ ska::TaskQueue::TaskQueue() : m_current(nullptr), m_previous(nullptr) {
 }
 
 void ska::TaskQueue::queueTask(RunnablePtr& t) {
-	m_tasks.push(std::move(t));
+	m_tasks.push(move(t));
 }
 
 bool ska::TaskQueue::hasRunningTask() const {
@@ -16,7 +16,7 @@ bool ska::TaskQueue::hasRunningTask() const {
 
 void ska::TaskQueue::refresh() {
 	if (m_current == nullptr) {
-		m_current = m_tasks.empty() ? nullptr : std::move(m_tasks.front());
+		m_current = m_tasks.empty() ? nullptr : move(m_tasks.front());
 		if (m_current == nullptr) {
 			return;
 		}
@@ -24,7 +24,7 @@ void ska::TaskQueue::refresh() {
 	}
 
 	if (!(*m_current)()) {
-		m_previous = std::move(m_current);
+		m_previous = move(m_current);
 		m_current = nullptr;
 	}
 }

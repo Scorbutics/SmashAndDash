@@ -23,7 +23,7 @@ namespace ska {
 	template <class E>
 	class EventListener : public IEventListener<E> {
 	public:
-		EventListener(Widget& tthis) {
+		explicit EventListener(Widget&) {
 		}
 
 		void addHandler(const EventHandler<E>& h) {
@@ -39,8 +39,8 @@ namespace ska {
 			for (auto& eh : m_callbacks) {
 				/* Si un callback indique à l'évènement qu'il est totalement stoppé, on stoppe la chaîne des callbacks*/
 				eh(&tthis, e);
-				if (e.stopped() == StopType::STOP_CALLBACK) {
-					e.stopPropagation(StopType::NOT_STOPPED);
+				if (e.stopped() == STOP_CALLBACK) {
+					e.stopPropagation(NOT_STOPPED);
 					break;
 				}
 			}

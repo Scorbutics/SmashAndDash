@@ -12,15 +12,15 @@ namespace ska {
 			loop = false;
 			ghost = false;
 			callbackActive = false;
-			lastTimeStarted = ska::TimeUtils::getTicks();
+			lastTimeStarted = TimeUtils::getTicks();
 		}
 
 		bool loop;
 		bool ghost;
 		unsigned int directionIndex;
-		std::vector<ska::Point<int>> directions;
+		std::vector<Point<int>> directions;
 		unsigned int delay;
-		ska::Point<int> origin;
+		Point<int> origin;
 		unsigned int lastTimeStarted;
 
 		bool callbackActive;

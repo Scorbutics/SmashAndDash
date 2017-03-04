@@ -114,17 +114,17 @@ void Weather::display() const {
     for(int i = 0; i < m_number; i++) {
 
 		ska::Rectangle buf;
-		buf.x = (int)m_pos[i].x + oRel.x;
-		buf.y = (int)m_pos[i].y + oRel.y;
+		buf.x = static_cast<int>(m_pos[i].x) + oRel.x;
+		buf.y = static_cast<int>(m_pos[i].y) + oRel.y;
 
         if(m_mosaic) {
             int nbrMosaicX, nbrMosaicY;
-			nbrMosaicX = worldWidth / m_weather->getWidth() + 1;
-			nbrMosaicY = worldHeight / m_weather->getHeight() + 1;
+			nbrMosaicX = static_cast<int>(worldWidth / m_weather->getWidth() + 1);
+			nbrMosaicY = static_cast<int>(worldHeight / m_weather->getHeight() + 1);
 
-            for(int i = 0; i < nbrMosaicX; i++) {
+            for(auto i = 0; i < nbrMosaicX; i++) {
 				buf.x = i * m_weather->getWidth() + oRel.x;
-                for(int j = 0; j < nbrMosaicY; j++) {
+                for(auto j = 0; j < nbrMosaicY; j++) {
 					buf.y = j*m_weather->getHeight() + oRel.y;
 					if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
 						m_weather->render(buf.x, buf.y);

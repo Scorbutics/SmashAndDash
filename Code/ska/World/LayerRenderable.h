@@ -17,7 +17,8 @@ namespace ska {
 	class World;
 	class LayerRenderable : public DrawableFixedPriority {
 	public:
-		LayerRenderable(ska::World& world);
+		LayerRenderable(World& world);
+		void operator=(const LayerRenderable&) = delete;
 		~LayerRenderable() = default;
 
 		void changeLevel(std::string fname, std::string chipsetname);
@@ -29,9 +30,9 @@ namespace ska {
 		void display() const override;
 		bool isVisible() const override;
 
-		ska::BlockRenderable* getBlock(unsigned int i, unsigned int j);
+		BlockRenderable* getBlock(unsigned int i, unsigned int j);
 	
-		void setRectAnim(ska::Rectangle rectAnim);
+		void setRectAnim(Rectangle rectAnim);
 
 	private:
 		World& m_world;

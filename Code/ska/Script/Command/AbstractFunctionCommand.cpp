@@ -8,7 +8,7 @@ ska::AbstractFunctionCommand::AbstractFunctionCommand(EntityManager& entityManag
 {
 }
 
-std::string ska::AbstractFunctionCommand::process(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+std::string ska::AbstractFunctionCommand::process(ScriptComponent& script, std::stringstream&, std::vector<std::string>& args) {
 	int argNumber = argumentsNumber();
 	if (argNumber != -1 && argNumber != args.size()) {
 		/* Syntax error */
@@ -16,7 +16,7 @@ std::string ska::AbstractFunctionCommand::process(ScriptComponent& script, std::
 		for (std::string& arg : args) {
 			syntaxErrorMsg += arg + " ";
 		}
-		throw ska::ScriptSyntaxError(syntaxErrorMsg);
+		throw ScriptSyntaxError(syntaxErrorMsg);
 	}
 
 	return execute(script, args);

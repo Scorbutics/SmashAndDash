@@ -14,10 +14,10 @@ namespace ska {
 		SceneSwitcher(const std::string& map, const std::string& chipsetName) :
 			m_mapName(map),
 			m_chipsetName(chipsetName) {}
-		
+		SceneSwitcher<T>& operator=(const SceneSwitcher<T>&) = delete;
 		virtual ~SceneSwitcher() = default;
 
-		virtual void switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene& lastScene, ska::InputContextManager& icm, T extraArg) const = 0;
+		virtual void switchTo(Window& w, SceneHolder& holder, Scene& lastScene, InputContextManager& icm, T extraArg) const = 0;
 
 	protected:
 		const std::string m_mapName;

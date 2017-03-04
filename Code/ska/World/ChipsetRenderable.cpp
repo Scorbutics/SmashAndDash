@@ -1,9 +1,5 @@
-#include <fstream>
-#include "../Exceptions/CorruptedFileException.h"
-#include "../Exceptions/FileException.h"
-#include "../World/Block.h"
+#include <utility>
 #include "../World/BlockRenderable.h"
-#include "../Utils/SkaConstants.h"
 #include "../Utils/StringUtils.h"
 #include "ChipsetRenderable.h"
 #include "../Script/ScriptSleepComponent.h"
@@ -26,7 +22,7 @@ void ska::ChipsetRenderable::update(BlockRenderable& block) {
 	m_animBlocks.getRectOfCurrentFrame();
 }
 
-ska::BlockRenderablePtr& ska::ChipsetRenderable::generateBlock(const int id, const int blockSize, ska::Point<int> posCorr, bool auto_anim) {
+ska::BlockRenderablePtr& ska::ChipsetRenderable::generateBlock(const int id, const int blockSize, Point<int> posCorr, bool auto_anim) {
 	if (m_blocks[id] == nullptr) {
 		m_blocks[id] = std::move(BlockRenderablePtr(new BlockRenderable(blockSize, posCorr, auto_anim)));
 	}

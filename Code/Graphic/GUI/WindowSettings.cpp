@@ -12,8 +12,8 @@
 #include "../../ska/Graphic/GUI/Components/ListBox.h"
 #include "../../ska/Graphic/GUI/Components/LabeledHorizontalSlider.h"
 
-WindowSettings::WindowSettings(ska::Widget& parent, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 10 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {	
+WindowSettings::WindowSettings(Widget& parent, const ska::Point<int>& absolutePos) :
+MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 10 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {	
 
 // 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
 // 	input->addHandler<ska::ValueChangedEventListener<std::wstring>>([](ska::Widget* tthis, ska::ValueChangedEvent<std::wstring>& e) {

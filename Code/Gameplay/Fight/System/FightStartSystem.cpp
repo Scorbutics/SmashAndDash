@@ -8,7 +8,7 @@
 #include "../../CustomEntityManager.h"
 
 FightStartSystem::FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
-ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(ws.getEntityManager()),
+System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(ws.getEntityManager()),
 m_worldScene(ws),
 m_icm(icm),
 m_player(player),

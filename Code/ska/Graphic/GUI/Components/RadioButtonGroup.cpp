@@ -4,7 +4,7 @@ ska::RadioButtonGroup::RadioButtonGroup() :
 	m_uniqueIndexCursor(0) {
 }
 
-std::size_t ska::RadioButtonGroup::addRadioButton(RadioButton& rb) {
+size_t ska::RadioButtonGroup::addRadioButton(RadioButton& rb) {
 	m_buttons.emplace(&rb);
 	return m_uniqueIndexCursor++;
 }
@@ -17,7 +17,7 @@ void ska::RadioButtonGroup::select(RadioButton& rb) {
 	}
 }
 
-std::size_t ska::RadioButtonGroup::getSize() const {
+size_t ska::RadioButtonGroup::getSize() const {
 	return m_buttons.size();
 }
 

@@ -16,7 +16,7 @@ ska::SDLTexture::SDLTexture(TextureData& data) : m_texture(nullptr) {
 }
 
 void ska::SDLTexture::load(const Window& window, const std::string& fileName, int r, int g, int b, int a) {
-	ska::SDLSurface sprite;
+	SDLSurface sprite;
 	m_texture = nullptr;
 	m_fileName = fileName;
 	m_r = r;
@@ -45,7 +45,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	}
 
 	if (sprite.getInstance() == nullptr) {
-		throw ska::FileException("Erreur du chargement de l'image " + m_fileName + ". Après tentative de récupération, impossible de charger l'image \""NOSUCHFILE"\" : " + std::string(SDL_GetError()));
+		throw FileException("Erreur du chargement de l'image " + m_fileName + ". Après tentative de récupération, impossible de charger l'image \""NOSUCHFILE"\" : " + std::string(SDL_GetError()));
 	}
 
 	free();
@@ -55,14 +55,14 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	m_h = sprite.getInstance()->h;
 }
 
-void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, const std::string& text, ska::Color c) {
+void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, const std::string& text, Color c) {
 	SDLSurface buffer;
 	Font f(fontSize);
 
 	buffer.loadFromText(f, text, c);
 
 	if (buffer.getInstance() == nullptr) {
-		throw ska::FileException("Erreur lors de la création de l'image-texte : " + std::string(TTF_GetError()));
+		throw FileException("Erreur lors de la création de l'image-texte : " + std::string(TTF_GetError()));
 	}
 
 	free();

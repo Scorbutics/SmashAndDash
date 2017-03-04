@@ -46,6 +46,7 @@ public:
 		return m_entityManager;
 	}
 
+	void operator=(const BattleEvent&) = delete;
 
 private:
 	BattleEventType m_eventType;

@@ -18,7 +18,7 @@ namespace ska {
 	class Button :
 		public Hoverable<ValueChangedEventListener<bool>, ClickEventListener> {
 	public:
-		Button(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const ska::Rectangle* clip, ClickEventHandler const& callback);
+		Button(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const Rectangle* clip, ClickEventHandler const& callback);
 		virtual void display() const override;
 		virtual ~Button();
 
@@ -35,13 +35,13 @@ namespace ska {
 	private:
 		void initHandlers();
 
-		ska::Texture m_placeHolder;
-		ska::Texture m_placeHolderHover;
-		ska::Texture m_placeHolderPressed;
-		ska::Texture const* m_textureSelector;
-		ska::Texture const* m_lastTextureSelector;
+		Texture m_placeHolder;
+		Texture m_placeHolderHover;
+		Texture m_placeHolderPressed;
+		Texture const* m_textureSelector;
+		Texture const* m_lastTextureSelector;
 		bool m_drawStyle;
-		ska::Rectangle m_clip;
+		Rectangle m_clip;
 		
 	};
 }

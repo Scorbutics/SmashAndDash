@@ -38,13 +38,13 @@ namespace ska {
 		template<typename T>
 		inline T get(const std::string& path) const {
 			/* unimplemented default */
-			throw ska::IllegalArgumentException("Unsupported converted type for path " + path);
+			throw IllegalArgumentException("Unsupported converted type for path " + path);
 		}
 
 	private:
 		void existsOrThrow(const std::string& path) const {
 			if (!exists(path)) {
-				throw ska::InvalidPathException("Unable to find the ini path " + path);
+				throw InvalidPathException("Unable to find the ini path " + path);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace ska {
 
 	template<>
 	inline void IniReader::set<bool>(const std::string& path, const bool& value) {
-		IniReader::set<std::string>(path, (value ? "true" : "false"));
+		set<std::string>(path, (value ? "true" : "false"));
 	}
 
 	/* get specializations */
@@ -74,12 +74,12 @@ namespace ska {
 
 	template<>
 	inline int IniReader::get(const std::string& path) const {
-		return ska::StringUtils::strToInt(get<std::string>(path));
+		return StringUtils::strToInt(get<std::string>(path));
 	}
 
 	template<>
 	inline unsigned int IniReader::get(const std::string& path) const {
-		return ska::StringUtils::strToUint(get<std::string>(path));
+		return StringUtils::strToUint(get<std::string>(path));
 	}
 
 	template<>

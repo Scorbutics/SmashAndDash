@@ -4,28 +4,33 @@
 #include "SlotPokemonData.h"
 #include "WindowMouseCursor.h"
 
-WindowTeam::WindowTeam(ska::Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
-ska::MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
+MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_mouseCursor(mouseCursor) {
 	
 	int count = -1;
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
-	m_slots.push_back(addWidget(std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)))));
+	auto slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
+	slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
+	slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
+	slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
+	slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
+	slotPkmn = std::unique_ptr<SlotPokemon>(new SlotPokemon(*this, ska::Point<int>(14, 20 + (count)* 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(addWidget(slotPkmn));
 
 	for(auto& s : m_slots) {
 		s->show(false);
-		s->addHandler<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>([this](ska::Widget* tthis, ska::ValueChangedEvent<SlotPokemonDataPtr*>& vce) {
-			auto parent = (*vce.getValue())->parent;
+		s->addHandler<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>([this](Widget*, ska::ValueChangedEvent<SlotPokemonDataPtr*>& vce) {
+			//auto parent = (*vce.getValue())->parent;
 			directNotify(vce);
-			
 		});
 	}
 
-	addHandler<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>([this](ska::Widget* tthis, ska::ValueChangedEvent<SlotPokemonDataPtr*>& vce) {
+	addHandler<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>([this](Widget*, ska::ValueChangedEvent<SlotPokemonDataPtr*>& vce) {
 		if (m_mouseCursor->isLoaded()) {
 			insertPokemon((*vce.getValue())->parent, std::move(m_mouseCursor->unloadPokemon()));
 		} else if(m_visibleSlots.size() > 1) {
@@ -44,7 +49,7 @@ void WindowTeam::organizeSlots() {
 	}
 }
 
-SlotPokemon* WindowTeam::insertPokemon(SlotPokemon* before, SlotPokemonDataPtr spd) {
+SlotPokemon* WindowTeam::insertPokemon(SlotPokemon*, SlotPokemonDataPtr spd) {
 	SlotPokemon* place = nullptr;
 	for(auto s : m_slots) {
 		if(!s->isLoaded()) {

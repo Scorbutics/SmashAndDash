@@ -1,5 +1,4 @@
 #pragma once
-#include <fstream>
 
 #include "SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
@@ -13,7 +12,8 @@ public:
     void setWeather(bool b);
     void setGuiTransparency(bool b);
 
-    
+	void operator=(const Settings&) = delete;
+
     void save();
 
     const std::string& getFileName() const;

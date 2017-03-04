@@ -18,12 +18,12 @@ struct EntityLoadEvent {
 	}
 
 	void exportStatistics(std::unique_ptr<Statistics>* destination) {
-		*destination = std::move(m_stats);
+		*destination = move(m_stats);
 		stats = destination->get();
 	}
 
 	void exportDescription(std::unique_ptr<const MonsterDescription>* destination) {
-		*destination = std::move(m_description);
+		*destination = move(m_description);
 		description = destination->get();
 	}
 

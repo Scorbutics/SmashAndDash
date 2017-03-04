@@ -23,8 +23,8 @@
 ///////////////////////////////////////////////
 
 
-DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-ska::WindowIG<>(rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+DialogMenu::DialogMenu(ska::MouseObservable&, ska::KeyObservable&, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
+WindowIG<>(rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_timeout(timeout),
 m_moving(false),
 m_show(false),
@@ -64,8 +64,8 @@ DialogMenu(gui, keyboardObs, text, imageResource, ska::Button::MENU_DEFAULT_THEM
 
 }
 
-DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const DialogMenu& dm) :
-ska::WindowIG<>(dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+DialogMenu::DialogMenu(ska::MouseObservable&, ska::KeyObservable&, const DialogMenu& dm) :
+WindowIG<>(dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	operator=(dm);
 }
 
@@ -79,7 +79,7 @@ void DialogMenu::display() const {
 	}
 	
 
-	ska::WindowIG<>::display();
+	WindowIG<>::display();
 
 	/* Draw the associated image */
 	//m_image.render(m_rectImage.x, m_rectImage.y);
@@ -284,7 +284,7 @@ void DialogMenu::modifyText(const std::string& texte) {
 
 	for (unsigned int j = 0; j < m_size; j++) {
 		m_stext[j].loadFromText(m_fontSize, m_text[j], m_color);
-		if ((m_stext[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE > box.w) {
+		if ((m_stext[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE > static_cast<unsigned int>(box.w)) {
 			setWidth((m_stext[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE);
 		}
 	}
@@ -310,7 +310,7 @@ void DialogMenu::hide(bool hide) {
 
 	if (!m_scroll) {
 		m_show = !hide;
-		std::fill(m_scrollTextLengthPerLine.begin(), m_scrollTextLengthPerLine.end(), 0.0F);
+		fill(m_scrollTextLengthPerLine.begin(), m_scrollTextLengthPerLine.end(), 0.0F);
 	} else {
 		m_isScrolling = true;
 	}
@@ -328,7 +328,7 @@ void DialogMenu::hide(bool hide) {
 // 	return m_rect;
 // }
 
-void DialogMenu::setAlpha(bool x) {
+void DialogMenu::setAlpha(bool) {
 	/*m_menuTiles.setAlpha(x ? 128:255);
     m_alpha = x;*/
 }
@@ -390,7 +390,7 @@ bool DialogMenu::isMoving() {
 }
 
 void DialogMenu::move(const ska::Point<int>& pos) {
-	ska::Widget::move(pos);
+	Widget::move(pos);
     m_scrollingRect.x = pos.x;
 	m_scrollingRect.y = pos.y;
 }

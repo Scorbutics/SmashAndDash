@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include <functional>
 #include "../Exceptions/IllegalArgumentException.h"
 
@@ -15,7 +14,7 @@ namespace ska {
         template <typename T1, typename ...Args1>
 		friend class Observable;
 
-		Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler) {
+		explicit Observer(std::function<bool(T&, Args...)> const& handler) : m_handler(handler) {
 			if(m_handler == nullptr) {
 				throw IllegalArgumentException("Function cannot be null", "Error");
 			}

@@ -25,6 +25,8 @@ public:
 		return m_stats;
 	}
 
+	void operator=(const StatisticsChangeEvent&) = delete;
+
 private:
 	const ska::EntityId& m_entity;
 	RawStatistics<int>& m_stats;

@@ -6,9 +6,9 @@
 #include "../ForceComponent.h"
 
 namespace ska {
-	class MovementSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MovementComponent, ForceComponent> {
+	class MovementSystem : public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, ForceComponent> {
 	public:
-		MovementSystem(ska::EntityManager& entityManager);
+		MovementSystem(EntityManager& entityManager);
 		virtual ~MovementSystem();
 	protected:
 		virtual void refresh() override;

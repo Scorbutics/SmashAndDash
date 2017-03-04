@@ -6,11 +6,10 @@
 #include "../../Gameplay/Data/RawStatistics.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
-#include "../../ska/Graphic/SpritePath.h"
 #include "../../ska/Graphic/GUI/Window.h"
 #include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
-GUIBattle::GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
+GUIBattle::GUIBattle(ska::Window&, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1)),
 BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1)),
 m_ged(ged),
@@ -35,7 +34,7 @@ void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsig
 }
 
 bool GUIBattle::onBattleStart(BattleEvent& be) {
-	if (be.getEventType() == BattleEventType::BATTLE_START) {
+	if (be.getEventType() == BATTLE_START) {
 		ska::CameraSystem& camSys = be.getCameraSystem();
 		const ska::EntityId& pokemon = be.getBattler();
 		const ska::EntityId& opponent = be.getOpponent();
@@ -73,7 +72,7 @@ bool GUIBattle::onBattleStart(BattleEvent& be) {
 /* TODO put the sprite in the GUI */
 //m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
 
-void GUIBattle::eventUpdate(bool movingDisallowed) {
+void GUIBattle::eventUpdate(bool) {
 	//if (m_moves.isVisible()) {
 	//	m_moves.refresh();
 

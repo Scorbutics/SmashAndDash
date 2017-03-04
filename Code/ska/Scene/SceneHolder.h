@@ -11,7 +11,7 @@ namespace ska {
 
 		virtual void update() = 0;
 		virtual void nextScene(ScenePtr& scene) = 0;
-		virtual ska::ScenePtr& getScene() = 0;
+		virtual ScenePtr& getScene() = 0;
 
 	protected:
 		ScenePtr m_currentScene;

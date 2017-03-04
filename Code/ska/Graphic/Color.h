@@ -64,11 +64,11 @@ namespace ska {
 namespace std {
 	template <>
 	struct hash<ska::Color> {
-		std::size_t operator()(const ska::Color& k) const {
+		size_t operator()(const ska::Color& k) const {
 			using std::size_t;
 			using std::hash;
 
-			std::size_t hashSeed = k.r;
+			size_t hashSeed = k.r;
 			int g = (int)k.g;
 			int b = (int)k.b;
 			int a = (int)k.a;

@@ -3,10 +3,12 @@
 #include "WindowMouseCursor.h"
 
 WindowMouseCursor::WindowMouseCursor(ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName) :
-ska::DynamicWindowIG<ska::ValueChangedEventListener<int>>(guiObservable, keyObservable, box, styleName),
+DynamicWindowIG<ska::ValueChangedEventListener<int>>(guiObservable, keyObservable, box, styleName),
 m_originalBox(box) {
-	m_pokemon = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(), false, nullptr));
-	m_item = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr));
+	auto pkmn = std::make_unique<ska::Image>(*this, "", ska::Point<int>(), false, nullptr);
+	m_pokemon = addWidget(pkmn);
+	auto itm = std::make_unique<ska::Image>(*this, "", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr);
+	m_item = addWidget(itm);
 	m_pokemon->show(false);
 	m_item->show(false);
 	setWidth(box.w);
@@ -24,7 +26,7 @@ void WindowMouseCursor::loadPokemon(SlotPokemonDataPtr& spd) {
 }
 
 void WindowMouseCursor::loadItem(unsigned int id) {
-	auto result = m_lastItemId;
+	//auto result = m_lastItemId;
 	m_item->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_INVENTORY, id), 2, 1, 1, 2);
 	m_item->show(true);
 	m_lastItemId = id;

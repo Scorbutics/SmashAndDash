@@ -6,13 +6,13 @@
 #include "../../Utils/IDs.h"
 
 
-SlotPokemon::SlotPokemon(ska::Widget& parent, ska::Point<int> relativePos) :
-ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
+WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 	m_fontSize(11) {
 	m_data = nullptr;
 	
-	ska::Widget& tthis = *this;
-	auto spriteArea = std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0 }, [&](ska::Widget*, ska::ClickEvent& e) {
+	Widget& tthis = *this;
+	auto spriteArea = std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0 }, [&](Widget*, ska::ClickEvent&) {
 	}));
 	auto nameArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4)));
 	auto levelArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22)));
@@ -27,7 +27,7 @@ ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEve
 	m_type1 = addWidget(type1Area);
 	m_type2 = addWidget(type2Area);
 
-	addHandler<ska::ClickEventListener>([this](ska::Widget* tthis, ska::ClickEvent& e) {
+	addHandler<ska::ClickEventListener>([this](Widget* tthis, ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			ska::ValueChangedEvent<SlotPokemonDataPtr*> vce(nullptr, &m_data);
 			m_data->parent = this;
@@ -37,7 +37,7 @@ ska::WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEve
 
 }
 
-bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent& sce) {
+bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent&) {
 	return true;
 }
 

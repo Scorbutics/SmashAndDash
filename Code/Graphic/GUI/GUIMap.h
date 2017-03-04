@@ -14,7 +14,8 @@ class GUIMap :
 	public ska::Observer<EntityLoadEvent> {
 public:
 	GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
-	
+	GUIMap& operator=(const GUIMap&) = delete;
+
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
 	void bind(Settings& sets);

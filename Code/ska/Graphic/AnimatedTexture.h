@@ -6,8 +6,7 @@
 #include <memory>
 
 namespace ska {
-	class AnimatedTexture
-	{
+	class AnimatedTexture {
 	public:
 		AnimatedTexture();
 		

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <algorithm>
 #include <sstream>
 #include "ScriptAutoSystem.h"
@@ -11,27 +12,27 @@
 #include "../../Utils/StringUtils.h"
 #include "../../Utils/FileUtils.h"
 #include "../../Utils/TimeUtils.h"
-#include "../ScriptSymbolsConstants.h"
 #include "../../Utils/NumberUtils.h"
 #include "../../Utils/SkaConstants.h"
 #include "../ScriptTriggerType.h"
 #include "../ScriptSleepComponent.h"
+
 
 //Par défaut, un script "permanent" se rafraîchit toutes les 1 ms
 #define SCRIPT_DEFAULT_PERIOD 1
 #define MAX_CONSECUTIVE_COMMANDS_PLAYED 5
 
 
-ska::ScriptAutoSystem::ScriptAutoSystem(ska::World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, ska::Savegame& saveGame) : System(entityManager),
+ska::ScriptAutoSystem::ScriptAutoSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame) : System(entityManager),
 m_saveGame(saveGame),
 m_world(w) {
 	sch.setupCommands(w, m_commands);
 }
 
 const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::string& id) const {
-	std::vector<std::string> keys = ska::StringUtils::split(key, '.');
+	std::vector<std::string> keys = StringUtils::split(key, '.');
 	if (keys.size() != 2) {
-		throw ska::ScriptSyntaxError("Error during recuperation of the global variable " + key);
+		throw ScriptSyntaxError("Error during recuperation of the global variable " + key);
 	}
 
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
@@ -44,22 +45,22 @@ const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::
 
 void ska::ScriptAutoSystem::removeComponent(const std::string& componentName, const std::string& id) const {
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
-		EntityId entity = m_namedScriptedEntities.at(id);
-		m_entityManager.removeComponent(ska::StringUtils::strToInt(id), componentName);
+		//EntityId entity = m_namedScriptedEntities.at(id);
+		m_entityManager.removeComponent(StringUtils::strToInt(id), componentName);
 	}
 }
 
 void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, const std::string& id) const {
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
-		EntityId entity = m_namedScriptedEntities.at(id);
-		m_entityManager.addComponent(ska::StringUtils::strToInt(id), componentName);
+		//EntityId entity = m_namedScriptedEntities.at(id);
+		m_entityManager.addComponent(StringUtils::strToInt(id), componentName);
 	}
 }
 
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
-const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin) {
+ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scriptSleepEntity, const EntityId origin) {
 	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {
-		throw ska::IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
+		throw IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
 	}
 
 	/* If the script is already running, return the running instance */
@@ -73,16 +74,16 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 	std::string validPath;
 	std::string keyArgs;
 
-	for (std::string& arg : scriptData.args) {
+	for (const auto& arg : scriptData.args) {
 		keyArgs += arg + " ";
 	}
 
-	ska::StringUtils::rtrim(keyArgs);
+	StringUtils::rtrim(keyArgs);
 
 	const std::string& keyScript = scriptData.name + "/\\" + keyArgs;
 	extendedName = keyScript + "_" + scriptData.context;
 
-	const std::string& currentDir = ska::FileUtils::getCurrentDirectory();
+	const std::string& currentDir = FileUtils::getCurrentDirectory();
 	validPath = (currentDir + FILE_SEPARATOR "" + scriptData.name);
 
 	ScriptComponent sc;
@@ -91,15 +92,14 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 		if (fscript.fail()) {
 			fscript.open(validPath.c_str());
 			if (fscript.fail()) {
-				throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + currentDir + "\\" + scriptData.name);
+				throw InvalidPathException("Impossible d'ouvrir le fichier script " + currentDir + "\\" + scriptData.name);
 			}
-		}
-		else {
+		} else {
 			validPath = scriptData.name;
 		}
 
 		if (validPath.empty()) {
-			throw ska::InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
+			throw InvalidPathException("Le script de nom " + scriptData.name + " est introuvable");
 		}
 
 		sc.active = 0;
@@ -110,14 +110,14 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 
 		std::ifstream scriptFile(sc.fullPath);
 		if (scriptFile.fail()) {
-			throw ska::InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
+			throw InvalidPathException("Impossible d'ouvrir le fichier script " + sc.fullPath);
 		}
 
-		for (std::string line; std::getline(scriptFile, line);) {
+		for (std::string line; getline(scriptFile, line);) {
 			sc.file.push_back(line);
 		}
 
-		m_cache.insert(std::make_pair(sc.fullPath, sc));
+		m_cache.insert(make_pair(sc.fullPath, sc));
 	} else {
 		sc = m_cache[validPath];
 	}
@@ -132,8 +132,8 @@ const ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent
 
 	/* Setup next args for the future script */
 	unsigned int i = 0;
-	for (const std::string& curArg : sc.extraArgs) {
-		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, sc.extendedName, "#arg" + ska::StringUtils::intToStr(i) + "#", curArg, sc.varMap);
+	for (const auto& curArg : sc.extraArgs) {
+		ScriptUtils::setValueFromVarOrSwitchNumber(m_saveGame, sc.extendedName, "#arg" + StringUtils::intToStr(i) + "#", curArg, sc.varMap);
 		i++;
 	}
 
@@ -164,19 +164,19 @@ ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
 
 void ska::ScriptAutoSystem::refresh() {
 	ScriptComponent* nextScript = getHighestPriorityScript();
-	if (nextScript == NULL) {
+	if (nextScript == nullptr) {
 		return;
 	}
 
 	try {
 		play(*nextScript, m_saveGame);
-	} catch (ska::ScriptDiedException sde) {
+	} catch (ScriptDiedException sde) {
 		const std::string& entityScriptId = sde.getScript();
 		if (entityScriptId.empty()) {
 			killAndSave(*nextScript, m_saveGame);
 		} else {
-			if (ska::StringUtils::isInt(entityScriptId, 10)) {
-				EntityId scriptEntity = ska::StringUtils::strToInt(entityScriptId);
+			if (StringUtils::isInt(entityScriptId, 10)) {
+				EntityId scriptEntity = StringUtils::strToInt(entityScriptId);
 				if (!m_entityManager.hasComponent<ScriptComponent>(scriptEntity)) {
 					std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found with id : " << entityScriptId << std::endl;
 				}
@@ -188,13 +188,13 @@ void ska::ScriptAutoSystem::refresh() {
 			}
 		}
 
-	} catch (ska::ScriptException e) {
+	} catch (ScriptException e) {
 		std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << e.what() << std::endl;
 	}
 
 }
 
-void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame& savegame) {
+void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&) const {
 	//string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
 	//std::ofstream scriptList;
 	/*scriptList.open(tmpScritFileName.c_str(), ios::app);
@@ -214,7 +214,7 @@ void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&
 ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 	float maxPriorityScriptValue = -1;
 	ScriptComponent* maxPriorityScript = NULL;
-	unsigned int currentTimeTicks = ska::TimeUtils::getTicks();
+	unsigned int currentTimeTicks = TimeUtils::getTicks();
 
 	for (EntityId entityId : m_processed) {
 		ScriptComponent& script = m_entityManager.getComponent<ScriptComponent>(entityId);
@@ -234,7 +234,7 @@ bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	bool cannotBePlayed =
 		EnumScriptState::RUNNING == script.state
 		|| script.active > 0
-		|| (ska::TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
+		|| (TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
 		|| script.state == EnumScriptState::DEAD
 		|| !(script.triggeringType == EnumScriptTriggerType::AUTO && script.state == EnumScriptState::STOPPED || script.state != EnumScriptState::STOPPED)
 		|| eof(script);
@@ -248,7 +248,7 @@ bool ska::ScriptAutoSystem::transferActiveToDelay(ScriptComponent& script) {
 	if (script.active > 1) {
 		script.state = EnumScriptState::PAUSED;
 		script.delay = script.active;
-		script.lastTimeDelayed = ska::TimeUtils::getTicks();
+		script.lastTimeDelayed = TimeUtils::getTicks();
 		script.active = 0;
 		return true;
 	}
@@ -261,7 +261,7 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 		return false;
 	}
 
-	script.lastTimeStarted = ska::TimeUtils::getTicks();
+	script.lastTimeStarted = TimeUtils::getTicks();
 
 	/* Update status once */
 	if (manageCurrentState(script) == EnumScriptState::PAUSED) {
@@ -301,14 +301,14 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 	return true;
 }
 
-std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame& savegame, const std::string& cmd) {
+std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame&, const std::string& cmd) {
 	std::string cmdName;
 	std::stringstream streamCmd;
 
 	streamCmd << cmd;
 	streamCmd >> cmdName;
 	/* No tabulation */
-	std::remove(cmdName.begin(), cmdName.end(), '\t');
+	remove(cmdName.begin(), cmdName.end(), '\t');
 
 	if (cmdName.empty()) {
 		if (streamCmd.eof()) {
@@ -318,21 +318,20 @@ std::string ska::ScriptAutoSystem::interpret(ScriptComponent& script, Savegame& 
 	}
 
 	if (m_commands.find(cmdName) != m_commands.end()) {
-		std::unordered_map<std::string, std::string>& varMap = script.varMap;
+		//auto& varMap = script.varMap;
 		try {
 			return m_commands[cmdName]->process(*this, script, streamCmd);
-		}
-		catch (ska::NumberFormatException nfe) {
-			throw ska::ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
+		} catch (const NumberFormatException& nfe) {
+			throw ScriptException("Commande " + cmdName + " : " + std::string(nfe.what()));
 		}
 	}
 	else {
-		throw ska::ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
+		throw ScriptUnknownCommandException("Impossible de trouver la commande " + cmdName + " dans le moteur de scripts.");
 	}
 }
 
 void ska::ScriptAutoSystem::registerCommand(const std::string& cmdName, CommandPtr& cmd) {
-	m_commands[cmdName] = std::move(cmd);
+	m_commands[cmdName] = move(cmd);
 }
 
 std::string ska::ScriptAutoSystem::nextLine(ScriptComponent& script) {
@@ -361,7 +360,7 @@ float ska::ScriptAutoSystem::getPriority(ScriptComponent& script, const unsigned
 	else {
 		/* A PAUSED script must gain rapidly high priority contrary to a STOPPED one.
 		Then we use the exponential to simulate that */
-		return ska::NumberUtils::exponential(coeff);
+		return NumberUtils::exponential(coeff);
 	}
 }
 
@@ -373,7 +372,7 @@ ska::ScriptState ska::ScriptAutoSystem::manageCurrentState(ScriptComponent& scri
 		script.state = EnumScriptState::PAUSED;
 		script.commandsPlayed = 0;
 	} else if (transferActiveToDelay(script)) {
-	} else if (script.state == EnumScriptState::PAUSED && ska::TimeUtils::getTicks() - script.lastTimeDelayed  > script.delay) {
+	} else if (script.state == EnumScriptState::PAUSED && TimeUtils::getTicks() - script.lastTimeDelayed  > script.delay) {
 		script.state = EnumScriptState::RUNNING;
 		script.delay = 0;
 	} else {

@@ -12,6 +12,8 @@ namespace ska {
 			m_oldValue(oldValue), m_value(value) {
 		}
 
+		void operator=(const ValueChangedEvent&) = delete;
+
 		const T& getValue() const {
 			return m_value;
 		}
@@ -24,7 +26,7 @@ namespace ska {
 			return WidgetMaskHelper::template getMask<ValueChangedEventListener<T>>();
 		}
 
-		virtual bool affects(const Widget& w) const override {
+		virtual bool affects(const Widget&) const override {
 			if (stopped() != NOT_STOPPED) {
 				return false;
 			}

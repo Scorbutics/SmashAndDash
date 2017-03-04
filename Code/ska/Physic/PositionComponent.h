@@ -8,16 +8,16 @@
 #include "../Utils/NumberUtils.h"
 
 namespace ska {
-	class PositionComponent : public ska::Component {
+	class PositionComponent : public Component {
 	public:
 		PositionComponent() {
 			static bool initialized = false;
 			if (!initialized) {
 				initialized = true;
 				const std::string className = getClassName(this);
-				addFieldSerializer(PositionComponent::serializeX, "x", className);
-				addFieldSerializer(PositionComponent::serializeY, "y", className);
-				addFieldSerializer(PositionComponent::serializeZ, "z", className);
+				addFieldSerializer(serializeX, "x", className);
+				addFieldSerializer(serializeY, "y", className);
+				addFieldSerializer(serializeZ, "z", className);
 			}
 			x = y = z = 0;
 		}

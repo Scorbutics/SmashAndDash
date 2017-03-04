@@ -3,7 +3,7 @@
 #include "LinearParticle.h"
 #include "../Utils/SkaConstants.h"
 
-ska::LinearParticle::LinearParticle(int idSprite, ska::Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
+ska::LinearParticle::LinearParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)
 {
     m_type = PARTICLE_LINEAR;
@@ -60,7 +60,7 @@ void ska::LinearParticle::resetSlopeNoise()
     m_slopeNoise = 0;
 }
 
-void ska::LinearParticle::launch(ska::Rectangle origin, float angle, unsigned int power)
+void ska::LinearParticle::launch(Rectangle origin, float angle, unsigned int power)
 {
 	Particle::launch(origin, angle, power);
 	m_ay = power*sin(angle);

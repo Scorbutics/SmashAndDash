@@ -1,6 +1,6 @@
 #include "Force.h"
 
-ska::Force::Force(ska::Rectangle pos, float power, float angle)
+ska::Force::Force(Rectangle pos, float power, float angle)
 {
 	m_pos = pos;
 	m_power = power;
@@ -9,7 +9,7 @@ ska::Force::Force(ska::Rectangle pos, float power, float angle)
 
 ska::Force::Force()
 {
-	ska::Rectangle nullPos;
+	Rectangle nullPos;
 	nullPos.x = 0;
 	nullPos.y = 0;
 	nullPos.w = 0;
@@ -34,7 +34,7 @@ float ska::Force::getAngle() const
 	return m_angle;
 }
 
-void ska::Force::setPos(ska::Rectangle pos)
+void ska::Force::setPos(Rectangle pos)
 {
 	m_pos = pos;
 }

@@ -30,7 +30,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
     const std::string& id = args[0];
 	const int dir = ska::StringUtils::strToInt(args[1]);
 	const int speed = ska::StringUtils::strToInt(args[2]);
-	const bool ghost = ska::StringUtils::strToInt(args[3]);
+	const bool ghost = ska::StringUtils::strToInt(args[3]) != 0;
 	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
@@ -43,7 +43,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
 
-	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, speed);
+	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
 	iamc.delay = -1;
 	iamc.ghost = ghost;
 

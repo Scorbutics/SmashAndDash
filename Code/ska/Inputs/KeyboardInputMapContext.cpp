@@ -5,37 +5,37 @@
 ska::KeyboardInputMapContext::KeyboardInputMapContext() {
 }
 
-void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, ska::InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {
+void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {
 	
-	codeMap[SDL_SCANCODE_ESCAPE] = InputAction::Quit;
-	toggles[SDL_SCANCODE_LSHIFT] = InputToggle::Run;
-	codeMap[SDL_SCANCODE_RETURN] = InputAction::DoAction;
-	codeMap[SDL_SCANCODE_SPACE] = InputAction::Jump;
+	codeMap[SDL_SCANCODE_ESCAPE] = Quit;
+	toggles[SDL_SCANCODE_LSHIFT] = Run;
+	codeMap[SDL_SCANCODE_RETURN] = DoAction;
+	codeMap[SDL_SCANCODE_SPACE] = Jump;
 
-	toggles[SDL_SCANCODE_A] = InputToggle::MoveLeft;
-	toggles[SDL_SCANCODE_W] = InputToggle::MoveUp;
-	toggles[SDL_SCANCODE_S] = InputToggle::MoveDown;
-	toggles[SDL_SCANCODE_D] = InputToggle::MoveRight;
+	toggles[SDL_SCANCODE_A] = MoveLeft;
+	toggles[SDL_SCANCODE_W] = MoveUp;
+	toggles[SDL_SCANCODE_S] = MoveDown;
+	toggles[SDL_SCANCODE_D] = MoveRight;
 	
-	codeMap[SDL_SCANCODE_Z] = InputAction::UseObject1;
-	codeMap[SDL_SCANCODE_X] = InputAction::UseObject2;
-	codeMap[SDL_SCANCODE_C] = InputAction::UseObject3;
-	codeMap[SDL_SCANCODE_V] = InputAction::UseObject4;
-	codeMap[SDL_SCANCODE_B] = InputAction::UseObject5;
-	codeMap[SDL_SCANCODE_N] = InputAction::UseObject6;
+	codeMap[SDL_SCANCODE_Z] = UseObject1;
+	codeMap[SDL_SCANCODE_X] = UseObject2;
+	codeMap[SDL_SCANCODE_C] = UseObject3;
+	codeMap[SDL_SCANCODE_V] = UseObject4;
+	codeMap[SDL_SCANCODE_B] = UseObject5;
+	codeMap[SDL_SCANCODE_N] = UseObject6;
 
-	codeMap[SDL_SCANCODE_1] = InputAction::ShotSkill1;
-	codeMap[SDL_SCANCODE_2] = InputAction::ShotSkill2;
-	codeMap[SDL_SCANCODE_3] = InputAction::ShotSkill3;
-	codeMap[SDL_SCANCODE_4] = InputAction::ShotSkill4;
+	codeMap[SDL_SCANCODE_1] = ShotSkill1;
+	codeMap[SDL_SCANCODE_2] = ShotSkill2;
+	codeMap[SDL_SCANCODE_3] = ShotSkill3;
+	codeMap[SDL_SCANCODE_4] = ShotSkill4;
 
 
 	/* Mouse click */
 	/* Left */
-	toggles[SDL_NUM_SCANCODES + 0] = InputToggle::MoveTo;
+	toggles[SDL_NUM_SCANCODES + 0] = MoveTo;
 
 	/* Right */
-	codeMap[SDL_NUM_SCANCODES + 1] = InputAction::PathfindTo;
+	codeMap[SDL_NUM_SCANCODES + 1] = PathfindTo;
 }
 
 ska::KeyboardInputMapContext::~KeyboardInputMapContext() {

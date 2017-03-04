@@ -38,7 +38,7 @@ SDL_Surface* ska::SDLSurface::getInstance() const {
 	return m_surface;
 }
 
-void ska::SDLSurface::loadFromText(const ska::Font& font, const std::string& text, ska::Color c) {
+void ska::SDLSurface::loadFromText(const Font& font, const std::string& text, Color c) {
 	free();
 	m_surface = TTF_RenderText_Blended(font.getInstance(), text.c_str(), c.toNative());
 }
@@ -55,10 +55,10 @@ void ska::SDLSurface::load32(const std::string& file) {
 
 ska::Color ska::SDLSurface::getPixel32Color(int x, int y) const {
 	if (m_surface == nullptr) {
-		return ska::Color( 0, 0, 0, 0 );
+		return Color( 0, 0, 0, 0 );
 	}
 
-	ska::Color c;
+	Color c;
 	c.a = 0;
 	Uint32 pix = getPixel32(x, y);
 	SDL_GetRGB(pix, getFormat(), &c.r, &c.g, &c.b);

@@ -3,7 +3,7 @@
 #include "FocusEvent.h"
 
 ska::FocusEventListener::FocusEventListener(Widget& tthis) :
-ska::EventListener<FocusEvent>(tthis) {
+EventListener<FocusEvent>(tthis) {
 
 }
 

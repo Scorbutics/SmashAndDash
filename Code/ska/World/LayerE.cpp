@@ -13,7 +13,7 @@
 #include "../Exceptions/NumberFormatException.h"
 
 //Constructeur ouvrant un monde déjà créé
-ska::LayerE::LayerE(ska::World& world) : m_world(world) {
+ska::LayerE::LayerE(World& world) : m_world(world) {
     m_nbrLignes = 0;
 }
 
@@ -78,7 +78,7 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 	std::ifstream flux(folder.c_str());
 	std::stringstream ss;
 	if (flux.fail()) {
-		throw ska::CorruptedFileException("Erreur (classe LayerE) : Impossible d'ouvrir le fichier event demandé: " + folder);
+		throw CorruptedFileException("Erreur (classe LayerE) : Impossible d'ouvrir le fichier event demandé: " + folder);
 	}
 
 	m_coordBX.clear();
@@ -93,29 +93,29 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 	std::string line;
 
 	/* Ignore first line */
-	std::getline(flux, line);
+	getline(flux, line);
 
 	int i = 0;
 	try {
-		while (std::getline(flux, line)) {
+		while (getline(flux, line)) {
 
 			i++;
 			size_t nextIndex = 0;
 			ss.clear();
 
-			const std::string x = ska::StringUtils::extractTo(nextIndex, line, ':');
-			m_coordBX.push_back(ska::StringUtils::strToInt(x));
+			const std::string x = StringUtils::extractTo(nextIndex, line, ':');
+			m_coordBX.push_back(StringUtils::strToInt(x));
 			nextIndex += x.size() + 1;
 
 			ss << line.substr(nextIndex);
 			std::string y;
 			ss >> y;
-			m_coordBY.push_back(ska::StringUtils::strToInt(y));
+			m_coordBY.push_back(StringUtils::strToInt(y));
 
 			std::string id;
 			ss >> id;
 			if (id != "!") {
-				m_ID.push_back(ska::StringUtils::strToInt(id));
+				m_ID.push_back(StringUtils::strToInt(id));
 			}
 			else {
 				m_ID.push_back(std::numeric_limits<int>().min());
@@ -123,11 +123,11 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 
 			std::string solide;
 			ss >> solide;
-			m_solide.push_back(ska::StringUtils::strToInt(solide));
+			m_solide.push_back(StringUtils::strToInt(solide));
 
 			std::string trigger;
 			ss >> trigger;
-			m_trigger.push_back(ska::StringUtils::strToInt(trigger));
+			m_trigger.push_back(StringUtils::strToInt(trigger));
 
 			std::string path;
 			ss >> path;
@@ -138,13 +138,13 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 			m_action.push_back(action);
 
 			std::string param;
-			std::getline(ss, param);
-			m_param.push_back(ska::StringUtils::ltrim(param));
+			getline(ss, param);
+			m_param.push_back(StringUtils::ltrim(param));
 
 		}
 	}
-	catch (ska::NumberFormatException& nfe) {
-		throw ska::CorruptedFileException("Erreur (classe LayerE) : Erreur lors de la lecture du fichier evenements (ligne : " + ska::StringUtils::intToStr(i) + ")\n" + std::string(nfe.what()));
+	catch (NumberFormatException& nfe) {
+		throw CorruptedFileException("Erreur (classe LayerE) : Erreur lors de la lecture du fichier evenements (ligne : " + StringUtils::intToStr(i) + ")\n" + std::string(nfe.what()));
 	}
 	m_nbrLignes = i;
 }

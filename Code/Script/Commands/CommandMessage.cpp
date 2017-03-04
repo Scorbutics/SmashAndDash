@@ -14,14 +14,13 @@ int CommandMessage::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandMessage::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
-{
+std::string CommandMessage::execute(ska::ScriptComponent&, std::vector<std::string>& args) {
 	if (MessageDialogBox::instanceExists()) {
 		return "";
 	}
 
-	const std::string& talkerId = args[0];
-	const std::string& text = args[1];
+	const auto& talkerId = args[0];
+	//const std::string& text = args[1];
 
 	std::string imageId;
 	if (talkerId != "f") {

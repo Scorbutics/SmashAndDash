@@ -14,7 +14,7 @@ namespace ska {
 	template <class T>
 	class RadioButtonList : public WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener> {
 	public:
-		RadioButtonList(Widget& parent, ska::Point<int> relativePos, const std::string& placeHolderStyleName) :
+		RadioButtonList(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName) :
 			WidgetPanel<ValueChangedEventListener<T*>, HoverEventListener, ClickEventListener>(parent, relativePos),
 			m_styleName(placeHolderStyleName),
 			m_group(std::shared_ptr<RadioButtonGroup>(new RadioButtonGroup())),

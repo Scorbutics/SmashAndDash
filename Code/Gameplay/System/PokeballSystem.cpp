@@ -4,7 +4,7 @@
 #define POWER 5
 
 PokeballSystem::PokeballSystem(ska::EntityManager& entityManager) : 
-ska::System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionComponent>(entityManager) {
+System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionComponent>(entityManager) {
 	m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", 4, 1, 4);
 	m_sprite.setDelay(200);
 	m_openPokeball.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", 1, 1, 1);

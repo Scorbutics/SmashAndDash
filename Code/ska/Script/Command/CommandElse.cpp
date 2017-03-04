@@ -18,24 +18,24 @@ ska::CommandElse::~CommandElse()
 }
 
 const std::string& ska::CommandElse::getCmdName() {
-	return ControlStatement::getCommandElse();
+	return getCommandElse();
 }
 
-std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringstream& streamCmd, std::vector<std::string>& args) {
+std::string ska::CommandElse::analyzeLine(ScriptComponent& script, std::stringstream&, std::vector<std::string>&) {
 	int ifEnd = 1;
 	std::string lineBuf;
 
 	while (ifEnd > 0 && !script.parent->eof(script)) {
 		lineBuf = script.parent->nextLine(script);
-		ska::StringUtils::ltrim(lineBuf);
-		if (lineBuf.find(ControlStatement::getCommandIf()) == 0)
+		StringUtils::ltrim(lineBuf);
+		if (lineBuf.find(getCommandIf()) == 0)
 			ifEnd++;
-		else if (lineBuf == ControlStatement::getCommandEndIf())
+		else if (lineBuf == getCommandEndIf())
 			ifEnd--;
 	}
 
 	if (script.parent->eof(script)) {
-		throw ska::ScriptSyntaxError("Un endif est manquant");
+		throw ScriptSyntaxError("Un endif est manquant");
 	}
 
 	return "";

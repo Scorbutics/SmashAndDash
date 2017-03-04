@@ -7,13 +7,13 @@
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) : 
 	AbstractGameGUI(w, playerICM, ged),
-	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)), 
-	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
+	Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)), 
+	Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
 
 	auto attachedToCursor = std::unique_ptr<ska::Widget>(new WindowMouseCursor(this, this, ska::Rectangle{ 0, 0, 64, 96 }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	m_attachedToCursor = static_cast<WindowMouseCursor*>(addTopWidget(attachedToCursor));
 
-	m_wMaster.addHandler<ska::HoverEventListener>([this](ska::Widget* tthis, ska::HoverEvent& e) {
+	m_wMaster.addHandler<ska::HoverEventListener>([this](ska::Widget*, ska::HoverEvent& e) {
 		m_attachedToCursor->move(e.getMousePosition() + ska::Point<int>(16, 16));
 	});
 
@@ -70,7 +70,7 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 	spd1->type1 = ele.description->type1;
 	spd1->type2 = ele.description->type2;
 
-	auto slot1 = wTeam.insertPokemon(nullptr, std::move(spd1));
+	wTeam.insertPokemon(nullptr, move(spd1));
 	
 	return true;
 }

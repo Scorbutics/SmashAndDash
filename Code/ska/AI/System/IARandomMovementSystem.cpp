@@ -4,7 +4,7 @@
 #include "../../Utils/NumberUtils.h"
 #include "../../Physic/PositionComponent.h"
 
-ska::IARandomMovementSystem::IARandomMovementSystem(ska::EntityManager& entityManager) : System(entityManager) {
+ska::IARandomMovementSystem::IARandomMovementSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
 void ska::IARandomMovementSystem::refresh() {
@@ -20,7 +20,7 @@ void ska::IARandomMovementSystem::refresh() {
 
 				switch (iamc.type) {
 				case RandomMovementType::NO_GOAL:
-					iamc.direction = NumberUtils::random(0, 7);
+					iamc.direction = static_cast<char>(NumberUtils::random(0, 7));
 					break;
 				case RandomMovementType::CIRCLE_AROUND:
 					char sens = NumberUtils::random(0, 1) == 0;
@@ -29,8 +29,8 @@ void ska::IARandomMovementSystem::refresh() {
 					/* But we check the emitter */
 					if (m_entityManager.hasComponent<PositionComponent>(iamc.emitter)) {
 						auto& pcEmitter = m_entityManager.getComponent<PositionComponent>(iamc.emitter);
-						auto diffPoint = ska::Point<int>(pcEmitter.x, pcEmitter.y) - ska::Point<int>(pc.x, pc.y);
-						auto horizontalDir = ska::NumberUtils::maximum(ska::NumberUtils::absolute(diffPoint.x), ska::NumberUtils::absolute(diffPoint.y)) == ska::NumberUtils::absolute(diffPoint.x);
+						auto diffPoint = Point<int>(pcEmitter.x, pcEmitter.y) - Point<int>(pc.x, pc.y);
+						auto horizontalDir = NumberUtils::maximum(NumberUtils::absolute(diffPoint.x), NumberUtils::absolute(diffPoint.y)) == NumberUtils::absolute(diffPoint.x);
 						iamc.direction = horizontalDir ? (sens ? 1 : 3) : (sens ? 0 : 2);
 					} else {
 						iamc.direction = -1;
@@ -42,9 +42,9 @@ void ska::IARandomMovementSystem::refresh() {
 		}
 
 		if (iamc.direction != -1) {
-			Force f = PhysicUtils::getMovement(iamc.direction, 100);
-			fc.x += f.getPower() * NumberUtils::cosinus(f.getAngle());
-			fc.y += f.getPower() * NumberUtils::sinus(f.getAngle());
+			auto f = PhysicUtils::getMovement(iamc.direction, 100);
+			fc.x += static_cast<float>(f.getPower() * NumberUtils::cosinus(f.getAngle()));
+			fc.y += static_cast<float>(f.getPower() * NumberUtils::sinus(f.getAngle()));
 		}
 	}
 }

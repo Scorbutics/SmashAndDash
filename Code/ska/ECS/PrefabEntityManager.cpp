@@ -16,53 +16,53 @@
 ska::PrefabEntityManager::PrefabEntityManager() {
 }
 
-ska::EntityId ska::PrefabEntityManager::createCharacter(const ska::Point<int> startPos, const int id, const unsigned int worldBlockSize) {
-	ska::EntityId hero = createEntity();
-	ska::PositionComponent pc;
+ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int id, const unsigned int worldBlockSize) {
+	EntityId hero = createEntity();
+	PositionComponent pc;
 	pc.x = startPos.x*worldBlockSize;
 	pc.y = startPos.y*worldBlockSize;
 	pc.z = 0;
-	addComponent<ska::PositionComponent>(hero, pc);
-	ska::MovementComponent mc;
-	memset(&mc, 0, sizeof(ska::MovementComponent));
-	ska::ForceComponent fc;
+	addComponent<PositionComponent>(hero, pc);
+	MovementComponent mc;
+	memset(&mc, 0, sizeof(MovementComponent));
+	ForceComponent fc;
 	memset(&fc, 0, sizeof(fc));
 	fc.weight = 65.0;
-	ska::GravityAffectedComponent gac;
+	GravityAffectedComponent gac;
 	gac.friction = 20;
-	addComponent<ska::GravityAffectedComponent>(hero, gac);
-	addComponent<ska::ForceComponent>(hero, fc);
-	addComponent<ska::MovementComponent>(hero, mc);
-	ska::GraphicComponent gc;
+	addComponent<GravityAffectedComponent>(hero, gac);
+	addComponent<ForceComponent>(hero, fc);
+	addComponent<MovementComponent>(hero, mc);
+	GraphicComponent gc;
 	gc.sprite.resize(1);
-	gc.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
+	gc.sprite[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
 	gc.sprite[0].setDelay(100);
 
-	ska::HitboxComponent hc;
+	HitboxComponent hc;
 	hc.xOffset = 20;
 	hc.yOffset = gc.sprite[0].getHeight() * 3 / 5;
 	hc.height = gc.sprite[0].getHeight() - hc.yOffset;
 	hc.width = gc.sprite[0].getWidth() - 2 * hc.xOffset;
-	addComponent<ska::HitboxComponent>(hero, hc);
+	addComponent<HitboxComponent>(hero, hc);
 
-	addComponent<ska::CollidableComponent>(hero, CollidableComponent());
-	addComponent<ska::HasShadowComponent>(hero, HasShadowComponent());
-	addComponent<ska::GraphicComponent>(hero, gc);
+	addComponent<CollidableComponent>(hero, CollidableComponent());
+	addComponent<HasShadowComponent>(hero, HasShadowComponent());
+	addComponent<GraphicComponent>(hero, gc);
 
-	addComponent<ska::DirectionalAnimationComponent>(hero, ska::DirectionalAnimationComponent());
+	addComponent<DirectionalAnimationComponent>(hero, DirectionalAnimationComponent());
 
 	return hero;
 }
 
-ska::EntityId ska::PrefabEntityManager::createTrainer(const ska::Point<int> startPos, const unsigned int worldBlockSize) {
-	ska::EntityId hero = createCharacter(startPos, 0, worldBlockSize);
-	addComponent<ska::CameraFocusedComponent>(hero, ska::CameraFocusedComponent());
-	ska::InputComponent ic;
+ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos, const unsigned int worldBlockSize) {
+	EntityId hero = createCharacter(startPos, 0, worldBlockSize);
+	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
+	InputComponent ic;
 	ic.movePower = 100;
 	ic.jumpPower = 130 << 3;
-	addComponent<ska::InputComponent>(hero, ic);
-	ska::ScriptAwareComponent sac;
-	addComponent<ska::ScriptAwareComponent>(hero, sac);
+	addComponent<InputComponent>(hero, ic);
+	ScriptAwareComponent sac;
+	addComponent<ScriptAwareComponent>(hero, sac);
 	return hero;
 }
 

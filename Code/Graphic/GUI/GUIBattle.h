@@ -31,6 +31,8 @@ public:
 	GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
 	~GUIBattle();
 
+	GUIBattle& operator=(const GUIBattle&) = delete;
+
 	void clear();
 	bool onBattleStart(BattleEvent& be);
 	bool onStatisticsChange(StatisticsChangeEvent& sce);
