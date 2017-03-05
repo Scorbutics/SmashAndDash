@@ -12,7 +12,7 @@ m_fightPos(fightPos),
 m_ged(ged) {
 }
 
-void SceneToBattleSwitcher::switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene& lastScene, ska::InputContextManager& icm, WorldScene& ws) const {
+void SceneToBattleSwitcher::switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene&, ska::InputContextManager& icm, WorldScene& ws) const {
 	auto scene = ska::ScenePtr(ska::ScenePtr(new SceneFight(w, holder, ws, icm, m_fightPos, m_fightComponent, m_ged)));
 	holder.nextScene(scene);
 }

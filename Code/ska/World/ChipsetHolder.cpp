@@ -9,7 +9,7 @@
 #include "ChipsetHolder.h"
 #include "../Graphic/Animation.h"
 
-ska::ChipsetHolder::ChipsetHolder(const std::string& correspondanceFile) {
+ska::ChipsetHolder::ChipsetHolder(const std::string&) {
 	SDLSurface fichierMCorr;
 	const std::string& corrName = "." FILE_SEPARATOR "Chipsets" FILE_SEPARATOR "corr.png";
 	m_corrFileWidth = 0;

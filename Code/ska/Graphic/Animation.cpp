@@ -10,7 +10,7 @@ ska::Animation::Animation() {
 	m_frameHeight = m_offset.h;
 	m_frameNumber = 1;
 	m_count = SDL_GetTicks();
-	m_countMAX = -1;
+	m_countMAX = static_cast<unsigned int>(-1);
 	m_position = 0;
 	m_isVertical = false;
 	m_sensAni = 1;

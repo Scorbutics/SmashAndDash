@@ -44,7 +44,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	iamc.origin = centerPos;
 
 	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
-	iamc.delay = -1;
+	iamc.delay = static_cast<unsigned int>(-1);
 	iamc.ghost = ghost;
 
 	/* if there is a script callback provided */

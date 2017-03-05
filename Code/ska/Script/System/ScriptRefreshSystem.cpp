@@ -67,7 +67,7 @@ void ska::ScriptRefreshSystem::refresh() {
 		const unsigned int blockSize = m_world.getBlockSize();
 		const Point<int> oldCenterPos = Point<int>(sac.lastBlockPos);
 
-		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, -1);
+		worldScripts = m_world.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, static_cast<const unsigned int>(-1));
 		if (iac[DoAction]) {
 			//clog << "Enter Pressed" << std::endl;
 			auto tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
@@ -155,7 +155,7 @@ void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const En
 const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
 	const unsigned int blockSizeSquared = m_world.getBlockSize() * m_world.getBlockSize();
 
-	ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);
+	//ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);
 	PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(script);
 
 	int varX = (scriptPos.x - entityPos.x);

@@ -14,7 +14,7 @@ Scene(oldScene) {
 
 }
 
-void AbstractNoGUISceneMap::load(ska::ScenePtr* lastScene) {
+void AbstractNoGUISceneMap::load(ska::ScenePtr*) {
 
 }
 

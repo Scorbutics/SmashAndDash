@@ -78,7 +78,7 @@ const ska::Rectangle& ska::Widget::getBox() const {
 	return m_box;
 }
 
-bool ska::Widget::notify(IWidgetEvent& e) {
+bool ska::Widget::notify(IWidgetEvent&) {
 	/* A non-handled widget cannot be notified */
 	return false;
 }

@@ -1,10 +1,9 @@
 #include "WindowRenderer.h"
 
-int WindowRenderer::render(ska::Window* win, ska::Texture* tex, int x, int y, ska::Rectangle* clip)
-{
+int WindowRenderer::render(ska::Window*, ska::Texture* tex, int x, int y, ska::Rectangle* clip) const{
 	ska::Rectangle destBuf = { x, y, tex->getWidth(), tex->getHeight() };
 
-	if (clip != NULL) {
+	if (clip != nullptr) {
 		destBuf.w = clip->w;
 		destBuf.h = clip->h;
 	}

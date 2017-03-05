@@ -8,7 +8,7 @@
 #include "../Script/ScriptSleepComponent.h"
 #include "../Graphic/System/CameraSystem.h"
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight) :  
+ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :  
 	m_blockSize(tailleBloc), 
 	m_chipset("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png"),
 	m_autoScriptsPlayed(false), 
@@ -291,31 +291,30 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBo
 		blockArea.y = 0;
 	}
 
-	if (blockArea.x + 1 > (int) maxWidth) {
+	if (blockArea.x + 1 > static_cast<int>(maxWidth)) {
 		blockArea.x = maxWidth - 1;
 	}
 
-	if (blockArea.y + 1 > (int) maxHeight) {
+	if (blockArea.y + 1 > static_cast<int>(maxHeight)) {
 		blockArea.y = maxHeight - 1;
 	}
 
-	if (blockArea.x + blockArea.w > (int) maxWidth) {
+	if (blockArea.x + blockArea.w > static_cast<int>(maxWidth)) {
 		blockArea.w = maxWidth - blockArea.x;
 	}
 
-	if (blockArea.y + blockArea.h > (int) maxHeight) {
+	if (blockArea.y + blockArea.h > static_cast<int>(maxHeight)) {
 		blockArea.h = maxHeight - blockArea.y;
 	}
 
-	for (unsigned int x = 0; x != blockArea.w; x++) {
-		for (unsigned int y = 0; y != blockArea.h; y++) {
+	for (unsigned int x = 0; x != static_cast<unsigned int>(blockArea.w); x++) {
+		for (unsigned int y = 0; y != static_cast<unsigned int>(blockArea.h); y++) {
 			Rectangle rect{ x + blockArea.x, y + blockArea.y, hitBox.w, hitBox.h};
 			blocksPos.push_back(rect);
 		}
 	}
 
-	auto x = *blocksPos.begin();
-	std::sort(blocksPos.begin(), blocksPos.end(), [hitBoxBlock](const decltype(x)& it1, decltype(x)& it2) -> bool {
+	std::sort(blocksPos.begin(), blocksPos.end(), [hitBoxBlock](const decltype(*blocksPos.begin())& it1, decltype(*blocksPos.begin())& it2) -> bool {
 		return RectangleUtils::distanceSquared(it1, hitBoxBlock) < RectangleUtils::distanceSquared(it2, hitBoxBlock);
 	});
 

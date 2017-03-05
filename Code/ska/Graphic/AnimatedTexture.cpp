@@ -45,11 +45,11 @@ void ska::AnimatedTexture::operator=(const AnimatedTexture& text) {
 }
 
 void ska::AnimatedTexture::setAlpha(int alpha) {
-	m_sprite.setAlpha(alpha);
+	m_sprite.setAlpha(static_cast<Uint8>(alpha));
 }
 
 void ska::AnimatedTexture::setColor(int red, int green, int blue) {
-	m_sprite.setColor(red, green, blue);
+	m_sprite.setColor(static_cast<Uint8>(red), static_cast<Uint8>(green), static_cast<Uint8>(blue));
 }
 
 void ska::AnimatedTexture::setDelay(const unsigned int delay) {

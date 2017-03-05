@@ -261,8 +261,7 @@ bool AreNodesEquals(Node *a, Node *b)
 }
 
 
-std::vector<Node*> GetNeighbours(Node *n, std::vector<std::vector<Node>> &graphe)
-{
+std::vector<Node*> GetNeighbours(Node *n, std::vector<std::vector<Node>> &) {
     int currentPos[4];
 
 	std::vector<Node*> neighbours;
@@ -323,7 +322,7 @@ void RemoveFromList(std::vector<Node*> *list, Node* n)
     *list = tmp;
 }
 
-void ska::Path::createGraphe(std::vector<std::vector<Node>> *graphe)
+void ska::Path::createGraphe(std::vector<std::vector<Node>> *)
 {
     /*for(int i = 0; i < w.getNbrBlocX(); i++)
     {

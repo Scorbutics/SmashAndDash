@@ -22,13 +22,13 @@ void ska::BlockRenderable::refresh() {
 	}
 }
 
-ska::Rectangle ska::BlockRenderable::determineFrame(Rectangle pos, const Rectangle* rectAnim) const {
-	Rectangle buf = m_spritePosInChipset;
+ska::Rectangle ska::BlockRenderable::determineFrame(Rectangle, const Rectangle* rectAnim) const {
+	auto buf = m_spritePosInChipset;
 
 	if (m_auto_animation) {
 		Rectangle bufRectAnim;
 
-		if (rectAnim != NULL) {
+		if (rectAnim != nullptr) {
 			bufRectAnim = *rectAnim;
 		} else  {
 			bufRectAnim = m_anim.getOffsetAndFrameSize();

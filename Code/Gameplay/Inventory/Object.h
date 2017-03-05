@@ -22,7 +22,7 @@ class Object {
 		m_pos.y = (int) pos.y;
 	}
 
-	const ska::Point<int>& getPos();
+	const ska::Point<int>& getPos() const;
 	ska::Texture* getSprite();
 	ska::Animation* getAnimation();
     std::string getDescription();

@@ -147,7 +147,7 @@ void ska::PhysicSprite::adaptPositionToBlock()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	Rectangle bufLastRect = m_rect;
+	//Rectangle bufLastRect = m_rect;
 	/*m_rect.x = (((this->getHitboxCenterPos().x) / TAILLEBLOC)) *TAILLEBLOC;
 	m_rect.y = (((this->getHitboxCenterPos().y) / TAILLEBLOC)) *TAILLEBLOC;
 	m_rect.x -= m_offset[3];

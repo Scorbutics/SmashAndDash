@@ -25,16 +25,25 @@ namespace ska {
 			HandledWidget<HL...>(parent, position) {
 		}
 
-		template <class SubWidget>
+		template <class SubWidget, typename std::enable_if<std::is_base_of<IHandledWidget, SubWidget>::value>::type* dummy = 0>
 		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
 			w->setPriority(static_cast<int>(m_globalList.size()));
-			if (std::is_base_of<IHandledWidget, SubWidget>::value && !reinterpret_cast<IHandledWidget&>(*w.get()).isMaskEmpty()) {
+			if (!reinterpret_cast<IHandledWidget&>(*w.get()).isMaskEmpty()) {
 				m_handledWidgets.push_back(std::move(w));
 				m_globalList.push_back(m_handledWidgets.back().get());
 			} else {
 				m_widgets.push_back(std::move(w));
 				m_globalList.push_back(m_widgets.back().get());
 			}
+			return reinterpret_cast<SubWidget*>(m_globalList.back());
+		}
+
+		template <class SubWidget, typename std::enable_if<!std::is_base_of<IHandledWidget, SubWidget>::value>::type* dummy = 0>
+		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
+			w->setPriority(static_cast<int>(m_globalList.size()));
+			m_widgets.push_back(std::move(w));
+			m_globalList.push_back(m_widgets.back().get());
+			
 			return reinterpret_cast<SubWidget*>(m_globalList.back());
 		}
 

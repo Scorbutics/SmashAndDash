@@ -18,7 +18,7 @@ ska::Layer::Layer(World& w, std::string pathFile, std::string chipsetName, Layer
     reset(pathFile, chipsetName);
 }
 
-ska::Layer::Layer(World& w, Layer* parent) : m_world(w), m_renderable(w) {
+ska::Layer::Layer(World& w, Layer*) : m_parent(nullptr), m_world(w), m_renderable(w), m_fileWidth(0), m_fileHeight(0){
 }
 
 ska::Layer* ska::Layer::getParent() const {
@@ -79,7 +79,7 @@ void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
 	m_world.setNbrBlocY(m_fileHeight);
 
 	auto& chipset = m_world.getChipset();
-	const unsigned int blockSize = m_world.getBlockSize();
+	//const auto blockSize = m_world.getBlockSize();
 
 	std::vector<std::vector<BlockRenderable*>> renderableBlocks;
 	m_block.resize(m_fileWidth);

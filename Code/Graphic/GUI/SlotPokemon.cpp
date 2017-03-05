@@ -12,13 +12,12 @@ WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventLis
 	m_data = nullptr;
 	
 	Widget& tthis = *this;
-	auto spriteArea = std::unique_ptr<ska::ButtonSprite>(new ska::ButtonSprite(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0 }, [&](Widget*, ska::ClickEvent&) {
-	}));
-	auto nameArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4)));
-	auto levelArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22)));
-	auto type1Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 1 : ", m_fontSize, ska::Point<int>(112, 40)));
-	auto pvArea = std::unique_ptr<ska::Label>(new ska::Label(*this, "PVs : ", m_fontSize, ska::Point<int>(208, 22)));
-	auto type2Area = std::unique_ptr<ska::Label>(new ska::Label(*this, "Type 2 : ", m_fontSize, ska::Point<int>(208, 40)));
+	auto spriteArea = std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{0}, [&](Widget*, ska::ClickEvent&) { });
+	auto nameArea = std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4));
+	auto levelArea = std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22));
+	auto type1Area = std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(112, 40));
+	auto pvArea = std::make_unique<ska::Label>(*this, "PVs : ", m_fontSize, ska::Point<int>(208, 22));
+	auto type2Area = std::make_unique<ska::Label>(*this, "Type 2 : ", m_fontSize, ska::Point<int>(208, 40));
 
 	m_sprite = addWidget(spriteArea);
 	m_name = addWidget(nameArea);
@@ -27,7 +26,7 @@ WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventLis
 	m_type1 = addWidget(type1Area);
 	m_type2 = addWidget(type2Area);
 
-	addHandler<ska::ClickEventListener>([this](Widget* tthis, ska::ClickEvent& e) {
+	addHandler<ska::ClickEventListener>([this](Widget*, ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {
 			ska::ValueChangedEvent<SlotPokemonDataPtr*> vce(nullptr, &m_data);
 			m_data->parent = this;

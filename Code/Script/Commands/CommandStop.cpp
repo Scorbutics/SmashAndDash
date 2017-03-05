@@ -16,7 +16,7 @@ int CommandStop::argumentsNumber() {
 	return 0;
 }
 
-std::string CommandStop::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandStop::execute(ska::ScriptComponent&, std::vector<std::string>&)
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	ofstream scriptList;

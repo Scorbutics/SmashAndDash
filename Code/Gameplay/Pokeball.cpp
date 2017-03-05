@@ -104,7 +104,7 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 void Pokeball::capture(/*Character* pkmn*/) {
 //	WGameCore& wScreen = WGameCore::getInstance();
 	//ska::World& w = wScreen.getWorld();
-	ska::Rectangle oRel = { 0 };
+	//ska::Rectangle oRel = { 0 };
 
 
 	/* Oh mon dieu... */
@@ -336,8 +336,8 @@ void Pokeball::display() const {
 
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {
-		ska::Rectangle animPos = m_gestionAnim.getOffsetAndFrameSize();
-		ska::Rectangle oRel = { 0 };
+		auto animPos = m_gestionAnim.getOffsetAndFrameSize();
+		//ska::Rectangle oRel = { 0 };
 
 		m_sprite.render(m_pokeballPos.x, m_pokeballPos.y, &animPos);
 	}
@@ -345,8 +345,8 @@ void Pokeball::display() const {
 
     if(m_isOpenning)  {
 		//Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
-		ska::Rectangle animVortexPos = m_gestionAnimVortex.getOffsetAndFrameSize();
-		ska::Point<int> buf = m_pokeballPos;
+	    auto animVortexPos = m_gestionAnimVortex.getOffsetAndFrameSize();
+	    auto buf = m_pokeballPos;
 
 		m_openPokeball.render(buf.x, buf.y);
 

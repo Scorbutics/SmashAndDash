@@ -5,16 +5,20 @@
 #include "../ska/Utils/NumberUtils.h"
 
 Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
-    m_world(w),
-    m_number(0) {
+    m_number(0),
+    m_world(w) {
 	m_active = false;
 	m_mosaic = false;
 	load(wSprite, number, distance, intensityX, intensityY, alpha);
 }
 
-Weather::Weather(ska::World& w) :
-    m_world(w),
-    m_number(0) {
+Weather::Weather(ska::World& w) : 
+	m_intensityX(0), 
+	m_intensityY(0), 
+	m_number(0),
+    m_distance(0), 
+	m_world(w) {
+
 	m_active = false;
 	m_mosaic = false;
 }
@@ -27,7 +31,7 @@ void Weather::load(const std::string& wSprite, int number, int distance, int int
 	m_active = true;
 
 	if (!wSprite.empty()) {
-		m_weather = ska::TexturePtr(new ska::Texture(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha));
+		m_weather = std::make_unique<ska::Texture>(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha);
 	}
 
 	resetRandomPos();
@@ -60,47 +64,45 @@ void Weather::resetPos() {
 }
 
 void Weather::resetRandomPos() {
-    for(int i = 0; i < m_number; i++) {
-		float radius = (float) ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2);
+    for(auto i = 0; i < m_number; i++) {
+	    auto radius = static_cast<float>(ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2));
 		m_pos[i] = ska::NumberUtils::cartesian(radius, ska::NumberUtils::random(0.0, 2*M_PI));
     }
 }
 
 void Weather::update() {
-	const ska::Rectangle* worldView = m_world.getView();
+	auto worldView = m_world.getView();
 
 	if (!m_active || worldView == nullptr) {
 		return;
 	}
 
-	const float worldWidth = (float)m_world.getPixelWidth();
-	const float worldHeight = (float)m_world.getPixelHeight();
+	const auto worldWidth = static_cast<float>(m_world.getPixelWidth());
+	const auto worldHeight = static_cast<float>(m_world.getPixelHeight());
 
-	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
+	//const ska::Rectangle oRel = { -worldView->x, -worldView->y };
 
-	for (int i = 0; i < m_number; i++) {
+	for (auto i = 0; i < m_number; i++) {
 
-		m_pos[i].x += (float)(m_intensityX / 5.);
-		m_pos[i].y += (float)(m_intensityY / 5.);
+		m_pos[i].x += static_cast<float>(m_intensityX / 5.);
+		m_pos[i].y += static_cast<float>(m_intensityY / 5.);
 
 		if ((m_pos[i].x + m_weather->getWidth()) < 0 && m_intensityX < 0) {
 			m_pos[i].x = worldWidth;
-		}
-		else if (m_pos[i].x > worldWidth && m_intensityX > 0) {
+		} else if (m_pos[i].x > worldWidth && m_intensityX > 0) {
 			m_pos[i].x = -worldWidth;
 		}
 
 		if ((m_pos[i].y + m_weather->getHeight())< 0 && m_intensityY < 0) {
 			m_pos[i].y = worldHeight;
-		}
-		else if (m_pos[i].y > worldHeight && m_intensityY > 0) {
+		} else if (m_pos[i].y > worldHeight && m_intensityY > 0) {
 			m_pos[i].y = -worldHeight;
 		}
 	}
 }
 
 void Weather::display() const {
-	const ska::Rectangle* worldView = m_world.getView();
+	auto worldView = m_world.getView();
 
 	if (!m_active || worldView == nullptr) {
 		return;
@@ -108,10 +110,10 @@ void Weather::display() const {
 
 	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
 
-	const float worldWidth = (float) m_world.getPixelWidth();
-	const float worldHeight = (float) m_world.getPixelHeight();
+	const auto worldWidth = static_cast<float>(m_world.getPixelWidth());
+	const auto worldHeight = static_cast<float>(m_world.getPixelHeight());
 
-    for(int i = 0; i < m_number; i++) {
+    for(auto i = 0; i < m_number; i++) {
 
 		ska::Rectangle buf;
 		buf.x = static_cast<int>(m_pos[i].x) + oRel.x;
@@ -122,8 +124,8 @@ void Weather::display() const {
 			nbrMosaicX = static_cast<int>(worldWidth / m_weather->getWidth() + 1);
 			nbrMosaicY = static_cast<int>(worldHeight / m_weather->getHeight() + 1);
 
-            for(auto i = 0; i < nbrMosaicX; i++) {
-				buf.x = i * m_weather->getWidth() + oRel.x;
+            for(auto i1 = 0; i1 < nbrMosaicX; i1++) {
+				buf.x = i1 * m_weather->getWidth() + oRel.x;
                 for(auto j = 0; j < nbrMosaicY; j++) {
 					buf.y = j*m_weather->getHeight() + oRel.y;
 					if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
@@ -138,11 +140,9 @@ void Weather::display() const {
     }
 }
 
-void Weather::hide(bool active)
-{
+void Weather::hide(bool active) {
     m_active = !active;
 }
 
-Weather::~Weather()
-{
+Weather::~Weather() {
 }

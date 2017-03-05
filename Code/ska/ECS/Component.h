@@ -5,7 +5,7 @@
 namespace ska {
 	
 	class Component;
-	typedef const std::string(*field_serializer_method)(const Component& component);
+	typedef std::string(*field_serializer_method)(const Component& component);
 	class Component {
 	public:
 		Component() = default;

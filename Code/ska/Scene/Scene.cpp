@@ -24,7 +24,7 @@ void ska::Scene::graphicUpdate(DrawableContainer& drawables) {
 	}
 }
 
-void ska::Scene::eventUpdate(bool movingDisallowed) {
+void ska::Scene::eventUpdate(bool) {
 
 	/* Logics */
 	for (auto& s : m_logics) {

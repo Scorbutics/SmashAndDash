@@ -172,9 +172,9 @@ bool ska::PhysicObject::isDodging()
 void ska::PhysicObject::setDirection(int x)
 {
 	if(x >= 0 && x < 8)
-		m_direction = x;
+		m_direction = static_cast<unsigned int>(x);
 	else
-		m_direction = -1;
+		m_direction = static_cast<unsigned int>(-1);
 }
 
 int ska::PhysicObject::getDirection() const
@@ -610,9 +610,9 @@ bool ska::PhysicObject::collision(Rectangle targetPos)
 bool ska::PhysicObject::collision()
 {
 	std::vector<Rectangle> ids, ids2;
-	Rectangle lastTheoricPos = m_rect;
-	Rectangle rectOrigin = m_rect;
-	float currentSpeed = getSpeed();
+//	Rectangle lastTheoricPos = m_rect;
+	//Rectangle rectOrigin = m_rect;
+//	float currentSpeed = getSpeed();
 
 	//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
 	//(y(t) - y(t-1))/(t - (t-1)) = dy/dt (t) = vy(t)
@@ -625,7 +625,7 @@ bool ska::PhysicObject::collision()
 		return true;       
 
 	//puis on recommence selon les y maintenant
-	Rectangle buf = m_rect;
+//	Rectangle buf = m_rect;
 	m_rect.y += (int)(m_speedy + 0.5);
 	ids2 = this->collisionNPC();
 

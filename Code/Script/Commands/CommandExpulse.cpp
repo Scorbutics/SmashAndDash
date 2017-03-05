@@ -55,7 +55,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
-	iamc.delay = -1;
+	iamc.delay = static_cast<unsigned int>(-1);
 	iamc.ghost = true;
 
 	iamc.directions.push_back(vector);

@@ -28,8 +28,8 @@ bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
 
 	SkillComponent* sc = nullptr;
 	BattleComponent* bc = nullptr;
-	ska::EntityId skillEntity;
-	ska::EntityId targettedEntity;
+	ska::EntityId skillEntity = static_cast<unsigned int>(-1);
+	ska::EntityId targettedEntity = static_cast<unsigned int>(-1);
 
 	/* Skill collision with a battle entity => Statistics modification */
 	if (m_entityManager.hasComponent<SkillComponent>(col.origin) && m_entityManager.hasComponent<BattleComponent>(col.target)) {

@@ -15,7 +15,7 @@ int CommandPlayShaking::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayShaking::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandPlayShaking::execute(ska::ScriptComponent&, std::vector<std::string>& args)
 {
 	//TODO Use a ShakerSystem
 

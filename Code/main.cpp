@@ -22,7 +22,7 @@ int main (int argc, char *argv[])
     argc = argc;
     argv = argv;
 
-    int startPosx = 0, startPosy = 0, widthBlocks = 0, heightBlocks = 0;
+	auto widthBlocks = 0, heightBlocks = 0;
     std::string startMapName, startMapChipsetName;
 
 	std::ofstream logFile("stdlog.txt", std::ios::trunc);
@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
 	std::cerr.rdbuf(errFile.rdbuf());
 
 	/* TODO : ne plus utiliser srand...  */
-    srand((unsigned int)time(NULL));
+    srand(static_cast<unsigned int>(time(nullptr)));
 
 
 	/* TODO : réécrire dans la classe Core (pour une fois, un singleton, car une seule initialisation par application cliente) */
@@ -62,7 +62,7 @@ int main (int argc, char *argv[])
 	ska::IniReader reader("gamesettings.ini");
 	widthBlocks = reader.get<int>("Window width_blocks");
 	heightBlocks = reader.get<int>("Window height_blocks");
-	const std::string& title = reader.get<std::string>("Window title");
+	const auto& title = reader.get<std::string>("Window title");
 
 	try {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
@@ -76,7 +76,7 @@ int main (int argc, char *argv[])
 	} catch (ska::GenericException& e) {
 		/* Handles Generics Game exceptions */
 		std::cerr << e.what() << std::endl;
-		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), NULL);
+		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), nullptr);
 	}
 
 	IMG_Quit();

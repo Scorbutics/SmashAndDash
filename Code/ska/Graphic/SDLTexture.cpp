@@ -19,12 +19,12 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	SDLSurface sprite;
 	m_texture = nullptr;
 	m_fileName = fileName;
-	m_r = r;
-	m_g = g;
-	m_b = b;
+	m_r = static_cast<Uint8>(r);
+	m_g = static_cast<Uint8>(g);
+	m_b = static_cast<Uint8>(b);
 
 	m_w = m_h = 0;
-	m_alpha = (a > 0 && a < 255) ? a : 255;
+	m_alpha = static_cast<Uint8>((a > 0 && a < 255) ? a : 255);
 
 	sprite.load(m_fileName);
 

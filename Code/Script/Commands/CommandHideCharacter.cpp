@@ -22,7 +22,7 @@ int CommandHideCharacter::argumentsNumber() {
 std::string CommandHideCharacter::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
 {
 	const std::string& id = args[0];
-	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+	//ska::EntityId internalEntity = script.parent->getEntityFromName(id);
 	const int hiding = ska::StringUtils::strToInt(args[2]);
 	if (hiding) {
 		m_entityManager.removeComponent<ska::GraphicComponent>(script.getEntity());

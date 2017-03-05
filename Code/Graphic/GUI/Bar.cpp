@@ -17,15 +17,15 @@ m_maxValue(maxValue),
 m_cameraSystem(cam),
 m_entityId(entityId) {
         
-	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
-    m_barSize.w = (int)((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
-    m_barSize.h = (int)((m_barStyle.getHeight() * 5) /6);
+	//const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+    m_barSize.w = static_cast<int>((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
+    m_barSize.h = static_cast<int>((m_barStyle.getHeight() * 5) /6);
 	m_barSize.x = m_barStyle.getWidth() / 12;
 	m_barSize.y = m_barStyle.getHeight() / 12;
 
     m_visible = true;
 
-	setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
+	DrawableFixedPriority::setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
 }
 
 void Bar::display() const {

@@ -19,7 +19,7 @@ void ShakerManager::refresh()
 
 	if(SDL_GetTicks() - m_t0 < m_duration)
 	{
-		ska::Rectangle buf = m_oRelBackup;
+		//ska::Rectangle buf = m_oRelBackup;
 
 		/*if (m_sens < 0)
 			buf.x = rand()%(m_intensity+1) + m_oRelBackup.x;

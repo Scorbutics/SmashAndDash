@@ -7,7 +7,7 @@ ska::SoundRenderer::SoundRenderer(unsigned int channels) :
 	ska::Observer<WorldEvent>(bind(&SoundRenderer::handleWorldEvent, this, std::placeholders::_1)),
 	m_currentPlayed(nullptr) {
 
-	if(Mix_AllocateChannels(channels) != channels) {
+	if(Mix_AllocateChannels(channels) != static_cast<int>(channels)) {
 		std::cerr << "SoundManager error : " << Mix_GetError() << std::endl;
 	}
 }

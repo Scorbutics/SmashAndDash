@@ -31,7 +31,7 @@ std::string GlobalScriptVariables::returnValue(std::string key, const int idType
 	return "";
 }
 
-std::string GlobalScriptVariables::getPokemonHp(int idType, int id)
+std::string GlobalScriptVariables::getPokemonHp(int, int)
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	if (wScreen.getFight().getPokemon() != NULL) {
@@ -40,7 +40,7 @@ std::string GlobalScriptVariables::getPokemonHp(int idType, int id)
 	return "";
 }
 
-std::string GlobalScriptVariables::getCharacterDirection(int idType, int id) {
+std::string GlobalScriptVariables::getCharacterDirection(int , int ) {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	const Character* c = wScreen.getEntityFactory().getNPC(idType, id);
 	if (c != NULL) {
@@ -49,7 +49,7 @@ std::string GlobalScriptVariables::getCharacterDirection(int idType, int id) {
 	return "";
 }
 
-std::string GlobalScriptVariables::getCharacterPosX(int idType, int id) {
+std::string GlobalScriptVariables::getCharacterPosX(int , int ) {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	const Character* c = wScreen.getEntityFactory().getNPC(idType, id);
 	if (c != NULL) {
@@ -58,7 +58,7 @@ std::string GlobalScriptVariables::getCharacterPosX(int idType, int id) {
 	return "";
 }
 
-std::string GlobalScriptVariables::getCharacterPosY(int idType, int id) {
+std::string GlobalScriptVariables::getCharacterPosY(int , int ) {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	const Character* c = wScreen.getEntityFactory().getNPC(idType, id);
 	if (c != NULL) {
@@ -67,7 +67,7 @@ std::string GlobalScriptVariables::getCharacterPosY(int idType, int id) {
 	return "";
 }
 
-std::string GlobalScriptVariables::getPokemonHpMax(int idType, int id)
+std::string GlobalScriptVariables::getPokemonHpMax(int , int )
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	if (wScreen.getFight().getPokemon() != NULL) {
@@ -76,7 +76,7 @@ std::string GlobalScriptVariables::getPokemonHpMax(int idType, int id)
 	return "";
 }
 
-std::string GlobalScriptVariables::getOpponentHp(int idType, int id)
+std::string GlobalScriptVariables::getOpponentHp(int , int )
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	if (wScreen.getFight().getOpponent() != NULL) {
@@ -85,7 +85,7 @@ std::string GlobalScriptVariables::getOpponentHp(int idType, int id)
 	return "";
 }
 
-std::string GlobalScriptVariables::getOpponentHpMax(int idType, int id)
+std::string GlobalScriptVariables::getOpponentHpMax(int , int )
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	if (wScreen.getFight().getOpponent() != NULL) {
@@ -94,7 +94,7 @@ std::string GlobalScriptVariables::getOpponentHpMax(int idType, int id)
 	return "";
 }
 
-std::string GlobalScriptVariables::getOpponentCaptureRate(int idType, int id)
+std::string GlobalScriptVariables::getOpponentCaptureRate(int , int )
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	if (wScreen.getFight().getOpponent() != NULL) {

@@ -13,6 +13,6 @@ private:
 	~WindowRenderer() {}
 
 public:		
-	int render(ska::Window* win, ska::Texture* tex, int x, int y, ska::Rectangle* clip = NULL);
+	int render(ska::Window* win, ska::Texture* tex, int x, int y, ska::Rectangle* clip = nullptr) const;
 		
 };

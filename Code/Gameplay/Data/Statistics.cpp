@@ -36,16 +36,16 @@ Statistics::Statistics(ska::IniReader* data, std::string block)
 	m_stats.speed = data->get<int>(block + " speed") / 2;
 	m_stats.attack = data->get<int>(block + " attack");
 	m_stats.droppedExp = data->get<int>("Experience level_1_exp_dropped");
-	m_slopes.hp = (float)((data->get<int>(block + " hp_max") - m_stats.hp) / 100.);
-	m_slopes.defense = (float)((data->get<int>(block + " spe_defense_max") - m_stats.speDefense) / 100.);
-	m_slopes.speed = (float)((data->get<int>(block + " speed_max") - m_stats.speed) / 100.);
-	m_slopes.speAttack = (float)((data->get<int>(block + " spe_attack_max") - m_stats.speAttack) / 100.);
-	m_slopes.attack = (float)((data->get<int>(block + " attack_max") - m_stats.attack) / 100.);
-	m_slopes.defense = (float)((data->get<int>(block + " defense_max") - m_stats.defense) / 100.);
+	m_slopes.hp = ((data->get<int>(block + " hp_max") - m_stats.hp) / 100.F);
+	m_slopes.defense = ((data->get<int>(block + " spe_defense_max") - m_stats.speDefense) / 100.F);
+	m_slopes.speed = ((data->get<int>(block + " speed_max") - m_stats.speed) / 100.F);
+	m_slopes.speAttack = ((data->get<int>(block + " spe_attack_max") - m_stats.speAttack) / 100.F);
+	m_slopes.attack = ((data->get<int>(block + " attack_max") - m_stats.attack) / 100.F);
+	m_slopes.defense = ((data->get<int>(block + " defense_max") - m_stats.defense) / 100.F);
 	m_stats.exp = data->get<int>("Experience level_1_exp_needed");
-	m_slopes.exp = (float) m_stats.exp;
+	m_slopes.exp = static_cast<float>(m_stats.exp);
 
-	m_slopes.droppedExp = (float)(abs((int)(m_slopes.exp - m_stats.droppedExp)) / 3.);
+	m_slopes.droppedExp = (abs(static_cast<int>(m_slopes.exp - m_stats.droppedExp)) / 3.F);
 
 
 	m_type = STATS_TYPE_LINEAR;
@@ -54,16 +54,16 @@ Statistics::Statistics(ska::IniReader* data, std::string block)
 
 void Statistics::nextLevel() {
 	m_level++;
-	m_stats.exp += (int) m_slopes.exp;
+	m_stats.exp += static_cast<int>(m_slopes.exp);
 	switch(m_type) {
 		case STATS_TYPE_LINEAR:
-			m_stats.hp += (int) m_slopes.hp;
-			m_stats.attack += (int) m_slopes.attack;
-			m_stats.defense += (int) m_slopes.defense;
-			m_stats.speed += (int) m_slopes.speed;
-			m_stats.speAttack += (int) m_slopes.speAttack;
-			m_stats.speDefense += (int) m_slopes.speDefense;
-			m_stats.droppedExp += (int) m_slopes.droppedExp;
+			m_stats.hp += static_cast<int>(m_slopes.hp);
+			m_stats.attack += static_cast<int>(m_slopes.attack);
+			m_stats.defense += static_cast<int>(m_slopes.defense);
+			m_stats.speed += static_cast<int>(m_slopes.speed);
+			m_stats.speAttack += static_cast<int>(m_slopes.speAttack);
+			m_stats.speDefense += static_cast<int>(m_slopes.speDefense);
+			m_stats.droppedExp += static_cast<int>(m_slopes.droppedExp);
 			break;
 
 		case STATS_TYPE_SQUARE:
@@ -76,30 +76,29 @@ void Statistics::nextLevel() {
 }
 
 void Statistics::setLevel(unsigned int level) {
-	if(m_level != level) {
-		m_stats.hp -= (int)m_slopes.hp;
-		m_stats.attack -= (int)m_slopes.attack;
-		m_stats.defense -= (int)m_slopes.defense;
-		m_stats.speed -= (int)m_slopes.speed;
-		m_stats.speAttack -= (int)m_slopes.speAttack;
-		m_stats.speDefense -= (int)m_slopes.speDefense;
-		m_stats.droppedExp -= (int)m_slopes.droppedExp;
+	if(m_level != static_cast<int>(level)) {
+		m_stats.hp -= static_cast<int>(m_slopes.hp);
+		m_stats.attack -= static_cast<int>(m_slopes.attack);
+		m_stats.defense -= static_cast<int>(m_slopes.defense);
+		m_stats.speed -= static_cast<int>(m_slopes.speed);
+		m_stats.speAttack -= static_cast<int>(m_slopes.speAttack);
+		m_stats.speDefense -= static_cast<int>(m_slopes.speDefense);
+		m_stats.droppedExp -= static_cast<int>(m_slopes.droppedExp);
 		m_level = level;
-		m_stats.exp += (int)m_slopes.exp*level;
-		m_stats.hp += (int)m_slopes.hp*level;
-		m_stats.attack += (int)m_slopes.attack*level;
-		m_stats.defense += (int)m_slopes.defense*level;
-		m_stats.speed += (int)m_slopes.speed*level;
-		m_stats.speAttack += (int)m_slopes.speAttack*level;
-		m_stats.speDefense += (int)m_slopes.speDefense*level;
-		m_stats.droppedExp += (int)m_slopes.droppedExp*level;
+		m_stats.exp += static_cast<int>(m_slopes.exp)*level;
+		m_stats.hp += static_cast<int>(m_slopes.hp)*level;
+		m_stats.attack += static_cast<int>(m_slopes.attack)*level;
+		m_stats.defense += static_cast<int>(m_slopes.defense)*level;
+		m_stats.speed += static_cast<int>(m_slopes.speed)*level;
+		m_stats.speAttack += static_cast<int>(m_slopes.speAttack)*level;
+		m_stats.speDefense += static_cast<int>(m_slopes.speDefense)*level;
+		m_stats.droppedExp += static_cast<int>(m_slopes.droppedExp)*level;
 
 	}
 }
 
-int Statistics::getMaxSpeed() const
-{
-	return (int)(m_stats.speed + 21 * m_slopes.speed);
+int Statistics::getMaxSpeed() const {
+	return static_cast<int>(m_stats.speed + 21 * m_slopes.speed);
 }
 
 int Statistics::getLevel() const
@@ -147,23 +146,21 @@ int Statistics::getDroppedExperience() const
 	return m_stats.droppedExp;
 }
 
-void Statistics::setExperience(int exp)
-{
-	setLevel((int)(exp / m_slopes.exp));
+void Statistics::setExperience(int exp) {
+	setLevel(static_cast<int>(exp / m_slopes.exp));
 }
 
-bool Statistics::addExperience(int exp)
-{
-	unsigned int lastexp = m_stats.exp + exp, lastlevel = m_level;
+bool Statistics::addExperience(int exp) {
+	unsigned int lastexp = m_stats.exp + exp;
+	auto lastlevel = m_level;
 	m_stats.exp += exp;
-	setLevel((int)(m_stats.exp / m_slopes.exp));
+	setLevel(static_cast<int>(m_stats.exp / m_slopes.exp));
 	m_stats.exp = lastexp;
 
 	return (m_level != lastlevel);
 }
 
-Statistics::~Statistics()
-{
+Statistics::~Statistics() {
 }
 
 

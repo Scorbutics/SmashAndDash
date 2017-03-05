@@ -204,13 +204,13 @@ void SavegameManager::loadTrainer() {
 	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
 
 	for (unsigned int i = 0; reader.exists("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
-		const std::string& id = ska::StringUtils::intToStr(i);
-		loadItem(reader.get<int>("Items " + id + "_id"), (unsigned int)reader.get<int>("Items " + id + "_amount"));
+		const auto& id = ska::StringUtils::intToStr(i);
+		loadItem(reader.get<int>("Items " + id + "_id"), reader.get<unsigned int>("Items " + id + "_amount"));
 	}
 
 }
 
-void SavegameManager::loadItem( int id, unsigned int amount ) {
+void SavegameManager::loadItem( int, unsigned int) {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	//wScreen.getInventory().add(id, amount);
 }

@@ -11,9 +11,9 @@ ska::CollisionSystem::CollisionSystem(World& w, EntityManager& entityManager, Ga
 
 void ska::CollisionSystem::refresh() {
 	for (EntityId entityId : m_processed) {
-		PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
+		/*PositionComponent& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 		HitboxComponent& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
-		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);*/
 		
 		std::vector<Point<int>> lastBlockColPosX;
 		std::vector<Point<int>> lastBlockColPosY;
@@ -72,14 +72,16 @@ void ska::CollisionSystem::refresh() {
 		}
 
 		if (collided) {
-			m_ged.Observable<CollisionEvent>::notifyObservers(CollisionEvent(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId)));
+			CollisionEvent ce(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId));
+			m_ged.Observable<CollisionEvent>::notifyObservers(ce);
 		}
 
 		if (entityCollided) {
 			entityCollided = false;
 			/* When collision between entities is detected, we can do things as decreasing health,
 			pushing entities, or any statistic interaction */
-			m_ged.Observable<CollisionEvent>::notifyObservers(CollisionEvent(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId)));
+			CollisionEvent ce(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId));
+			m_ged.Observable<CollisionEvent>::notifyObservers(ce);
 		}
 	}
 }

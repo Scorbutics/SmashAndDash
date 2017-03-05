@@ -31,7 +31,7 @@ m_window(w) {
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
 }
 
-void AbstractSceneMap::load(ska::ScenePtr* lastScene) {
+void AbstractSceneMap::load(ska::ScenePtr*) {
 	m_worldScene.linkCamera(&getCamera());
 	bool firstTime = !m_worldScene.loadedOnce();
 	if (!firstTime) {

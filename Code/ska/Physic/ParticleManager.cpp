@@ -159,8 +159,7 @@ void ska::ParticleManager::refresh()
 }
 
 //Effondrement
-void ska::ParticleManager::playCrumbling(int idSprite, float acceleration, float density, unsigned int duration)
-{
+void ska::ParticleManager::playCrumbling(int , float , float , unsigned int ) {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
 	/*m_duration = duration;

@@ -86,42 +86,34 @@ bool Object::use()
 }
 
 //utilisation choisie sur le pokémon numéro i de l'équipe
-bool Object::use(int i)
+bool Object::use(int)
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-    if(m_action[0] == '+')
-    {
-		if (std::string::npos != m_action.find("heal"))
-        {
-			std::string pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
+    if(m_action[0] == '+') {
+		if (std::string::npos != m_action.find("heal")) {
+	        auto pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
 			/*if (wScreen.getPokemonManager().getPokemon(i)->isAlive())
 				wScreen.getPokemonManager().getPokemon(i)->setHP(wScreen.getPokemonManager().getPokemon(i)->getHp() + atoi(pv.c_str()));*/
         }
     }
-    else
-    {
-
+    else {
     }
 	return true;
 }
 
-const ska::Point<int>& Object::getPos()
-{
+const ska::Point<int>& Object::getPos() const{
     return m_pos;
 }
 
-ska::Texture* Object::getSprite()
-{
+ska::Texture* Object::getSprite() {
     return &m_sprite;
 }
 
-ska::Animation* Object::getAnimation()
-{
+ska::Animation* Object::getAnimation() {
     return &m_animation;
 }
 
-std::string Object::getDescription()
-{
+std::string Object::getDescription() {
     return m_description;
 }
 

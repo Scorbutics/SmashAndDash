@@ -109,7 +109,7 @@ void ska::Chipset::generateBlock(Color& key, Block** outputBlock, BlockRenderabl
 		if (m_corr.find(key) != m_corr.end()) {
 			Point<int> posCorr = m_corr.at(key);
 			Uint8 prop = m_sProperties.getPixel32Color(posCorr.x, posCorr.y).r;
-			Uint16 col = m_sCol.getPixel32(posCorr.x, posCorr.y);
+			Uint32 col = m_sCol.getPixel32(posCorr.x, posCorr.y);
 
 			int collision = (col == m_whiteColor || col == m_lightColor) ? BLOCK_COL_NO : BLOCK_COL_YES;
 			bool auto_anim = (col == m_darkColor || col == m_lightColor);

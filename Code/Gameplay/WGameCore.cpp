@@ -61,10 +61,11 @@ void WGameCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 
 //Boucle principale gérant évènements et affichages du monde.
 bool WGameCore::refresh() {
-	while (true) {
-		refreshInternal();
+	auto continuer = true;
+	while (continuer) {
+		continuer = refreshInternal();
 	}
-    return true;
+	return false;
 }
 
 
@@ -97,11 +98,11 @@ bool WGameCore::refreshInternal() {
 	long t0 = 0;
 
 	//Ici, transition entrante
-	static const int FPS = 63;
-	static const int TICKS = 1000 / FPS;
+	static const auto FPS = 63;
+	static const auto TICKS = 1000 / FPS;
 
 	try {
-		while (true) {
+		for (;;) {
 			t = ska::TimeUtils::getTicks();
 			if (t - t0 > TICKS)  {
 				//Rafraîchissement à chaque frame : graphique puis évènementiel
@@ -113,8 +114,7 @@ bool WGameCore::refreshInternal() {
 				// Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
 				m_fpsCalculator.calculate(t - t0);
 				t0 = t;
-			}
-			else {
+			} else {
 				/* Temporisation entre 2 frames */
 				SDL_Delay(TICKS - (t - t0));
 			}
@@ -123,7 +123,6 @@ bool WGameCore::refreshInternal() {
 		return false;
 	}
 
-	return true;
 }
 
 

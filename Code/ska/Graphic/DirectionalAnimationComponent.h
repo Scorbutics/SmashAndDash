@@ -17,7 +17,7 @@ namespace ska {
 		int direction;
 
 	protected:
-		static const std::string serializeDirection(const Component& component) {
+		static std::string serializeDirection(const Component& component) {
 			return StringUtils::intToStr(static_cast<const DirectionalAnimationComponent&>(component).direction);
 		}
 

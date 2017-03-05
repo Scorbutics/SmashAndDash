@@ -48,8 +48,8 @@ namespace ska {
 
 		ChipsetRenderable m_renderable;
 
-		Uint16 m_darkColor;
-		Uint16 m_whiteColor;
-		Uint16 m_lightColor;
+		Uint32 m_darkColor;
+		Uint32 m_whiteColor;
+		Uint32 m_lightColor;
 	};
 }

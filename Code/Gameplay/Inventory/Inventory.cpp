@@ -220,7 +220,7 @@ void Inventory::remove(std::string name, unsigned int amount)
 
 }
 
-void Inventory::display(ska::Rectangle rect)
+void Inventory::display(ska::Rectangle)
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	const ska::InputRange& mousePos = wScreen.getRanges()[ska::InputRangeType::MousePos];

@@ -39,7 +39,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 
 	/* Hero use case */
 	if (id == "0") {
-		const std::string& fichier = args[0];
+		const std::string& fichier = mapName;
 		const std::string buf = ".\\Levels"FILE_SEPARATOR""
 			+ fichier
 			+ ""FILE_SEPARATOR""

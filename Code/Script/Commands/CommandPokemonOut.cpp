@@ -16,10 +16,11 @@ int CommandPokemonOut::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPokemonOut::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandPokemonOut::execute(ska::ScriptComponent&, std::vector<std::string>& args)
 {
 	int index;
-	unsigned int duree = 2000, t0 = 0;
+	//unsigned int duree = 2000, t0 = 0;
+	unsigned int t0 = 0;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
 	index = ska::StringUtils::strToInt(args[0]);
