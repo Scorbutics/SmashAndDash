@@ -11,10 +11,10 @@ namespace ska {
 	class PositionComponent : public Component {
 	public:
 		PositionComponent() {
-			static bool initialized = false;
+			static auto initialized = false;
 			if (!initialized) {
 				initialized = true;
-				const std::string className = getClassName(this);
+				const auto className = ComponentHandler<std::remove_reference<decltype(*this)>::type>::getClassName();
 				addFieldSerializer(serializeX, "x", className);
 				addFieldSerializer(serializeY, "y", className);
 				addFieldSerializer(serializeZ, "z", className);
@@ -60,13 +60,7 @@ namespace ska {
 		static std::string serializeZ(const Component& component) {
 			return StringUtils::intToStr(static_cast<const PositionComponent&>(component).z);
 		}
-	private:
-		static const std::string& getClassName(Component* c) {
-			static const std::string fullClassName = std::string(typeid(*c).name());
-			static const size_t startPos = fullClassName.find_last_of(':');
-			static const std::string& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
-			return name;
-		}
+
 	public:
 		void operator=(const Point<int>& p) {
 			x = p.x;

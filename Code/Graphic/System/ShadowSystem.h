@@ -10,6 +10,7 @@ class ShadowSystem : public AbstractGraphicSystem, public ska::System<std::unord
 {
 public:
 	ShadowSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager);
+	ShadowSystem& operator=(const ShadowSystem&) = delete;
 	virtual ~ShadowSystem();
 	virtual void update() override;
 protected:

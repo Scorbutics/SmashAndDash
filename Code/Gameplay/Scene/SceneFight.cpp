@@ -85,7 +85,7 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	sd.description = skillData.get<std::string>("Description description");
 	sd.name = skillData.get<std::string>("Description name");
 	sd.type = skillData.get<std::string>("Description type");
-	sd.context = skillData.get<int>("Description context");
+	sd.context = skillData.get<std::string>("Description context");
 
 	const std::string& particleNumber = "Particle number";
 	const std::string& particleSpeed = "Particle speed";
@@ -102,8 +102,8 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 
 	sd.id = skillData.get<int>("Description id");
 
-	sd.cooldown = skillData.get<int>("Stats cooldown");
-	sd.range = skillData.get<int>("Stats blocks_range") * m_worldScene.getWorld().getBlockSize();
+	sd.cooldown = skillData.get<unsigned int>("Stats cooldown");
+	sd.range = skillData.get<int>("Stats blocks_range") * static_cast<int>(m_worldScene.getWorld().getBlockSize());
 
 	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
 		LoadRawStatistics(sd.buffAlly, skillData, "BuffsAlly");
@@ -113,10 +113,10 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	}
 }
 
-void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId entity, SkillsHolderComponent& shc) const{
-	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)) && i < shc.skills.size(); i++) {
-		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(i) + "_level") <= m_level) {
-			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
+void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const{
+	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))) && i < shc.skills.size(); i++) {
+		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i)) + "_level") <= m_level) {
+			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))));
 		}
 	}
 }
@@ -158,7 +158,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 			auto& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_trainerId);
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_trainerId);
 
-			auto& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
+			//auto& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			//DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			//dc.dialog.hide(false);
 
@@ -200,7 +200,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 	}, *dialogRawTask));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>* finalRawTask;
-	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>& t, ska::InputComponent ic, ska::PositionComponent pc) {
+	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>&, ska::InputComponent ic, ska::PositionComponent pc) {
 		
 		/* Ajout InputComponent au Pokémon,
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
@@ -219,9 +219,9 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
 		
 		auto& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_pokemonId);
-		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
+		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
-		const ska::Rectangle targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
+		const auto targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
@@ -262,7 +262,7 @@ bool SceneFight::unload() {
 
 			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_pokemonId);
-			ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
+			//ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			//DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			//dc.dialog.hide(false);
 
@@ -277,7 +277,7 @@ bool SceneFight::unload() {
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
 	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>(
-		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>& t, ska::InputComponent ic) {
+		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>&, ska::InputComponent ic) {
 		
 		m_loadState = 0;
 		m_worldScene.unload();

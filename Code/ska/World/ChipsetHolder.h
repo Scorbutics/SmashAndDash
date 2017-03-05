@@ -12,7 +12,10 @@ namespace ska {
 
 	class ChipsetHolder {
 	public:
-		ChipsetHolder(const std::string& correspondanceFile);
+		explicit ChipsetHolder(const std::string& correspondanceFile);
+		ChipsetHolder(const ChipsetHolder&) = delete;
+		ChipsetHolder& operator=(const ChipsetHolder&) = delete;
+
 		bool attach(const unsigned int blockSize, const std::string& chipsetName);
 		std::vector<ScriptSleepComponent*> getScript(const std::string& id, const ScriptTriggerType& type, bool& autoBlackList);
 		void render(Rectangle pos, const BlockRenderable& block) const;

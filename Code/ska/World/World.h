@@ -26,6 +26,9 @@ namespace ska {
 	class World : public HasGraphic, public CameraAware {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+		World(const World&) = delete;
+		World& operator=(const World&) = delete;
+
 		virtual void load(const std::string& fileName, const std::string& chipsetName);
 
 		std::vector<IniReader>& getMobSettings();

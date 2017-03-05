@@ -6,10 +6,10 @@
 
 
 namespace ska {
-	class IARandomMovementSystem : public System<std::unordered_set<EntityId>, IARandomMovementComponent, ForceComponent>
-	{
+	class IARandomMovementSystem : public System<std::unordered_set<EntityId>, IARandomMovementComponent, ForceComponent> {
 	public:
-		IARandomMovementSystem(EntityManager& entityManager);
+		explicit IARandomMovementSystem(EntityManager& entityManager);
+		IARandomMovementSystem& operator=(const IARandomMovementSystem&) = delete;
 		virtual ~IARandomMovementSystem();
 	protected:
 		virtual void refresh() override;

@@ -36,12 +36,15 @@ class SceneFight :
 	public AbstractSceneMap_ {
 public:
 	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, PokemonGameEventDispatcher& ged);
+	SceneFight(const SceneFight&) = delete;
+	SceneFight& operator=(const SceneFight&) = delete;
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneFight();
+
 private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath) const;
 	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;

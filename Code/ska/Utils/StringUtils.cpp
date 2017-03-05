@@ -39,15 +39,15 @@ bool ska::StringUtils::isInt(const std::string& s, const int base) {
 }
 
 int ska::StringUtils::strToInt(const std::string& str) {
-	const std::string& sTrimed = trim(str);
+	const auto& sTrimed = trim(str);
 	if (!isInt(sTrimed, 10)) {
 		throw NumberFormatException(sTrimed);
 	}
 	return atoi(sTrimed.c_str());
 }
 
-int ska::StringUtils::strToUint(const std::string& str) {
-	const std::string& sTrimed = trim(str);
+unsigned int ska::StringUtils::strToUint(const std::string& str) {
+	const auto& sTrimed = trim(str);
 	if (!isInt(sTrimed, 10)) {
 		throw NumberFormatException(sTrimed);
 	}

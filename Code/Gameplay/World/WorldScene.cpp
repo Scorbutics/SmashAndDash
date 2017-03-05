@@ -16,6 +16,7 @@
 #include "../Fight/FightComponent.h"
 #include "../CustomEntityManager.h"
 #include "../../ska/Graphic/GUI/Window.h"
+#include "../../ska/Graphic/Draw/DrawableContainer.h"
 
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 Scene(sh, ril),
@@ -34,8 +35,8 @@ m_cameraSystem(nullptr),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
 m_gui(w, ril, ged),
-m_settings(settings),
-m_worldBGM(DEFAULT_BGM),
+m_settings(settings), m_player(0),
+	m_worldBGM(DEFAULT_BGM),
 m_ged(ged) {
 	m_loadedOnce = false;
 
@@ -59,7 +60,7 @@ const std::string& WorldScene::getFileName() const {
 }
 
 void WorldScene::linkCamera(ska::CameraSystem* cs) {
-	if (m_cameraSystem == NULL || cs == NULL) {
+	if (m_cameraSystem == nullptr || cs == nullptr) {
 		m_cameraSystem = cs;
 		for (auto& g : m_graphics) {
 			g->linkCamera(cs);

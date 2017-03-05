@@ -8,7 +8,8 @@
 namespace ska {
 	class MovementSystem : public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, ForceComponent> {
 	public:
-		MovementSystem(EntityManager& entityManager);
+		explicit MovementSystem(EntityManager& entityManager);
+		MovementSystem& operator=(const MovementSystem&) = delete;
 		virtual ~MovementSystem();
 	protected:
 		virtual void refresh() override;

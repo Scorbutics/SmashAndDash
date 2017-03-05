@@ -5,11 +5,10 @@
 
 namespace ska {
 	template <class V, class K>
-	class ResourceTemplate
-	{
+	class ResourceTemplate {
 
 	public:
-		virtual void load(K key) {
+		void loadFromKey(K key) {
 			m_key = key;
 			if (m_container.find(m_key) == m_container.end() || m_container[m_key].lock() == nullptr) {
 				m_value = std::make_shared<V>(m_key);
@@ -19,19 +18,21 @@ namespace ska {
 			}
 		}
 
-		virtual void free() { m_value = nullptr; }
+		void free() { m_value = nullptr; }
 
-		virtual ~ResourceTemplate() { free(); }
+		virtual ~ResourceTemplate() {
+			free(); 
+		}
 
 
 	protected:
 		ResourceTemplate() {
-			ResourceTemplate<V, K>::free(); 
+			free(); 
 		}
 
 		explicit ResourceTemplate(K key) {
-			ResourceTemplate<V, K>::free();
-			ResourceTemplate<V, K>::load(key); 
+			free();
+			ResourceTemplate<V, K>::loadFromKey(key);
 		}
 
 		K m_key;

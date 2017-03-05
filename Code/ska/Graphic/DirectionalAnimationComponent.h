@@ -5,10 +5,10 @@ namespace ska {
 	class DirectionalAnimationComponent : public Component {
 	public:
 		DirectionalAnimationComponent() {
-			static bool initialized = false;
+			static auto initialized = false;
 			if (!initialized) {
 				initialized = true;
-				const std::string className = getClassName(this);
+				const auto className = ComponentHandler<std::remove_reference<decltype(*this)>::type>::getClassName();
 				addFieldSerializer(serializeDirection, "direction", className);
 			}
 			direction = 0;
@@ -21,12 +21,5 @@ namespace ska {
 			return StringUtils::intToStr(static_cast<const DirectionalAnimationComponent&>(component).direction);
 		}
 
-	private:
-		static const std::string& getClassName(Component* c) {
-			static const std::string fullClassName = std::string(typeid(*c).name());
-			static const size_t startPos = fullClassName.find_last_of(':');
-			static const std::string& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
-			return name;
-		}
 	};
 }

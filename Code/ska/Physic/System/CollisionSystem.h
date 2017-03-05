@@ -18,6 +18,7 @@ namespace ska {
 	class CollisionSystem : public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, HitboxComponent, CollidableComponent> {
 	public:
 		CollisionSystem(World& w, EntityManager& entityManager, GameEventDispatcher& ged);
+		CollisionSystem& operator=(const CollisionSystem&) = delete;
 		virtual ~CollisionSystem();
 	protected:
 		virtual void refresh() override;

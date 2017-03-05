@@ -143,7 +143,7 @@ namespace ska {
 		template <class T>
 		ComponentHandler<T>& getComponents() {
 			static ComponentHandler<T> m_components;
-			static bool initialized = false;
+			static auto initialized = false;
 			/* Correction performances issues du Profiling Very Sleepy : temps passé dans le hachage pour la table de noms de composants trop élevé */
 			if (!initialized) {
 				initialized = true;

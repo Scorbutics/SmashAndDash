@@ -8,7 +8,8 @@
 
 class PokeballSystem : public ska::System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionComponent>  {
 public:
-	PokeballSystem(ska::EntityManager& entityManager);
+	explicit PokeballSystem(ska::EntityManager& entityManager);
+	PokeballSystem& operator=(const PokeballSystem&) = delete;
 	virtual ~PokeballSystem();
 
 protected:

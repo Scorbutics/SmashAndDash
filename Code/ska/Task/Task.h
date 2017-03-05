@@ -28,7 +28,7 @@ namespace ska {
 	class Task<RR, TaskReceiver<RA...>, TaskSender<SA...>> : public ITask<SA...>{
 	public:
 
-		Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
+		explicit Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
 			m_f(f) {
 			m_previous = nullptr;
 		}
@@ -39,13 +39,13 @@ namespace ska {
 		}
 
 		template <int ...N>
-		RR run(meta::SeqList<N...> seq) {
+		RR run(meta::SeqList<N...>) {
 			return (m_previous != nullptr) ?
 				m_f(*this, std::get<N>(m_previous->m_forwardArgs)...) :
 				m_f(*this, std::get<N>(m_empty)...);
 		}
 
-		RR operator()() {
+		virtual RR operator()() {
 			return run(meta::SeqRange<sizeof...(RA)>());
 		}
 

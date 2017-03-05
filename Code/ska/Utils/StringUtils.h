@@ -11,7 +11,7 @@ namespace ska {
 	public:
 		static std::string intToStr(const int x);
 		static int strToInt(const std::string& str);
-		static int strToUint(const std::string& str);
+		static unsigned int strToUint(const std::string& str);
 		static float strToFloat(const std::string& str);
 		static std::string uintToStr(const unsigned int x);
 		static std::string floatToStr(const float f);

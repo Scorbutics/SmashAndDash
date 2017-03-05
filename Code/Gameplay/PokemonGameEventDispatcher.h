@@ -12,6 +12,7 @@ class SEventDispatcher :
 	public ska::Observable<ET>... {
 public:
 	SEventDispatcher() = default;
+	SEventDispatcher(const SEventDispatcher&) = delete;
 	virtual ~SEventDispatcher() = default;
 
 private:

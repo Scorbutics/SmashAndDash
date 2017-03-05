@@ -7,15 +7,17 @@ namespace ska {
 	class Runnable;
 	typedef std::unique_ptr<Runnable> RunnablePtr;
 
-	class TaskQueue
-	{
+	class TaskQueue {
 	public:
 		TaskQueue();
-		~TaskQueue();
+		TaskQueue(const TaskQueue&) = delete;
+		TaskQueue& operator=(const TaskQueue&) = delete;
+		virtual ~TaskQueue();
 
 		bool hasRunningTask() const;
 		void queueTask(RunnablePtr& t);
 		void refresh();
+
 	private:
 		std::queue<RunnablePtr> m_tasks;
 		RunnablePtr m_previous;

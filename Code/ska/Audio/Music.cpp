@@ -3,15 +3,15 @@
 
 ska::Music::Music(const std::string& musicName) {
 	if (!musicName.empty()) {
-		ResourceTemplate<SDLMusic, std::string>::load(musicName);
+		loadFromKey(musicName);
 	}
 }
 
-void ska::Music::setVolume(float vol) {
+void ska::Music::setVolume(float vol) const{
 	m_value->setVolume(vol);
 }
 
-void ska::Music::play(SoundRenderer& sndMgr) {
+void ska::Music::play(SoundRenderer& sndMgr) const{
 	sndMgr.play(m_value->m_instance);
 	if (m_value->m_volume != -1) {
 		sndMgr.setMusicVolume(m_value->m_volume);

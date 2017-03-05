@@ -32,6 +32,9 @@ class WorldScene : public ska::Scene,
 
 public:
 	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged);
+	WorldScene(const WorldScene&) = delete;
+	WorldScene& operator=(const WorldScene&) = delete;
+
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;

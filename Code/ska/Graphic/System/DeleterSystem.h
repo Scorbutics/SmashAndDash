@@ -5,10 +5,10 @@
 
 
 namespace ska {
-	class DeleterSystem : public System<std::unordered_set<EntityId>, DeleterComponent>
-	{
+	class DeleterSystem : public System<std::unordered_set<EntityId>, DeleterComponent> {
 	public:
-		DeleterSystem(EntityManager& entityManager);
+		explicit DeleterSystem(EntityManager& entityManager);
+		DeleterSystem& operator=(const DeleterSystem&) = delete;
 		virtual ~DeleterSystem();
 		virtual void refresh() override;
 	};

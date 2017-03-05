@@ -12,7 +12,7 @@ namespace ska {
 
 	class KeyEventListener : public EventListener<KeyEvent> {
 	public:
-		KeyEventListener(Widget& tthis);
+		explicit KeyEventListener(Widget& tthis);
 		virtual bool notify(Widget& tthis, KeyEvent& e) override;
 		virtual ~KeyEventListener() = default;
 

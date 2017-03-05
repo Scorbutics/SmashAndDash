@@ -20,11 +20,12 @@ namespace ska {
 using SceneChangeObserver = ska::Observer<ska::SceneSwitcher<WorldScene&>>;
 
 class AbstractSceneMap :
-	public AbstractNoGUISceneMap, public SceneChangeObserver
-{
+	public AbstractNoGUISceneMap, public SceneChangeObserver {
 public:
 	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
 	AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, Scene& oldScene, const bool sameMap);
+	AbstractSceneMap& operator=(const AbstractSceneMap&) = delete;
+
 	bool onTeleport(const ska::SceneSwitcher<WorldScene&>& switcher);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;

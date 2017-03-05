@@ -57,7 +57,7 @@ namespace ska {
 				return false;
 			}
 
-			auto maskIndex = m_maskHandlerIndexes[e.getMask()];
+			auto maskIndex = static_cast<size_t>(m_maskHandlerIndexes[e.getMask()]);
 			HandlerNotifier hn(*this, e);
 			meta::visit_element_at_index(m_handlers, maskIndex, hn);
 			return hn.hasBeenNotified();

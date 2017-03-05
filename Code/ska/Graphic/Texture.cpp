@@ -5,7 +5,7 @@
 #include "../Exceptions/IllegalStateException.h"
 #include "./GUI/Window.h"
 
-ska::Window* ska::Texture::m_window = NULL;
+ska::Window* ska::Texture::m_window = nullptr;
 
 ska::Texture::Texture(std::string id, int r, int g, int b, int a) : ResourceTemplate() {
 	load(id, r, g, b, a);
@@ -29,7 +29,7 @@ void ska::Texture::load(std::string id, int r, int g, int b, int a) {
 	finalColor.g = static_cast<Uint8>(g);
 	finalColor.r = static_cast<Uint8>(r);
 
-	ResourceTemplate::load(TextureData(*m_window, id, finalColor));
+	loadFromKey(TextureData(*m_window, id, finalColor));
 }
 
 void ska::Texture::setColor(Uint8 r, Uint8 g, Uint8 b) const {

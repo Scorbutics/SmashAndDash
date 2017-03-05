@@ -7,7 +7,9 @@ namespace ska {
 	class SceneHolder : public TaskQueue {
 	public:
 		SceneHolder() = default;
-		virtual ~SceneHolder() = default;
+		SceneHolder(const SceneHolder&) = delete;
+		SceneHolder& operator=(const SceneHolder&) = delete;
+		~SceneHolder() = default;
 
 		virtual void update() = 0;
 		virtual void nextScene(ScenePtr& scene) = 0;

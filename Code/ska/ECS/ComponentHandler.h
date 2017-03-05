@@ -8,8 +8,7 @@
 
 namespace ska {
 	template <typename T>
-	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer
-	{
+	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer {
 
 	public:
 		ComponentHandler() {
@@ -36,21 +35,20 @@ namespace ska {
 			return m_components[id];
 		}
 
-		virtual const std::string getComponentField(const EntityId id, const std::string& field) override {
+		virtual std::string getComponentField(const EntityId id, const std::string& field) override {
 			return m_components[id].serialize(m_components[id], field, getClassName());
 		}
 
-		const unsigned int getMask() const {
+		unsigned int getMask() const {
 			return m_mask;
 		}
 
-		virtual ~ComponentHandler() {
-		}
+		virtual ~ComponentHandler() = default;
 
 		static const std::string& getClassName() {
-			static const std::string fullClassName = std::string(typeid(T).name());
-			static const size_t startPos = fullClassName.find_last_of(':');
-			static const std::string& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
+			static const auto fullClassName = std::string(typeid(T).name());
+			static const auto startPos = fullClassName.find_last_of(':');
+			static const auto& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
 			return name;
 		}
 

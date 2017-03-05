@@ -14,7 +14,6 @@ namespace ska {
 
 	public:
 		explicit Texture(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
-		Texture(std::string id, Color finalColor);
 		Texture();
 		void loadFromText(unsigned int fontSize, std::string text, Color c);
 		void load(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
@@ -26,7 +25,7 @@ namespace ska {
 		void setBlendMode(SDL_BlendMode blending) const;
 		void operator=(const Texture& text);
 		void setAlpha(Uint8 alpha) const;
-		int render(int x, int y, const Rectangle* clip = NULL) const;
+		int render(int x, int y, const Rectangle* clip = nullptr) const;
 
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;

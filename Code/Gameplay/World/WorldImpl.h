@@ -16,7 +16,10 @@ class WorldImpl :
 	
 public:
 	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+	WorldImpl(const WorldImpl&) = delete;
 	~WorldImpl();
+
+	WorldImpl& operator=(const WorldImpl&) = delete;
 	void load(const std::string& fileName, const std::string& chipsetName) override;
 	
 	void loadWeatherFromData(const std::string& stringDataFile);

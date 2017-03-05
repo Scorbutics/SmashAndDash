@@ -9,8 +9,8 @@ namespace ska {
 	class Music : public ResourceTemplate<SDLMusic, std::string> {
 	public:
 		explicit Music(const std::string& musicName);
-		void setVolume(float vol);
-		void play(SoundRenderer& sndMgr);
+		void setVolume(float vol) const;
+		void play(SoundRenderer& sndMgr) const;
 		virtual ~Music();
 	};
 }

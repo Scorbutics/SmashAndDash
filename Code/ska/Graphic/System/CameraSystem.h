@@ -12,7 +12,7 @@ namespace ska {
 	class CameraSystem : public System<std::unordered_set<EntityId>, PositionComponent, CameraFocusedComponent> {
 	public:
 		CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH);
-
+		CameraSystem& operator=(const CameraSystem&) = delete;
 		void screenResized(const unsigned int screenW, const unsigned int screenH);
 		void worldResized(const unsigned int worldW, const unsigned int worldH);
 

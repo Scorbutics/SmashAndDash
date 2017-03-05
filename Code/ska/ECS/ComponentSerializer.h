@@ -8,7 +8,7 @@ namespace ska {
 		ComponentSerializer() = default;
 		virtual ~ComponentSerializer() = default;
 
-		virtual const std::string getComponentField(const EntityId id, const std::string& field) = 0;
+		virtual std::string getComponentField(const EntityId id, const std::string& field) = 0;
 		
 		virtual unsigned int remove(EntityId entityId) = 0;
 		virtual unsigned int addEmpty(EntityId entityId) = 0;

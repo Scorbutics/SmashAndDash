@@ -51,6 +51,8 @@ namespace ska {
 			m_callbacks.push_front(h);
 		}
 
+		virtual ~EventListener() = default;
+
 	private:
 		std::deque<EventHandler<E>> m_callbacks;
 	};

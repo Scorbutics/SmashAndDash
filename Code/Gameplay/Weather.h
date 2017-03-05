@@ -30,7 +30,9 @@ class Weather : public ska::DrawableFixedPriority
 
 public:
 	Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
-	 Weather(ska::World& w);
+	explicit Weather(ska::World& w);
+	Weather(const Weather&) = delete;
+	Weather& operator=(const Weather&) = delete;
 	 ~Weather();
 
 	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
@@ -52,7 +54,7 @@ public:
      int getIntensityY();
      int getNumber();
 
-    protected:
+protected:
      int m_intensityX, m_intensityY, m_number, m_distance;
      std::unique_ptr<ska::Texture> m_weather;
      std::vector<ska::Point<float>> m_pos;

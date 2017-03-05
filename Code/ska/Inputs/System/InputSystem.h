@@ -11,6 +11,7 @@ namespace ska {
 	class InputSystem : public System<std::unordered_set<EntityId>, PositionComponent, InputComponent, ForceComponent> {
 	public:
 		InputSystem(const InputContextManager& icm, EntityManager& entityManager);
+		InputSystem& operator=(const InputSystem&) = delete;
 		virtual ~InputSystem();
 	protected:
 		virtual void refresh() override;

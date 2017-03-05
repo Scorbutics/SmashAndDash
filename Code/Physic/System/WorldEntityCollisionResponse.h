@@ -5,6 +5,7 @@
 class WorldEntityCollisionResponse : public ska::WorldCollisionResponse {
 public:
 	WorldEntityCollisionResponse(ska::World& w, ska::GameEventDispatcher& colSys, ska::EntityManager& entityManager);
+	WorldEntityCollisionResponse& operator=(const WorldEntityCollisionResponse&) = delete;
 	WorldEntityCollisionResponse(std::function<bool(ska::CollisionEvent&)> onWorldCollision, ska::World& w, ska::GameEventDispatcher& colSys, ska::EntityManager& entityManager);
 	~WorldEntityCollisionResponse();
 	bool onWorldCollision(ska::CollisionEvent& e);
