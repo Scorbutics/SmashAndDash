@@ -209,7 +209,7 @@ std::string ska::ScriptUtils::interpretVarName(const Savegame& saveGame, const S
 		ss << v.substr(1, v.size()-2);
 
 		unsigned int i;
-		for (i = 0; ss >> cmds[i] && i < 2; i++);
+		for (i = 0; ss >> cmds[i] && i <= 2; i++);
 
 		if (!ss.eof()) {
 			throw ScriptSyntaxError("Error while interpreting global var (not enough arguments) : " + v);

@@ -4,6 +4,7 @@
 #include "../Data/SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../Weather.h"
+#include "../PokemonGameEventDispatcherDeclaration.h"
 
 namespace ska {
 	class IniReader;

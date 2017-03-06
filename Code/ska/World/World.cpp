@@ -69,8 +69,7 @@ bool ska::World::canMoveOnBlock(const Point<int>& pos, const std::unordered_set<
 		l = &m_lTop;
 		break;
 	default:
-		l = nullptr;
-		break;
+		return true;;
 	}
 	const Point<int> blockPos = pos / m_blockSize;
 	if (blockPos.x >= m_nbrBlockX || blockPos.y >= m_nbrBlockY ) {

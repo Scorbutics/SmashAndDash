@@ -12,6 +12,7 @@
 #include "../../Gameplay/Fight/BattleEvent.h"
 #include "../../Gameplay/Fight/StatisticsChangeEvent.h"
 #include "DialogMenu.h"
+#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class Bar;
 using BarPtr = std::unique_ptr<Bar>;

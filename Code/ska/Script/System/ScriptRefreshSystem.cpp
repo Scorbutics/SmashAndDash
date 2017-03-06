@@ -13,7 +13,7 @@
 
 
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
-System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
+ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
 m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem) {
 
@@ -24,7 +24,7 @@ void ska::ScriptRefreshSystem::refresh() {
 	EntityManager& entityManager = ScriptPositionSystemAccess::m_entityManager;
 	std::vector<EntityId> toDelete;
 
-	for (EntityId entityId : System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
+	for (EntityId entityId : ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
 		ScriptAwareComponent& sac = entityManager.getComponent<ScriptAwareComponent>(entityId);
 		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
 		const HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
@@ -137,7 +137,7 @@ void ska::ScriptRefreshSystem::refresh() {
 }
 
 void ska::ScriptRefreshSystem::update() {
-	System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update();
+	ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update();
 }
 
 void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {

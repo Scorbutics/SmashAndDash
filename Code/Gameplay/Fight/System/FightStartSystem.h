@@ -7,6 +7,7 @@
 #include "../../../ska/Inputs/InputContextManager.h"
 #include "../../../ska/Graphic/GraphicComponent.h"
 #include "../../../Gameplay/PokemonGameEventDispatcher.h"
+#include "../../PokemonGameEventDispatcherDeclaration.h"
 
 class WorldScene;
 class CustomEntityManager;

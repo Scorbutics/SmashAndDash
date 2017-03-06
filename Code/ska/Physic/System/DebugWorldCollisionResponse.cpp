@@ -11,7 +11,7 @@ ska::DebugWorldCollisionResponse::DebugWorldCollisionResponse(GameEventDispatche
 WorldCollisionObserver(bind(&DebugWorldCollisionResponse::onWorldCollision, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged) {
-	m_ged.Observable<CollisionEvent>::addObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }
 
 bool ska::DebugWorldCollisionResponse::onWorldCollision(CollisionEvent& e) {
@@ -22,5 +22,5 @@ bool ska::DebugWorldCollisionResponse::onWorldCollision(CollisionEvent& e) {
 }
 
 ska::DebugWorldCollisionResponse::~DebugWorldCollisionResponse() {
-	m_ged.Observable<CollisionEvent>::removeObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::removeObserver(*this);
 }

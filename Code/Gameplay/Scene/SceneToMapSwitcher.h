@@ -1,6 +1,7 @@
 #pragma once
 #include "../../ska/Scene/SceneSwitcher.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
+#include "../PokemonGameEventDispatcherDeclaration.h"
 
 class WorldScene;
 

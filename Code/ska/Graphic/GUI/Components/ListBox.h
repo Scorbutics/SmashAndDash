@@ -34,7 +34,7 @@ namespace ska {
 					
 				});
 				
-				setPriority(std::numeric_limits<int>::max());
+				ListBox<T>::setPriority(std::numeric_limits<int>::max());
 
 				auto wListbox = std::make_unique<DynamicWindowIG<FocusEventListener>>(*this, Rectangle{ 0, button->getBox().h, button->getBox().w, (int)(m_values.size() + 1)*button->getBox().h }, "");
 				wListbox->show(false);
@@ -51,7 +51,7 @@ namespace ska {
 				/*m_gui.addWindow(std::move(m_wListbox));*/
 				
 				m_wListBox = addWidget(wListbox);
-				m_wListBox->setHeight(getBox().h);
+				m_wListBox->setHeight(ListBox<T>::getBox().h);
 				m_wListBox->setPriority(1);
 				addWidget(button)->setPriority(3);
 				m_label = addWidget(std::make_unique<Label>(*this, " ", m_fontSize, Point<int>(5, 1)));
@@ -74,7 +74,7 @@ namespace ska {
 			wListbox.clear();
 			static unsigned int  buttonHeight = 12;
 
-			auto b1 = std::make_unique<Button>(wListbox, Point<int>(0, getBox().h), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
+			auto b1 = std::make_unique<Button>(wListbox, Point<int>(0, ListBox<T>::getBox().h), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
 				e.stopPropagation(STOP_WIDGET);
 				if (e.getState() != MOUSE_RELEASE) {
 					return;
@@ -86,12 +86,12 @@ namespace ska {
 				clearValue();
 			});
 
-			wListbox.addWidget(std::make_unique<Label>(wListbox, " ", m_fontSize, Point<int>(10, getBox().h)));
+			wListbox.addWidget(std::make_unique<Label>(wListbox, " ", m_fontSize, Point<int>(10, ListBox<T>::getBox().h)));
 			wListbox.addWidget(b1);
 			
 			size_t index = 1;
 			for (auto& v : m_values) {
-				auto b = std::make_unique<Button>(wListbox, Point<int>(0, getBox().h + buttonHeight * (int)index), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
+				auto b = std::make_unique<Button>(wListbox, Point<int>(0, ListBox<T>::getBox().h + buttonHeight * (int)index), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
 					e.stopPropagation(STOP_WIDGET);
 					if (e.getState() != MOUSE_RELEASE) {
 						return;
@@ -108,11 +108,11 @@ namespace ska {
 				ss << v;
 				auto str = ss.str();
 				wListbox.addWidget(b);
-				wListbox.addWidget(std::make_unique<Label>(wListbox, str.empty() ? " " : str, m_fontSize, Point<int>(10, getBox().h + buttonHeight * (int)index)));
+				wListbox.addWidget(std::make_unique<Label>(wListbox, str.empty() ? " " : str, m_fontSize, Point<int>(10, ListBox<T>::getBox().h + buttonHeight * (int)index)));
 
 				index++;
 			}
-			wListbox.setHeight(buttonHeight * ((int)m_values.size() + 1));
+			wListbox.setHeight(buttonHeight * (static_cast<int>(m_values.size()) + 1));
 		}
 
 		T* getValue() const {

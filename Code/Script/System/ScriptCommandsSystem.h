@@ -4,6 +4,7 @@
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../ska/Utils/Observable.h"
 #include "../../ska/Utils/Observer.h"
+#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class WorldScene;
 

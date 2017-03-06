@@ -12,7 +12,7 @@ ska::WorldCollisionResponse::WorldCollisionResponse(World& w, GameEventDispatche
 	m_entityManager(em),
 	m_ged(ged),
 	m_world(w) {
-	m_ged.Observable<CollisionEvent>::addObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }
 
 ska::WorldCollisionResponse::WorldCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, World& w, GameEventDispatcher& ged, EntityManager& em) :
@@ -20,7 +20,7 @@ WorldCollisionObserver(onEntityCollision),
 m_entityManager(em),
 m_ged(ged),
 m_world(w) {
-	m_ged.Observable<CollisionEvent>::addObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }
 
 bool ska::WorldCollisionResponse::onWorldCollision(CollisionEvent& colE) {
@@ -58,5 +58,5 @@ bool ska::WorldCollisionResponse::onWorldCollision(CollisionEvent& colE) {
 }
 
 ska::WorldCollisionResponse::~WorldCollisionResponse() {
-	m_ged.Observable<CollisionEvent>::removeObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::removeObserver(*this);
 }

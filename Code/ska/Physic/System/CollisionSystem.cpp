@@ -73,7 +73,7 @@ void ska::CollisionSystem::refresh() {
 
 		if (collided) {
 			CollisionEvent ce(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId));
-			m_ged.Observable<CollisionEvent>::notifyObservers(ce);
+			m_ged.ska::Observable<CollisionEvent>::notifyObservers(ce);
 		}
 
 		if (entityCollided) {
@@ -81,7 +81,7 @@ void ska::CollisionSystem::refresh() {
 			/* When collision between entities is detected, we can do things as decreasing health,
 			pushing entities, or any statistic interaction */
 			CollisionEvent ce(entityId, nullptr, &col, m_entityManager.getComponent<CollidableComponent>(entityId));
-			m_ged.Observable<CollisionEvent>::notifyObservers(ce);
+			m_ged.ska::Observable<CollisionEvent>::notifyObservers(ce);
 		}
 	}
 }

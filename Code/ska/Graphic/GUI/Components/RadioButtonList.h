@@ -34,7 +34,7 @@ namespace ska {
 			
 			for (auto& v : values) {
 				auto fradio = std::unique_ptr<RadioButton>(new RadioButton(*this, m_group, radioCursor, m_styleName));
-				auto radio = addWidget(fradio);
+				auto radio = RadioButtonList<T>::addWidget(fradio);
 
 				radio->addHandler<ValueChangedEventListener<bool>>([this](Widget* tthis, ValueChangedEvent<bool>& e) {
 					if (e.getValue()) {
@@ -62,7 +62,7 @@ namespace ska {
 				std::stringstream ss;
 				ss << v;
 				const auto& str = ss.str();
-				addWidget(std::unique_ptr<Label>(new Label(*this, str.empty() ? " " : str, m_fontSize, labelCursor)));
+				RadioButtonList<T>::addWidget(std::make_unique<Label>(*this, str.empty() ? " " : str, m_fontSize, labelCursor));
 				labelCursor.y += radioHeight + m_ypadding;
 			}
 

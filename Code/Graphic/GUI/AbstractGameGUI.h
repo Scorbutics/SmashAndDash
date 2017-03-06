@@ -2,6 +2,7 @@
 
 #include "../../ska/Graphic/GUI/GUI.h"
 #include "../../Gameplay./PokemonGameEventDispatcher.h"
+#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class AbstractGameGUI : public ska::GUI {
 public:

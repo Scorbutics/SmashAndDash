@@ -7,8 +7,8 @@
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) : 
 	AbstractGameGUI(w, playerICM, ged),
-	Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)), 
-	Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
+	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
+	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
 
 	auto attachedToCursor = std::unique_ptr<ska::Widget>(new WindowMouseCursor(this, this, ska::Rectangle{ 0, 0, 64, 96 }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	m_attachedToCursor = static_cast<WindowMouseCursor*>(addTopWidget(attachedToCursor));

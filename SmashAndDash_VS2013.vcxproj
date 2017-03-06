@@ -128,9 +128,11 @@
     <ClInclude Include="Code\Audio\PokemonSoundRenderer.h" />
     <ClInclude Include="Code\Gameplay\Data\EntityLoadEvent.h" />
     <ClInclude Include="Code\Gameplay\Data\MonsterDescription.h" />
+    <ClInclude Include="Code\Gameplay\Data\SettingsChangeEventType.h" />
     <ClInclude Include="Code\Gameplay\Fight\BattleEvent.h" />
     <ClInclude Include="Code\Gameplay\Fight\StatisticsChangeEvent.h" />
     <ClInclude Include="Code\Gameplay\PokemonGameEventDispatcher.h" />
+    <ClInclude Include="Code\Gameplay\PokemonGameEventDispatcherDeclaration.h" />
     <ClInclude Include="Code\Graphic\GUI\AbstractGameGUI.h" />
     <ClInclude Include="Code\Graphic\GUI\SlotPokemonData.h" />
     <ClInclude Include="Code\Graphic\GUI\WindowMouseCursor.h" />

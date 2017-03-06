@@ -2,6 +2,7 @@
 
 #include "SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
+#include "../PokemonGameEventDispatcherDeclaration.h"
 
 class Settings {
 public:

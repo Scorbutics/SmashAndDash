@@ -10,14 +10,14 @@ ska::EntityCollisionResponse::EntityCollisionResponse(GameEventDispatcher& ged, 
 	EntityCollisionObserver(bind(&EntityCollisionResponse::onEntityCollision, this, std::placeholders::_1)),
 	m_entityManager(em), 
 	m_ged(ged) {
-	m_ged.Observable<CollisionEvent>::addObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }
 
 ska::EntityCollisionResponse::EntityCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, GameEventDispatcher& ged, EntityManager& em) :
 EntityCollisionObserver(onEntityCollision),
 m_entityManager(em),
 m_ged(ged) {
-	m_ged.Observable<CollisionEvent>::addObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }
 
 bool ska::EntityCollisionResponse::onEntityCollision(CollisionEvent& e) {
@@ -51,5 +51,5 @@ bool ska::EntityCollisionResponse::onEntityCollision(CollisionEvent& e) {
 }
 
 ska::EntityCollisionResponse::~EntityCollisionResponse() {
-	m_ged.Observable<CollisionEvent>::removeObserver(*this);
+	m_ged.ska::Observable<CollisionEvent>::removeObserver(*this);
 }

@@ -2,6 +2,7 @@
 
 #include "ValueChangedEventListener.h"
 #include "WidgetEvent.h"
+#include "WidgetMaskHelper.h"
 
 namespace ska {
 	
@@ -27,7 +28,7 @@ namespace ska {
 		}
 
 		virtual bool affects(const Widget&) const override {
-			if (stopped() != NOT_STOPPED) {
+			if (ValueChangedEvent<T>::stopped() != NOT_STOPPED) {
 				return false;
 			}
 			return true;

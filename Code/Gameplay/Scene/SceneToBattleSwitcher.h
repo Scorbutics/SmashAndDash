@@ -2,6 +2,7 @@
 #include "../../ska/Scene/SceneSwitcher.h"
 #include "../../ska/Graphic/Point.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
+#include "../PokemonGameEventDispatcherDeclaration.h"
 
 class FightComponent;
 class WorldScene;
