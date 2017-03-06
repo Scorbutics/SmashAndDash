@@ -65,7 +65,7 @@ bool WGameCore::refresh() {
 	while (continuer) {
 		continuer = refreshInternal();
 	}
-	return false;
+	return true;
 }
 
 

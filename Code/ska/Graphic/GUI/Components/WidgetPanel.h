@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <type_traits>
 #include <deque>
 #include <functional>
 #include <algorithm>
@@ -12,12 +13,36 @@
 #include "../../../Utils/TupleUtils.h"
 
 namespace ska {
+
+	template <class SubWidget, bool = std::is_base_of<IHandledWidget, SubWidget>::value>
+	struct WidgetHandlingTrait {
+		static void manageHandled(std::unique_ptr<SubWidget>& w, std::vector<std::unique_ptr<Widget>>& handledWidgets, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
+			auto widget = static_cast<IHandledWidget*>(w.get());
+			auto activeWidget = !widget->isMaskEmpty();
+			if (activeWidget) {
+				handledWidgets.push_back(std::move(w));
+				globalList.push_back(handledWidgets.back().get());
+			}
+			else {
+				WidgetHandlingTrait<SubWidget, false>::manageHandled(w, handledWidgets, widgets, globalList);
+			}
+		}
+	};
+
+	template <class SubWidget>
+	struct WidgetHandlingTrait<SubWidget, false> {
+		static void manageHandled(std::unique_ptr<SubWidget>& w, std::vector<std::unique_ptr<Widget>>&, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
+			widgets.push_back(std::move(w));
+			globalList.push_back(widgets.back().get());
+		}
+	};
+
 	template <class ... HL>
 	class WidgetPanel : public HandledWidget<HL...> {
 	public:
 		WidgetPanel() = default;
 
-		WidgetPanel(Widget& parent) : 
+		explicit WidgetPanel(Widget& parent) : 
 			HandledWidget<HL...>(parent) {
 		}
 
@@ -25,25 +50,10 @@ namespace ska {
 			HandledWidget<HL...>(parent, position) {
 		}
 
-		template <class SubWidget, typename std::enable_if<std::is_base_of<IHandledWidget, SubWidget>::value>::type* dummy = 0>
+		template <class SubWidget>
 		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
 			w->setPriority(static_cast<int>(m_globalList.size()));
-			if (!reinterpret_cast<IHandledWidget&>(*w.get()).isMaskEmpty()) {
-				m_handledWidgets.push_back(std::move(w));
-				m_globalList.push_back(m_handledWidgets.back().get());
-			} else {
-				m_widgets.push_back(std::move(w));
-				m_globalList.push_back(m_widgets.back().get());
-			}
-			return reinterpret_cast<SubWidget*>(m_globalList.back());
-		}
-
-		template <class SubWidget, typename std::enable_if<!std::is_base_of<IHandledWidget, SubWidget>::value>::type* dummy = 0>
-		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
-			w->setPriority(static_cast<int>(m_globalList.size()));
-			m_widgets.push_back(std::move(w));
-			m_globalList.push_back(m_widgets.back().get());
-			
+			WidgetHandlingTrait<SubWidget>::manageHandled(w, m_handledWidgets, m_widgets, m_globalList);
 			return reinterpret_cast<SubWidget*>(m_globalList.back());
 		}
 

@@ -21,6 +21,8 @@ namespace ska {
 	/* Dummy indicator class (for compile time class comparisons) */
 	class IHandledWidget {
 	public:
+		virtual ~IHandledWidget(){}
+
 		virtual	bool isMaskEmpty() const = 0;
 	};
 
