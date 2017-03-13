@@ -18,7 +18,7 @@ namespace ska {
 		WorldCollisionResponse(World& w, GameEventDispatcher& ged, EntityManager& em);
 		WorldCollisionResponse(std::function<bool(CollisionEvent&)> onEntityCollision, World& w, GameEventDispatcher& colSys, EntityManager& em);
 		WorldCollisionResponse& operator=(const WorldCollisionResponse&) = delete;
-		bool onWorldCollision(CollisionEvent& e);
+		virtual bool onWorldCollision(CollisionEvent& e);
 		~WorldCollisionResponse();
 	protected:
 		EntityManager& m_entityManager;

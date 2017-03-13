@@ -22,8 +22,7 @@ namespace ska {
 			if (activeWidget) {
 				handledWidgets.push_back(std::move(w));
 				globalList.push_back(handledWidgets.back().get());
-			}
-			else {
+			} else {
 				WidgetHandlingTrait<SubWidget, false>::manageHandled(w, handledWidgets, widgets, globalList);
 			}
 		}

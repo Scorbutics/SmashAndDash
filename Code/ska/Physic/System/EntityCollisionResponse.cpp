@@ -26,11 +26,10 @@ bool ska::EntityCollisionResponse::onEntityCollision(CollisionEvent& e) {
 	}
 
 	auto col = *e.collisionComponent;
-	ForceComponent& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
-	//MovementComponent& mtarget = m_entityManager.getComponent<MovementComponent>(col.target);
+	auto& ftarget = m_entityManager.getComponent<ForceComponent>(col.target);
 
-	ForceComponent& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
-	MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(col.origin);
+	auto& forigin = m_entityManager.getComponent<ForceComponent>(col.origin);
+	auto& moveComponent = m_entityManager.getComponent<MovementComponent>(col.origin);
 
 	if (col.xaxis) {
 		ftarget.x += (moveComponent.vx + moveComponent.ax)*ftarget.weight;

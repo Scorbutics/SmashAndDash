@@ -1,6 +1,5 @@
 #include "GravitySystem.h"
 #include "../../Utils/SkaConstants.h"
-#include "../../Utils/NumberUtils.h"
 
 ska::GravitySystem::GravitySystem(EntityManager& entityManager) : System(entityManager) {
 }

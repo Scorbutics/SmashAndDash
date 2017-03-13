@@ -14,7 +14,7 @@ namespace ska {
 	public:
 		DebugWorldCollisionResponse(GameEventDispatcher& ged, EntityManager& em);
 		DebugWorldCollisionResponse& operator=(const DebugWorldCollisionResponse&) = delete;
-		bool onWorldCollision(CollisionEvent& e);
+		bool onWorldCollision(CollisionEvent& e) const;
 		~DebugWorldCollisionResponse();
 	private:
 		EntityManager& m_entityManager;

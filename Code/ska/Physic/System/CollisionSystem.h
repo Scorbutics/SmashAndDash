@@ -23,7 +23,7 @@ namespace ska {
 	protected:
 		virtual void refresh() override;
 	private:
-		inline const Rectangle createHitBox(EntityId entityId, bool xaxis) const;
+		inline Rectangle createHitBox(EntityId entityId, bool xaxis) const;
 		World& m_world;
 		GameEventDispatcher& m_ged;
 	};

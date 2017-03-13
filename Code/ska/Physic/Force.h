@@ -1,29 +1,24 @@
-#ifndef DEF_FORCE
-#define DEF_FORCE
+#pragma once
 
 #include "../Graphic/Rectangle.h"
 
 namespace ska {
-	class Force
-	{
-	public:
-		Force();
-		Force(Rectangle pos, float power, float angle);
+	struct Force {
+		Force() : pos({ 0 }), angle(0), power(0) {	
+		}
 
-		Rectangle getPos();
-		float getPower() const;
-		float getAngle() const;
+		Force(Rectangle p, float pow, float a) :
+			pos(p),
+			angle(a),
+			power(pow) {			
+		}
 
-		void setPos(Rectangle pos);
-		void setPower(float power);
-		void setAngle(float angle);
+		~Force() = default;
 
-		~Force();
-
-	protected:
-		Rectangle m_pos;
-		float m_angle, m_power;
+		Rectangle pos;
+		float angle;
+		float power;
 
 	};
 }
-#endif
+

@@ -1,9 +1,7 @@
-#include <iostream>
 #include "../CollisionEvent.h"
 #include "WorldCollisionResponse.h"
 #include "../WorldCollisionComponent.h"
 #include "../CollidableComponent.h"
-#include "../CollisionComponent.h"
 #include "../../ECS/EntityManager.h"
 #include "../../World/World.h"
 
@@ -29,7 +27,7 @@ bool ska::WorldCollisionResponse::onWorldCollision(CollisionEvent& colE) {
 	}
 
 	auto wcol = *colE.wcollisionComponent;
-	bool colX = false;
+	auto colX = false;
 	if (wcol.xaxis) {
 		for (const auto& p : wcol.blockColPosX) {
 			colX |= !m_world.canMoveOnBlock(p, colE.collidableComponent.authorizedBlockIds, 0);
@@ -39,8 +37,8 @@ bool ska::WorldCollisionResponse::onWorldCollision(CollisionEvent& colE) {
 			}
 		}
 	}
-	
-	bool colY = false;
+
+	auto colY = false;
 	if (wcol.yaxis) {
 		for (const auto& p : wcol.blockColPosY) {
 			colY |= !m_world.canMoveOnBlock(p, colE.collidableComponent.authorizedBlockIds, 0);

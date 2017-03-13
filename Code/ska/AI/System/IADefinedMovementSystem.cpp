@@ -12,29 +12,29 @@ void ska::IADefinedMovementSystem::refresh() {
 	std::vector<EntityId> entityWithComponentsToDelete;
 
 	for (EntityId entityId : m_processed) {
-		MovementComponent& mc = m_entityManager.getComponent<MovementComponent>(entityId);
-		PositionComponent& pc = m_entityManager.getComponent<PositionComponent>(entityId);
-		IADefinedMovementComponent& iamc = m_entityManager.getComponent<IADefinedMovementComponent>(entityId);
-		const HitboxComponent& hc = m_entityManager.getComponent<HitboxComponent>(entityId);
+		auto& mc = m_entityManager.getComponent<MovementComponent>(entityId);
+		auto& pc = m_entityManager.getComponent<PositionComponent>(entityId);
+		auto& iamc = m_entityManager.getComponent<IADefinedMovementComponent>(entityId);
+		const auto& hc = m_entityManager.getComponent<HitboxComponent>(entityId);
 		const auto& centerPos = PositionComponent::getCenterPosition(pc, hc);
 
 		if (iamc.directionIndex >= iamc.directions.size()) {
 			continue;
 		}
 
-		const Point<int>& targetVector = iamc.directions[iamc.directionIndex];
+		const auto& targetVector = iamc.directions[iamc.directionIndex];
 		PolarPoint<float> polarVectorMovement = NumberUtils::polar(targetVector.x, targetVector.y);
 		
 		/* speed */
 		polarVectorMovement.radius = 5;
 
-		const Point<int> targetPoint = targetVector + iamc.origin;
-		const Point<float> finalMovement = NumberUtils::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
+		const auto targetPoint = targetVector + iamc.origin;
+		const auto finalMovement = NumberUtils::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
 		
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
-		const unsigned int distanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos, targetPoint);
-		const unsigned int nextDistanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos + finalMovement, targetPoint);
-		const bool directionChanged = distanceSquaredToTarget < nextDistanceSquaredToTarget;
+		const auto distanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos, targetPoint);
+		const auto nextDistanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos + finalMovement, targetPoint);
+		const auto directionChanged = distanceSquaredToTarget < nextDistanceSquaredToTarget;
 		
 		bool collisioned;
 		if (iamc.ghost) {
@@ -43,7 +43,7 @@ void ska::IADefinedMovementSystem::refresh() {
 		} else {
 			collisioned = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
 		}
-		bool finished = false;
+		auto finished = false;
 		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || collisioned) {
 
 			iamc.origin = iamc.directions[iamc.directionIndex];

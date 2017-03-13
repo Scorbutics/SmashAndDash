@@ -600,7 +600,6 @@
     <ClCompile Include="Code\ska\Utils\TimeUtils.cpp" />
     <ClCompile Include="Code\ska\Graphic\SDLFont.cpp" />
     <ClCompile Include="Code\ska\Graphic\Font.cpp" />
-    <ClCompile Include="Code\ska\Physic\Force.cpp" />
     <ClCompile Include="Code\Graphic\GestionAnimations.cpp" />
     <ClCompile Include="Code\ska\Physic\GravityParticle.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUI.cpp" />

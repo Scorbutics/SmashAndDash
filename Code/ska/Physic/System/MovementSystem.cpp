@@ -1,5 +1,4 @@
 #include "MovementSystem.h"
-#include "../CollisionComponent.h"
 #include "../../Utils/NumberUtils.h"
 #include "../WorldCollisionComponent.h"
 
@@ -7,12 +6,12 @@ ska::MovementSystem::MovementSystem(EntityManager& entityManager) : System(entit
 }
 
 void ska::MovementSystem::refresh() {
-	for (EntityId entityId : m_processed) {
-		PositionComponent& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
-		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+	for (auto entityId : m_processed) {
+		auto& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
+		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
-			WorldCollisionComponent& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
+			auto& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
 			
 			/* World Collision */
 			if (col.xaxis) {
@@ -44,9 +43,9 @@ void ska::MovementSystem::refresh() {
 		moveComponent.az = 0;*/
 
 		//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
-		posComponent.x += static_cast<int>(moveComponent.vx + 0.5);
-		posComponent.y += static_cast<int>(moveComponent.vy + 0.5);
-		posComponent.z += static_cast<int>(moveComponent.vz + 0.5);
+		posComponent.x += static_cast<int>(moveComponent.vx);
+		posComponent.y += static_cast<int>(moveComponent.vy);
+		posComponent.z += static_cast<int>(moveComponent.vz);
 
 
 		/* Ignore low values */

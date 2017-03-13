@@ -4,9 +4,9 @@ ska::ForceSystem::ForceSystem(EntityManager& entityManager) : System(entityManag
 }
 
 void ska::ForceSystem::refresh() {
-	for (EntityId entityId : m_processed) {
-		ForceComponent& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
-		MovementComponent& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+	for (auto entityId : m_processed) {
+		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
+		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		/* sum(F) = m*a */
 		moveComponent.ax = forceComponent.x / forceComponent.weight;

@@ -184,8 +184,8 @@ int ska::PhysicObject::getDirection() const
 
 void ska::PhysicObject::applyForce(Force f)
 {
-	int power = (int)f.getPower();
-	float angle = f.getAngle();
+	int power = (int)f.power;
+	float angle = f.angle;
 
 	//application de la force sur x et y:
 	m_ax += power*cos(angle)/m_weight;
@@ -256,8 +256,8 @@ void ska::PhysicObject::applyForce(int direction, float power)
 		break;
 	}
 
-	f.setAngle(angle);
-	f.setPower(power);
+	f.angle = (angle);
+	f.power = (power);
 	this->applyForce(f);
 }
 
@@ -283,8 +283,8 @@ void ska::PhysicObject::applyForce(Rectangle dest, float power)
 			angle += (float)M_PI;
 	}
 
-	f.setAngle(angle);
-	f.setPower(power);
+	f.angle = (angle);
+	f.power = (power);
 	this->applyForce(f);
 
 }

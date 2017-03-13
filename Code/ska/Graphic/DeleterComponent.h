@@ -4,7 +4,7 @@
 namespace ska {
 	class DeleterComponent: public Component {
 	public:
-		DeleterComponent() : startTime(TimeUtils::getTicks()) {
+		DeleterComponent() : delay(0), startTime(TimeUtils::getTicks()) {
 		}
 
 		int delay;

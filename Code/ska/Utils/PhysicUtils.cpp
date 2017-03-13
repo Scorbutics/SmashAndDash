@@ -49,8 +49,8 @@ const ska::Force ska::PhysicUtils::getMovement(const int direction, const float 
 		break;
 	}
 
-	f.setAngle(angle);
-	f.setPower(speed);
+	f.angle = (angle);
+	f.power = (speed);
 	return f;
 }
 

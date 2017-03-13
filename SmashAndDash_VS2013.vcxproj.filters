@@ -1334,9 +1334,6 @@
     <ClCompile Include="Code\ska\Graphic\TextureData.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Physic\Force.cpp">
-      <Filter>Fichiers sources\Physic</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Physic\GravityParticle.cpp">
       <Filter>Fichiers sources\Physic</Filter>
     </ClCompile>

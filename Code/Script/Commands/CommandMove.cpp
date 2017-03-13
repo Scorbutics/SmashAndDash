@@ -71,7 +71,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	mc.vy = 0;
 	mc.ax = 0;
 	mc.ay = 0;
-	const ska::Point<int> vector = ska::NumberUtils::cartesian(moveForce.getPower(), moveForce.getAngle());
+	const ska::Point<int> vector = ska::NumberUtils::cartesian(moveForce.power, moveForce.angle);
 	iamc.directions.push_back(vector);
 	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, iamc);
 

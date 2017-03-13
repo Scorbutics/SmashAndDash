@@ -3,12 +3,13 @@
 #include "../../Utils/PhysicUtils.h"
 #include "../../Utils/NumberUtils.h"
 #include "../../Physic/PositionComponent.h"
+#include "../../Utils/RectangleUtils.h"
 
 ska::IARandomMovementSystem::IARandomMovementSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
 void ska::IARandomMovementSystem::refresh() {
-	for (EntityId entityId : m_processed) {
+	for (auto entityId : m_processed) {
 		auto& fc = m_entityManager.getComponent<ForceComponent>(entityId);
 		auto& iamc = m_entityManager.getComponent<IARandomMovementComponent>(entityId);
 
@@ -32,6 +33,14 @@ void ska::IARandomMovementSystem::refresh() {
 						auto diffPoint = Point<int>(pcEmitter.x, pcEmitter.y) - Point<int>(pc.x, pc.y);
 						auto horizontalDir = NumberUtils::maximum(NumberUtils::absolute(diffPoint.x), NumberUtils::absolute(diffPoint.y)) == NumberUtils::absolute(diffPoint.x);
 						iamc.direction = horizontalDir ? (sens ? 1 : 3) : (sens ? 0 : 2);
+
+						/* Change the direction the entity look at */
+						if (m_entityManager.hasComponent<DirectionalAnimationComponent>(entityId)) {
+							auto& dac = m_entityManager.getComponent<DirectionalAnimationComponent>(entityId);
+							dac.looked = iamc.emitter;
+							dac.type = DirectionalAnimationType::MOVEMENT_THEN_FOLLOWING;
+						}
+
 					} else {
 						iamc.direction = -1;
 					}
@@ -43,8 +52,8 @@ void ska::IARandomMovementSystem::refresh() {
 
 		if (iamc.direction != -1) {
 			auto f = PhysicUtils::getMovement(iamc.direction, 100);
-			fc.x += static_cast<float>(f.getPower() * NumberUtils::cosinus(f.getAngle()));
-			fc.y += static_cast<float>(f.getPower() * NumberUtils::sinus(f.getAngle()));
+			fc.x += static_cast<float>(f.power * NumberUtils::cosinus(f.angle));
+			fc.y += static_cast<float>(f.power * NumberUtils::sinus(f.angle));
 		}
 	}
 }

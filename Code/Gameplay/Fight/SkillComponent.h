@@ -5,7 +5,7 @@
 
 class SkillComponent : public ska::Component {
 public:
-	SkillComponent() {
+	SkillComponent(): range(0), battler(0), amplitude(0) {
 		damage = 0;
 		knockback = 0;
 		speed = 0.01F;

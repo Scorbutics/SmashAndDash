@@ -2,9 +2,16 @@
 #include "../ECS/Component.h"
 #include "../Utils/StringUtils.h"
 namespace ska {
+	namespace DirectionalAnimationType {
+		enum Enum {
+			MOVEMENT,
+			MOVEMENT_THEN_FOLLOWING
+		};
+	}
+
 	class DirectionalAnimationComponent : public Component {
 	public:
-		DirectionalAnimationComponent() {
+		DirectionalAnimationComponent() : type(DirectionalAnimationType::MOVEMENT), looked(0) {
 			static auto initialized = false;
 			if (!initialized) {
 				initialized = true;
@@ -15,6 +22,8 @@ namespace ska {
 		}
 
 		int direction;
+		DirectionalAnimationType::Enum type;
+		EntityId looked;
 
 	protected:
 		static std::string serializeDirection(const Component& component) {
