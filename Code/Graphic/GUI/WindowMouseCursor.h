@@ -8,7 +8,7 @@
 class WindowMouseCursor : 
 	public ska::DynamicWindowIG<ska::ValueChangedEventListener<int>> {
 public:
-	WindowMouseCursor(ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName);
+	WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName);
 	WindowMouseCursor(const WindowMouseCursor&) = delete;
 	WindowMouseCursor& operator=(const WindowMouseCursor&) = delete;
 	void loadPokemon(SlotPokemonDataPtr& spd);

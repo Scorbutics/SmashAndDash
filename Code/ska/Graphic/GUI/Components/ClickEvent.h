@@ -10,8 +10,6 @@ namespace ska {
 		ClickEvent(const MouseEventType& state, Point<int>& pos);
 		~ClickEvent() = default;
 
-		void pushWidgetToFront();
-
 		virtual unsigned int getMask() const override;
 	private:
 		bool m_pushToFront;

@@ -1,9 +1,7 @@
-#include <algorithm>
 #include "TaskQueue.h"
-#include "Task.h"
 #include "Runnable.h"
 
-ska::TaskQueue::TaskQueue() : m_current(nullptr), m_previous(nullptr) {
+ska::TaskQueue::TaskQueue() : m_previous(nullptr), m_current(nullptr) {
 }
 
 void ska::TaskQueue::queueTask(RunnablePtr& t) {

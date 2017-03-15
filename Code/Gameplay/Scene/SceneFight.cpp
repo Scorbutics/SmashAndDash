@@ -4,10 +4,6 @@
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
-#include "../../Graphic/DialogComponent.h"
-#include "../../Utils/IDs.h"
-#include "../../Graphic/GUI/DialogMenu.h"
-#include "../Data/Statistics.h"
 #include "../../ska/Task/TaskQueue.h"
 #include "../../Graphic/GUI/Bar.h"
 
@@ -141,12 +137,12 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
 	
 	m_descriptor.load(m_opponent, "Description");
-	
-	
-	int delay = 3000;
+
+
+	auto delay = 3000;
 
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
-	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
+	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
 		//static int dialogId = 0;
 		if (m_loadState == 0) {
 			m_loadState++;
@@ -226,7 +222,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		BattleEvent be(BattleEventType::BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
+		BattleEvent be(BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
 		m_ged.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		m_sceneLoaded = true;
@@ -248,7 +244,7 @@ bool SceneFight::unload() {
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
 	const unsigned int delay = 3000;
 
-	ska::RunnablePtr dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
+	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
 		static auto dialogId = 0;
 		if (m_loadState == 0) {
 			m_loadState++;
@@ -260,7 +256,7 @@ bool SceneFight::unload() {
 				return false;
 			}
 
-			ska::InputComponent& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
+			auto& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
 			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_pokemonId);
 			//ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			//DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));

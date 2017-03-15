@@ -22,12 +22,12 @@
 #define SCROLL_BUTTON_SPEED 3
 
 ska::GUI::GUI(const Window& w, InputContextManager& playerICM) :
-m_playerICM(playerICM),
 m_window(w),
+m_playerICM(playerICM),
 m_hovered(nullptr),
 m_clicked(nullptr),
-m_wMaster(this, this, Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, ""),
-m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"){
+m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
+m_wMaster(this, this, this, Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
 
 	m_wAction = addWindow(std::make_unique<DynamicWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
 	DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
@@ -53,13 +53,9 @@ void ska::GUI::initButtons(const Window& w) {
 	auto scrollButtonLambda = [this](Widget* tthis, HoverEvent& e) {
 		auto target = static_cast<GUIScrollButtonWindowIG*>(tthis);
 		if (e.getState() == MOUSE_OUT) {
-			if (target->scrollRewind()) {
-				m_bottomButtons.emplace(target);
-			}
+			target->scrollRewind();
 		} else if (e.getState() == MOUSE_ENTER) {
-			if (target->scrollTo(Point<int>(target->getRelativePosition().x, -target->getBox().w / 3), 5)) {
-				m_bottomButtons.emplace(target);
-			}
+			target->scrollTo(Point<int>(target->getRelativePosition().x, -target->getBox().w / 3), 5);
 		}
 
 	};
@@ -230,13 +226,8 @@ void ska::GUI::refresh() {
 	refreshKeyboard();
 
 	//Time-based events
-	for (auto it = begin(m_bottomButtons); it != m_bottomButtons.end(); )  {
-		if(!(*it)->refresh()) {
-			it = m_bottomButtons.erase(it);
-		} else {
-			++it;
-		}
-	}
+	TimeEvent te;
+	TimeObservable::notifyObservers(te);
 
 }
 

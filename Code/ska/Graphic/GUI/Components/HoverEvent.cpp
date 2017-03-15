@@ -23,7 +23,7 @@ const ska::Point<int>& ska::HoverEvent::getMousePosition() const {
 	return m_mousePos;
 }
 
-const ska::Point<int> ska::HoverEvent::getPosition(const Widget& w) const {
+ska::Point<int> ska::HoverEvent::getPosition(const Widget& w) const {
 	return m_pos - w.getAbsolutePosition();
 }
 
@@ -35,7 +35,7 @@ bool ska::HoverEvent::affects(const Widget& w) const {
 	if (!w.isVisible()) {
 		return false;
 	}
-	const Point<int>& relativeEventPos = getPosition() - w.getAbsolutePosition();
+	const auto& relativeEventPos = getPosition() - w.getAbsolutePosition();
 	return RectangleUtils::isPositionInBox(relativeEventPos, Rectangle{ 0, 0, w.getBox().w, w.getBox().h });
 }
 

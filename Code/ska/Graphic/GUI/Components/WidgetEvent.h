@@ -1,5 +1,4 @@
 #pragma once
-#include "../../Point.h"
 #include "IWidgetEvent.h"
 
 namespace ska {
@@ -19,15 +18,15 @@ namespace ska {
 			m_target = t;
 		}
 
-		void stopPropagation(const StopType& st) {
+		void stopPropagation(const StopType& st) override{
 			m_stopPropagation = st;
 		}
 
-		StopType stopped() const {
+		StopType stopped() const override{
 			return m_stopPropagation;
 		}
 
-		Widget* getTarget() {
+		Widget* getTarget() const{
 			return m_target;
 		}
 
@@ -35,8 +34,8 @@ namespace ska {
 			return m_target;
 		}
 
-		virtual unsigned int getMask() const = 0;
-		virtual bool affects(const Widget& w) const = 0;
+		virtual unsigned int getMask() const override = 0;
+		virtual bool affects(const Widget& w) const override = 0;
 
 		virtual ~WidgetEvent() = default;
 

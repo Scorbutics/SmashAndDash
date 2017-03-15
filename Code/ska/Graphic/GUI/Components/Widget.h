@@ -54,9 +54,9 @@ namespace ska {
 			return notify(e);
 		}
 
-		const Point<int> getAbsolutePosition() const;
+		Point<int> getAbsolutePosition() const;
 
-		const Point<int> getRelativePosition() const;
+		Point<int> getRelativePosition() const;
 
 		virtual ~Widget() = default;
 

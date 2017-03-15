@@ -1,8 +1,5 @@
 #pragma once
 #include <iostream>
-#include <memory>
-#include <vector>
-#include <functional>
 #include <unordered_map>
 #include <bitset>
 #include <tuple>
@@ -37,7 +34,7 @@ namespace ska {
 			(void)_;
 		}
 
-		HandledWidget(Widget& parent)  :
+		explicit HandledWidget(Widget& parent)  :
 			Widget(parent),
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
@@ -122,7 +119,7 @@ namespace ska {
 
 		template<class T>
 		T instantiateHandler() {
-			const MaskUnit& mu = WidgetMaskHelper::template getMask<T>();
+			const MaskUnit& mu = WidgetMaskHelper::getMask<T>();
 			m_maskHandlerIndexes[mu] = m_currentMaskIndex;
 			m_currentMaskIndex--;
 			return T(static_cast<Widget&>(*this));
@@ -130,7 +127,7 @@ namespace ska {
 
 		template <class T>
 		void buildMask() {
-			unsigned int mask = WidgetMaskHelper::template getMask<T>();
+			unsigned int mask = WidgetMaskHelper::getMask<T>();
 			if (mask >= m_mask.size()) {
 				std::cout << "Error" << std::endl;
 				throw std::runtime_error("Too many listeners are used. Unable to continue.");

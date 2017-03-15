@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "../../Texture.h"
 #include "../../Color.h"
 #include "Widget.h"

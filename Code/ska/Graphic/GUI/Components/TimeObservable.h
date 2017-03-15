@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../Utils/Observable.h"
-#include "KeyEvent.h"
+#include "TimeEvent.h"
 
 namespace ska {
-	using KeyObservable = Observable<KeyEvent>;
+	using TimeObservable = Observable<TimeEvent>;
 }

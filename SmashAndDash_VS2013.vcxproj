@@ -164,7 +164,12 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButton.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEvent.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEventListener.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObservable.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObserver.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\UiBinder.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEventListener.h" />
@@ -500,7 +505,8 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp" />
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonList.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.cpp" />
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\TimeEvent.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.cpp" />
     <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp" />

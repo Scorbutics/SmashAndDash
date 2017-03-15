@@ -1,16 +1,10 @@
 #pragma once
-#include <iostream>
 #include <memory>
 #include <vector>
 #include <type_traits>
-#include <deque>
-#include <functional>
 #include <algorithm>
-#include <bitset>
-#include <tuple>
 
 #include "HandledWidget.h"
-#include "../../../Utils/TupleUtils.h"
 
 namespace ska {
 
@@ -63,8 +57,8 @@ namespace ska {
 				return false;
 			}
 
-			bool result = false;
-			bool stopped = false;
+			auto result = false;
+			auto stopped = false;
 			for (auto& w : m_handledWidgets) {
 				const auto nextNotify = w->notify(e);
 				result |= nextNotify;
@@ -98,7 +92,7 @@ namespace ska {
 		}
 
 		void display() const override {
-			for (auto w = m_globalList.begin(); w != m_globalList.end(); w++) {
+			for (auto w = m_globalList.begin(); w != m_globalList.end(); ++w) {
 				(*w)->display();
 			}
 		}

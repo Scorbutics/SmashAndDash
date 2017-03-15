@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <iostream>
-#include <list>
 #include <string>
 #include <sstream>
 
@@ -10,23 +9,18 @@
 #include "../../Exceptions/InvalidPathException.h"
 #include "../../Exceptions/IllegalArgumentException.h"
 
-void IniListSet(std::list<std::string>& lines, std::string path, std::string content);
-std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines, std::string path);
-std::list<std::string>::iterator IniListSearchBlock(std::list<std::string>& lines, std::string block);
-
 namespace ska {
-	class IniReader
-	{
+	class IniReader {
 	public:
-		IniReader(std::string inifilename);
+		explicit IniReader(const std::string& inifilename);
 		IniReader();
-		~IniReader();
+		~IniReader() = default;
 
 		void clear();
-		bool load(std::string inifilename);
-		void save(std::string inifilename);
+		bool load(const std::string& inifilename);
+		void save(const std::string& inifilename);
 		bool isLoaded() const;
-		bool exists(std::string path) const;
+		bool exists(const std::string& path) const;
 
 		template<typename T>
 		void set(const std::string& path, const T& value) {
@@ -36,7 +30,7 @@ namespace ska {
 		}
 		
 		template<typename T>
-		inline T get(const std::string& path) const {
+		T get(const std::string& path) const {
 			/* unimplemented default */
 			throw IllegalArgumentException("Unsupported converted type for path " + path);
 		}
@@ -89,7 +83,7 @@ namespace ska {
 
 	template<>
 	inline float IniReader::get(const std::string& path) const {
-		const std::string& s = get<std::string>(path);
+		const auto& s = get<std::string>(path);
 		std::stringstream ss;
 		float f;
 		ss << s;

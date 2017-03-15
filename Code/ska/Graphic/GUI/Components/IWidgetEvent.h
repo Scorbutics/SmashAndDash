@@ -6,6 +6,7 @@ namespace ska {
 
 	class IWidgetEvent {
 	public:
+		virtual ~IWidgetEvent(){}
 
 		virtual bool affects(const Widget& w) const = 0;
 		virtual unsigned int getMask() const = 0;

@@ -83,7 +83,7 @@ bool ska::Widget::notify(IWidgetEvent&) {
 	return false;
 }
 
-const ska::Point<int> ska::Widget::getAbsolutePosition() const {
+ska::Point<int> ska::Widget::getAbsolutePosition() const {
 	if (m_parent == nullptr) {
 		return m_box;
 	}
@@ -91,7 +91,7 @@ const ska::Point<int> ska::Widget::getAbsolutePosition() const {
 	return m_parent->getAbsolutePosition() + m_box;
 }
 
-const ska::Point<int> ska::Widget::getRelativePosition() const {
+ska::Point<int> ska::Widget::getRelativePosition() const {
 	return m_box;
 }
 

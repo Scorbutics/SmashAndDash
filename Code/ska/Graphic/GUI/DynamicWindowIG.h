@@ -10,7 +10,6 @@
 #include "./Components/ClickEventListener.h"
 #include "./Components/HoverEventListener.h"
 
-
 namespace ska {
 
 	class KeyEvent;
@@ -26,22 +25,22 @@ namespace ska {
 
 	public:
 		DynamicWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, box, styleName),
-			m_guiObservable(nullptr),
-			m_keyObservable(nullptr),
+			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, nullptr, box, styleName),
 			MouseObserver(std::bind(&DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
-			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)) {
+			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)),
+			m_guiObservable(nullptr),
+			m_keyObservable(nullptr) {
 				this->move(box);
 				this->setWidth(box.w);
 				this->setHeight(box.h);
 		}
 
-		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(box, styleName),
-			m_guiObservable(guiObservable),
-			m_keyObservable(keyObservable),
+		DynamicWindowIG(TimeObservable* timeObservable, MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
+			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(timeObservable, box, styleName),
 			MouseObserver(std::bind(&DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
-			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)) {
+			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)),
+			m_guiObservable(guiObservable),
+			m_keyObservable(keyObservable) {
 
 			m_guiObservable->HoverObservable::addObserver(*this);
 			m_guiObservable->ClickObservable::addObserver(*this);

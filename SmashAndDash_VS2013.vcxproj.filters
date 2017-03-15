@@ -1107,6 +1107,21 @@
     <ClInclude Include="Code\Gameplay\Data\SettingsChangeEventType.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEventListener.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObserver.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObservable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Graphic\GUI\Bar.cpp">
@@ -1691,9 +1706,6 @@
     <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonList.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -1729,6 +1741,12 @@
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MapMouseCursor.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\TimeEvent.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

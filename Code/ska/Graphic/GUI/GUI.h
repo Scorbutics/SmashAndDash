@@ -3,12 +3,12 @@
 #include <unordered_set>
 #include <memory>
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
-#include "../../Graphic/Point.h"
 #include "./Components/MouseObservable.h"
 #include "./Components/KeyObservable.h"
 #include "DynamicWindowIG.h"
 #include "./Components/KeyEventListener.h"
 #include "Components/MouseCursor.h"
+#include "Components/TimeObservable.h"
 
 namespace ska {
 	class Window;
@@ -19,7 +19,8 @@ namespace ska {
 	class GUI : 
 		public DrawableFixedPriority, 
 		public MouseObservable, 
-		public KeyObservable {
+		public KeyObservable,
+		public TimeObservable {
 
 	public:
 		GUI(const Window& w, InputContextManager& playerICM);
@@ -40,7 +41,6 @@ namespace ska {
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
 		DynamicWindowIG<>* m_wAction;
-		std::unordered_set<DynamicWindowIG<>*> m_bottomButtons;
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
 		const Window& m_window;

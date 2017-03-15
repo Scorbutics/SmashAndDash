@@ -11,7 +11,7 @@ namespace ska {
 	class RepeatableTask<TaskReceiver<RA...>, TaskSender<SA...>> : public Task<bool, TaskReceiver<RA...>, TaskSender<SA...>>, public Runnable{
 	public:
 		/* Specilization only when the task doesn't receive any data from a previous one. The previous task shall NOT be provided */
-		RepeatableTask(typename meta::Identity<std::function<bool(Task<bool, TaskReceiver<>, TaskSender<SA...>>&, RA...)>>::type const& f) :
+		explicit RepeatableTask(typename meta::Identity<std::function<bool(Task<bool, TaskReceiver<>, TaskSender<SA...>>&, RA...)>>::type const& f) :
 			Task<bool, TaskReceiver<>, TaskSender<SA...>>(f) {
 			}
 

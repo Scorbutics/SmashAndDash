@@ -22,7 +22,7 @@ namespace ska {
 		}
 
 		bool notifyObservers(T& t, Args... args) {
-			bool hasBeenHandled = false;
+			auto hasBeenHandled = false;
 			for (auto& obs : m_head) {
 				hasBeenHandled |= obs->receive(t, std::forward<Args&>(args)...);
 			}

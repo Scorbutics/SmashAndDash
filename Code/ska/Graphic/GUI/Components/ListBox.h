@@ -39,7 +39,7 @@ namespace ska {
 				auto wListbox = std::make_unique<DynamicWindowIG<FocusEventListener>>(*this, Rectangle{ 0, button->getBox().h, button->getBox().w, (int)(m_values.size() + 1)*button->getBox().h }, "");
 				wListbox->show(false);
 
-				wListbox->addHandler<FocusEventListener>([](Widget* tthis, FocusEvent& e) {
+				wListbox->template addHandler<FocusEventListener>([](Widget* tthis, FocusEvent& e) {
 					if (e.getState() == MOUSE_BLUR && (e.getClickedTarget() == nullptr || !tthis->isAParent(*e.getClickedTarget()))) {
 						tthis->show(false);
 					}
@@ -87,11 +87,11 @@ namespace ska {
 			});
 
 			wListbox.addWidget(std::make_unique<Label>(wListbox, " ", m_fontSize, Point<int>(10, ListBox<T>::getBox().h)));
-			wListbox.addWidget(b1);
+			wListbox.addWidget(std::move(b1));
 			
 			size_t index = 1;
 			for (auto& v : m_values) {
-				auto b = std::make_unique<Button>(wListbox, Point<int>(0, ListBox<T>::getBox().h + buttonHeight * (int)index), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
+				auto b = std::make_unique<Button>(wListbox, Point<int>(0, ListBox<T>::getBox().h + buttonHeight * static_cast<int>(index)), m_styleName, nullptr, [&](Widget* tthis, ClickEvent& e) {
 					e.stopPropagation(STOP_WIDGET);
 					if (e.getState() != MOUSE_RELEASE) {
 						return;
@@ -107,7 +107,7 @@ namespace ska {
 				std::stringstream ss;
 				ss << v;
 				auto str = ss.str();
-				wListbox.addWidget(b);
+				wListbox.addWidget(std::move(b));
 				wListbox.addWidget(std::make_unique<Label>(wListbox, str.empty() ? " " : str, m_fontSize, Point<int>(10, ListBox<T>::getBox().h + buttonHeight * (int)index)));
 
 				index++;

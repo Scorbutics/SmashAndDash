@@ -16,7 +16,7 @@ namespace ska {
 
 		const Point<int>& getRelativeMousePosition() const;
 		const Point<int>& getMousePosition() const;
-		const Point<int> getPosition(const Widget& w) const;
+		Point<int> getPosition(const Widget& w) const;
 		
 		virtual unsigned int getMask() const override;
 		virtual bool affects(const Widget& w) const override;

@@ -12,7 +12,6 @@
 #include "../../ska/Graphic/System/CameraFixedSystem.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
-#include "../../ska/Inputs/InputComponent.h"
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Gameplay/Fight/System/SkillRefreshSystem.h"

@@ -5,19 +5,21 @@
 #include <algorithm>
 #include "IniReader.h"
 
+void IniListSet(std::list<std::string>& lines, const std::string& path, const std::string& content);
+std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines, const std::string& path);
+std::list<std::string>::iterator IniListSearchBlock(std::list<std::string>& lines, const std::string& block);
+
 ska::IniReader::IniReader() {
 	m_isLoaded = false;
 }
 
-ska::IniReader::IniReader(std::string inifilename) : 
+ska::IniReader::IniReader(const std::string& inifilename) : 
 IniReader() {
 	load(inifilename);
 }
 
-ska::IniReader::~IniReader() {
-}
 
-bool ska::IniReader::load(std::string inifilename) {
+bool ska::IniReader::load(const std::string& inifilename) {
 	m_content.clear();
 	
 	std::ifstream iniFile(inifilename.c_str());
@@ -35,7 +37,7 @@ bool ska::IniReader::load(std::string inifilename) {
 
 		getline(iniFile, line);
 
-		size_t posVar = line.find('=');
+		auto posVar = line.find('=');
 
 		//suppression des espaces non nécessaires si présents
 		if (posVar == std::string::npos)
@@ -71,7 +73,7 @@ bool ska::IniReader::load(std::string inifilename) {
 	return true;
 }
 
-void ska::IniReader::save(std::string inifilename) {
+void ska::IniReader::save(const std::string& inifilename) {
 	std::ofstream iniFile(inifilename);
 	std::list<std::string> lines;
 
@@ -83,7 +85,7 @@ void ska::IniReader::save(std::string inifilename) {
 
 
 	//transcription de la map sous forme de liste
-	for (std::unordered_map<std::string, std::string>::iterator it = m_content.begin(); it != m_content.end(); ++it) {
+	for (auto it = m_content.begin(); it != m_content.end(); ++it) {
 		IniListSet(lines, it->first, it->second);
 	}
 
@@ -94,7 +96,7 @@ void ska::IniReader::save(std::string inifilename) {
 	}
 }
 
-bool ska::IniReader::exists(std::string path) const {
+bool ska::IniReader::exists(const std::string& path) const {
 	return (m_content.find(path) != m_content.end());
 }
 
@@ -109,7 +111,7 @@ void ska::IniReader::clear() {
 
 
 //Insère ou modifie (si le chemin existe déjà) le contenu content du chemin path dans la liste lines
-void IniListSet(std::list<std::string>& lines, std::string path, std::string content) {
+void IniListSet(std::list<std::string>& lines, const std::string& path, const std::string& content) {
 	std::string currentBlock;
 	std::string blockPath, varPath;
 
@@ -124,7 +126,7 @@ void IniListSet(std::list<std::string>& lines, std::string path, std::string con
 				lines.push_back(varPath+"="+content);
 			
 		} else {
-			it++;
+			++it;
 			lines.insert(it, varPath+"="+content);
 		}
 		
@@ -136,7 +138,7 @@ void IniListSet(std::list<std::string>& lines, std::string path, std::string con
 
 
 //retourne l'iterateur dans la liste correspondant au chemin cherché, et lines.end() s'il n'est pas trouvé
-std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines, std::string path) {
+std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines, const std::string& path) {
 	std::string blockPath, varPath;
 
 	blockPath = path.substr(0, path.find(' '));
@@ -164,7 +166,7 @@ std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines
 }
 
 //retourne l'iterateur dans la liste correspondant au bloc cherché, et lines.end() s'il n'est pas trouvé
-std::list<std::string>::iterator IniListSearchBlock(std::list<std::string>& lines, std::string block) {
+std::list<std::string>::iterator IniListSearchBlock(std::list<std::string>& lines, const std::string& block) {
 	std::string currentBlock;
 
 	for (std::list<std::string>::iterator it = lines.begin(); it != lines.end(); ++it) {

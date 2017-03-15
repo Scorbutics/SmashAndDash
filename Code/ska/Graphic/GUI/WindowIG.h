@@ -1,6 +1,4 @@
 #pragma once
-#include "../../Utils/SkaConstants.h"
-#include "../../Utils/RectangleUtils.h"
 #include "./Components/WidgetPanel.h"
 #include "../Texture.h"
 
@@ -14,8 +12,8 @@ namespace ska{
 	public:
 		WindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
 			WidgetPanel<HL...>(parent),
-			m_menuTiles(styleName + ".png"),
-			m_drawStyle(!styleName.empty()) {
+			m_drawStyle(!styleName.empty()),
+			m_menuTiles(styleName + ".png") {
 
 			this->move(box);
 			this->setWidth(box.w);
@@ -23,8 +21,8 @@ namespace ska{
 		}
 
 		WindowIG(const Rectangle& box, const std::string& styleName) :
-			m_menuTiles(styleName + ".png"),
-			m_drawStyle(!styleName.empty()) {
+			m_drawStyle(!styleName.empty()),
+			m_menuTiles(styleName + ".png") {
 
 			this->move(box);
 			this->setWidth(box.w);

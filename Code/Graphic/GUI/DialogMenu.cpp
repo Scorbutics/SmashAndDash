@@ -3,13 +3,12 @@
 #include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
 #include "Inventory_Area.h"
 #include "../../Utils/IDs.h"
-#include "../../ska/Utils/RectangleUtils.h"
 #include "../../ska/Utils/TimeUtils.h"
 #include "../../ska/Graphic/GUI/Components/Widget.h"
 #include "../../ska/Graphic/GUI/Components/Label.h"
-#include "../../ska/Graphic/GUI/Components/Image.h"
 #include "../../ska/Graphic/GUI/Components/KeyObservable.h"
 #include "Image_Area.h"
+#include "../../ska/Graphic/GUI/Components/ScrollingMultiLineLabel.h"
 
 #define RECT_OFFSET 12
 #define F_IN 1
@@ -21,22 +20,22 @@
 //Le menu est géré de même façon qu'un layer. on a une image qui permet la construction des fenêtres du menu (on peut considérer ça comme un chipset à menu),
 //et on blit certaines parties de l'image à tel ou tel endroit de sorte à créer une fenêtre.
 ///////////////////////////////////////////////
-
-
 DialogMenu::DialogMenu(ska::MouseObservable&, ska::KeyObservable&, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
 WindowIG<>(rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
-m_timeout(timeout),
-m_moving(false),
-m_show(false),
-m_isScrolling(false), 
-m_alpha(false),
-m_sensScroll(F_OUT), 
-m_scroll(scroll), 
 m_fontSize(fontSize),
-m_t0(0), 
-m_ligne(0) {
+m_ligne(0),
+m_sensScroll(F_OUT),
+m_timeout(timeout), 
+m_t0(0),
+m_show(false), 
+m_scroll(scroll), 
+m_alpha(false),
+m_moving(false), 
+m_isScrolling(false) {
 	m_scrollingRect = getBox();
 	m_scrollingRect.y += m_scrollingRect.h;
+
+	//addWidget(std::make_unique<ska::ScrollingMultiLineLabel>());
 
 	/*if (!imageResource.empty()) {
 		m_image.load(imageResource);
@@ -95,7 +94,7 @@ void DialogMenu::display() const {
 
 			if (i == m_ligne) {
 				if (m_scrollTextLengthPerLine[m_ligne] < m_stext[m_ligne].getWidth()) {
-					textClip.w += (int)m_scrollTextLengthPerLine[m_ligne];
+					textClip.w += static_cast<int>(m_scrollTextLengthPerLine[m_ligne]);
 				} else {
 					textClip.w = m_stext[m_ligne].getWidth();
 				}
@@ -150,7 +149,7 @@ void DialogMenu::click(const ska::Point<int>& clickPos) {
 
 void DialogMenu::refresh() {
 	if (isVisible(true)) {
-		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= (unsigned int)m_timeout) {
+		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= static_cast<unsigned int>(m_timeout)) {
 			hide(true);
 		}
 	}
@@ -164,10 +163,10 @@ void DialogMenu::refresh() {
 	
 		if (m_scrollTextLengthPerLine[m_ligne] < m_stext[m_ligne].getWidth()) {
 			m_scrollTextLengthPerLine[m_ligne] += 9.5;
-			textClip.w += (int)m_scrollTextLengthPerLine[m_ligne];
+			//textClip.w += static_cast<int>(m_scrollTextLengthPerLine[m_ligne]);
 		} else {
 			textClip.w = m_stext[m_ligne].getWidth();
-			m_scrollTextLengthPerLine[m_ligne] = (float)textClip.w;
+			m_scrollTextLengthPerLine[m_ligne] = static_cast<float>(textClip.w);
 			if (m_ligne + 1 < m_text.size()) {
 				m_ligne++;
 			}
