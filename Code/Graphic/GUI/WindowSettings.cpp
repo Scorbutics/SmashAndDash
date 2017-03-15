@@ -6,11 +6,12 @@
 #include "../../ska/Graphic/GUI/GUI.h"
 #include "../../ska/Graphic/GUI/Components/Input.h"
 #include "../../ska/Graphic/GUI/Components/CheckBox.h"
-#include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
-#include "../../ska/Graphic/GUI/Components/RadioButton.h"
+/*#include "../../ska/Graphic/GUI/Components/RadioButtonGroup.h"
+#include "../../ska/Graphic/GUI/Components/RadioButton.h"*/
 #include "../../ska/Graphic/GUI/Components/RadioButtonList.h"
 #include "../../ska/Graphic/GUI/Components/ListBox.h"
 #include "../../ska/Graphic/GUI/Components/LabeledHorizontalSlider.h"
+//#include "../../ska/Graphic/GUI/Components/ScrollingMultiLineLabel.h"
 
 WindowSettings::WindowSettings(Widget& parent, const ska::Point<int>& absolutePos) :
 MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 10 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {	

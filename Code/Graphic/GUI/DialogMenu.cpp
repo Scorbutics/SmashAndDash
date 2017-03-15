@@ -35,7 +35,8 @@ m_isScrolling(false) {
 	m_scrollingRect = getBox();
 	m_scrollingRect.y += m_scrollingRect.h;
 
-	//addWidget(std::make_unique<ska::ScrollingMultiLineLabel>());
+	//TODO suite
+	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1, ska::Point<int>(16, 112)));
 
 	/*if (!imageResource.empty()) {
 		m_image.load(imageResource);
@@ -45,7 +46,7 @@ m_isScrolling(false) {
 	m_rectImage.w = m_image.getWidth();
 	m_rectImage.h = m_image.getHeight();*/
 
-	modifyText(text);
+	//modifyText(text);
 }
 
 DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs) :
