@@ -22,7 +22,7 @@ namespace ska {
 	private:
 		void initHandlers() {
 			const auto& clip = Rectangle{ 0, 0, this->getBox().w, TAILLEBLOCFENETRE / 2 };
-			auto button = std::unique_ptr<Button>(new Button(*this, Point<int>(), Button::MENU_DEFAULT_THEME_PATH + "button", &clip, [&](Widget* tthis, ClickEvent& e) {
+			auto button = std::make_unique<Button>(*this, Point<int>(), Button::MENU_DEFAULT_THEME_PATH + "button", &clip, [&](Widget* tthis, ClickEvent& e) {
 				if (e.getState() == MOUSE_CLICK) {
 					m_moving = true;
 					m_offsetWindowOrigin = e.getPosition(*tthis);
@@ -30,7 +30,7 @@ namespace ska {
 				else if (e.getState() == MOUSE_RELEASE) {
 					m_moving = false;
 				}
-			}));
+			});
 			button->setWidth(this->getBox().w - TAILLEBLOCFENETRE / 2);
 			button->setHeight(TAILLEBLOCFENETRE / 2);
 			button->addHandler<HoverEventListener>([&](Widget*, HoverEvent& e) {
@@ -41,11 +41,11 @@ namespace ska {
 				}
 			});
 
-			auto buttonQuit = std::unique_ptr<ButtonQuit>(new ButtonQuit(*this, Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), Button::MENU_DEFAULT_THEME_PATH + "close_button"));
+			auto buttonQuit = std::make_unique<ButtonQuit>(*this, Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), Button::MENU_DEFAULT_THEME_PATH + "close_button");
 
 			
-			this->addWidget(button)->setPriority(std::numeric_limits<int>::max() );
-			this->addWidget(buttonQuit)->setPriority(std::numeric_limits<int>::max()-1);
+			this->addWidget(std::move(button))->setPriority(std::numeric_limits<int>::max() );
+			this->addWidget(std::move(buttonQuit))->setPriority(std::numeric_limits<int>::max()-1);
 		}
 
 		bool m_moving;

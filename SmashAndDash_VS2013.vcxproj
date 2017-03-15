@@ -645,7 +645,6 @@
     <ClCompile Include="Code\Graphic\GUI\WindowSettings.cpp" />
     <ClCompile Include="Code\Graphic\GUI\WindowShop.cpp" />
     <ClCompile Include="Code\Graphic\GUI\WindowTeam.cpp" />
-    <ClCompile Include="Code\Graphic\GUI\Window_Area.cpp" />
     <ClCompile Include="Code\ska\World\World.cpp" />
     <ClCompile Include="Code\ska\Script\Command\ControlStatement.cpp" />
     <ClCompile Include="Code\ska\Script\Command\CommandLog.cpp" />

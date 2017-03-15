@@ -5,8 +5,8 @@
 
 ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& styleName, Point<int> relativePos, const unsigned int pixelWidth) : 
 WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventListener>(parent, relativePos),
-	m_sliding(false), 
-	m_percents(0) {
+	m_percents(0), 
+	m_sliding(false) {
 	auto b = std::make_unique<Button>(*this, Point<int>(0, 0), styleName, nullptr, [this](Widget*, ClickEvent& e) {
 		m_sliding = e.getState() == MOUSE_CLICK;
 		if (m_sliding) {
@@ -22,8 +22,8 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 	clipImage.h = std::numeric_limits<int>::max();
 	auto img = std::make_unique<Image>(*this, styleName + "_bar.png", Point<int>(0, 0), false, &clipImage);
 	img->setWidth(pixelWidth);
-	setWidth(pixelWidth);
-	setHeight(img->getBox().h);
+	Widget::setWidth(pixelWidth);
+	Widget::setHeight(img->getBox().h);
 
 	addHandler<HoverEventListener>([this](Widget*, HoverEvent& e) {
 		if(e.getState() == MOUSE_OVER && m_sliding) {
@@ -35,8 +35,8 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 		}
 	});
 
-	addWidget(img);
-	addWidget(b);
+	addWidget(std::move(img));
+	addWidget(std::move(b));
 }
 
 float ska::HorizontalSlider::getValue() const {

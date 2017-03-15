@@ -5,16 +5,14 @@
 WindowMouseCursor::WindowMouseCursor(ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName) :
 DynamicWindowIG<ska::ValueChangedEventListener<int>>(guiObservable, keyObservable, box, styleName),
 m_originalBox(box) {
-	auto pkmn = std::make_unique<ska::Image>(*this, "", ska::Point<int>(), false, nullptr);
-	m_pokemon = addWidget(pkmn);
-	auto itm = std::make_unique<ska::Image>(*this, "", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr);
-	m_item = addWidget(itm);
+	m_pokemon = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(), false, nullptr));
+	m_item = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr));
 	m_pokemon->show(false);
 	m_item->show(false);
-	setWidth(box.w);
-	setHeight(box.h);
+	Widget::setWidth(box.w);
+	Widget::setHeight(box.h);
 	show(false);
-	setPriority(std::numeric_limits<int>::max());
+	DrawableFixedPriority::setPriority(std::numeric_limits<int>::max());
 }
 
 void WindowMouseCursor::loadPokemon(SlotPokemonDataPtr& spd) {

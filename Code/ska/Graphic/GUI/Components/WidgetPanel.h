@@ -16,21 +16,21 @@ namespace ska {
 
 	template <class SubWidget, bool = std::is_base_of<IHandledWidget, SubWidget>::value>
 	struct WidgetHandlingTrait {
-		static void manageHandled(std::unique_ptr<SubWidget>& w, std::vector<std::unique_ptr<Widget>>& handledWidgets, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
+		static void manageHandled(std::unique_ptr<SubWidget>&& w, std::vector<std::unique_ptr<Widget>>& handledWidgets, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
 			auto widget = static_cast<IHandledWidget*>(w.get());
 			auto activeWidget = !widget->isMaskEmpty();
 			if (activeWidget) {
 				handledWidgets.push_back(std::move(w));
 				globalList.push_back(handledWidgets.back().get());
 			} else {
-				WidgetHandlingTrait<SubWidget, false>::manageHandled(w, handledWidgets, widgets, globalList);
+				WidgetHandlingTrait<SubWidget, false>::manageHandled(std::move(w), handledWidgets, widgets, globalList);
 			}
 		}
 	};
 
 	template <class SubWidget>
 	struct WidgetHandlingTrait<SubWidget, false> {
-		static void manageHandled(std::unique_ptr<SubWidget>& w, std::vector<std::unique_ptr<Widget>>&, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
+		static void manageHandled(std::unique_ptr<SubWidget>&& w, std::vector<std::unique_ptr<Widget>>&, std::vector<std::unique_ptr<Widget>>& widgets, std::vector<Widget*>& globalList) {
 			widgets.push_back(std::move(w));
 			globalList.push_back(widgets.back().get());
 		}
@@ -50,9 +50,9 @@ namespace ska {
 		}
 
 		template <class SubWidget>
-		SubWidget* addWidget(std::unique_ptr<SubWidget>& w) {
+		SubWidget* addWidget(std::unique_ptr<SubWidget>&& w) {
 			w->setPriority(static_cast<int>(m_globalList.size()));
-			WidgetHandlingTrait<SubWidget>::manageHandled(w, m_handledWidgets, m_widgets, m_globalList);
+			WidgetHandlingTrait<SubWidget>::manageHandled(std::move(w), m_handledWidgets, m_widgets, m_globalList);
 			return reinterpret_cast<SubWidget*>(m_globalList.back());
 		}
 

@@ -21,22 +21,18 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	});
 // 	addWidget(input);
 	
-	auto title = std::unique_ptr<ska::Label>(new ska::Label(*this, "Paramètres", 11, ska::Point<int>(95, 0)));
+	auto title = std::make_unique<ska::Label>(*this, "Paramètres", 11, ska::Point<int>(95, 0));
 	title->setPriority(std::numeric_limits<int>::max());
 	title->setFontColor(255, 255, 255, 255);
-	addWidget(title);
+	addWidget(std::move(title));
+	
+	addWidget(std::make_unique<ska::Label>(*this, "Météo", 11, ska::Point<int>(40, 32)));
+	
+	m_weatherController = addWidget(std::make_unique<ska::CheckBox>(*this, ska::Point<int>(16, 32), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
+	
+	addWidget(std::make_unique<ska::Label>(*this, "Brouillard transparent", 11, ska::Point<int>(40, 48)));
 
-	auto weatherText = std::unique_ptr<ska::Label>(new ska::Label(*this, "Météo", 11, ska::Point<int>(40, 32)));
-	addWidget(weatherText);
-
-	auto weather = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 32), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
-	m_weatherController = addWidget(weather);
-
-	auto fogTransparencyText = std::unique_ptr<ska::Label>(new ska::Label(*this, "Brouillard transparent", 11, ska::Point<int>(40, 48)));
-	addWidget(fogTransparencyText);
-
-	auto fogTransparency = std::unique_ptr<ska::CheckBox>(new ska::CheckBox(*this, ska::Point<int>(16, 48), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
-	m_fogTController = addWidget(fogTransparency);
+	m_fogTController = addWidget(std::make_unique<ska::CheckBox>(*this, ska::Point<int>(16, 48), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr));
 
 // 	auto radioList = std::unique_ptr<ska::RadioButtonList<std::string>>(new ska::RadioButtonList<std::string>(*this, ska::Point<int>(176, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
 // 	std::vector<std::string> radioVals;
@@ -62,12 +58,8 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	});
 // 	addWidget(listbox);
 
-
-
-	auto volLabel = std::unique_ptr<ska::Label>(new ska::Label(*this, "Volume", 11, ska::Point<int>(16, 80)));
-	addWidget(volLabel);
-	auto hSlider = std::unique_ptr<ska::LabeledHorizontalSlider>(new ska::LabeledHorizontalSlider(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160));
-	m_volController = addWidget(hSlider);
+	addWidget(std::make_unique<ska::Label>(*this, "Volume", 11, ska::Point<int>(16, 80)));
+	m_volController = addWidget(std::make_unique<ska::LabeledHorizontalSlider>(*this, ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160));
 
 	resort();
 }

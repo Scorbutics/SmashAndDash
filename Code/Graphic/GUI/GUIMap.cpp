@@ -20,15 +20,11 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 	auto rawWindowTeam = new WindowTeam(m_wMaster, m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team = rawWindowTeam;
 	rawWindowTeam->show(false);
-
-	auto windowTeam = std::unique_ptr<WindowTeam>(rawWindowTeam);
-	addWindow<WindowTeam, ska::ValueChangedEventListener<int>>(windowTeam, "team");
+	addWindow<WindowTeam, ska::ValueChangedEventListener<int>>(std::unique_ptr<WindowTeam>(rawWindowTeam), "team");
 
 	auto rawWindowSettings = new WindowSettings(m_wMaster, ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	rawWindowSettings->show(false);
-
-	auto windowSettings = std::unique_ptr<WindowSettings>(rawWindowSettings);
-	addWindow<WindowSettings, ska::KeyEventListener>(windowSettings, "settings");
+	addWindow<WindowSettings, ska::KeyEventListener>(std::unique_ptr<WindowSettings>(rawWindowSettings), "settings");
 
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);

@@ -25,15 +25,15 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, Point<i
 	});
 
 	auto label = std::make_unique<Label>(*this, text, fontSize, Point<int>(5, button->getBox().h / 2 - fontSize/2));
-	setWidth(button->getBox().w);
-	setHeight(button->getBox().h);
+	Widget::setWidth(button->getBox().w);
+	Widget::setHeight(button->getBox().h);
 
 	m_clip.y = 0;
 	m_clip.w = getBox().w - 10;
 	adaptDisplayWithText(*label);
 
-	addWidget(button);
-	addWidget(label);
+	addWidget(std::move(button));
+	addWidget(std::move(label));
 
 	addHandler<FocusEventListener>([&](Widget*, FocusEvent& e) {
 		auto f = e.getState() == MOUSE_FOCUS;

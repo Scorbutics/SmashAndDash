@@ -1130,9 +1130,6 @@
     <ClCompile Include="Code\Graphic\GUI\TrainerCard.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Graphic\GUI\Window_Area.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\WindowBag.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>

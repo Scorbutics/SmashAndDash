@@ -54,11 +54,11 @@ namespace ska {
 
 	protected:
 		template <class Win, class ...HL>
-		Win* addWindow(std::unique_ptr<Win>& w, const std::string& name) {
-			auto result = m_wMaster.addWidget(w);
+		Win* addWindow(std::unique_ptr<Win>&& w, const std::string& name) {
+			auto result = m_wMaster.addWidget(std::move(w));
 			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
 			m_windowAnnuary[name] = t;
-			t->addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
+			t->template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
 			return result;
