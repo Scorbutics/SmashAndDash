@@ -20,8 +20,8 @@
 //Le menu est géré de même façon qu'un layer. on a une image qui permet la construction des fenêtres du menu (on peut considérer ça comme un chipset à menu),
 //et on blit certaines parties de l'image à tel ou tel endroit de sorte à créer une fenêtre.
 ///////////////////////////////////////////////
-DialogMenu::DialogMenu(ska::MouseObservable&, ska::KeyObservable&, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-WindowIG<>(rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
+DynamicWindowIG<>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_fontSize(fontSize),
 m_ligne(0),
 m_sensScroll(F_OUT),
@@ -49,23 +49,23 @@ m_isScrolling(false) {
 	//modifyText(text);
 }
 
-DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs) :
-DialogMenu(gui, keyboardObs, "", "", { 0 }) {
+DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs) :
+DialogMenu(timeObs, gui, keyboardObs, "", "", { 0 }) {
 
 }
 
-DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) :
-DialogMenu(gui, keyboardObs, text, "", ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const ska::Rectangle rect, const int timeout, const bool scroll) :
+DialogMenu(timeObs, gui, keyboardObs, text, "", ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
 
 }
 
-DialogMenu::DialogMenu(ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) :
-DialogMenu(gui, keyboardObs, text, imageResource, ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
+DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout, const bool scroll) :
+DialogMenu(timeObs, gui, keyboardObs, text, imageResource, ska::Button::MENU_DEFAULT_THEME_PATH + "menu.png", rect, 22, scroll, timeout) {
 
 }
 
-DialogMenu::DialogMenu(ska::MouseObservable&, ska::KeyObservable&, const DialogMenu& dm) :
-WindowIG<>(dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const DialogMenu& dm) :
+DynamicWindowIG<>(&timeObs, &mouseObs, &keyObs, dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	operator=(dm);
 }
 
@@ -79,7 +79,7 @@ void DialogMenu::display() const {
 	}
 	
 
-	WindowIG<>::display();
+	DynamicWindowIG<>::display();
 
 	/* Draw the associated image */
 	//m_image.render(m_rectImage.x, m_rectImage.y);

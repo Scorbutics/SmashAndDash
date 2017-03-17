@@ -165,6 +165,7 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.h" />
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\SortedWidgetVector.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEvent.h" />
     <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEventListener.h" />

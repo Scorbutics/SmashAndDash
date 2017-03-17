@@ -36,7 +36,7 @@ std::vector<const ska::Drawable*>::const_iterator ska::VectorDrawableContainer::
 
 void ska::VectorDrawableContainer::draw() {
 	sort(m_data.begin(), m_data.end(), Drawable::staticOperatorInf);
-	for (const Drawable* d : m_data) {
+	for (auto d : m_data) {
 			d->display();
 	}
 }

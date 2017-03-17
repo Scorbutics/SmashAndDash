@@ -56,7 +56,7 @@ namespace ska {
 		template <class Win, class ...HL>
 		Win* addWindow(std::unique_ptr<Win>&& w, const std::string& name) {
 			auto result = m_wMaster.addWidget(std::move(w));
-			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(m_wMaster.backWidget());
+			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(result);
 			m_windowAnnuary[name] = t;
 			t->template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
