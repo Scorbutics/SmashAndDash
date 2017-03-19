@@ -1,16 +1,7 @@
 #pragma once
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <memory>
-#include "../../ska/Graphic/Color.h"
-#include "../../ska/Graphic/Texture.h"
-#include "../../ska/Graphic/Point.h"
-#include "../../ska/Graphic/GUI/WindowIG.h"
 #include "IDialogMenu.h"
-#include "../../ska/Graphic/GUI/Components/KeyObservable.h"
-#include "../../ska/Graphic/GUI/DynamicWindowIG.h"
+#include "../../ska/Graphic/GUI/Windows/DynamicWindowIG.h"
+
 
 class World;
 class Inventory;
@@ -33,17 +24,17 @@ public:
 	void modifyText(const std::string& text);
     void modifyColor(ska::Color col);
     
-    void hide(bool x);
+    void hide(bool x) override;
 /*	void move(ska::Point<int> pos);*/
     bool isMoving();
 
 	/*void setClickHandler(std::function<void(void)> const& action) override;
 	void click(const ska::Point<int>& clickPos) override;*/
-	void move(const ska::Point<int>& pos);
+	void move(const ska::Point<int>& pos) override;
     //void setPosImg(int x, int y);
 
     void setAlpha(bool x);
-	Widget* getButton(const std::string& key);
+	
     //Inventory_Area* getInventoryArea(unsigned int index);
 
 	//void name(const std::string& name);
@@ -61,7 +52,7 @@ public:
 	bool isVisible(bool noScrolling) const;
 
 	//const ska::Rectangle getRect() const override;
-	void refresh() override;
+	virtual bool refresh() override;
 	void display() const override;
 	bool isVisible() const override;
 	int getPriority() const override;

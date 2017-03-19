@@ -5,10 +5,10 @@
 #include "SDLSurface.h"
 #include "Font.h"
 #include "TextureData.h"
-#include "../Graphic/GUI/Window.h"
 #include "../Exceptions/FileException.h"
+#include "../Core/Window.h"
 
-ska::SDLTexture::SDLTexture() : m_texture(nullptr) {
+ska::SDLTexture::SDLTexture() : m_r(0), m_g(0), m_b(0), m_texture(nullptr), m_w(0), m_h(0), m_alpha(0){
 }
 
 ska::SDLTexture::SDLTexture(TextureData& data) : m_texture(nullptr) {

@@ -1,20 +1,13 @@
 #include "DialogMenu.h"
-#include "../../Utils/ChargementImages.h"
-#include "../../ska/Graphic/GUI/Components/ButtonQuit.h"
-#include "Inventory_Area.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/Button.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/ScrollingMultiLineLabel.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Utils/TimeUtils.h"
-#include "../../ska/Graphic/GUI/Components/Widget.h"
-#include "../../ska/Graphic/GUI/Components/Label.h"
-#include "../../ska/Graphic/GUI/Components/KeyObservable.h"
-#include "Image_Area.h"
-#include "../../ska/Graphic/GUI/Components/ScrollingMultiLineLabel.h"
 
 #define RECT_OFFSET 12
 #define F_IN 1
 #define F_OUT 2
 #define SCROLL_SPEED 3
-	
 
 ///////////////////////////////////////////////
 //Le menu est géré de même façon qu'un layer. on a une image qui permet la construction des fenêtres du menu (on peut considérer ça comme un chipset à menu),
@@ -36,7 +29,7 @@ m_isScrolling(false) {
 	m_scrollingRect.y += m_scrollingRect.h;
 
 	//TODO suite
-	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1, ska::Point<int>(16, 112)));
+	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1.F, ska::Point<int>(16, 112)));
 
 	/*if (!imageResource.empty()) {
 		m_image.load(imageResource);
@@ -148,7 +141,7 @@ void DialogMenu::click(const ska::Point<int>& clickPos) {
 // 	return m_name;
 // }
 
-void DialogMenu::refresh() {
+bool DialogMenu::refresh() {
 	if (isVisible(true)) {
 		if (m_timeout != -1 && (ska::TimeUtils::getTicks() - m_t0) >= static_cast<unsigned int>(m_timeout)) {
 			hide(true);
@@ -218,6 +211,7 @@ void DialogMenu::refresh() {
 // 	if (m_closeButton != nullptr) {
 // 		m_closeButton->refresh();
 // 	}
+	return true;
 }
 
 // void DialogMenu::setClickHandler(std::function<void(void)> const& action) {

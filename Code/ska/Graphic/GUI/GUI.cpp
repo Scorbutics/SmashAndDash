@@ -1,27 +1,15 @@
-#include <string>
-#include <algorithm>
-
-#include "GUI.h"
-#include "../../Utils/SkaConstants.h"
-#include "../../Utils/StringUtils.h"
+#include "../../Core/Window.h"
 #include "../../Inputs/InputContextManager.h"
-#include "../../Inputs/InputAction.h"
-#include "../../Inputs/InputRange.h"
-#include "../../Inputs/InputToggle.h"
-#include "../../Graphic/GUI/Window.h"
-#include "./Components/Widget.h"
-#include "./Components/HoverEvent.h"
-#include "./Components/KeyEvent.h"
-#include "./Components/FocusEvent.h"
-#include "./Components/ClickEvent.h"
-#include "GUIScrollButtonWindowIG.h"
-#include "./Components/ButtonSprite.h"
-
-#include "./Components/HoverEventListener.h"
+#include "GUI.h"
+#include "Components/Concrete/Button.h"
+#include "Windows/GUIScrollButtonWindowIG.h"
+#include "Components/Concrete/ButtonSprite.h"
+#include "Events/FocusEvent.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
-ska::GUI::GUI(const Window& w, InputContextManager& playerICM) :
+
+ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
 m_window(w),
 m_playerICM(playerICM),
 m_hovered(nullptr),

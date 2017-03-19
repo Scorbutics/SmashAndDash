@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../ska/Graphic/GUI/DynamicWindowIG.h"
-#include "../../ska/Graphic/GUI/Components/ValueChangedEventListener.h"
-#include "../../ska/Graphic/GUI/Components/Image.h"
 #include "SlotPokemonData.h"
+#include "../../ska/Graphic/GUI/Windows/DynamicWindowIG.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/Image.h"
+#include "../../ska/Graphic/GUI/Events/ValueChangedEvent.h"
 
 class WindowMouseCursor : 
 	public ska::DynamicWindowIG<ska::ValueChangedEventListener<int>> {

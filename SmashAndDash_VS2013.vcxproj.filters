@@ -375,9 +375,6 @@
     <ClInclude Include="Code\ska\Graphic\Draw\VectorDrawableContainer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Window.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\Animation.h">
       <Filter>Fichiers d%27en-tête\Graphic</Filter>
     </ClInclude>
@@ -894,47 +891,8 @@
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Widget.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\Button.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\Label.h">
-      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\Image.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonQuit.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ButtonSprite.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\WindowIG.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\HoverEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GUI\GUI.h">
       <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObservable.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseObserver.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\TimeScrollableWindowIG.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\Graphic\GUI\GUIMap.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -942,49 +900,13 @@
     <ClInclude Include="Code\Graphic\GUI\SlotPokemon.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\MoveableWindow.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\Input.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ClickEventListener.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyEventListener.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\HoverEventListener.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Utils\TupleUtils.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\IWidgetEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\EventListener.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GUI\Components\HandledWidget.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GUI\Components\WidgetPanel.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyObservable.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\KeyObserver.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\DynamicWindowIG.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GUI\Components\Hoverable.h">
@@ -996,46 +918,7 @@
     <ClInclude Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\StopType.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\FocusEventListener.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseEventType.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\CheckBox.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButton.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ListBox.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEventListener.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ValueChangedEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\RadioButtonList.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ska\Graphic\GUI\Components\UiBinder.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Audio\SDLSound.h">
@@ -1045,9 +928,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Audio\Music.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ska\Core\Game.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Code\ska\Audio\SoundEvent.h">
@@ -1089,9 +969,6 @@
     <ClInclude Include="Code\Graphic\GUI\SlotPokemonData.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\MouseCursor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Code\Gameplay\Data\EntityLoadEvent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -1107,23 +984,149 @@
     <ClInclude Include="Code\Gameplay\Data\SettingsChangeEventType.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\ClickEvent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEvent.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\ClickEventListener.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeEventListener.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\EventListener.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObserver.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\FocusEvent.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\TimeObservable.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\FocusEventListener.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ska\Graphic\GUI\Components\SortedWidgetVector.h">
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\HoverEvent.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\HoverEventListener.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\IWidgetEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\KeyEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\KeyEventListener.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\TimeEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\TimeEventListener.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\WidgetEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\WidgetContainer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\WidgetHandlingTrait.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\WidgetMaskHelper.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\ValueChangedEventListener.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\ValueChangedEvent.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\SortedWidgetVector.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\MouseEventType.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\KeyObserver.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\KeyObservable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Events\StopType.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\TimeObservable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\Button.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\ButtonQuit.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\ButtonSprite.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\CheckBox.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\HorizontalSlider.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\Image.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\Input.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\Label.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\LabeledHorizontalSlider.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\ListBox.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\MouseCursor.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\MouseObservable.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\MouseObserver.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Utils\TimeObserver.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\ScrollingMultiLineLabel.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\RadioButton.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\RadioButtonGroup.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Components\Concrete\RadioButtonList.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Windows\DynamicWindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Windows\MoveableWindow.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Windows\TimeScrollableWindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Windows\WindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Graphic\GUI\Windows\GUIScrollButtonWindowIG.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ska\Core\Window.h">
+      <Filter>Fichiers d%27en-tête\Graphic\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1324,9 +1327,6 @@
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\Draw\VectorDrawableContainer.cpp">
       <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Window.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Graphic\Animation.cpp">
       <Filter>Fichiers sources\Graphic</Filter>
@@ -1628,32 +1628,8 @@
     <ClCompile Include="Code\Gameplay\Scene\SceneToMapSwitcher.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEvent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\Button.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\Label.cpp">
-      <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\Image.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonQuit.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\ButtonSprite.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEvent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\GUI.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\GUIScrollButtonWindowIG.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\GUIMap.cpp">
       <Filter>Fichiers sources</Filter>
@@ -1661,25 +1637,7 @@
     <ClCompile Include="Code\Graphic\GUI\SlotPokemon.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\Input.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEvent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Graphic\GUI\Components\Widget.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\WidgetMaskHelper.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\KeyEventListener.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\ClickEventListener.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\HoverEventListener.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsWin.cpp">
@@ -1688,28 +1646,7 @@
     <ClCompile Include="Code\ska\Utils\OSSpecific\FileUtilsUnix.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\FocusEvent.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\FocusEventListener.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\ska\Inputs\EnumContextManager.h">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\CheckBox.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButton.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\RadioButtonGroup.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\HorizontalSlider.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\LabeledHorizontalSlider.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Audio\SDLSound.cpp">
@@ -1719,9 +1656,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Audio\Music.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ska\Core\Game.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Code\ska\Audio\SoundEvent.cpp">
@@ -1739,17 +1673,83 @@
     <ClCompile Include="Code\Graphic\GUI\WindowMouseCursor.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\MouseCursor.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Code\Graphic\GUI\MapMouseCursor.cpp">
       <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\ScrollingMultiLineLabel.cpp">
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\ClickEvent.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Code\ska\Graphic\GUI\Components\TimeEvent.cpp">
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\ClickEventListener.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\FocusEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\FocusEventListener.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\HoverEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\HoverEventListener.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\KeyEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\KeyEventListener.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Events\TimeEvent.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Utils\WidgetMaskHelper.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\Button.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\ButtonQuit.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\ButtonSprite.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\CheckBox.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\HorizontalSlider.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\Image.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\Input.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\Label.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\LabeledHorizontalSlider.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\MouseCursor.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\RadioButton.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\RadioButtonGroup.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Components\Concrete\ScrollingMultiLineLabel.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Graphic\GUI\Windows\GUIScrollButtonWindowIG.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ska\Core\Window.cpp">
+      <Filter>Fichiers sources\Graphic\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

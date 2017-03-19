@@ -17,8 +17,8 @@ void MessageDialogBox::display() const {
 	m_dialog.display();
 }
 
-void MessageDialogBox::refresh() {
-	const ska::InputActionContainer& in = m_playerICM.getActions();
+bool MessageDialogBox::refresh() {
+	const auto& in = m_playerICM.getActions();
 
 	if ((m_talker.isVisible(true) || m_dialog.isVisible(true)) && (in[ska::InputAction::DoAction] || in[ska::InputAction::Quit])) {
 		m_talker.hide(true);
@@ -27,6 +27,7 @@ void MessageDialogBox::refresh() {
 
 	m_talker.refresh();
 	m_dialog.refresh();
+	return true;
 }
 
 int MessageDialogBox::getPriority() const {

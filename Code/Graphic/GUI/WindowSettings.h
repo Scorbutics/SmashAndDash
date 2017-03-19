@@ -1,7 +1,7 @@
 #pragma once
 #include "../../ska/Graphic/GUI/Components/UiBinder.h"
-#include "../../ska/Graphic/GUI/MoveableWindow.h"
-#include "../../ska/Graphic/GUI/Components/KeyEventListener.h"
+#include "../../ska/Graphic/GUI/Windows/MoveableWindow.h"
+
 
 namespace ska {
 	class Widget;

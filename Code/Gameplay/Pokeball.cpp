@@ -1,13 +1,11 @@
 #include <math.h>
-#include <fstream>
-#include <limits.h>
+
 
 #define OPEN_DELAY 50 //durée 50 frames
 
 #include "../Utils/IDs.h"
 #include "Pokeball.h"
 #include "../Utils/ChargementImages.h"
-#include "Data/Statistics.h"
 #include "Weather.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
 #include "../ska/Utils/RectangleUtils.h"

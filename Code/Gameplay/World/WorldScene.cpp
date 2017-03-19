@@ -8,15 +8,14 @@
 #include "WorldScene.h"
 #include "../Data/Settings.h"
 #include "../../ska/World/LayerE.h"
-#include "../../ska/World/Layer.h"
 #include "../../Utils/IDs.h"
 #include "../../ska/Exceptions/CorruptedFileException.h"
 #include "../../ska/Script/ScriptSleepComponent.h"
 #include "../../ska/Exceptions/ScriptSyntaxError.h"
 #include "../Fight/FightComponent.h"
 #include "../CustomEntityManager.h"
-#include "../../ska/Graphic/GUI/Window.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
+#include "../../ska/Core/Window.h"
 
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 Scene(sh, ril),
@@ -149,19 +148,16 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		const unsigned int radius = rmin + rand() % (rmax - rmin + 1);
 
 		ska::Point<int> dest;
-		dest.x = (int)(radius*cos(angle) + pos.x);
-		dest.y = (int)(radius*sin(angle) + pos.y);
+		dest.x = static_cast<int>(radius*cos(angle) + pos.x);
+		dest.y = static_cast<int>(radius*sin(angle) + pos.y);
 		dest.x = (dest.x / blockSize) * blockSize;
 		dest.y = (dest.y / blockSize) * blockSize;
 
-		ska::Rectangle boxWorld, boxDest;
+		ska::Rectangle boxWorld;
 		boxWorld.x = 0;
 		boxWorld.y = 0;
 		boxWorld.w = m_world.getNbrBlocX()*blockSize;
 		boxWorld.h = m_world.getNbrBlocY()*blockSize;
-		boxDest.x = dest.x - radius;
-		boxDest.y = dest.y - radius;
-		boxDest.h = boxDest.w = 30;
 
 		std::vector<ska::Point<int>> blockColPos;
 		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
@@ -250,7 +246,6 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 	}
 
 	ska::Point<int> posEntityId;
-	ska::Point<int> startPos;
 
 	std::unordered_map<std::string, ska::EntityId> result;
 
@@ -289,8 +284,8 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		std::vector<std::string> totalArgs = ska::StringUtils::split(params, ',');
 		if (!totalArgs.empty()) {
 			ssc.args.reserve(totalArgs.size() - 1);
-			for (unsigned int i = 1; i < totalArgs.size(); i++) {
-				ssc.args.push_back(ska::StringUtils::trim(totalArgs[i]));
+			for (unsigned int i1 = 1; i1 < totalArgs.size(); i1++) {
+				ssc.args.push_back(ska::StringUtils::trim(totalArgs[i1]));
 			}
 		} else {
 			throw ska::ScriptSyntaxError("Error while reading a script in the event layer file (l." + ska::StringUtils::intToStr(i) + ") : no arguments supplied to the script cmd");
@@ -305,19 +300,19 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 	return result;
 }
 
-const unsigned int WorldScene::getScreenW() const {
+unsigned int WorldScene::getScreenW() const {
 	return m_screenW;
 }
 
-const unsigned int WorldScene::getScreenH() const {
+unsigned int WorldScene::getScreenH() const {
 	return m_screenH;
 }
 
-ska::EntityId WorldScene::getPlayer() {
+ska::EntityId WorldScene::getPlayer() const{
 	return m_player;
 }
 
-CustomEntityManager& WorldScene::getEntityManager() {
+CustomEntityManager& WorldScene::getEntityManager() const{
 	return m_entityManager;
 }
 

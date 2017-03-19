@@ -1,5 +1,4 @@
-#ifndef DEF_POKEBALLLAUNCHREASON
-#define DEF_POKEBALLLAUNCHREASON
+#pragma once
 
 namespace PokeballLaunchReason
 {
@@ -10,5 +9,3 @@ namespace PokeballLaunchReason
 		Throw,
 	};
 }
-
-#endif

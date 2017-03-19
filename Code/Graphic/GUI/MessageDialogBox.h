@@ -15,7 +15,7 @@ public:
 
 	void operator=(const MessageDialogBox&) = delete;
 
-	void refresh() override;
+	bool refresh() override;
 	void display() const override;
 	void hide(bool x) override;
 	bool isVisible() const override;

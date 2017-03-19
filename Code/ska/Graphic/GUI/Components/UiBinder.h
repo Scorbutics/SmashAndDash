@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <unordered_map>
+#include "../Events/ValueChangedEventListener.h"
 
 namespace ska {
 	class Widget;
@@ -14,7 +15,7 @@ namespace ska {
 		template <class W>
 		void bind(W& w, std::function<void(V)> func) {
 			m_functions[&w] = func;
-			w.addHandler<ValueChangedEventListener<V>>([&](Widget* tthis, ValueChangedEvent<V>& e) {	
+			w.template addHandler<ValueChangedEventListener<V>>([&](Widget* tthis, ValueChangedEvent<V>& e) {	
 				m_functions[tthis](e.getValue());
 			});
 		}

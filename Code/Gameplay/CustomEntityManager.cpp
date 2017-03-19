@@ -8,7 +8,6 @@
 #include "../ska/Physic/HitboxComponent.h"
 #include "../ska/Physic/ForceComponent.h"
 #include "../ska/Physic/CollidableComponent.h"
-#include "../ska/Inputs/Readers/IniReader.h"
 #include "../ska/Graphic/SpritePath.h"
 #include "./Fight/SkillsHolderComponent.h"
 #include "../ska/Utils/NumberUtils.h"
@@ -22,17 +21,17 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 
 	SkillComponent sc;
 	//sc.noise = reader.getInt("Particle slope_noise");
-	const SkillDescriptor& sd = shc.skills[index];
+	const auto& sd = shc.skills[index];
 	sc.speed = sd.speed;
 	sc.damage = -sd.buffEnemy.hp;
 	sc.knockback = sd.knockback;
 	sc.range = sd.range;
-	const int maxNoise = sd.noise;
+	const auto maxNoise = sd.noise;
 	sc.noise = ska::NumberUtils::random(maxNoise/2, maxNoise);
 	sc.amplitude = sd.amplitude;
-	
 
-	ska::EntityId skill = createEntity();
+
+	auto skill = createEntity();
 
 	ska::PositionComponent pcSkill;
 	ska::GraphicComponent gcSkill;
@@ -55,7 +54,7 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 }
 
 ska::EntityId CustomEntityManager::createTrainer(const ska::Point<int> startBlockPos, const unsigned int worldBlockSize) {
-	ska::EntityId trainer = PrefabEntityManager::createTrainer(startBlockPos, worldBlockSize);
+	auto trainer = PrefabEntityManager::createTrainer(startBlockPos, worldBlockSize);
 	addComponent<MobSpawnAreaComponent>(trainer, MobSpawnAreaComponent());
 	addComponent<FightComponent>(trainer, FightComponent());
 	return trainer;

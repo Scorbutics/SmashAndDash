@@ -1,16 +1,10 @@
 #pragma once
-#include <iostream>
 
-#include "../../../Utils/SkaConstants.h"
-
-#include "HoverEventListener.h"
 #include "HandledWidget.h"
-#include "StopType.h"
+#include "../Events/HoverEvent.h"
+
 
 namespace ska {
-
-	class MouseObservable;
-	class InputContextManager;
 
 	template <class W>
 	class HoverStateController {

@@ -1,14 +1,11 @@
 #pragma once
 #include <vector>
-#include <unordered_set>
 #include <memory>
 #include "../../Graphic/Draw/DrawableFixedPriority.h"
-#include "./Components/MouseObservable.h"
-#include "./Components/KeyObservable.h"
-#include "DynamicWindowIG.h"
-#include "./Components/KeyEventListener.h"
-#include "Components/MouseCursor.h"
-#include "Components/TimeObservable.h"
+#include "Utils/MouseObservable.h"
+#include "Windows/DynamicWindowIG.h"
+#include "Components/Concrete/MouseCursor.h"
+
 
 namespace ska {
 	class Window;

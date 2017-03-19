@@ -4,38 +4,13 @@
 #include <type_traits>
 #include <algorithm>
 
-
 #include "HandledWidget.h"
-#include "SortedWidgetVector.h"
+#include "../Utils/WidgetHandlingTrait.h"
+#include "../Events/StopType.h"
+#include "../Events/IWidgetEvent.h"
+
 
 namespace ska {
-
-	template <class T>
-	using WidgetContainer = std::vector<T>;
-
-	template <class SubWidget, bool = std::is_base_of<IHandledWidget, SubWidget>::value>
-	struct WidgetHandlingTrait {
-		static void manageHandled(std::unique_ptr<SubWidget>&& w, WidgetContainer<std::unique_ptr<Widget>>& handledWidgets, std::vector<std::unique_ptr<Widget>>& widgets, WidgetContainer<Widget*>& globalList) {
-			auto widget = static_cast<IHandledWidget*>(w.get());
-			auto activeWidget = !widget->isMaskEmpty();
-			if (activeWidget) {
-				ska::Widget* rawW = w.get();
-				handledWidgets.push_back(std::move(w));
-				globalList.push_back(std::move(rawW));
-			} else {
-				WidgetHandlingTrait<SubWidget, false>::manageHandled(std::move(w), handledWidgets, widgets, globalList);
-			}
-		}
-	};
-
-	template <class SubWidget>
-	struct WidgetHandlingTrait<SubWidget, false> {
-		static void manageHandled(std::unique_ptr<SubWidget>&& w, WidgetContainer<std::unique_ptr<Widget>>&, std::vector<std::unique_ptr<Widget>>& widgets, WidgetContainer<Widget*>& globalList) {
-			ska::Widget* rawW = w.get();
-			widgets.push_back(std::move(w));
-			globalList.push_back(std::move(rawW));
-		}
-	};
 
 	template <class ... HL>
 	class WidgetPanel : public HandledWidget<HL...> {
@@ -67,15 +42,15 @@ namespace ska {
 				return false;
 			}
 
+			organizeHandledWidgets();
+
 			auto result = false;
 			auto stopped = false;
 			std::size_t cursor = 0;
-			for (auto& w : m_handledWidgets) {
-				/*
-				if(m_handledWidgets.organize(w, cursor)) {
-					return result;
+			for (auto& w : m_handledWidgets) {				
+				if (!w->isVisible() && !m_handledWidgets.isVisibleAtIndex(cursor)) {
+					break;
 				}
-				*/
 
 				const auto nextNotify = w->notify(e);
 				result |= nextNotify;
@@ -105,6 +80,7 @@ namespace ska {
 			}
 		}
 
+		
 		virtual bool directNotify(IWidgetEvent& e) override {
 			return HandledWidget<HL...>::notify(e);
 		}
@@ -125,8 +101,9 @@ namespace ska {
 
 		virtual ~WidgetPanel() = default;
 
-		void switchTextureAndMemorize() {}
-		void resetTexture() {}
+		static void switchTextureAndMemorize() {}
+
+		static void resetTexture() {}
 
 		void resort() {
 			this->sortZIndexWidgets(false);	
@@ -145,26 +122,34 @@ namespace ska {
 		}
 
 	private:
+		void organizeHandledWidgets() {
+			size_t cursor = 0;
+			for (auto& w : m_handledWidgets) {
+				m_handledWidgets.organize(w, cursor);
+				cursor++;
+			}
+		}
+
 		void sortZIndexWidgets(bool asc) {
 			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
-				/*auto v1 = w1->isVisible() ? 1 : 0;
+				auto v1 = w1->isVisible() ? 1 : 0;
 				auto v2 = w2->isVisible() ? 1 : 0;
 
-				if (v1 == v2) {*/
+				if (v1 == v2) {
 					return (w1->getPriority() < w2->getPriority());
-				/*}
+				}
 
-				return v1 < v2;*/
+				return v1 < v2;
 			};
 			auto comparatorDesc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
-				/*auto v1 = w1->isVisible() ? 1 : 0;
+				auto v1 = w1->isVisible() ? 1 : 0;
 				auto v2 = w2->isVisible() ? 1 : 0;
-				*/
-				//if(v1 == v2) {
+				
+				if(v1 == v2) {
 					return (w1->getPriority() > w2->getPriority());
-				//}
+				}
 
-				//return v1 < v2;
+				return v1 < v2;
 			};
 			if (asc) {
 				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorInf);

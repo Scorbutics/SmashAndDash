@@ -5,8 +5,8 @@
 #include <tuple>
 
 #include "Widget.h"
-#include "IWidgetEvent.h"
-#include "WidgetMaskHelper.h"
+#include "../Events/IWidgetEvent.h"
+#include "../Utils/WidgetMaskHelper.h"
 
 #define SKA_GUI_MAX_WIDGET_EVENT_LISTENER 16
 
@@ -147,7 +147,7 @@ namespace ska {
 			return true;
 		}
 
-		bool accept(IWidgetEvent&) {
+		bool accept(IWidgetEvent&) const{
 			return !isVisible();
 		}
 	};

@@ -1,26 +1,17 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <memory>
-#include "../ska/Graphic/GUI/Window.h"
-#include "Data/Settings.h"
-#include "../ska/Inputs/RawInputListener.h"
-#include "../Graphic/GUI/TrainerCard.h"
-#include "Data/SavegameManager.h"
-
-#include "../ska/Inputs/InputContextManager.h"
+#include "../ska/Core/Window.h"
+#include "../ska/Scene/Scene.h"
+#include "PokemonGameEventDispatcherDeclaration.h"
 #include "../Audio/PokemonSoundRenderer.h"
-#include "World/WorldScene.h"
 #include "CustomEntityManager.h"
 #include "Scene/SceneHolderCore.h"
-#include "PokemonGameEventDispatcher.h"
-//#include "Inventory\Inventory.h"
+#include "../Graphic/GUI/TrainerCard.h"
+#include "World/WorldScene.h"
 #include "../ska/Utils/FpsCalculator.h"
-#include "../ska/Core/Game.h"
+#include "Data/Settings.h"
 
 class WGameCore : 
-	public ska::Window, 
-	public ska::Game {
+	public ska::Window {
 
 public:
 	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
@@ -30,14 +21,11 @@ public:
 	void eventUpdate(bool movingDisallowed);
 
 	bool refresh();
-    void activeEcritureLog();
-
-	void initNewWorld();
 	
 	//Inventory& getInventory();
 	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
-	TrainerCard& getTrainerCard();
+	//TrainerCard& getTrainerCard();
 	ska::World& getWorld();
 	WorldScene& getWorldScene();
 

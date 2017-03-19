@@ -1,26 +1,12 @@
-#include <vector>
-#include "../ska/Inputs/InputContext.h"
+#include "WGameCore.h"
 #include "../ska/Inputs/KeyboardInputMapContext.h"
 #include "../ska/Inputs/KeyboardInputGUIContext.h"
-#include "../Gameplay/WGameCore.h"
-#include "../ska/World/World.h"
-#include "../Gameplay/Weather.h"
+#include "Scene/SceneMap.h"
 #include "../ska/Graphic/Draw/VectorDrawableContainer.h"
-#include "../ska/Utils/RectangleUtils.h"
-#include "../ska/World/LayerE.h"
-#include "../ska/Exceptions/CorruptedFileException.h"
 #include "../ska/Exceptions/SceneDiedException.h"
-#include "./Scene/SceneMap.h"
-#include "../Graphic/GUI/DialogMenu.h"
-#include "../Graphic/GUI/WindowSettings.h"
-#include "../Graphic/GUI/WindowTeam.h"
-#include "../Graphic/GUI/WindowShop.h"
-#include "../Graphic/GUI/WindowBag.h"
-#include "../Graphic/GUI/ToolBar.h"
 
 WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsigned int h):
 Window(title, w, h),
-Game(),
 m_playerICM(m_rawInputListener),
 m_settings(m_eventDispatcher, "gamesettings.ini"),
 m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher),
@@ -29,15 +15,15 @@ m_soundManager(m_eventDispatcher) {
 	m_eventDispatcher.addMultipleObservers<ska::SoundEvent, ska::WorldEvent>(m_soundManager, m_soundManager);
 
 	/* MAP inputs */
-	auto mapicp = ska::InputContextPtr(new ska::KeyboardInputMapContext());
+	auto mapicp = std::unique_ptr<ska::InputContext>(std::make_unique<ska::KeyboardInputMapContext>());
 	m_playerICM.addContext(ska::EnumContextManager::CONTEXT_MAP, mapicp);
 
 	/* GUI inputs */
-	auto guiicp = ska::InputContextPtr(new ska::KeyboardInputGUIContext());
+	auto guiicp = std::unique_ptr<ska::InputContext>(std::make_unique<ska::KeyboardInputGUIContext>());
 	m_playerICM.addContext(ska::EnumContextManager::CONTEXT_GUI, guiicp);
 
 	/* Let's start on the map */
-	auto scene = ska::ScenePtr(new SceneMap(*this, m_sceneHolder, m_eventDispatcher, m_playerICM, m_worldScene, false));
+	auto scene = std::unique_ptr<ska::Scene>(std::make_unique<SceneMap>(*this, m_sceneHolder, m_eventDispatcher, m_playerICM, m_worldScene, false));
 	m_sceneHolder.nextScene(scene);
 	m_sceneHolder.update();
 

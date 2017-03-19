@@ -1,7 +1,8 @@
 #pragma once
 #include <list>
-#include "../../ska/Graphic/GUI/MoveableWindow.h"
+
 #include "SlotPokemon.h"
+#include "../../ska/Graphic/GUI/Windows/MoveableWindow.h"
 
 class WindowMouseCursor;
 class WindowTeam : public ska::MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>> {

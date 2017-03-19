@@ -1,6 +1,4 @@
-#ifndef DEF_WEATHER
-#define DEF_WEATHER
-
+#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
@@ -63,4 +61,3 @@ protected:
 
 };
 
-#endif

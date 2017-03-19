@@ -1,7 +1,6 @@
 #include "SceneToBattleSwitcher.h"
 #include "SceneFight.h"
 #include "../World/WorldScene.h"
-#include "../../ska/Graphic/GUI/Window.h"
 #include "../../ska/Scene/SceneHolder.h"
 #include "../Fight/FightComponent.h"
 
@@ -13,6 +12,6 @@ m_ged(ged) {
 }
 
 void SceneToBattleSwitcher::switchTo(ska::Window& w, ska::SceneHolder& holder, ska::Scene&, ska::InputContextManager& icm, WorldScene& ws) const {
-	auto scene = ska::ScenePtr(ska::ScenePtr(new SceneFight(w, holder, ws, icm, m_fightPos, m_fightComponent, m_ged)));
+	auto scene = ska::ScenePtr(std::unique_ptr<ska::Scene>(std::make_unique<SceneFight>(w, holder, ws, icm, m_fightPos, m_fightComponent, m_ged)));
 	holder.nextScene(scene);
 }

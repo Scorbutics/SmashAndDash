@@ -1,14 +1,10 @@
 #pragma once
-#include "../../ska/Graphic/GUI/WindowIG.h"
-#include "../../ska/Graphic/Texture.h"
-#include "../../ska/Graphic/GUI/Components/Label.h"
-#include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
 
-#include "../../ska/Graphic/GUI/Components/HoverEventListener.h"
-#include "../../ska/Graphic/GUI/Components/ClickEventListener.h"
-#include "../../ska/Graphic/GUI/Components/ValueChangedEventListener.h"
 
 #include "SlotPokemonData.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/ButtonSprite.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/Label.h"
+#include "../../ska/Graphic/GUI/Windows/WindowIG.h"
 
 class StatisticsChangeEvent;
 

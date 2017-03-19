@@ -12,7 +12,6 @@
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
-#include "../../ska/Utils/Observable.h"
 #include "../../ska/Graphic/Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
 #include "../../Graphic/GUI/GUIMap.h"
@@ -41,19 +40,18 @@ public:
 	virtual void eventUpdate(bool movingDisallowed) override;
 	virtual ~WorldScene();
 
-	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn);
+	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 	std::unordered_map<std::string, ska::EntityId> reinit(std::string fileName, std::string chipsetName);
-	void linkCamera(ska::CameraSystem* cs);
+	void linkCamera(ska::CameraSystem* cs) override;
 
 	ska::World& getWorld();
-	std::vector<ska::IniReader>& getMobSettings();
-	CustomEntityManager& getEntityManager();
+	CustomEntityManager& getEntityManager() const;
 	SavegameManager& getSaveGame();
-	ska::EntityId getPlayer();
+	ska::EntityId getPlayer() const;
 	bool loadedOnce();
-
-	const unsigned int getScreenW() const;
-	const unsigned int getScreenH() const;
+	std::vector<ska::IniReader>& getMobSettings() override;
+	unsigned int getScreenW() const;
+	unsigned int getScreenH() const;
 
 	const std::string& getFileName() const;
 

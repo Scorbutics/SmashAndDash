@@ -2,8 +2,10 @@
 #include <string>
 #include "MessageType.h"
 
-class Window;
+
 namespace ska {
+	class Window;
+
 	class MessagePopup
 	{
 	public:

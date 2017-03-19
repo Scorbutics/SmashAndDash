@@ -6,13 +6,14 @@ class PokeballComponent : public ska::Component {
 	friend class PokeballSystem;
 
 public:
-	PokeballComponent() {
+	PokeballComponent(): a(0), b(0), c(0), sens(0){
 		started = false;
 		isOpenning = false;
 		isInactive = false;
 		count = 0;
 		speed = 1;
 	}
+
 	virtual ~PokeballComponent() = default;
 
 	ska::Point<int> finalPos;

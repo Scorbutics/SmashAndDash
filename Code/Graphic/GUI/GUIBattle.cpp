@@ -1,20 +1,17 @@
 #include "GUIBattle.h"
 #include "Bar.h"
-#include "../../Utils/IDs.h"
-#include "../../ska/ECS/EntityManager.h"
-#include "../../Gameplay/Fight/BattleComponent.h"
-#include "../../Gameplay/Data/RawStatistics.h"
-#include "../../ska/Graphic/Draw/DrawableContainer.h"
+#include "../../ska/Graphic/GUI/Components/Concrete/Button.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
-#include "../../ska/Graphic/GUI/Window.h"
-#include "../../ska/Graphic/GUI/Components/ButtonSprite.h"
+#include "../../Gameplay/Fight/BattleComponent.h"
+#include "../../ska/Graphic/Draw/DrawableContainer.h"
+
 
 GUIBattle::GUIBattle(ska::Window&, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1)),
 BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1)),
-m_ged(ged),
+m_playerICM(playerICM),
 //m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
-m_playerICM(playerICM) {
+m_ged(ged) {
 	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<StatisticsChangeEvent>::addObserver(*this);
 }

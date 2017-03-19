@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 
 class SlotPokemon;
 struct SlotPokemonData {
@@ -11,7 +12,7 @@ struct SlotPokemonData {
 	std::string hp;
 	SlotPokemon* parent;
 
-	SlotPokemonData(): parent(nullptr) {
+	SlotPokemonData(): id(0), parent(nullptr) {
 
 	}
 

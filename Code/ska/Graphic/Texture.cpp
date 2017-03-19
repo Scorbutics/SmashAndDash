@@ -3,7 +3,7 @@
 
 #include "Texture.h"
 #include "../Exceptions/IllegalStateException.h"
-#include "./GUI/Window.h"
+#include "../Core/Window.h"
 
 ska::Window* ska::Texture::m_window = nullptr;
 

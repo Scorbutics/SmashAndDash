@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <memory>
 #include "../ska/Graphic/Point.h"
 #include "PokeballLaunchReasonEnum.h"
 #include "../ska/Graphic/Animation.h"
