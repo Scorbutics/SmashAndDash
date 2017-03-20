@@ -3,7 +3,7 @@
 #include "WindowMouseCursor.h"
 
 WindowMouseCursor::WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName) :
-DynamicWindowIG<ska::ValueChangedEventListener<int>>(timeObservable, guiObservable, keyObservable, box, styleName),
+TimeScrollableWindowIG<ska::ValueChangedEventListener<int>>(timeObservable, guiObservable, keyObservable, box, styleName),
 m_originalBox(box) {
 	m_pokemon = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(), false, nullptr));
 	m_item = addWidget(std::make_unique<ska::Image>(*this, "", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr));

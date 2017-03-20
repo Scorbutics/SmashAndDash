@@ -5,6 +5,8 @@
 #include "Utils/MouseObservable.h"
 #include "Windows/DynamicWindowIG.h"
 #include "Components/Concrete/MouseCursor.h"
+#include "Utils/TimeObservable.h"
+#include "Windows/TimeScrollableWindowIG.h"
 
 
 namespace ska {
@@ -37,7 +39,7 @@ namespace ska {
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
-		DynamicWindowIG<>* m_wAction;
+		TimeScrollableWindowIG<>* m_wAction;
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
 		const Window& m_window;
@@ -69,7 +71,7 @@ namespace ska {
 			return m_windowAnnuary[name];
 		}
 
-		DynamicWindowIG<KeyEventListener> m_wMaster;
+		TimeScrollableWindowIG<KeyEventListener> m_wMaster;
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 	};
 }

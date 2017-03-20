@@ -17,7 +17,7 @@ m_clicked(nullptr),
 m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
 m_wMaster(this, this, this, Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
 
-	m_wAction = addWindow(std::make_unique<DynamicWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
+	m_wAction = addWindow(std::make_unique<TimeScrollableWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
 	DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 	m_wAction->setPriority(0);
 	m_hide = false;

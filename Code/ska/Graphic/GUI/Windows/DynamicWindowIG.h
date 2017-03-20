@@ -1,12 +1,11 @@
 #pragma once
-#include "TimeScrollableWindowIG.h"
 #include "../Components/Hoverable.h"
 #include "../Utils/MouseObserver.h"
 #include "../Utils/KeyObserver.h"
-#include "../Utils/TimeObservable.h"
 #include "../Utils/KeyObservable.h"
 #include "../Utils/MouseObservable.h"
 #include "../Events/ClickEventListener.h"
+#include "WindowIG.h"
 
 namespace ska {
 
@@ -16,14 +15,14 @@ namespace ska {
 
 	template <class ...HL>
 	class DynamicWindowIG :
-		public TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>,
+		public WindowIG<ClickEventListener, HoverEventListener, HL...>,
 		public HoverStateController<DynamicWindowIG<HL...>>,
 		public MouseObserver,
 		public KeyObserver {
 
 	public:
 		DynamicWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(parent, nullptr, box, styleName),
+			WindowIG<ClickEventListener, HoverEventListener, HL...>(parent, box, styleName),
 			MouseObserver(std::bind(&DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
 			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)),
 			m_guiObservable(nullptr),
@@ -33,8 +32,8 @@ namespace ska {
 				this->setHeight(box.h);
 		}
 
-		DynamicWindowIG(TimeObservable* timeObservable, MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
-			TimeScrollableWindowIG<ClickEventListener, HoverEventListener, HL...>(timeObservable, box, styleName),
+		DynamicWindowIG(MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
+			WindowIG<ClickEventListener, HoverEventListener, HL...>(box, styleName),
 			MouseObserver(std::bind(&DynamicWindowIG<HL...>::hoverEvent, this, std::placeholders::_1), std::bind(&DynamicWindowIG<HL...>::clickEvent, this, std::placeholders::_1)),
 			KeyObserver(std::bind(&DynamicWindowIG<HL...>::keyEvent, this, std::placeholders::_1)),
 			m_guiObservable(guiObservable),

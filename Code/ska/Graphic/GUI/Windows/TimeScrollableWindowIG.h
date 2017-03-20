@@ -1,5 +1,5 @@
 #pragma once
-#include "WindowIG.h"
+#include "DynamicWindowIG.h"
 #include "../Utils/TimeObserver.h"
 #include "../Utils/TimeObservable.h"
 #include "../Events/TimeEventListener.h"
@@ -8,37 +8,36 @@ namespace ska {
 
 	template <class ...HL>
 	class TimeScrollableWindowIG : 
-		public WindowIG<TimeEventListener, HL...>,
+		public DynamicWindowIG<TimeEventListener, HL...>,
 		public TimeObserver {
 	public:
 
-		TimeScrollableWindowIG(Widget& parent, TimeObservable* timeObservable, const Rectangle& box, const std::string& styleName) :
-			WindowIG<TimeEventListener, HL...>(parent, box, styleName),
-			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), m_timeObservable(timeObservable) {
-			if (m_timeObservable != nullptr) {
-				m_timeObservable->addObserver(*this);
-			}
+		TimeScrollableWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) : 
+			DynamicWindowIG<TimeEventListener, HL...>(parent, box, styleName),                                                                                                                         
+			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), 
+			m_timeObservable(nullptr) {
 
-			HandledWidget<TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
-				refresh();
+				HandledWidget<ClickEventListener, HoverEventListener, TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
+				refreshInternal();
 			});
 		}
 
-		TimeScrollableWindowIG(TimeObservable* timeObservable, const Rectangle& box, const std::string& styleName) :
-			WindowIG<TimeEventListener, HL...>(box, styleName),
-			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), m_timeObservable(timeObservable) {
+		TimeScrollableWindowIG(TimeObservable* timeObservable, MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
+			DynamicWindowIG<TimeEventListener, HL...>(guiObservable, keyObservable, box, styleName),
+			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), 
+			m_timeObservable(timeObservable) {
+
 			if (m_timeObservable != nullptr) {
 				m_timeObservable->addObserver(*this);
 			}
 
-			HandledWidget<TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
-				refresh();
+			HandledWidget<ClickEventListener, HoverEventListener, TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
+				refreshInternal();
 			});
 		}
 
 		TimeScrollableWindowIG<HL...>& operator=(const TimeScrollableWindowIG<HL...>&) = delete;
 
-		
 
 		virtual bool scrollTo(const Point<int>& relativeTargetPos, unsigned int steps) {
 			/* If we're already scrolling, do not scroll. First, wait to finish the current scroll. */
@@ -87,7 +86,7 @@ namespace ska {
 			return this->notify(e);
 		}
 
-		virtual bool refresh() {
+		bool refreshInternal() {
 			if (!m_moving) {
 				return false;
 			}

@@ -14,7 +14,7 @@
 //et on blit certaines parties de l'image à tel ou tel endroit de sorte à créer une fenêtre.
 ///////////////////////////////////////////////
 DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-DynamicWindowIG<>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+TimeScrollableWindowIG<>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_fontSize(fontSize),
 m_ligne(0),
 m_sensScroll(F_OUT),
@@ -28,9 +28,11 @@ m_isScrolling(false) {
 	m_scrollingRect = getBox();
 	m_scrollingRect.y += m_scrollingRect.h;
 
-	//TODO suite
 	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1.F, ska::Point<int>(16, 112)));
-
+	addHandler<ska::TimeEventListener>([](ska::Widget*, ska::TimeEvent&) {
+		//scrollTo()
+		//TODO
+	});
 	/*if (!imageResource.empty()) {
 		m_image.load(imageResource);
 	}
@@ -58,7 +60,7 @@ DialogMenu(timeObs, gui, keyboardObs, text, imageResource, ska::Button::MENU_DEF
 }
 
 DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const DialogMenu& dm) :
-DynamicWindowIG<>(&timeObs, &mouseObs, &keyObs, dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+TimeScrollableWindowIG<>(&timeObs, &mouseObs, &keyObs, dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	operator=(dm);
 }
 
@@ -72,7 +74,7 @@ void DialogMenu::display() const {
 	}
 	
 
-	DynamicWindowIG<>::display();
+	TimeScrollableWindowIG<>::display();
 
 	/* Draw the associated image */
 	//m_image.render(m_rectImage.x, m_rectImage.y);

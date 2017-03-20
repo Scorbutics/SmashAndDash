@@ -1,6 +1,8 @@
 #pragma once
 #include "IDialogMenu.h"
 #include "../../ska/Graphic/GUI/Windows/DynamicWindowIG.h"
+#include "../../ska/Graphic/GUI/Utils/TimeObservable.h"
+#include "../../ska/Graphic/GUI/Windows/TimeScrollableWindowIG.h"
 
 
 class World;
@@ -12,7 +14,7 @@ namespace ska {
 	class MouseObservable;
 }
 
-class DialogMenu : public IDialogMenu, public ska::DynamicWindowIG<> {
+class DialogMenu : public IDialogMenu, public ska::TimeScrollableWindowIG<> {
 public:
 	DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
 	DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);
@@ -52,7 +54,7 @@ public:
 	bool isVisible(bool noScrolling) const;
 
 	//const ska::Rectangle getRect() const override;
-	virtual bool refresh() override;
+	bool refresh();
 	void display() const override;
 	bool isVisible() const override;
 	int getPriority() const override;

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "SlotPokemonData.h"
-#include "../../ska/Graphic/GUI/Windows/DynamicWindowIG.h"
 #include "../../ska/Graphic/GUI/Components/Concrete/Image.h"
 #include "../../ska/Graphic/GUI/Events/ValueChangedEvent.h"
+#include "../../ska/Graphic/GUI/Utils/TimeObservable.h"
+#include "../../ska/Graphic/GUI/Windows/TimeScrollableWindowIG.h"
 
 class WindowMouseCursor : 
-	public ska::DynamicWindowIG<ska::ValueChangedEventListener<int>> {
+	public ska::TimeScrollableWindowIG<ska::ValueChangedEventListener<int>> {
 public:
 	WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName);
 	WindowMouseCursor(const WindowMouseCursor&) = delete;

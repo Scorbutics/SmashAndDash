@@ -1,7 +1,7 @@
 #include "GUIScrollButtonWindowIG.h"
 
 ska::GUIScrollButtonWindowIG::GUIScrollButtonWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
-DynamicWindowIG<>(parent, box, styleName),
+TimeScrollableWindowIG<>(parent, box, styleName),
 m_realPos(0, 0) {
 
 }
