@@ -2,6 +2,7 @@
 #include "DynamicWindowIG.h"
 #include "../Components/Concrete/Button.h"
 #include "../Components/Concrete/ButtonQuit.h"
+#include "../Events/HoverEvent.h"
 
 namespace ska {
 
@@ -32,7 +33,7 @@ namespace ska {
 			});
 			button->setWidth(this->getBox().w - TAILLEBLOCFENETRE / 2);
 			button->setHeight(TAILLEBLOCFENETRE / 2);
-			button->addHandler<HoverEventListener>([&](Widget*, HoverEvent& e) {
+			button->template addHandler<HoverEventListener> ([&](Widget*, HoverEvent& e) {
 				if (m_moving && e.getState() != MOUSE_ENTER) {
 					const auto& clickAbsPos = e.getMousePosition();
 					const auto& newPos = clickAbsPos - m_offsetWindowOrigin;

@@ -173,7 +173,7 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(Savegame& saveGame, const s
 		return;
 
 	if (varNumber[0] == '{' && varNumber[varNumber.size() - 1] == '}') {
-		saveGame.setGameSwitch(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()), (value == "1"));
+		saveGame.setGameSwitch(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)), (value == "1"));
 	} else if (varNumber[0] == '[' && varNumber[varNumber.size() - 1] == ']') {
 		std::string v = varNumber.substr(1, varNumber.size() - 2);
 		std::string key = getVariableKey(v);
@@ -187,7 +187,7 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(Savegame& saveGame, const s
 		varMap[varNumber + scriptExtendedName] = value;
 	}
 
-	saveGame.setGameVariable(atoi(varNumber.substr(1, varNumber.size() - 2).c_str()) - 1, atoi(value.c_str()));
+	saveGame.setGameVariable(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)) - 1, ska::StringUtils::strToInt(value));
 
 }
 

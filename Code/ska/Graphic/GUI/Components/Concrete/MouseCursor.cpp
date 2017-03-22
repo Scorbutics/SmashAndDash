@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "MouseCursor.h"
 
 ska::MouseCursor::MouseCursor(const std::string& styleName) : 

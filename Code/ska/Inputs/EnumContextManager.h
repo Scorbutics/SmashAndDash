@@ -5,3 +5,13 @@ namespace ska {
 		CONTEXT_GUI
 	};
 }
+
+namespace std {
+	template<>
+	struct hash<ska::EnumContextManager> {
+		std::size_t operator()(const ska::EnumContextManager& k) const {
+	    	return k;
+	    }
+
+	};
+}

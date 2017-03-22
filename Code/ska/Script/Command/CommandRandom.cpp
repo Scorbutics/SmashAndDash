@@ -1,6 +1,7 @@
 #include "CommandRandom.h"
 #include "../../Utils/ScriptUtils.h"
 #include "../../Utils/StringUtils.h"
+#include "../../Utils/NumberUtils.h"
 
 ska::CommandRandom::CommandRandom(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
@@ -24,7 +25,7 @@ std::string ska::CommandRandom::execute(ScriptComponent&, std::vector<std::strin
 
 	if (valueInt > 0)
 	{
-		resultInt = rand() % valueInt;
+		resultInt = NumberUtils::random(0, valueInt);
 		return StringUtils::intToStr(resultInt);
 	}
 	return "";

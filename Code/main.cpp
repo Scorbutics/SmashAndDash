@@ -6,9 +6,10 @@
 #include <memory>
 #include <vector>
 #include <sstream>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+#define SDL_MAIN_HANDLED
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include "Gameplay/WGameCore.h"
 #include "./ska/Exceptions/GenericException.h"
 #include "./ska/Exceptions/TerminateProcessException.h"
@@ -17,7 +18,7 @@
 
 #define SKA_DEBUG
 
-int main (int argc, char *argv[])
+int main( int argc , char ** argv )
 {
     argc = argc;
     argv = argv;
@@ -85,7 +86,7 @@ int main (int argc, char *argv[])
 	TTF_Quit();
 
 	SDL_Quit();
-	
+
 
     return 0;
 

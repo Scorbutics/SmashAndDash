@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 #include "SoundRenderer.h"
 
 ska::SoundRenderer::SoundRenderer(unsigned int channels) : 

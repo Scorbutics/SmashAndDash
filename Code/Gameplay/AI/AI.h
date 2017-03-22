@@ -1,4 +1,4 @@
-#ifndef DEF_AI
+/*#ifndef DEF_AI
 #define DEF_AI
 
 #include <iostream>
@@ -26,4 +26,4 @@ class AI
 		m_pMove;  //probabilité de déplacement par seconde
 };
 
-#endif
+#endif*/

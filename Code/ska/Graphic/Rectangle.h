@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 namespace ska {
 	typedef SDL_Rect Rectangle;

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "CalculOperators.h"
 #include "../../Utils/StringUtils.h"
+#include "../../Utils/NumberUtils.h"
 #include "../../Exceptions/ScriptSyntaxError.h"
 
 ska::FormalCalculator::FormalCalculator()
@@ -103,7 +104,7 @@ float ska::FormalCalculator::interpretSingleCalculation(size_t operatorPos, std:
 	float op1 = StringUtils::strToFloat(StringUtils::trim(s.substr(posStart + 1, operatorPos)));
 	float op2 = StringUtils::strToFloat(StringUtils::trim(s.substr(operatorPos + 1, posEnd - 1)));
 
-	if ((s[operatorPos] == CalculOperators::divise || s[operatorPos] == CalculOperators::modulo) && abs(op2) < 0.0001) {
+	if ((s[operatorPos] == CalculOperators::divise || s[operatorPos] == CalculOperators::modulo) && NumberUtils::absolute(op2) < 0.0001) {
 		calculSyntaxError(s);
 		return 0.0;
 	}

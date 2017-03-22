@@ -1,3 +1,4 @@
+#include <limits>
 #include "Button.h"
 #include "../Widget.h"
 #include "../../Events/ClickEventListener.h"
@@ -12,42 +13,42 @@ m_placeHolderHover(placeHolderStyleName + "_hover.png"),
 m_placeHolderPressed(placeHolderStyleName + "_pressed.png"),
 m_drawStyle(!placeHolderStyleName.empty()) {
 	Widget::move(getRelativePosition() + relativePos);
-	
+
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
 	Widget::setWidth(m_placeHolder.getWidth());
 	Widget::setHeight(m_placeHolder.getHeight());
-	
+
 	initHandlers();
 	addHandler<ClickEventListener>(callback);
 
 	if (clip != nullptr) {
 		m_clip = *clip;
 	} else {
-		memset(&m_clip, 0, sizeof m_clip);
+		m_clip = Rectangle{0};
 		m_clip.w = std::numeric_limits<int>().max();
 		m_clip.h = std::numeric_limits<int>().max();
 	}
 
 }
 
-ska::Button::Button() : 
+ska::Button::Button() :
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	memset(&m_clip, 0, sizeof m_clip);
+	m_clip = Rectangle {0};
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
 
 	initHandlers();
 }
 
-ska::Button::Button(Widget& parent) : 
+ska::Button::Button(Widget& parent) :
 Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	memset(&m_clip, 0, sizeof m_clip);
+	m_clip = Rectangle {0};
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
 
@@ -66,7 +67,7 @@ void ska::Button::switchTextureAndMemorize() {
 		case ButtonState::DISABLED:
 			t = &m_placeHolder;
 			break;
-		
+
 		case ButtonState::PRESSED:
 			t = &m_placeHolderPressed;
 			break;

@@ -1,5 +1,6 @@
 #include "Statistics.h"
 #include "../../Utils/IDs.h"
+#include "../../ska/Utils/NumberUtils.h"
 #include "../../ska/Inputs/Readers/IniReader.h"
 
 
@@ -45,7 +46,7 @@ Statistics::Statistics(ska::IniReader* data, std::string block)
 	m_stats.exp = data->get<int>("Experience level_1_exp_needed");
 	m_slopes.exp = static_cast<float>(m_stats.exp);
 
-	m_slopes.droppedExp = (abs(static_cast<int>(m_slopes.exp - m_stats.droppedExp)) / 3.F);
+	m_slopes.droppedExp = (ska::NumberUtils::absolute(static_cast<int>(m_slopes.exp - m_stats.droppedExp)) / 3.F);
 
 
 	m_type = STATS_TYPE_LINEAR;

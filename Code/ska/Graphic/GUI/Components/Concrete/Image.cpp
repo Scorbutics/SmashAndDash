@@ -1,3 +1,4 @@
+#include <limits>
 #include "Image.h"
 
 ska::Image::Image(Widget& parent, const std::string& imagePath, Point<int> relativePos, bool alpha, Rectangle* clip) :

@@ -2,6 +2,7 @@
 
 #include "ValueChangedEventListener.h"
 #include "WidgetEvent.h"
+#include "../Utils/WidgetMaskHelper.h"
 
 namespace ska {
 	

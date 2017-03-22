@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "../../Utils/StringUtils.h"
+
 
 #define MAXLENGTH 20
 
@@ -63,7 +65,7 @@ std::string GetINIValueFromFile(const std::string& stringFile, const std::string
         {
            data = line.substr(pos + s.length() + 1, line.length()-(pos+ s.length() + 1));
            if(data.size() != 0)
-            return rtrim(data);
+            return ska::StringUtils::rtrim(data);
            else
             return "EMPTYDATA";
         }
@@ -167,24 +169,4 @@ int GetLengthOfFile(const std::string& fileName)
     return x;
 }
 
-
-// Supprime les espaces à droite de la chaîne.
-std::string rtrim(const std::string& s)
-{
-	// Parcours à l'envers des caractères de la chaîne, jusqu'à trouver un
-	// caractère qui n'est pas un caractère blanc.
-	std::string::const_reverse_iterator it = s.rbegin();
-	while (it != s.rend())
-	{
-		if (!isspace(*it)) break;
-		++it;
-	}
-	// Différence entre l'itérateur de fin et celui tout juste trouvé.
-	std::string::difference_type diff = s.rend() - it;
-	// Effacement des caractères allant du (début + diff) à la fin.
-	
-	std::string result = s; 
-	result.erase(s.begin() + diff, s.end());
-	return result;
-}
 

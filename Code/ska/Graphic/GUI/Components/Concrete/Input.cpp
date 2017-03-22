@@ -1,6 +1,6 @@
 
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "Input.h"
 #include "../../Events/KeyEvent.h"
 #include "../../Events/ValueChangedEvent.h"

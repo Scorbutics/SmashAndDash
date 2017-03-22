@@ -109,7 +109,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 
 
 	//experimental (théorème de l'arrangement) :
-	pokec.a = -(float)5 * ((leftPos.x - rightPos.x + 2 * POWER) + 2 * sqrt((float)(abs(POWER*(POWER + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
+	pokec.a = -(float)5 * ((leftPos.x - rightPos.x + 2 * POWER) + 2 * ska::NumberUtils::squareroot((float)(abs(POWER*(POWER + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
 	pokec.b = p - pokec.a*(rightPos.x + leftPos.x);
 	pokec.c = leftPos.y - pokec.a*leftPos.x*leftPos.x - pokec.b*leftPos.x;
 

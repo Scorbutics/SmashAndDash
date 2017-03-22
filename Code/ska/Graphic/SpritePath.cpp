@@ -4,6 +4,7 @@
 #include "SpritePath.h"
 #include "../Utils/SkaConstants.h"
 #include "../Utils/StringUtils.h"
+#include "../Utils/NumberUtils.h"
 
 ska::SpritePath::SpritePath()
 {
@@ -21,7 +22,7 @@ ska::SpritePath::SpritePath()
 
 std::string ska::SpritePath::getPath(unsigned int spriteType, int id)
 {
-	return m_paths[spriteType] + FILE_SEPARATOR + (id >= 0 ? "" : "pnj") + StringUtils::intToStr(abs(id)) + ".png";
+	return m_paths[spriteType] + FILE_SEPARATOR + (id >= 0 ? "" : "pnj") + StringUtils::intToStr(NumberUtils::absolute(id)) + ".png";
 }
 
 ska::SpritePath::~SpritePath(){}

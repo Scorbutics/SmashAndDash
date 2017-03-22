@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include "FpsRenderable.h"
 
 namespace ska {
@@ -14,7 +15,7 @@ namespace ska {
 		const static int MAXSAMPLES = 100;
 		int m_tickindex;
 		int m_ticksum;
-		int m_ticklist[MAXSAMPLES];
+		std::array<int, MAXSAMPLES> m_ticklist;
 		FpsRenderable m_renderable;
 	};
 }

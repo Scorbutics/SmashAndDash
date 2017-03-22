@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL2/SDL_mixer.h>
+#include <SDL_mixer.h>
 #include "../Utils/Observer.h"
 #include "../World/WorldEvent.h"
 #include "SoundEvent.h"

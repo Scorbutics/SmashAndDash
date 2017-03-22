@@ -1,4 +1,4 @@
-
+#include <algorithm>
 #include "World.h"
 #include "Layer.h"
 #include "Block.h"
@@ -8,13 +8,13 @@
 #include "../Script/ScriptSleepComponent.h"
 #include "../Graphic/System/CameraSystem.h"
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :  
-	m_blockSize(tailleBloc), 
+ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :
+	m_blockSize(tailleBloc),
 	m_chipset("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png"),
-	m_autoScriptsPlayed(false), 
+	m_autoScriptsPlayed(false),
 	m_lTop(*this, &m_lMid),
-	m_lMid(*this, &m_lBot), 
-	m_lBot(*this), 
+	m_lMid(*this, &m_lBot),
+	m_lBot(*this),
 	m_layerE(*this) {
 }
 
@@ -182,7 +182,7 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 		m_genericName = fileName.substr(0, fileName.find_last_of('.'));
 		m_worldName = m_genericName.substr(m_genericName.find_last_of('/') + 1, m_genericName.size());
 		m_fileName = fileName;
-		
+
 		getData();
 	}
 
@@ -201,12 +201,12 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 		m_lTop.reset(topLayerName, chipsetName);
 
 		m_layerE.changeLevel(eventLayerName);
-		
+
 		if (m_cameraSystem != NULL) {
 			m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
 		}
 	}
-		
+
 }
 
 std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const Point<int>& oldPos, const Point<int>& newPos, const Point<int>& posToLookAt, const ScriptTriggerType& reason, const unsigned int layerIndex) {
@@ -234,7 +234,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const Point<in
 		}
 		return result;
 	}
-	
+
 	const Point<int> newBlock = newPos / m_blockSize;
 	const Point<int> oldBlock = oldPos / m_blockSize;
 	Block* b = l->getBlock(posToLookAt.x / m_blockSize, posToLookAt.y / m_blockSize);
@@ -255,7 +255,7 @@ std::vector<ska::ScriptSleepComponent*> ska::World::chipsetScript(const Point<in
 		}
 	}
 	return result;
-	
+
 }
 
 ska::Point<int> ska::World::alignOnBlock(const Rectangle& hitbox) const {
@@ -267,7 +267,7 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBo
 	std::vector<Rectangle> blocksPos;
 	Point<int> hitBoxBlock = (Point<int>(hitBox) + Point<int>(hitBox.w, hitBox.h) / 2) / m_blockSize;
 	Rectangle result = hitBox;
-	
+
 
 	if (radius == 0) {
 		return result;
@@ -281,7 +281,7 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBo
 	blockArea.y = hitBoxBlock.y - radius;
 	blockArea.w = (radius << 1) + 1;
 	blockArea.h = (radius << 1) + 1;
-	
+
 	if (blockArea.x < 0) {
 		blockArea.x = 0;
 	}
@@ -377,7 +377,7 @@ void ska::World::setNbrBlocY(unsigned int nbrBlockY) {
 
 
 void ska::World::getRainFromData(std::string stringDataFile){
-    int idsprite, acceleration, density;	
+    int idsprite, acceleration, density;
 	IniReader reader(stringDataFile);
 
     if(reader.exists("Rain id_sprite")) {

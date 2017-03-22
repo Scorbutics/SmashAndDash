@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include "../Utils/SkaConstants.h"
 #include "SDLTexture.h"
 #include "SDLSurface.h"

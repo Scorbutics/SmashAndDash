@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 #include "Font.h"
 #include "SDLSurface.h"
 

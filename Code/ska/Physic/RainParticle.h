@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include "../../ska/Physic/GravityParticle.h"
 #include "../../ska/Graphic/Rectangle.h"
 
@@ -16,4 +16,4 @@ private:
 	int m_id;
 	RainParticleManager& m_parent;
 };
-
+*/

@@ -1,4 +1,4 @@
-#include <math.h>
+/*#include <math.h>
 #include "../Gameplay/WGameCore.h"
 #include "RainParticleManager.h"
 #include "../ska/World/Layer.h"
@@ -61,7 +61,7 @@ void RainParticleManager::refresh() {
 		//w.setWind(windForce);
 	}
 
-	/* Gestion du vent */
+	// Gestion du vent 
 	if (m_active) {
 		if (m_countWind < 2000 && m_countWind != 0) {
 			m_countWind += m_sens;
@@ -99,4 +99,4 @@ void RainParticleManager::playRain(int idSprite, float acceleration, float densi
 
 RainParticleManager::~RainParticleManager()
 {
-}
+}*/

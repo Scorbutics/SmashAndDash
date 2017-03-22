@@ -11,7 +11,7 @@ namespace ska {
 	class ValueChangedEventListener : public EventListener<ValueChangedEvent<T>> {
 	public:
 		explicit ValueChangedEventListener(Widget& tthis) : 
-			EventListener(tthis) {
+			EventListener<ValueChangedEvent<T>>(tthis) {
 		}
 
 		virtual ~ValueChangedEventListener() = default;

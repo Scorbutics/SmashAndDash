@@ -4,7 +4,7 @@
 #include "Animation.h"
 
 ska::Animation::Animation() {
-	memset(&m_offset, 0, sizeof(m_offset));
+	m_offset = Rectangle{0};
 	m_offsetBase = m_offset;
 	m_frameWidth = m_offset.w;
 	m_frameHeight = m_offset.h;
@@ -41,7 +41,7 @@ ska::Animation::Animation(unsigned int delay, int frameNumber, bool isVertical, 
 	r.y = y;
 	r.w = width;
 	r.h = height;
-	
+
 	m_offset = r;
 	m_offsetBase = m_offset;
 	m_frameWidth = r.w;
@@ -133,7 +133,7 @@ void ska::Animation::setCurrentFrame(unsigned int number) {
     if(m_position >= m_frameNumber) {
         m_sensAni = -1;
         m_position = m_frameNumber-2;
-    } 
+    }
 	if(m_position <= 0) {
         m_sensAni = 1;
         m_position = 0;

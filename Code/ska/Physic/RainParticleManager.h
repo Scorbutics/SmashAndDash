@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include "../../ska/Physic/ParticleManager.h"
 
 class RainParticleManager : public ska::ParticleManager
@@ -19,4 +19,4 @@ private:
 	unsigned int m_wind, m_countWind;
 	double m_Twind;
 };
-
+*/

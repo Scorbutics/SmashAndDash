@@ -1,4 +1,4 @@
-
+/*
 #include "AI.h"
 #include "../../Utils\IDs.h"
 #include "..\WGameCore.h"
@@ -110,21 +110,22 @@ void AI::act(Fight& fight)
 			trainer->getPath()->setPathString(pathChar);			
 		}
 		m_trainerT0 = SDL_GetTicks();
-	}*/
+	}
 
 
 	ska::Rectangle screenRect;
 	ska::Point<int> centerPos;
-	/*centerPos.x = wScreen.getFight().getPokemon()->getHitboxCenterPos().x;
-	centerPos.y = wScreen.getFight().getPokemon()->getHitboxCenterPos().y;*/
+	centerPos.x = wScreen.getFight().getPokemon()->getHitboxCenterPos().x;
+	centerPos.y = wScreen.getFight().getPokemon()->getHitboxCenterPos().y;
 
     screenRect.x = screenRect.y = 0;
     screenRect.w = wScreen.getWidth();
     screenRect.h = wScreen.getHeight();
-    /*centerPos.x += wScreen.getORel().x;
-    centerPos.y += wScreen.getORel().y;*/
+    centerPos.x += wScreen.getORel().x;
+    centerPos.y += wScreen.getORel().y;
 
-	/*if (!ska::RectangleUtils::isPositionInBox(centerPos, screenRect) || !wScreen.getFight().getOpponent()->isAlive()) {
+	if (!ska::RectangleUtils::isPositionInBox(centerPos, screenRect) || !wScreen.getFight().getOpponent()->isAlive()) {
 		fight.end(EndFightReason::Win);
-	}*/
-}
+	}
+}*/
+	

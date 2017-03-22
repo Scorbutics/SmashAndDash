@@ -24,9 +24,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	pc.z = 0;
 	addComponent<PositionComponent>(hero, pc);
 	MovementComponent mc;
-	memset(&mc, 0, sizeof(MovementComponent));
 	ForceComponent fc;
-	memset(&fc, 0, sizeof(fc));
 	fc.weight = 65.0;
 	GravityAffectedComponent gac;
 	gac.friction = 20;

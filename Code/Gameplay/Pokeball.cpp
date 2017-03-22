@@ -82,7 +82,7 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 		p = 100000;
 	}
 
-    m_speed = abs(m_finalPos.x - m_pokeballPos.x)/30 + 1; //on adapte la vitesse à la distance à parcourir pour éviter de privilégier les lancers de pokeball courts.
+    m_speed = ska::NumberUtils::absolute(m_finalPos.x - m_pokeballPos.x)/30 + 1; //on adapte la vitesse à la distance à parcourir pour éviter de privilégier les lancers de pokeball courts.
 
 
     //calcul (au préalable fait sur papier) des coefficients de la parabole en fonction de la position du heros et de l'endroit voulu du lancer.
@@ -91,7 +91,7 @@ void Pokeball::launch(const ska::Point<int>& src, const ska::Point<int>& destPos
 
 
     //experimental (théorème de l'arrangement) :
-	m_a = -(float)5 * ((leftPos.x - rightPos.x + 2 * m_power) + 2 * sqrt((float)(abs(m_power*(m_power + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
+	m_a = -(float)5 * ((leftPos.x - rightPos.x + 2 * m_power) + 2 * ska::NumberUtils::squareroot((float)(ska::NumberUtils::absolute(m_power*(m_power + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
 	m_b = p - m_a*(rightPos.x + leftPos.x);
 	m_c = leftPos.y - m_a*leftPos.x*leftPos.x - m_b*leftPos.x;
 

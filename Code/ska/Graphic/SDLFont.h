@@ -3,7 +3,7 @@
 
 #include <map>
 #include <memory>
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 namespace ska {
 	class SDLFont
