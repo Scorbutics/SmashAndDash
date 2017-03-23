@@ -1,17 +1,17 @@
 [Project]
 FileName=SmashAndDash.dev
 Name=SmashAndDash
-Type=1
+Type=0
 Ver=2
 ObjFiles=
 Includes=
-Libs=
+Libs=C:\TDM-GCC-64\x86_64-w64-mingw32\lib
 PrivateResource=
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=
-Linker=
+CppCompiler=-lSDL2main_@@_-lSDL2_@@_-lSDL2_ttf_@@_-lSDL2_image_@@_-lSDL2_mixer_@@_
+Linker="libSDL2main.a"_@@_"libSDL2.dll.a"_@@_"libSDL2_image.dll.a"_@@_"libSDL2_ttf.dll.a"_@@_"libSDL2_mixer.dll.a"_@@_
 IsCpp=1
 Icon=
 ExeOutput=
@@ -27,8 +27,8 @@ CommandLine=
 Folders=Audio,Gameplay,Gameplay/AI,Gameplay/Data,Gameplay/Fight,Gameplay/Fight/System,Gameplay/Inventory,Gameplay/Mobs,Gameplay/Mobs/System,Gameplay/Scene,Gameplay/System,Gameplay/World,Graphic,Graphic/GUI,Graphic/System,Physic,Physic/System,Script,Script/Commands,Script/System,ska,ska/AI,ska/AI/System,ska/Audio,ska/Core,ska/Data,ska/ECS,ska/Exceptions,ska/Graphic,ska/Graphic/Draw,ska/Graphic/GUI,ska/Graphic/GUI/Components,ska/Graphic/GUI/Components/Concrete,ska/Graphic/GUI/Events,ska/Graphic/GUI/Utils,ska/Graphic/GUI/Windows,ska/Graphic/System,ska/Inputs,ska/Inputs/Readers,ska/Inputs/System,ska/Physic,ska/Physic/System,ska/Scene,ska/Script,ska/Script/Command,ska/Script/System,ska/Task,ska/Utils,ska/Utils/FormalCalculation,ska/Utils/OSSpecific,ska/World,Utils
 IncludeVersionInfo=0
 SupportXPThemes=0
-CompilerSet=1
-CompilerSettings=0000000000000000001000000
+CompilerSet=6
+CompilerSettings=0000000000000000000000000
 UnitCount=560
 
 [VersionInfo]

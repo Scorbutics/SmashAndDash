@@ -15,6 +15,13 @@
 				</Compiler>
 			</Target>
 		</Build>
+		<Linker>
+			<Add library="../../../../../TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2main.a" />
+			<Add library="../../../../../TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2.dll.a" />
+			<Add library="../../../../../TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_image.dll.a" />
+			<Add library="../../../../../TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
+			<Add library="../../../../../TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
+		</Linker>
 		<Unit filename="Code/Audio/PokemonSoundRenderer.cpp" />
 		<Unit filename="Code/Audio/PokemonSoundRenderer.h" />
 		<Unit filename="Code/Gameplay/AI/AI.cpp" />
