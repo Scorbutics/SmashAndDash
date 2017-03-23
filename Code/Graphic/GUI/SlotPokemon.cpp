@@ -8,10 +8,10 @@ SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
 WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 	m_fontSize(11) {
 	m_data = nullptr;
-	
+
 	Widget& tthis = *this;
 
-	m_sprite = addWidget(std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0 }, [&](Widget*, ska::ClickEvent&) {}));
+	m_sprite = addWidget(std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0, 0, 0, 0 }, [&](Widget*, ska::ClickEvent&) {}));
 	m_name = addWidget(std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4)));
 	m_level = addWidget(std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22)));
 	m_hp = addWidget(std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(112, 40)));
@@ -34,7 +34,7 @@ bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent&) {
 
 void SlotPokemon::load(SlotPokemonDataPtr& spd) {
 	m_data = std::move(spd);
-	
+
 	m_sprite->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_data->id), ska::Rectangle{ 1 * 64, 160, 64, 64 });
 	m_name->modifyText("Nom : " + m_data->name);
 	m_level->modifyText("Niveau : " + m_data->level);

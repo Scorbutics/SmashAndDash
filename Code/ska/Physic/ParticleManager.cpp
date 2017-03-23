@@ -68,7 +68,7 @@ void ska::ParticleManager::remove(unsigned int index)
     if(index < m_particles.size())
 	{
 		m_particles[index].reset();
-        m_particles[index] = NULL;
+        m_particles[index] = nullptr;
     } else {
 		std::cerr << "Erreur (classe ParticleManager) : impossible d'accéder à l'élément numéro " << index << " des sprites de particules" << std::endl;
 	}

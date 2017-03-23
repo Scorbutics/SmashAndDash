@@ -261,15 +261,15 @@ bool AreNodesEquals(Node *a, Node *b)
 }
 
 
-std::vector<Node*> GetNeighbours(Node *n, std::vector<std::vector<Node>> &) {
-    int currentPos[4];
+std::vector<Node*> GetNeighbours(Node *, std::vector<std::vector<Node>> &) {
+    //int currentPos[4];
 
 	std::vector<Node*> neighbours;
 
-    currentPos[DOWN] = n->getLine() + 1;
+    /*currentPos[DOWN] = n->getLine() + 1;
     currentPos[RIGHT] = n->getCol() + 1;
     currentPos[UP] = n->getLine() - 1;
-    currentPos[LEFT] = n->getCol() - 1;
+    currentPos[LEFT] = n->getCol() - 1;*/
 
 	/*
 	if(currentPos[UP] >= 0)

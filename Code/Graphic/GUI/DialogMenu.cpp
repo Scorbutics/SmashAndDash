@@ -45,7 +45,7 @@ m_isScrolling(false) {
 }
 
 DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs) :
-DialogMenu(timeObs, gui, keyboardObs, "", "", { 0 }) {
+DialogMenu(timeObs, gui, keyboardObs, "", "", { 0, 0, 0, 0 }) {
 
 }
 

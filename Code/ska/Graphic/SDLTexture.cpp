@@ -30,7 +30,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 
 	if (sprite.getInstance() == nullptr) {
 		std::cerr << "Erreur lors du chargement de l'image \"" << m_fileName << "\" : " << SDL_GetError() << std::endl;
-	} else if (m_r >= 0 && m_g >= 0 && m_b >= 0) {
+	} else {
 		SDL_SetColorKey(sprite.getInstance(), SDL_TRUE, SDL_MapRGBA(sprite.getFormat(), m_r, m_g, m_b, m_alpha));
 	}
 

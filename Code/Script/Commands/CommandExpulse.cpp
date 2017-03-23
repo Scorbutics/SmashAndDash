@@ -42,7 +42,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
 
 	ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
-	const ska::Point<int> offsetHitboxBlock = m_world.alignOnBlock(hitbox);
+	//const ska::Point<int> offsetHitboxBlock = m_world.alignOnBlock(hitbox);
 	const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
 	ska::Point<int> vector;
 	vector.x = targetBlock.x /*- offsetHitboxBlock.x*/ - (pc.x + hc.xOffset);

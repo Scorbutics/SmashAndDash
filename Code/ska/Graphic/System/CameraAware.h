@@ -4,6 +4,8 @@ namespace ska {
 
 	class CameraAware {
 	public:
+	    CameraAware() = default;
+	    virtual ~CameraAware() = default;
 		virtual void linkCamera(CameraSystem* cs) = 0;
 	};
 }

@@ -14,11 +14,11 @@ int CommandAddPokemon::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandAddPokemon::execute(ska::ScriptComponent&, std::vector<std::string>& args) {
-	int id;
+std::string CommandAddPokemon::execute(ska::ScriptComponent&, std::vector<std::string>& ) {
+	/*int id;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	id = ska::StringUtils::strToInt(args[0]);
+	id = ska::StringUtils::strToInt(args[0]);*/
 
 	//wScreen.getPokemonManager().add(id);
 	return "";

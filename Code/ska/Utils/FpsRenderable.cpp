@@ -2,8 +2,8 @@
 #include "StringUtils.h"
 #include "TimeUtils.h"
 
-ska::FpsRenderable::FpsRenderable() : 
-	m_toggleVisible(true), m_t0(0) {
+ska::FpsRenderable::FpsRenderable() :
+	m_t0(0), m_toggleVisible(true) {
 
 }
 

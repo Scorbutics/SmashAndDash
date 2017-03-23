@@ -44,7 +44,7 @@ namespace ska {
 			result.y = (absoluteHitbox.y + (absoluteHitbox.y + absoluteHitbox.h) + 1) / 2;
 
 			auto fDir = PhysicUtils::getMovement(dac.direction, NumberUtils::maximum(static_cast<float>(absoluteHitbox.w), static_cast<float>(absoluteHitbox.h)));
-			Point<int> pos = NumberUtils::cartesian(fDir.power, fDir.angle);
+			Point<int> pos = Point<int>::cartesian(fDir.power, fDir.angle);
 			return result + pos;
 		}
 
@@ -52,7 +52,7 @@ namespace ska {
 		static std::string serializeX(const Component& component) {
 			return StringUtils::intToStr(static_cast<const PositionComponent&>(component).x);
 		}
-		
+
 		static std::string serializeY(const Component& component) {
 			return StringUtils::intToStr(static_cast<const PositionComponent&>(component).y);
 		}

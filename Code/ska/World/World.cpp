@@ -10,12 +10,12 @@
 
 ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :
 	m_blockSize(tailleBloc),
-	m_chipset("." FILE_SEPARATOR "Chipsets" FILE_SEPARATOR "corr.png"),
 	m_autoScriptsPlayed(false),
-	m_lTop(*this, &m_lMid),
-	m_lMid(*this, &m_lBot),
 	m_lBot(*this),
-	m_layerE(*this) {
+	m_lMid(*this, &m_lBot),
+	m_lTop(*this, &m_lMid),
+	m_layerE(*this),
+	m_chipset("." FILE_SEPARATOR "Chipsets" FILE_SEPARATOR "corr.png") {
 }
 
 void ska::World::linkCamera(CameraSystem* cs) {
@@ -53,7 +53,7 @@ bool ska::World::isSameBlockId(const Point<int>& p1, const Point<int>& p2, int l
 
 	Block* b1 = l == nullptr ? getHigherBlock(p1Block.x, p1Block.y) : l->getBlock(p1Block.x, p1Block.y);
 	Block* b2 = l == nullptr ? getHigherBlock(p2Block.x, p2Block.y) : l->getBlock(p2Block.x, p2Block.y);
-	return (b1 == b2 || b1 != nullptr && b2 != nullptr && b1->getID() == b2->getID());
+	return (b1 == b2 || (b1 != nullptr && b2 != nullptr && b1->getID() == b2->getID()));
 }
 
 bool ska::World::canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const {
@@ -144,7 +144,7 @@ bool ska::World::canMoveToPos(Rectangle hitbox, std::vector<Point<int>>& output)
 }
 
 const ska::Rectangle* ska::World::getView() const {
-	return m_cameraSystem == NULL ? NULL : m_cameraSystem->getDisplay();
+	return m_cameraSystem == nullptr ? nullptr : m_cameraSystem->getDisplay();
 }
 
 ska::LayerRenderable& ska::World::getLayerRenderable(int level) {
@@ -376,8 +376,8 @@ void ska::World::setNbrBlocY(unsigned int nbrBlockY) {
 
 
 
-void ska::World::getRainFromData(std::string stringDataFile){
-    int idsprite, acceleration, density;
+void ska::World::getRainFromData(std::string ){
+    /*int idsprite, acceleration, density;
 	IniReader reader(stringDataFile);
 
     if(reader.exists("Rain id_sprite")) {
@@ -386,7 +386,7 @@ void ska::World::getRainFromData(std::string stringDataFile){
 		density = reader.get<int>("Rain density");
     } else {
         std::clog << "La pluie est inexistante sur cette map" << std::endl;
-    }
+    }*/
 }
 
 void ska::World::getMobSettingsFromData() {

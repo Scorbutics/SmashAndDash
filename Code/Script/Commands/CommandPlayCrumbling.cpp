@@ -15,12 +15,12 @@ int CommandPlayCrumbling::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPlayCrumbling::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandPlayCrumbling::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	int duree = 0;
+	/*int duree = 0;
 
-	duree = ska::StringUtils::strToInt(args[0]);
+	duree = ska::StringUtils::strToInt(args[0]);*/
 
 	//wScreen.getParticleManager().playCrumbling(1, 30, 0.25, duree);
 	return "";

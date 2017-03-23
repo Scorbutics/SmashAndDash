@@ -4,7 +4,7 @@
 #include "../../ska/Graphic/PositionnedGraphicDrawable.h"
 
 AbstractGraphicSystem::AbstractGraphicSystem(ska::CameraSystem* camera) : m_camera(camera) {
-	m_drawables = NULL;
+	m_drawables = nullptr;
 }
 
 void AbstractGraphicSystem::linkCamera(ska::CameraSystem* camera) {

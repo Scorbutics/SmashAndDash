@@ -12,11 +12,11 @@ Weather::Weather(ska::World& w, const std::string& wSprite, int number, int dist
 	load(wSprite, number, distance, intensityX, intensityY, alpha);
 }
 
-Weather::Weather(ska::World& w) : 
-	m_intensityX(0), 
-	m_intensityY(0), 
+Weather::Weather(ska::World& w) :
+	m_intensityX(0),
+	m_intensityY(0),
 	m_number(0),
-    m_distance(0), 
+    m_distance(0),
 	m_world(w) {
 
 	m_active = false;
@@ -66,7 +66,7 @@ void Weather::resetPos() {
 void Weather::resetRandomPos() {
     for(auto i = 0; i < m_number; i++) {
 	    auto radius = static_cast<float>(ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2));
-		m_pos[i] = ska::NumberUtils::cartesian(radius, ska::NumberUtils::random(0.0, 2*M_PI));
+		m_pos[i] = ska::Point<float>::cartesian(radius, ska::NumberUtils::random(0.0, 2*M_PI));
     }
 }
 
@@ -108,7 +108,7 @@ void Weather::display() const {
 		return;
 	}
 
-	const ska::Rectangle oRel = { -worldView->x, -worldView->y };
+	const ska::Rectangle oRel = { -worldView->x, -worldView->y, 0, 0 };
 
 	const auto worldWidth = static_cast<float>(m_world.getPixelWidth());
 	const auto worldHeight = static_cast<float>(m_world.getPixelHeight());
@@ -128,13 +128,13 @@ void Weather::display() const {
 				buf.x = i1 * m_weather->getWidth() + oRel.x;
                 for(auto j = 0; j < nbrMosaicY; j++) {
 					buf.y = j*m_weather->getHeight() + oRel.y;
-					if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
+					if ((buf.x + m_weather->getWidth()) >= 0 && buf.x <= worldWidth && (buf.y + m_weather->getHeight()) >= 0 && buf.y <= worldHeight) {
 						m_weather->render(buf.x, buf.y);
 					}
                 }
             }
 
-		} else if (buf.x + m_weather->getWidth() >= 0 && buf.x <= worldWidth && buf.y + m_weather->getHeight() >= 0 && buf.y <= worldHeight) {
+		} else if ((buf.x + m_weather->getWidth()) >= 0 && buf.x <= worldWidth && (buf.y + m_weather->getHeight()) >= 0 && buf.y <= worldHeight) {
 			m_weather->render(buf.x, buf.y);
 		}
     }

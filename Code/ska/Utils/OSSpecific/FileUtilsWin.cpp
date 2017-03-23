@@ -6,6 +6,8 @@
 #include "../../Exceptions/FileException.h"
 #include "../../Exceptions/InvalidPathException.h"
 
+BOOL DirectoryExists(LPCTSTR szPath);
+
 BOOL DirectoryExists(LPCTSTR szPath)
 {
 	DWORD dwAttrib = GetFileAttributes(szPath);

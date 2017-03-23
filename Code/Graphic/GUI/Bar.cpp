@@ -34,7 +34,7 @@ void Bar::display() const {
 	ska::Rectangle rectSize{ 0, 0, m_barSize.w, m_barSize.h };
 
 	const ska::Rectangle* camera = m_cameraSystem.getDisplay();
-	const ska::Rectangle nonNullCamera = camera == nullptr ? ska::Rectangle{ 0 } : *camera;
+	const ska::Rectangle nonNullCamera = camera == nullptr ? ska::Rectangle{ 0, 0, 0, 0 } : *camera;
 
 
 	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);

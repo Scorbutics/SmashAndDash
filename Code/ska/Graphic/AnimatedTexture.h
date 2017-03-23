@@ -9,14 +9,14 @@ namespace ska {
 	class AnimatedTexture {
 	public:
 		AnimatedTexture();
-		
+
 		void loadFromText(unsigned int fontSize, std::string text, SDL_Color c, const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, bool isVertical = false);
 		void load(std::string id, const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, bool isVertical = false, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
-		
+
 		void stop(const bool x);
 		void reset();
 		void nextFrame();
-		
+
 		int render(int x, int y);
 
 		void setDelay(const unsigned int delay);
@@ -25,13 +25,13 @@ namespace ska {
 		void setOffset(const Point<int>& offset);
 		void setRelativePosition(const Point<int>& p);
 
-		const unsigned int getWidth() const;
-		const unsigned int getHeight() const;
-		const Rectangle getOffsetBase() const;
-		
+		unsigned int getWidth() const;
+		unsigned int getHeight() const;
+		Rectangle getOffsetBase() const;
 
-		const unsigned int getFullWidth() const;
-		const unsigned int getFullHeight() const;
+
+		unsigned int getFullWidth() const;
+		unsigned int getFullHeight() const;
 
 		void operator=(const AnimatedTexture& text);
 

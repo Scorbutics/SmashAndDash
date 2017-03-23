@@ -7,14 +7,14 @@
 namespace ska {
 
 	template <class ...HL>
-	class TimeScrollableWindowIG : 
+	class TimeScrollableWindowIG :
 		public DynamicWindowIG<TimeEventListener, HL...>,
 		public TimeObserver {
 	public:
 
-		TimeScrollableWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) : 
-			DynamicWindowIG<TimeEventListener, HL...>(parent, box, styleName),                                                                                                                         
-			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), 
+		TimeScrollableWindowIG(Widget& parent, const Rectangle& box, const std::string& styleName) :
+			DynamicWindowIG<TimeEventListener, HL...>(parent, box, styleName),
+			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false),
 			m_timeObservable(nullptr) {
 
 				HandledWidget<ClickEventListener, HoverEventListener, TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
@@ -24,7 +24,7 @@ namespace ska {
 
 		TimeScrollableWindowIG(TimeObservable* timeObservable, MouseObservable* guiObservable, KeyObservable* keyObservable, const Rectangle& box, const std::string& styleName) :
 			DynamicWindowIG<TimeEventListener, HL...>(guiObservable, keyObservable, box, styleName),
-			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false), 
+			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false),
 			m_timeObservable(timeObservable) {
 
 			if (m_timeObservable != nullptr) {
@@ -94,23 +94,21 @@ namespace ska {
 			const auto& pos = this->getRelativePosition();
 
 			auto nextPos = pos;
-			auto distx = static_cast<unsigned int>((m_slope.x != 0.0) ? (m_destinationPos.x - pos.x) * (m_destinationPos.x - pos.x) : 0);
+			auto distx = static_cast<unsigned int>((static_cast<int>(m_slope.x) != 0) ? (m_destinationPos.x - pos.x) * (m_destinationPos.x - pos.x) : 0);
 			auto xdone = distx == 0;
-			if (m_slope.x*m_slope.x >= distx) {
+			if (m_slope.x * m_slope.x >= distx) {
 				nextPos.x = m_destinationPos.x;
 				m_slope.x = 0;
-			}
-			else {
+			} else {
 				nextPos.x += static_cast<int>(m_slope.x);
 			}
 
-			auto disty = static_cast<unsigned int>((m_slope.y != 0.0) ? (m_destinationPos.y - pos.y) * (m_destinationPos.y - pos.y) : 0);
+			auto disty = static_cast<unsigned int>((static_cast<int>(m_slope.y) != 0) ? (m_destinationPos.y - pos.y) * (m_destinationPos.y - pos.y) : 0);
 			auto ydone = disty == 0;
-			if (m_slope.y*m_slope.y >= disty) {
+			if (m_slope.y * m_slope.y >= disty) {
 				nextPos.y = m_destinationPos.y;
 				m_slope.y = 0;
-			}
-			else {
+			} else {
 				nextPos.y += static_cast<int>(m_slope.y);
 			}
 
@@ -125,7 +123,7 @@ namespace ska {
 		Point<int> m_destinationPos;
 		Point<double> m_slope;
 		bool m_moving;
-	
+
 		TimeObservable *const m_timeObservable;
 
 	};

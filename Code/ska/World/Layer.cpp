@@ -13,7 +13,7 @@
 ska::Layer::Layer(World& w, std::string pathFile, std::string chipsetName, Layer* parent) : m_world(w), m_renderable(w) {
 	m_block.reserve(20);
 	m_parent = parent;
-	m_fileWidth = 0; 
+	m_fileWidth = 0;
 	m_fileHeight = 0;
     reset(pathFile, chipsetName);
 }
@@ -51,19 +51,19 @@ int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) co
 		if (b == nullptr) {
 			return BLOCK_COL_VOID;
 		}
-		return b->getCollision(); 
-	} 
+		return b->getCollision();
+	}
 	return BLOCK_COL_YES;
 }
 
 
-void ska::Layer::reset(std::string pathFile, std::string chipsetName) {
+void ska::Layer::reset(std::string pathFile, std::string) {
 
     m_nomFichier = pathFile.substr(pathFile.find_last_of('/')+1, pathFile.size());
     m_name = m_nomFichier.substr(0, m_nomFichier.find_last_of('.'));
 
     SDLSurface fichierMPng;
-    
+
     fichierMPng.load32(pathFile);
 	if (fichierMPng.getInstance() == nullptr) {
 		throw FileException("Erreur lors du chargement de la couche " + m_name + " : " + std::string(SDL_GetError()));

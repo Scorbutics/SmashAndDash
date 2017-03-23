@@ -25,7 +25,7 @@ m_drawStyle(!placeHolderStyleName.empty()) {
 	if (clip != nullptr) {
 		m_clip = *clip;
 	} else {
-		m_clip = Rectangle{0};
+		m_clip = Rectangle{0, 0, 0, 0};
 		m_clip.w = std::numeric_limits<int>().max();
 		m_clip.h = std::numeric_limits<int>().max();
 	}
@@ -36,7 +36,7 @@ ska::Button::Button() :
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	m_clip = Rectangle {0};
+	m_clip = Rectangle{0, 0, 0, 0};
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
 
@@ -48,7 +48,7 @@ Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),
 m_drawStyle(false) {
 	m_textureSelector = &m_placeHolder;
 	m_lastTextureSelector = nullptr;
-	m_clip = Rectangle {0};
+	m_clip = Rectangle{0, 0, 0, 0};
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();
 

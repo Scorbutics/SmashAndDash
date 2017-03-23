@@ -56,7 +56,7 @@ namespace ska {
 		bool collision();
 		bool collision(Rectangle targetPos);
 
-		~PhysicObject();
+		virtual ~PhysicObject();
 
 
 	private:                                                            //tout ce qui touche à la mécanique de mouvement interne à la classe

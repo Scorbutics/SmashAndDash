@@ -15,14 +15,14 @@ int CommandHeal::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandHeal::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandHeal::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	int value;
+	/*int value;
 	unsigned int index;
 
 	index = ska::StringUtils::strToInt(args[0]);
-	value = ska::StringUtils::strToInt(args[1]);
+	value = ska::StringUtils::strToInt(args[1]);*/
 
 	//if (index >= 0 && index < wScreen.getPokemonManager().getPokemonTeamSize()) {
 		//wScreen.getPokemonManager().getPokemon(index)->setHP(wScreen.getPokemonManager().getPokemon(index)->getHp() + value);

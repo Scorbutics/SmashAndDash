@@ -2,9 +2,9 @@
 #include "../Graphic/SpritePath.h"
 //#include "../Gameplay\WGameCore.h"
 
-ska::Particle::Particle(int idSprite, unsigned int weight, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) : m_anim(300, 2, false),
-m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE)
-{
+ska::Particle::Particle(int idSprite, unsigned int weight, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
+m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE),
+m_anim(300, 2, false) {
     m_slopeNoise = 0;
     m_skill = false;
     m_pos = pos;
@@ -161,9 +161,9 @@ std::vector<ska::Rectangle> ska::Particle::collisionNPC()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	Rectangle rect = m_pos;
+	/*Rectangle rect = m_pos;
     rect.w = m_spriteSize.w;
-    rect.h = m_spriteSize.h;
+    rect.h = m_spriteSize.h;*/
 
 	return std::vector<Rectangle>();//wScreen.detectEntity(rect);
 }

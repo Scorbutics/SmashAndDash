@@ -26,8 +26,8 @@ public:
 	~MessageDialogBox();
 private:
 	static int m_instanceExists;
-	DialogMenu m_talker;
 	DialogMenu m_dialog;
+	DialogMenu m_talker;
 
 	const ska::InputContextManager& m_playerICM;
 };

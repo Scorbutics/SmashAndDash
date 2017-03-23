@@ -6,8 +6,9 @@
 #include "../../ska/Physic/HitboxComponent.h"
 #include "AbstractGraphicSystem.h"
 
-class ShadowSystem : public AbstractGraphicSystem, public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, ska::HitboxComponent, ska::HasShadowComponent>
-{
+class ShadowSystem :
+    public AbstractGraphicSystem,
+    public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, ska::HitboxComponent, ska::HasShadowComponent> {
 public:
 	ShadowSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager);
 	ShadowSystem& operator=(const ShadowSystem&) = delete;
@@ -15,7 +16,7 @@ public:
 	virtual void update() override;
 protected:
 	virtual void refresh() override;
-	
+
 private:
 	ska::AnimatedTexture m_shadow;
 };

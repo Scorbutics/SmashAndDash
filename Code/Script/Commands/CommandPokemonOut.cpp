@@ -16,9 +16,9 @@ int CommandPokemonOut::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPokemonOut::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandPokemonOut::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
-	int index;
+	/*int index;
 	//unsigned int duree = 2000, t0 = 0;
 	unsigned int t0 = 0;
 	//WGameCore& wScreen = WGameCore::getInstance();
@@ -29,7 +29,7 @@ std::string CommandPokemonOut::execute(ska::ScriptComponent&, std::vector<std::s
 
 	//wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), launchPos, PokeballLaunchReason::Throw);
 
-	t0 = SDL_GetTicks();
+	t0 = SDL_GetTicks();*/
 
 	/*while (SDL_GetTicks() - t0 < duree)
 	{

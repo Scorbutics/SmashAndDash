@@ -28,7 +28,7 @@ int GetRandom(std::vector<int>& probs)
 		if(probs[i] != -1)
 			newProbs.push_back(i);
 
-	
+
 	return newProbs[rand()%newSize];
 }
 
@@ -98,7 +98,7 @@ void VariablesWriting(const std::vector<int> &vect, const std::string& filename)
 	reader.set("Game var_number", vect.size());
 	std::stringstream ss;
 
-	for(int i = 1; i <= vect.size(); i++)
+	for(unsigned int i = 1; i <= vect.size(); i++)
 	{
 		ss << "%";
 
@@ -119,7 +119,7 @@ void SwitchesWriting(const std::vector<bool> &vect, const std::string& filename)
 	reader.set("Game switch_number", vect.size());
 	std::stringstream ss;
 
-	for(int i = 1; i <= vect.size(); i++)
+	for(unsigned int i = 1; i <= vect.size(); i++)
 	{
 		ss << "%";
 

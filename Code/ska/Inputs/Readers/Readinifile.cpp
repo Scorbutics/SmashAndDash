@@ -47,7 +47,7 @@ std::string GetINIValueFromFile(const std::string& stringFile, const std::string
     int startPos = FindInFile(stringFile, from);
 	std::ifstream f(stringFile.c_str(), std::ios::binary);
 
-    unsigned int pos;
+    std::size_t pos;
 
     if(f.fail())
 		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
@@ -60,9 +60,8 @@ std::string GetINIValueFromFile(const std::string& stringFile, const std::string
     do
     {
         getline(f, line);
-        pos = (unsigned int)line.find(s);
-		if (pos != std::string::npos)
-        {
+        pos = line.find(s);
+		if (pos != std::string::npos) {
            data = line.substr(pos + s.length() + 1, line.length()-(pos+ s.length() + 1));
            if(data.size() != 0)
             return ska::StringUtils::rtrim(data);
@@ -78,7 +77,7 @@ std::string GetINIValueFromFile(const std::string& stringFile, const std::string
 
 std::string SetINIValueToFile(const std::string& stringFile, const std::string& s, const std::string& to, const std::string& value) {
 	std::string line, data;
-    unsigned int pos;
+    std::size_t pos;
     int startPos = FindInFile(stringFile, to);
 	std::ifstream fr(stringFile.c_str(), std::ios::binary);
 
@@ -97,7 +96,7 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
     do
     {
         getline(fr, line);
-        pos = (unsigned int)line.find(s);
+        pos = line.find(s);
 		if (pos != std::string::npos)
             pos = ((int)fr.tellg()) -2; // se place avant le \n (qui fait 2 caractères sous windows)
 

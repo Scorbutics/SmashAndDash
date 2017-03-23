@@ -11,6 +11,8 @@
 #include "../../ska/Physic/CollisionEvent.h"
 #include "../../ska/AI/IARandomMovementComponent.h"
 
+void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block);
+
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
 	stats.hp = data.get<int>(block + " hp");
 	stats.defense = data.get<int>(block + " defense");

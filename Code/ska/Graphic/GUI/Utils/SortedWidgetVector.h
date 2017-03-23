@@ -9,12 +9,12 @@ namespace ska {
 	public:
 
 		SortedWidgetVector() : m_lastVisibleHandledWidget(-1) {
-			
+
 		}
 
 		void push_back(T&& w) {
 			m_data.push_back(std::move(w));
-			if (m_lastVisibleHandledWidget + 1 < m_data.size() && m_data.back()->isVisible()) {
+			if (static_cast<std::size_t>(m_lastVisibleHandledWidget + 1) < m_data.size() && m_data.back()->isVisible()) {
 				std::swap(m_data[m_data.size() - 1], m_data[m_lastVisibleHandledWidget + 1]);
 				m_lastVisibleHandledWidget++;
 			}

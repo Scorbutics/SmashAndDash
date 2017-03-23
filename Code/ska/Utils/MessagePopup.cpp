@@ -12,7 +12,7 @@ ska::MessagePopup::MessagePopup(MessageType::Enum mt, const std::string& title, 
 	case MessageType::Error:
 		flags = SDL_MESSAGEBOX_ERROR;
 		break;
-	
+
 	default:
 	case MessageType::Info:
 		flags = SDL_MESSAGEBOX_INFORMATION;
@@ -22,7 +22,7 @@ ska::MessagePopup::MessagePopup(MessageType::Enum mt, const std::string& title, 
 	SDL_ShowSimpleMessageBox(flags,
 		title.c_str(),
 		message.c_str(),
-		w == nullptr ? NULL : 
+		w == nullptr ? nullptr :
 		w->getHandle());
 }
 

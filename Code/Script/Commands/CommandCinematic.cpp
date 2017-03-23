@@ -18,19 +18,19 @@ int CommandCinematic::argumentsNumber() {
 }
 
 /* TODO : faire une scène (héritant de la classe Scene) cinématique */
-std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::string>& args) {
+std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::string>& ) {
 	//WGameCore& wScreen = WGameCore::getInstance();
-	unsigned int frameNumber, delay, id_anim, duration;
+	/*unsigned int frameNumber, delay, id_anim, duration;
 	//bool continuer = true;
 	ska::Rectangle pos;
 	std::string message;
 	ska::SpriteAnimation* cinematic;
 	//ska::KeyInput* in = wScreen.getInputListener().getKeyInput();
 
-	/*menuPos.x = 0;
+	menuPos.x = 0;
 	menuPos.y = wScreen.getHeight() - TAILLEBLOCFENETRE * 4;
 	menuPos.w = wScreen.getWidth();
-	menuPos.h = TAILLEBLOCFENETRE * 4;*/
+	menuPos.h = TAILLEBLOCFENETRE * 4
 
 	id_anim = ska::StringUtils::strToInt(args[0]);
 	delay = ska::StringUtils::strToInt(args[1]);
@@ -40,7 +40,7 @@ std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::st
 	pos.y = ska::StringUtils::strToInt(args[5]);
 	message = args[6];
 
-/*
+
 	if (pos.x != -1)
 		pos.x -= wScreen.getORel().x;
 
@@ -53,7 +53,7 @@ std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::st
 
 	//wScreen.getSpriteAnimationManager().reset();
 
-	cinematic = NULL;//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, pos, -1, -1, frameNumber, delay);
+	//cinematic = nullptr;//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, pos, -1, -1, frameNumber, delay);
 
 	/*while (continuer)
 	{

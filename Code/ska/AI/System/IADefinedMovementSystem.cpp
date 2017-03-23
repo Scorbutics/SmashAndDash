@@ -23,19 +23,19 @@ void ska::IADefinedMovementSystem::refresh() {
 		}
 
 		const auto& targetVector = iamc.directions[iamc.directionIndex];
-		PolarPoint<float> polarVectorMovement = NumberUtils::polar(targetVector.x, targetVector.y);
-		
+		PolarPoint<float> polarVectorMovement = PolarPoint<float>::polar(targetVector.x, targetVector.y);
+
 		/* speed */
 		polarVectorMovement.radius = 5;
 
 		const auto targetPoint = targetVector + iamc.origin;
-		const auto finalMovement = NumberUtils::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
-		
+		const auto finalMovement = Point<float>::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
+
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
 		const auto distanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos, targetPoint);
 		const auto nextDistanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos + finalMovement, targetPoint);
 		const auto directionChanged = distanceSquaredToTarget < nextDistanceSquaredToTarget;
-		
+
 		bool collisioned;
 		if (iamc.ghost) {
 			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);

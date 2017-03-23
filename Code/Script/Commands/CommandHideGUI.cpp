@@ -16,12 +16,12 @@ int CommandHideGUI::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandHideGUI::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandHideGUI::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
-	int b;
+	/*int b;
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	b = ska::StringUtils::strToInt(args[0]);
+	b = ska::StringUtils::strToInt(args[0]);*/
 
 	//wScreen.getGUI().getToolbar()->hide(b != 0);
 	//wScreen.getGUI().hide(b != 0);

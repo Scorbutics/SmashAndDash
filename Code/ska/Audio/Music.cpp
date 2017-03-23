@@ -13,7 +13,7 @@ void ska::Music::setVolume(float vol) const{
 
 void ska::Music::play(SoundRenderer& sndMgr) const{
 	sndMgr.play(m_value->m_instance);
-	if (m_value->m_volume != -1) {
+	if (static_cast<int>(m_value->m_volume) != -1) {
 		sndMgr.setMusicVolume(m_value->m_volume);
 	}
 }

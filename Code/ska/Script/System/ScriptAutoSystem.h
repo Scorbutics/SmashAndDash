@@ -10,10 +10,10 @@
 namespace ska {
 	class World;
 
-	class ScriptAutoSystem : 
+	class ScriptAutoSystem :
 		public System<std::unordered_set<EntityId>, ScriptComponent> {
 	public:
-		
+
 		Savegame& getSavegame();
 		ScriptComponent registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
@@ -56,6 +56,7 @@ namespace ska {
 		virtual void refresh() override;
 		struct ScriptCommandHelper {
 			ScriptCommandHelper(World&, EntityManager& parent) : m_entityManager(parent) {}
+			virtual ~ScriptCommandHelper() = default;
 			void operator=(const ScriptCommandHelper&) = delete;
 			virtual void setupCommands(World& w, std::unordered_map<std::string, CommandPtr>& commands) const = 0;
 			EntityManager& m_entityManager;

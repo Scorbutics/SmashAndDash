@@ -15,7 +15,7 @@
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager) :
 ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
-m_icm(icm), m_world(world), m_scriptAutoSystem(scriptAutoSystem) {
+m_world(world), m_icm(icm), m_scriptAutoSystem(scriptAutoSystem) {
 
 }
 
@@ -81,8 +81,8 @@ void ska::ScriptRefreshSystem::refresh() {
 		if (entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			const WorldCollisionComponent& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
 			//clog << "Block collision" << std::endl;
-			if (wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY ||
-				wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX) {
+			if ((wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY) ||
+				(wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX)) {
 
 				auto tmp = m_world.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 0);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
@@ -149,10 +149,10 @@ void ska::ScriptRefreshSystem::clearNamedScriptedEntities() {
 }
 
 void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const EntityId origin) {
-	m_scriptAutoSystem.registerScript(NULL, scriptEntity, origin);
+	m_scriptAutoSystem.registerScript(nullptr, scriptEntity, origin);
 }
 
-const ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
+ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
 	const unsigned int blockSizeSquared = m_world.getBlockSize() * m_world.getBlockSize();
 
 	//ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);

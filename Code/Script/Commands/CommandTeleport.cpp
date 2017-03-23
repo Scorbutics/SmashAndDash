@@ -65,7 +65,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 
 	std::string fichier, fichier2, fichierD;
-	int x = 1, y;
+	int x = 1/*, y*/;
 
 
 	fichier = ska::StringUtils::extractTo(0, param, '/');
@@ -79,7 +79,7 @@ void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 	std::string buf; //on le transforme en string
 	buf = oss.str();
 	oss.clear();
-	y = atoi(param.substr(param.find_last_of(':') + 1, param.find_last_of('\0')).c_str());
+	//y = atoi(param.substr(param.find_last_of(':') + 1, param.find_last_of('\0')).c_str());
 
 	//wScreen.transition(0);
 

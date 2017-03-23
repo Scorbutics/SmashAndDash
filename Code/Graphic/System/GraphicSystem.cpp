@@ -1,3 +1,4 @@
+#include <limits>
 #include "../../ska/Graphic/System/CameraSystem.h"
 #include "../../ska/Graphic/Draw/DrawableContainer.h"
 #include "GraphicSystem.h"
@@ -7,33 +8,35 @@
 
 typedef std::unique_ptr<DialogMenu> DialogMenuPtr;
 
-GraphicSystem::GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager) : System(entityManager), AbstractGraphicSystem(camera) {
-	m_drawables = NULL;
+GraphicSystem::GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager) :
+    AbstractGraphicSystem(camera),
+    System(entityManager) {
+	m_drawables = nullptr;
 }
 
 void GraphicSystem::refresh() {
-	const ska::Rectangle* camera = m_camera == NULL ? NULL : m_camera->getDisplay();
-	const unsigned int cameraX = (camera == NULL || camera->x < 0 ? 0 : camera->x);
-	const unsigned int cameraY = (camera == NULL || camera->y < 0 ? 0 : camera->y);
+	const ska::Rectangle* camera = m_camera == nullptr ? nullptr : m_camera->getDisplay();
+	const unsigned int cameraX = (camera == nullptr || camera->x < 0 ? 0 : camera->x);
+	const unsigned int cameraY = (camera == nullptr || camera->y < 0 ? 0 : camera->y);
 
-	if (m_drawables == NULL) {
+	if (m_drawables == nullptr) {
 		return;
 	}
-	
-	m_topLayerPriority = INT_MIN;
+
+	m_topLayerPriority = std::numeric_limits<int>::min();
 	m_pgd.clear();
-	
-	for (ska::EntityId entityId : m_processed) {
+
+	for (const ska::EntityId entityId : m_processed) {
 		ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(entityId);
 		ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 		const int relPosX = pos.x - cameraX;
 		const int relPosY = pos.y - cameraY - pos.z;
 
 		for (auto& sprite : gc.sprite) {
-			if (!(relPosX + sprite.getWidth() < 0 || camera != NULL && relPosX >= camera->w ||
-				relPosY + sprite.getHeight() < 0 || camera != NULL && relPosY >= camera->h)) {
+			if (!((relPosX + sprite.getWidth()) < 0 || (camera != nullptr && relPosX >= camera->w) ||
+				(relPosY + sprite.getHeight()) < 0 || (camera != nullptr && relPosY >= camera->h))) {
 				m_topLayerPriority = ska::NumberUtils::maximum(pos.y, m_topLayerPriority);
-				const int priority = gc.desiredPriority > INT_MIN ? gc.desiredPriority : pos.y + (camera == NULL ? 0 : camera->h*pos.z);
+				const int priority = gc.desiredPriority > std::numeric_limits<int>::min() ? gc.desiredPriority : pos.y + (camera == nullptr ? 0 : camera->h*pos.z);
 				m_pgd.push_back(ska::PositionnedGraphicDrawable(sprite, relPosX, relPosY, priority, m_topLayerPriority));
 			}
 		}
@@ -42,7 +45,7 @@ void GraphicSystem::refresh() {
 			//DialogComponent& dc = m_entityManager.getComponent<DialogComponent>(entityId);
 			/*dc.dialog.move({ static_cast<int>(pos.x - cameraX), static_cast<int>(pos.y - cameraY - dc.dialog.getBox().h) });
 			dc.dialog.refresh();
-			if (dc.dialog.isVisible()) {	
+			if (dc.dialog.isVisible()) {
 				m_drawables->add(dc.dialog);
 			} else {*/
 				m_entityManager.removeComponent<DialogComponent>(entityId);
@@ -53,7 +56,7 @@ void GraphicSystem::refresh() {
 		m_drawables->add(pgd);
 	}
 
-	m_drawables = NULL;
+	m_drawables = nullptr;
 }
 
 void GraphicSystem::update() {

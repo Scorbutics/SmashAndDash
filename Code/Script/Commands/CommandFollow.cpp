@@ -14,15 +14,15 @@ int CommandFollow::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandFollow::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandFollow::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
-	int id, number, id_target, number_target, flag;
+	/*int id, number, id_target, number_target, flag;
 
 	id = ska::StringUtils::strToInt(args[0]);
 	number = ska::StringUtils::strToInt(args[1]);
 	id_target = ska::StringUtils::strToInt(args[2]);
 	number_target = ska::StringUtils::strToInt(args[3]);
-	flag = ska::StringUtils::strToInt(args[4]);
+	flag = ska::StringUtils::strToInt(args[4]);*/
 
 	/* TODO en même temps que IAPathSystem */
 

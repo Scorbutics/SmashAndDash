@@ -6,7 +6,7 @@
 ska::ButtonSprite::ButtonSprite(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback) :
 Button(parent, relativePos, placeHolderStyleName, nullptr, callback),
 m_img(SpritePath::getInstance().getPath(SPRITEBANK_ICONS, id)) {
-	m_clip = Rectangle {0};
+	m_clip = Rectangle{0, 0, 0, 0};
 	ButtonSprite::move(getRelativePosition() + relativePos);
 	m_clip.w = std::numeric_limits<int>().max();
 	m_clip.h = std::numeric_limits<int>().max();

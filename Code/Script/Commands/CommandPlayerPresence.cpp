@@ -9,6 +9,8 @@
 #include "../../ska/Physic/PositionComponent.h"
 #include "../../ska/Physic/HitboxComponent.h"
 
+bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs);
+
 bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs)
 {
 	return lhs.x == rhs.x && lhs.y == rhs.y;

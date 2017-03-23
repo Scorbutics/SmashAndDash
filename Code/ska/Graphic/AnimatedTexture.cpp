@@ -24,7 +24,7 @@ void ska::AnimatedTexture::recalculateFrames(const unsigned int horizontalFrames
 	m_anim.setOffsetAndFrameSize(frame);
 }
 
-const ska::Rectangle ska::AnimatedTexture::getOffsetBase() const {
+ska::Rectangle ska::AnimatedTexture::getOffsetBase() const {
 	return m_anim.getOffsetBase();
 }
 
@@ -61,19 +61,19 @@ int ska::AnimatedTexture::render(int x, int y) {
 	return m_sprite.render(x + m_relativePos.x, y + m_relativePos.y, &tmp);
 }
 
-const unsigned int ska::AnimatedTexture::getWidth() const {
+unsigned int ska::AnimatedTexture::getWidth() const {
 	return m_anim.getOffsetAndFrameSize().w;
 }
 
-const unsigned int ska::AnimatedTexture::getHeight() const {
+unsigned int ska::AnimatedTexture::getHeight() const {
 	return m_anim.getOffsetAndFrameSize().h;
 }
 
-const unsigned int ska::AnimatedTexture::getFullWidth() const {
+unsigned int ska::AnimatedTexture::getFullWidth() const {
 	return m_sprite.getWidth();
 }
 
-const unsigned int ska::AnimatedTexture::getFullHeight() const {
+unsigned int ska::AnimatedTexture::getFullHeight() const {
 	return m_sprite.getHeight();
 }
 

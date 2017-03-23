@@ -9,10 +9,10 @@
 #include "../Script/ScriptSleepComponent.h"
 
 ska::Chipset::Chipset(const std::unordered_map<Color, Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) :
-	m_blockSize(blockSize),
-	m_chipsetName(chipsetName),
 	m_corr(corr),
+	m_blockSize(blockSize),
 	m_corrFileWidth(corrFileWidth),
+	m_chipsetName(chipsetName),
 	m_renderable(static_cast<const unsigned int>(corr.size()), blockSize, chipsetName) {
 	load();
 	m_blocks.resize(corr.size());

@@ -34,8 +34,9 @@ namespace ska {
 
 	protected:
 		bool m_visible;
-		Texture m_sprite, m_shadow;
 		Animation m_anim;
+		Texture m_shadow;
+		Texture m_sprite;
 
 	};
 }

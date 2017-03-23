@@ -16,9 +16,9 @@ int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandThrowPokebal::execute(ska::ScriptComponent&, std::vector<std::string>& args)
+std::string CommandThrowPokebal::execute(ska::ScriptComponent&, std::vector<std::string>& )
 {
-	ska::Point<int> srcId, dst;
+	/*ska::Point<int> srcId, dst;
 	int launchReason;
 	//0 : Capture
 	//1 : Recall
@@ -30,6 +30,6 @@ std::string CommandThrowPokebal::execute(ska::ScriptComponent&, std::vector<std:
 	dst.y = ska::StringUtils::strToInt(args[3]);
 	launchReason = ska::StringUtils::strToInt(args[4]);
 
-	//wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));
+	//wScreen.getPokeball().launch(wScreen.getEntityFactory().getNPC(srcId.x, srcId.y), dst, static_cast<PokeballLaunchReason::Enum> (launchReason));*/
 	return "";
 }

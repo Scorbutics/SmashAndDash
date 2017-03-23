@@ -20,7 +20,7 @@ void MobSpawningSystem::refresh() {
 		if (reader != NULL) {
 			for (ska::EntityId entityId : m_processed) {
 				ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
-				m_totalSpawnedEntities += m_mobSpawner.spawnMob({ pc.x, pc.y }, m_rmin, m_rmax, m_spawnNum, reader);
+				m_totalSpawnedEntities += m_mobSpawner.spawnMob({ pc.x, pc.y, 0, 0}, m_rmin, m_rmax, m_spawnNum, reader);
 			}
 		}
 		m_t0 = ska::TimeUtils::getTicks();

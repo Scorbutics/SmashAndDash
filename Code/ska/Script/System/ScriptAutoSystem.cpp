@@ -236,7 +236,7 @@ bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 		|| script.active > 0
 		|| (TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
 		|| script.state == EnumScriptState::DEAD
-		|| !(script.triggeringType == EnumScriptTriggerType::AUTO && script.state == EnumScriptState::STOPPED || script.state != EnumScriptState::STOPPED)
+		|| !((script.triggeringType == EnumScriptTriggerType::AUTO && script.state == EnumScriptState::STOPPED) || (script.state != EnumScriptState::STOPPED))
 		|| eof(script);
 
 	return !cannotBePlayed;

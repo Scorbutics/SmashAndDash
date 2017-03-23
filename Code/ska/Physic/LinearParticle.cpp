@@ -27,7 +27,7 @@ void ska::LinearParticle::refresh()
     }
 
     float angle;
-    if(m_ax != 0)
+    if(static_cast<int>(m_ax) != 0)
     {
         angle = atan(((float)m_ay)/m_ax);
         if(m_ax < 0)

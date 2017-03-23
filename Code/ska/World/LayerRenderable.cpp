@@ -13,7 +13,7 @@ ska::LayerRenderable::LayerRenderable(World& w) : m_world(w) {
 }
 
 void ska::LayerRenderable::update() {
-	Rectangle absoluteCurrentPos;
+	//Rectangle absoluteCurrentPos;
 	const Rectangle* cameraPos = m_world.getView();
 
 	if (cameraPos == NULL) {
@@ -35,8 +35,8 @@ void ska::LayerRenderable::update() {
 		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
 			unsigned int currentXBlock = i*m_world.getBlockSize();
 			unsigned int currentYBlock = j*m_world.getBlockSize();
-			absoluteCurrentPos.x = currentXBlock - absORelX;
-			absoluteCurrentPos.y = currentYBlock - absORelY;
+			/*absoluteCurrentPos.x = currentXBlock - absORelX;
+			absoluteCurrentPos.y = currentYBlock - absORelY;*/
 
 			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
 				BlockRenderable* b = m_block[i][j];
@@ -44,7 +44,7 @@ void ska::LayerRenderable::update() {
 					m_world.getChipset().update(*b);
 				}
 			}
-			
+
 		}
 	}
 }

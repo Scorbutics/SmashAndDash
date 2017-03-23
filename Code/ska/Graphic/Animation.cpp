@@ -4,7 +4,7 @@
 #include "Animation.h"
 
 ska::Animation::Animation() {
-	m_offset = Rectangle{0};
+	m_offset = Rectangle{0, 0, 0, 0};
 	m_offsetBase = m_offset;
 	m_frameWidth = m_offset.w;
 	m_frameHeight = m_offset.h;

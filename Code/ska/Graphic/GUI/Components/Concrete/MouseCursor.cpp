@@ -1,10 +1,11 @@
 #include <SDL.h>
 #include "MouseCursor.h"
 
-ska::MouseCursor::MouseCursor(const std::string& styleName) : 
-	m_currentCursor(&m_basicCursor), m_visible(false),
+ska::MouseCursor::MouseCursor(const std::string& styleName) :
 	m_basicCursor(styleName + ".png"),
-	m_grabCursor(styleName + "_grab.png") {
+	m_grabCursor(styleName + "_grab.png"),
+	m_currentCursor(&m_basicCursor),
+	m_visible(false) {
 	SDL_ShowCursor(false);
 }
 

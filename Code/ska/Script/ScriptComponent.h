@@ -39,11 +39,11 @@ namespace ska {
 		std::string fullPath;
 		std::string key;
 
-		const EntityId getEntity() const {
+		EntityId getEntity() const {
 			return entityId;
 		}
 
-		const EntityId getOrigin() const {
+		EntityId getOrigin() const {
 			return origin;
 		}
 

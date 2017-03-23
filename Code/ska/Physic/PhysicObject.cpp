@@ -36,7 +36,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
 {
     m_id = id;
     m_weight = weight;
-    if(m_weight == 0.)
+    if(static_cast<int>(m_weight) == 0)
 		m_weight = 1.;
 
     if(speedLimit != 0)
@@ -64,7 +64,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
 {
     m_id = id;
     m_weight = weight;
-	if(m_weight == 0.)
+	if(static_cast<int>(m_weight) == 0)
 		m_weight = 1.;
 
     if(speedLimit != 0)
@@ -93,7 +93,7 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
     m_id = id;
 
 	m_weight = weight;
-	if(m_weight == 0.)
+	if(static_cast<int>(m_weight) == 0)
 		m_weight = 1.;
 	m_rect = r;
 	m_ax = m_ay = m_az = 0.;
@@ -123,9 +123,9 @@ ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber, float weight,
 	m_id = id;
 
 	m_weight = weight;
-	if(m_weight == 0.)
+	if(static_cast<int>(m_weight) == 0)
 		m_weight = 1.;
-	
+
 	m_rect.x = x;
 	m_rect.y = y;
 	m_rect.w = w;
@@ -296,10 +296,10 @@ void ska::PhysicObject::refresh()
 	//( en comptant qu'au préalable on a peut-être déjà appliqué une ou plusieurs force(s) avec "applyForce" )
 	m_ax += - m_frictionCoeff * m_speedx / m_weight;
 	m_ay += - m_frictionCoeff * m_speedy / m_weight;
-	
+
 	//EARTH_GRAVITY était trop élevée alors j'ai préféré la diviser par 5
 	m_az -= (float)EARTH_GRAVITY / 5;
-	
+
 	//(v(t) - v(t-1))/(t - (t-1)) = dv/dt (t) = a(t)
 	m_speedx += m_ax;
 	m_speedy += m_ay;
@@ -309,7 +309,7 @@ void ska::PhysicObject::refresh()
     m_ay = 0;
 	m_az = 0;
 
-	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
+	if(static_cast<unsigned int>(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz) != 0)
 		this->move();
 }
 
@@ -382,7 +382,7 @@ void ska::PhysicObject::move(int direction, float speed)
     m_speedx = speed*cos(angle);
     m_speedy = speed*sin(angle);
 
-	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
+	if(static_cast<unsigned int>(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz) != 0)
 		this->move();
 
 }
@@ -424,7 +424,7 @@ void ska::PhysicObject::move(Rectangle dest, float speed)
 		m_speedy = speed*sin(angle);
 	}
 
-	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
+	if(static_cast<unsigned int>(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz) != 0)
 		this->move();
 
 }
@@ -432,7 +432,7 @@ void ska::PhysicObject::move(Rectangle dest, float speed)
 //bouge dans une direction vers "dest", à la vitesse courante de l'objet
 void ska::PhysicObject::move(Rectangle dest)
 {
-	if(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz != 0)
+	if(static_cast<unsigned int>(m_speedx*m_speedx + m_speedy*m_speedy + m_speedz*m_speedz) != 0)
 		this->move(dest, sqrt(m_speedx*m_speedx + m_speedy*m_speedy));
 }
 
@@ -472,11 +472,11 @@ std::vector<ska::Rectangle> ska::PhysicObject::move()
 	lastTheoricPos.y += (int)(m_speedy + 0.5);
     if(lastTheoricPos.x != rectOrigin.x || lastTheoricPos.y != rectOrigin.y)
         m_direction = RectangleUtils::getDirectionFromPos(rectOrigin, lastTheoricPos);
-	
 
 
 
-	
+
+
 
 
 	//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
@@ -599,7 +599,7 @@ bool ska::PhysicObject::collision(Rectangle targetPos)
 	m_rect = targetPos;
 	m_rect.x -= (m_rect.w - m_offset[1] + m_offset[3]) / 2;
 	m_rect.y -= (m_rect.h - m_offset[0] + m_offset[2]) / 2;
-	
+
 	result = collision();
 
 	m_rect = lastPos;
@@ -622,7 +622,7 @@ bool ska::PhysicObject::collision()
 	//si jamais on entre en contact avec un objet non traversable du monde...
 	bool colWorld = this->collisionWorld();
 	if (!m_ghost && (colWorld || (!ids.empty() && !isDodging())))
-		return true;       
+		return true;
 
 	//puis on recommence selon les y maintenant
 //	Rectangle buf = m_rect;
@@ -678,7 +678,7 @@ bool ska::PhysicObject::collisionWorld()
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	World& w = wScreen.getWorld();*/
-	Rectangle chd, chg, cbg;
+	/*Rectangle chd, chg, cbg;
 
 
 	//position coin haut droit hitbox
@@ -691,7 +691,7 @@ bool ska::PhysicObject::collisionWorld()
 
 	//position coin bas gauche hitbox
 	cbg.x = m_rect.x + m_offset[3];
-	cbg.y = m_rect.y + m_rect.h-1 - m_offset[0];
+	cbg.y = m_rect.y + m_rect.h-1 - m_offset[0];*/
 
     /*for(int j = chg.y/TAILLEBLOC; j <= cbg.y/TAILLEBLOC; j++)
         for(int i = chg.x/TAILLEBLOC; i <= chd.x/TAILLEBLOC; i++)
@@ -737,7 +737,7 @@ int ska::PhysicObject::getOffset(int direction)
 
 float ska::PhysicObject::getAngle()
 {
-    if(m_speedx != 0)
+    if(static_cast<int>(m_speedx) != 0)
     {
         if(m_speedx > 0)
             return atan(m_speedy/m_speedx);

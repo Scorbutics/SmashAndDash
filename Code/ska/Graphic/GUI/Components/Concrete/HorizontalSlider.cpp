@@ -4,9 +4,9 @@
 #include "HorizontalSlider.h"
 #include "../../Events/ValueChangedEvent.h"
 
-ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& styleName, Point<int> relativePos, const unsigned int pixelWidth) : 
+ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& styleName, Point<int> relativePos, const unsigned int pixelWidth) :
 WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventListener>(parent, relativePos),
-	m_percents(0), 
+	m_percents(0),
 	m_sliding(false) {
 	auto b = std::make_unique<Button>(*this, Point<int>(0, 0), styleName, nullptr, [this](Widget*, ClickEvent& e) {
 		m_sliding = e.getState() == MOUSE_CLICK;
@@ -18,7 +18,7 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 		}
 	});
 
-	Rectangle clipImage{ 0 };
+	Rectangle clipImage{ 0, 0, 0, 0 };
 	clipImage.w = pixelWidth;
 	clipImage.h = std::numeric_limits<int>::max();
 	auto img = std::make_unique<Image>(*this, styleName + "_bar.png", Point<int>(0, 0), false, &clipImage);
@@ -46,7 +46,7 @@ float ska::HorizontalSlider::getValue() const {
 
 void ska::HorizontalSlider::forceValue(float v) {
 	m_percents = v;
-	
+
 	if (m_percents > 1.0) {
 		m_percents = 1.0;
 	} else if (m_percents < 0) {

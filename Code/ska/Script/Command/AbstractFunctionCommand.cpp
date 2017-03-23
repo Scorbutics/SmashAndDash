@@ -10,7 +10,7 @@ ska::AbstractFunctionCommand::AbstractFunctionCommand(EntityManager& entityManag
 
 std::string ska::AbstractFunctionCommand::process(ScriptComponent& script, std::stringstream&, std::vector<std::string>& args) {
 	int argNumber = argumentsNumber();
-	if (argNumber != -1 && argNumber != args.size()) {
+	if (argNumber != -1 && static_cast<std::size_t>(argNumber) != args.size()) {
 		/* Syntax error */
 		std::string syntaxErrorMsg("Syntax error with parameters : ");
 		for (std::string& arg : args) {

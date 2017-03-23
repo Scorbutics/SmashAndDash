@@ -4,6 +4,8 @@
 #include "Font.h"
 #include "SDLSurface.h"
 
+SDL_Surface* LoadImage32(const std::string& fichier_image);
+
 SDL_Surface* LoadImage32(const std::string& fichier_image) {
 	SDL_Surface* result = nullptr;
 	SDL_Surface* imageRam;
@@ -15,7 +17,7 @@ SDL_Surface* LoadImage32(const std::string& fichier_image) {
         }
 
         /* Copie l'image image_ram de moins de 32 bits vers image_result qui fait 32 bits */
-        SDL_UpperBlit(imageRam, nullptr, result, nullptr);        
+        SDL_UpperBlit(imageRam, nullptr, result, nullptr);
 
 		/* Clean up phase */
 		loadImage32Free:

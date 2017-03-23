@@ -27,10 +27,10 @@ void SkillRefreshSystem::refresh() {
 		mc.vz = 0;
 		/* End of example */
 
-		auto pp = ska::NumberUtils::polar(sc.target.x - sc.origin.x,  sc.target.y - sc.origin.y);
+		auto pp = ska::PolarPoint<float>::polar(sc.target.x - sc.origin.x,  sc.target.y - sc.origin.y);
 		ska::Point<float> emptyFloatPoint;
 		ska::Point<float> velocityPoint(mc.vx, mc.vy);
-		const auto& directionalPoint = ska::NumberUtils::rotate<float>(emptyFloatPoint, pp.angle, velocityPoint);
+		const auto& directionalPoint = ska::Point<float>::rotate(emptyFloatPoint, pp.angle, velocityPoint);
 		mc.vx = directionalPoint.x;
 		mc.vy = directionalPoint.y;
 
