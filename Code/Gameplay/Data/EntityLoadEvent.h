@@ -7,13 +7,13 @@ struct EntityLoadEvent {
 	EntityLoadEvent(ska::IniReader& reader, unsigned int pkmnid, unsigned int hp) :
 	m_stats(std::make_unique<Statistics>(&reader, "BaseStats")),
 		m_description(std::make_unique<MonsterDescription const>(reader, "Description")),
+		stats(m_stats.get()),
+		description(m_description.get()),
+		id(pkmnid),
 		baseExpNeeded(reader.get<unsigned int>("Experience level_1_exp_needed")),
 		baseExpDropped(reader.get<unsigned int>("Experience level_1_exp_dropped")),
 		expEvolutionType(reader.get<std::string>("Experience type")),
-		currentHp(hp),
-		id(pkmnid),
-		stats(m_stats.get()),
-		description(m_description.get()) {
+		currentHp(hp) {
 
 	}
 

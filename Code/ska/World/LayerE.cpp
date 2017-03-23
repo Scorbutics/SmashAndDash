@@ -74,7 +74,7 @@ int ska::LayerE::getNbrLignes() const {
 
 void ska::LayerE::changeLevel(const std::string& fichier) {
     m_nomFichier = fichier;
-	const std::string folder = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_nomFichier.substr(0, m_nomFichier.find_last_of('E')) + ""FILE_SEPARATOR"" + m_nomFichier;
+	const std::string folder = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_nomFichier.substr(0, m_nomFichier.find_last_of('E')) + "" FILE_SEPARATOR "" + m_nomFichier;
 	std::ifstream flux(folder.c_str());
 	std::stringstream ss;
 	if (flux.fail()) {

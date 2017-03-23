@@ -45,7 +45,7 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 	}
 
 	if (sprite.getInstance() == nullptr) {
-		throw FileException("Erreur du chargement de l'image " + m_fileName + ". Après tentative de récupération, impossible de charger l'image \""NOSUCHFILE"\" : " + std::string(SDL_GetError()));
+		throw FileException("Erreur du chargement de l'image " + m_fileName + ". Après tentative de récupération, impossible de charger l'image \"" NOSUCHFILE "\" : " + std::string(SDL_GetError()));
 	}
 
 	free();

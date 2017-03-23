@@ -96,7 +96,7 @@ private:
 };
 
 
-/*
+
 class Melee : public Skill
 {
     public:

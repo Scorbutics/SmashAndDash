@@ -195,7 +195,7 @@ void ska::ScriptAutoSystem::refresh() {
 }
 
 void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&) const {
-	//string& tmpScritFileName = ("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR"tmpscripts.data");
+	//string& tmpScritFileName = ("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + savegame.getSaveName() + FILE_SEPARATOR "tmpscripts.data");
 	//std::ofstream scriptList;
 	/*scriptList.open(tmpScritFileName.c_str(), ios::app);
 	if (!scriptList.fail()) {

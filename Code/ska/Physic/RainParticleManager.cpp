@@ -44,7 +44,7 @@ void RainParticleManager::displayRainFog() const
 }
 
 void RainParticleManager::display() const {
-	ParticleManager::display();	
+	ParticleManager::display();
 	displayRainFog();
 }
 
@@ -61,7 +61,7 @@ void RainParticleManager::refresh() {
 		//w.setWind(windForce);
 	}
 
-	// Gestion du vent 
+	// Gestion du vent
 	if (m_active) {
 		if (m_countWind < 2000 && m_countWind != 0) {
 			m_countWind += m_sens;
@@ -92,7 +92,7 @@ void RainParticleManager::playRain(int idSprite, float acceleration, float densi
 		//ajoute une particule gravitationnelle d'id 0
 	}
 
-	m_rainWeather.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Meteo"FILE_SEPARATOR"gloomy.png", -1, -1, -1, 128);
+	m_rainWeather.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Meteo" FILE_SEPARATOR "gloomy.png", -1, -1, -1, 128);
 	m_t0 = SDL_GetTicks();
 
 }

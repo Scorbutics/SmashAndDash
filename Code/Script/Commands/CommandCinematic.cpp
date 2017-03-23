@@ -49,7 +49,7 @@ std::string CommandCinematic::execute(ska::ScriptComponent&, std::vector<std::st
 
 
 	//TODO : notify GUI instead of generating a messageBox...
-	//DialogMenu messageBox(message, "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", menuPos, 21);
+	//DialogMenu messageBox(message, "", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "menu.png", menuPos, 21);
 
 	//wScreen.getSpriteAnimationManager().reset();
 

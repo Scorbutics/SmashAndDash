@@ -20,7 +20,7 @@ void ska::AnimatedTexture::recalculateFrames(const unsigned int horizontalFrames
 	m_anim.setVertical(isVertical);
 	const unsigned int width = m_sprite.getWidth() / horizontalFrames;
 	const unsigned int height = m_sprite.getHeight() / verticalFrames;
-	Rectangle frame = { 0, 0, width, height };
+	Rectangle frame = { 0, 0, static_cast<int>(width), static_cast<int>(height) };
 	m_anim.setOffsetAndFrameSize(frame);
 }
 

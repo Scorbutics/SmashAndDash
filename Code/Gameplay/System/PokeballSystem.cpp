@@ -3,18 +3,18 @@
 
 #define POWER 5
 
-PokeballSystem::PokeballSystem(ska::EntityManager& entityManager) : 
+PokeballSystem::PokeballSystem(ska::EntityManager& entityManager) :
 System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionComponent>(entityManager) {
-	m_sprite.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png", 4, 1, 4);
+	m_sprite.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball.png", 4, 1, 4);
 	m_sprite.setDelay(200);
-	m_openPokeball.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png", 1, 1, 1);
-	m_vortex.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png", 2, 1, 2, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 100);
+	m_openPokeball.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-openned.png", 1, 1, 1);
+	m_vortex.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-aura.png", 2, 1, 2, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 100);
 	m_vortex.setDelay(400);
 }
 
 PokeballSystem::~PokeballSystem() {
 
-	
+
 
 }
 
@@ -22,7 +22,7 @@ void PokeballSystem::refresh() {
 	for (ska::EntityId entityId : m_processed) {
 		PokeballComponent& pokec = m_entityManager.getComponent<PokeballComponent>(entityId);
 		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
-		
+
 		if (!pokec.started) {
 			throwBall(entityId);
 		}
@@ -100,7 +100,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 	}
 
 	//on adapte la vitesse à la distance à parcourir pour éviter de privilégier les lancers de pokeball courts.
-	pokec.speed = abs(pokec.finalPos.x - pc.x) / 30 + 1; 
+	pokec.speed = abs(pokec.finalPos.x - pc.x) / 30 + 1;
 
 
 	//calcul (au préalable fait sur papier) des coefficients de la parabole en fonction de la position du heros et de l'endroit voulu du lancer.
@@ -113,7 +113,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 	pokec.b = p - pokec.a*(rightPos.x + leftPos.x);
 	pokec.c = leftPos.y - pokec.a*leftPos.x*leftPos.x - pokec.b*leftPos.x;
 
-	
+
 	/* Initialisation logique (états) */
 	pokec.started = true;
 	pokec.isInactive = false;

@@ -89,7 +89,7 @@ void AI::act(Fight& fight)
         }
 
 
-	/*Character* trainer = wScreen.getEntityFactory().getTrainer();
+	Character* trainer = wScreen.getEntityFactory().getTrainer();
 	//mouvements aléatoires du dresseur durant un combat
 	if ((long)(SDL_GetTicks() - m_trainerT0) >= m_trainerTimer)
 	{
@@ -102,12 +102,12 @@ void AI::act(Fight& fight)
 			direction = ska::RectangleUtils::getDirectionFromPos(posPkmn, posTrainer) - 1;
 		else
 			trainer->getPath()->setPathString("");
-		
+
 
 		if (r == 0 || r == 1)
 		{
 			pathChar[0] = GetCharFromDirection(direction % 4);
-			trainer->getPath()->setPathString(pathChar);			
+			trainer->getPath()->setPathString(pathChar);
 		}
 		m_trainerT0 = SDL_GetTicks();
 	}
@@ -128,4 +128,4 @@ void AI::act(Fight& fight)
 		fight.end(EndFightReason::Win);
 	}
 }*/
-	
+

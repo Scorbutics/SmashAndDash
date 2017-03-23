@@ -4,7 +4,7 @@
 #include "../../Events/ClickEventListener.h"
 
 
-const std::string& ska::Button::MENU_DEFAULT_THEME_PATH = "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"default_theme"FILE_SEPARATOR;
+const std::string& ska::Button::MENU_DEFAULT_THEME_PATH = "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "default_theme" FILE_SEPARATOR;
 
 ska::Button::Button(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, const Rectangle* clip, ClickEventHandler const& callback) :
 Hoverable<ValueChangedEventListener<bool>, ClickEventListener>(parent),

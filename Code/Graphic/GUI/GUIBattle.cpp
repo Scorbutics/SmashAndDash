@@ -67,7 +67,7 @@ bool GUIBattle::onBattleStart(BattleEvent& be) {
 }
 
 /* TODO put the sprite in the GUI */
-//m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
+//m_icone.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
 
 void GUIBattle::eventUpdate(bool) {
 	//if (m_moves.isVisible()) {

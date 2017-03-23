@@ -40,9 +40,9 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 	/* Hero use case */
 	if (id == "0") {
 		const std::string& fichier = mapName;
-		const std::string buf = ".\\Levels"FILE_SEPARATOR""
+		const std::string buf = ".\\Levels" FILE_SEPARATOR ""
 			+ fichier
-			+ ""FILE_SEPARATOR""
+			+ "" FILE_SEPARATOR ""
 			+ fichier
 			+ ".ini";
 
@@ -83,9 +83,9 @@ void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 
 	//wScreen.transition(0);
 
-	buf = ".\\Levels"FILE_SEPARATOR""
+	buf = ".\\Levels" FILE_SEPARATOR ""
 		+ fichier.substr(0, fichier.find_last_of("."))
-		+ ""FILE_SEPARATOR""
+		+ "" FILE_SEPARATOR ""
 		+ fichier.substr(0, fichier.find_last_of("."))
 		+ ".ini";
 

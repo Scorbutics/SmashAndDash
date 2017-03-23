@@ -11,8 +11,8 @@ m_chipsetName(chipsetName),
 m_iaRandomMovementSystem(ws.getEntityManager()),
 m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
 m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
-m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
 m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getEntityManager()),
+m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
 m_fightStartSystem(w, sh, ged, ws, ril, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_scriptSystem);
@@ -36,8 +36,8 @@ m_chipsetName(chipsetName),
 m_iaRandomMovementSystem(ws.getEntityManager()),
 m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
 m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
-m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
 m_scriptSystem(m_scriptAutoSystem, m_inputCManager, ws.getWorld(), ws.getEntityManager()),
+m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
 m_fightStartSystem(w, m_holder, ged, ws, m_inputCManager, ws.getPlayer()),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_scriptSystem);

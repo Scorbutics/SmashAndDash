@@ -7,10 +7,10 @@
 
 WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsigned int h):
 Window(title, w, h),
+m_soundManager(m_eventDispatcher),
 m_playerICM(m_rawInputListener),
 m_settings(m_eventDispatcher, "gamesettings.ini"),
-m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher),
-m_soundManager(m_eventDispatcher) {
+m_worldScene(m_entityManager, m_sceneHolder, m_playerICM, *this, m_settings, m_eventDispatcher) {
 
 	m_eventDispatcher.addMultipleObservers<ska::SoundEvent, ska::WorldEvent>(m_soundManager, m_soundManager);
 
@@ -27,7 +27,7 @@ m_soundManager(m_eventDispatcher) {
 	m_sceneHolder.nextScene(scene);
 	m_sceneHolder.update();
 
-	//m_inv.load("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"inventory_square_highlight.png");
+	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
 	m_fpsCalculator.setDisplayPriority(INT_MAX);
 
 }

@@ -26,9 +26,9 @@ m_gestionAnimVortex(175, 2, false) {
     m_isOpenning = m_isInactive = m_show = false;
 
 	setSprites(
-		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball.png",
-		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-openned.png",
-		"."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Fight"FILE_SEPARATOR"pokeball-aura.png");
+		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball.png",
+		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-openned.png",
+		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-aura.png");
 }
 
 void Pokeball::setSprites(const std::string& spriteName, const std::string& spriteOpenPokeball, const std::string& spritePokeballAura) {
@@ -120,19 +120,19 @@ void Pokeball::capture(/*Character* pkmn*/) {
 		//w.graphicUpdate(drawables);
 		m_sprite.render(buf.x, buf.y, &animPos);
 
-		/*		wScreen.getParticleManager().refresh();
+		wScreen.getParticleManager().refresh();
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
-		wScreen.getParticleManager().displayRainFog();*/
+		wScreen.getParticleManager().displayRainFog();
 
 		//Affiche la météo
-		/*if(*wScreen.getSettings().getFogActive())
+		if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
 		if(*wScreen.getSettings().getWeatherActive())
-			w.getWeather()->display();*/
+			w.getWeather()->display();
 
 
-	/*	wScreen.flip();
+	wScreen.flip();
 		SDL_Delay(30);
 	}
 
@@ -162,18 +162,18 @@ void Pokeball::capture(/*Character* pkmn*/) {
 		m_vortex.render(buf.x, buf.y, &animVortexPos);
 
 
-		/*wScreen.getParticleManager().refresh();
+		wScreen.getParticleManager().refresh();
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 		wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
-		wScreen.getParticleManager().displayRainFog();*/
+		wScreen.getParticleManager().displayRainFog();
 
 		//Affiche la météo
-		/*if(*wScreen.getSettings().getFogActive())
+		if(*wScreen.getSettings().getFogActive())
 			w.getFog()->display();
 		if(*wScreen.getSettings().getWeatherActive())
-			w.getWeather()->display();*/
+			w.getWeather()->display();
 
-	/*	wScreen.flip();
+		wScreen.flip();
 		SDL_Delay(30);
 		delay = SDL_GetTicks() - lastTime;
 	}
@@ -212,19 +212,19 @@ void Pokeball::capture(/*Character* pkmn*/) {
 		//	m_sprite.render(buf.x, buf.y, &animPos);
 
 
-			/*wScreen.getParticleManager().refresh();
+			wScreen.getParticleManager().refresh();
 			wScreen.getParticleManager().display(PARTICLE_MANAGER_CRUMBLING);
 			wScreen.getParticleManager().display(PARTICLE_MANAGER_RAIN);
-			wScreen.getParticleManager().displayRainFog();*/
+			wScreen.getParticleManager().displayRainFog();
 			//Affiche la météo
-			/*if(*wScreen.getSettings().getFogActive())
+			if(*wScreen.getSettings().getFogActive())
 				w.getFog()->display();
 			if(*wScreen.getSettings().getWeatherActive())
-				w.getWeather()->display();*/
+				w.getWeather()->display();
 
 
 
-		/*	wScreen.flip();
+			wScreen.flip();
 			SDL_Delay(30);
 			delay = SDL_GetTicks() - lastTime;
 		}
@@ -235,7 +235,7 @@ void Pokeball::capture(/*Character* pkmn*/) {
 	else
 	{
 		wScreen.getPokemonManager().add(pkmn);
-		/*wScreen.getFight().end(EndFightReason::Capture);*/
+		wScreen.getFight().end(EndFightReason::Capture);*/
 	//}
 
 }

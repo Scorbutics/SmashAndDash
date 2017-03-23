@@ -39,11 +39,11 @@ void ska::Chipset::load() {
 	m_whiteColor = SDL_MapRGB(m_sChipset.getFormat(), 255, 255, 255);
 
     const std::string& chipsetFolder = m_chipsetName.substr(0, m_chipsetName.find_last_of('.'));
-	std::ifstream scriptList((chipsetFolder + ""FILE_SEPARATOR"scripts.txt").c_str(), std::ifstream::in);
+	std::ifstream scriptList((chipsetFolder + "" FILE_SEPARATOR "scripts.txt").c_str(), std::ifstream::in);
 	std::string ss;
 
 	if (scriptList.fail()) {
-		throw FileException("Erreur lors de l'ouverture du fichier \"" + chipsetFolder + ""FILE_SEPARATOR"scripts.txt" + "\", fichier de scripts du chipset. " + std::string(SDL_GetError()));
+		throw FileException("Erreur lors de l'ouverture du fichier \"" + chipsetFolder + "" FILE_SEPARATOR "scripts.txt" + "\", fichier de scripts du chipset. " + std::string(SDL_GetError()));
 	}
 
 	while (getline(scriptList, ss)) {
@@ -58,7 +58,7 @@ void ska::Chipset::load() {
 
 void ska::Chipset::fillScript(const std::string& chipsetFolder, const std::string& id, const ScriptTriggerType& type) {
 	std::ifstream currentScript;
-	const std::string fullName = chipsetFolder + ""FILE_SEPARATOR"Scripts"FILE_SEPARATOR"" + id + "_" + (char)(type + '0') + ".txt";
+	const std::string fullName = chipsetFolder + "" FILE_SEPARATOR "Scripts" FILE_SEPARATOR "" + id + "_" + (char)(type + '0') + ".txt";
 	currentScript.open(fullName, std::ios_base::in);
 	if (currentScript.fail()) {
 		return;
@@ -87,7 +87,7 @@ std::vector<ska::ScriptSleepComponent*> ska::Chipset::getScript(const std::strin
 		autoBlackList = true;
 	} else if(!id.empty()) {
 		const std::string fullId = id + "_" + (char)(reason + '0');
-		const std::string fullName = m_chipsetName.substr(0, m_chipsetName.find_last_of('.')) + ""FILE_SEPARATOR"Scripts"FILE_SEPARATOR"" + fullId + ".txt";
+		const std::string fullName = m_chipsetName.substr(0, m_chipsetName.find_last_of('.')) + "" FILE_SEPARATOR "Scripts" FILE_SEPARATOR "" + fullId + ".txt";
 		if (m_triggeredScripts.find(fullName) != m_triggeredScripts.end()) {
 			result.push_back(&m_triggeredScripts.at(fullName));
 		}

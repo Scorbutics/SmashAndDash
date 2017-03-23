@@ -42,7 +42,7 @@ void ska::ButtonSprite::move(const Point<int>& pos) {
 	const auto& box = getBox();
 
 	Rectangle placeHolderRect = Rectangle{ 0, 0, box.w, box.h };
-	m_rect = m_clip.w == 0 ? Rectangle{ 0, 0, m_img.getWidth(), m_img.getHeight() } : m_clip;
+	m_rect = m_clip.w == 0 ? Rectangle{ 0, 0, static_cast<int>(m_img.getWidth()), static_cast<int>(m_img.getHeight()) } : m_clip;
 	m_rect = RectangleUtils::posToCenterPicture(m_rect, placeHolderRect);
 	Widget::move(pos);
 }

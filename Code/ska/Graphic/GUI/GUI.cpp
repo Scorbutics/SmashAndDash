@@ -15,7 +15,7 @@ m_playerICM(playerICM),
 m_hovered(nullptr),
 m_clicked(nullptr),
 m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
-m_wMaster(this, this, this, Rectangle{ 0, 0, w.getWidth(), w.getHeight() }, "") {
+m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
 	m_wAction = addWindow(std::make_unique<TimeScrollableWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
 	DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
@@ -64,7 +64,7 @@ void ska::GUI::initButtons(const Window& w) {
 	m_wAction->setName("ACTIONS");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"pokedex.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "pokedex.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
 	auto secondButton = std::make_unique<GUIScrollButtonWindowIG>(*m_wAction, buf, Button::MENU_DEFAULT_THEME_PATH + "menu");
 	secondButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(std::move(secondButton));
@@ -72,7 +72,7 @@ void ska::GUI::initButtons(const Window& w) {
 	//m_buttonList[1]->setActionClic("pokedex");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"bag.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "bag.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
 	auto thirdButton = std::make_unique<GUIScrollButtonWindowIG>(*m_wAction, buf, Button::MENU_DEFAULT_THEME_PATH + "menu");
 	thirdButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(std::move(thirdButton));
@@ -84,7 +84,7 @@ void ska::GUI::initButtons(const Window& w) {
 	});*/
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"card.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "card.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
 	auto fourthButton = std::make_unique<GUIScrollButtonWindowIG>(*m_wAction, buf, Button::MENU_DEFAULT_THEME_PATH + "menu");
 	fourthButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	m_wAction->addWidget(std::move(fourthButton));
@@ -92,7 +92,7 @@ void ska::GUI::initButtons(const Window& w) {
 	//m_buttonList[3]->name("Carte dresseur");
 
     buf.x += 5*TAILLEBLOCFENETRE/2;
-	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR"tape.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"toolsmenu.png", buf, 22, false)));
+	//m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "tape.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
 	auto fifthButton = std::make_unique<GUIScrollButtonWindowIG>(*m_wAction, buf, Button::MENU_DEFAULT_THEME_PATH + "menu");
 	fifthButton->addHandler<HoverEventListener>(scrollButtonLambda);
 	std::unique_ptr<ButtonSprite> bsFifth = std::make_unique<ButtonSprite>(*fifthButton, Point<int>(1, 1), "", 104, [&](Widget*, const ClickEvent& e) {
@@ -173,7 +173,7 @@ void ska::GUI::refreshMouse() {
 		ClickEvent ce(MOUSE_CLICK, pMp);
 		ClickObservable::notifyObservers(ce);
 		m_clicked = ce.getTarget();
-	
+
 		auto lastFocused = m_lastFocused;
 		if (m_clicked != nullptr) {
 			FocusEvent fe(m_clicked, MOUSE_FOCUS);
@@ -181,7 +181,7 @@ void ska::GUI::refreshMouse() {
 			if(fe.getTarget() != nullptr) {
 				m_playerICM.disableContext(CONTEXT_MAP, true);
 			}
-			
+
 			m_lastFocused = m_clicked;
 		}
 
@@ -292,7 +292,7 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
 
         buf.x = 6*TAILLEBLOCFENETRE+TAILLEBLOCFENETRE/2;
         buf.y = TAILLEBLOCFENETRE*3/4;
-        m_pokeInfoWindow->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
+        m_pokeInfoWindow->addButtonClose("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button_active.png", buf);
         buf.x = TAILLEBLOCFENETRE/2;
         buf.y = TAILLEBLOCFENETRE/2;
         m_pokeInfoWindow->addTextArea("Type 1 : " + pokemon->getDescriptor()->getType(1), 20, buf);
@@ -311,9 +311,9 @@ void GUI::resetInfoPokemonWindow(Character* pokemon)
         m_facesetPkmn->deleteAll();
         id = pokemon->getID();
 		if (id >= 0) {
-			ss << "."FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" << id << ".png";
+			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << id << ".png";
 		} else {
-			ss << "."FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" << -id << ".png";
+			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << -id << ".png";
 		}
 
         buf.x = TAILLEBLOCFENETRE/2;
@@ -338,7 +338,7 @@ void GUI::resetInfoPNJWindow(Character* pnj)
 
         buf.x = 4*TAILLEBLOCFENETRE+TAILLEBLOCFENETRE/2;
         buf.y = TAILLEBLOCFENETRE/2;
-        m_pnjInfoWindow->addButtonClose("."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button.png", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"close_button_active.png", buf);
+        m_pnjInfoWindow->addButtonClose("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button_active.png", buf);
 		ska::Rectangle rectSrcBuf;
         rectSrcBuf.x = 0;
         rectSrcBuf.y = pnj->getSprite()->getHeight()*2 /8;
@@ -363,9 +363,9 @@ void GUI::resetInfoPNJWindow(Character* pnj)
         m_facesetOpponent->deleteAll();
         id = pnj->getID();
 		if (id >= 0) {
-			ss << "."FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" << id << ".png";
+			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << id << ".png";
 		} else {
-			ss << "."FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" << -id << ".png";
+			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << -id << ".png";
 		}
 
         buf.x = TAILLEBLOCFENETRE/2;

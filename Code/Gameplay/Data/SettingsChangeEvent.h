@@ -3,11 +3,10 @@
 
 class Settings;
 
-	
+
 struct SettingsChangeEvent {
-	SettingsChangeEvent(SettingsChangeEventType scet, const Settings& s) : 
-		eventType(scet), 
-		settings(s) {
+	SettingsChangeEvent(SettingsChangeEventType scet, const Settings& s) :
+		settings(s), eventType(scet) {
 	}
 
 	void operator=(const SettingsChangeEvent&) = delete;

@@ -35,7 +35,7 @@ std::string CommandChoice::execute(ska::ScriptComponent&, std::vector<std::strin
 			buf = "pnj" + ska::StringUtils::intToStr(abs(atoi(fname.c_str())));
 	}
 
-	/*MessageDialogBox box(texte, (fname != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + buf + ".png" : ""), wScreen.getHeight(), wScreen.getWidth());
+	/*MessageDialogBox box(texte, (fname != "f" ? "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" + buf + ".png" : ""), wScreen.getHeight(), wScreen.getWidth());
 	ska::Rectangle menuPos = box.getRect();
 
 	choicePos = menuPos;
@@ -48,9 +48,9 @@ std::string CommandChoice::execute(ska::ScriptComponent&, std::vector<std::strin
 		choicePos.x = wScreen.getWidth() - choicePos.w;
 	}
 
-	DialogMenu choice("Entrée:Oui¤Echap:Non", "", "."FILE_SEPARATOR"Menu"FILE_SEPARATOR"menu.png", choicePos, 22);
+	DialogMenu choice("Entrée:Oui¤Echap:Non", "", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "menu.png", choicePos, 22);
 	*/
 	//ska::ScriptUtils::setValueFromVarOrSwitchNumber(script.parent->getSavegame(), script.extendedName, var, doAction ? "1" : "0", script.varMap);
-	
+
 	return "";
 }

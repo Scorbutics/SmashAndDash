@@ -38,7 +38,7 @@ std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::ve
 	ska::HitboxComponent& hitboxComponent = m_entityManager.getComponent<ska::HitboxComponent>(internalEntity);
 
 	ska::Rectangle pos1, pos2;
-	ska::Rectangle entityPos = { positionComponent.x + hitboxComponent.xOffset, positionComponent.y + hitboxComponent.yOffset, hitboxComponent.width, hitboxComponent.height};
+	ska::Rectangle entityPos = { positionComponent.x + hitboxComponent.xOffset, positionComponent.y + hitboxComponent.yOffset, static_cast<int>(hitboxComponent.width), static_cast<int>(hitboxComponent.height)};
 
 	pos1.x = ska::StringUtils::strToInt(posFromX);
 	pos1.y = ska::StringUtils::strToInt(posFromY);

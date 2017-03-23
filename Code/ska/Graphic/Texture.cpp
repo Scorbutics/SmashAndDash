@@ -67,7 +67,7 @@ int ska::Texture::render(int x, int y, const Rectangle* clip) const {
 
 	checkWindow();
 
-	Rectangle destBuf = { x, y, m_value->m_w, m_value->m_h };
+	Rectangle destBuf = { x, y, static_cast<int>(m_value->m_w), static_cast<int>(m_value->m_h) };
 
 	if( clip != nullptr ) {
 		destBuf.w = clip->w;

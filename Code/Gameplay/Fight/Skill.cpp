@@ -69,7 +69,7 @@ void Projectile::refresh()
 
 			particlePos = m_particles[i]->getPos();
 			particleOrigin = m_particles[i]->getOrigin();
-/*
+
 			particleOrigin.x += wScreen.getORel().x;
 			particleOrigin.y += wScreen.getORel().y;*/
 			/*distance = ska::RectangleUtils::distanceSquared(particlePos, particleOrigin);
@@ -120,7 +120,7 @@ void AOE::refresh()
 {
 	WGameCore& wScreen = WGameCore::getInstance();
 
-	/*if(!wScreen.getFight().isFighting() || !m_active)
+	if(!wScreen.getFight().isFighting() || !m_active)
 		return;
 
 	Character* pkmn = wScreen.getFight().getPokemon();
@@ -250,7 +250,7 @@ Melee::~Melee()
 	m_type = data->getString("Description type");
 	m_context = data->getInt("Description context");
 	m_id = data->getInt("Description id");
-	m_icone.load("."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Icones"FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	m_icone.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png", DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
 
 	m_cooldown = data->getInt("Stats cooldown");
 	m_range = data->getInt("Stats blocks_range");
@@ -308,7 +308,7 @@ void Projectile::launch(ska::Point<int> dest)
        angle += (float)M_PI;
 
 	m_direction = ska::RectangleUtils::getDirectionFromPos(buf, dest);
-/*
+
     buf.x -= wScreen.getORel().x;
     buf.y -= wScreen.getORel().y;
 
@@ -362,7 +362,7 @@ void Projectile::collision()
     //Rectangle mousePos = wScreen.getInputListener().getInput()->getMousePos();
     //int speed;
 
-   /* for(int i = 0; i < m_nombre; i++)
+ for(int i = 0; i < m_nombre; i++)
     {
 			idChar = m_particles[i]->collisionNPC();
 			size_t idCharSize = idChar.size();

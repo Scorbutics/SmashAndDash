@@ -6,7 +6,7 @@
 #include "../../ska/Utils/FileUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 
-SavegameManager::SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename): 
+SavegameManager::SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_ged(ged) {
 	m_pathname = filename;
 }
@@ -58,8 +58,8 @@ void SavegameManager::saveGame(const std::string& pathname) {
 	saveTrainer();
 	savePokemonTeam();
 
-	SwitchesWriting(m_game_switches, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR +m_pathname + FILE_SEPARATOR"switches.ini");
-	VariablesWriting(m_game_variables, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"variables.ini");
+	SwitchesWriting(m_game_switches, "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "switches.ini");
+	VariablesWriting(m_game_variables, "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "variables.ini");
 }
 
 std::string SavegameManager::getSaveName() const {
@@ -71,10 +71,10 @@ void SavegameManager::loadGame(const std::string& pathname) {
 	loadTrainer();
 	loadPokemonTeam();
 
-	SwitchesAcquisition(m_game_switches, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR +m_pathname + FILE_SEPARATOR"switches.ini");
-	VariablesAcquisition(m_game_variables, "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"variables.ini");
+	SwitchesAcquisition(m_game_switches, "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "switches.ini");
+	VariablesAcquisition(m_game_variables, "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "variables.ini");
 
-	std::ofstream tmpScriptList(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"tmpscripts.data").c_str(), std::ios::trunc);
+	std::ofstream tmpScriptList(("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "tmpscripts.data").c_str(), std::ios::trunc);
 }
 
 void SavegameManager::savePokemonTeam() {
@@ -83,23 +83,23 @@ void SavegameManager::savePokemonTeam() {
 
 	for (unsigned int i = 0; i < 6; i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);
-		remove(("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini").c_str());
+		remove(("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini").c_str());
 	}
 
 
 	/*for(unsigned int i = 0; i < wScreen.getPokemonManager().getPokemonTeamSize(); i++)
 	{
 		const std::string& id = ska::StringUtils::intToStr(i);
-		ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
+		ofstream of("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
 		of.close();
-		reader.load("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
+		reader.load("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
 		if(reader.isLoaded())
 		{
 			Character* pkmn = wScreen.getPokemonManager().getPokemon(i);
 			reader.set("Data id", pkmn->getID());
 			reader.set("Data experience", pkmn->getStatistics()->getExperience());
 			reader.set("Stats hp", pkmn->getHp());
-			reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR + id + ".ini");
+			reader.save("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
 		}
 	}*/
 }
@@ -108,19 +108,19 @@ void SavegameManager::loadPokemonTeam() {
 	ska::IniReader pkmnReader;
 	unsigned int index = 0;
 
-	const auto basePath = "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team" + FILE_SEPARATOR;
+	const auto basePath = "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR;
 
 	do {
 		const std::string& id = ska::StringUtils::intToStr(index);
 		pkmnReader.load(basePath + id + ".ini");
 		if(pkmnReader.isLoaded()) {
-			
+
 
 			const auto charId = pkmnReader.get<int>("Data id");
 			const auto charExp = pkmnReader.get<unsigned int>("Data experience");
 			const auto charHp = pkmnReader.get<unsigned int>("Stats hp");
-			
-			const auto pokemonDBPath = "."FILE_SEPARATOR"Data"FILE_SEPARATOR"Monsters"FILE_SEPARATOR + ska::StringUtils::intToStr(charId) + ".ini";
+
+			const auto pokemonDBPath = "." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(charId) + ".ini";
 			ska::IniReader detailsReader(pokemonDBPath);
 			EntityLoadEvent ele(detailsReader, charId, charHp);
 			ele.stats->setExperience(charExp);
@@ -145,29 +145,29 @@ const std::string& SavegameManager::getPathName() {
 
 void SavegameManager::saveTrainer() {
 	//Character* hero;
-	std::ofstream of("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	std::ofstream of("." FILE_SEPARATOR " Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
 
 	if(of.fail()) {
-		ska::FileUtils::createDirectory("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname);
-		ska::FileUtils::createDirectory("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"Team");
+		ska::FileUtils::createDirectory("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname);
+		ska::FileUtils::createDirectory("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team");
 
-		of.open("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+		of.open("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 	}
 
-	/*ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	/*ska::IniReader reader("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 
 	hero = wScreen.getEntityFactory().getTrainer();
 	reader.set("Trainer start_posx", hero->getHitboxCenterPos().x/TAILLEBLOC);
 	reader.set("Trainer start_posy", hero->getHitboxCenterPos().y/TAILLEBLOC);
 	reader.set("Trainer start_map_name", wScreen.getWorld().getName());
-	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");*/
+	reader.save("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");*/
 
 	saveItems();
 }
 
 void SavegameManager::saveItems() {
-	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	ska::IniReader reader("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	for(unsigned int i = 0; i < wScreen.getInventory().getSize(); i++)
 	{
@@ -175,20 +175,21 @@ void SavegameManager::saveItems() {
 		reader.set("Items " + id + "_id", wScreen.getInventory().getObjectFromIndex(i)->getID());
 		reader.set("Items " + id + "_amount", wScreen.getInventory().getAmountFromIndex(i));
 	}*/
-	reader.save("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	reader.save("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 }
 
 void SavegameManager::loadTrainer() {
 
-	unsigned int startPosx, startPosy;
-	ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_pathname + FILE_SEPARATOR"trainer.ini");
+	ska::IniReader reader("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
 	//WGameCore& wScreen = WGameCore::getInstance();
 
+	/*
+	TODO
 	startPosx = reader.get<int>("Trainer start_posx");
-	startPosy = reader.get<int>("Trainer start_posy");
+	startPosy = reader.get<int>("Trainer start_posy");*/
 	m_startMapName = reader.get<std::string>("Trainer start_map_name");
 
-	std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+	std::string buf = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR;
 	buf += m_startMapName;
 	buf +=  FILE_SEPARATOR;
 	buf += m_startMapName;

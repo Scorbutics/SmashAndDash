@@ -43,11 +43,11 @@ private:
 	const std::string m_chipsetName;
 
 	ska::IARandomMovementSystem m_iaRandomMovementSystem;
+	ska::IADefinedMovementSystem m_iaDefinedMovementSystem;
 	MobSpawningSystem m_mobSpawningSystem;
 
 	ska::ScriptRefreshSystem m_scriptSystem;
 	ScriptCommandsSystem m_scriptAutoSystem;
-	ska::IADefinedMovementSystem m_iaDefinedMovementSystem;
 
 	FightStartSystem m_fightStartSystem;
 	ska::CameraFollowSystem m_cameraSystem;

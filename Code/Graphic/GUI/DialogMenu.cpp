@@ -18,12 +18,12 @@ TimeScrollableWindowIG<>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_D
 m_fontSize(fontSize),
 m_ligne(0),
 m_sensScroll(F_OUT),
-m_timeout(timeout), 
+m_timeout(timeout),
 m_t0(0),
-m_show(false), 
-m_scroll(scroll), 
+m_show(false),
+m_scroll(scroll),
 m_alpha(false),
-m_moving(false), 
+m_moving(false),
 m_isScrolling(false) {
 	m_scrollingRect = getBox();
 	m_scrollingRect.y += m_scrollingRect.h;
@@ -72,13 +72,13 @@ void DialogMenu::display() const {
 	if(!isVisible()) {
 		return;
 	}
-	
+
 
 	TimeScrollableWindowIG<>::display();
 
 	/* Draw the associated image */
 	//m_image.render(m_rectImage.x, m_rectImage.y);
-	
+
 	/* Draw the text */
 	if (!m_stext.empty()) {
 		ska::Point<int> textPos;
@@ -86,7 +86,7 @@ void DialogMenu::display() const {
 		textPos.y = RECT_OFFSET + m_scrollingRect.y + m_fontSize / 2;
 
 		for (unsigned int i = 0; i <= m_ligne; i++) {
-			ska::Rectangle textClip = { 0, 0, 0, m_stext[0].getHeight() };
+			ska::Rectangle textClip = { 0, 0, 0, static_cast<int>(m_stext[0].getHeight()) };
 
 			if (i == m_ligne) {
 				if (m_scrollTextLengthPerLine[m_ligne] < m_stext[m_ligne].getWidth()) {
@@ -102,7 +102,7 @@ void DialogMenu::display() const {
 			textPos.y += m_fontSize;
 		}
 	}
-	
+
 
 }
 
@@ -154,9 +154,9 @@ bool DialogMenu::refresh() {
 	//m_rectImage = ska::RectangleUtils::posToCenterPicture(m_rectImage, m_scrollingRect);
 
 	/* Text scrolling */
-	if (!m_stext.empty()) {		
-		ska::Rectangle textClip = { 0, 0, 0, m_stext[0].getHeight() };
-	
+	if (!m_stext.empty()) {
+		ska::Rectangle textClip = { 0, 0, 0, static_cast<int>(m_stext[0].getHeight()) };
+
 		if (m_scrollTextLengthPerLine[m_ligne] < m_stext[m_ligne].getWidth()) {
 			m_scrollTextLengthPerLine[m_ligne] += 9.5;
 			//textClip.w += static_cast<int>(m_scrollTextLengthPerLine[m_ligne]);
@@ -233,7 +233,7 @@ bool DialogMenu::refresh() {
 // 			index--;
 // 		}
 // 	}
-//     
+//
 // 	return (index == 0) ? &(**(reinterpret_cast<std::unique_ptr<Inventory_Area>*> (&(m_areaList[i - 1])))) : NULL;    */
 // 	return nullptr;
 // }
@@ -243,7 +243,7 @@ void DialogMenu::modifyColor(ska::Color col) {
 	for (unsigned int i = 0; i < m_size; i++) {
 		m_stext[i].loadFromText(m_fontSize, m_text[i], m_color);
 	}
-    
+
 }
 
 // void DialogMenu::name(const std::string& name) {
@@ -254,12 +254,12 @@ void DialogMenu::modifyText(const std::string& texte) {
     m_stext.clear();
 	m_text.clear();
 	m_scrollTextLengthPerLine.clear();
-	
+
 
     {
         unsigned int j = 0;
         for(unsigned int i = 0; i < texte.size(); i++) {
-			
+
             if(i == 0 || texte[i] == '¤') {
                 m_text.push_back("");
                 m_stext.push_back(ska::Texture());
@@ -270,7 +270,7 @@ void DialogMenu::modifyText(const std::string& texte) {
 			if (j - 1 < m_text.size() && texte[i] != '¤') {
 				m_text[j - 1] += texte[i];
 			}
-			
+
         }
         m_size = j;
 
@@ -284,8 +284,8 @@ void DialogMenu::modifyText(const std::string& texte) {
 			setWidth((m_stext[j].getWidth() / TAILLEBLOCFENETRE + 1) * TAILLEBLOCFENETRE);
 		}
 	}
-        
-    
+
+
 
 }
 
@@ -295,14 +295,14 @@ void DialogMenu::resize(int w, int h) {
 }
 
 bool DialogMenu::isVisible(bool noScrolling) const {
-	return m_show || m_scroll && (!noScrolling && m_isScrolling);
+	return m_show || (m_scroll && (!noScrolling && m_isScrolling));
 }
 
 bool DialogMenu::isVisible() const {
 	return isVisible(false);
 }
 
-void DialogMenu::hide(bool hide) {   
+void DialogMenu::hide(bool hide) {
 
 	if (!m_scroll) {
 		m_show = !hide;
@@ -336,23 +336,23 @@ void DialogMenu::setAlpha(bool) {
 // void DialogMenu::addTextArea(const std::string& text, int fontSize, ska::Point<int> relativePos) {
 // 	m_widgets.push_back(std::unique_ptr<ska::Label>(new ska::Label(*this, text, fontSize, relativePos)));
 // }
-// 
+//
 // void DialogMenu::addImageArea(const std::string& name, bool alpha, ska::Point<int> relativePos, ska::Rectangle* rectSrc) {
 // 	m_widgets.push_back(std::unique_ptr<ska::Image>(new ska::Image(*this, name, relativePos, alpha)));
 // }
-// 
+//
 // void DialogMenu::addScrollText(const std::string& buttonAspect, int height, int width, const std::vector<std::string>& text, int fontSize, ska::Rectangle relativePos) {
 // 	//m_areaList.push_back(std::unique_ptr<Scroll_Text>(new Scroll_Text(m_playerICM, *this, buttonAspect, height, width, text, fontSize, relativePos)));
 // }
-// 
+//
 // void DialogMenu::addButton(ska::Rectangle relativePos, const std::string& styleName, const std::string& styleNamePressed, int* variable, const std::vector<int>& value, const std::vector<std::string>& displayedText, int fontSize, const std::string& key) {
 // 	//m_areaList.push_back(std::unique_ptr<Button>(new Button(*this, relativePos, styleName, styleNamePressed, variable, value, displayedText, fontSize, key, false)));
 // }
-// 
+//
 // void DialogMenu::addButtonBar(ska::Rectangle relativePos, const std::string& styleName, int* variable, const std::vector<int>& values, const std::vector<std::string>& displayedText, int fontSize, const std::string& key) {
 // 	//m_areaList.push_back(std::unique_ptr<Button_Bar>(new Button_Bar(*this, relativePos, styleName, variable, values, displayedText, fontSize, key)));
 // }
-// 
+//
 // ska::Widget* DialogMenu::getButton(const std::string& key) {
 // 	/* Si c'est pour faire ça, autant faire une unordered_map ....... */
 // 	/*for (auto& area : m_areaList) {
@@ -370,7 +370,7 @@ void DialogMenu::setAlpha(bool) {
 // 	buf.w = m_rect.w - relativePos.y;
 // 	//m_widgets.push_back(std::unique_ptr<Inventory_Area>(new Inventory_Area(*this, &inv, buf)));
 // }
-// 
+//
 // ska::ButtonQuit* DialogMenu::getCloseButton()
 // {
 // 	return m_closeButton.get();

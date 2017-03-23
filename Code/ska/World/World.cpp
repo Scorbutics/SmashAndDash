@@ -10,7 +10,7 @@
 
 ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :
 	m_blockSize(tailleBloc),
-	m_chipset("."FILE_SEPARATOR"Chipsets"FILE_SEPARATOR"corr.png"),
+	m_chipset("." FILE_SEPARATOR "Chipsets" FILE_SEPARATOR "corr.png"),
 	m_autoScriptsPlayed(false),
 	m_lTop(*this, &m_lMid),
 	m_lMid(*this, &m_lBot),
@@ -187,9 +187,9 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 	}
 
 	if (worldChanged || chipsetChanged) {
-		const std::string& botLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".bmp";
-		const std::string& midLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "M.bmp";
-		const std::string& topLayerName = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + "T.bmp";
+		const std::string& botLayerName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_genericName + "" FILE_SEPARATOR "" + m_genericName + ".bmp";
+		const std::string& midLayerName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_genericName + "" FILE_SEPARATOR "" + m_genericName + "M.bmp";
+		const std::string& topLayerName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_genericName + "" FILE_SEPARATOR "" + m_genericName + "T.bmp";
 		const std::string& eventLayerName = m_genericName + "E.txt";
 
 		m_lBot.clear();
@@ -308,7 +308,7 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBo
 
 	for (unsigned int x = 0; x != static_cast<unsigned int>(blockArea.w); x++) {
 		for (unsigned int y = 0; y != static_cast<unsigned int>(blockArea.h); y++) {
-			Rectangle rect{ x + blockArea.x, y + blockArea.y, hitBox.w, hitBox.h};
+			Rectangle rect{ static_cast<int>(x + blockArea.x), static_cast<int>(y + blockArea.y), hitBox.w, hitBox.h};
 			blocksPos.push_back(rect);
 		}
 	}
@@ -394,7 +394,7 @@ void ska::World::getMobSettingsFromData() {
 
 	unsigned int i = 0;
 	do  {
-		m_mobSettings.push_back(IniReader( "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"Monsters"FILE_SEPARATOR"" + StringUtils::intToStr(i) + ".ini"));
+		m_mobSettings.push_back(IniReader( "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_genericName + "" FILE_SEPARATOR "Monsters" FILE_SEPARATOR "" + StringUtils::intToStr(i) + ".ini"));
 		i++;
 	} while(m_mobSettings[i-1].isLoaded());
 
@@ -404,7 +404,7 @@ void ska::World::getMobSettingsFromData() {
 }
 
 void ska::World::getData() {
-    std::string stringDataFile = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR"" + m_genericName + ""FILE_SEPARATOR"" + m_genericName + ".ini";
+    std::string stringDataFile = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + m_genericName + "" FILE_SEPARATOR "" + m_genericName + ".ini";
 
     getRainFromData(stringDataFile);
 	getMobSettingsFromData();

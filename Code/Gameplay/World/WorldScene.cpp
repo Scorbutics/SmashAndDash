@@ -19,25 +19,25 @@
 
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 Scene(sh, ril),
-m_entityManager(entityManager),
+m_screenW(w.getWidth()),
+m_screenH(w.getHeight()),
+m_loadedOnce(false),
+m_ged(ged),
+m_settings(settings), m_player(0),
 m_saveManager(ged, "save1"),
+m_entityManager(entityManager),
+m_cameraSystem(nullptr),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
-m_graphicSystem(nullptr, m_entityManager),
-m_shadowSystem(nullptr, m_entityManager),
-m_movementSystem(m_entityManager),
-m_gravitySystem(m_entityManager),
 m_forceSystem(m_entityManager),
+m_gravitySystem(m_entityManager),
+m_movementSystem(m_entityManager),
 m_daSystem(m_entityManager),
 m_deleterSystem(m_entityManager),
 m_inputSystem(m_inputCManager, m_entityManager),
-m_cameraSystem(nullptr),
-m_screenW(w.getWidth()),
-m_screenH(w.getHeight()),
+m_graphicSystem(nullptr, m_entityManager),
+m_shadowSystem(nullptr, m_entityManager),
 m_gui(w, ril, ged),
-m_settings(settings), m_player(0),
-	m_worldBGM(DEFAULT_BGM),
-m_ged(ged) {
-	m_loadedOnce = false;
+m_worldBGM(DEFAULT_BGM) {
 
 	m_graphics.push_back(&m_graphicSystem);
 	m_graphics.push_back(&m_shadowSystem);
@@ -85,7 +85,7 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead(m_world.getLayerRenderable(1));
 
 	Scene::graphicUpdate(drawables);
-	
+
 	/* We use the maximum drawing priority of characters to draw the top layer */
 	m_world.getLayerRenderable(2).setPriority(m_graphicSystem.getTopLayerPriority());
 	drawables.add(m_world.getLayerRenderable(2));
@@ -103,7 +103,7 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 
 void WorldScene::eventUpdate(bool movingDisallowed) {
 	m_world.update();
-	
+
 	//GUI
 	m_gui.refresh();
 
@@ -200,7 +200,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 				ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
 				const ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
-				ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, hc.width, hc.height };
+				ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 				const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
 				pc.x = targetBlock.x - hc.xOffset;
@@ -216,17 +216,17 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 }
 
 std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fileName, std::string chipsetName) {
-	
+
 	m_world.load(fileName, chipsetName);
 	if (!m_loadedOnce) {
-		ska::IniReader reader("."FILE_SEPARATOR"Data"FILE_SEPARATOR"Saves"FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR"trainer.ini");
+		ska::IniReader reader("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_saveManager.getPathName() + FILE_SEPARATOR "trainer.ini");
 
 		ska::Point<int> startPos;
 		startPos.x = reader.get<int>("Trainer start_posx");
 		startPos.y = reader.get<int>("Trainer start_posy");
 		std::string startMapName = reader.get<std::string>("Trainer start_map_name");
 
-		std::string buf = "."FILE_SEPARATOR"Levels"FILE_SEPARATOR;
+		std::string buf = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR;
 		buf += startMapName;
 		buf += FILE_SEPARATOR;
 		buf += startMapName;
@@ -237,7 +237,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		if (startMapChipset == "STRINGNOTFOUND") {
 			throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
-		
+
 		m_player = m_entityManager.createTrainer(startPos, m_world.getBlockSize());
 
 		m_loadedOnce = true;

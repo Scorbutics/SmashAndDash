@@ -10,20 +10,18 @@
 #include "../../ska/Graphic/System/CameraSystem.h"
 
 Bar::Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
+m_entityManager(em),
+m_entityId(entityId),
+m_cameraSystem(cam),
 m_barStyle(barStyleName),
 m_barContent(barContentName),
-m_entityManager(em),
 m_maxValue(maxValue),
-m_cameraSystem(cam),
-m_entityId(entityId) {
-        
+m_visible(true) {
 	//const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
     m_barSize.w = static_cast<int>((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
     m_barSize.h = static_cast<int>((m_barStyle.getHeight() * 5) /6);
 	m_barSize.x = m_barStyle.getWidth() / 12;
 	m_barSize.y = m_barStyle.getHeight() / 12;
-
-    m_visible = true;
 
 	DrawableFixedPriority::setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
 }
@@ -44,7 +42,7 @@ void Bar::display() const {
 
 	m_barStyle.render(pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y);
 	m_barContent.render(pos.x + m_barSize.x - nonNullCamera.x, pos.y + m_barSize.y + offsetY - nonNullCamera.y, &rectSize);
-	
+
 }
 
 void Bar::setCurrentValue(unsigned int v) {

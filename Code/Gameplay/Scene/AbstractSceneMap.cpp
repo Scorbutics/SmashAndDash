@@ -10,10 +10,10 @@ AbstractNoGUISceneMap(sh, ril),
 SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
+m_window(w),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
 m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_entityCollisionResponse(ged, ws.getEntityManager()),
-m_window(w) {
+m_entityCollisionResponse(ged, ws.getEntityManager()) {
 	m_logics.push_back(&m_collisionSystem);
 }
 
@@ -22,10 +22,10 @@ AbstractNoGUISceneMap(oldScene),
 SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_worldScene(ws),
+m_window(w),
 m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
 m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_entityCollisionResponse(ged, ws.getEntityManager()),
-m_window(w) {
+m_entityCollisionResponse(ged, ws.getEntityManager()) {
 	m_logics.push_back(&m_collisionSystem);
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);

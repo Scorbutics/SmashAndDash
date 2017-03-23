@@ -29,7 +29,7 @@ std::string CommandMessage::execute(ska::ScriptComponent&, std::vector<std::stri
 
 	/* TODO Observer */
 
-	/*IDialogMenuPtr menu = IDialogMenuPtr(new MessageDialogBox(text, (talkerId != "f" ? "."FILE_SEPARATOR"Sprites"FILE_SEPARATOR"Facesets"FILE_SEPARATOR"" + imageId + ".png" : ""), wScreen.getHeight(), wScreen.getWidth()));
+	/*IDialogMenuPtr menu = IDialogMenuPtr(new MessageDialogBox(text, (talkerId != "f" ? "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" + imageId + ".png" : ""), wScreen.getHeight(), wScreen.getWidth()));
 	menu->hide(false);
 	wScreen.getGUI().addDialog(menu);*/
 
