@@ -148,11 +148,7 @@
 		<Unit filename="Graphic/GUI/Windows/WindowIG.h" />
 		<Unit filename="Graphic/GraphicComponent.h" />
 		<Unit filename="Graphic/HasShadowComponent.h" />
-		<Unit filename="Graphic/Point.h" />
 		<Unit filename="Graphic/PositionnedGraphicDrawable.h" />
-		<Unit filename="Graphic/PrefabEntityManager.cpp" />
-		<Unit filename="Graphic/PrefabEntityManager.h" />
-		<Unit filename="Graphic/Rectangle.h" />
 		<Unit filename="Graphic/SDLFont.cpp" />
 		<Unit filename="Graphic/SDLFont.h" />
 		<Unit filename="Graphic/SDLSurface.cpp" />
