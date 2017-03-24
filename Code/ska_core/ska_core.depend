@@ -79,3 +79,134 @@
 	"../SkaConstants.h"
 	<string>
 
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\component.cpp
+	"Component.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\componenthandler.h
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\staticcounterglobal.h
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\staticcounterglobal.cpp
+	"StaticCounterGlobal.h"
+
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\genericexception.cpp
+	"GenericException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\formalcalculation\formalcalculator.cpp
+	<sstream>
+	"FormalCalculator.h"
+	<iostream>
+	"CalculOperators.h"
+	"../../Utils/StringUtils.h"
+	"../../Utils/NumberUtils.h"
+	"../../Exceptions/ScriptSyntaxError.h"
+
+1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\formalcalculation\formalcalculator.h
+	<string>
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\formalcalculation\calculoperators.h
+
+1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\stringutils.h
+	<string>
+	<vector>
+
+1490353569 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490353457 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490353530 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\scriptsyntaxerror.h
+	"ScriptException.h"
+
+1490353494 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\scriptexception.h
+	"GenericException.h"
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.cpp
+	<cstdlib>
+	<cmath>
+	"NumberUtils.h"
+
+1490171500 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilsunix.cpp
+	"../SkaConstants.h"
+	<errno.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<unistd.h>
+	"FileUtilsUnix.h"
+	"../../Exceptions/FileException.h"
+	"../../Exceptions/InvalidPathException.h"
+
+1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\skaconstants.h
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilsunix.h
+	"../SkaConstants.h"
+	<string>
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\fileexception.h
+	"InputException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\inputexception.h
+	"GenericException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\invalidpathexception.h
+	"InputException.h"
+
+1490349771 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilswin.cpp
+	"../SkaConstants.h"
+	<Windows.h>
+	"FileUtilsWin.h"
+	"../../Exceptions/FileException.h"
+	"../../Exceptions/InvalidPathException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilswin.h
+	"../SkaConstants.h"
+	<string>
+
+1490171500 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\stringutils.cpp
+	"StringUtils.h"
+	"../Exceptions/NumberFormatException.h"
+	<string>
+	<sstream>
+	<algorithm>
+	<functional>
+	<cctype>
+	<locale>
+	<iomanip>
+	<codecvt>
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\numberformatexception.h
+	"GenericException.h"
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\timeutils.cpp
+	<SDL_timer.h>
+	"TimeUtils.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\timeutils.h
+
