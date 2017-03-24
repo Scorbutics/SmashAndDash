@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../Graphic/Rectangle.h"
-#include "../Graphic/Point.h"
+#include "Rectangle.h"
+#include "Point.h"
 
 namespace ska {
 	class RectangleUtils {
 	public:
 		static unsigned int distanceSquared(const Point<int>& pos1, const Point<int>& pos2);
-		
+
 		template <class T>
 		static bool isPositionInBox(const Point<T> &pos, const Rectangle &box) {
-			return((pos.x >= box.x) && (pos.x <= box.x + box.w) && (pos.y >= box.y) && (pos.y <= box.y + box.h));	
+			return((pos.x >= box.x) && (pos.x <= box.x + box.w) && (pos.y >= box.y) && (pos.y <= box.y + box.h));
 		}
 
 		static Rectangle intersect(const Rectangle& r1, const Rectangle& r2);

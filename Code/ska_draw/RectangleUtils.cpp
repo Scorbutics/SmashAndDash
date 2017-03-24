@@ -1,6 +1,6 @@
 #include <iostream>
-#include "RectangleUtils.h"
-#include "NumberUtils.h"
+#include "Utils/RectangleUtils.h"
+#include "Utils/NumberUtils.h"
 
 ska::RectangleUtils::RectangleUtils()
 {
@@ -19,7 +19,7 @@ bool ska::RectangleUtils::collisionBoxABoxB(const Rectangle& rectA, const Rectan
 	if (rectA.x > rectB.x + rectB.w || rectA.x + rectA.w < rectB.x) {
 		return false;
 	}
-	
+
 	if (rectA.y > rectB.y + rectB.h || rectA.y + rectA.h < rectB.y) {
 		return false;
 	}
@@ -44,7 +44,7 @@ ska::Rectangle ska::RectangleUtils::intersect(const Rectangle& r1, const Rectang
 		output.h = 0;
 	}
 	return output;
-	
+
 }
 
 //divise l'écran en 8 directions possibles en fonction de la position de la souris
@@ -69,9 +69,9 @@ int ska::RectangleUtils::getDirectionFromPos(const Point<int>& posHero, const Po
 
 	int direction;
 	//taux d'accroissement entre (TAILLEECRAN;TAILLEECRAN/3) et (0; TAILLEECRAN*2/3)
-	const double penteDiago1 = 1. / 3; 
+	const double penteDiago1 = 1. / 3;
 	//taux d'accroissement entre (TAILLEECRAN*2/3; 0) et (TAILLEECRAN/3;TAILLEECRAN)
-	const double penteDiago2 = 3.; 
+	const double penteDiago2 = 3.;
 
 	if (pente > penteDiago2) {
 		if (mousePos.y > posHero.y) {

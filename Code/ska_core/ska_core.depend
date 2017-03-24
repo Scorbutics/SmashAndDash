@@ -1,84 +1,4 @@
 # depslib dependency file v1.0
-1490171499 source:c:\documents\perso\dev\c++\ska_core\exceptions\genericexception.cpp
-	"GenericException.h"
-
-1490254140 c:\documents\perso\dev\c++\ska_core\exceptions\genericexception.h
-	<exception>
-	<string>
-
-1490254140 source:c:\documents\perso\dev\c++\ska_core\utils\formalcalculation\formalcalculator.cpp
-	<sstream>
-	"FormalCalculator.h"
-	<iostream>
-	"CalculOperators.h"
-	"../../Utils/StringUtils.h"
-	"../../Utils/NumberUtils.h"
-	"../../Exceptions/ScriptSyntaxError.h"
-
-1490171500 c:\documents\perso\dev\c++\ska_core\utils\formalcalculation\formalcalculator.h
-	<string>
-
-1490254140 c:\documents\perso\dev\c++\ska_core\utils\formalcalculation\calculoperators.h
-
-1490171500 c:\documents\perso\dev\c++\ska_core\utils\stringutils.h
-	<string>
-	<vector>
-
-1490353569 c:\documents\perso\dev\c++\ska_core\utils\numberutils.h
-	<functional>
-	"../Exceptions/IllegalArgumentException.h"
-
-1490353457 c:\documents\perso\dev\c++\ska_core\exceptions\illegalargumentexception.h
-	<string>
-	"GenericException.h"
-
-1490353530 c:\documents\perso\dev\c++\ska_core\exceptions\scriptsyntaxerror.h
-	"ScriptException.h"
-
-1490353494 c:\documents\perso\dev\c++\ska_core\exceptions\scriptexception.h
-	"GenericException.h"
-
-1490254140 source:c:\documents\perso\dev\c++\ska_core\utils\numberutils.cpp
-	<cstdlib>
-	<cmath>
-	"NumberUtils.h"
-
-1490171500 source:c:\documents\perso\dev\c++\ska_core\utils\osspecific\fileutilsunix.cpp
-	"../SkaConstants.h"
-	<errno.h>
-	<sys/types.h>
-	<sys/stat.h>
-	<unistd.h>
-	"FileUtilsUnix.h"
-	"../../Exceptions/FileException.h"
-	"../../Exceptions/InvalidPathException.h"
-
-1490171500 c:\documents\perso\dev\c++\ska_core\utils\skaconstants.h
-
-1490254140 c:\documents\perso\dev\c++\ska_core\utils\osspecific\fileutilsunix.h
-	"../SkaConstants.h"
-	<string>
-
-1490254140 c:\documents\perso\dev\c++\ska_core\exceptions\fileexception.h
-	"InputException.h"
-
-1490254140 c:\documents\perso\dev\c++\ska_core\exceptions\inputexception.h
-	"GenericException.h"
-
-1490254140 c:\documents\perso\dev\c++\ska_core\exceptions\invalidpathexception.h
-	"InputException.h"
-
-1490349771 source:c:\documents\perso\dev\c++\ska_core\utils\osspecific\fileutilswin.cpp
-	"../SkaConstants.h"
-	<Windows.h>
-	"FileUtilsWin.h"
-	"../../Exceptions/FileException.h"
-	"../../Exceptions/InvalidPathException.h"
-
-1490254140 c:\documents\perso\dev\c++\ska_core\utils\osspecific\fileutilswin.h
-	"../SkaConstants.h"
-	<string>
-
 1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\ecs\component.cpp
 	"Component.h"
 
@@ -116,6 +36,146 @@
 	<exception>
 	<string>
 
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputcontextmanager.cpp
+	"InputContextManager.h"
+	"KeyboardInputMapContext.h"
+	"KeyboardInputGUIContext.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputcontextmanager.h
+	<vector>
+	<bitset>
+	<unordered_map>
+	"InputContext.h"
+	"EnumContextManager.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputcontext.h
+	<unordered_map>
+	<memory>
+	"InputAction.h"
+	"InputRange.h"
+	"InputToggle.h"
+	"RawInputListener.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputaction.h
+	<bitset>
+
+1490361505 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputrange.h
+	<vector>
+	"../Point.h"
+
+1490367635 c:\documents\perso\dev\c++\smashanddash\code\ska_core\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490353569 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490353457 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\rectangle.h
+	<SDL.h>
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\inputtoggle.h
+	<bitset>
+
+1490361521 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\rawinputlistener.h
+	"KeyInput.h"
+	"MouseInput.h"
+	"../Rectangle.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyinput.h
+	<SDL.h>
+	<bitset>
+
+1490361515 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\mouseinput.h
+	"../Point.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\enumcontextmanager.h
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputmapcontext.h
+	"KeyboardInputContext.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputcontext.h
+	"InputContext.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputguicontext.h
+	"KeyboardInputContext.h"
+
+1490349771 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputcontext.cpp
+	<SDL.h>
+	"KeyboardInputContext.h"
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputguicontext.cpp
+	<SDL.h>
+	"KeyboardInputGUIContext.h"
+
+1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyboardinputmapcontext.cpp
+	<SDL.h>
+	"KeyboardInputMapContext.h"
+
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\keyinput.cpp
+	<iostream>
+	<string>
+	"KeyInput.h"
+
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\mouseinput.cpp
+	<cstring>
+	"MouseInput.h"
+
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\rawinputlistener.cpp
+	<iostream>
+	"RawInputListener.h"
+	"../Utils/SkaConstants.h"
+	"../Exceptions/TerminateProcessException.h"
+	"../Utils/StringUtils.h"
+
+1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\skaconstants.h
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\terminateprocessexception.h
+	"GenericException.h"
+
+1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\stringutils.h
+	<string>
+	<vector>
+
+1490171499 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\readers\inireader.cpp
+	<iostream>
+	<fstream>
+	<string>
+	<list>
+	<algorithm>
+	"IniReader.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\readers\inireader.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<sstream>
+	"../../Utils/StringUtils.h"
+	"../../Exceptions/InvalidPathException.h"
+	"../../Exceptions/IllegalArgumentException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\invalidpathexception.h
+	"InputException.h"
+
+1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\inputexception.h
+	"GenericException.h"
+
+1490349771 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\readers\readinifile.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"../../Utils/StringUtils.h"
+	"Readinifile.h"
+
+1490171499 c:\documents\perso\dev\c++\smashanddash\code\ska_core\inputs\readers\readinifile.h
+	<iostream>
+
+1490364466 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\point.cpp
+
 1490254140 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\formalcalculation\formalcalculator.cpp
 	<sstream>
 	"FormalCalculator.h"
@@ -129,18 +189,6 @@
 	<string>
 
 1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\formalcalculation\calculoperators.h
-
-1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\stringutils.h
-	<string>
-	<vector>
-
-1490353569 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.h
-	<functional>
-	"../Exceptions/IllegalArgumentException.h"
-
-1490353457 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\illegalargumentexception.h
-	<string>
-	"GenericException.h"
 
 1490353530 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\scriptsyntaxerror.h
 	"ScriptException.h"
@@ -163,19 +211,11 @@
 	"../../Exceptions/FileException.h"
 	"../../Exceptions/InvalidPathException.h"
 
-1490171500 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\skaconstants.h
-
 1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilsunix.h
 	"../SkaConstants.h"
 	<string>
 
 1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\fileexception.h
-	"InputException.h"
-
-1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\inputexception.h
-	"GenericException.h"
-
-1490254140 c:\documents\perso\dev\c++\smashanddash\code\ska_core\exceptions\invalidpathexception.h
 	"InputException.h"
 
 1490349771 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\osspecific\fileutilswin.cpp
