@@ -1,0 +1,61 @@
+#pragma once
+#include <vector>
+#include <typeinfo>
+#include <string>
+#include "ECSDefines.h"
+#include "StaticCounterGlobal.h"
+#include "ComponentSerializer.h"
+
+namespace ska {
+	template <typename T>
+	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer {
+
+	public:
+		ComponentHandler() {
+			m_components.resize(SKA_ECS_MAX_ENTITIES);
+			m_mask = m_componentTypeCounter++;
+		}
+
+		unsigned int addEmpty(EntityId) override {
+			/* We can add operations here depending of the ComponentHandler implementation */
+			return m_mask;
+		}
+
+		unsigned int add(EntityId entityId, const T& comp) {
+			m_components[entityId] = comp;
+			return m_mask;
+		}
+
+		unsigned int remove(EntityId) override {
+			/* We can add operations here depending of the ComponentHandler implementation */
+			return m_mask;
+		}
+
+		T& getComponent(const EntityId id) {
+			return m_components[id];
+		}
+
+		virtual std::string getComponentField(const EntityId id, const std::string& field) override {
+			return m_components[id].serialize(m_components[id], field, getClassName());
+		}
+
+		unsigned int getMask() const {
+			return m_mask;
+		}
+
+		virtual ~ComponentHandler() = default;
+
+		static const std::string& getClassName() {
+			static const auto fullClassName = std::string(typeid(T).name());
+			static const auto startPos = fullClassName.find_last_of(':');
+			static const auto& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
+			return name;
+		}
+
+	private:
+		std::vector<T> m_components;
+		unsigned int m_mask;
+	};
+
+
+}
