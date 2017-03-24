@@ -247,10 +247,8 @@
 		<Unit filename="Code/ska/ECS/ComponentSerializer.h" />
 		<Unit filename="Code/ska/ECS/ECSDefines.h" />
 		<Unit filename="Code/ska/ECS/EntityManager.h" />
-		<Unit filename="Code/ska/ECS/IGraphicSystem.h" />
 		<Unit filename="Code/ska/ECS/ISystem.h" />
 		<Unit filename="Code/ska/ECS/PrefabEntityManager.cpp" />
-		<Unit filename="Code/ska/ECS/PrefabEntityManager.h" />
 		<Unit filename="Code/ska/ECS/StaticCounterGlobal.cpp" />
 		<Unit filename="Code/ska/ECS/StaticCounterGlobal.h" />
 		<Unit filename="Code/ska/ECS/System.h" />
@@ -372,6 +370,8 @@
 		<Unit filename="Code/ska/Graphic/HasShadowComponent.h" />
 		<Unit filename="Code/ska/Graphic/Point.h" />
 		<Unit filename="Code/ska/Graphic/PositionnedGraphicDrawable.h" />
+		<Unit filename="Code/ska/Graphic/PrefabEntityManager.cpp" />
+		<Unit filename="Code/ska/Graphic/PrefabEntityManager.h" />
 		<Unit filename="Code/ska/Graphic/Rectangle.h" />
 		<Unit filename="Code/ska/Graphic/SDLFont.cpp" />
 		<Unit filename="Code/ska/Graphic/SDLFont.h" />
@@ -398,6 +398,7 @@
 		<Unit filename="Code/ska/Graphic/System/DeleterSystem.h" />
 		<Unit filename="Code/ska/Graphic/System/DirectionalAnimationSystem.cpp" />
 		<Unit filename="Code/ska/Graphic/System/DirectionalAnimationSystem.h" />
+		<Unit filename="Code/ska/Graphic/System/IGraphicSystem.h" />
 		<Unit filename="Code/ska/Graphic/Texture.cpp" />
 		<Unit filename="Code/ska/Graphic/Texture.h" />
 		<Unit filename="Code/ska/Graphic/TextureData.cpp" />
