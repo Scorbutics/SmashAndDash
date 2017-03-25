@@ -185,9 +185,9 @@ void ska::ScriptUtils::setValueFromVarOrSwitchNumber(Savegame& saveGame, const s
 	}
 	else if (varNumber[0] == '#' && varNumber[varNumber.size() - 1] == '#') {
 		varMap[varNumber + scriptExtendedName] = value;
+	} else {
+		saveGame.setGameVariable(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)) - 1, ska::StringUtils::strToInt(value));
 	}
-
-	saveGame.setGameVariable(ska::StringUtils::strToInt(varNumber.substr(1, varNumber.size() - 2)) - 1, ska::StringUtils::strToInt(value));
 
 }
 

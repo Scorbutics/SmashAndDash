@@ -14,6 +14,7 @@ m_window(w),
 m_playerICM(playerICM),
 m_hovered(nullptr),
 m_clicked(nullptr),
+m_lastFocused(nullptr),
 m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
 m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
