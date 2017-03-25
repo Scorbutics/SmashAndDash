@@ -50,6 +50,7 @@
 		<Unit filename="ECS/Basics/Graphic/CameraFocusedComponent.h" />
 		<Unit filename="ECS/Basics/Graphic/DebugGraphicComponent.h" />
 		<Unit filename="ECS/Basics/Graphic/DeleterComponent.h" />
+		<Unit filename="ECS/Basics/Graphic/DialogComponent.h" />
 		<Unit filename="ECS/Basics/Graphic/DirectionalAnimationComponent.h" />
 		<Unit filename="ECS/Basics/Input/InputComponent.h" />
 		<Unit filename="ECS/Basics/Physic/CollidableComponent.h" />
@@ -62,6 +63,7 @@
 		<Unit filename="ECS/Basics/Physic/WorldCollisionComponent.h" />
 		<Unit filename="ECS/Basics/Script/ScriptAwareComponent.h" />
 		<Unit filename="ECS/Basics/Script/ScriptPositionedGetter.h" />
+		<Unit filename="ECS/Basics/Script/ScriptRegisterer.h" />
 		<Unit filename="ECS/Basics/Script/ScriptSleepComponent.h" />
 		<Unit filename="ECS/Basics/Script/ScriptTriggerType.h" />
 		<Unit filename="ECS/Component.cpp" />
@@ -94,7 +96,6 @@
 		<Unit filename="Exceptions/TerminateProcessException.h" />
 		<Unit filename="Inputs/EnumContextManager.h" />
 		<Unit filename="Inputs/InputAction.h" />
-		<Unit filename="Inputs/InputComponent.h" />
 		<Unit filename="Inputs/InputContext.h" />
 		<Unit filename="Inputs/InputContextManager.cpp" />
 		<Unit filename="Inputs/InputContextManager.h" />

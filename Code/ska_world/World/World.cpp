@@ -112,9 +112,8 @@ void ska::World::update() {
 	m_lTop.getRenderable().update();
 }
 
-bool ska::World::canMoveToPos(Rectangle hitbox, std::vector<Point<int>>& output) const {
+bool ska::World::canMoveToPos(const Rectangle& hitbox, std::vector<Point<int>>& output) const {
 	Point<int> chd, chg, cbg;
-
 
 	//position coin haut droit hitbox
 	chd.x = hitbox.x + hitbox.w;

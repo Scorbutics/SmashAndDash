@@ -82,6 +82,8 @@
 		<Unit filename="Graphic/SpriteAnimation.h" />
 		<Unit filename="Graphic/SpriteAnimationManager.cpp" />
 		<Unit filename="Graphic/SpriteAnimationManager.h" />
+		<Unit filename="Graphic/System/AbstractGraphicSystem.cpp" />
+		<Unit filename="Graphic/System/AbstractGraphicSystem.h" />
 		<Unit filename="Graphic/System/CameraAware.h" />
 		<Unit filename="Graphic/System/CameraFixedSystem.cpp" />
 		<Unit filename="Graphic/System/CameraFixedSystem.h" />
@@ -95,7 +97,11 @@
 		<Unit filename="Graphic/System/DeleterSystem.h" />
 		<Unit filename="Graphic/System/DirectionalAnimationSystem.cpp" />
 		<Unit filename="Graphic/System/DirectionalAnimationSystem.h" />
+		<Unit filename="Graphic/System/GraphicSystem.cpp" />
+		<Unit filename="Graphic/System/GraphicSystem.h" />
 		<Unit filename="Graphic/System/IGraphicSystem.h" />
+		<Unit filename="Graphic/System/ShadowSystem.cpp" />
+		<Unit filename="Graphic/System/ShadowSystem.h" />
 		<Unit filename="Graphic/Texture.cpp" />
 		<Unit filename="Graphic/Texture.h" />
 		<Unit filename="Graphic/TextureData.cpp" />

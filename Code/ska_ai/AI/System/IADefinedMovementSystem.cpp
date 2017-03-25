@@ -3,7 +3,7 @@
 #include "Utils/PhysicUtils.h"
 #include "Utils/NumberUtils.h"
 #include "Utils/RectangleUtils.h"
-#include "../ScriptRegisterer.h"
+#include "ECS/Basics/Script/ScriptRegisterer.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
 ska::IADefinedMovementSystem::IADefinedMovementSystem(EntityManager& entityManager, ScriptRegisterer* scriptSystem) : System(entityManager), m_scriptSystem(scriptSystem) {

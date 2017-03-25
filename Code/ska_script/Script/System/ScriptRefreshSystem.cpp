@@ -10,8 +10,8 @@
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "ECS/Basics/Script/ScriptTriggerType.h"
 #include "ECS/Basics/Graphic/DebugGraphicComponent.h"
-#include "../ScriptPositionedGetter.h"
-#include "../BlockContainer.h"
+#include "ECS/Basics/Script/ScriptPositionedGetter.h"
+#include "Data/BlockContainer.h"
 
 ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc, EntityManager& entityManager) :
 ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),

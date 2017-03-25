@@ -56,7 +56,6 @@
 		<Unit filename="AI/Node.h" />
 		<Unit filename="AI/Path.cpp" />
 		<Unit filename="AI/Path.h" />
-		<Unit filename="AI/ScriptRegisterer.h" />
 		<Unit filename="AI/System/IADefinedMovementSystem.cpp" />
 		<Unit filename="AI/System/IADefinedMovementSystem.h" />
 		<Unit filename="AI/System/IARandomMovementSystem.cpp" />

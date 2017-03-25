@@ -16,6 +16,7 @@
 #include "LayerE.h"
 #include "ECS/Basics/Physic/CollisionProfile.h"
 #include "Data/BlockContainer.h"
+#include "ECS/Basics/Script/ScriptPositionedGetter.h"
 
 namespace ska {
 	class CameraSystem;
@@ -29,7 +30,8 @@ namespace ska {
 	    public HasGraphic,
 	    public CameraAware,
 	    public BlockContainer,
-	    public CollisionProfile {
+	    public CollisionProfile,
+	    public ScriptPositionedGetter {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		World(const World&) = delete;
@@ -63,7 +65,7 @@ namespace ska {
 
 		void getData();
 		bool isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex) const override;
-		bool canMoveToPos(Rectangle pos, std::vector<Point<int>>& output) const;
+		bool canMoveToPos(const Rectangle& hitbox, std::vector<Point<int>>& output) const override;
 		bool canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const override;
 
 		bool getCollision(const int i, const int j) const;
@@ -72,7 +74,7 @@ namespace ska {
 		unsigned int getBlockSize() const;
 
 		/* TODO classe à part ? */
-		std::vector<ScriptSleepComponent*> chipsetScript(const Point<int>& oldPos, const Point<int>& newPos, const Point<int>& p, const ScriptTriggerType& reason, const unsigned int layerIndex);
+		std::vector<ScriptSleepComponent*> chipsetScript(const Point<int>& oldPos, const Point<int>& newPos, const Point<int>& p, const ScriptTriggerType& reason, unsigned int layerIndex) override;
 		Rectangle placeOnNearestPracticableBlock(const Rectangle& hitBox, const unsigned int radius) const;
 		Point<int> alignOnBlock(const Rectangle& hitbox) const;
 

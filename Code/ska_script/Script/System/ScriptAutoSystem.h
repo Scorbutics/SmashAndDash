@@ -6,16 +6,17 @@
 #include "Data/Savegame.h"
 #include "../ScriptComponent.h"
 #include "ECS/System.h"
+#include "ECS/Basics/Script/ScriptRegisterer.h"
 
 namespace ska {
 	class World;
 
-	class ScriptAutoSystem :
+	class ScriptAutoSystem : public ScriptRegisterer,
 		public System<std::unordered_set<EntityId>, ScriptComponent> {
 	public:
 
 		Savegame& getSavegame();
-		void registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
+		void registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin) override;
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);

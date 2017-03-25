@@ -29,13 +29,13 @@
 
 1490456266 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\skaconstants.h
 
-1490459089 source:d:\users\brice\source\repos\smashanddash\code\ska_ai\ai\system\iadefinedmovementsystem.cpp
+1490475509 source:d:\users\brice\source\repos\smashanddash\code\ska_ai\ai\system\iadefinedmovementsystem.cpp
 	"IADefinedMovementSystem.h"
 	"Utils/TimeUtils.h"
 	"Utils/PhysicUtils.h"
 	"Utils/NumberUtils.h"
 	"Utils/RectangleUtils.h"
-	"../ScriptRegisterer.h"
+	"ECS/Basics/Script/ScriptRegisterer.h"
 	"ECS/Basics/Physic/WorldCollisionComponent.h"
 
 1490458705 d:\users\brice\source\repos\smashanddash\code\ska_ai\ai\system\iadefinedmovementsystem.h
@@ -202,4 +202,7 @@
 
 1490386019 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\forcecomponent.h
 	"../../Component.h"
+
+1490459076 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\script\scriptregisterer.h
+	"ECS/ECSDefines.h"
 

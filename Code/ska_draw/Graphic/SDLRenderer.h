@@ -16,6 +16,8 @@ namespace ska {
 		SDLRenderer(const SDLRenderer& r) = delete;
         SDLRenderer& operator=(const SDLRenderer& r) = delete;
 
+        void renderClear() const;
+
         SDL_Texture* createTextureFromSurface(const SDLSurface& s) const;
         void renderPresent() const;
         int renderCopy(const SDLTexture& t, const Rectangle* clip, const Rectangle& dest) const;

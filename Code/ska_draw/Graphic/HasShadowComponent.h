@@ -1,5 +1,5 @@
 #pragma once
-#include "../ECS/Component.h"
+#include "ECS/Component.h"
 
 namespace ska {
 	class HasShadowComponent : public Component {

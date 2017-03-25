@@ -1,18 +1,18 @@
 #pragma once
 #include "GraphicComponent.h"
-#include "../Physic/PositionComponent.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
 #include "Draw/Drawable.h"
 
 namespace ska {
 	class PositionnedGraphicDrawable : public Drawable {
-	
+
 	public:
-		PositionnedGraphicDrawable(AnimatedTexture& gc, int posx, int posy, int priority, int priority2D) : 
-			m_graphic(gc), 
-			m_priority(priority), 
-			m_priority2D(priority2D)  { 
-			m_positionx = posx; 
-			m_positiony = posy; 
+		PositionnedGraphicDrawable(AnimatedTexture& gc, int posx, int posy, int priority, int priority2D) :
+			m_graphic(gc),
+			m_priority(priority),
+			m_priority2D(priority2D)  {
+			m_positionx = posx;
+			m_positiony = posy;
 		}
 
 		void operator=(const PositionnedGraphicDrawable&) = delete;
@@ -20,7 +20,7 @@ namespace ska {
 		virtual void display() const override {
 			m_graphic.render(m_positionx, m_positiony);
 		}
-		
+
 		virtual int getPriority() const override {
 			return m_priority;
 		}
