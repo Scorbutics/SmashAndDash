@@ -9,7 +9,7 @@
 #include "Color.h"
 
 namespace ska {
-	class Window;
+	class SDLRenderer;
 	class Texture : public ResourceTemplate<SDLTexture, TextureData> {
 
 	public:
@@ -17,7 +17,7 @@ namespace ska {
 		Texture();
 		void loadFromText(unsigned int fontSize, std::string text, Color c);
 		void load(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
-		static void setDefaultWindow(Window* w);
+		static void setDefaultRenderer(SDLRenderer& renderer);
 		static void freeAll();
 		virtual ~Texture();
 
@@ -31,8 +31,8 @@ namespace ska {
 		unsigned int getHeight() const;
 
 	private:
-		static void checkWindow();
-		static Window* m_window;
+		static void checkRenderer();
+		static SDLRenderer* m_renderer;
 	};
 	typedef std::unique_ptr<Texture> TexturePtr;
 }

@@ -1,0 +1,399 @@
+# depslib dependency file v1.0
+1490381095 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\fpscalculator.cpp
+	<iostream>
+	"FpsCalculator.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\fpscalculator.h
+	<array>
+	"FpsRenderable.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\fpsrenderable.h
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"Graphic/Texture.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\drawablefixedpriority.h
+	"Drawable.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\drawable.h
+	<memory>
+
+1490443392 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\texture.h
+	<memory>
+	"Utils/ResourceTemplate.h"
+	"SDLTexture.h"
+	"TextureData.h"
+	"Utils/SkaConstants.h"
+	"Rectangle.h"
+	"Color.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1490445062 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdltexture.h
+	<string>
+	"Color.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\color.h
+	<SDL.h>
+	"Utils/NumberUtils.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490446464 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\texturedata.h
+	<string>
+	"Color.h"
+	"SDLRenderer.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\fpsrenderable.cpp
+	"FpsRenderable.h"
+	"Utils/StringUtils.h"
+	"Utils/TimeUtils.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\timeutils.h
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\animatedtexture.cpp
+	"AnimatedTexture.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\animatedtexture.h
+	"Animation.h"
+	"Texture.h"
+	"Rectangle.h"
+	"Point.h"
+	<memory>
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\animation.h
+	"Rectangle.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\animation.cpp
+	<iostream>
+	<string>
+	"Animation.h"
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\priorityqueuedrawablecontainer.cpp
+	"PriorityQueueDrawableContainer.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\priorityqueuedrawablecontainer.h
+	<queue>
+	"DrawableContainer.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\drawablecontainer.h
+	"DrawableFixedPriority.h"
+	<climits>
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\vectordrawablecontainer.cpp
+	<algorithm>
+	"VectorDrawableContainer.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\draw\vectordrawablecontainer.h
+	<vector>
+	<functional>
+	"DrawableContainer.h"
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\font.cpp
+	<sstream>
+	"Font.h"
+	"Utils/ResourceTemplate.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\font.h
+	"SDLFont.h"
+	"Utils/ResourceTemplate.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlfont.h
+	<map>
+	<memory>
+	<SDL_ttf.h>
+
+1490437634 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlfont.cpp
+	<iostream>
+	"SDLFont.h"
+	"Utils/SkaConstants.h"
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlsurface.cpp
+	<iostream>
+	<sstream>
+	<SDL_image.h>
+	"Font.h"
+	"SDLSurface.h"
+
+1490443705 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlsurface.h
+	<SDL.h>
+	"Color.h"
+
+1490446391 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlrenderer.h
+	<SDL.h>
+	"Rectangle.h"
+
+1490446386 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdlrenderer.cpp
+	<iostream>
+	"SDLRenderer.h"
+	"SDLSurface.h"
+	"SDLTexture.h"
+	"Exceptions/IllegalArgumentException.h"
+
+1490445285 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\sdltexture.cpp
+	<iostream>
+	<SDL_ttf.h>
+	"Utils/SkaConstants.h"
+	"SDLTexture.h"
+	"SDLSurface.h"
+	"Font.h"
+	"TextureData.h"
+	"Exceptions/FileException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\fileexception.h
+	"InputException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\inputexception.h
+	"GenericException.h"
+
+1490445349 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\spriteanimation.cpp
+	"SpriteAnimation.h"
+	"Utils/SpritePath.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\spriteanimation.h
+	"Animation.h"
+	"Texture.h"
+	"Point.h"
+	"Rectangle.h"
+	<memory>
+
+1490386047 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\spritepath.h
+	<string>
+	<vector>
+	"Singleton_template.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\singleton_template.h
+
+1490381096 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\spriteanimationmanager.cpp
+	<iostream>
+	<utility>
+	"SpriteAnimationManager.h"
+	"SpriteAnimation.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\spriteanimationmanager.h
+	<memory>
+	<vector>
+	"./Draw/DrawableFixedPriority.h"
+	"Point.h"
+
+1490445444 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerafixedsystem.cpp
+	"CameraFixedSystem.h"
+	"Rectangle.h"
+	"../GraphicComponent.h"
+
+1490445413 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerafixedsystem.h
+	"CameraSystem.h"
+	"Rectangle.h"
+
+1490445409 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerasystem.h
+	<unordered_set>
+	"Rectangle.h"
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Graphic/CameraFocusedComponent.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\system.h
+	<unordered_set>
+	"ECSDefines.h"
+	"EntityManager.h"
+	"ISystem.h"
+	"../Utils/Observer.h"
+	"../Utils/Refreshable.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\entitymanager.h
+	<bitset>
+	<unordered_set>
+	<array>
+	<unordered_map>
+	<string>
+	"ECSDefines.h"
+	"ComponentHandler.h"
+	"../Exceptions/IllegalStateException.h"
+	"../Exceptions/IllegalArgumentException.h"
+	"../Utils/Observable.h"
+	"ComponentSerializer.h"
+	"../Utils/StringUtils.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\componenthandler.h
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\staticcounterglobal.h
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\isystem.h
+	<memory>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\refreshable.h
+
+1490385402 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\positioncomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+	"../../../Utils/PhysicUtils.h"
+	"../../../Point.h"
+	"HitboxComponent.h"
+	"../Graphic/DirectionalAnimationComponent.h"
+	"../../../Utils/NumberUtils.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490385446 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\physicutils.h
+	"Force.h"
+
+1490385456 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\force.h
+	"../Rectangle.h"
+
+1490385464 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\hitboxcomponent.h
+	"../../Component.h"
+
+1490385478 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\graphic\directionalanimationcomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+
+1490385484 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\graphic\camerafocusedcomponent.h
+	"../../Component.h"
+
+1490445451 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\graphiccomponent.h
+	<vector>
+	<limits>
+	"ECS/Component.h"
+	"AnimatedTexture.h"
+
+1490445467 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerafollowsystem.cpp
+	"CameraFollowSystem.h"
+	"Rectangle.h"
+	"../GraphicComponent.h"
+
+1490445456 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerafollowsystem.h
+	"CameraSystem.h"
+	"Rectangle.h"
+
+1490445472 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\camerasystem.cpp
+	"CameraSystem.h"
+	"Rectangle.h"
+	"../GraphicComponent.h"
+
+1490445606 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\debugcollisiondrawersystem.cpp
+	"DebugCollisionDrawerSystem.h"
+	"Utils/SpritePath.h"
+	"Utils/SkaConstants.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"../GraphicComponent.h"
+	"ECS/Basics/Graphic/DeleterComponent.h"
+
+1490445561 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\debugcollisiondrawersystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/WorldCollisionComponent.h"
+	"ECS/Basics/Graphic/DebugGraphicComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+
+1490445537 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\worldcollisioncomponent.h
+	"../../Component.h"
+	"../../ECSDefines.h"
+	"../../../Point.h"
+
+1490445571 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\graphic\debuggraphiccomponent.h
+	<queue>
+	"../../Component.h"
+	"../../ECSDefines.h"
+
+1490445616 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\graphic\deletercomponent.h
+	"../../Component.h"
+	"Utils/TimeUtils.h"
+
+1490445728 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\deletersystem.cpp
+	"DeleterSystem.h"
+	"Utils/SpritePath.h"
+
+1490445639 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\deletersystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Graphic/DeleterComponent.h"
+
+1490445813 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\directionalanimationsystem.cpp
+	"DirectionalAnimationSystem.h"
+	"../../RectangleUtils.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+
+1490445749 d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\system\directionalanimationsystem.h
+	<unordered_set>
+	"../GraphicComponent.h"
+	"ECS/Basics/Graphic/DirectionalAnimationComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/System.h"
+
+1490385173 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\movementcomponent.h
+	"../../Component.h"
+
+1490381096 d:\users\brice\source\repos\smashanddash\code\ska_draw\rectangleutils.h
+	"Rectangle.h"
+	"Point.h"
+
+1490446431 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\texture.cpp
+	<iostream>
+	<string>
+	"Texture.h"
+	"Exceptions/IllegalStateException.h"
+
+1490446519 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\graphic\texturedata.cpp
+	"TextureData.h"
+	"Utils/StringUtils.h"
+
+1490446612 source:d:\users\brice\source\repos\smashanddash\code\ska_draw\rectangleutils.cpp
+	<iostream>
+	"RectangleUtils.h"
+	"Utils/NumberUtils.h"
+

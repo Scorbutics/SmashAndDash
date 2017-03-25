@@ -1,24 +1,23 @@
 #pragma once
 #include <string>
 #include "Color.h"
+#include "SDLRenderer.h"
 
 namespace ska {
-	class Window;
+
 	class TextureData {
 	public:
-		TextureData(Window& window, std::string, Color c);
-		TextureData();
-
-		void operator=(const TextureData& t2);
+		TextureData(SDLRenderer& r, const std::string&, Color c);
+        TextureData();
 
 		std::pair<std::string, Color> getData() const;
-		const Window& getWindow() const;
+		const SDLRenderer& getRenderer() const;
 
 		virtual ~TextureData();
 
 	private:
 		std::pair<std::string, Color> m_data;
-		Window* m_window;
+		SDLRenderer* m_renderer;
 	};
 }
 

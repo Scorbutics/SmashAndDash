@@ -1,6 +1,6 @@
 #pragma once
 #include "CameraSystem.h"
-#include "../Rectangle.h"
+#include "Rectangle.h"
 
 namespace ska {
 
@@ -13,6 +13,6 @@ namespace ska {
 		virtual void refresh() override;
 	private:
 		Rectangle m_fixed;
-		
+
 	};
 }

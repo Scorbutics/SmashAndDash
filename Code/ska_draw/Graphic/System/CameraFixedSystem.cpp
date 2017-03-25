@@ -1,5 +1,5 @@
 #include "CameraFixedSystem.h"
-#include "../Rectangle.h"
+#include "Rectangle.h"
 #include "../GraphicComponent.h"
 
 ska::CameraFixedSystem::CameraFixedSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH, Point<int> point) :

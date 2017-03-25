@@ -1,5 +1,5 @@
 #include "CameraFollowSystem.h"
-#include "../Rectangle.h"
+#include "Rectangle.h"
 #include "../GraphicComponent.h"
 
 ska::CameraFollowSystem::CameraFollowSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) : CameraSystem(entityManager, screenW, screenH) {
@@ -14,7 +14,7 @@ void ska::CameraFollowSystem::refresh() {
 		m_pos = &m_follow;
 		focusOn(m_follow, &entityId);
 	}
-	
+
 }
 
 ska::CameraFollowSystem::~CameraFollowSystem()

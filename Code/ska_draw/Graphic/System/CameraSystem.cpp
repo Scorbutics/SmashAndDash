@@ -1,5 +1,5 @@
 #include "CameraSystem.h"
-#include "../Rectangle.h"
+#include "Rectangle.h"
 #include "../GraphicComponent.h"
 
 ska::CameraSystem::CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) : System(entityManager) {

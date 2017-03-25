@@ -40,8 +40,56 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="Script/Command/AbstractCommand.cpp" />
+		<Unit filename="Script/Command/AbstractCommand.h" />
+		<Unit filename="Script/Command/AbstractFunctionCommand.cpp" />
+		<Unit filename="Script/Command/AbstractFunctionCommand.h" />
+		<Unit filename="Script/Command/Command.h" />
+		<Unit filename="Script/Command/CommandAssign.cpp" />
+		<Unit filename="Script/Command/CommandAssign.h" />
+		<Unit filename="Script/Command/CommandAssignSwitch.cpp" />
+		<Unit filename="Script/Command/CommandAssignSwitch.h" />
+		<Unit filename="Script/Command/CommandBlockAuthorize.cpp" />
+		<Unit filename="Script/Command/CommandBlockAuthorize.h" />
+		<Unit filename="Script/Command/CommandCalculate.cpp" />
+		<Unit filename="Script/Command/CommandCalculate.h" />
+		<Unit filename="Script/Command/CommandElse.cpp" />
+		<Unit filename="Script/Command/CommandElse.h" />
+		<Unit filename="Script/Command/CommandElseEnd.h" />
+		<Unit filename="Script/Command/CommandEnd.cpp" />
+		<Unit filename="Script/Command/CommandEnd.h" />
+		<Unit filename="Script/Command/CommandEndScript.cpp" />
+		<Unit filename="Script/Command/CommandEndScript.h" />
+		<Unit filename="Script/Command/CommandIf.cpp" />
+		<Unit filename="Script/Command/CommandIf.h" />
+		<Unit filename="Script/Command/CommandLog.cpp" />
+		<Unit filename="Script/Command/CommandLog.h" />
+		<Unit filename="Script/Command/CommandRandom.cpp" />
+		<Unit filename="Script/Command/CommandRandom.h" />
+		<Unit filename="Script/Command/CommandRemoveComponent.cpp" />
+		<Unit filename="Script/Command/CommandRemoveComponent.h" />
+		<Unit filename="Script/Command/CommandRestoreComponent.cpp" />
+		<Unit filename="Script/Command/CommandRestoreComponent.h" />
+		<Unit filename="Script/Command/CommandScript.cpp" />
+		<Unit filename="Script/Command/CommandScript.h" />
+		<Unit filename="Script/Command/CommandWait.cpp" />
+		<Unit filename="Script/Command/CommandWait.h" />
+		<Unit filename="Script/Command/ControlStatement.cpp" />
+		<Unit filename="Script/Command/ControlStatement.h" />
+		<Unit filename="Script/ScriptAwareComponent.h" />
+		<Unit filename="Script/ScriptComponent.h" />
+		<Unit filename="Script/ScriptSleepComponent.h" />
+		<Unit filename="Script/ScriptState.h" />
+		<Unit filename="Script/ScriptSymbolsConstants.h" />
+		<Unit filename="Script/ScriptTriggerType.h" />
+		<Unit filename="Script/ScriptUtils.cpp" />
+		<Unit filename="Script/ScriptUtils.h" />
+		<Unit filename="Script/System/ScriptAutoSystem.cpp" />
+		<Unit filename="Script/System/ScriptAutoSystem.h" />
+		<Unit filename="Script/System/ScriptBasicCommandsSystem.cpp" />
+		<Unit filename="Script/System/ScriptBasicCommandsSystem.h" />
+		<Unit filename="Script/System/ScriptRefreshSystem.cpp" />
+		<Unit filename="Script/System/ScriptRefreshSystem.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

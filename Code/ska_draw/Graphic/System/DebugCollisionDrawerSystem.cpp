@@ -1,9 +1,9 @@
 #include "DebugCollisionDrawerSystem.h"
-#include "../SpritePath.h"
-#include "../../Utils/SkaConstants.h"
-#include "../../Physic/PositionComponent.h"
+#include "Utils/SpritePath.h"
+#include "Utils/SkaConstants.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
 #include "../GraphicComponent.h"
-#include "../DeleterComponent.h"
+#include "ECS/Basics/Graphic/DeleterComponent.h"
 
 ska::DebugCollisionDrawerSystem::DebugCollisionDrawerSystem(EntityManager& em) : System(em) {
 }

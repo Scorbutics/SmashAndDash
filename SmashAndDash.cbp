@@ -518,6 +518,8 @@
 		<Unit filename="Code/ska/Script/ScriptState.h" />
 		<Unit filename="Code/ska/Script/ScriptSymbolsConstants.h" />
 		<Unit filename="Code/ska/Script/ScriptTriggerType.h" />
+		<Unit filename="Code/ska/Script/ScriptUtils.cpp" />
+		<Unit filename="Code/ska/Script/ScriptUtils.h" />
 		<Unit filename="Code/ska/Script/System/ScriptAutoSystem.cpp" />
 		<Unit filename="Code/ska/Script/System/ScriptAutoSystem.h" />
 		<Unit filename="Code/ska/Script/System/ScriptBasicCommandsSystem.cpp" />

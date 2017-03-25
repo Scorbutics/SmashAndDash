@@ -1,5 +1,4 @@
-#ifndef DEF_SDLTEXTURE
-#define DEF_SDLTEXTURE
+#pragma once
 
 #include <string>
 #include "Color.h"
@@ -7,15 +6,17 @@
 namespace ska {
 	class Texture;
 	class TextureData;
-	class Window;
+    class SDLRenderer;
+
 	class SDLTexture {
 		friend class Texture;
+		friend class SDLRenderer;
 
 	public:
 		SDLTexture();
 		SDLTexture(TextureData& p);
-		void load(const Window& w, const std::string& id, int r = -1, int g = -1, int b = -1, int a = -1);
-		void loadFromText(const Window& w, unsigned int fontSize, const std::string& text, Color c);
+		void load(const SDLRenderer& renderer, const std::string& id, int r = -1, int g = -1, int b = -1, int a = -1);
+		void loadFromText(const SDLRenderer& renderer, unsigned int fontSize, const std::string& text, Color c);
 		void free();
 		~SDLTexture();
 
@@ -37,4 +38,4 @@ namespace ska {
 		std::string m_fileName;
 	};
 }
-#endif
+

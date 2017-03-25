@@ -40,8 +40,16 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="AI/IADefinedMovementComponent.h" />
+		<Unit filename="AI/IARandomMovementComponent.h" />
+		<Unit filename="AI/Node.cpp" />
+		<Unit filename="AI/Node.h" />
+		<Unit filename="AI/Path.cpp" />
+		<Unit filename="AI/Path.h" />
+		<Unit filename="AI/System/IADefinedMovementSystem.cpp" />
+		<Unit filename="AI/System/IADefinedMovementSystem.h" />
+		<Unit filename="AI/System/IARandomMovementSystem.cpp" />
+		<Unit filename="AI/System/IARandomMovementSystem.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

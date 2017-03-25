@@ -1,6 +1,6 @@
 #include "DirectionalAnimationSystem.h"
-#include "../../Utils/RectangleUtils.h"
-#include "../../Physic/PositionComponent.h"
+#include "../../RectangleUtils.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
 
 ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {
 }
@@ -19,7 +19,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 		auto& texture = gc.sprite[0];
 		auto spritePos = texture.getOffsetBase();
 		const int spriteHeight = texture.getHeight();
-		
+
 
 		if (static_cast<int>(mov.vx) == 0 && static_cast<int>(mov.vy) == 0) {
 			texture.stop(true);
@@ -27,7 +27,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 		} else {
 			texture.stop(false);
 		}
-		
+
 		const auto xMove = static_cast<int>(mov.vx + mov.ax + 0.5);
 		const auto yMove = static_cast<int>(mov.vy + mov.ay + 0.5);
 
@@ -40,7 +40,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 				dac.direction = RectangleUtils::getDirectionFromPos(Point<int>(0, 0), Point<int>(xMove, yMove));
 				break;
 			}
-			
+
 			if (dac.type == DirectionalAnimationType::MOVEMENT) {
 				break;
 			}
@@ -52,7 +52,7 @@ void ska::DirectionalAnimationSystem::refresh() {
 			}
 			break;
 		}
-		 
+
 		default: break;
 		}
 

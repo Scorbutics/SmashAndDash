@@ -3,7 +3,9 @@
 	<Workspace title="Workspace">
 		<Project filename="SmashAndDash.cbp" />
 		<Project filename="Code/ska_core/ska_core.cbp" />
-		<Project filename="Code/ska_draw/ska_draw.cbp" />
+		<Project filename="Code/ska_draw/ska_draw.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
 		<Project filename="Code/ska_gui/ska_gui.cbp" />
 		<Project filename="Code/ska_physic/ska_physic.cbp" />
 		<Project filename="Code/ska_script/ska_script.cbp" />

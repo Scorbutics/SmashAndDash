@@ -1,6 +1,6 @@
 #pragma once
 #include "CameraSystem.h"
-#include "../Rectangle.h"
+#include "Rectangle.h"
 
 namespace ska {
 	class CameraFollowSystem : public CameraSystem {

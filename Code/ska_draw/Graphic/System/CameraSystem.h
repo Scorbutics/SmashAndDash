@@ -1,9 +1,9 @@
 #pragma once
 #include <unordered_set>
-#include "../Rectangle.h"
-#include "../../ECS/System.h"
-#include "../../Physic/PositionComponent.h"
-#include "../CameraFocusedComponent.h"
+#include "Rectangle.h"
+#include "ECS/System.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
+#include "ECS/Basics/Graphic/CameraFocusedComponent.h"
 
 namespace ska {
 	template <class T>

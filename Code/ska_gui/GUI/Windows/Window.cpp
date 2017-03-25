@@ -25,18 +25,15 @@ m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
 
 	if (m_screen == nullptr) {
 		std::cerr << "Erreur lors de la création de la fenêtre SDL :" << SDL_GetError() << std::endl;
+		throw IllegalArgumentException("Bad instanciation : screen cannot be null");
 	}
 
-	m_renderer = SDL_CreateRenderer(m_screen, -1, SDL_RENDERER_ACCELERATED);
-
-	if (m_renderer == nullptr) {
-		std::cerr << "Erreur lors de la création de la fenêtre SDL (renderer) :" << SDL_GetError() << std::endl;
-	}
+	m_renderer.load(m_screen, -1, SDL_RENDERER_ACCELERATED);
 
 	SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
 	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear")) {
-		std::cerr << "Attention : Linear texture filtering inactivé !" << std::endl;
+		std::clog << "Attention : Linear texture filtering non activé !" << std::endl;
 	}
 
 }
@@ -49,14 +46,9 @@ unsigned int ska::Window::getHeight() const {
 	return m_height;
 }
 
-SDL_Renderer* ska::Window::getRenderer() const {
-	return m_renderer;
-}
-
 void ska::Window::flip() const{
-	SDL_RenderPresent(m_renderer);
+	m_renderer.renderPresent();
 }
-
 
 void ska::Window::resize(unsigned int w, unsigned int h) {
 	m_width = w;
@@ -69,6 +61,5 @@ SDL_Window* ska::Window::getHandle() const{
 
 
 ska::Window::~Window() {
-	SDL_DestroyRenderer(m_renderer);
 	SDL_DestroyWindow(m_screen);
 }

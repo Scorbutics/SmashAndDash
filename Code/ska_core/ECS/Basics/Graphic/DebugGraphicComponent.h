@@ -1,7 +1,7 @@
 #pragma once
 #include <queue>
-#include "../ECS/Component.h"
-#include "../ECS/ECSDefines.h"
+#include "../../Component.h"
+#include "../../ECSDefines.h"
 
 namespace ska {
 	enum DebugGraphicType {

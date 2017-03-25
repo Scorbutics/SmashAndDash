@@ -42,6 +42,43 @@
 		</Build>
 		<Unit filename="PhysicUtils.cpp" />
 		<Unit filename="PhysicUtils.h" />
+		<Unit filename="Physic/CollisionEvent.h" />
+		<Unit filename="Physic/Force.h" />
+		<Unit filename="Physic/ForceComponent.h" />
+		<Unit filename="Physic/GravityAffectedComponent.h" />
+		<Unit filename="Physic/GravityParticle.cpp" />
+		<Unit filename="Physic/GravityParticle.h" />
+		<Unit filename="Physic/HitboxComponent.h" />
+		<Unit filename="Physic/LinearParticle.cpp" />
+		<Unit filename="Physic/LinearParticle.h" />
+		<Unit filename="Physic/MovementComponent.h" />
+		<Unit filename="Physic/Particle.cpp" />
+		<Unit filename="Physic/Particle.h" />
+		<Unit filename="Physic/ParticleManager.cpp" />
+		<Unit filename="Physic/ParticleManager.h" />
+		<Unit filename="Physic/PhysicObject.cpp" />
+		<Unit filename="Physic/PhysicObject.h" />
+		<Unit filename="Physic/PhysicSprite.cpp" />
+		<Unit filename="Physic/PhysicSprite.h" />
+		<Unit filename="Physic/RainParticle.cpp" />
+		<Unit filename="Physic/RainParticle.h" />
+		<Unit filename="Physic/RainParticleManager.cpp" />
+		<Unit filename="Physic/RainParticleManager.h" />
+		<Unit filename="Physic/System/CollisionSystem.cpp" />
+		<Unit filename="Physic/System/CollisionSystem.h" />
+		<Unit filename="Physic/System/DebugWorldCollisionResponse.cpp" />
+		<Unit filename="Physic/System/DebugWorldCollisionResponse.h" />
+		<Unit filename="Physic/System/EntityCollisionResponse.cpp" />
+		<Unit filename="Physic/System/EntityCollisionResponse.h" />
+		<Unit filename="Physic/System/ForceSystem.cpp" />
+		<Unit filename="Physic/System/ForceSystem.h" />
+		<Unit filename="Physic/System/GravitySystem.cpp" />
+		<Unit filename="Physic/System/GravitySystem.h" />
+		<Unit filename="Physic/System/MovementSystem.cpp" />
+		<Unit filename="Physic/System/MovementSystem.h" />
+		<Unit filename="Physic/System/WorldCollisionResponse.cpp" />
+		<Unit filename="Physic/System/WorldCollisionResponse.h" />
+		<Unit filename="Physic/WorldCollisionComponent.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

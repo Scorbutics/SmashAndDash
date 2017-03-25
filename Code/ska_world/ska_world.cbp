@@ -40,8 +40,56 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="../ska_script/Script/Command/AbstractCommand.cpp" />
+		<Unit filename="../ska_script/Script/Command/AbstractCommand.h" />
+		<Unit filename="../ska_script/Script/Command/AbstractFunctionCommand.cpp" />
+		<Unit filename="../ska_script/Script/Command/AbstractFunctionCommand.h" />
+		<Unit filename="../ska_script/Script/Command/Command.h" />
+		<Unit filename="../ska_script/Script/Command/CommandAssign.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandAssign.h" />
+		<Unit filename="../ska_script/Script/Command/CommandAssignSwitch.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandAssignSwitch.h" />
+		<Unit filename="../ska_script/Script/Command/CommandBlockAuthorize.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandBlockAuthorize.h" />
+		<Unit filename="../ska_script/Script/Command/CommandCalculate.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandCalculate.h" />
+		<Unit filename="../ska_script/Script/Command/CommandElse.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandElse.h" />
+		<Unit filename="../ska_script/Script/Command/CommandElseEnd.h" />
+		<Unit filename="../ska_script/Script/Command/CommandEnd.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandEnd.h" />
+		<Unit filename="../ska_script/Script/Command/CommandEndScript.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandEndScript.h" />
+		<Unit filename="../ska_script/Script/Command/CommandIf.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandIf.h" />
+		<Unit filename="../ska_script/Script/Command/CommandLog.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandLog.h" />
+		<Unit filename="../ska_script/Script/Command/CommandRandom.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandRandom.h" />
+		<Unit filename="../ska_script/Script/Command/CommandRemoveComponent.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandRemoveComponent.h" />
+		<Unit filename="../ska_script/Script/Command/CommandRestoreComponent.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandRestoreComponent.h" />
+		<Unit filename="../ska_script/Script/Command/CommandScript.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandScript.h" />
+		<Unit filename="../ska_script/Script/Command/CommandWait.cpp" />
+		<Unit filename="../ska_script/Script/Command/CommandWait.h" />
+		<Unit filename="../ska_script/Script/Command/ControlStatement.cpp" />
+		<Unit filename="../ska_script/Script/Command/ControlStatement.h" />
+		<Unit filename="../ska_script/Script/ScriptAwareComponent.h" />
+		<Unit filename="../ska_script/Script/ScriptComponent.h" />
+		<Unit filename="../ska_script/Script/ScriptSleepComponent.h" />
+		<Unit filename="../ska_script/Script/ScriptState.h" />
+		<Unit filename="../ska_script/Script/ScriptSymbolsConstants.h" />
+		<Unit filename="../ska_script/Script/ScriptTriggerType.h" />
+		<Unit filename="../ska_script/Script/ScriptUtils.cpp" />
+		<Unit filename="../ska_script/Script/ScriptUtils.h" />
+		<Unit filename="../ska_script/Script/System/ScriptAutoSystem.cpp" />
+		<Unit filename="../ska_script/Script/System/ScriptAutoSystem.h" />
+		<Unit filename="../ska_script/Script/System/ScriptBasicCommandsSystem.cpp" />
+		<Unit filename="../ska_script/Script/System/ScriptBasicCommandsSystem.h" />
+		<Unit filename="../ska_script/Script/System/ScriptRefreshSystem.cpp" />
+		<Unit filename="../ska_script/Script/System/ScriptRefreshSystem.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

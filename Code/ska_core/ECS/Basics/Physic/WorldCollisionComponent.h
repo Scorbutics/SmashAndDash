@@ -1,7 +1,7 @@
 #pragma once
-#include "../../ska/ECS/Component.h"
-#include "../../ska/ECS/ECSDefines.h"
-#include "../Graphic/Point.h"
+#include "../../Component.h"
+#include "../../ECSDefines.h"
+#include "../../../Point.h"
 namespace ska {
 	class WorldCollisionComponent : public Component {
 	public:

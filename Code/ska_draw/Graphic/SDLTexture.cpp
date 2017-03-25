@@ -1,21 +1,20 @@
 #include <iostream>
 #include <SDL_ttf.h>
-#include "../Utils/SkaConstants.h"
+#include "Utils/SkaConstants.h"
 #include "SDLTexture.h"
 #include "SDLSurface.h"
 #include "Font.h"
 #include "TextureData.h"
-#include "../Exceptions/FileException.h"
-#include "../Core/Window.h"
+#include "Exceptions/FileException.h"
 
 ska::SDLTexture::SDLTexture() : m_r(0), m_g(0), m_b(0), m_texture(nullptr), m_w(0), m_h(0), m_alpha(0){
 }
 
 ska::SDLTexture::SDLTexture(TextureData& data) : m_texture(nullptr) {
-	load(data.getWindow(), data.getData().first, data.getData().second.r, data.getData().second.g, data.getData().second.b, data.getData().second.a);
+	load(data.getRenderer(), data.getData().first, data.getData().second.r, data.getData().second.g, data.getData().second.b, data.getData().second.a);
 }
 
-void ska::SDLTexture::load(const Window& window, const std::string& fileName, int r, int g, int b, int a) {
+void ska::SDLTexture::load(const SDLRenderer& renderer, const std::string& fileName, int r, int g, int b, int a) {
 	SDLSurface sprite;
 	m_texture = nullptr;
 	m_fileName = fileName;
@@ -50,12 +49,12 @@ void ska::SDLTexture::load(const Window& window, const std::string& fileName, in
 
 	free();
 	m_fileName = fileName;
-	m_texture = SDL_CreateTextureFromSurface(window.getRenderer(), sprite.getInstance());
+	m_texture = renderer.createTextureFromSurface(sprite);
 	m_w = sprite.getInstance()->w;
 	m_h = sprite.getInstance()->h;
 }
 
-void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, const std::string& text, Color c) {
+void ska::SDLTexture::loadFromText(const SDLRenderer& renderer, unsigned int fontSize, const std::string& text, Color c) {
 	SDLSurface buffer;
 	Font f(fontSize);
 
@@ -67,7 +66,7 @@ void ska::SDLTexture::loadFromText(const Window& window, unsigned int fontSize, 
 
 	free();
 	m_fileName = text;
-	m_texture = SDL_CreateTextureFromSurface(window.getRenderer(), buffer.getInstance());
+	m_texture = renderer.createTextureFromSurface(buffer);
 	m_h = buffer.getInstance()->h;
 	m_w = buffer.getInstance()->w;
 	m_alpha = c.a;

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <limits>
-#include "../ECS/Component.h"
+#include "ECS/Component.h"
 #include "AnimatedTexture.h"
 
 namespace ska {

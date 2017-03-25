@@ -40,6 +40,25 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="Data/Events/CollisionEvent.h" />
+		<Unit filename="Data/Events/SoundEvent.cpp" />
+		<Unit filename="Data/Events/SoundEvent.h" />
+		<Unit filename="Data/Events/WorldEvent.h" />
+		<Unit filename="Data/GameEventDispatcher.h" />
+		<Unit filename="Data/Savegame.h" />
+		<Unit filename="ECS/Basics/Graphic/CameraFocusedComponent.h" />
+		<Unit filename="ECS/Basics/Graphic/DebugGraphicComponent.h" />
+		<Unit filename="ECS/Basics/Graphic/DeleterComponent.h" />
+		<Unit filename="ECS/Basics/Graphic/DirectionalAnimationComponent.h" />
+		<Unit filename="ECS/Basics/Input/InputComponent.h" />
+		<Unit filename="ECS/Basics/Physic/CollidableComponent.h" />
+		<Unit filename="ECS/Basics/Physic/CollisionComponent.h" />
+		<Unit filename="ECS/Basics/Physic/ForceComponent.h" />
+		<Unit filename="ECS/Basics/Physic/GravityAffectedComponent.h" />
+		<Unit filename="ECS/Basics/Physic/HitboxComponent.h" />
+		<Unit filename="ECS/Basics/Physic/MovementComponent.h" />
+		<Unit filename="ECS/Basics/Physic/PositionComponent.h" />
+		<Unit filename="ECS/Basics/Physic/WorldCollisionComponent.h" />
 		<Unit filename="ECS/Component.cpp" />
 		<Unit filename="ECS/Component.h" />
 		<Unit filename="ECS/ComponentHandler.h" />
@@ -47,11 +66,10 @@
 		<Unit filename="ECS/ECSDefines.h" />
 		<Unit filename="ECS/EntityManager.h" />
 		<Unit filename="ECS/ISystem.h" />
-		<Unit filename="ECS/PrefabEntityManager.cpp" />
-		<Unit filename="ECS/PrefabEntityManager.h" />
 		<Unit filename="ECS/StaticCounterGlobal.cpp" />
 		<Unit filename="ECS/StaticCounterGlobal.h" />
 		<Unit filename="ECS/System.h" />
+		<Unit filename="EventDispatcher.h" />
 		<Unit filename="Exceptions/CorruptedFileException.h" />
 		<Unit filename="Exceptions/FileException.h" />
 		<Unit filename="Exceptions/GenericException.cpp" />
@@ -93,10 +111,18 @@
 		<Unit filename="Inputs/Readers/IniReader.h" />
 		<Unit filename="Inputs/Readers/Readinifile.cpp" />
 		<Unit filename="Inputs/Readers/Readinifile.h" />
+		<Unit filename="Inputs/System/InputSystem.cpp" />
+		<Unit filename="Inputs/System/InputSystem.h" />
 		<Unit filename="Point.cpp" />
 		<Unit filename="Point.h" />
 		<Unit filename="Rectangle.h" />
+		<Unit filename="Task/RepeatableTask.h" />
+		<Unit filename="Task/Runnable.h" />
+		<Unit filename="Task/Task.h" />
+		<Unit filename="Task/TaskQueue.cpp" />
+		<Unit filename="Task/TaskQueue.h" />
 		<Unit filename="Utils/FileUtils.h" />
+		<Unit filename="Utils/Force.h" />
 		<Unit filename="Utils/FormalCalculation/CalculOperators.h" />
 		<Unit filename="Utils/FormalCalculation/FormalCalculator.cpp" />
 		<Unit filename="Utils/FormalCalculation/FormalCalculator.h" />
@@ -109,10 +135,14 @@
 		<Unit filename="Utils/OSSpecific/FileUtilsWin.h" />
 		<Unit filename="Utils/Observable.h" />
 		<Unit filename="Utils/Observer.h" />
+		<Unit filename="Utils/PhysicUtils.cpp" />
+		<Unit filename="Utils/PhysicUtils.h" />
 		<Unit filename="Utils/Refreshable.h" />
 		<Unit filename="Utils/ResourceTemplate.h" />
 		<Unit filename="Utils/Singleton_template.h" />
 		<Unit filename="Utils/SkaConstants.h" />
+		<Unit filename="Utils/SpritePath.cpp" />
+		<Unit filename="Utils/SpritePath.h" />
 		<Unit filename="Utils/StringUtils.cpp" />
 		<Unit filename="Utils/StringUtils.h" />
 		<Unit filename="Utils/TimeUtils.cpp" />

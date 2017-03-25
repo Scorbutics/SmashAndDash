@@ -1,18 +1,14 @@
 #include <iostream>
-#include "Utils/RectangleUtils.h"
+#include "RectangleUtils.h"
 #include "Utils/NumberUtils.h"
 
 ska::RectangleUtils::RectangleUtils()
 {
 }
 
-
-unsigned int ska::RectangleUtils::distanceSquared(const Point<int>& pos1, const Point<int>& pos2)
-{
+unsigned int ska::RectangleUtils::distanceSquared(const Point<int>& pos1, const Point<int>& pos2) {
 	return (((pos1.x - pos2.x) * (pos1.x - pos2.x)) + ((pos1.y - pos2.y) * (pos1.y - pos2.y)));
 }
-
-
 
 bool ska::RectangleUtils::collisionBoxABoxB(const Rectangle& rectA, const Rectangle& rectB) {
 

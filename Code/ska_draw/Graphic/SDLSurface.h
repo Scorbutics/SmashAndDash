@@ -7,6 +7,8 @@ namespace ska {
 	class Font;
 
 	class SDLSurface {
+	    friend class SDLRenderer;
+
 	public:
 		SDLSurface();
 		~SDLSurface();

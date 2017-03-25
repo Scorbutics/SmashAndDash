@@ -40,8 +40,16 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.cpp" />
-		<Unit filename="main.h" />
+		<Unit filename="Audio/Music.cpp" />
+		<Unit filename="Audio/Music.h" />
+		<Unit filename="Audio/SDLMusic.cpp" />
+		<Unit filename="Audio/SDLMusic.h" />
+		<Unit filename="Audio/SDLSound.cpp" />
+		<Unit filename="Audio/SDLSound.h" />
+		<Unit filename="Audio/SoundEvent.cpp" />
+		<Unit filename="Audio/SoundEvent.h" />
+		<Unit filename="Audio/SoundRenderer.cpp" />
+		<Unit filename="Audio/SoundRenderer.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

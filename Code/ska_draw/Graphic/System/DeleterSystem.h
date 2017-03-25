@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_set>
-#include "../../ECS/System.h"
-#include "../DeleterComponent.h"
+#include "ECS/System.h"
+#include "ECS/Basics/Graphic/DeleterComponent.h"
 
 
 namespace ska {

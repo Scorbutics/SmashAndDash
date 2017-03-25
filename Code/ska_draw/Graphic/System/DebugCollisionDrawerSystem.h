@@ -1,10 +1,10 @@
 #pragma once
 #include <unordered_set>
-#include "../../ECS/System.h"
-#include "../../Physic/WorldCollisionComponent.h"
-#include "../DebugGraphicComponent.h"
-#include "../../Physic/PositionComponent.h"
-#include "../../Physic/HitboxComponent.h"
+#include "ECS/System.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "ECS/Basics/Graphic/DebugGraphicComponent.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
+#include "ECS/Basics/Physic/HitboxComponent.h"
 
 namespace ska {
 	class DebugCollisionDrawerSystem : public System<std::unordered_set<EntityId>, PositionComponent, HitboxComponent, DebugGraphicComponent> {

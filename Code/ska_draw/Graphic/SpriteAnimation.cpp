@@ -1,5 +1,5 @@
 #include "SpriteAnimation.h"
-#include "SpritePath.h"
+#include "Utils/SpritePath.h"
 
 
 
