@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A8719202-D043-4D78-A1C5-3EC97CFB2B8A}</ProjectGuid>
+    <RootNamespace>ska_core</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2main.lib;SDL2.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="bin\Debug\libska_core.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Data\BlockContainer.h" />
+    <ClInclude Include="Data\Events\CollisionEvent.h" />
+    <ClInclude Include="Data\Events\SoundEvent.h" />
+    <ClInclude Include="Data\Events\WorldEvent.h" />
+    <ClInclude Include="Data\GameEventDispatcher.h" />
+    <ClInclude Include="Data\Savegame.h" />
+    <ClInclude Include="ECS\Basics\Graphic\CameraFocusedComponent.h" />
+    <ClInclude Include="ECS\Basics\Graphic\DebugGraphicComponent.h" />
+    <ClInclude Include="ECS\Basics\Graphic\DeleterComponent.h" />
+    <ClInclude Include="ECS\Basics\Graphic\DialogComponent.h" />
+    <ClInclude Include="ECS\Basics\Graphic\DirectionalAnimationComponent.h" />
+    <ClInclude Include="ECS\Basics\Input\InputComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\CollidableComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\CollisionComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\CollisionProfile.h" />
+    <ClInclude Include="ECS\Basics\Physic\ForceComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\GravityAffectedComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\HitboxComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\MovementComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\PositionComponent.h" />
+    <ClInclude Include="ECS\Basics\Physic\WorldCollisionComponent.h" />
+    <ClInclude Include="ECS\Basics\Script\ScriptAwareComponent.h" />
+    <ClInclude Include="ECS\Basics\Script\ScriptPositionedGetter.h" />
+    <ClInclude Include="ECS\Basics\Script\ScriptRegisterer.h" />
+    <ClInclude Include="ECS\Basics\Script\ScriptSleepComponent.h" />
+    <ClInclude Include="ECS\Basics\Script\ScriptTriggerType.h" />
+    <ClInclude Include="ECS\Component.h" />
+    <ClInclude Include="ECS\ComponentHandler.h" />
+    <ClInclude Include="ECS\ComponentSerializer.h" />
+    <ClInclude Include="ECS\ECSDefines.h" />
+    <ClInclude Include="ECS\EntityManager.h" />
+    <ClInclude Include="ECS\ISystem.h" />
+    <ClInclude Include="ECS\StaticCounterGlobal.h" />
+    <ClInclude Include="ECS\System.h" />
+    <ClInclude Include="EventDispatcher.h" />
+    <ClInclude Include="Exceptions\CorruptedFileException.h" />
+    <ClInclude Include="Exceptions\FileException.h" />
+    <ClInclude Include="Exceptions\GenericException.h" />
+    <ClInclude Include="Exceptions\IllegalArgumentException.h" />
+    <ClInclude Include="Exceptions\IllegalStateException.h" />
+    <ClInclude Include="Exceptions\IndexOutOfBoundsException.h" />
+    <ClInclude Include="Exceptions\InputException.h" />
+    <ClInclude Include="Exceptions\InvalidPathException.h" />
+    <ClInclude Include="Exceptions\NumberFormatException.h" />
+    <ClInclude Include="Exceptions\SceneDiedException.h" />
+    <ClInclude Include="Exceptions\ScriptDiedException.h" />
+    <ClInclude Include="Exceptions\ScriptException.h" />
+    <ClInclude Include="Exceptions\ScriptNotActivatedException.h" />
+    <ClInclude Include="Exceptions\ScriptSyntaxError.h" />
+    <ClInclude Include="Exceptions\ScriptUnknownCommandException.h" />
+    <ClInclude Include="Exceptions\TerminateProcessException.h" />
+    <ClInclude Include="Inputs\EnumContextManager.h" />
+    <ClInclude Include="Inputs\InputAction.h" />
+    <ClInclude Include="Inputs\InputContext.h" />
+    <ClInclude Include="Inputs\InputContextManager.h" />
+    <ClInclude Include="Inputs\InputRange.h" />
+    <ClInclude Include="Inputs\InputToggle.h" />
+    <ClInclude Include="Inputs\KeyboardInputContext.h" />
+    <ClInclude Include="Inputs\KeyboardInputGUIContext.h" />
+    <ClInclude Include="Inputs\KeyboardInputMapContext.h" />
+    <ClInclude Include="Inputs\KeyInput.h" />
+    <ClInclude Include="Inputs\MouseInput.h" />
+    <ClInclude Include="Inputs\RawInputListener.h" />
+    <ClInclude Include="Inputs\Readers\IniReader.h" />
+    <ClInclude Include="Inputs\Readers\Readinifile.h" />
+    <ClInclude Include="Inputs\System\InputSystem.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Task\RepeatableTask.h" />
+    <ClInclude Include="Task\Runnable.h" />
+    <ClInclude Include="Task\Task.h" />
+    <ClInclude Include="Task\TaskQueue.h" />
+    <ClInclude Include="Utils\FileUtils.h" />
+    <ClInclude Include="Utils\Force.h" />
+    <ClInclude Include="Utils\FormalCalculation\CalculOperators.h" />
+    <ClInclude Include="Utils\FormalCalculation\FormalCalculator.h" />
+    <ClInclude Include="Utils\Identity.h" />
+    <ClInclude Include="Utils\NumberUtils.h" />
+    <ClInclude Include="Utils\Observable.h" />
+    <ClInclude Include="Utils\Observer.h" />
+    <ClInclude Include="Utils\OSSpecific\FileUtilsUnix.h" />
+    <ClInclude Include="Utils\OSSpecific\FileUtilsWin.h" />
+    <ClInclude Include="Utils\PhysicUtils.h" />
+    <ClInclude Include="Utils\RectangleUtils.h" />
+    <ClInclude Include="Utils\Refreshable.h" />
+    <ClInclude Include="Utils\ResourceTemplate.h" />
+    <ClInclude Include="Utils\Singleton_template.h" />
+    <ClInclude Include="Utils\SkaConstants.h" />
+    <ClInclude Include="Utils\SpritePath.h" />
+    <ClInclude Include="Utils\StringUtils.h" />
+    <ClInclude Include="Utils\TimeUtils.h" />
+    <ClInclude Include="Utils\TupleUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Data\Events\SoundEvent.cpp" />
+    <ClCompile Include="ECS\Component.cpp" />
+    <ClCompile Include="ECS\StaticCounterGlobal.cpp" />
+    <ClCompile Include="Exceptions\GenericException.cpp" />
+    <ClCompile Include="Inputs\InputContextManager.cpp" />
+    <ClCompile Include="Inputs\KeyboardInputContext.cpp" />
+    <ClCompile Include="Inputs\KeyboardInputGUIContext.cpp" />
+    <ClCompile Include="Inputs\KeyboardInputMapContext.cpp" />
+    <ClCompile Include="Inputs\KeyInput.cpp" />
+    <ClCompile Include="Inputs\MouseInput.cpp" />
+    <ClCompile Include="Inputs\RawInputListener.cpp" />
+    <ClCompile Include="Inputs\Readers\IniReader.cpp" />
+    <ClCompile Include="Inputs\Readers\Readinifile.cpp" />
+    <ClCompile Include="Inputs\System\InputSystem.cpp" />
+    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Task\TaskQueue.cpp" />
+    <ClCompile Include="Utils\FormalCalculation\FormalCalculator.cpp" />
+    <ClCompile Include="Utils\NumberUtils.cpp" />
+    <ClCompile Include="Utils\OSSpecific\FileUtilsUnix.cpp" />
+    <ClCompile Include="Utils\OSSpecific\FileUtilsWin.cpp" />
+    <ClCompile Include="Utils\PhysicUtils.cpp" />
+    <ClCompile Include="Utils\RectangleUtils.cpp" />
+    <ClCompile Include="Utils\SpritePath.cpp" />
+    <ClCompile Include="Utils\StringUtils.cpp" />
+    <ClCompile Include="Utils\TimeUtils.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
