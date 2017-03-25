@@ -18,10 +18,12 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
-					<Add directory="C:/Documents/Perso/Dev/C++/SmashAndDash/Code/ska_core/" />
+					<Add directory="../ska_core/" />
 				</Compiler>
 				<Linker>
+					<Add option="-lska_core" />
 					<Add library="user32" />
+					<Add directory="../ska_core/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -32,22 +34,21 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-O2" />
+					<Add directory="../ska_core/" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
+					<Add directory="../ska_core/bin/Release" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add directory="../ska_core/" />
 		</Compiler>
-		<Linker>
-			<Add directory="../ska_core/bin/Debug" />
-		</Linker>
 		<Unit filename="FpsCalculator.cpp" />
 		<Unit filename="FpsCalculator.h" />
 		<Unit filename="FpsRenderable.cpp" />
@@ -66,92 +67,13 @@
 		<Unit filename="Graphic/Draw/VectorDrawableContainer.h" />
 		<Unit filename="Graphic/Font.cpp" />
 		<Unit filename="Graphic/Font.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Button.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Button.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ButtonQuit.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ButtonQuit.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ButtonSprite.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ButtonSprite.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/CheckBox.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/CheckBox.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/HorizontalSlider.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/HorizontalSlider.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Image.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Image.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Input.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Input.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Label.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/Label.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/LabeledHorizontalSlider.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/LabeledHorizontalSlider.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ListBox.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/MouseCursor.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/MouseCursor.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/RadioButton.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/RadioButton.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/RadioButtonGroup.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/RadioButtonGroup.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/RadioButtonList.h" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ScrollingMultiLineLabel.cpp" />
-		<Unit filename="Graphic/GUI/Components/Concrete/ScrollingMultiLineLabel.h" />
-		<Unit filename="Graphic/GUI/Components/HandledWidget.h" />
-		<Unit filename="Graphic/GUI/Components/Hoverable.h" />
-		<Unit filename="Graphic/GUI/Components/UiBinder.h" />
-		<Unit filename="Graphic/GUI/Components/Widget.cpp" />
-		<Unit filename="Graphic/GUI/Components/Widget.h" />
-		<Unit filename="Graphic/GUI/Components/WidgetPanel.h" />
-		<Unit filename="Graphic/GUI/Events/ClickEvent.cpp" />
-		<Unit filename="Graphic/GUI/Events/ClickEvent.h" />
-		<Unit filename="Graphic/GUI/Events/ClickEventListener.cpp" />
-		<Unit filename="Graphic/GUI/Events/ClickEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/EventListener.h" />
-		<Unit filename="Graphic/GUI/Events/FocusEvent.cpp" />
-		<Unit filename="Graphic/GUI/Events/FocusEvent.h" />
-		<Unit filename="Graphic/GUI/Events/FocusEventListener.cpp" />
-		<Unit filename="Graphic/GUI/Events/FocusEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/HoverEvent.cpp" />
-		<Unit filename="Graphic/GUI/Events/HoverEvent.h" />
-		<Unit filename="Graphic/GUI/Events/HoverEventListener.cpp" />
-		<Unit filename="Graphic/GUI/Events/HoverEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/IWidgetEvent.h" />
-		<Unit filename="Graphic/GUI/Events/KeyEvent.cpp" />
-		<Unit filename="Graphic/GUI/Events/KeyEvent.h" />
-		<Unit filename="Graphic/GUI/Events/KeyEventListener.cpp" />
-		<Unit filename="Graphic/GUI/Events/KeyEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/MouseEventType.h" />
-		<Unit filename="Graphic/GUI/Events/StopType.h" />
-		<Unit filename="Graphic/GUI/Events/TimeEvent.cpp" />
-		<Unit filename="Graphic/GUI/Events/TimeEvent.h" />
-		<Unit filename="Graphic/GUI/Events/TimeEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/ValueChangedEvent.h" />
-		<Unit filename="Graphic/GUI/Events/ValueChangedEventListener.h" />
-		<Unit filename="Graphic/GUI/Events/WidgetEvent.h" />
-		<Unit filename="Graphic/GUI/GUI.cpp" />
-		<Unit filename="Graphic/GUI/GUI.h" />
-		<Unit filename="Graphic/GUI/Utils/KeyObservable.h" />
-		<Unit filename="Graphic/GUI/Utils/KeyObserver.h" />
-		<Unit filename="Graphic/GUI/Utils/MouseObservable.h" />
-		<Unit filename="Graphic/GUI/Utils/MouseObserver.h" />
-		<Unit filename="Graphic/GUI/Utils/SortedWidgetVector.h" />
-		<Unit filename="Graphic/GUI/Utils/TimeObservable.h" />
-		<Unit filename="Graphic/GUI/Utils/TimeObserver.h" />
-		<Unit filename="Graphic/GUI/Utils/WidgetContainer.h" />
-		<Unit filename="Graphic/GUI/Utils/WidgetHandlingTrait.h" />
-		<Unit filename="Graphic/GUI/Utils/WidgetMaskHelper.cpp" />
-		<Unit filename="Graphic/GUI/Utils/WidgetMaskHelper.h" />
-		<Unit filename="Graphic/GUI/Windows/DynamicWindowIG.h" />
-		<Unit filename="Graphic/GUI/Windows/GUIScrollButtonWindowIG.cpp" />
-		<Unit filename="Graphic/GUI/Windows/GUIScrollButtonWindowIG.h" />
-		<Unit filename="Graphic/GUI/Windows/MoveableWindow.h" />
-		<Unit filename="Graphic/GUI/Windows/TimeScrollableWindowIG.h" />
-		<Unit filename="Graphic/GUI/Windows/Window.cpp" />
-		<Unit filename="Graphic/GUI/Windows/Window.h" />
-		<Unit filename="Graphic/GUI/Windows/WindowIG.h" />
 		<Unit filename="Graphic/GraphicComponent.h" />
 		<Unit filename="Graphic/HasShadowComponent.h" />
 		<Unit filename="Graphic/PositionnedGraphicDrawable.h" />
 		<Unit filename="Graphic/SDLFont.cpp" />
 		<Unit filename="Graphic/SDLFont.h" />
+		<Unit filename="Graphic/SDLRenderer.cpp" />
+		<Unit filename="Graphic/SDLRenderer.h" />
 		<Unit filename="Graphic/SDLSurface.cpp" />
 		<Unit filename="Graphic/SDLSurface.h" />
 		<Unit filename="Graphic/SDLTexture.cpp" />
@@ -160,8 +82,6 @@
 		<Unit filename="Graphic/SpriteAnimation.h" />
 		<Unit filename="Graphic/SpriteAnimationManager.cpp" />
 		<Unit filename="Graphic/SpriteAnimationManager.h" />
-		<Unit filename="Graphic/SpritePath.cpp" />
-		<Unit filename="Graphic/SpritePath.h" />
 		<Unit filename="Graphic/System/CameraAware.h" />
 		<Unit filename="Graphic/System/CameraFixedSystem.cpp" />
 		<Unit filename="Graphic/System/CameraFixedSystem.h" />
@@ -180,8 +100,6 @@
 		<Unit filename="Graphic/Texture.h" />
 		<Unit filename="Graphic/TextureData.cpp" />
 		<Unit filename="Graphic/TextureData.h" />
-		<Unit filename="RectangleUtils.cpp" />
-		<Unit filename="RectangleUtils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

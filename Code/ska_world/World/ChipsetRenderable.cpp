@@ -1,8 +1,8 @@
 #include <utility>
 #include "../World/BlockRenderable.h"
-#include "../Utils/StringUtils.h"
+#include "Utils/StringUtils.h"
 #include "ChipsetRenderable.h"
-#include "../Script/ScriptSleepComponent.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
 
 
 ska::ChipsetRenderable::ChipsetRenderable(const unsigned int corrFileSize, const int blockSize, const std::string& chipsetName) :

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../ska/ECS/Component.h"
-#include "../../ska/ECS/ECSDefines.h"
+#include "ECS/Component.h"
+#include "ECS/ECSDefines.h"
 namespace ska {
 	class CollisionComponent : public Component {
 	public:

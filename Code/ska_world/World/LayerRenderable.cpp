@@ -2,8 +2,8 @@
 #include <string>
 #include <fstream>
 
-#include "../Exceptions/IndexOutOfBoundsException.h"
-#include "../Utils/StringUtils.h"
+#include "Exceptions/IndexOutOfBoundsException.h"
+#include "Utils/StringUtils.h"
 
 #include "World.h"
 #include "LayerRenderable.h"

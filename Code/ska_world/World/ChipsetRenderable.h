@@ -1,8 +1,8 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include "../Graphic/Texture.h"
-#include "../Graphic/Animation.h"
+#include "Graphic/Texture.h"
+#include "Graphic/Animation.h"
 #include "../World/BlockRenderable.h"
 
 namespace ska {

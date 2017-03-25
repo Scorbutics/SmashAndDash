@@ -1,0 +1,394 @@
+# depslib dependency file v1.0
+1490459547 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\abstractcommand.cpp
+	<iostream>
+	"AbstractCommand.h"
+	"Utils/StringUtils.h"
+	"../ScriptUtils.h"
+	"../ScriptSymbolsConstants.h"
+	"../System/ScriptAutoSystem.h"
+	"../ScriptComponent.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\abstractcommand.h
+	<sstream>
+	<vector>
+	"Command.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\command.h
+	<fstream>
+	<memory>
+	<string>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_script\script\scriptutils.h
+	<string>
+	<unordered_map>
+	"../Script/ScriptComponent.h"
+
+1490459567 d:\users\brice\source\repos\smashanddash\code\ska_script\script\scriptcomponent.h
+	<fstream>
+	<string>
+	<vector>
+	<limits>
+	<unordered_map>
+	"ECS/Component.h"
+	"ScriptState.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"ECS/ECSDefines.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\componenthandler.h
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\staticcounterglobal.h
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\scriptstate.h
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\script\scripttriggertype.h
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\scriptsymbolsconstants.h
+
+1490459576 d:\users\brice\source\repos\smashanddash\code\ska_script\script\system\scriptautosystem.h
+	<unordered_set>
+	<string>
+	<unordered_map>
+	"../Command/Command.h"
+	"Data/Savegame.h"
+	"../ScriptComponent.h"
+	"ECS/System.h"
+
+1490381032 d:\users\brice\source\repos\smashanddash\code\ska_core\\data\savegame.h
+	<string>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\system.h
+	<unordered_set>
+	"ECSDefines.h"
+	"EntityManager.h"
+	"ISystem.h"
+	"../Utils/Observer.h"
+	"../Utils/Refreshable.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\entitymanager.h
+	<bitset>
+	<unordered_set>
+	<array>
+	<unordered_map>
+	<string>
+	"ECSDefines.h"
+	"ComponentHandler.h"
+	"../Exceptions/IllegalStateException.h"
+	"../Exceptions/IllegalArgumentException.h"
+	"../Utils/Observable.h"
+	"ComponentSerializer.h"
+	"../Utils/StringUtils.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\isystem.h
+	<memory>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\refreshable.h
+
+1490459584 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\abstractfunctioncommand.cpp
+	"AbstractFunctionCommand.h"
+	"Utils/StringUtils.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"../ScriptSymbolsConstants.h"
+	"../ScriptComponent.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\abstractfunctioncommand.h
+	"AbstractCommand.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\scriptsyntaxerror.h
+	"ScriptException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\scriptexception.h
+	"GenericException.h"
+
+1490459594 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandassign.cpp
+	"CommandAssign.h"
+	"../ScriptUtils.h"
+	"../ScriptSymbolsConstants.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandassign.h
+	"AbstractFunctionCommand.h"
+
+1490459601 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandassignswitch.cpp
+	"CommandAssignSwitch.h"
+	"../ScriptUtils.h"
+	"../ScriptSymbolsConstants.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandassignswitch.h
+	"AbstractFunctionCommand.h"
+
+1490459618 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandblockauthorize.cpp
+	"CommandBlockAuthorize.h"
+	"../ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"ECS/Basics/Physic/CollidableComponent.h"
+	"../System/ScriptAutoSystem.h"
+	"Exceptions/ScriptException.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandblockauthorize.h
+	"AbstractFunctionCommand.h"
+
+1490456862 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\physic\collidablecomponent.h
+	<unordered_set>
+	"ECS/Component.h"
+
+1490459632 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandcalculate.cpp
+	"CommandCalculate.h"
+	"Utils/StringUtils.h"
+	"../ScriptUtils.h"
+	"Utils/FormalCalculation/FormalCalculator.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandcalculate.h
+	"AbstractFunctionCommand.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\formalcalculation\formalcalculator.h
+	<string>
+
+1490459641 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandelse.cpp
+	<string>
+	"CommandElse.h"
+	"CommandIf.h"
+	"CommandElseEnd.h"
+	"Utils/StringUtils.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"../ScriptComponent.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandelse.h
+	"ControlStatement.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\controlstatement.h
+	"AbstractCommand.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandif.h
+	"ControlStatement.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandelseend.h
+	"ControlStatement.h"
+
+1490459652 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandend.cpp
+	"CommandEnd.h"
+	"../ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"Utils/SkaConstants.h"
+	"Exceptions/ScriptDiedException.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandend.h
+	"AbstractFunctionCommand.h"
+
+1490456266 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\scriptdiedexception.h
+	"ScriptException.h"
+
+1490459659 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandendscript.cpp
+	"CommandEndScript.h"
+	"Exceptions/ScriptDiedException.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandendscript.h
+	<vector>
+	"CommandEnd.h"
+
+1490459667 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandif.cpp
+	"CommandIf.h"
+	<string>
+	<algorithm>
+	"Utils/StringUtils.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandlog.cpp
+	<iostream>
+	"CommandLog.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandlog.h
+	"AbstractFunctionCommand.h"
+
+1490459696 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandrandom.cpp
+	"CommandRandom.h"
+	"../ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"Utils/NumberUtils.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandrandom.h
+	"AbstractFunctionCommand.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490459719 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandremovecomponent.cpp
+	"CommandRemoveComponent.h"
+	"../ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandremovecomponent.h
+	"AbstractFunctionCommand.h"
+
+1490459728 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandrestorecomponent.cpp
+	"CommandRestoreComponent.h"
+	"../ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"../System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandrestorecomponent.h
+	"AbstractFunctionCommand.h"
+
+1490459771 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandscript.cpp
+	<string>
+	"CommandScript.h"
+	"Utils/StringUtils.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"../System/ScriptAutoSystem.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/EntityManager.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandscript.h
+	"AbstractFunctionCommand.h"
+
+1490458534 d:\users\brice\source\repos\smashanddash\code\ska_core\\ecs\basics\script\scriptsleepcomponent.h
+	<vector>
+	<string>
+	"../../Component.h"
+	"ScriptTriggerType.h"
+
+1490459813 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandwait.cpp
+	"CommandWait.h"
+	"Utils/StringUtils.h"
+	"../../Script/ScriptComponent.h"
+	"../../Script/System/ScriptAutoSystem.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\commandwait.h
+	"AbstractFunctionCommand.h"
+
+1490381033 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\command\controlstatement.cpp
+	<iostream>
+	"ControlStatement.h"
+
+1490459837 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\scriptutils.cpp
+	<sstream>
+	"ScriptUtils.h"
+	"Utils/FormalCalculation/FormalCalculator.h"
+	"../Script/ScriptSymbolsConstants.h"
+	"Utils/StringUtils.h"
+	"Utils/SkaConstants.h"
+	"../Script/System/ScriptAutoSystem.h"
+	"Exceptions/NumberFormatException.h"
+	"Exceptions/ScriptSyntaxError.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\numberformatexception.h
+	"GenericException.h"
+
+1490460578 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\system\scriptautosystem.cpp
+	<iostream>
+	<algorithm>
+	<sstream>
+	"ScriptAutoSystem.h"
+	"Exceptions/ScriptDiedException.h"
+	"Exceptions/ScriptUnknownCommandException.h"
+	"Exceptions/IllegalArgumentException.h"
+	"../ScriptUtils.h"
+	"Exceptions/InvalidPathException.h"
+	"Exceptions/NumberFormatException.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"Utils/StringUtils.h"
+	"Utils/FileUtils.h"
+	"Utils/TimeUtils.h"
+	"Utils/NumberUtils.h"
+	"Utils/SkaConstants.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\scriptunknowncommandexception.h
+	"ScriptException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\invalidpathexception.h
+	"InputException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\inputexception.h
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\fileutils.h
+	<string>
+	"SkaConstants.h"
+	"./OSSpecific/FileUtilsUnix.h"
+	"./OSSpecific/FileUtilsWin.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\osspecific\fileutilsunix.h
+	"../SkaConstants.h"
+	<string>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\osspecific\fileutilswin.h
+	"../SkaConstants.h"
+	<string>
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\timeutils.h
+
+1490381033 source:d:\users\brice\source\repos\smashanddash\code\ska_script\script\system\scriptbasiccommandssystem.cpp
+	<utility>
+	"ScriptBasicCommandsSystem.h"
+	"../Command/CommandEnd.h"
+	"../Command/CommandCalculate.h"
+	"../Command/CommandAssignSwitch.h"
+	"../Command/CommandEndScript.h"
+	"../Command/CommandAssign.h"
+	"../Command/CommandRandom.h"
+	"../Command/CommandWait.h"
+	"../Command/CommandLog.h"
+	"../Command/CommandScript.h"
+	"../Command/CommandIf.h"
+	"../Command/CommandElse.h"
+	"../Command/CommandElseEnd.h"
+	"../Command/CommandRemoveComponent.h"
+	"../Command/CommandRestoreComponent.h"
+	"../Command/CommandBlockAuthorize.h"
+
+1490381033 d:\users\brice\source\repos\smashanddash\code\ska_script\script\system\scriptbasiccommandssystem.h
+	"ScriptAutoSystem.h"
+

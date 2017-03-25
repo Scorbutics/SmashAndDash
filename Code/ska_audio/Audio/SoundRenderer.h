@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL_mixer.h>
 #include "Utils/Observer.h"
-#include "../World/WorldEvent.h"
-#include "SoundEvent.h"
+#include "Data/Events/WorldEvent.h"
+#include "Data/Events/SoundEvent.h"
 
 namespace ska {
 	class SoundRenderer :

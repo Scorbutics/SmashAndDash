@@ -1,10 +1,10 @@
 #include "Particle.h"
-#include "../Graphic/SpritePath.h"
-//#include "../Gameplay\WGameCore.h"
+#include "PhysicDefines.h"
+#include "Utils/SpritePath.h"
 
-ska::Particle::Particle(int idSprite, unsigned int weight, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
-m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE),
-m_anim(300, 2, false) {
+ska::Particle::Particle(int idSprite, unsigned int weight, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative)
+//m_sprite(SpritePath::getInstance().getPath(SPRITEBANK_PARTICLE, idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE),
+/*m_anim(300, 2, false)*/ {
     m_slopeNoise = 0;
     m_skill = false;
     m_pos = pos;
@@ -24,9 +24,9 @@ m_anim(300, 2, false) {
     m_noise = 0;
 
 
-	m_spriteSize.w = m_sprite.getWidth()/2;
-	m_spriteSize.h = m_sprite.getHeight()/2;
-	m_anim.setOffsetAndFrameSize(m_spriteSize);
+	/*m_spriteSize.w = m_sprite.getWidth()/2;
+	m_spriteSize.h = m_sprite.getHeight()/2;*/
+	//m_anim.setOffsetAndFrameSize(m_spriteSize);
 
 }
 
@@ -78,10 +78,10 @@ void ska::Particle::destroy()
 void ska::Particle::toSkillParticle()
 {
     m_skill = true;
-	m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_SKILL, m_idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
-	m_spriteSize.w = m_sprite.getWidth()/2;
-	m_spriteSize.h = m_sprite.getHeight()/2;
-	m_anim.setOffsetAndFrameSize(m_spriteSize);
+	//m_sprite.load(SpritePath::getInstance().getPath(SPRITEBANK_SKILL, m_idSprite), DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE);
+	//m_spriteSize.w = m_sprite.getWidth()/2;
+	//m_spriteSize.h = m_sprite.getHeight()/2;
+	//m_anim.setOffsetAndFrameSize(m_spriteSize);
 }
 
 int ska::Particle::getState()
@@ -89,11 +89,11 @@ int ska::Particle::getState()
     return m_state;
 }
 
-void ska::Particle::display()
+/*void ska::Particle::display()
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 
-	/* Et encore une machine d'état un peu dégueu... */
+	//Et encore une machine d'état un peu dégueu...
     if(m_t - (m_lifetime + m_splashTime) >= 0)
     {
         m_state = PARTICLE_STATE_END;
@@ -104,8 +104,8 @@ void ska::Particle::display()
 
 
 	Rectangle animRect = { 0, 0, m_spriteSize.w, m_spriteSize.h }, relativePos = m_pos;
-    /*relativePos.x += wScreen.getORel().x;
-    relativePos.y += wScreen.getORel().y;*/
+    relativePos.x += wScreen.getORel().x;
+    relativePos.y += wScreen.getORel().y;
 
 
     animRect = m_anim.getRectOfCurrentFrame();
@@ -114,7 +114,7 @@ void ska::Particle::display()
 
 	m_sprite.render(relativePos.x, relativePos.y, &animRect);
 
-}
+}*/
 
 void ska::Particle::setLoop(bool loop)
 {

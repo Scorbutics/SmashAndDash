@@ -1,7 +1,7 @@
 #include <limits>
 #include "ButtonSprite.h"
 
-#include "../../../SpritePath.h"
+#include "Utils/SpritePath.h"
 
 ska::ButtonSprite::ButtonSprite(Widget& parent, Point<int> relativePos, const std::string& placeHolderStyleName, unsigned int id, ClickEventHandler const& callback) :
 Button(parent, relativePos, placeHolderStyleName, nullptr, callback),

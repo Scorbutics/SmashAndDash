@@ -2,20 +2,20 @@
 #include <algorithm>
 #include <sstream>
 #include "ScriptAutoSystem.h"
-#include "../../Exceptions/ScriptDiedException.h"
-#include "../../Exceptions/ScriptUnknownCommandException.h"
-#include "../../Exceptions/IllegalArgumentException.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Exceptions/InvalidPathException.h"
-#include "../../Exceptions/NumberFormatException.h"
-#include "../../Exceptions/ScriptSyntaxError.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Utils/FileUtils.h"
-#include "../../Utils/TimeUtils.h"
-#include "../../Utils/NumberUtils.h"
-#include "../../Utils/SkaConstants.h"
-#include "../ScriptTriggerType.h"
-#include "../ScriptSleepComponent.h"
+#include "Exceptions/ScriptDiedException.h"
+#include "Exceptions/ScriptUnknownCommandException.h"
+#include "Exceptions/IllegalArgumentException.h"
+#include "../ScriptUtils.h"
+#include "Exceptions/InvalidPathException.h"
+#include "Exceptions/NumberFormatException.h"
+#include "Exceptions/ScriptSyntaxError.h"
+#include "Utils/StringUtils.h"
+#include "Utils/FileUtils.h"
+#include "Utils/TimeUtils.h"
+#include "Utils/NumberUtils.h"
+#include "Utils/SkaConstants.h"
+#include "ECS/Basics/Script/ScriptTriggerType.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
 
 
 //Par défaut, un script "permanent" se rafraîchit toutes les 1 ms
@@ -58,14 +58,14 @@ void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, c
 }
 
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
-ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scriptSleepEntity, const EntityId origin) {
+void ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scriptSleepEntity, const EntityId origin) {
 	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {
 		throw IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
 	}
 
-	/* If the script is already running, return the running instance */
+	/* If the script is already running, return */
 	if (m_entityManager.hasComponent<ScriptComponent>(scriptSleepEntity)) {
-		return m_entityManager.getComponent<ScriptComponent>(scriptSleepEntity);
+		return;
 	}
 
 	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
@@ -139,7 +139,6 @@ ska::ScriptComponent ska::ScriptAutoSystem::registerScript(ScriptComponent*, con
 
 	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
 
-	return sc;
 }
 
 void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {

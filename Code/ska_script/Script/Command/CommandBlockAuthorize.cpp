@@ -1,9 +1,9 @@
 #include "CommandBlockAuthorize.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Physic/CollidableComponent.h"
+#include "../ScriptUtils.h"
+#include "Utils/StringUtils.h"
+#include "ECS/Basics/Physic/CollidableComponent.h"
 #include "../System/ScriptAutoSystem.h"
-#include "../../Exceptions/ScriptException.h"
+#include "Exceptions/ScriptException.h"
 
 ska::CommandBlockAuthorize::CommandBlockAuthorize(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

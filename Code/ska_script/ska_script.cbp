@@ -15,11 +15,13 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
+					<Add option="-lska_core" />
 					<Add library="user32" />
+					<Add directory="../ska_core/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -40,6 +42,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="../ska_core/" />
+		</Compiler>
 		<Unit filename="Script/Command/AbstractCommand.cpp" />
 		<Unit filename="Script/Command/AbstractCommand.h" />
 		<Unit filename="Script/Command/AbstractFunctionCommand.cpp" />
@@ -76,12 +81,9 @@
 		<Unit filename="Script/Command/CommandWait.h" />
 		<Unit filename="Script/Command/ControlStatement.cpp" />
 		<Unit filename="Script/Command/ControlStatement.h" />
-		<Unit filename="Script/ScriptAwareComponent.h" />
 		<Unit filename="Script/ScriptComponent.h" />
-		<Unit filename="Script/ScriptSleepComponent.h" />
 		<Unit filename="Script/ScriptState.h" />
 		<Unit filename="Script/ScriptSymbolsConstants.h" />
-		<Unit filename="Script/ScriptTriggerType.h" />
 		<Unit filename="Script/ScriptUtils.cpp" />
 		<Unit filename="Script/ScriptUtils.h" />
 		<Unit filename="Script/System/ScriptAutoSystem.cpp" />

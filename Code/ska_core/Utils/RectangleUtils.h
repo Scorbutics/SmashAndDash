@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Rectangle.h"
-#include "Point.h"
+#include "../Rectangle.h"
+#include "../Point.h"
 
 namespace ska {
 	class RectangleUtils {

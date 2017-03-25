@@ -4,13 +4,13 @@
 #include <fstream>
 #include <sstream>
 
-#include "../Utils/StringUtils.h"
-#include "../Utils/SkaConstants.h"
+#include "Utils/StringUtils.h"
+#include "Utils/SkaConstants.h"
 #include "LayerE.h"
 #include "Layer.h"
 #include "World.h"
-#include "../Exceptions/CorruptedFileException.h"
-#include "../Exceptions/NumberFormatException.h"
+#include "Exceptions/CorruptedFileException.h"
+#include "Exceptions/NumberFormatException.h"
 
 //Constructeur ouvrant un monde déjà créé
 ska::LayerE::LayerE(World& world) : m_world(world) {

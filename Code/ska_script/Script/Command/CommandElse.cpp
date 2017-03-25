@@ -2,8 +2,8 @@
 #include "CommandElse.h"
 #include "CommandIf.h"
 #include "CommandElseEnd.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Exceptions/ScriptSyntaxError.h"
+#include "Utils/StringUtils.h"
+#include "Exceptions/ScriptSyntaxError.h"
 #include "../ScriptComponent.h"
 #include "../System/ScriptAutoSystem.h"
 

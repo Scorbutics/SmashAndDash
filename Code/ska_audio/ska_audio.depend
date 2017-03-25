@@ -1,0 +1,55 @@
+# depslib dependency file v1.0
+1490381032 source:d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\music.cpp
+	"SoundRenderer.h"
+	"Music.h"
+
+1490455577 d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\soundrenderer.h
+	<SDL_mixer.h>
+	"Utils/Observer.h"
+	"Data/Events/WorldEvent.h"
+	"Data/Events/SoundEvent.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490384580 d:\users\brice\source\repos\smashanddash\code\ska_core\\data\events\worldevent.h
+
+1490384661 d:\users\brice\source\repos\smashanddash\code\ska_core\\data\events\soundevent.h
+
+1490382985 d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\music.h
+	"Utils/ResourceTemplate.h"
+	"SDLMusic.h"
+
+1490381095 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1490381032 d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\sdlmusic.h
+	<string>
+	<SDL_mixer.h>
+
+1490381032 source:d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\sdlmusic.cpp
+	"SDLMusic.h"
+
+1490381032 source:d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\sdlsound.cpp
+	"SDLSound.h"
+
+1490381032 d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\sdlsound.h
+	<string>
+	<SDL_mixer.h>
+
+1490455601 source:d:\users\brice\source\repos\smashanddash\code\ska_audio\audio\soundrenderer.cpp
+	<iostream>
+	<SDL_mixer.h>
+	"Music.h"
+	"SoundRenderer.h"
+

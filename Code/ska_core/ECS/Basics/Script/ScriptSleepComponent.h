@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "../ECS/Component.h"
+#include "../../Component.h"
 #include "ScriptTriggerType.h"
 
 namespace ska {

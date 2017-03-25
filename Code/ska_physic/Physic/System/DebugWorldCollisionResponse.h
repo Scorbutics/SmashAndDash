@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Utils/Observer.h"
-#include "../../Core/GameEventDispatcher.h"
+#include "Utils/Observer.h"
+#include "Data/GameEventDispatcher.h"
 
 namespace ska {
 	struct CollisionEvent;

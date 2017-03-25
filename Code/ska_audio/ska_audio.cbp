@@ -15,11 +15,13 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add directory="../ska_core/" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
+					<Add directory="../ska_core/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -40,14 +42,15 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Linker>
+			<Add option="-lska_core" />
+		</Linker>
 		<Unit filename="Audio/Music.cpp" />
 		<Unit filename="Audio/Music.h" />
 		<Unit filename="Audio/SDLMusic.cpp" />
 		<Unit filename="Audio/SDLMusic.h" />
 		<Unit filename="Audio/SDLSound.cpp" />
 		<Unit filename="Audio/SDLSound.h" />
-		<Unit filename="Audio/SoundEvent.cpp" />
-		<Unit filename="Audio/SoundEvent.h" />
 		<Unit filename="Audio/SoundRenderer.cpp" />
 		<Unit filename="Audio/SoundRenderer.h" />
 		<Extensions>

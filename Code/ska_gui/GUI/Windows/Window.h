@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <SDL.h>
-#include "Graphics/SDLRenderer.h"
+#include "Graphic/SDLRenderer.h"
 
 namespace ska {
 	class Window {
@@ -13,6 +13,8 @@ namespace ska {
 		virtual ~Window();
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
+
+		void showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const ;
 
 		void flip() const;
 		void resize(unsigned int w, unsigned int h);

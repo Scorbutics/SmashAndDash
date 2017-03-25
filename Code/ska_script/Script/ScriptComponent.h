@@ -4,10 +4,10 @@
 #include <vector>
 #include <limits>
 #include <unordered_map>
-#include "../ECS/Component.h"
+#include "ECS/Component.h"
 #include "ScriptState.h"
-#include "ScriptTriggerType.h"
-#include "../ECS/ECSDefines.h"
+#include "ECS/Basics/Script/ScriptTriggerType.h"
+#include "ECS/ECSDefines.h"
 
 namespace ska {
     class ScriptAutoSystem;

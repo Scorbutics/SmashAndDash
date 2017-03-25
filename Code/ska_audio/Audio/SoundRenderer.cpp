@@ -1,8 +1,9 @@
 #include <iostream>
 #include <SDL_mixer.h>
+#include "Music.h"
 #include "SoundRenderer.h"
 
-ska::SoundRenderer::SoundRenderer(unsigned int channels) : 
+ska::SoundRenderer::SoundRenderer(unsigned int channels) :
 	ska::Observer<SoundEvent>(bind(&SoundRenderer::handleSoundEvent, this, std::placeholders::_1)),
 	ska::Observer<WorldEvent>(bind(&SoundRenderer::handleWorldEvent, this, std::placeholders::_1)),
 	m_currentPlayed(nullptr) {
@@ -38,7 +39,7 @@ bool ska::SoundRenderer::handleSoundEvent(SoundEvent& se) {
 
 bool ska::SoundRenderer::handleWorldEvent(WorldEvent& we) {
 	auto music = we.getBgm();
-	if (we.getEventType() == WORLD_CREATE || 
+	if (we.getEventType() == WORLD_CREATE ||
 		we.getEventType() == WORLD_CHANGE) {
 		music->play(*this);
 	}

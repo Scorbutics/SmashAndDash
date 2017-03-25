@@ -6,7 +6,7 @@
 
 ska::SDLRenderer* ska::Texture::m_renderer = nullptr;
 
-ska::Texture::Texture(std::string id, int r, int g, int b, int a) : ResourceTemplate() {
+ska::Texture::Texture(const std::string& id, int r, int g, int b, int a) : ResourceTemplate() {
 	load(id, r, g, b, a);
 }
 
@@ -19,7 +19,7 @@ void ska::Texture::freeAll() {
 }
 
 
-void ska::Texture::load(std::string id, int r, int g, int b, int a) {
+void ska::Texture::load(const std::string& id, int r, int g, int b, int a) {
 	checkRenderer();
 
 	SDL_Color finalColor;

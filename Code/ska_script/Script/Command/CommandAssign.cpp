@@ -1,5 +1,5 @@
 #include "CommandAssign.h"
-#include "../../Utils/ScriptUtils.h"
+#include "../ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
 #include "../System/ScriptAutoSystem.h"
 

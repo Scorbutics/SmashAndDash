@@ -2,8 +2,8 @@
 
 #include <vector>
 #include <memory>
-#include "../Graphic/Animation.h"
-#include "../Graphic/Point.h"
+#include "Graphic/Animation.h"
+#include "Point.h"
 
 namespace ska {
 

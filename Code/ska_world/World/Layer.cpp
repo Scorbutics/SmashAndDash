@@ -4,10 +4,10 @@
 
 #include "Layer.h"
 #include "World.h"
-#include "../Exceptions/CorruptedFileException.h"
-#include "../Exceptions/IndexOutOfBoundsException.h"
-#include "../Utils/StringUtils.h"
-#include "../Exceptions/FileException.h"
+#include "Exceptions/CorruptedFileException.h"
+#include "Exceptions/IndexOutOfBoundsException.h"
+#include "Utils/StringUtils.h"
+#include "Exceptions/FileException.h"
 
 //Constructeur ouvrant un monde déjà créé
 ska::Layer::Layer(World& w, std::string pathFile, std::string chipsetName, Layer* parent) : m_world(w), m_renderable(w) {

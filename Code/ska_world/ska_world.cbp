@@ -15,11 +15,17 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
+					<Add option="-lska_core" />
+					<Add option="-lska_draw" />
+					<Add option="-lska_physic" />
 					<Add library="user32" />
+					<Add directory="../ska_core/bin/Debug" />
+					<Add directory="../ska_physic/bin/Debug" />
+					<Add directory="../ska_draw/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -40,56 +46,36 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="../ska_script/Script/Command/AbstractCommand.cpp" />
-		<Unit filename="../ska_script/Script/Command/AbstractCommand.h" />
-		<Unit filename="../ska_script/Script/Command/AbstractFunctionCommand.cpp" />
-		<Unit filename="../ska_script/Script/Command/AbstractFunctionCommand.h" />
-		<Unit filename="../ska_script/Script/Command/Command.h" />
-		<Unit filename="../ska_script/Script/Command/CommandAssign.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandAssign.h" />
-		<Unit filename="../ska_script/Script/Command/CommandAssignSwitch.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandAssignSwitch.h" />
-		<Unit filename="../ska_script/Script/Command/CommandBlockAuthorize.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandBlockAuthorize.h" />
-		<Unit filename="../ska_script/Script/Command/CommandCalculate.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandCalculate.h" />
-		<Unit filename="../ska_script/Script/Command/CommandElse.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandElse.h" />
-		<Unit filename="../ska_script/Script/Command/CommandElseEnd.h" />
-		<Unit filename="../ska_script/Script/Command/CommandEnd.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandEnd.h" />
-		<Unit filename="../ska_script/Script/Command/CommandEndScript.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandEndScript.h" />
-		<Unit filename="../ska_script/Script/Command/CommandIf.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandIf.h" />
-		<Unit filename="../ska_script/Script/Command/CommandLog.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandLog.h" />
-		<Unit filename="../ska_script/Script/Command/CommandRandom.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandRandom.h" />
-		<Unit filename="../ska_script/Script/Command/CommandRemoveComponent.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandRemoveComponent.h" />
-		<Unit filename="../ska_script/Script/Command/CommandRestoreComponent.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandRestoreComponent.h" />
-		<Unit filename="../ska_script/Script/Command/CommandScript.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandScript.h" />
-		<Unit filename="../ska_script/Script/Command/CommandWait.cpp" />
-		<Unit filename="../ska_script/Script/Command/CommandWait.h" />
-		<Unit filename="../ska_script/Script/Command/ControlStatement.cpp" />
-		<Unit filename="../ska_script/Script/Command/ControlStatement.h" />
-		<Unit filename="../ska_script/Script/ScriptAwareComponent.h" />
-		<Unit filename="../ska_script/Script/ScriptComponent.h" />
-		<Unit filename="../ska_script/Script/ScriptSleepComponent.h" />
-		<Unit filename="../ska_script/Script/ScriptState.h" />
-		<Unit filename="../ska_script/Script/ScriptSymbolsConstants.h" />
-		<Unit filename="../ska_script/Script/ScriptTriggerType.h" />
-		<Unit filename="../ska_script/Script/ScriptUtils.cpp" />
-		<Unit filename="../ska_script/Script/ScriptUtils.h" />
-		<Unit filename="../ska_script/Script/System/ScriptAutoSystem.cpp" />
-		<Unit filename="../ska_script/Script/System/ScriptAutoSystem.h" />
-		<Unit filename="../ska_script/Script/System/ScriptBasicCommandsSystem.cpp" />
-		<Unit filename="../ska_script/Script/System/ScriptBasicCommandsSystem.h" />
-		<Unit filename="../ska_script/Script/System/ScriptRefreshSystem.cpp" />
-		<Unit filename="../ska_script/Script/System/ScriptRefreshSystem.h" />
+		<Compiler>
+			<Add directory="../ska_core/" />
+			<Add directory="../ska_draw/" />
+			<Add directory="../ska_physic/" />
+		</Compiler>
+		<Unit filename="Scene/HasGraphic.h" />
+		<Unit filename="Scene/HasLogic.h" />
+		<Unit filename="Scene/Scene.cpp" />
+		<Unit filename="Scene/Scene.h" />
+		<Unit filename="Scene/SceneHolder.h" />
+		<Unit filename="Scene/SceneSwitcher.h" />
+		<Unit filename="Scene/SceneType.h" />
+		<Unit filename="World/Block.cpp" />
+		<Unit filename="World/Block.h" />
+		<Unit filename="World/BlockRenderable.cpp" />
+		<Unit filename="World/BlockRenderable.h" />
+		<Unit filename="World/Chipset.cpp" />
+		<Unit filename="World/Chipset.h" />
+		<Unit filename="World/ChipsetHolder.cpp" />
+		<Unit filename="World/ChipsetHolder.h" />
+		<Unit filename="World/ChipsetRenderable.cpp" />
+		<Unit filename="World/ChipsetRenderable.h" />
+		<Unit filename="World/Layer.cpp" />
+		<Unit filename="World/Layer.h" />
+		<Unit filename="World/LayerE.cpp" />
+		<Unit filename="World/LayerE.h" />
+		<Unit filename="World/LayerRenderable.cpp" />
+		<Unit filename="World/LayerRenderable.h" />
+		<Unit filename="World/World.cpp" />
+		<Unit filename="World/World.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

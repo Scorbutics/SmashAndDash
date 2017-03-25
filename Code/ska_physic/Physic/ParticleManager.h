@@ -1,18 +1,15 @@
-#ifndef DEF_PARTICLE_MANAGER
-#define DEF_PARTICLE_MANAGER
+#pragma once
 
 #include <iostream>
 #include <string>
 #include <memory>
 #include <vector>
+
 #include "Particle.h"
-#include "../Graphic/Texture.h"
-#include "../Graphic/Draw/DrawableFixedPriority.h"
-#include "../Graphic/Rectangle.h"
+#include "Rectangle.h"
 
 namespace ska {
-	class ParticleManager : public DrawableFixedPriority
-	{
+	class ParticleManager {
 
 	public:
 		ParticleManager();
@@ -24,13 +21,11 @@ namespace ska {
 		void stop();
 		void hide(bool h);
 
-		virtual bool isVisible() const override;
-		virtual void display() const override;
+		virtual bool isVisible() const;
+		//virtual void display() const override;
 
 		virtual void refresh();
 		int collisionNPC();
-
-
 
 	protected:
 		void remove(unsigned int index);
@@ -42,10 +37,10 @@ namespace ska {
 		void addLinearParticle(int idSprite, unsigned int weight);
 
 		std::vector<std::unique_ptr<Particle>> m_particles;
-		Texture m_rainWeather;
+		//Texture m_rainWeather;
 		int m_sens;
 		bool m_active;
 		unsigned int m_duration, m_t0;
 	};
 }
-#endif
+

@@ -1,9 +1,9 @@
 #pragma once
 #include <unordered_set>
-#include "../../ECS/System.h"
-#include "../MovementComponent.h"
-#include "../PositionComponent.h"
-#include "../ForceComponent.h"
+#include "ECS/System.h"
+#include "ECS/Basics/Physic/MovementComponent.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
+#include "ECS/Basics/Physic/ForceComponent.h"
 
 namespace ska {
 	class MovementSystem : public System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, ForceComponent> {

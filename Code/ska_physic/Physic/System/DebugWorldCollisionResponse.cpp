@@ -1,10 +1,10 @@
 #include <iostream>
-#include "../CollisionEvent.h"
+#include "Data/Events/CollisionEvent.h"
 #include "DebugWorldCollisionResponse.h"
-#include "../../Graphic/DebugGraphicComponent.h"
-#include "../WorldCollisionComponent.h"
-#include "../CollidableComponent.h"
-#include "../../ECS/EntityManager.h"
+#include "ECS/Basics/Graphic/DebugGraphicComponent.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "ECS/Basics/Physic/CollidableComponent.h"
+#include "ECS/EntityManager.h"
 #include "CollisionSystem.h"
 
 ska::DebugWorldCollisionResponse::DebugWorldCollisionResponse(GameEventDispatcher& ged, EntityManager& em) :

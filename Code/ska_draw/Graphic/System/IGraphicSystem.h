@@ -1,6 +1,6 @@
 #pragma once
-#include "ISystem.h"
-#include "../Graphic/System/CameraAware.h"
+#include "ECS/ISystem.h"
+#include "Graphic/System/CameraAware.h"
 
 namespace ska {
 	class DrawableContainer;

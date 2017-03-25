@@ -1,6 +1,6 @@
 #pragma once
 #include "../Components/WidgetPanel.h"
-#include "../../Texture.h"
+#include "Graphic/Texture.h"
 
 
 namespace ska{

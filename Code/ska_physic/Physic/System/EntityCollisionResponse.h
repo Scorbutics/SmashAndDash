@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Utils/Observer.h"
-#include "../../Core/GameEventDispatcher.h"
+#include "Utils/Observer.h"
+#include "Data/GameEventDispatcher.h"
 
 namespace ska {
 	struct CollisionEvent;
@@ -16,10 +16,10 @@ namespace ska {
 		EntityCollisionResponse& operator=(const EntityCollisionResponse&) = delete;
 		virtual bool onEntityCollision(CollisionEvent&);
 		~EntityCollisionResponse();
-	
+
 	protected:
 		EntityManager& m_entityManager;
-	
+
 	private:
 		GameEventDispatcher& m_ged;
 

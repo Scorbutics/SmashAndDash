@@ -1,21 +1,18 @@
-#ifndef DEF_PARTICLE
-#define DEF_PARTICLE
+#pragma once
 
-
+#include <memory>
 #include <iostream>
 #include <vector>
-#include "../Graphic/Texture.h"
-#include "../Graphic/Animation.h"
-#include "../Graphic/Point.h"
+#include "Point.h"
 
 namespace ska {
-	class Particle
-	{
+	class Particle {
 
 	public:
 		Particle(int idSprite, unsigned int weight, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative);
 		virtual void refresh() = 0;
-		void display();
+		//void display();
+
 		virtual void launch(Point<int> origin, float angle, unsigned int power);
 		virtual void addSlopeNoise(float x) = 0;
 		virtual void resetSlopeNoise() = 0;
@@ -40,10 +37,10 @@ namespace ska {
 		void setLoop(bool loop);
 
 	protected:
-		Texture m_sprite;
+		//Texture m_sprite;
 		unsigned int m_weight, m_power, m_countWind;
 		Rectangle m_pos, m_spriteSize;
-		Animation m_anim;
+		//Animation m_anim;
 		float m_angle, m_slopeNoise;
 		bool m_active, m_loop, m_relative, m_skill;
 		int m_idSprite, m_type, m_state, m_noise;
@@ -56,4 +53,4 @@ namespace ska {
 
 	typedef std::unique_ptr<Particle> ParticlePtr;
 }
-#endif
+

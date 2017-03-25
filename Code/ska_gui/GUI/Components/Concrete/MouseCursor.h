@@ -1,7 +1,7 @@
 #pragma once
-#include "../../../Draw/DrawableFixedPriority.h"
+#include "Graphic/Draw/DrawableFixedPriority.h"
 #include "Point.h"
-#include "../../../Texture.h"
+#include "Graphic/Texture.h"
 
 
 namespace ska {

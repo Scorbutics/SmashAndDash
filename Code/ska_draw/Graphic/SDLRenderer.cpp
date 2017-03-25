@@ -29,6 +29,7 @@ void ska::SDLRenderer::load(SDL_Window* window, int index, Uint32 flags) {
     }
 
     m_renderer = SDL_CreateRenderer(window, index, flags);
+    SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
     if(m_renderer == nullptr) {
         std::cerr << "Erreur lors de la création de la fenêtre SDL (renderer) :" << SDL_GetError() << std::endl;

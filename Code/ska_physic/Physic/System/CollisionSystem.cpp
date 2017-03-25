@@ -1,17 +1,18 @@
 #include "CollisionSystem.h"
-#include "../../Utils/RectangleUtils.h"
-#include "../CollisionComponent.h"
-#include "../WorldCollisionComponent.h"
+#include "ECS/Basics/Physic/CollisionProfile.h"
+#include "Utils/RectangleUtils.h"
+#include "ECS/Basics/Physic/CollisionComponent.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
-ska::CollisionSystem::CollisionSystem(World& w, EntityManager& entityManager, GameEventDispatcher& ged) : 
-	System(entityManager), 
-	m_world(w),
+ska::CollisionSystem::CollisionSystem(CollisionProfile& cp, EntityManager& entityManager, GameEventDispatcher& ged) :
+	System(entityManager),
+	m_collisionProfile(cp),
 	m_ged(ged) {
 }
 
 void ska::CollisionSystem::refresh() {
 	for (auto entityId : m_processed) {
-		
+
 		std::vector<Point<int>> lastBlockColPosX;
 		std::vector<Point<int>> lastBlockColPosY;
 		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
@@ -33,7 +34,7 @@ void ska::CollisionSystem::refresh() {
 					col.target = itEntity;
 					entityCollided = true;
 					col.xaxis = true;
-				} 
+				}
 				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, false))) {
 					col.origin = entityId;
 					col.target = itEntity;
@@ -53,16 +54,16 @@ void ska::CollisionSystem::refresh() {
 		auto collided = false;
 		Rectangle nextPosX = { entityHitboxX.x, entityHitboxX.y, entityHitboxX.w, entityHitboxX.h };
 		Rectangle nextPosY = { entityHitboxY.x, entityHitboxY.y, entityHitboxY.w, entityHitboxY.h };
-		
+
 		wcol.blockColPosX.clear();
-		if (!m_world.canMoveToPos(nextPosX, wcol.blockColPosX)){
+		if (!m_collisionProfile.canMoveToPos(nextPosX, wcol.blockColPosX)){
 			collided = true;
 			wcol.xaxis = true;
 			wcol.lastBlockColPosX = lastBlockColPosX;
 		}
 
 		wcol.blockColPosY.clear();
-		if (!m_world.canMoveToPos(nextPosY, wcol.blockColPosY)){
+		if (!m_collisionProfile.canMoveToPos(nextPosY, wcol.blockColPosY)){
 			collided = true;
 			wcol.yaxis = true;
 			wcol.lastBlockColPosY = lastBlockColPosY;

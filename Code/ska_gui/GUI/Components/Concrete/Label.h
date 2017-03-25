@@ -1,6 +1,6 @@
 #pragma once
 #include "../Widget.h"
-#include "../../../Texture.h"
+#include "Graphic/Texture.h"
 
 namespace ska {
 	class Label : public Widget {
@@ -13,7 +13,7 @@ namespace ska {
 		void setClip(Rectangle* r);
 		void display() const override;
 		void clear();
-			
+
 	private:
 		std::string m_text;
 		unsigned int m_fontSize;

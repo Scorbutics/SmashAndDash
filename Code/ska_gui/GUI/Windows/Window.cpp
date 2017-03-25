@@ -3,7 +3,7 @@
 #include <fstream>
 
 #include "Window.h"
-#include "../../Texture.h"
+#include "Graphic/Texture.h"
 
 
 #define TAILLEBLOCFENETRE 32
@@ -15,7 +15,7 @@ ska::Window::Window(const std::string& title, const unsigned int w, const unsign
 m_wName(title),
 m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h),
 m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
-	Texture::setDefaultWindow(this);
+	Texture::setDefaultRenderer(m_renderer);
 
 	m_screen = SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
@@ -29,8 +29,6 @@ m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
 	}
 
 	m_renderer.load(m_screen, -1, SDL_RENDERER_ACCELERATED);
-
-	SDL_SetRenderDrawColor( m_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
 	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear")) {
 		std::clog << "Attention : Linear texture filtering non activé !" << std::endl;
@@ -50,15 +48,17 @@ void ska::Window::flip() const{
 	m_renderer.renderPresent();
 }
 
+void ska::Window::showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const {
+    SDL_ShowSimpleMessageBox(flags,
+            title.c_str(),
+            message.c_str(),
+            m_screen);
+}
+
 void ska::Window::resize(unsigned int w, unsigned int h) {
 	m_width = w;
 	m_height = h;
 }
-
-SDL_Window* ska::Window::getHandle() const{
-	return m_screen;
-}
-
 
 ska::Window::~Window() {
 	SDL_DestroyWindow(m_screen);

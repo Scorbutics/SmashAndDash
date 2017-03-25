@@ -15,11 +15,15 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add directory="../ska_core/" />
+					<Add directory="../ska_physic/" />
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
+					<Add directory="../ska_physic/bin/Debug" />
+					<Add directory="../ska_core/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -40,12 +44,19 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="../ska_core/" />
+		</Compiler>
+		<Linker>
+			<Add option="-lska_core" />
+		</Linker>
 		<Unit filename="AI/IADefinedMovementComponent.h" />
 		<Unit filename="AI/IARandomMovementComponent.h" />
 		<Unit filename="AI/Node.cpp" />
 		<Unit filename="AI/Node.h" />
 		<Unit filename="AI/Path.cpp" />
 		<Unit filename="AI/Path.h" />
+		<Unit filename="AI/ScriptRegisterer.h" />
 		<Unit filename="AI/System/IADefinedMovementSystem.cpp" />
 		<Unit filename="AI/System/IADefinedMovementSystem.h" />
 		<Unit filename="AI/System/IARandomMovementSystem.cpp" />

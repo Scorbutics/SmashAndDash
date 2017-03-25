@@ -1,6 +1,6 @@
 #pragma once
 #include <unordered_set>
-#include "../../ska/ECS/Component.h"
+#include "ECS/Component.h"
 
 namespace ska {
 	class CollidableComponent : public Component {

@@ -6,14 +6,16 @@
 #include <unordered_set>
 #include <memory>
 #include <vector>
-#include "../Inputs/Readers/IniReader.h"
-#include "../Graphic/Texture.h"
-#include "../Graphic/Animation.h"
+#include "Inputs/Readers/IniReader.h"
+#include "Graphic/Texture.h"
+#include "Graphic/Animation.h"
 #include "../Scene/Scene.h"
-#include "../Graphic/System/CameraAware.h"
+#include "Graphic/System/CameraAware.h"
 #include "ChipsetHolder.h"
 #include "Layer.h"
 #include "LayerE.h"
+#include "ECS/Basics/Physic/CollisionProfile.h"
+#include "Data/BlockContainer.h"
 
 namespace ska {
 	class CameraSystem;
@@ -23,7 +25,11 @@ namespace ska {
 	class ScriptSleepComponent;
 	typedef char ScriptTriggerType;
 
-	class World : public HasGraphic, public CameraAware {
+	class World :
+	    public HasGraphic,
+	    public CameraAware,
+	    public BlockContainer,
+	    public CollisionProfile {
 	public:
 		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
 		World(const World&) = delete;
@@ -38,7 +44,7 @@ namespace ska {
 
 		unsigned int getPixelWidth() const;
 		unsigned int getPixelHeight() const;
-		
+
 		void update();
 
 		unsigned int getNbrBlocX() const;
@@ -56,9 +62,9 @@ namespace ska {
 		Block* getHigherBlock(const unsigned int i, const unsigned int j) const;
 
 		void getData();
-		bool isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex);
+		bool isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex) const override;
 		bool canMoveToPos(Rectangle pos, std::vector<Point<int>>& output) const;
-		bool canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const;
+		bool canMoveOnBlock(const Point<int>& pos, const std::unordered_set<int>& authorizedBlocks, int layerIndex) const override;
 
 		bool getCollision(const int i, const int j) const;
 		bool isBlockDodgeable(const int i, const int j) const;
@@ -83,9 +89,9 @@ namespace ska {
 		int m_nbrBlockX, m_nbrBlockY;
 		unsigned int m_blockSize;
 
-		
+
 		std::string m_fileName, m_genericName, m_worldName;
-		
+
 		bool m_autoScriptsPlayed;
 		std::vector<IniReader> m_mobSettings;
 		CameraSystem* m_cameraSystem;

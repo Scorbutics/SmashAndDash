@@ -1,7 +1,7 @@
 #include <math.h>
-//#include "../Gameplay\WGameCore.h"
+#include "PhysicDefines.h"
 #include "GravityParticle.h"
-#include "../Utils/SkaConstants.h"
+#include "Utils/SkaConstants.h"
 
 ska::GravityParticle::GravityParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, float acceleration, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)

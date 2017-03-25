@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Point.h"
-#include "../../Draw/DrawableFixedPriority.h"
-#include "../../../RectangleUtils.h"
+#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Utils/RectangleUtils.h"
 #include "Utils/TupleUtils.h"
 
 namespace ska {

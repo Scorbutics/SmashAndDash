@@ -1,7 +1,7 @@
 #include <iostream>
 #include "AbstractCommand.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Utils/ScriptUtils.h"
+#include "Utils/StringUtils.h"
+#include "../ScriptUtils.h"
 #include "../ScriptSymbolsConstants.h"
 #include "../System/ScriptAutoSystem.h"
 #include "../ScriptComponent.h"

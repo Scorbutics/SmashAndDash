@@ -1,13 +1,13 @@
 
-#include "../Exceptions/CorruptedFileException.h"
-#include "../Exceptions/FileException.h"
-#include "../Graphic/SDLSurface.h"
-#include "../Utils/StringUtils.h"
+#include "Exceptions/CorruptedFileException.h"
+#include "Exceptions/FileException.h"
+#include "Graphic/SDLSurface.h"
+#include "Utils/StringUtils.h"
 #include "Block.h"
-#include "../Utils/SkaConstants.h"
+#include "Utils/SkaConstants.h"
 #include "Chipset.h"
 #include "ChipsetHolder.h"
-#include "../Graphic/Animation.h"
+#include "Graphic/Animation.h"
 
 ska::ChipsetHolder::ChipsetHolder(const std::string&) {
 	SDLSurface fichierMCorr;

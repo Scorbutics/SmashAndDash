@@ -1,7 +1,7 @@
 #include <math.h>
-//#include "../Gameplay\WGameCore.h"
 #include "LinearParticle.h"
-#include "../Utils/SkaConstants.h"
+#include "PhysicDefines.h"
+#include "Utils/SkaConstants.h"
 
 ska::LinearParticle::LinearParticle(int idSprite, Rectangle pos, double lifetime, double splashTime, bool loop, bool relative) :
 	Particle(idSprite, 0, pos, lifetime, splashTime, loop, relative)

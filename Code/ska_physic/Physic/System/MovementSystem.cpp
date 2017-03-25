@@ -1,6 +1,6 @@
 #include "MovementSystem.h"
-#include "../../Utils/NumberUtils.h"
-#include "../WorldCollisionComponent.h"
+#include "Utils/NumberUtils.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
 ska::MovementSystem::MovementSystem(EntityManager& entityManager) : System(entityManager) {
 }
@@ -12,7 +12,7 @@ void ska::MovementSystem::refresh() {
 
 		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			auto& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
-			
+
 			/* World Collision */
 			if (col.xaxis) {
 				moveComponent.vx = 0;

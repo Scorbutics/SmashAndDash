@@ -1,6 +1,6 @@
 #include "CommandRemoveComponent.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Utils/StringUtils.h"
+#include "../ScriptUtils.h"
+#include "Utils/StringUtils.h"
 #include "../System/ScriptAutoSystem.h"
 
 ska::CommandRemoveComponent::CommandRemoveComponent(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

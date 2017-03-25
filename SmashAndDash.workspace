@@ -6,11 +6,26 @@
 		<Project filename="Code/ska_draw/ska_draw.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 		</Project>
-		<Project filename="Code/ska_gui/ska_gui.cbp" />
-		<Project filename="Code/ska_physic/ska_physic.cbp" />
-		<Project filename="Code/ska_script/ska_script.cbp" />
-		<Project filename="Code/ska_audio/ska_audio.cbp" />
-		<Project filename="Code/ska_world/ska_world.cbp" />
-		<Project filename="Code/ska_ai/ska_ai.cbp" />
+		<Project filename="Code/ska_gui/ska_gui.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+			<Depends filename="Code/ska_draw/ska_draw.cbp" />
+		</Project>
+		<Project filename="Code/ska_physic/ska_physic.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
+		<Project filename="Code/ska_script/ska_script.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
+		<Project filename="Code/ska_audio/ska_audio.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
+		<Project filename="Code/ska_world/ska_world.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+			<Depends filename="Code/ska_draw/ska_draw.cbp" />
+			<Depends filename="Code/ska_physic/ska_physic.cbp" />
+		</Project>
+		<Project filename="Code/ska_ai/ska_ai.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

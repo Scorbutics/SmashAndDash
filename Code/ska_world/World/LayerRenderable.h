@@ -8,7 +8,7 @@
 
 #include "BlockRenderable.h"
 
-#include "../Graphic/Draw/DrawableFixedPriority.h"
+#include "Graphic/Draw/DrawableFixedPriority.h"
 
 class ParticleManager;
 
@@ -31,7 +31,7 @@ namespace ska {
 		bool isVisible() const override;
 
 		BlockRenderable* getBlock(unsigned int i, unsigned int j);
-	
+
 		void setRectAnim(Rectangle rectAnim);
 
 	private:

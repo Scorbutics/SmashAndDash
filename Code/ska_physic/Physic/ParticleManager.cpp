@@ -1,9 +1,7 @@
 #include "ParticleManager.h"
-
+#include "PhysicDefines.h"
 #include "GravityParticle.h"
-//#include "../Gameplay\WGameCore.h"
-#include "../World/Layer.h"
-#include "../Utils/NumberUtils.h"
+#include "Utils/NumberUtils.h"
 
 ska::ParticleManager::ParticleManager()
 {
@@ -80,7 +78,7 @@ void ska::ParticleManager::remove(unsigned int index)
 	}
 }
 
-void ska::ParticleManager::display() const {
+/*void ska::ParticleManager::display() const {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	//World& w = wScreen.getWorld();
 
@@ -97,7 +95,7 @@ void ska::ParticleManager::display() const {
 			}
 		}
 	}
-}
+}*/
 
 void ska::ParticleManager::refresh()
 {

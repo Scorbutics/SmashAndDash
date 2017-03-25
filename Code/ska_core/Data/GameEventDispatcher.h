@@ -1,8 +1,8 @@
 #pragma once
 #include "EventDispatcher.h"
-#include "../Audio/SoundEvent.h"
-#include "../Physic/CollisionEvent.h"
-#include "../World/WorldEvent.h"
+#include "Data/Events/SoundEvent.h"
+#include "Data/Events/CollisionEvent.h"
+#include "Data/Events/WorldEvent.h"
 
 namespace ska {
 	using GameEventDispatcher = EventDispatcher<SoundEvent, WorldEvent, CollisionEvent>;

@@ -1,11 +1,12 @@
 #include "IADefinedMovementSystem.h"
-#include "../../Utils/TimeUtils.h"
-#include "../../Utils/PhysicUtils.h"
-#include "../../Utils/NumberUtils.h"
-#include "../../Utils/RectangleUtils.h"
-#include "../../Physic/WorldCollisionComponent.h"
+#include "Utils/TimeUtils.h"
+#include "Utils/PhysicUtils.h"
+#include "Utils/NumberUtils.h"
+#include "Utils/RectangleUtils.h"
+#include "../ScriptRegisterer.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
-ska::IADefinedMovementSystem::IADefinedMovementSystem(EntityManager& entityManager, ScriptAutoSystem* scriptSystem) : System(entityManager), m_scriptSystem(scriptSystem) {
+ska::IADefinedMovementSystem::IADefinedMovementSystem(EntityManager& entityManager, ScriptRegisterer* scriptSystem) : System(entityManager), m_scriptSystem(scriptSystem) {
 }
 
 void ska::IADefinedMovementSystem::refresh() {
@@ -54,6 +55,7 @@ void ska::IADefinedMovementSystem::refresh() {
 			} else {
 				finished = true;
 				if (m_scriptSystem != nullptr && iamc.callbackActive) {
+					//TODO Event pour remplacer ça
 					/* triggers callback */
 					EntityId scriptEntity = m_entityManager.createEntity();
 					m_entityManager.addComponent<ScriptSleepComponent>(scriptEntity, iamc.callback);

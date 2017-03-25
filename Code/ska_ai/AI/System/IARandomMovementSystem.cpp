@@ -1,9 +1,9 @@
 #include "IARandomMovementSystem.h"
-#include "../../Utils/TimeUtils.h"
-#include "../../Utils/PhysicUtils.h"
-#include "../../Utils/NumberUtils.h"
-#include "../../Physic/PositionComponent.h"
-#include "../../Utils/RectangleUtils.h"
+#include "Utils/TimeUtils.h"
+#include "Utils/PhysicUtils.h"
+#include "Utils/NumberUtils.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
+#include "Utils/RectangleUtils.h"
 
 ska::IARandomMovementSystem::IARandomMovementSystem(EntityManager& entityManager) : System(entityManager) {
 }

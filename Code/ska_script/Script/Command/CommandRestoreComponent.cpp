@@ -1,6 +1,6 @@
 #include "CommandRestoreComponent.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Utils/StringUtils.h"
+#include "../ScriptUtils.h"
+#include "Utils/StringUtils.h"
 #include "../System/ScriptAutoSystem.h"
 
 ska::CommandRestoreComponent::CommandRestoreComponent(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

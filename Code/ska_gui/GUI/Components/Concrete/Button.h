@@ -2,12 +2,12 @@
 
 #include "../Hoverable.h"
 #include "../../Events/ClickEventListener.h"
-#include "../../../Texture.h"
+#include "Graphic/Texture.h"
 #include "../../Events/ValueChangedEvent.h"
 
 
 namespace ska {
-	
+
 	class Button :
 		public Hoverable<ValueChangedEventListener<bool>, ClickEventListener> {
 	public:
@@ -35,6 +35,6 @@ namespace ska {
 		Texture const* m_lastTextureSelector;
 		bool m_drawStyle;
 		Rectangle m_clip;
-		
+
 	};
 }

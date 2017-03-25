@@ -15,11 +15,15 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
 					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
+					<Add option="-lska_core" />
+					<Add option="-lska_draw" />
 					<Add library="user32" />
+					<Add directory="../ska_draw/bin/Debug" />
+					<Add directory="../ska_core/bin/Debug" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -30,16 +34,22 @@
 				<Option createDefFile="1" />
 				<Option createStaticLib="1" />
 				<Compiler>
+					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
-					<Add option="-O2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
+					<Add directory="../ska_draw/bin/Release" />
+					<Add directory="../ska_core/bin/Release" />
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add directory="../ska_draw/" />
+			<Add directory="../ska_core/" />
+		</Compiler>
 		<Unit filename="GUI/Components/Concrete/Button.cpp" />
 		<Unit filename="GUI/Components/Concrete/Button.h" />
 		<Unit filename="GUI/Components/Concrete/ButtonQuit.cpp" />

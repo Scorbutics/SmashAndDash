@@ -1,17 +1,17 @@
-#include "../Inputs/InputContextManager.h"
-#include "../Graphic/Draw/DrawableContainer.h"
-#include "../ECS/IGraphicSystem.h"
-#include "../ECS/ISystem.h"
+#include "Inputs/InputContextManager.h"
+#include "Graphic/Draw/DrawableContainer.h"
+#include "Graphic/System/IGraphicSystem.h"
+#include "ECS/ISystem.h"
 #include "SceneHolder.h"
 #include "Scene.h"
 
-ska::Scene::Scene(SceneHolder& sh, InputContextManager& ril) : 
-m_inputCManager(ril), 
+ska::Scene::Scene(SceneHolder& sh, InputContextManager& ril) :
+m_inputCManager(ril),
 m_holder(sh) {
 }
 
-ska::Scene::Scene(Scene& oldScene): 
-m_inputCManager(oldScene.m_inputCManager), 
+ska::Scene::Scene(Scene& oldScene):
+m_inputCManager(oldScene.m_inputCManager),
 m_holder(oldScene.m_holder) {
 
 }

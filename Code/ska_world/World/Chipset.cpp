@@ -1,12 +1,12 @@
 #include <fstream>
-#include "../Exceptions/CorruptedFileException.h"
-#include "../Exceptions/FileException.h"
+#include "Exceptions/CorruptedFileException.h"
+#include "Exceptions/FileException.h"
 #include "../World/Block.h"
 #include "../World/BlockRenderable.h"
-#include "../Utils/SkaConstants.h"
-#include "../Utils/StringUtils.h"
+#include "Utils/SkaConstants.h"
+#include "Utils/StringUtils.h"
 #include "Chipset.h"
-#include "../Script/ScriptSleepComponent.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
 
 ska::Chipset::Chipset(const std::unordered_map<Color, Point<int>>& corr, const unsigned int corrFileWidth, const int blockSize, const std::string& chipsetName) :
 	m_corr(corr),

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "RectangleUtils.h"
-#include "Utils/NumberUtils.h"
+#include "NumberUtils.h"
 
 ska::RectangleUtils::RectangleUtils()
 {

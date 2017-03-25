@@ -1,7 +1,7 @@
 #include "CommandRandom.h"
-#include "../../Utils/ScriptUtils.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Utils/NumberUtils.h"
+#include "../ScriptUtils.h"
+#include "Utils/StringUtils.h"
+#include "Utils/NumberUtils.h"
 
 ska::CommandRandom::CommandRandom(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

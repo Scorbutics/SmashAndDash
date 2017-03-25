@@ -1,5 +1,5 @@
 #include "CommandWait.h"
-#include "../../Utils/StringUtils.h"
+#include "Utils/StringUtils.h"
 #include "../../Script/ScriptComponent.h"
 #include "../../Script/System/ScriptAutoSystem.h"
 

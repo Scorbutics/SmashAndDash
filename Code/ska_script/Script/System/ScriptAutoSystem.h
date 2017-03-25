@@ -3,9 +3,9 @@
 #include <string>
 #include <unordered_map>
 #include "../Command/Command.h"
-#include "../../Data/Savegame.h"
+#include "Data/Savegame.h"
 #include "../ScriptComponent.h"
-#include "../../ECS/System.h"
+#include "ECS/System.h"
 
 namespace ska {
 	class World;
@@ -15,7 +15,7 @@ namespace ska {
 	public:
 
 		Savegame& getSavegame();
-		ScriptComponent registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
+		void registerScript(ScriptComponent* parent, const EntityId scriptSleepEntity, const EntityId origin);
 		void registerCommand(const std::string& cmdName, CommandPtr& cmd);
 		void setupScriptArgs(ScriptComponent* parent, ScriptComponent& script, const std::vector<std::string>& args);
 		void kill(const std::string& keyScript);

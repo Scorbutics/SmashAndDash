@@ -2,11 +2,11 @@
 #include "World.h"
 #include "Layer.h"
 #include "Block.h"
-#include "../Utils/StringUtils.h"
-#include "../Utils/RectangleUtils.h"
+#include "Utils/StringUtils.h"
+#include "Utils/RectangleUtils.h"
 #include "LayerE.h"
-#include "../Script/ScriptSleepComponent.h"
-#include "../Graphic/System/CameraSystem.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
+#include "Graphic/System/CameraSystem.h"
 
 ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :
 	m_blockSize(tailleBloc),
@@ -29,8 +29,8 @@ unsigned int ska::World::getNumberLayers() const {
 	return 3;
 }
 
-bool ska::World::isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex) {
-	Layer* l;
+bool ska::World::isSameBlockId(const Point<int>& p1, const Point<int>& p2, int layerIndex) const {
+	const Layer* l;
 	switch (layerIndex) {
 	case 0:
 		l = &m_lBot;

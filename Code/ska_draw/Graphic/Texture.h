@@ -13,10 +13,10 @@ namespace ska {
 	class Texture : public ResourceTemplate<SDLTexture, TextureData> {
 
 	public:
-		explicit Texture(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
+		explicit Texture(const std::string& id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
 		Texture();
 		void loadFromText(unsigned int fontSize, std::string text, Color c);
-		void load(std::string id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
+		void load(const std::string& id, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
 		static void setDefaultRenderer(SDLRenderer& renderer);
 		static void freeAll();
 		virtual ~Texture();

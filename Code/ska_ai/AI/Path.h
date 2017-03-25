@@ -1,8 +1,6 @@
-#ifndef DEF_PATH
-#define DEF_PATH
-
+#pragma once
 #include <string>
-#include "../Graphic/Rectangle.h"
+#include "Rectangle.h"
 #include "Node.h"
 
 class World;
@@ -31,4 +29,4 @@ namespace ska {
 		unsigned int m_pos, m_type;
 	};
 }
-#endif
+

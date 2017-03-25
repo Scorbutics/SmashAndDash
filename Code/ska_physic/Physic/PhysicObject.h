@@ -1,10 +1,9 @@
-﻿#ifndef DEF_PHYSICOBJECT
-#define DEF_PHYSICOBJECT
+﻿#pragma once
 
 #include <stdlib.h>
 #include <vector>
-#include "Force.h"
-#include "../Graphic/Point.h"
+#include "Utils/Force.h"
+#include "Point.h"
 
 class World;
 
@@ -77,5 +76,3 @@ namespace ska {
 
 	};
 }
-
-#endif

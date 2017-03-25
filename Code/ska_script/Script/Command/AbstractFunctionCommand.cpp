@@ -1,6 +1,6 @@
 #include "AbstractFunctionCommand.h"
-#include "../../Utils/StringUtils.h"
-#include "../../Exceptions/ScriptSyntaxError.h"
+#include "Utils/StringUtils.h"
+#include "Exceptions/ScriptSyntaxError.h"
 #include "../ScriptSymbolsConstants.h"
 #include "../ScriptComponent.h"
 

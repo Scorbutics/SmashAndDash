@@ -1,14 +1,14 @@
 #include "EntityCollisionResponse.h"
-#include "../../Physic/ForceComponent.h"
-#include "../../Physic/MovementComponent.h"
-#include "../../ECS/EntityManager.h"
+#include "ECS/Basics/Physic/ForceComponent.h"
+#include "ECS/Basics/Physic/MovementComponent.h"
+#include "ECS/EntityManager.h"
 #include "CollisionSystem.h"
-#include "../../ECS/EntityManager.h"
-#include "../CollisionComponent.h"
+#include "ECS/EntityManager.h"
+#include "ECS/Basics/Physic/CollisionComponent.h"
 
 ska::EntityCollisionResponse::EntityCollisionResponse(GameEventDispatcher& ged, EntityManager& em) :
 	EntityCollisionObserver(bind(&EntityCollisionResponse::onEntityCollision, this, std::placeholders::_1)),
-	m_entityManager(em), 
+	m_entityManager(em),
 	m_ged(ged) {
 	m_ged.ska::Observable<CollisionEvent>::addObserver(*this);
 }

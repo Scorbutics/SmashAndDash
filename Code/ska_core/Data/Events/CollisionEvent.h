@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ECS/ECSDefines.h"
+#include "ECS/ECSDefines.h"
 
 
 namespace ska {
@@ -10,8 +10,8 @@ namespace ska {
 
 	struct CollisionEvent {
 		CollisionEvent(const EntityId e, WorldCollisionComponent* wcolComp, CollisionComponent* colComp, const CollidableComponent& colliComp) :
-			entity(e), 
-			collisionComponent(colComp), 
+			entity(e),
+			collisionComponent(colComp),
 			wcollisionComponent(wcolComp),
 			collidableComponent(colliComp) {
 		}
@@ -19,7 +19,7 @@ namespace ska {
 		void operator=(const CollisionEvent&) = delete;
 
 		virtual ~CollisionEvent() = default;
-		
+
 		const EntityId entity;
 		CollisionComponent* collisionComponent;
 		WorldCollisionComponent* wcollisionComponent;

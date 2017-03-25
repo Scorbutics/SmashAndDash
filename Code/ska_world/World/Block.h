@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "../Graphic/Point.h"
+#include "Point.h"
 
 namespace ska {
 
@@ -14,7 +14,7 @@ namespace ska {
 		unsigned int getProperties();
 		int getCollision() const;
 		unsigned int getID() const;
-		
+
 	private:
 		unsigned int m_properties;
 		unsigned int m_id;

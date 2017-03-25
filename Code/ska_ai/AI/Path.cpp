@@ -6,7 +6,7 @@
 
 #include "Path.h"
 #include "Node.h"
-#include "../Utils/SkaConstants.h"
+#include "Utils/SkaConstants.h"
 
 #define DOWN 0
 #define RIGHT 1

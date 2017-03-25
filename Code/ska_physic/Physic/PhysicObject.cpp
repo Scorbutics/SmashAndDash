@@ -1,10 +1,8 @@
 ﻿#include <math.h>
-#include <algorithm>    // std::find
+#include <algorithm>
 #include "PhysicObject.h"
-#include" ../../../Utils/RectangleUtils.h"
-#include "../Utils/SkaConstants.h"
-//#include "../Gameplay\WGameCore.h"
-//#include "../Utils\ChargementImages.h"
+#include "Utils/RectangleUtils.h"
+#include "Utils/SkaConstants.h"
 
 //Constructeur classique
 ska::PhysicObject::PhysicObject(int id, unsigned int entityNumber)

@@ -1,5 +1,5 @@
 #include "DirectionalAnimationSystem.h"
-#include "../../RectangleUtils.h"
+#include "Utils/RectangleUtils.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
 
 ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {

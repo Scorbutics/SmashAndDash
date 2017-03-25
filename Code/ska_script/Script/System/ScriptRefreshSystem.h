@@ -1,15 +1,17 @@
 #pragma once
 #include <unordered_set>
-#include "../ScriptAwareComponent.h"
-#include "../../Physic/PositionComponent.h"
-#include "../../Physic/MovementComponent.h"
-#include "../ScriptSleepComponent.h"
-#include "../../Inputs/InputContextManager.h"
-#include "../../ECS/System.h"
+#include "ECS/Basics/Script/ScriptAwareComponent.h"
+#include "ECS/Basics/Physic/PositionComponent.h"
+#include "ECS/Basics/Physic/MovementComponent.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
+#include "Inputs/InputContextManager.h"
+#include "ECS/System.h"
 #include "ScriptAutoSystem.h"
-#include "../../World/World.h"
 
 namespace ska {
+    class ScriptPositionedGetter;
+    class BlockContainer;
+
 	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, PositionComponent, ScriptSleepComponent>;
 
 	class ScriptRefreshSystem :
@@ -18,7 +20,7 @@ namespace ska {
 		public ScriptPositionSystemAccess {
 
 	public:
-		ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, World& world, EntityManager& entityManager);
+		ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc, EntityManager& entityManager);
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 		void clearNamedScriptedEntities();
 		virtual ~ScriptRefreshSystem();
@@ -29,7 +31,8 @@ namespace ska {
 		EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const;
 		void startScript(const EntityId scriptEntity, const EntityId origin);
 
-		World& m_world;
+		ScriptPositionedGetter& m_scriptPositionedGetter;
+		BlockContainer& m_blockContainer;
 		const InputContextManager& m_icm;
 		ScriptAutoSystem& m_scriptAutoSystem;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "../../Graphic/Draw/DrawableFixedPriority.h"
+#include "Graphic/Draw/DrawableFixedPriority.h"
 #include "Utils/MouseObservable.h"
 #include "Windows/DynamicWindowIG.h"
 #include "Components/Concrete/MouseCursor.h"
@@ -15,9 +15,9 @@ namespace ska {
 	class HoverEvent;
 	class InputContextManager;
 
-	class GUI : 
-		public DrawableFixedPriority, 
-		public MouseObservable, 
+	class GUI :
+		public DrawableFixedPriority,
+		public MouseObservable,
 		public KeyObservable,
 		public TimeObservable {
 
@@ -32,7 +32,7 @@ namespace ska {
 		void hide(bool x);
 
 		void display() const override;
-		
+
 
 	private:
 		void refreshMouse();

@@ -1,12 +1,12 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include "../Graphic/Color.h"
-#include "../Graphic/Point.h"
-#include "../Graphic/SDLSurface.h"
-#include "../Graphic/Texture.h"
-#include "../Script/ScriptSleepComponent.h"
-#include "../Graphic/Animation.h"
+#include "Graphic/Color.h"
+#include "Point.h"
+#include "Graphic/SDLSurface.h"
+#include "Graphic/Texture.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
+#include "Graphic/Animation.h"
 #include "ChipsetRenderable.h"
 
 namespace ska {
@@ -16,7 +16,7 @@ namespace ska {
 	class BlockRenderable;
 	typedef std::unique_ptr<BlockRenderable> BlockRenderablePtr;
 	typedef char ScriptTriggerType;
-	
+
 
 	class Chipset {
 	public:
@@ -36,9 +36,9 @@ namespace ska {
 		const std::unordered_map<Color, Point<int>>& m_corr;
 		std::unordered_map<std::string, ScriptSleepComponent> m_triggeredScripts;
 		std::unordered_map<int, ScriptSleepComponent> m_autoScripts;
-		
+
 		std::vector<BlockPtr> m_blocks;
-		
+
 		const int m_blockSize;
 		const unsigned int m_corrFileWidth;
 		std::string m_chipsetName;

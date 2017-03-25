@@ -9,7 +9,7 @@
 #include "Block.h"
 #include "LayerRenderable.h"
 
-#include "../Graphic/Draw/DrawableFixedPriority.h"
+#include "Graphic/Draw/DrawableFixedPriority.h"
 
 class ParticleManager;
 
@@ -51,6 +51,6 @@ namespace ska {
 	};
 	typedef std::unique_ptr<Layer> LayerPtr;
 
-	
+
 }
 
