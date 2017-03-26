@@ -14,14 +14,11 @@
 					<Add option="-std=c++14" />
 				</Compiler>
 				<Linker>
-					<Add option="-lska_core" />
-					<Add option="-lska_draw" />
-					<Add option="-lska_gui" />
-					<Add option="-lska_physic" />
-					<Add option="-lska_script" />
-					<Add option="-lska_audio" />
-					<Add option="-lska_world" />
-					<Add option="-lska_ai" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2main.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_image.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
 					<Add library="libska_core.a" />
 					<Add library="libska_draw.a" />
 					<Add library="libska_gui.a" />
@@ -30,14 +27,7 @@
 					<Add library="libska_audio.a" />
 					<Add library="libska_world.a" />
 					<Add library="libska_ai.a" />
-					<Add directory="Code/ska_core/bin/Debug" />
-					<Add directory="Code/ska_draw/bin/Debug" />
-					<Add directory="Code/ska_gui/bin/Debug" />
-					<Add directory="Code/ska_physic/bin/Debug" />
-					<Add directory="Code/ska_script/bin/Debug" />
-					<Add directory="Code/ska_audio/bin/Debug" />
-					<Add directory="Code/ska_world/bin/Debug" />
-					<Add directory="Code/ska_ai/bin/Debug" />
+					<Add directory="." />
 				</Linker>
 			</Target>
 		</Build>
@@ -65,14 +55,14 @@
 			<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_image.dll.a" />
 			<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
 			<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
-			<Add library="Code/ska_core/bin/Debug/libska_core.a" />
-			<Add library="Code/ska_draw/bin/Debug/libska_draw.a" />
-			<Add library="Code/ska_gui/bin/Debug/libska_gui.a" />
-			<Add library="Code/ska_physic/bin/Debug/libska_physic.a" />
-			<Add library="Code/ska_script/bin/Debug/libska_script.a" />
-			<Add library="Code/ska_audio/bin/Debug/libska_audio.a" />
-			<Add library="Code/ska_world/bin/Debug/libska_world.a" />
-			<Add library="Code/ska_ai/bin/Debug/libska_ai.a" />
+			<Add library="libska_core.a" />
+			<Add library="libska_draw.a" />
+			<Add library="libska_gui.a" />
+			<Add library="libska_physic.a" />
+			<Add library="libska_script.a" />
+			<Add library="libska_audio.a" />
+			<Add library="libska_world.a" />
+			<Add library="libska_ai.a" />
 		</Linker>
 		<Unit filename="Code/Game/Audio/PokemonSoundRenderer.cpp" />
 		<Unit filename="Code/Game/Audio/PokemonSoundRenderer.h" />

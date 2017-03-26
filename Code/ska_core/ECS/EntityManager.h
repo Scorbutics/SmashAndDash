@@ -24,7 +24,8 @@ namespace ska {
 
 	class EntityManager : public Observable<const EntityEventType, const EntityComponentsMask&, EntityId> {
 	public:
-		EntityManager() { }
+		EntityManager() : m_componentMask() { }
+
 		EntityId createEntity() {
 			EntityId newId;
 			if (((int)(m_entities.size() - m_deletedEntities.size())) >= SKA_ECS_MAX_ENTITIES) {
@@ -40,10 +41,13 @@ namespace ska {
 				m_deletedEntities.pop_back();
 				m_entities.insert(newId);
 			}
-			
+
+            /* Reset all components */
+			//m_componentMask[newId] &= 0;
+
 			return newId;
 		}
-		
+
 		void removeEntity(EntityId entity) {
 			if (m_entities.find(entity) == m_entities.end() || m_entities.count(entity) <= 0) {
 				auto startMessage = ("Unable to delete entity #" + StringUtils::intToStr(static_cast<int>(entity)));
@@ -55,7 +59,7 @@ namespace ska {
 			m_deletedEntities.push_back(entity);
 
 			/* Reset all components */
-			m_componentMask[entity] &= 0;
+			//m_componentMask[entity] &= 0;
 
 			notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
 		}
@@ -116,7 +120,7 @@ namespace ska {
 		template <class T>
 		bool hasComponent(EntityId entityId) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
-			return m_componentMask[entityId][components.getMask()];	
+			return m_componentMask[entityId][components.getMask()];
 		}
 
 		template <class T>
@@ -131,8 +135,14 @@ namespace ska {
 			return components.getMask();
 		}
 
+        template <class T>
+		std::string getComponentName() {
+			ComponentHandler<T>& components = this->template getComponents<T>();
+			return components.getClassName();
+		}
+
 		virtual ~EntityManager() { }
-	
+
 	private:
 		std::array<EntityComponentsMask, SKA_ECS_MAX_ENTITIES> m_componentMask;
 		std::unordered_set<EntityId> m_entities;
@@ -163,7 +173,7 @@ namespace ska {
 			m_componentMask[entity][componentMask] = true;
 			notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
 		}
-		
+
 	};
 
 }

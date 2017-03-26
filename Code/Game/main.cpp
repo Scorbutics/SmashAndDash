@@ -39,7 +39,10 @@ int main( int argc , char ** argv )
     srand(static_cast<unsigned int>(time(nullptr)));
 
 
-	/* TODO : réécrire dans la classe Core (pour une fois, un singleton, car une seule initialisation par application cliente) */
+	/* TODO : réécrire dans la classe Core (pour une fois, un singleton de sorte à éviter les multiples appels aux initializers) */
+
+    /* Fix GDB Bug with named thread on windows (Mixer raises an exception when init) */
+    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 
     // Chargement de la vidéo, de l'audio et du texte
     if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {

@@ -7,12 +7,12 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="ska_audio" prefix_auto="1" extension_auto="1" />
+				<Option output="../../ska_audio" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
-				<Option type="3" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
@@ -21,7 +21,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
-					<Add directory="." />
+					<Add directory="../../" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -43,9 +43,6 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Linker>
-			<Add option="-lska_core" />
-		</Linker>
 		<Unit filename="Audio/Music.cpp" />
 		<Unit filename="Audio/Music.h" />
 		<Unit filename="Audio/SDLMusic.cpp" />

@@ -7,23 +7,20 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="ska_world" prefix_auto="1" extension_auto="1" />
+				<Option output="../../ska_world" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
-				<Option type="3" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
-					<Add option="-lska_core" />
-					<Add option="-lska_draw" />
-					<Add option="-lska_physic" />
 					<Add library="user32" />
-					<Add directory="." />
+					<Add directory="../../" />
 				</Linker>
 			</Target>
 			<Target title="Release">

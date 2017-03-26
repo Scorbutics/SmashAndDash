@@ -1,19 +1,21 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include <typeinfo>
 #include <string>
 #include "ECSDefines.h"
 #include "StaticCounterGlobal.h"
 #include "ComponentSerializer.h"
+#include "../Utils/Demangle.h"
 
 namespace ska {
 	template <typename T>
 	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer {
 
 	public:
-		ComponentHandler() {
+		ComponentHandler(): m_mask(StaticCounterGlobal::increment()) {
 			m_components.resize(SKA_ECS_MAX_ENTITIES);
-			m_mask = m_componentTypeCounter++;
+			std::clog << "Initializing component type " << getClassName() << " with mask " << m_mask << std::endl;
 		}
 
 		unsigned int addEmpty(EntityId) override {
@@ -46,7 +48,7 @@ namespace ska {
 		virtual ~ComponentHandler() = default;
 
 		static const std::string& getClassName() {
-			static const auto fullClassName = std::string(typeid(T).name());
+			static const auto fullClassName = std::string(ska::demangle(typeid(T).name()));
 			static const auto startPos = fullClassName.find_last_of(':');
 			static const auto& name = fullClassName.substr((startPos == std::string::npos ? -1 : startPos) + 1);
 			return name;
@@ -54,7 +56,7 @@ namespace ska {
 
 	private:
 		std::vector<T> m_components;
-		unsigned int m_mask;
+		const unsigned int m_mask;
 	};
 
 
