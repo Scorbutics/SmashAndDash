@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/ska_gui" prefix_auto="1" extension_auto="1" />
+				<Option output="ska_gui" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -22,12 +22,11 @@
 					<Add option="-lska_core" />
 					<Add option="-lska_draw" />
 					<Add library="user32" />
-					<Add directory="../ska_draw/bin/Debug" />
-					<Add directory="../ska_core/bin/Debug" />
+					<Add directory="." />
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/ska_gui" prefix_auto="1" extension_auto="1" />
+				<Option output="ska_gui" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -41,8 +40,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="user32" />
-					<Add directory="../ska_draw/bin/Release" />
-					<Add directory="../ska_core/bin/Release" />
+					<Add directory="." />
 				</Linker>
 			</Target>
 		</Build>

@@ -45,7 +45,7 @@ namespace ska {
 			result.y = (absoluteHitbox.y + (absoluteHitbox.y + absoluteHitbox.h) + 1) / 2;
 
 			auto fDir = PhysicUtils::getMovement(dac.direction, NumberUtils::maximum(static_cast<float>(absoluteHitbox.w), static_cast<float>(absoluteHitbox.h)));
-			Point<int> pos = Point<int>::cartesian(fDir.power, fDir.angle);
+			auto pos = Point<float>::cartesian(fDir.power, fDir.angle);
 			return result + pos;
 		}
 

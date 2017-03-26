@@ -2,5 +2,5 @@
 <CodeBlocks_workspace_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveProject path="SmashAndDash.cbp" />
-	<PreferredTarget name="default" />
+	<PreferredTarget name="Debug" />
 </CodeBlocks_workspace_layout_file>

@@ -24,13 +24,13 @@ void ska::IADefinedMovementSystem::refresh() {
 		}
 
 		const auto& targetVector = iamc.directions[iamc.directionIndex];
-		PolarPoint<float> polarVectorMovement = PolarPoint<float>::polar(targetVector.x, targetVector.y);
+		auto polarVectorMovement = PolarPoint<int>::polar(targetVector.x, targetVector.y);
 
 		/* speed */
 		polarVectorMovement.radius = 5;
 
 		const auto targetPoint = targetVector + iamc.origin;
-		const auto finalMovement = Point<float>::cartesian(polarVectorMovement.radius, polarVectorMovement.angle);
+		const auto finalMovement = Point<float>::cartesian(static_cast<float>(polarVectorMovement.radius), polarVectorMovement.angle);
 
 		/* Either the time is up, or the goal is reached (if we are going farer and farer from the target pos, goal is reached) */
 		const auto distanceSquaredToTarget = RectangleUtils::distanceSquared(centerPos, targetPoint);
