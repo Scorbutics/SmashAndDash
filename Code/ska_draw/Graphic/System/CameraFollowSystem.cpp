@@ -1,3 +1,4 @@
+#include <iostream>
 #include "CameraFollowSystem.h"
 #include "Rectangle.h"
 #include "../GraphicComponent.h"

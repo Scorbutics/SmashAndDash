@@ -43,8 +43,6 @@ ska::Block* ska::Layer::getBlock(const unsigned int i, const unsigned int j) con
 
 }
 
-
-
 int ska::Layer::getBlockCollision(const unsigned int i, const unsigned int j) const {
 	if (i < m_block.size() && j < m_block[i].size()) {
 		Block* b = m_block[i][j];

@@ -2,8 +2,10 @@
 #include "Rectangle.h"
 #include "../GraphicComponent.h"
 
-ska::CameraSystem::CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) : System(entityManager) {
-	m_pos = nullptr;
+ska::CameraSystem::CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) :
+    System(entityManager),
+    m_pos(nullptr) {
+
 	worldResized(screenW, screenH);
 	screenResized(screenW, screenH);
 }

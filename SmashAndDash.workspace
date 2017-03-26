@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
-		<Project filename="SmashAndDash.cbp">
-			<Depends filename="Code/ska_core/ska_core.cbp" />
-			<Depends filename="Code/ska_draw/ska_draw.cbp" />
-			<Depends filename="Code/ska_gui/ska_gui.cbp" />
-			<Depends filename="Code/ska_physic/ska_physic.cbp" />
-			<Depends filename="Code/ska_script/ska_script.cbp" />
-			<Depends filename="Code/ska_audio/ska_audio.cbp" />
-			<Depends filename="Code/ska_world/ska_world.cbp" />
-			<Depends filename="Code/ska_ai/ska_ai.cbp" />
-		</Project>
 		<Project filename="Code/ska_core/ska_core.cbp" />
 		<Project filename="Code/ska_draw/ska_draw.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
@@ -35,6 +25,16 @@
 		</Project>
 		<Project filename="Code/ska_ai/ska_ai.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
+		<Project filename="SmashAndDash.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+			<Depends filename="Code/ska_draw/ska_draw.cbp" />
+			<Depends filename="Code/ska_gui/ska_gui.cbp" />
+			<Depends filename="Code/ska_physic/ska_physic.cbp" />
+			<Depends filename="Code/ska_script/ska_script.cbp" />
+			<Depends filename="Code/ska_audio/ska_audio.cbp" />
+			<Depends filename="Code/ska_world/ska_world.cbp" />
+			<Depends filename="Code/ska_ai/ska_ai.cbp" />
 		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

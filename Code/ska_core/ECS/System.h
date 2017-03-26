@@ -18,9 +18,12 @@ namespace ska {
 		explicit System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) {
 			m_entityManager.addObserver(*this);
-
+            //m_systemComponentMask.reset();
+            std::clog << "Initializing system with components : ";
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
+			std::clog << "End system initialization" << std::endl << std::endl;
+
 			(void)_;
 
 		}
@@ -40,6 +43,12 @@ namespace ska {
 		void scheduleDeferredRemove(EntityId e) {
 			m_toDelete.emplace(e);
 		}
+
+		virtual ~System(){ m_entityManager.removeObserver(*this); }
+
+	private:
+		std::unordered_set<EntityId> m_toDelete;
+		EntityComponentsMask m_systemComponentMask;
 
 		bool onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
 
@@ -65,13 +74,6 @@ namespace ska {
 			return true;
 		}
 
-		virtual ~System(){ m_entityManager.removeObserver(*this); }
-
-	private:
-		std::unordered_set<EntityId> m_toDelete;
-		EntityComponentsMask m_systemComponentMask;
-
-
 		template <class T>
 		void buildSystemMask() {
 			/* Retrieve all the components masks using the variadic template with ComponentType
@@ -81,6 +83,8 @@ namespace ska {
 			if (mask >= m_systemComponentMask.size()) {
 				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
 			}
+			std::clog << m_entityManager.template getComponentName<T>() << " with mask " << mask << ", " << std::endl;
+
 			m_systemComponentMask[mask] = true;
 		}
 
