@@ -68,6 +68,7 @@
 		<Unit filename="ECS/Basics/Script/ScriptTriggerType.h" />
 		<Unit filename="ECS/Component.cpp" />
 		<Unit filename="ECS/Component.h" />
+		<Unit filename="ECS/ComponentHandler.cpp" />
 		<Unit filename="ECS/ComponentHandler.h" />
 		<Unit filename="ECS/ComponentSerializer.h" />
 		<Unit filename="ECS/ECSDefines.h" />

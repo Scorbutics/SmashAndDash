@@ -22,68 +22,22 @@ namespace ska {
 		COMPONENT_REMOVE
 	};
 
-	class EntityManager : public Observable<const EntityEventType, const EntityComponentsMask&, EntityId> {
+	class EntityManager :
+	    public Observable<const EntityEventType, const EntityComponentsMask&, EntityId> {
 	public:
 		EntityManager() : m_componentMask() { }
 
-		EntityId createEntity() {
-			EntityId newId;
-			if (((int)(m_entities.size() - m_deletedEntities.size())) >= SKA_ECS_MAX_ENTITIES) {
-				throw IllegalStateException("Too many entities are currently in use. Unable to create a new one. "
-					"Increase SKA_ECS_MAX_ENTITIES at compile time to avoid the problem.");
-			}
+		EntityId createEntity();
+		void removeEntity(EntityId entity);
+		void removeEntities(const std::unordered_set<EntityId>& exceptions);
+		void refreshEntity(EntityId entity);
+		void refreshEntities();
 
-			if (m_deletedEntities.empty()) {
-				newId = static_cast<EntityId>(m_entities.size());
-				m_entities.insert(newId);
-			} else {
-				newId = m_deletedEntities[m_deletedEntities.size() - 1];
-				m_deletedEntities.pop_back();
-				m_entities.insert(newId);
-			}
+		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field);
+		void removeComponent(const EntityId entity, const std::string& component);
+		void addComponent(const EntityId entity, const std::string& component);
 
-            /* Reset all components */
-			//m_componentMask[newId] &= 0;
-
-			return newId;
-		}
-
-		void removeEntity(EntityId entity) {
-			if (m_entities.find(entity) == m_entities.end() || m_entities.count(entity) <= 0) {
-				auto startMessage = ("Unable to delete entity #" + StringUtils::intToStr(static_cast<int>(entity)));
-				throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
-			}
-
-			m_entities.erase(entity);
-
-			m_deletedEntities.push_back(entity);
-
-			/* Reset all components */
-			//m_componentMask[entity] &= 0;
-
-			notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
-		}
-
-		void removeEntities(const std::unordered_set<EntityId>& exceptions) {
-			std::unordered_set<EntityId> entities = m_entities;
-			for (EntityId entity : entities) {
-				if (exceptions.find(entity) == exceptions.end()) {
-					removeEntity(entity);
-				}
-			}
-		}
-
-		void refreshEntity(EntityId entity) {
-			notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
-		}
-
-		void refreshEntities() {
-			for (const auto& entity : m_entities) {
-				notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
-			}
-		}
-
-		template <class T>
+        template <class T>
 		void addComponent(EntityId entity, const T& component) {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			commonAddComponent(entity, components.add(entity, component));
@@ -94,27 +48,6 @@ namespace ska {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			T& result = components.getComponent(entityId);
 			return result;
-		}
-
-		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field) {
-			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
-				return m_nameMappedComponent[component]->getComponentField(entityId, field);
-			}
-			return "";
-		}
-
-		void removeComponent(const EntityId entity, const std::string& component) {
-			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
-				ComponentSerializer * components = m_nameMappedComponent[component];
-				commonRemoveComponent(entity, *components);
-			}
-		}
-
-		void addComponent(const EntityId entity, const std::string& component) {
-			if (m_nameMappedComponent.find(component) != m_nameMappedComponent.end()) {
-				ComponentSerializer * components = m_nameMappedComponent[component];
-				commonAddComponent(entity, components->addEmpty(entity));
-			}
 		}
 
 		template <class T>
@@ -141,38 +74,29 @@ namespace ska {
 			return components.getClassName();
 		}
 
-		virtual ~EntityManager() { }
+		virtual ~EntityManager() = default;
 
 	private:
 		std::array<EntityComponentsMask, SKA_ECS_MAX_ENTITIES> m_componentMask;
 		std::unordered_set<EntityId> m_entities;
 		EntityIdContainer m_deletedEntities;
 
-		std::unordered_map<std::string, ComponentSerializer*> m_nameMappedComponent;
+		static std::unordered_map<std::string, ComponentSerializer*> NAME_MAPPED_COMPONENT;
 
 		template <class T>
-		ComponentHandler<T>& getComponents() {
-			static ComponentHandler<T> m_components;
+		static ComponentHandler<T>& getComponents() {
+			static ComponentHandler<T> components;
 			static auto initialized = false;
 			/* Correction performances issues du Profiling Very Sleepy : temps passé dans le hachage pour la table de noms de composants trop élevé */
 			if (!initialized) {
 				initialized = true;
-				m_nameMappedComponent.emplace(m_components.getClassName(), &m_components);
+				NAME_MAPPED_COMPONENT.emplace(components.getClassName(), &components);
 			}
-			return m_components;
+			return components;
 		}
 
-		void commonRemoveComponent(EntityId entity, ComponentSerializer& components) {
-			unsigned int removedComponentMask = components.remove(entity);
-			m_componentMask[entity][removedComponentMask] = false;
-
-			notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
-		}
-
-		void commonAddComponent(EntityId entity, const unsigned int componentMask) {
-			m_componentMask[entity][componentMask] = true;
-			notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
-		}
+		void commonRemoveComponent(EntityId entity, ComponentSerializer& components);
+		void commonAddComponent(EntityId entity, const unsigned int componentMask);
 
 	};
 
