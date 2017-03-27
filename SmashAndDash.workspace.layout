@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_layout_file>
 	<FileVersion major="1" minor="0" />
-	<ActiveProject path="Code/ska_audio/ska_audio.cbp" />
-	<PreferredTarget name="default" />
+	<ActiveProject path="Code/ska_core/ska_core.cbp" />
 </CodeBlocks_workspace_layout_file>

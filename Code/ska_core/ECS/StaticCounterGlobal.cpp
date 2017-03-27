@@ -1,3 +1,6 @@
 #include "StaticCounterGlobal.h"
 
-unsigned int ska::StaticCounterGlobal::m_componentTypeCounter = 0;
+unsigned int ska::StaticCounterGlobal::increment() {
+    static unsigned int componentTypeCounter = 0;
+    return componentTypeCounter++;
+}
