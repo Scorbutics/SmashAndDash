@@ -6,13 +6,21 @@ void ska::EntityManager::commonRemoveComponent(EntityId entity, ComponentSeriali
     unsigned int removedComponentMask = components.remove(entity);
     m_componentMask[entity][removedComponentMask] = false;
 
-    notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
+    m_alteredEntities.insert(entity);
+}
+
+void ska::EntityManager::refresh() {
+    for(const EntityId entity : m_alteredEntities) {
+        notifyObservers(COMPONENT_ALTER, m_componentMask[entity], entity);
+    }
+    m_alteredEntities.clear();
 }
 
 
 void ska::EntityManager::commonAddComponent(EntityId entity, const unsigned int componentMask) {
     m_componentMask[entity][componentMask] = true;
-    notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
+
+    m_alteredEntities.insert(entity);
 }
 
 

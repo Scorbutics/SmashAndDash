@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ska_script" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../ska_script" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-lska_core" />
+					<Add library="user32" />
+					<Add directory="../../" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="ska_script" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add directory="." />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../ska_core/" />
+		</Compiler>
+		<Unit filename="Script/Command/AbstractCommand.cpp" />
+		<Unit filename="Script/Command/AbstractCommand.h" />
+		<Unit filename="Script/Command/AbstractFunctionCommand.cpp" />
+		<Unit filename="Script/Command/AbstractFunctionCommand.h" />
+		<Unit filename="Script/Command/Command.h" />
+		<Unit filename="Script/Command/CommandAssign.cpp" />
+		<Unit filename="Script/Command/CommandAssign.h" />
+		<Unit filename="Script/Command/CommandAssignSwitch.cpp" />
+		<Unit filename="Script/Command/CommandAssignSwitch.h" />
+		<Unit filename="Script/Command/CommandBlockAuthorize.cpp" />
+		<Unit filename="Script/Command/CommandBlockAuthorize.h" />
+		<Unit filename="Script/Command/CommandCalculate.cpp" />
+		<Unit filename="Script/Command/CommandCalculate.h" />
+		<Unit filename="Script/Command/CommandElse.cpp" />
+		<Unit filename="Script/Command/CommandElse.h" />
+		<Unit filename="Script/Command/CommandElseEnd.h" />
+		<Unit filename="Script/Command/CommandEnd.cpp" />
+		<Unit filename="Script/Command/CommandEnd.h" />
+		<Unit filename="Script/Command/CommandEndScript.cpp" />
+		<Unit filename="Script/Command/CommandEndScript.h" />
+		<Unit filename="Script/Command/CommandIf.cpp" />
+		<Unit filename="Script/Command/CommandIf.h" />
+		<Unit filename="Script/Command/CommandLog.cpp" />
+		<Unit filename="Script/Command/CommandLog.h" />
+		<Unit filename="Script/Command/CommandRandom.cpp" />
+		<Unit filename="Script/Command/CommandRandom.h" />
+		<Unit filename="Script/Command/CommandRemoveComponent.cpp" />
+		<Unit filename="Script/Command/CommandRemoveComponent.h" />
+		<Unit filename="Script/Command/CommandRestoreComponent.cpp" />
+		<Unit filename="Script/Command/CommandRestoreComponent.h" />
+		<Unit filename="Script/Command/CommandScript.cpp" />
+		<Unit filename="Script/Command/CommandScript.h" />
+		<Unit filename="Script/Command/CommandWait.cpp" />
+		<Unit filename="Script/Command/CommandWait.h" />
+		<Unit filename="Script/Command/ControlStatement.cpp" />
+		<Unit filename="Script/Command/ControlStatement.h" />
+		<Unit filename="Script/ScriptComponent.h" />
+		<Unit filename="Script/ScriptState.h" />
+		<Unit filename="Script/ScriptSymbolsConstants.h" />
+		<Unit filename="Script/ScriptUtils.cpp" />
+		<Unit filename="Script/ScriptUtils.h" />
+		<Unit filename="Script/System/ScriptAutoSystem.cpp" />
+		<Unit filename="Script/System/ScriptAutoSystem.h" />
+		<Unit filename="Script/System/ScriptBasicCommandsSystem.cpp" />
+		<Unit filename="Script/System/ScriptBasicCommandsSystem.h" />
+		<Unit filename="Script/System/ScriptRefreshSystem.cpp" />
+		<Unit filename="Script/System/ScriptRefreshSystem.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -68,6 +68,14 @@ namespace ska {
 				}
 				break;
 
+            case COMPONENT_ALTER:
+                if(resultMask == m_systemComponentMask) {
+                    m_processed.insert(entityId);
+                } else {
+                    m_processed.erase(entityId);
+                }
+                break;
+
 			default:
 				break;
 			}

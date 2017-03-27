@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ska_ai" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../ska_ai" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add directory="../ska_core/" />
+					<Add directory="../ska_physic/" />
+				</Compiler>
+				<Linker>
+					<Add option="-lska_core" />
+					<Add library="user32" />
+					<Add directory="../../" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="ska_ai" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add directory="." />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../ska_core/" />
+		</Compiler>
+		<Unit filename="AI/IADefinedMovementComponent.h" />
+		<Unit filename="AI/IARandomMovementComponent.h" />
+		<Unit filename="AI/Node.cpp" />
+		<Unit filename="AI/Node.h" />
+		<Unit filename="AI/Path.cpp" />
+		<Unit filename="AI/Path.h" />
+		<Unit filename="AI/System/IADefinedMovementSystem.cpp" />
+		<Unit filename="AI/System/IADefinedMovementSystem.h" />
+		<Unit filename="AI/System/IARandomMovementSystem.cpp" />
+		<Unit filename="AI/System/IARandomMovementSystem.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

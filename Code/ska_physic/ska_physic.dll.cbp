@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ska_physic" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../ska_physic" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../.." />
+				<Option object_output="obj/Debug/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+					<Add directory="../ska_core/" />
+				</Compiler>
+				<Linker>
+					<Add option="-lska_core" />
+					<Add library="user32" />
+					<Add directory="../../" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="ska_physic" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+					<Add directory="." />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="../ska_core/" />
+		</Compiler>
+		<Unit filename="Physic/GravityParticle.cpp" />
+		<Unit filename="Physic/GravityParticle.h" />
+		<Unit filename="Physic/LinearParticle.cpp" />
+		<Unit filename="Physic/LinearParticle.h" />
+		<Unit filename="Physic/Particle.cpp" />
+		<Unit filename="Physic/Particle.h" />
+		<Unit filename="Physic/ParticleManager.cpp" />
+		<Unit filename="Physic/ParticleManager.h" />
+		<Unit filename="Physic/PhysicDefines.h" />
+		<Unit filename="Physic/PhysicObject.cpp" />
+		<Unit filename="Physic/PhysicObject.h" />
+		<Unit filename="Physic/RainParticle.cpp" />
+		<Unit filename="Physic/RainParticle.h" />
+		<Unit filename="Physic/RainParticleManager.cpp" />
+		<Unit filename="Physic/RainParticleManager.h" />
+		<Unit filename="Physic/System/CollisionSystem.cpp" />
+		<Unit filename="Physic/System/CollisionSystem.h" />
+		<Unit filename="Physic/System/DebugWorldCollisionResponse.cpp" />
+		<Unit filename="Physic/System/DebugWorldCollisionResponse.h" />
+		<Unit filename="Physic/System/EntityCollisionResponse.cpp" />
+		<Unit filename="Physic/System/EntityCollisionResponse.h" />
+		<Unit filename="Physic/System/ForceSystem.cpp" />
+		<Unit filename="Physic/System/ForceSystem.h" />
+		<Unit filename="Physic/System/GravitySystem.cpp" />
+		<Unit filename="Physic/System/GravitySystem.h" />
+		<Unit filename="Physic/System/MovementSystem.cpp" />
+		<Unit filename="Physic/System/MovementSystem.h" />
+		<Unit filename="Physic/System/WorldCollisionResponse.cpp" />
+		<Unit filename="Physic/System/WorldCollisionResponse.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

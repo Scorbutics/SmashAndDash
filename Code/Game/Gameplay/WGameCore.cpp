@@ -63,6 +63,7 @@ void WGameCore::graphicUpdate(void) {
 }
 
 void WGameCore::eventUpdate(bool movingDisallowed) {
+	m_entityManager.refresh();
 	/* Scene dependent event update */
 	m_sceneHolder.getScene()->eventUpdate(movingDisallowed);
 	m_sceneHolder.update();

@@ -19,7 +19,8 @@ namespace ska {
 
 	enum EntityEventType {
 		COMPONENT_ADD,
-		COMPONENT_REMOVE
+		COMPONENT_REMOVE,
+		COMPONENT_ALTER
 	};
 
 	class EntityManager :
@@ -32,6 +33,7 @@ namespace ska {
 		void removeEntities(const std::unordered_set<EntityId>& exceptions);
 		void refreshEntity(EntityId entity);
 		void refreshEntities();
+        void refresh();
 
 		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field);
 		void removeComponent(const EntityId entity, const std::string& component);
@@ -79,6 +81,7 @@ namespace ska {
 	private:
 		std::array<EntityComponentsMask, SKA_ECS_MAX_ENTITIES> m_componentMask;
 		std::unordered_set<EntityId> m_entities;
+		std::unordered_set<EntityId> m_alteredEntities;
 		EntityIdContainer m_deletedEntities;
 
 		static std::unordered_map<std::string, ComponentSerializer*> NAME_MAPPED_COMPONENT;
