@@ -19,7 +19,7 @@ namespace ska {
 			m_entityManager(entityManager) {
 			m_entityManager.addObserver(*this);
             //m_systemComponentMask.reset();
-            std::clog << "Initializing system with components : ";
+            std::clog << "Initializing system with components : " << std::endl;
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
 			std::clog << "End system initialization" << std::endl << std::endl;
@@ -91,7 +91,7 @@ namespace ska {
 			if (mask >= m_systemComponentMask.size()) {
 				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
 			}
-			std::clog << m_entityManager.template getComponentName<T>() << " with mask " << mask << ", " << std::endl;
+			std::clog << "\t - " << m_entityManager.template getComponentName<T>() << " with mask " << mask << std::endl;
 
 			m_systemComponentMask[mask] = true;
 		}

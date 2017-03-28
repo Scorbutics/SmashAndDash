@@ -10,7 +10,9 @@
 
 namespace ska {
 	template <typename T>
-	class ComponentHandler : public StaticCounterGlobal, public ComponentSerializer {
+	class ComponentHandler :
+	    public StaticCounterGlobal,
+        public ComponentSerializer {
 
 	public:
 		ComponentHandler(): m_mask(StaticCounterGlobal::increment()) {

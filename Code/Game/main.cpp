@@ -26,14 +26,14 @@ int main( int argc , char ** argv )
 	auto widthBlocks = 0, heightBlocks = 0;
     std::string startMapName, startMapChipsetName;
 
-	std::ofstream logFile("stdlog.txt", std::ios::trunc);
+	/*std::ofstream logFile("stdlog.txt", std::ios::trunc);
 	std::clog.rdbuf(logFile.rdbuf());
 
 	std::wofstream wlogFile("wstdlog.txt", std::ios::trunc);
 	std::wclog.rdbuf(wlogFile.rdbuf());
 
 	std::ofstream errFile("stderr.txt", std::ios::trunc);
-	std::cerr.rdbuf(errFile.rdbuf());
+	std::cerr.rdbuf(errFile.rdbuf());*/
 
 	/* TODO : ne plus utiliser srand...  */
     srand(static_cast<unsigned int>(time(nullptr)));
