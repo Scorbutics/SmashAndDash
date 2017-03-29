@@ -68,7 +68,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(IncludePath)</IncludePath>
-    <LibraryPath>.\x64\Debug;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\lib\amd64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>x64\Debug;C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\lib\amd64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -95,7 +95,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_ttf.lib;SDL2_image.lib;ska_ai.lib;ska_audio.lib;ska_core.lib;ska_draw.lib;ska_gui.lib;ska_physic.lib;ska_script.lib;ska_world.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

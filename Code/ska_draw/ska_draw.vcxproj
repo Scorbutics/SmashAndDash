@@ -24,7 +24,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -67,6 +67,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>..\..\x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\ska_core;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,9 +120,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="bin\Debug\libska_draw.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="FpsCalculator.cpp" />
     <ClCompile Include="FpsRenderable.cpp" />
     <ClCompile Include="Graphic\AnimatedTexture.cpp" />
@@ -129,6 +127,8 @@
     <ClCompile Include="Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
     <ClCompile Include="Graphic\Draw\VectorDrawableContainer.cpp" />
     <ClCompile Include="Graphic\Font.cpp" />
+    <ClCompile Include="Graphic\GraphicComponent.cpp" />
+    <ClCompile Include="Graphic\HasShadowComponent.cpp" />
     <ClCompile Include="Graphic\SDLFont.cpp" />
     <ClCompile Include="Graphic\SDLRenderer.cpp" />
     <ClCompile Include="Graphic\SDLSurface.cpp" />

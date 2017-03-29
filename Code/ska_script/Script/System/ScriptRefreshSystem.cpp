@@ -82,7 +82,7 @@ void ska::ScriptRefreshSystem::refresh() {
 
 		if (entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
 			const WorldCollisionComponent& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
-			//clog << "Block collision" << std::endl;
+			std::clog << "Block collision" << std::endl;
 			if ((wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY) ||
 				(wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX)) {
 

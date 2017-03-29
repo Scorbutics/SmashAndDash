@@ -24,7 +24,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -116,9 +116,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="bin\Debug\libska_core.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Data\BlockContainer.h" />
     <ClInclude Include="Data\Events\CollisionEvent.h" />
     <ClInclude Include="Data\Events\SoundEvent.h" />
@@ -191,6 +188,7 @@
     <ClInclude Include="Task\Runnable.h" />
     <ClInclude Include="Task\Task.h" />
     <ClInclude Include="Task\TaskQueue.h" />
+    <ClInclude Include="Utils\Demangle.h" />
     <ClInclude Include="Utils\FileUtils.h" />
     <ClInclude Include="Utils\Force.h" />
     <ClInclude Include="Utils\FormalCalculation\CalculOperators.h" />
@@ -214,7 +212,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\Events\SoundEvent.cpp" />
+    <ClCompile Include="ECS\Basics\Graphic\CameraFocusedComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Graphic\DebugGraphicComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Graphic\DeleterComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Graphic\DialogComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Graphic\DirectionalAnimationComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Input\InputComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\CollidableComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\CollisionComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\ForceComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\GravityAffectedComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\HitboxComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\MovementComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\PositionComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Physic\WorldCollisionComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Script\ScriptAwareComponent.cpp" />
+    <ClCompile Include="ECS\Basics\Script\ScriptSleepComponent.cpp" />
     <ClCompile Include="ECS\Component.cpp" />
+    <ClCompile Include="ECS\EntityManager.cpp" />
     <ClCompile Include="ECS\StaticCounterGlobal.cpp" />
     <ClCompile Include="Exceptions\GenericException.cpp" />
     <ClCompile Include="Inputs\InputContextManager.cpp" />
@@ -229,6 +244,7 @@
     <ClCompile Include="Inputs\System\InputSystem.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Task\TaskQueue.cpp" />
+    <ClCompile Include="Utils\Demangle.cpp" />
     <ClCompile Include="Utils\FormalCalculation\FormalCalculator.cpp" />
     <ClCompile Include="Utils\NumberUtils.cpp" />
     <ClCompile Include="Utils\OSSpecific\FileUtilsUnix.cpp" />

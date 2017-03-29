@@ -48,9 +48,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\libska_ai.def">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

@@ -1,7 +1,5 @@
 #include "IADefinedMovementSystem.h"
 #include "Utils/TimeUtils.h"
-#include "Utils/PhysicUtils.h"
-#include "Utils/NumberUtils.h"
 #include "Utils/RectangleUtils.h"
 #include "ECS/Basics/Script/ScriptRegisterer.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
@@ -57,7 +55,7 @@ void ska::IADefinedMovementSystem::refresh() {
 				if (m_scriptSystem != nullptr && iamc.callbackActive) {
 					//TODO Event pour remplacer ça
 					/* triggers callback */
-					EntityId scriptEntity = m_entityManager.createEntity();
+					auto scriptEntity = m_entityManager.createEntity();
 					m_entityManager.addComponent<ScriptSleepComponent>(scriptEntity, iamc.callback);
 					m_scriptSystem->registerScript(nullptr, scriptEntity, entityId);
 				}

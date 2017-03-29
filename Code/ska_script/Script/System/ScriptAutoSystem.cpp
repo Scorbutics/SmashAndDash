@@ -45,15 +45,19 @@ const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::
 
 void ska::ScriptAutoSystem::removeComponent(const std::string& componentName, const std::string& id) const {
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
-		//EntityId entity = m_namedScriptedEntities.at(id);
-		m_entityManager.removeComponent(StringUtils::strToInt(id), componentName);
+		EntityId entity = m_namedScriptedEntities.at(id);
+		//const auto idInt = StringUtils::strToInt(id);
+		m_entityManager.removeComponent(entity, componentName);
+		//m_entityManager.refreshEntity(idInt);
 	}
 }
 
 void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, const std::string& id) const {
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
-		//EntityId entity = m_namedScriptedEntities.at(id);
-		m_entityManager.addComponent(StringUtils::strToInt(id), componentName);
+		EntityId entity = m_namedScriptedEntities.at(id);
+		//const auto idInt = StringUtils::strToInt(id);
+		m_entityManager.addComponent(entity, componentName);
+		//m_entityManager.refreshEntity(idInt);
 	}
 }
 
@@ -138,7 +142,6 @@ void ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scri
 	}
 
 	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
-
 }
 
 void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {
@@ -232,9 +235,9 @@ bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	transferActiveToDelay(script);
 	bool cannotBePlayed =
 		EnumScriptState::RUNNING == script.state
+		|| EnumScriptState::DEAD == script.state
 		|| script.active > 0
 		|| (TimeUtils::getTicks() - script.lastTimeDelayed) <= script.delay
-		|| script.state == EnumScriptState::DEAD
 		|| !((script.triggeringType == EnumScriptTriggerType::AUTO && script.state == EnumScriptState::STOPPED) || (script.state != EnumScriptState::STOPPED))
 		|| eof(script);
 

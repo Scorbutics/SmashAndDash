@@ -47,7 +47,7 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vec
 
 		ska::PositionComponent pcANim;
 		pcANim.x = pc.x;
-		pcANim.y = (int)(pc.y + hc.yOffset - gc.sprite[0].getHeight());
+		pcANim.y = static_cast<int>(pc.y + hc.yOffset - gc.sprite[0].getHeight());
 		m_entityManager.addComponent<ska::PositionComponent>(animation, pcANim);
 		ska::GraphicComponent gcAnim;
 		gcAnim.sprite.resize(1);

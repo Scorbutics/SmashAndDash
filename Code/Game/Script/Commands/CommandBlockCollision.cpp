@@ -1,13 +1,5 @@
-#include <string>
 #include "CommandBlockCollision.h"
-#include "Exceptions/ScriptException.h"
-#include "../../Utils/IDs.h"
 #include "Script/System/ScriptAutoSystem.h"
-#include "ECS/Basics/Input/InputComponent.h"
-#include "ECS/Basics/Physic/ForceComponent.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "Utils/StringUtils.h"
-#include "Utils/PhysicUtils.h"
 #include "Utils/NumberUtils.h"
 
 CommandBlockCollision::CommandBlockCollision(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {

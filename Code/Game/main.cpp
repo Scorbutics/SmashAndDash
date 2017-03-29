@@ -18,10 +18,9 @@
 
 #define SKA_DEBUG
 
-int main( int argc , char ** argv )
-{
-    argc = argc;
-    argv = argv;
+int main( int argc , char ** argv ) {
+	(void) argc;
+    (void) argv;
 
 	auto widthBlocks = 0, heightBlocks = 0;
     std::string startMapName, startMapChipsetName;

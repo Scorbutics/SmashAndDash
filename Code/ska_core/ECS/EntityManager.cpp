@@ -3,14 +3,14 @@
 std::unordered_map<std::string, ska::ComponentSerializer*> ska::EntityManager::NAME_MAPPED_COMPONENT;
 
 void ska::EntityManager::commonRemoveComponent(EntityId entity, ComponentSerializer& components) {
-    unsigned int removedComponentMask = components.remove(entity);
+	auto removedComponentMask = components.remove(entity);
     m_componentMask[entity][removedComponentMask] = false;
 
     m_alteredEntities.insert(entity);
 }
 
 void ska::EntityManager::refresh() {
-    for(const EntityId entity : m_alteredEntities) {
+    for(const auto& entity : m_alteredEntities) {
         notifyObservers(COMPONENT_ALTER, m_componentMask[entity], entity);
     }
     m_alteredEntities.clear();
@@ -33,7 +33,7 @@ const std::string ska::EntityManager::serializeComponent(const EntityId entityId
 
 void ska::EntityManager::removeComponent(const EntityId entity, const std::string& component) {
     if (NAME_MAPPED_COMPONENT.find(component) != NAME_MAPPED_COMPONENT.end()) {
-        ComponentSerializer * components = NAME_MAPPED_COMPONENT[component];
+	    auto components = NAME_MAPPED_COMPONENT[component];
         commonRemoveComponent(entity, *components);
     }
 }
@@ -48,7 +48,7 @@ void ska::EntityManager::addComponent(const EntityId entity, const std::string& 
 
 ska::EntityId ska::EntityManager::createEntity() {
     EntityId newId;
-    if (((int)(m_entities.size() - m_deletedEntities.size())) >= SKA_ECS_MAX_ENTITIES) {
+    if (static_cast<int>(m_entities.size() - m_deletedEntities.size()) >= SKA_ECS_MAX_ENTITIES) {
         throw IllegalStateException("Too many entities are currently in use. Unable to create a new one. "
             "Increase SKA_ECS_MAX_ENTITIES at compile time to avoid the problem.");
     }
@@ -63,7 +63,9 @@ ska::EntityId ska::EntityManager::createEntity() {
     }
 
     /* Reset all components */
-    //m_componentMask[newId] &= 0;
+    m_componentMask[newId] &= 0;
+
+	m_alteredEntities.insert(newId);
 
     return newId;
 }
@@ -71,7 +73,7 @@ ska::EntityId ska::EntityManager::createEntity() {
 void ska::EntityManager::removeEntity(EntityId entity) {
     if (m_entities.find(entity) == m_entities.end() || m_entities.count(entity) <= 0) {
         auto startMessage = ("Unable to delete entity #" + StringUtils::intToStr(static_cast<int>(entity)));
-        throw IllegalArgumentException(startMessage + " : this entity doesn't exist or is already deleted");
+        throw IllegalArgumentException (startMessage + " : this entity doesn't exist or is already deleted");
     }
 
     m_entities.erase(entity);
@@ -79,14 +81,14 @@ void ska::EntityManager::removeEntity(EntityId entity) {
     m_deletedEntities.push_back(entity);
 
     /* Reset all components */
-    //m_componentMask[entity] &= 0;
+    m_componentMask[entity] &= 0;
 
-    notifyObservers(COMPONENT_REMOVE, m_componentMask[entity], entity);
+	m_alteredEntities.insert(entity);
 }
 
 void ska::EntityManager::removeEntities(const std::unordered_set<EntityId>& exceptions) {
-    std::unordered_set<EntityId> entities = m_entities;
-    for (EntityId entity : entities) {
+	auto entities = m_entities;
+    for (const auto& entity : entities) {
         if (exceptions.find(entity) == exceptions.end()) {
             removeEntity(entity);
         }
@@ -94,11 +96,11 @@ void ska::EntityManager::removeEntities(const std::unordered_set<EntityId>& exce
 }
 
 void ska::EntityManager::refreshEntity(EntityId entity) {
-    notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
+    notifyObservers(COMPONENT_ALTER, m_componentMask[entity], entity);
 }
 
 void ska::EntityManager::refreshEntities() {
     for (const auto& entity : m_entities) {
-        notifyObservers(COMPONENT_ADD, m_componentMask[entity], entity);
+		notifyObservers(COMPONENT_ALTER, m_componentMask[entity], entity);
     }
 }

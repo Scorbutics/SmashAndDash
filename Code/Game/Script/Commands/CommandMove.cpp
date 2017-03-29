@@ -27,23 +27,23 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 		throw ska::ScriptException("This command needs at least 4 parameters");
 	}
 
-    const std::string& id = args[0];
-	const int dir = ska::StringUtils::strToInt(args[1]);
-	const int speed = ska::StringUtils::strToInt(args[2]);
-	const bool ghost = ska::StringUtils::strToInt(args[3]) != 0;
-	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+    const auto& id = args[0];
+	const auto dir = ska::StringUtils::strToInt(args[1]);
+	const auto speed = ska::StringUtils::strToInt(args[2]);
+	const auto ghost = ska::StringUtils::strToInt(args[3]) != 0;
+	auto internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
 		throw ska::ScriptException("The targetted entity cannot move : " + id);
 	}
 
-	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(internalEntity),
+	const auto& centerPos = ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(internalEntity),
 																			m_entityManager.getComponent<ska::HitboxComponent>(internalEntity));
 
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
 
-	const ska::Force moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
+	const auto moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
 	iamc.delay = static_cast<unsigned int>(-1);
 	iamc.ghost = ghost;
 
@@ -51,7 +51,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	if (args.size() > 4) {
 		std::vector<std::string> extraArgs;
 
-		const std::string& scriptName = args[4];
+		const auto& scriptName = args[4];
 		/* Rebuild an argument string to be read by the new running script */
 		for (unsigned int i = 5; i < args.size(); i++) {
 			extraArgs.push_back(args[i]);
@@ -66,12 +66,12 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 		iamc.callback = ssc;
 		iamc.callbackActive = true;
 	}
-	ska::MovementComponent& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
+	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
 	mc.vx = 0;
 	mc.vy = 0;
 	mc.ax = 0;
 	mc.ay = 0;
-	const ska::Point<int> vector = ska::Point<int>::cartesian(moveForce.power, moveForce.angle);
+	const auto vector = ska::Point<int>::cartesian(moveForce.power, moveForce.angle);
 	iamc.directions.push_back(vector);
 	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, iamc);
 

@@ -24,7 +24,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -130,9 +130,6 @@
     <ClCompile Include="AI\Path.cpp" />
     <ClCompile Include="AI\System\IADefinedMovementSystem.cpp" />
     <ClCompile Include="AI\System\IARandomMovementSystem.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\libska_ai.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
