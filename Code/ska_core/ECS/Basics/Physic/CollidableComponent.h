@@ -1,11 +1,11 @@
 #pragma once
 #include <unordered_set>
-#include "ECS/Component.h"
+#include "../../Component.h"
 
 namespace ska {
 	class CollidableComponent : public Component {
 	public:
-		CollidableComponent() = default;
+		CollidableComponent();
 		~CollidableComponent() = default;
 		std::unordered_set<int> authorizedBlockIds;
 	};

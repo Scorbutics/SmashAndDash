@@ -10,21 +10,9 @@
 namespace ska {
 	class PositionComponent : public Component {
 	public:
-		PositionComponent() {
-			static auto initialized = false;
-			if (!initialized) {
-				initialized = true;
-				const auto className = ComponentHandler<std::remove_reference<decltype(*this)>::type>::getClassName();
-				addFieldSerializer(serializeX, "x", className);
-				addFieldSerializer(serializeY, "y", className);
-				addFieldSerializer(serializeZ, "z", className);
-			}
-			x = y = z = 0;
-		}
-
-		PositionComponent(const Point<int>& p) {
-			operator=(p);
-		}
+		PositionComponent();
+		PositionComponent(const Point<int>& p);
+        void operator=(const Point<int>& p);
 
 		static Point<int> getCenterPosition(const PositionComponent& pc, const HitboxComponent& hc) {
 			Point<int> result;
@@ -63,11 +51,7 @@ namespace ska {
 		}
 
 	public:
-		void operator=(const Point<int>& p) {
-			x = p.x;
-			y = p.y;
-			z = 0;
-		}
+
 
 		int x;
 		int y;

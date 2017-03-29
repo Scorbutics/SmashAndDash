@@ -5,7 +5,9 @@
 namespace ska {
 	class WorldCollisionComponent : public Component {
 	public:
-		WorldCollisionComponent() { xaxis = false; yaxis = false; }
+        WorldCollisionComponent();
+		~WorldCollisionComponent() = default;
+
 		bool xaxis;
 		bool yaxis;
 		std::vector<Point<int>> blockColPosX;

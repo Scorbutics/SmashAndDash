@@ -5,6 +5,9 @@
 namespace ska {
 	class ScriptAwareComponent : public Component {
 	public:
+	    ScriptAwareComponent();
+	    ~ScriptAwareComponent() = default;
+
 		PositionComponent lastBlockPos;
 	};
 }

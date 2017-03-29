@@ -14,11 +14,8 @@ namespace ska {
 		int period;
 		std::vector<std::string> args;
 
-		ScriptSleepComponent() {
-			deleteEntityWhenFinished = false;
-			triggeringType = 0;
-			period = 0;
-		}
+		ScriptSleepComponent();
+		~ScriptSleepComponent() = default;
 
 	};
 }

@@ -4,5 +4,7 @@
 namespace ska {
 	class HasShadowComponent : public Component {
 	public:
+	    HasShadowComponent();
+	    ~HasShadowComponent() = default;
 	};
 }

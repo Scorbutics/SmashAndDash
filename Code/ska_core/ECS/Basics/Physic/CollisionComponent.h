@@ -1,10 +1,10 @@
 #pragma once
-#include "ECS/Component.h"
-#include "ECS/ECSDefines.h"
+#include "../../Component.h"
+#include "../../ECSDefines.h"
 namespace ska {
 	class CollisionComponent : public Component {
 	public:
-		CollisionComponent() { xaxis = false; yaxis = false; origin = 0; target = 0; }
+		CollisionComponent();
 		EntityId origin;
 		EntityId target;
 		bool xaxis;

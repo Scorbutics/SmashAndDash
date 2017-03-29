@@ -3,6 +3,8 @@
 namespace ska {
 	class GravityAffectedComponent : public Component {
 	public:
+	    GravityAffectedComponent();
+	    ~GravityAffectedComponent() = default;
 		float friction;
 	};
 }
