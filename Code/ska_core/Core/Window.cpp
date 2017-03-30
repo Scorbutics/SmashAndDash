@@ -1,21 +1,18 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include "../Exceptions/IllegalArgumentException.h"
 #include "Window.h"
-#include "Graphic/Texture.h"
 
 
 #define TAILLEBLOCFENETRE 32
 #define TAILLEECRANMINX TAILLEBLOCFENETRE*15
 #define TAILLEECRANMINY TAILLEBLOCFENETRE*13
 
-
 ska::Window::Window(const std::string& title, const unsigned int w, const unsigned int h) :
 m_wName(title),
 m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h),
 m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
-	Texture::setDefaultRenderer(m_renderer);
 
 	m_screen = SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
@@ -44,8 +41,9 @@ unsigned int ska::Window::getHeight() const {
 	return m_height;
 }
 
-void ska::Window::flip() const{
+void ska::Window::display() const{
 	m_renderer.renderPresent();
+	m_renderer.renderClear();
 }
 
 void ska::Window::showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const {

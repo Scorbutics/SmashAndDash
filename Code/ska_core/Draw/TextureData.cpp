@@ -1,5 +1,5 @@
 #include "TextureData.h"
-#include "Utils/StringUtils.h"
+#include "../Utils/StringUtils.h"
 
 ska::TextureData::TextureData(SDLRenderer& r, const std::string& texturePath, Color col) :
     m_renderer(&r){

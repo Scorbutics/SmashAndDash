@@ -293,9 +293,9 @@ bool SceneFight::unload() {
 	return m_taskQueue.hasRunningTask();
 }
 
-void SceneFight::eventUpdate(bool movingDisallowed) {
-	AbstractSceneMap::eventUpdate(movingDisallowed);
-	m_guiBattle.eventUpdate(movingDisallowed);
+void SceneFight::eventUpdate(unsigned int ellapsedTime) {
+	AbstractSceneMap::eventUpdate(ellapsedTime);
+	m_guiBattle.eventUpdate(ellapsedTime);
 }
 
 SceneFight::~SceneFight() {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include "Utils/NumberUtils.h"
+#include "../Utils/NumberUtils.h"
 
 namespace ska {
 	struct Color {

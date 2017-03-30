@@ -1,6 +1,6 @@
 #pragma once
 #include "Script/System/ScriptBasicCommandsSystem.h"
-#include "Scene/SceneSwitcher.h"
+#include "Core/Scene/SceneSwitcher.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Utils/Observable.h"
 #include "Utils/Observer.h"

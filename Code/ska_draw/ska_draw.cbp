@@ -57,13 +57,6 @@
 		<Unit filename="Graphic/Animation.cpp" />
 		<Unit filename="Graphic/Animation.h" />
 		<Unit filename="Graphic/Color.h" />
-		<Unit filename="Graphic/Draw/Drawable.h" />
-		<Unit filename="Graphic/Draw/DrawableContainer.h" />
-		<Unit filename="Graphic/Draw/DrawableFixedPriority.h" />
-		<Unit filename="Graphic/Draw/PriorityQueueDrawableContainer.cpp" />
-		<Unit filename="Graphic/Draw/PriorityQueueDrawableContainer.h" />
-		<Unit filename="Graphic/Draw/VectorDrawableContainer.cpp" />
-		<Unit filename="Graphic/Draw/VectorDrawableContainer.h" />
 		<Unit filename="Graphic/Font.cpp" />
 		<Unit filename="Graphic/Font.h" />
 		<Unit filename="Graphic/GraphicComponent.h" />

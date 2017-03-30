@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 #include "Point.h"
 #include "Graphic/Texture.h"
 

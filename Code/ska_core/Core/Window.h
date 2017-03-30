@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <SDL.h>
-#include "Graphic/SDLRenderer.h"
+#include "../Draw/SDLRenderer.h"
 
 namespace ska {
 	class Window {
@@ -16,7 +16,7 @@ namespace ska {
 
 		void showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const ;
 
-		void flip() const;
+		void display() const;
 		void resize(unsigned int w, unsigned int h);
 
 	private:
@@ -24,7 +24,6 @@ namespace ska {
 		unsigned int m_height;
 		unsigned int m_width;
 
-	protected:
 		SDL_Window * m_screen;
 		SDLRenderer m_renderer;
 

@@ -51,8 +51,8 @@ void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead(*world.getWeather());*/
 }
 
-void AbstractNoGUISceneMap::eventUpdate(bool movingDisallowed) {
-	Scene::eventUpdate(movingDisallowed);
+void AbstractNoGUISceneMap::eventUpdate(unsigned int ellapsedTime) {
+	Scene::eventUpdate(ellapsedTime);
 
 	//WGameCore& core = WGameCore::getInstance();
 	//ska::World& world = core.getWorld();

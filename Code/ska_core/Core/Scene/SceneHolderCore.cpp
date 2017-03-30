@@ -1,11 +1,11 @@
 #include "SceneHolderCore.h"
-#include "Exceptions/SceneDiedException.h"
+#include "../../Exceptions/SceneDiedException.h"
 
-void SceneHolderCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
+void ska::SceneHolderCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
 	m_nextScene = move(scene);
 }
 
-void SceneHolderCore::update() {
+void ska::SceneHolderCore::update() {
 	if (m_nextScene != nullptr) {
 		bool firstScene;
 		bool triggerChangeScene;
@@ -35,6 +35,6 @@ void SceneHolderCore::update() {
 	refresh();
 }
 
-ska::ScenePtr& SceneHolderCore::getScene() {
+ska::ScenePtr& ska::SceneHolderCore::getScene() {
 	return m_currentScene;
 }

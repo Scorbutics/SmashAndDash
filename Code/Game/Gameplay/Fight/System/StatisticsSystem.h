@@ -2,7 +2,7 @@
 #include <unordered_set>
 #include "ECS/System.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
-#include "Scene/SceneHolder.h"
+#include "Core/Scene/SceneHolder.h"
 #include "../BattleComponent.h"
 #include "../../World/WorldScene.h"
 #include "../../PokemonGameEventDispatcher.h"

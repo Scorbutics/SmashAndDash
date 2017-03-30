@@ -7,6 +7,7 @@ namespace ska {
 
 	public:
 		static unsigned int getTicks();
+		static void wait(unsigned int ms);
 		~TimeUtils();
 	};
 }

@@ -2,7 +2,7 @@
 #include "SDLRenderer.h"
 #include "SDLSurface.h"
 #include "SDLTexture.h"
-#include "Exceptions/IllegalArgumentException.h"
+#include "../Exceptions/IllegalArgumentException.h"
 
 ska::SDLRenderer::SDLRenderer(SDL_Window * window, int index, Uint32 flags) :
     m_renderer(nullptr) {

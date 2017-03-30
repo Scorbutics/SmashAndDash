@@ -47,13 +47,6 @@
 			<Add directory="../ska_draw/" />
 			<Add directory="../ska_physic/" />
 		</Compiler>
-		<Unit filename="Scene/HasGraphic.h" />
-		<Unit filename="Scene/HasLogic.h" />
-		<Unit filename="Scene/Scene.cpp" />
-		<Unit filename="Scene/Scene.h" />
-		<Unit filename="Scene/SceneHolder.h" />
-		<Unit filename="Scene/SceneSwitcher.h" />
-		<Unit filename="Scene/SceneType.h" />
 		<Unit filename="World/Block.cpp" />
 		<Unit filename="World/Block.h" />
 		<Unit filename="World/BlockRenderable.cpp" />

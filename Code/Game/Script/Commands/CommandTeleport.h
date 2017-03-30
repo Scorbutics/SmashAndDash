@@ -2,7 +2,7 @@
 #include "Script/Command/AbstractFunctionCommand.h"
 
 #include "../../Gameplay/World/WorldScene.h"
-#include "Scene/SceneSwitcher.h"
+#include "Core/Scene/SceneSwitcher.h"
 #include "Utils/Observable.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 

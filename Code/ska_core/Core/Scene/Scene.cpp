@@ -1,7 +1,7 @@
-#include "Inputs/InputContextManager.h"
-#include "Graphic/Draw/DrawableContainer.h"
-#include "Graphic/System/IGraphicSystem.h"
-#include "ECS/ISystem.h"
+#include "../../Inputs/InputContextManager.h"
+#include "../../Draw/DrawableContainer.h"
+#include "../../Draw/IGraphicSystem.h"
+#include "../../ECS/ISystem.h"
 #include "SceneHolder.h"
 #include "Scene.h"
 
@@ -24,7 +24,7 @@ void ska::Scene::graphicUpdate(DrawableContainer& drawables) {
 	}
 }
 
-void ska::Scene::eventUpdate(bool) {
+void ska::Scene::eventUpdate(unsigned int) {
 
 	/* Logics */
 	for (auto& s : m_logics) {

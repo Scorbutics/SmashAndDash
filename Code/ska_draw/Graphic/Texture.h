@@ -2,11 +2,11 @@
 
 #include <memory>
 #include "Utils/ResourceTemplate.h"
-#include "SDLTexture.h"
-#include "TextureData.h"
+#include "Draw/SDLTexture.h"
+#include "Draw/TextureData.h"
 #include "Utils/SkaConstants.h"
 #include "Rectangle.h"
-#include "Color.h"
+#include "Draw/Color.h"
 
 namespace ska {
 	class SDLRenderer;

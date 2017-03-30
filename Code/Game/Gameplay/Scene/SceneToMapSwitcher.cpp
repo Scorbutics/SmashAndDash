@@ -1,7 +1,7 @@
 #include "SceneToMapSwitcher.h"
 #include "SceneMap.h"
 #include "../World/WorldScene.h"
-#include "Scene/SceneHolder.h"
+#include "Core/Scene/SceneHolder.h"
 
 SceneToMapSwitcher::SceneToMapSwitcher(const std::string& map, const std::string& chipset, PokemonGameEventDispatcher& ged) :
 SceneSwitcher(map, chipset),

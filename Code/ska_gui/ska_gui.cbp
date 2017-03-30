@@ -124,8 +124,6 @@
 		<Unit filename="GUI/Windows/GUIScrollButtonWindowIG.h" />
 		<Unit filename="GUI/Windows/MoveableWindow.h" />
 		<Unit filename="GUI/Windows/TimeScrollableWindowIG.h" />
-		<Unit filename="GUI/Windows/Window.cpp" />
-		<Unit filename="GUI/Windows/Window.h" />
 		<Unit filename="GUI/Windows/WindowIG.h" />
 		<Unit filename="MessagePopup.cpp" />
 		<Unit filename="MessagePopup.h" />

@@ -1,6 +1,5 @@
 #include <sstream>
 #include "Font.h"
-#include "Utils/ResourceTemplate.h"
 
 
 ska::Font::Font() : ResourceTemplate() {

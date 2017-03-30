@@ -3,7 +3,7 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "../FightComponent.h"
 #include "ECS/System.h"
-#include "Scene/SceneHolder.h"
+#include "Core/Scene/SceneHolder.h"
 #include "Inputs/InputContextManager.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../../Gameplay/PokemonGameEventDispatcher.h"

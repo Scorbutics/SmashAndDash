@@ -5,8 +5,8 @@
 #include "Utils/Observer.h"
 #include "Utils/Observable.h"
 #include "ECS/ECSDefines.h"
-#include "Scene/HasGraphic.h"
-#include "Scene/HasLogic.h"
+#include "Core/Scene/HasGraphic.h"
+#include "Core/Scene/HasLogic.h"
 
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../Gameplay/Fight/BattleEvent.h"
@@ -39,7 +39,7 @@ public:
 	bool onStatisticsChange(StatisticsChangeEvent& sce);
 
 	void graphicUpdate(ska::DrawableContainer& drawables) override;
-	void eventUpdate(bool movingDisallowed) override;
+	void eventUpdate(unsigned int ellapsedTime) override;
 
 private:
 	void addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId);

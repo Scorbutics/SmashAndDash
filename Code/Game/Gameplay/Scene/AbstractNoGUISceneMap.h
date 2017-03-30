@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene/Scene.h"
+#include "Core/Scene/Scene.h"
 
 namespace ska {
 	class World;
@@ -17,7 +17,7 @@ public:
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(bool movingDisallowed) override;
+	virtual void eventUpdate(unsigned int ellapsedTime) override;
 	virtual ~AbstractNoGUISceneMap();
 
 };

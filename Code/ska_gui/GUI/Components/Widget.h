@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Point.h"
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 #include "Utils/RectangleUtils.h"
 #include "Utils/TupleUtils.h"
 

@@ -1,7 +1,7 @@
 #include "SceneToBattleSwitcher.h"
 #include "SceneFight.h"
 #include "../World/WorldScene.h"
-#include "Scene/SceneHolder.h"
+#include "Core/Scene/SceneHolder.h"
 #include "../Fight/FightComponent.h"
 
 SceneToBattleSwitcher::SceneToBattleSwitcher(const std::string& map, const std::string& chipset, PokemonGameEventDispatcher& ged, ska::Point<int> fightPos, const FightComponent& fc) :

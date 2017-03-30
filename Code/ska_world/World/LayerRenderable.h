@@ -8,7 +8,7 @@
 
 #include "BlockRenderable.h"
 
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 
 class ParticleManager;
 

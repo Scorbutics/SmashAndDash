@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Graphic/Texture.h"
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 #include "ECS/ECSDefines.h"
 class SpriteBank;
 

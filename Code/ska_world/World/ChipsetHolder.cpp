@@ -1,7 +1,7 @@
 
 #include "Exceptions/CorruptedFileException.h"
 #include "Exceptions/FileException.h"
-#include "Graphic/SDLSurface.h"
+#include "Draw/SDLSurface.h"
 #include "Utils/StringUtils.h"
 #include "Block.h"
 #include "Utils/SkaConstants.h"

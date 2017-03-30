@@ -2,7 +2,7 @@
 #include "../World/WorldScene.h"
 #include "../CustomEntityManager.h"
 #include "World/LayerE.h"
-#include "Scene/SceneSwitcher.h"
+#include "Core/Scene/SceneSwitcher.h"
 #include "AbstractSceneMap.h"
 
 AbstractSceneMap::AbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap) :
@@ -68,12 +68,12 @@ void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 
 }
 
-void AbstractSceneMap::eventUpdate(bool stuck) {
+void AbstractSceneMap::eventUpdate(unsigned int ellapsedTime) {
 	/* Raw input acquisition */
 	m_inputCManager.refresh();
 
-	AbstractNoGUISceneMap::eventUpdate(stuck);
-	m_worldScene.eventUpdate(stuck);
+	AbstractNoGUISceneMap::eventUpdate(ellapsedTime);
+	m_worldScene.eventUpdate(ellapsedTime);
 }
 
 AbstractSceneMap::~AbstractSceneMap()

@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS/ISystem.h"
+#include "../ECS/ISystem.h"
 #include "CameraAware.h"
 
 namespace ska {

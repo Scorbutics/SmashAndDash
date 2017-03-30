@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 #include "Utils/MouseObservable.h"
 #include "Windows/DynamicWindowIG.h"
 #include "Components/Concrete/MouseCursor.h"

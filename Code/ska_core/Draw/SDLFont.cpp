@@ -1,6 +1,6 @@
 #include <iostream>
 #include "SDLFont.h"
-#include "Utils/SkaConstants.h"
+#include "../Utils/SkaConstants.h"
 
 ska::SDLFont::SDLFont() {
 	m_fontC = nullptr;

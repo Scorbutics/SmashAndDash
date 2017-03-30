@@ -1,11 +1,11 @@
 #include <iostream>
 #include <SDL_ttf.h>
-#include "Utils/SkaConstants.h"
+#include "../Utils/SkaConstants.h"
 #include "SDLTexture.h"
 #include "SDLSurface.h"
 #include "Font.h"
 #include "TextureData.h"
-#include "Exceptions/FileException.h"
+#include "../Exceptions/FileException.h"
 
 ska::SDLTexture::SDLTexture() : m_r(0), m_g(0), m_b(0), m_texture(nullptr), m_w(0), m_h(0), m_alpha(0){
 }

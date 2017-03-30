@@ -127,8 +127,6 @@
 		<Unit filename="Code/Game/Gameplay/Scene/DebugAbstractSceneMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneFight.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneFight.h" />
-		<Unit filename="Code/Game/Gameplay/Scene/SceneHolderCore.cpp" />
-		<Unit filename="Code/Game/Gameplay/Scene/SceneHolderCore.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToBattleSwitcher.cpp" />

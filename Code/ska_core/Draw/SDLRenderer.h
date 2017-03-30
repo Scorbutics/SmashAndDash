@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include "Rectangle.h"
+#include "../Rectangle.h"
 
 namespace ska {
     class SDLSurface;

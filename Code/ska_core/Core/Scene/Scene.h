@@ -8,7 +8,7 @@ namespace ska {
 	class InputContextManager;
 	class ISystem;
 	class IGraphicSystem;
-	
+
 	class Scene : public HasGraphic, public HasLogic {
 	public:
 		Scene(SceneHolder& sh, InputContextManager& ril);
@@ -19,7 +19,7 @@ namespace ska {
 		virtual void load(std::unique_ptr<Scene>* lastScene) = 0;
 		virtual bool unload() = 0;
 		virtual void graphicUpdate(DrawableContainer& drawables) override;
-		virtual void eventUpdate(bool movingDisallowed) override;
+		virtual void eventUpdate(unsigned int ellapsedTime) override;
 
 		virtual ~Scene() = default;
 

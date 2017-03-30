@@ -6,6 +6,6 @@ namespace ska {
 		HasLogic() {}
 		virtual ~HasLogic() {}
 
-		virtual void eventUpdate(bool movingDisallowed) = 0;
+		virtual void eventUpdate(unsigned int ellapsedTime) = 0;
 	};
 }

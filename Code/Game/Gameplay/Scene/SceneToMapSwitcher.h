@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene/SceneSwitcher.h"
+#include "Core/Scene/SceneSwitcher.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../PokemonGameEventDispatcherDeclaration.h"
 

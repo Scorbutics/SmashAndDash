@@ -3,7 +3,7 @@
 #include "GUI/Components/Concrete/Button.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
-#include "Graphic/Draw/DrawableContainer.h"
+#include "Draw/DrawableContainer.h"
 
 
 GUIBattle::GUIBattle(ska::Window&, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
@@ -69,7 +69,7 @@ bool GUIBattle::onBattleStart(BattleEvent& be) {
 /* TODO put the sprite in the GUI */
 //m_icone.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR + ska::StringUtils::intToStr(m_id) + ".png");
 
-void GUIBattle::eventUpdate(bool) {
+void GUIBattle::eventUpdate(unsigned int) {
 	//if (m_moves.isVisible()) {
 	//	m_moves.refresh();
 

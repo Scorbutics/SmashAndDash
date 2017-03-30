@@ -3,7 +3,7 @@
 #include "PokeballLaunchReasonEnum.h"
 #include "Graphic/Animation.h"
 #include "Graphic/Texture.h"
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 
 class Pokeball : public ska::DrawableFixedPriority {
 

@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <memory>
 #include "Point.h"
-#include "Graphic/Color.h"
+#include "Draw/Color.h"
 #include "Chipset.h"
 namespace ska {
 	class Block;

@@ -211,3 +211,210 @@
 1490566342 d:\users\brice\source\repos\smashanddash\code\ska_core\\utils\demangle.h
 	<string>
 
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\node.cpp
+	<iostream>
+	<cstdlib>
+	<string>
+	"Node.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\node.h
+	<string>
+	<vector>
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\path.cpp
+	<iostream>
+	<cstdlib>
+	<string>
+	<vector>
+	<math.h>
+	"Path.h"
+	"Node.h"
+	"Utils/SkaConstants.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\path.h
+	<string>
+	"Rectangle.h"
+	"Node.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\system\iarandommovementsystem.cpp
+	"IARandomMovementSystem.h"
+	"Utils/TimeUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Utils/RectangleUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\system\iarandommovementsystem.h
+	<unordered_set>
+	"../IARandomMovementComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/System.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\iarandommovementcomponent.h
+	"ECS/Component.h"
+	"Point.h"
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componenthandler.h
+	<iostream>
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+	"../Utils/Demangle.h"
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\staticcounterglobal.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490604206 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\demangle.h
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490777487 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\forcecomponent.h
+	"../../Component.h"
+
+1490690983 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\system.h
+	<unordered_set>
+	"ECSDefines.h"
+	"EntityManager.h"
+	"ISystem.h"
+	"../Utils/Observer.h"
+	"../Utils/Refreshable.h"
+
+1490684422 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\entitymanager.h
+	<bitset>
+	<unordered_set>
+	<array>
+	<unordered_map>
+	<string>
+	"ECSDefines.h"
+	"ComponentHandler.h"
+	"../Exceptions/IllegalStateException.h"
+	"../Exceptions/IllegalArgumentException.h"
+	"../Utils/Observable.h"
+	"ComponentSerializer.h"
+	"../Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\isystem.h
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\refreshable.h
+
+1490884278 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\timeutils.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\physicutils.h
+	"Force.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\force.h
+	"../Rectangle.h"
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\positioncomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+	"../../../Utils/PhysicUtils.h"
+	"../../../Point.h"
+	"HitboxComponent.h"
+	"../Graphic/DirectionalAnimationComponent.h"
+	"../../../Utils/NumberUtils.h"
+
+1490777539 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\hitboxcomponent.h
+	"../../Component.h"
+
+1490775404 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\directionalanimationcomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+	"../Rectangle.h"
+	"../Point.h"
+
+1490857474 source:c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\system\iadefinedmovementsystem.cpp
+	"IADefinedMovementSystem.h"
+	"Utils/TimeUtils.h"
+	"Utils/RectangleUtils.h"
+	"ECS/Basics/Script/ScriptRegisterer.h"
+	"ECS/Basics/Physic/WorldCollisionComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\system\iadefinedmovementsystem.h
+	<unordered_set>
+	"../IADefinedMovementComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/System.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\ai\iadefinedmovementcomponent.h
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/Component.h"
+	"Point.h"
+	"Utils/TimeUtils.h"
+
+1490777826 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptsleepcomponent.h
+	<vector>
+	<string>
+	"../../Component.h"
+	"ScriptTriggerType.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scripttriggertype.h
+
+1490777575 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\movementcomponent.h
+	"../../Component.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptregisterer.h
+	"ECS/ECSDefines.h"
+
+1490777768 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\worldcollisioncomponent.h
+	"../../Component.h"
+	"../../ECSDefines.h"
+	"../../../Point.h"
+

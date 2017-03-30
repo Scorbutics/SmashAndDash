@@ -4,7 +4,7 @@
 #include <vector>
 #include "Graphic/Texture.h"
 #include "Point.h"
-#include "Graphic/Draw/DrawableFixedPriority.h"
+#include "Draw/DrawableFixedPriority.h"
 
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage

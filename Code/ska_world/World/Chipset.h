@@ -1,9 +1,9 @@
 #pragma once
 #include <unordered_map>
 #include <memory>
-#include "Graphic/Color.h"
+#include "Draw/Color.h"
 #include "Point.h"
-#include "Graphic/SDLSurface.h"
+#include "Draw/SDLSurface.h"
 #include "Graphic/Texture.h"
 #include "ECS/Basics/Script/ScriptSleepComponent.h"
 #include "Graphic/Animation.h"

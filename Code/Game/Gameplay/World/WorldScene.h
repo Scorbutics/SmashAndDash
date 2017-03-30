@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene/Scene.h"
+#include "Core/Scene/Scene.h"
 #include "Physic/System/ForceSystem.h"
 #include "Physic/System/GravitySystem.h"
 #include "Inputs/System/InputSystem.h"
@@ -37,7 +37,7 @@ public:
 	virtual void load(ska::ScenePtr* scene) override;
 	virtual bool unload() override;
 	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(bool movingDisallowed) override;
+	virtual void eventUpdate(unsigned int ellapsedTime) override;
 	virtual ~WorldScene();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;

@@ -14,8 +14,8 @@
 #include "Exceptions/ScriptSyntaxError.h"
 #include "../Fight/FightComponent.h"
 #include "../CustomEntityManager.h"
-#include "Graphic/Draw/DrawableContainer.h"
-#include "GUI/Windows/Window.h"
+#include "Draw/DrawableContainer.h"
+#include "Core/Window.h"
 
 WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
 Scene(sh, ril),
@@ -101,13 +101,13 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.add(m_gui);
 }
 
-void WorldScene::eventUpdate(bool movingDisallowed) {
+void WorldScene::eventUpdate(unsigned int ellapsedTime) {
 	m_world.update();
 
 	//GUI
 	m_gui.refresh();
 
-	return Scene::eventUpdate(movingDisallowed);
+	return Scene::eventUpdate(ellapsedTime);
 }
 
 ska::World& WorldScene::getWorld() {
