@@ -56,27 +56,17 @@
 		<Unit filename="Graphic/AnimatedTexture.h" />
 		<Unit filename="Graphic/Animation.cpp" />
 		<Unit filename="Graphic/Animation.h" />
-		<Unit filename="Graphic/Color.h" />
-		<Unit filename="Graphic/Font.cpp" />
-		<Unit filename="Graphic/Font.h" />
+		<Unit filename="Graphic/GraphicComponent.cpp" />
 		<Unit filename="Graphic/GraphicComponent.h" />
+		<Unit filename="Graphic/HasShadowComponent.cpp" />
 		<Unit filename="Graphic/HasShadowComponent.h" />
 		<Unit filename="Graphic/PositionnedGraphicDrawable.h" />
-		<Unit filename="Graphic/SDLFont.cpp" />
-		<Unit filename="Graphic/SDLFont.h" />
-		<Unit filename="Graphic/SDLRenderer.cpp" />
-		<Unit filename="Graphic/SDLRenderer.h" />
-		<Unit filename="Graphic/SDLSurface.cpp" />
-		<Unit filename="Graphic/SDLSurface.h" />
-		<Unit filename="Graphic/SDLTexture.cpp" />
-		<Unit filename="Graphic/SDLTexture.h" />
 		<Unit filename="Graphic/SpriteAnimation.cpp" />
 		<Unit filename="Graphic/SpriteAnimation.h" />
 		<Unit filename="Graphic/SpriteAnimationManager.cpp" />
 		<Unit filename="Graphic/SpriteAnimationManager.h" />
 		<Unit filename="Graphic/System/AbstractGraphicSystem.cpp" />
 		<Unit filename="Graphic/System/AbstractGraphicSystem.h" />
-		<Unit filename="Graphic/System/CameraAware.h" />
 		<Unit filename="Graphic/System/CameraFixedSystem.cpp" />
 		<Unit filename="Graphic/System/CameraFixedSystem.h" />
 		<Unit filename="Graphic/System/CameraFollowSystem.cpp" />
@@ -91,13 +81,10 @@
 		<Unit filename="Graphic/System/DirectionalAnimationSystem.h" />
 		<Unit filename="Graphic/System/GraphicSystem.cpp" />
 		<Unit filename="Graphic/System/GraphicSystem.h" />
-		<Unit filename="Graphic/System/IGraphicSystem.h" />
 		<Unit filename="Graphic/System/ShadowSystem.cpp" />
 		<Unit filename="Graphic/System/ShadowSystem.h" />
 		<Unit filename="Graphic/Texture.cpp" />
 		<Unit filename="Graphic/Texture.h" />
-		<Unit filename="Graphic/TextureData.cpp" />
-		<Unit filename="Graphic/TextureData.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
