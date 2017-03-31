@@ -1,6 +1,6 @@
 #include <SDL.h>
 #include "MessagePopup.h"
-#include "GUI/Windows/Window.h"
+#include "Core/Window.h"
 
 ska::MessagePopup::MessagePopup(MessageType::Enum mt, const std::string& title, const std::string& message, Window* w) {
 	Uint32 flags = 0;

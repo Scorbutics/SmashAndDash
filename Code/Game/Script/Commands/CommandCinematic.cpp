@@ -1,5 +1,4 @@
 #include "CommandCinematic.h"
-#include "../../Gameplay/WGameCore.h"
 #include "../../Graphic/GUI/DialogMenu.h"
 #include "Utils/StringUtils.h"
 #include "Rectangle.h"

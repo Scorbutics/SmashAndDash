@@ -1,10 +1,9 @@
 #pragma once
 #include <queue>
 #include <memory>
-
+#include "Runnable.h"
 
 namespace ska {
-	class Runnable;
 	typedef std::unique_ptr<Runnable> RunnablePtr;
 
 	class TaskQueue {
@@ -12,7 +11,7 @@ namespace ska {
 		TaskQueue();
 		TaskQueue(const TaskQueue&) = delete;
 		TaskQueue& operator=(const TaskQueue&) = delete;
-		virtual ~TaskQueue();
+		virtual ~TaskQueue() = default;
 
 		bool hasRunningTask() const;
 		void queueTask(RunnablePtr& t);

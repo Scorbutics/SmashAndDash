@@ -11,5 +11,8 @@ namespace ska {
         void nextScene(std::unique_ptr<ska::Scene>& scene) override;
         ska::ScenePtr& getScene() override;
 
+	private:
+		ScenePtr m_currentScene;
+		ScenePtr m_nextScene;
     };
 }

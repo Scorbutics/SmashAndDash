@@ -1,5 +1,4 @@
 #include "CommandHeal.h"
-#include "../../Gameplay/WGameCore.h"
 #include "Utils/StringUtils.h"
 
 CommandHeal::CommandHeal(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

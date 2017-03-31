@@ -1,6 +1,5 @@
-#include <list>
+#include "../Data/Settings.h"
 #include "WorldImpl.h"
-#include "../WGameCore.h"
 #include "../CustomEntityManager.h"
 #include "Draw/DrawableContainer.h"
 #include "Physic/ParticleManager.h"

@@ -1,6 +1,5 @@
 //
 // #include "Fight.h"
-// #include "..\WGameCore.h"
 // #include "../../ska/World\LayerE.h"
 // #include "../../Utils\ChargementImages.h"
 // #include "..\Data\Statistics.h"
@@ -15,7 +14,6 @@
 // Fight::Fight(): m_animGrass(1, 3, false)
 // {
 // 	ska::Rectangle buf;
-// 	WGameCore& wScreen = WGameCore::getInstance();
 // 	buf.x = 0;
 // 	buf.y = 0;
 // 	buf.w = 48;

@@ -18,7 +18,7 @@ namespace ska {
 
 	private:
 		Music* m_music;
-		SoundEventType m_eventType;
-		
+		const SoundEventType m_eventType;
+
 	};
 }

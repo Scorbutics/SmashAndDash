@@ -25,8 +25,6 @@ public:
 	ska::World& getWorld();
 	WorldScene& getWorldScene();
 
-	ska::ScenePtr& getScene();
-
 private:
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;

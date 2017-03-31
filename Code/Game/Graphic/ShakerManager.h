@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Rectangle.h"
-class WGameCore;
 class World;
 
 class ShakerManager

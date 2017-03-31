@@ -26,7 +26,6 @@ void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	Scene::graphicUpdate(drawables);
 
 	/*
-	WGameCore& core = WGameCore::getInstance();
 	ska::World& world = core.getWorld();
 	Pokeball& pokeball = core.getPokeball();
 	Fight& fight = core.getFight();

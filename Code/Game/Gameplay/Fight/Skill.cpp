@@ -2,7 +2,6 @@
 
 #include "Skill.h"
 #include "Physic/LinearParticle.h"
-#include "../WGameCore.h"
 #include "../../Utils/ChargementImages.h"
 #include "Utils/SpritePath.h"
 #include "../../Gameplay/Data/Statistics.h"
@@ -56,7 +55,6 @@ Projectile::Projectile(ska::IniReader* data):
 
 void Projectile::refresh()
 {
-	WGameCore& wScreen = WGameCore::getInstance();
 
     for(int i = 0; i < m_nombre; i++)
         if(m_particles[i] != NULL && m_particles[i]->isActive())

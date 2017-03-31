@@ -1,7 +1,6 @@
 /*
 #include "AI.h"
 #include "../../Utils\IDs.h"
-#include "..\WGameCore.h"
 #include "../../Utils\ChargementImages.h"
 #include "../../Gameplay/Fight/Skill.h"
 #include "../../ska/Utils/RectangleUtils.h"
@@ -47,13 +46,11 @@ unsigned int AI::getContext()
 
 Character* AI::getOpponent()
 {
-	//WGameCore& wScreen = WGameCore::getInstance();
 	return NULL;//wScreen.getFight().getOpponent();
 }
 
 void AI::act(Fight& fight)
 {
-	WGameCore& wScreen = WGameCore::getInstance();
 	ska::World& w = wScreen.getWorld();
 
     if(fight.getOpponent() == NULL || !fight.isFighting())

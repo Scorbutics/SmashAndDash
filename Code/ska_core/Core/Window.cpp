@@ -3,7 +3,7 @@
 #include <fstream>
 #include "../Exceptions/IllegalArgumentException.h"
 #include "Window.h"
-
+#include "../Draw/SDLRenderer.h"
 
 #define TAILLEBLOCFENETRE 32
 #define TAILLEECRANMINX TAILLEBLOCFENETRE*15
@@ -12,7 +12,8 @@
 ska::Window::Window(const std::string& title, const unsigned int w, const unsigned int h) :
 m_wName(title),
 m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h),
-m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
+m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w),
+m_containsDefaultRenderer(false) {
 
 	m_screen = SDL_CreateWindow(title.c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
@@ -27,10 +28,10 @@ m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w) {
 
 	m_renderer.load(m_screen, -1, SDL_RENDERER_ACCELERATED);
 
-	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear")) {
-		std::clog << "Attention : Linear texture filtering non activé !" << std::endl;
+	if(SDLRenderer::getDefaultRenderer() == nullptr) {
+        m_containsDefaultRenderer = true;
+        SDLRenderer::setDefaultRenderer(&m_renderer);
 	}
-
 }
 
 unsigned int ska::Window::getWidth() const {
@@ -59,5 +60,8 @@ void ska::Window::resize(unsigned int w, unsigned int h) {
 }
 
 ska::Window::~Window() {
+    if(m_containsDefaultRenderer) {
+        SDLRenderer::setDefaultRenderer(nullptr);
+    }
 	SDL_DestroyWindow(m_screen);
 }

@@ -15,6 +15,8 @@ namespace ska {
 		SDLRenderer& operator=(SDLRenderer&& r);
 		SDLRenderer(const SDLRenderer& r) = delete;
         SDLRenderer& operator=(const SDLRenderer& r) = delete;
+        static void setDefaultRenderer(SDLRenderer* renderer);
+        static SDLRenderer* getDefaultRenderer();
 
         void renderClear() const;
 
@@ -29,6 +31,7 @@ namespace ska {
 	private:
 	    void free();
 		SDL_Renderer* m_renderer;
+		static SDLRenderer* m_currentDefaultRenderer;
 
 	};
 }

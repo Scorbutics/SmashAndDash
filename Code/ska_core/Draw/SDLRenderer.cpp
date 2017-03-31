@@ -4,6 +4,8 @@
 #include "SDLTexture.h"
 #include "../Exceptions/IllegalArgumentException.h"
 
+ska::SDLRenderer* ska::SDLRenderer::m_currentDefaultRenderer = nullptr;
+
 ska::SDLRenderer::SDLRenderer(SDL_Window * window, int index, Uint32 flags) :
     m_renderer(nullptr) {
     load(window, index, flags);
@@ -16,6 +18,10 @@ ska::SDLRenderer::SDLRenderer() :
 ska::SDLRenderer::SDLRenderer(SDLRenderer&& r) :
     m_renderer(nullptr) {
     operator=(std::move(r));
+}
+
+void ska::SDLRenderer::setDefaultRenderer(SDLRenderer* r) {
+	m_currentDefaultRenderer = r;
 }
 
 ska::SDLRenderer& ska::SDLRenderer::operator=(SDLRenderer&& r) {
@@ -47,6 +53,10 @@ void ska::SDLRenderer::renderPresent() const {
 
 SDL_Texture* ska::SDLRenderer::createTextureFromSurface(const SDLSurface& s) const {
     return SDL_CreateTextureFromSurface(m_renderer, s.m_surface);
+}
+
+ska::SDLRenderer* ska::SDLRenderer::getDefaultRenderer() {
+    return m_currentDefaultRenderer;
 }
 
 int ska::SDLRenderer::renderCopy(const SDLTexture& t, const Rectangle* clip, const Rectangle& dest) const {

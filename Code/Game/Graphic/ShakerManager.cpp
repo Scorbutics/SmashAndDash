@@ -12,7 +12,6 @@ ShakerManager::ShakerManager()
 
 void ShakerManager::refresh()
 {
-	//WGameCore& wScreen = WGameCore::getInstance();
 
 	if(!m_active)
 		return;
@@ -41,7 +40,6 @@ void ShakerManager::refresh()
 
 void ShakerManager::shake(unsigned int intensity, unsigned int duration)
 {
-	//WGameCore& wScreen = WGameCore::getInstance();
 	//si jamais on n'est PAS déjà en train de secouer l'écran
 	//(évite d'appeler plusieurs fois la fonction pendant sa propre exécution)
 	//(effet de récursivité sinon)

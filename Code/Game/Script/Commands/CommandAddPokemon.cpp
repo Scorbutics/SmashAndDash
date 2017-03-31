@@ -16,7 +16,6 @@ int CommandAddPokemon::argumentsNumber() {
 
 std::string CommandAddPokemon::execute(ska::ScriptComponent&, std::vector<std::string>& ) {
 	/*int id;
-	//WGameCore& wScreen = WGameCore::getInstance();
 
 	id = ska::StringUtils::strToInt(args[0]);*/
 

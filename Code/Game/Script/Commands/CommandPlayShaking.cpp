@@ -1,5 +1,4 @@
 #include "CommandPlayShaking.h"
-//#include "../../Gameplay\WGameCore.h"
 #include "Utils/StringUtils.h"
 
 CommandPlayShaking::CommandPlayShaking(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)

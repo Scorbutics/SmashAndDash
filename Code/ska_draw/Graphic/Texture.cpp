@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Texture.h"
+#include "Draw/SDLRenderer.h"
 #include "Exceptions/IllegalStateException.h"
 
 ska::SDLRenderer* ska::Texture::m_renderer = nullptr;
@@ -55,10 +56,6 @@ void ska::Texture::setAlpha(Uint8 alpha) const{
 	}
 }
 
-void ska::Texture::setDefaultRenderer(SDLRenderer& r) {
-	m_renderer = &r;
-}
-
 int ska::Texture::render(int x, int y, const Rectangle* clip) const {
 	if (m_value == nullptr) {
 		return -1;
@@ -78,7 +75,10 @@ int ska::Texture::render(int x, int y, const Rectangle* clip) const {
 
 void ska::Texture::checkRenderer() {
 	if (m_renderer == nullptr) {
-		throw IllegalStateException("The Texture's default window is not set");
+        m_renderer = SDLRenderer::getDefaultRenderer();
+        if(m_renderer == nullptr) {
+            throw IllegalStateException("The Texture's default window is not set");
+        }
 	}
 }
 

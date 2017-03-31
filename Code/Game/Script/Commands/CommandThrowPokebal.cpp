@@ -1,5 +1,4 @@
 #include "CommandThrowPokebal.h"
-#include "../../Gameplay/WGameCore.h"
 #include "Utils/StringUtils.h"
 #include "Rectangle.h"
 

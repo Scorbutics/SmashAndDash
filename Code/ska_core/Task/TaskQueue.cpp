@@ -26,8 +26,3 @@ void ska::TaskQueue::refresh() {
 		m_current = nullptr;
 	}
 }
-
-
-ska::TaskQueue::~TaskQueue()
-{
-}

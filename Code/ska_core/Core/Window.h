@@ -27,5 +27,7 @@ namespace ska {
 		SDL_Window * m_screen;
 		SDLRenderer m_renderer;
 
+		bool m_containsDefaultRenderer;
+
 	};
 }
