@@ -5,7 +5,7 @@ namespace ska {
 	class SceneDiedException : public GenericException {
 	public:
 
-		SceneDiedException(std::string message) : GenericException(message, "SceneDiedException") {
+		explicit SceneDiedException(std::string message) : GenericException(message, "SceneDiedException") {
 		}
 
 		virtual ~SceneDiedException() {

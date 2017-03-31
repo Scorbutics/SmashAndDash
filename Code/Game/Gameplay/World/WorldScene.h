@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Scene/Scene.h"
+#include "Core/Scene/SceneBase.h"
 #include "Physic/System/ForceSystem.h"
 #include "Physic/System/GravitySystem.h"
 #include "Inputs/System/InputSystem.h"
@@ -18,6 +18,7 @@
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 
+
 namespace ska {
 	class IniReader;
 	class CameraSystem;
@@ -25,12 +26,12 @@ namespace ska {
 }
 class CustomEntityManager;
 
-class WorldScene : public ska::Scene,
+class WorldScene : public ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher>,
 	public MobSpawner,
 	public ska::CameraAware {
 
 public:
-	WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged);
+	WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, Settings& settings);
 	WorldScene(const WorldScene&) = delete;
 	WorldScene& operator=(const WorldScene&) = delete;
 
@@ -60,13 +61,10 @@ private:
 	const unsigned int m_screenH;
 	bool m_loadedOnce;
 
-	PokemonGameEventDispatcher& m_ged;
 	Settings& m_settings;
 
 	ska::EntityId m_player;
 	SavegameManager m_saveManager;
-
-	CustomEntityManager& m_entityManager;
 
 	/* Special system : camera (linked to World) */
 	ska::CameraSystem* m_cameraSystem;

@@ -1,5 +1,5 @@
 #pragma once
-#include "Data/GameEventDispatcher.h"
+#include "Data/Events/GameEventDispatcher.h"
 #include "Physic/System/WorldCollisionResponse.h"
 
 namespace ska {

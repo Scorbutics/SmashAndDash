@@ -1,8 +1,12 @@
 #include "SceneHolderCore.h"
 #include "../../Exceptions/SceneDiedException.h"
 
-void ska::SceneHolderCore::nextScene(std::unique_ptr<ska::Scene>& scene) {
-	m_nextScene = move(scene);
+void ska::SceneHolderCore::graphicUpdate(DrawableContainer& drawables) {
+	m_currentScene->graphicUpdate(drawables);
+}
+
+void ska::SceneHolderCore::eventUpdate(unsigned ellapsedTime) {
+	m_currentScene->eventUpdate(ellapsedTime);
 }
 
 void ska::SceneHolderCore::update() {
@@ -19,7 +23,7 @@ void ska::SceneHolderCore::update() {
 		}
 
 		if (triggerChangeScene) {
-			std::unique_ptr<ska::Scene> lastScene = move(firstScene ? std::unique_ptr<ska::Scene>(nullptr) : move(m_currentScene));
+			auto lastScene = move(firstScene ? std::unique_ptr<ska::Scene>(nullptr) : move(m_currentScene));
 			m_currentScene = move(m_nextScene);
 			m_nextScene = nullptr;
 			m_currentScene->load(firstScene ? nullptr : &lastScene);
@@ -33,8 +37,4 @@ void ska::SceneHolderCore::update() {
 
 	/* If exists, an helper that executes current running task once */
 	refresh();
-}
-
-ska::ScenePtr& ska::SceneHolderCore::getScene() {
-	return m_currentScene;
 }

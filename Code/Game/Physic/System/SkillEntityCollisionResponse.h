@@ -1,6 +1,6 @@
 #pragma once
 #include "Physic/System/EntityCollisionResponse.h"
-#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 template <typename T>
 struct RawStatistics;

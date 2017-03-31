@@ -12,17 +12,18 @@ ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril
 	m_ranges.resize(INPUT_MAX_RANGE);
 }
 
-void ska::InputContextManager::addContext(EnumContextManager ecm, InputContextPtr& icp) {
-	icp->buildCodeMap();
-	m_contexts[ecm] = move(icp);
+void ska::InputContextManager::addContext(EnumContextManager ecm, InputContextPtr&& icp) {
+	m_contexts[ecm] = std::move(icp);
+	m_contexts[ecm]->buildCodeMap();
+	
 }
 
 void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disable) {
 	if (disable && m_contexts.find(ecm) != m_contexts.end()) {
-		m_disabledContexts[ecm] = move(m_contexts[ecm]);
+		m_disabledContexts[ecm] = std::move(m_contexts[ecm]);
 		m_contexts.erase(ecm);
 	} else if (!disable && m_disabledContexts.find(ecm) != m_disabledContexts.end()) {
-		m_contexts[ecm] = move(m_disabledContexts[ecm]);
+		m_contexts[ecm] = std::move(m_disabledContexts[ecm]);
 		m_disabledContexts.erase(ecm);
 	}
 }

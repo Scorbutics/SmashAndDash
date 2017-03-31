@@ -18,6 +18,92 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GUI\Components\Concrete\Button.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\ButtonQuit.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\ButtonSprite.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\CheckBox.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\HorizontalSlider.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\Image.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\Input.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\Label.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\LabeledHorizontalSlider.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\MouseCursor.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\RadioButton.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\RadioButtonGroup.cpp" />
+    <ClCompile Include="GUI\Components\Concrete\ScrollingMultiLineLabel.cpp" />
+    <ClCompile Include="GUI\Components\Widget.cpp" />
+    <ClCompile Include="GUI\Events\ClickEvent.cpp" />
+    <ClCompile Include="GUI\Events\ClickEventListener.cpp" />
+    <ClCompile Include="GUI\Events\FocusEvent.cpp" />
+    <ClCompile Include="GUI\Events\FocusEventListener.cpp" />
+    <ClCompile Include="GUI\Events\HoverEvent.cpp" />
+    <ClCompile Include="GUI\Events\HoverEventListener.cpp" />
+    <ClCompile Include="GUI\Events\KeyEvent.cpp" />
+    <ClCompile Include="GUI\Events\KeyEventListener.cpp" />
+    <ClCompile Include="GUI\Events\TimeEvent.cpp" />
+    <ClCompile Include="GUI\GUI.cpp" />
+    <ClCompile Include="GUI\Utils\WidgetMaskHelper.cpp" />
+    <ClCompile Include="GUI\Windows\GUIScrollButtonWindowIG.cpp" />
+    <ClCompile Include="MessagePopup.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GUI\Components\Concrete\Button.h" />
+    <ClInclude Include="GUI\Components\Concrete\ButtonQuit.h" />
+    <ClInclude Include="GUI\Components\Concrete\ButtonSprite.h" />
+    <ClInclude Include="GUI\Components\Concrete\CheckBox.h" />
+    <ClInclude Include="GUI\Components\Concrete\HorizontalSlider.h" />
+    <ClInclude Include="GUI\Components\Concrete\Image.h" />
+    <ClInclude Include="GUI\Components\Concrete\Input.h" />
+    <ClInclude Include="GUI\Components\Concrete\Label.h" />
+    <ClInclude Include="GUI\Components\Concrete\LabeledHorizontalSlider.h" />
+    <ClInclude Include="GUI\Components\Concrete\ListBox.h" />
+    <ClInclude Include="GUI\Components\Concrete\MouseCursor.h" />
+    <ClInclude Include="GUI\Components\Concrete\RadioButton.h" />
+    <ClInclude Include="GUI\Components\Concrete\RadioButtonGroup.h" />
+    <ClInclude Include="GUI\Components\Concrete\RadioButtonList.h" />
+    <ClInclude Include="GUI\Components\Concrete\ScrollingMultiLineLabel.h" />
+    <ClInclude Include="GUI\Components\HandledWidget.h" />
+    <ClInclude Include="GUI\Components\Hoverable.h" />
+    <ClInclude Include="GUI\Components\UiBinder.h" />
+    <ClInclude Include="GUI\Components\Widget.h" />
+    <ClInclude Include="GUI\Components\WidgetPanel.h" />
+    <ClInclude Include="GUI\Events\ClickEvent.h" />
+    <ClInclude Include="GUI\Events\ClickEventListener.h" />
+    <ClInclude Include="GUI\Events\EventListener.h" />
+    <ClInclude Include="GUI\Events\FocusEvent.h" />
+    <ClInclude Include="GUI\Events\FocusEventListener.h" />
+    <ClInclude Include="GUI\Events\HoverEvent.h" />
+    <ClInclude Include="GUI\Events\HoverEventListener.h" />
+    <ClInclude Include="GUI\Events\IWidgetEvent.h" />
+    <ClInclude Include="GUI\Events\KeyEvent.h" />
+    <ClInclude Include="GUI\Events\KeyEventListener.h" />
+    <ClInclude Include="GUI\Events\MouseEventType.h" />
+    <ClInclude Include="GUI\Events\StopType.h" />
+    <ClInclude Include="GUI\Events\TimeEvent.h" />
+    <ClInclude Include="GUI\Events\TimeEventListener.h" />
+    <ClInclude Include="GUI\Events\ValueChangedEvent.h" />
+    <ClInclude Include="GUI\Events\ValueChangedEventListener.h" />
+    <ClInclude Include="GUI\Events\WidgetEvent.h" />
+    <ClInclude Include="GUI\GUI.h" />
+    <ClInclude Include="GUI\Utils\KeyObservable.h" />
+    <ClInclude Include="GUI\Utils\KeyObserver.h" />
+    <ClInclude Include="GUI\Utils\MouseObservable.h" />
+    <ClInclude Include="GUI\Utils\MouseObserver.h" />
+    <ClInclude Include="GUI\Utils\SortedWidgetVector.h" />
+    <ClInclude Include="GUI\Utils\TimeObservable.h" />
+    <ClInclude Include="GUI\Utils\TimeObserver.h" />
+    <ClInclude Include="GUI\Utils\WidgetContainer.h" />
+    <ClInclude Include="GUI\Utils\WidgetHandlingTrait.h" />
+    <ClInclude Include="GUI\Utils\WidgetMaskHelper.h" />
+    <ClInclude Include="GUI\Windows\DynamicWindowIG.h" />
+    <ClInclude Include="GUI\Windows\GUIScrollButtonWindowIG.h" />
+    <ClInclude Include="GUI\Windows\MoveableWindow.h" />
+    <ClInclude Include="GUI\Windows\TimeScrollableWindowIG.h" />
+    <ClInclude Include="GUI\Windows\WindowIG.h" />
+    <ClInclude Include="MessagePopup.h" />
+    <ClInclude Include="MessageType.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8FBDACFA-3964-4952-8ADC-836BF4FDF0D1}</ProjectGuid>
     <RootNamespace>ska_gui</RootNamespace>
@@ -119,97 +205,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\libska_gui.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GUI\Components\Concrete\Button.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\ButtonQuit.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\ButtonSprite.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\CheckBox.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\HorizontalSlider.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\Image.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\Input.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\Label.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\LabeledHorizontalSlider.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\MouseCursor.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\RadioButton.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\RadioButtonGroup.cpp" />
-    <ClCompile Include="GUI\Components\Concrete\ScrollingMultiLineLabel.cpp" />
-    <ClCompile Include="GUI\Components\Widget.cpp" />
-    <ClCompile Include="GUI\Events\ClickEvent.cpp" />
-    <ClCompile Include="GUI\Events\ClickEventListener.cpp" />
-    <ClCompile Include="GUI\Events\FocusEvent.cpp" />
-    <ClCompile Include="GUI\Events\FocusEventListener.cpp" />
-    <ClCompile Include="GUI\Events\HoverEvent.cpp" />
-    <ClCompile Include="GUI\Events\HoverEventListener.cpp" />
-    <ClCompile Include="GUI\Events\KeyEvent.cpp" />
-    <ClCompile Include="GUI\Events\KeyEventListener.cpp" />
-    <ClCompile Include="GUI\Events\TimeEvent.cpp" />
-    <ClCompile Include="GUI\GUI.cpp" />
-    <ClCompile Include="GUI\Utils\WidgetMaskHelper.cpp" />
-    <ClCompile Include="GUI\Windows\GUIScrollButtonWindowIG.cpp" />
-    <ClCompile Include="GUI\Windows\Window.cpp" />
-    <ClCompile Include="MessagePopup.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GUI\Components\Concrete\Button.h" />
-    <ClInclude Include="GUI\Components\Concrete\ButtonQuit.h" />
-    <ClInclude Include="GUI\Components\Concrete\ButtonSprite.h" />
-    <ClInclude Include="GUI\Components\Concrete\CheckBox.h" />
-    <ClInclude Include="GUI\Components\Concrete\HorizontalSlider.h" />
-    <ClInclude Include="GUI\Components\Concrete\Image.h" />
-    <ClInclude Include="GUI\Components\Concrete\Input.h" />
-    <ClInclude Include="GUI\Components\Concrete\Label.h" />
-    <ClInclude Include="GUI\Components\Concrete\LabeledHorizontalSlider.h" />
-    <ClInclude Include="GUI\Components\Concrete\ListBox.h" />
-    <ClInclude Include="GUI\Components\Concrete\MouseCursor.h" />
-    <ClInclude Include="GUI\Components\Concrete\RadioButton.h" />
-    <ClInclude Include="GUI\Components\Concrete\RadioButtonGroup.h" />
-    <ClInclude Include="GUI\Components\Concrete\RadioButtonList.h" />
-    <ClInclude Include="GUI\Components\Concrete\ScrollingMultiLineLabel.h" />
-    <ClInclude Include="GUI\Components\HandledWidget.h" />
-    <ClInclude Include="GUI\Components\Hoverable.h" />
-    <ClInclude Include="GUI\Components\UiBinder.h" />
-    <ClInclude Include="GUI\Components\Widget.h" />
-    <ClInclude Include="GUI\Components\WidgetPanel.h" />
-    <ClInclude Include="GUI\Events\ClickEvent.h" />
-    <ClInclude Include="GUI\Events\ClickEventListener.h" />
-    <ClInclude Include="GUI\Events\EventListener.h" />
-    <ClInclude Include="GUI\Events\FocusEvent.h" />
-    <ClInclude Include="GUI\Events\FocusEventListener.h" />
-    <ClInclude Include="GUI\Events\HoverEvent.h" />
-    <ClInclude Include="GUI\Events\HoverEventListener.h" />
-    <ClInclude Include="GUI\Events\IWidgetEvent.h" />
-    <ClInclude Include="GUI\Events\KeyEvent.h" />
-    <ClInclude Include="GUI\Events\KeyEventListener.h" />
-    <ClInclude Include="GUI\Events\MouseEventType.h" />
-    <ClInclude Include="GUI\Events\StopType.h" />
-    <ClInclude Include="GUI\Events\TimeEvent.h" />
-    <ClInclude Include="GUI\Events\TimeEventListener.h" />
-    <ClInclude Include="GUI\Events\ValueChangedEvent.h" />
-    <ClInclude Include="GUI\Events\ValueChangedEventListener.h" />
-    <ClInclude Include="GUI\Events\WidgetEvent.h" />
-    <ClInclude Include="GUI\GUI.h" />
-    <ClInclude Include="GUI\Utils\KeyObservable.h" />
-    <ClInclude Include="GUI\Utils\KeyObserver.h" />
-    <ClInclude Include="GUI\Utils\MouseObservable.h" />
-    <ClInclude Include="GUI\Utils\MouseObserver.h" />
-    <ClInclude Include="GUI\Utils\SortedWidgetVector.h" />
-    <ClInclude Include="GUI\Utils\TimeObservable.h" />
-    <ClInclude Include="GUI\Utils\TimeObserver.h" />
-    <ClInclude Include="GUI\Utils\WidgetContainer.h" />
-    <ClInclude Include="GUI\Utils\WidgetHandlingTrait.h" />
-    <ClInclude Include="GUI\Utils\WidgetMaskHelper.h" />
-    <ClInclude Include="GUI\Windows\DynamicWindowIG.h" />
-    <ClInclude Include="GUI\Windows\GUIScrollButtonWindowIG.h" />
-    <ClInclude Include="GUI\Windows\MoveableWindow.h" />
-    <ClInclude Include="GUI\Windows\TimeScrollableWindowIG.h" />
-    <ClInclude Include="GUI\Windows\Window.h" />
-    <ClInclude Include="GUI\Windows\WindowIG.h" />
-    <ClInclude Include="MessagePopup.h" />
-    <ClInclude Include="MessageType.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

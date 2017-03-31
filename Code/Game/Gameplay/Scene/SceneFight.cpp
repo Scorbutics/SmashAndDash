@@ -5,7 +5,6 @@
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
 #include "Task/TaskQueue.h"
-#include "../../Graphic/GUI/Bar.h"
 
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/Events/CollisionEvent.h"
@@ -22,13 +21,13 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 	stats.attack = data.get<int>(block + " attack");
 }
 
-SceneFight::SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, PokemonGameEventDispatcher& ged) :
-AbstractSceneMap_(w, ws, ged, sh, ril, true),
+SceneFight::SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc) :
+AbstractSceneMap_(em, ged, w, ril, oldScene, ws, true),
 m_ged(ged),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
 m_pokeballSystem(ws.getEntityManager()),
-m_statsSystem(w, ws.getEntityManager(), sh, ril, ws, ged),
+m_statsSystem(w, ws.getEntityManager(), m_holder, ril, ws, ged),
 m_opponentScriptId(fc.opponentScriptId),
 m_level(fc.level),
 m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
@@ -44,7 +43,7 @@ m_worldEntityCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
 m_skillEntityCollisionResponse(m_collisionSystem, ged, ws.getEntityManager()),
 m_randomMovementSystem(ws.getEntityManager()),
 m_guiBattle(w, ril, ged),
-m_taskQueue(sh) {
+m_taskQueue(m_holder) {
 	m_logics.push_back(&m_cameraSystem);
 	m_logics.push_back(&m_pokeballSystem);
 	m_logics.push_back(&m_battleSystem);

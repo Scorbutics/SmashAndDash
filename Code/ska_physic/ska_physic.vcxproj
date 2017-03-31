@@ -18,6 +18,39 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Physic\GravityParticle.cpp" />
+    <ClCompile Include="Physic\LinearParticle.cpp" />
+    <ClCompile Include="Physic\Particle.cpp" />
+    <ClCompile Include="Physic\ParticleManager.cpp" />
+    <ClCompile Include="Physic\PhysicObject.cpp" />
+    <ClCompile Include="Physic\RainParticle.cpp" />
+    <ClCompile Include="Physic\RainParticleManager.cpp" />
+    <ClCompile Include="Physic\System\CollisionSystem.cpp" />
+    <ClCompile Include="Physic\System\DebugWorldCollisionResponse.cpp" />
+    <ClCompile Include="Physic\System\EntityCollisionResponse.cpp" />
+    <ClCompile Include="Physic\System\ForceSystem.cpp" />
+    <ClCompile Include="Physic\System\GravitySystem.cpp" />
+    <ClCompile Include="Physic\System\MovementSystem.cpp" />
+    <ClCompile Include="Physic\System\WorldCollisionResponse.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Physic\GravityParticle.h" />
+    <ClInclude Include="Physic\LinearParticle.h" />
+    <ClInclude Include="Physic\Particle.h" />
+    <ClInclude Include="Physic\ParticleManager.h" />
+    <ClInclude Include="Physic\PhysicDefines.h" />
+    <ClInclude Include="Physic\PhysicObject.h" />
+    <ClInclude Include="Physic\RainParticle.h" />
+    <ClInclude Include="Physic\RainParticleManager.h" />
+    <ClInclude Include="Physic\System\CollisionSystem.h" />
+    <ClInclude Include="Physic\System\DebugWorldCollisionResponse.h" />
+    <ClInclude Include="Physic\System\EntityCollisionResponse.h" />
+    <ClInclude Include="Physic\System\ForceSystem.h" />
+    <ClInclude Include="Physic\System\GravitySystem.h" />
+    <ClInclude Include="Physic\System\MovementSystem.h" />
+    <ClInclude Include="Physic\System\WorldCollisionResponse.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{509EC505-134A-4CD9-A230-7DCB8DE36695}</ProjectGuid>
     <RootNamespace>ska_physic</RootNamespace>
@@ -117,39 +150,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Physic\GravityParticle.cpp" />
-    <ClCompile Include="Physic\LinearParticle.cpp" />
-    <ClCompile Include="Physic\Particle.cpp" />
-    <ClCompile Include="Physic\ParticleManager.cpp" />
-    <ClCompile Include="Physic\PhysicObject.cpp" />
-    <ClCompile Include="Physic\RainParticle.cpp" />
-    <ClCompile Include="Physic\RainParticleManager.cpp" />
-    <ClCompile Include="Physic\System\CollisionSystem.cpp" />
-    <ClCompile Include="Physic\System\DebugWorldCollisionResponse.cpp" />
-    <ClCompile Include="Physic\System\EntityCollisionResponse.cpp" />
-    <ClCompile Include="Physic\System\ForceSystem.cpp" />
-    <ClCompile Include="Physic\System\GravitySystem.cpp" />
-    <ClCompile Include="Physic\System\MovementSystem.cpp" />
-    <ClCompile Include="Physic\System\WorldCollisionResponse.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Physic\GravityParticle.h" />
-    <ClInclude Include="Physic\LinearParticle.h" />
-    <ClInclude Include="Physic\Particle.h" />
-    <ClInclude Include="Physic\ParticleManager.h" />
-    <ClInclude Include="Physic\PhysicDefines.h" />
-    <ClInclude Include="Physic\PhysicObject.h" />
-    <ClInclude Include="Physic\RainParticle.h" />
-    <ClInclude Include="Physic\RainParticleManager.h" />
-    <ClInclude Include="Physic\System\CollisionSystem.h" />
-    <ClInclude Include="Physic\System\DebugWorldCollisionResponse.h" />
-    <ClInclude Include="Physic\System\EntityCollisionResponse.h" />
-    <ClInclude Include="Physic\System\ForceSystem.h" />
-    <ClInclude Include="Physic\System\GravitySystem.h" />
-    <ClInclude Include="Physic\System\MovementSystem.h" />
-    <ClInclude Include="Physic\System\WorldCollisionResponse.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

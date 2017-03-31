@@ -2,7 +2,7 @@
 #include "AbstractSceneMap.h"
 #include "Graphic/System/DebugCollisionDrawerSystem.h"
 #include "Physic/System/DebugWorldCollisionResponse.h"
-#include "Data/GameEventDispatcher.h"
+#include "Data/Events/GameEventDispatcher.h"
 
 namespace ska {
 	class Window;

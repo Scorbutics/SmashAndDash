@@ -7,7 +7,7 @@
 #include "Data/Events/CollisionEvent.h"
 #include "Rectangle.h"
 #include "ECS/System.h"
-#include "Data/GameEventDispatcher.h"
+#include "Data/Events/GameEventDispatcher.h"
 
 namespace ska {
 	class CollisionComponent;

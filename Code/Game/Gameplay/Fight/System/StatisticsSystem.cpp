@@ -14,8 +14,9 @@ void StatisticsSystem::refresh() {
 		/* TODO : observer (eg hp < 0 could mean end trainer battle or end pokémon battle) */
 		if (bc.hp < 0) {
 			scheduleDeferredRemove(entityId);
-			auto scene = ska::ScenePtr(new SceneMap(m_window, m_sceneHolder, m_ged, m_playerICM, m_worldScene, m_worldScene.getFileName(), m_worldScene.getWorld().getChipset().getName(), true));
-			m_sceneHolder.nextScene(scene);
+			
+			/*auto scene = ska::ScenePtr(new SceneMap(m_window, m_sceneHolder, m_ged, m_playerICM, m_worldScene, m_worldScene.getFileName(), m_worldScene.getWorld().getChipset().getName(), true));
+			m_sceneHolder.nextScene(scene);*/
 		}
 	}
 }

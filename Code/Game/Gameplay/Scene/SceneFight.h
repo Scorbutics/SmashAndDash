@@ -34,7 +34,7 @@ namespace ska {
 class SceneFight :
 	public AbstractSceneMap_ {
 public:
-	SceneFight(ska::Window& w, ska::SceneHolder& sh, WorldScene& ws, ska::InputContextManager& ril, ska::Point<int> fightPos, FightComponent fc, PokemonGameEventDispatcher& ged);
+	SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc);
 	SceneFight(const SceneFight&) = delete;
 	SceneFight& operator=(const SceneFight&) = delete;
 	virtual void load(ska::ScenePtr* lastScene) override;

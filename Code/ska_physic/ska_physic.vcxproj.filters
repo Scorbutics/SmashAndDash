@@ -1,108 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Physic\GravityParticle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\LinearParticle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\Particle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\ParticleManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\PhysicObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\RainParticle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\RainParticleManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\CollisionSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\DebugWorldCollisionResponse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\EntityCollisionResponse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\ForceSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\GravitySystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\MovementSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Physic\System\WorldCollisionResponse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="Physic\GravityParticle.cpp" />
+    <ClCompile Include="Physic\LinearParticle.cpp" />
+    <ClCompile Include="Physic\Particle.cpp" />
+    <ClCompile Include="Physic\ParticleManager.cpp" />
+    <ClCompile Include="Physic\PhysicObject.cpp" />
+    <ClCompile Include="Physic\RainParticle.cpp" />
+    <ClCompile Include="Physic\RainParticleManager.cpp" />
+    <ClCompile Include="Physic\System\CollisionSystem.cpp" />
+    <ClCompile Include="Physic\System\DebugWorldCollisionResponse.cpp" />
+    <ClCompile Include="Physic\System\EntityCollisionResponse.cpp" />
+    <ClCompile Include="Physic\System\ForceSystem.cpp" />
+    <ClCompile Include="Physic\System\GravitySystem.cpp" />
+    <ClCompile Include="Physic\System\MovementSystem.cpp" />
+    <ClCompile Include="Physic\System\WorldCollisionResponse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Physic\GravityParticle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\LinearParticle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\Particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\ParticleManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\PhysicDefines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\PhysicObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\RainParticle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\RainParticleManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\CollisionSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\DebugWorldCollisionResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\EntityCollisionResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\ForceSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\GravitySystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\MovementSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Physic\System\WorldCollisionResponse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="Physic\GravityParticle.h" />
+    <ClInclude Include="Physic\LinearParticle.h" />
+    <ClInclude Include="Physic\Particle.h" />
+    <ClInclude Include="Physic\ParticleManager.h" />
+    <ClInclude Include="Physic\PhysicDefines.h" />
+    <ClInclude Include="Physic\PhysicObject.h" />
+    <ClInclude Include="Physic\RainParticle.h" />
+    <ClInclude Include="Physic\RainParticleManager.h" />
+    <ClInclude Include="Physic\System\CollisionSystem.h" />
+    <ClInclude Include="Physic\System\DebugWorldCollisionResponse.h" />
+    <ClInclude Include="Physic\System\EntityCollisionResponse.h" />
+    <ClInclude Include="Physic\System\ForceSystem.h" />
+    <ClInclude Include="Physic\System\GravitySystem.h" />
+    <ClInclude Include="Physic\System\MovementSystem.h" />
+    <ClInclude Include="Physic\System\WorldCollisionResponse.h" />
   </ItemGroup>
 </Project>

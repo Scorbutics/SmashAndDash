@@ -18,6 +18,18 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Audio\Music.cpp" />
+    <ClCompile Include="Audio\SDLMusic.cpp" />
+    <ClCompile Include="Audio\SDLSound.cpp" />
+    <ClCompile Include="Audio\SoundRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Audio\Music.h" />
+    <ClInclude Include="Audio\SDLMusic.h" />
+    <ClInclude Include="Audio\SDLSound.h" />
+    <ClInclude Include="Audio\SoundRenderer.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DFF1D027-750D-4245-A5CC-CE8A53181C3D}</ProjectGuid>
     <RootNamespace>ska_audio</RootNamespace>
@@ -117,21 +129,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Audio\Music.cpp" />
-    <ClCompile Include="Audio\SDLMusic.cpp" />
-    <ClCompile Include="Audio\SDLSound.cpp" />
-    <ClCompile Include="Audio\SoundRenderer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Audio\Music.h" />
-    <ClInclude Include="Audio\SDLMusic.h" />
-    <ClInclude Include="Audio\SDLSound.h" />
-    <ClInclude Include="Audio\SoundRenderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="bin\Debug\libska_audio.def" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

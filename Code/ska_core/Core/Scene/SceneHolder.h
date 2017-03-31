@@ -1,5 +1,4 @@
 #pragma once
-#include "SceneType.h"
 #include "Scene.h"
 #include "../../Task/TaskQueue.h"
 
@@ -12,7 +11,17 @@ namespace ska {
 		virtual ~SceneHolder() = default;
 
 		virtual void update() = 0;
-		virtual void nextScene(ScenePtr& scene) = 0;
-		virtual ScenePtr& getScene() = 0;
+
+		template<class S>
+		void nextScene(std::unique_ptr<S>&& scene) {
+			m_nextScene = std::move(scene);
+		}
+
+		/*ScenePtr& getScene() {
+			return m_currentScene;
+		}*/
+
+	protected:
+		ScenePtr m_nextScene;
 	};
 }

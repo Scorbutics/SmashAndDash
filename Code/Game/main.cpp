@@ -23,9 +23,9 @@ int main( int argc , char ** argv ) {
 		//(widthBlocks*TAILLEBLOC > TAILLEECRANMINX ? widthBlocks*TAILLEBLOC: TAILLEECRANMINX), (heightBlocks*TAILLEBLOC > TAILLEECRANMINY ? heightBlocks*TAILLEBLOC: TAILLEECRANMINY)
 
 		//Crée une fenetre de type "WGameCore", Génère ce monde sur la fenetre (unique)
-		WGameCore wScreen(title, widthBlocks * TAILLEBLOC, heightBlocks * TAILLEBLOC);
-		//boucle principale
-		while (wScreen.refresh());
+		WGameCore app(title, widthBlocks * TAILLEBLOC, heightBlocks * TAILLEBLOC);
+		
+		while (app.run());
 	} catch (ska::TerminateProcessException& tpe) {
 		std::clog << tpe.what() << std::endl;
 	} catch (ska::GenericException& e) {

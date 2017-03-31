@@ -17,7 +17,7 @@
 
 namespace ska {
     template <class EM, class ED, class D, class S>
-    class GameCore : public SceneHolder {
+    class GameCore {
     public:
         GameCore(const std::string& title, unsigned int w, unsigned int h) :
             m_soundManager(m_eventDispatcher),
@@ -44,8 +44,8 @@ namespace ska {
                 throw ska::IllegalStateException("Erreur lors de l'initialisation de SDL_image : " + std::string(IMG_GetError()));
             }
 
-            if (!(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024))) {
-                std::cerr << "Impossible d'initialiser SDL_mixer : " << SDL_GetError() << std::endl;
+            if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
+				std::cerr << "Impossible d'initialiser SDL_mixer : " << Mix_GetError() << std::endl;
             }
 
             if(TTF_Init() == -1) {
@@ -59,16 +59,13 @@ namespace ska {
 
         virtual ~GameCore() {
         	TTF_Quit();
-
             Mix_CloseAudio();
             Mix_Quit();
-
             IMG_Quit();
-
             SDL_Quit();
         };
 
-        bool refresh() {
+        bool run() {
             auto continuer = true;
             while (continuer) {
                 continuer = refreshInternal();
@@ -76,73 +73,56 @@ namespace ska {
             return true;
         }
 
-        void nextScene(ScenePtr& scene) override {
-            m_sceneHolder.nextScene(scene);
+		template<class SC, class ... Args>
+		std::unique_ptr<SC> makeScene(Args&&... args) {
+			return std::make_unique<SC>(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM, m_sceneHolder, std::forward<Args>(args)...);
         }
 
-        void update() override {
-            m_sceneHolder.update();
-        }
-
-        ska::ScenePtr& getScene() override {
-            return m_sceneHolder.getScene();
-        }
+		template<class SC, class ... Args>
+		void navigateToScene(Args&&... args) {
+			m_sceneHolder.nextScene(makeScene<SC, Args...>(std::forward<Args>(args)...));
+			m_sceneHolder.update();
+		}
 
     protected:
-        EM& getEntityManager() {
-            return m_entityManager;
-        }
-
-        ED& getEventDispatcher() {
-            return m_eventDispatcher;
-        }
-
-        InputContextManager& getInputContext() {
-            return m_playerICM;
-        }
-
-        void addInputContext(EnumContextManager em, InputContextPtr& c) {
-            m_playerICM.addContext(em, c);
-        }
-
-        Window& getWindow() {
-            return *m_mainWindow;
+        void addInputContext(EnumContextManager em, InputContextPtr&& c) {
+            m_playerICM.addContext(em, std::move(c));
         }
 
     private:
         bool refreshInternal() {
-            //t et t0 sont les temps pour la gestion des fps
-            long t = 0;
-            long t0 = 0;
+            unsigned long t = 0;
+			unsigned long t0 = 0;
 
-            //Ici, transition entrante
             static const auto FPS = 63;
             static const auto TICKS = 1000 / FPS;
 
             try {
                 for (;;) {
                     t = ska::TimeUtils::getTicks();
-                    if (t - t0 > TICKS)  {
-                        //Rafraîchissement à chaque frame : graphique puis évènementiel
+					
+					const auto ellapsedTime = t - t0;
+
+					if (ellapsedTime > TICKS)  {
                         graphicUpdate();
-                        eventUpdate(t - t0);
+						eventUpdate(ellapsedTime);
 
                         m_mainWindow->display();
-                        // Le temps "actuel" devient le temps "precedent" pour nos futurs calculs
+                        
                         //m_fpsCalculator.calculate(t - t0);
                         t0 = t;
                     } else {
                         /* Temporisation entre 2 frames */
-                        TimeUtils::wait(TICKS - (t - t0));
+						TimeUtils::wait(TICKS - (ellapsedTime));
                     }
                 }
-            } catch (ska::SceneDiedException& sde) {
+            } catch (ska::SceneDiedException&) {
                 return false;
             }
         }
 
         void graphicUpdate(void) {
-        	m_sceneHolder.getScene()->graphicUpdate(m_drawables);
+        	m_sceneHolder.graphicUpdate(m_drawables);
             //TODO : dans GUI
             //m_drawables.add(m_fpsCalculator.getRenderable());
             m_drawables.draw();
@@ -152,13 +132,17 @@ namespace ska {
         void eventUpdate(unsigned int ellapsedTime) {
             m_entityManager.refresh();
             /* Scene dependent event update */
-            m_sceneHolder.getScene()->eventUpdate(ellapsedTime);
+            m_sceneHolder.eventUpdate(ellapsedTime);
             m_sceneHolder.update();
         }
 
 
         EM m_entityManager;
+
+	protected:
         ED m_eventDispatcher;
+	
+	private:
         D m_drawables;
         S m_soundManager;
 

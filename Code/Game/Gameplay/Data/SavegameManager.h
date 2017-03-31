@@ -3,7 +3,6 @@
 #include <vector>
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/Savegame.h"
-#include "../PokemonGameEventDispatcherDeclaration.h"
 
 class SavegameManager : public ska::Savegame {
 public:

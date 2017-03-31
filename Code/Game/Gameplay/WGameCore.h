@@ -7,7 +7,6 @@
 #include "Core/GameCore.h"
 #include "CustomEntityManager.h"
 #include "Draw/VectorDrawableContainer.h"
-#include "PokemonGameEventDispatcherDeclaration.h"
 #include "PokemonGameEventDispatcher.h"
 #include "../Audio/PokemonSoundRenderer.h"
 
@@ -23,14 +22,14 @@ public:
 	//PokemonManager& getPokemonManager();
 	//TrainerCard& getTrainerCard();
 	ska::World& getWorld();
-	WorldScene& getWorldScene();
+	//WorldScene& getWorldScene();
 
 private:
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
 	Settings m_settings;
+	std::unique_ptr<WorldScene> m_worldScene;
 	//Inventory m_inv;
-	WorldScene m_worldScene;
 	ska::FpsCalculator m_fpsCalculator;
 
 };

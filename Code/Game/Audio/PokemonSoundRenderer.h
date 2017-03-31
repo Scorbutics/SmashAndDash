@@ -4,7 +4,6 @@
 #include "Audio/SoundRenderer.h"
 #include "../Gameplay/Data/SettingsChangeEvent.h"
 #include "../Gameplay/PokemonGameEventDispatcher.h"
-#include "../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class PokemonSoundRenderer :
 	public ska::SoundRenderer,

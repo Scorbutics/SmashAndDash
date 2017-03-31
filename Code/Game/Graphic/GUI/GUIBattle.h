@@ -3,7 +3,6 @@
 #include <memory>
 #include <unordered_map>
 #include "Utils/Observer.h"
-#include "Utils/Observable.h"
 #include "ECS/ECSDefines.h"
 #include "Core/Scene/HasGraphic.h"
 #include "Core/Scene/HasLogic.h"
@@ -11,8 +10,6 @@
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../Gameplay/Fight/BattleEvent.h"
 #include "../../Gameplay/Fight/StatisticsChangeEvent.h"
-#include "DialogMenu.h"
-#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class Bar;
 using BarPtr = std::unique_ptr<Bar>;

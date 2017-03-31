@@ -1,17 +1,17 @@
 #pragma once
+#include <vector>
 #include <memory>
 #include "HasGraphic.h"
 #include "HasLogic.h"
 
 namespace ska {
 	class SceneHolder;
-	class InputContextManager;
 	class ISystem;
 	class IGraphicSystem;
 
 	class Scene : public HasGraphic, public HasLogic {
 	public:
-		Scene(SceneHolder& sh, InputContextManager& ril);
+		explicit Scene(SceneHolder& sh);
 		Scene(Scene& oldScene);
 
 		void operator=(const Scene&) = delete;
@@ -24,8 +24,9 @@ namespace ska {
 		virtual ~Scene() = default;
 
 	protected:
-		InputContextManager& m_inputCManager;
 		SceneHolder& m_holder;
+
+		//TODO encapsulation + forte
 		std::vector<ISystem*> m_logics;
 		std::vector<IGraphicSystem*> m_graphics;
 

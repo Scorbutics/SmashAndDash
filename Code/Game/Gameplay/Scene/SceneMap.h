@@ -28,9 +28,9 @@ class SceneMap :
 	public AbstractSceneMap_
 {
 public:
-	SceneMap(ska::Window& w, ska::SceneHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
-	SceneMap(ska::Window& w, ska::SceneHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap);
-	SceneMap(ska::Window& w, PokemonGameEventDispatcher& ged, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	//SceneMap(ska::Window& w, ska::SceneHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldScene& ws, const bool sameMap);
+	SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
 	virtual void load(ska::ScenePtr* lastScene) override;
 	virtual bool unload() override;
 	void reinit();

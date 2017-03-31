@@ -2,17 +2,20 @@
 #include "SceneHolder.h"
 
 namespace ska {
-    class SceneHolderCore : public SceneHolder {
+    class SceneHolderCore : 
+		public SceneHolder,
+		public HasGraphic,
+		public HasLogic {
     public:
         SceneHolderCore() = default;
         ~SceneHolderCore() = default;
 
-        void update() override;
-        void nextScene(std::unique_ptr<ska::Scene>& scene) override;
-        ska::ScenePtr& getScene() override;
+		void graphicUpdate(DrawableContainer& drawables) override;
+		void eventUpdate(unsigned int ellapsedTime) override;
 
+        void update() override;
+	
 	private:
 		ScenePtr m_currentScene;
-		ScenePtr m_nextScene;
     };
 }

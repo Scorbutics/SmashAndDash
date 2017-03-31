@@ -7,7 +7,6 @@
 #include "Inputs/InputContextManager.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../../Gameplay/PokemonGameEventDispatcher.h"
-#include "../../PokemonGameEventDispatcherDeclaration.h"
 
 class WorldScene;
 class CustomEntityManager;

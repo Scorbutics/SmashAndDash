@@ -4,7 +4,7 @@
 #include "../../Gameplay/Data/SettingsChangeEvent.h"
 #include "WindowMouseCursor.h"
 #include "../../Gameplay/Data/EntityLoadEvent.h"
-#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+#include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 class Settings;
 class WindowTeam;

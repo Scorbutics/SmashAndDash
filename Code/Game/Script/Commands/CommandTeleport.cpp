@@ -1,18 +1,16 @@
 #include "CommandTeleport.h"
-#include <string>
 #include "Script/ScriptComponent.h"
 #include "Script/System/ScriptAutoSystem.h"
-#include "Exceptions/SceneDiedException.h"
 #include "Exceptions/InvalidPathException.h"
 #include "World/World.h"
 #include "../../Utils/IDs.h"
 #include "Utils/StringUtils.h"
 
 #include "../../Gameplay/Scene/SceneToMapSwitcher.h"
+#include "../../Gameplay/Data/MapEvent.h"
 
-CommandTeleport::CommandTeleport(const ska::World& w, SceneChangeObservable& sceneChanger, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
+CommandTeleport::CommandTeleport(const ska::World& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
 AbstractFunctionCommand(entityManager),
-m_sceneChanger(sceneChanger),
 m_world(w),
 m_ged(ged) {
 }
@@ -54,9 +52,10 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		auto sceneToMapSwitcher = SceneToMapSwitcher(fichier, chipsetName, m_ged);
-		m_sceneChanger.notifyObservers(sceneToMapSwitcher);
-
+		MapEvent me(MapEvent::MAP);
+		me.chipsetName = chipsetName;
+		me.mapName = mapName;
+		m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 	}
 
 	return "";

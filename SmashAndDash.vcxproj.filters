@@ -1,593 +1,190 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="Code\Game\Audio\PokemonSoundRenderer.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\AI\AI.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\CustomEntityManager.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Data\PokemonDescriptor.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Data\SavegameManager.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Data\Settings.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Data\Statistics.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\Fight.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\Skill.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\System\BattleSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\System\FightStartSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Inventory\Inventory.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Inventory\Object.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Pokeball.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\PrefabEntityManager.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\AbstractNoGUISceneMap.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\AbstractSceneMap.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneFight.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneMap.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\System\PokeballSystem.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Weather.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\WGameCore.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\World\WorldImpl.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\World\WorldScene.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\AbstractGameGUI.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\Bar.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\DialogMenu.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\DynamicWindowArea.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\GUIBattle.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\GUIMap.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\Image_Area.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\Inventory_Area.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\MapMouseCursor.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\MessageDialogBox.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\MovableWindow.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\SlotPokemon.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\ToolBar.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\TrainerCard.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowBag.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowMouseCursor.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowRenderer.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowSettings.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowShop.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\WindowTeam.cpp" />
+    <ClCompile Include="Code\Game\Graphic\ShakerManager.cpp" />
+    <ClCompile Include="Code\Game\main.cpp" />
+    <ClCompile Include="Code\Game\Physic\System\SkillEntityCollisionResponse.cpp" />
+    <ClCompile Include="Code\Game\Physic\System\WorldEntityCollisionResponse.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandAddPokemon.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandBlockCollision.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandChoice.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandCinematic.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandDirection.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandExpulse.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandFollow.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandHeal.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandHideCharacter.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandHideGUI.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandJump.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandKillEntity.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandMessage.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandMove.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandPlayAnimation.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandPlayCrumbling.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandPlayerPresence.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandPlayShaking.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandPokemonOut.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandShop.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandStop.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandStuckCharacter.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandTeleport.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandThrowPokebal.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandTranslationCamera.cpp" />
+    <ClCompile Include="Code\Game\Script\GlobalScriptVariables.cpp" />
+    <ClCompile Include="Code\Game\Script\System\ScriptCommandsSystem.cpp" />
+    <ClCompile Include="Code\Game\Utils\ChargementImages.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="icon1.ico">
-      <Filter>Fichiers de ressources</Filter>
-    </None>
-    <None Include="icon2.ico">
-      <Filter>Fichiers de ressources</Filter>
-    </None>
-    <None Include="..\..\..\..\..\..\..\Windows\System32\PerfCenterCpl.ico">
-      <Filter>Fichiers de ressources</Filter>
-    </None>
-    <None Include="..\icon1.ico">
-      <Filter>Fichiers de ressources</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Code\Game\Audio\PokemonSoundRenderer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\AI\AI.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\CustomEntityManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Data\PokemonDescriptor.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Data\SavegameManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Data\Settings.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Data\Statistics.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\Fight.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\Skill.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\System\BattleSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\System\FightStartSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Inventory\Inventory.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Inventory\Object.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Pokeball.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\PrefabEntityManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\AbstractNoGUISceneMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\AbstractSceneMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\SceneFight.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\SceneHolderCore.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\SceneMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\SceneToBattleSwitcher.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Scene\SceneToMapSwitcher.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\System\PokeballSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\Weather.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\WGameCore.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\World\WorldImpl.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Gameplay\World\WorldScene.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\AbstractGameGUI.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\Bar.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\DialogMenu.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\DynamicWindowArea.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\GUIBattle.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\GUIMap.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\Image_Area.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\Inventory_Area.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\MapMouseCursor.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\MessageDialogBox.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\MovableWindow.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\SlotPokemon.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\ToolBar.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\TrainerCard.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowBag.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowMouseCursor.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowRenderer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowSettings.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowShop.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\GUI\WindowTeam.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Graphic\ShakerManager.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Physic\System\SkillEntityCollisionResponse.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Physic\System\WorldEntityCollisionResponse.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandAddPokemon.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandBlockCollision.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandChoice.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandCinematic.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandDirection.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandExpulse.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandFollow.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandHeal.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandHideCharacter.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandHideGUI.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandJump.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandKillEntity.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandMessage.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandMove.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandPlayAnimation.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandPlayCrumbling.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandPlayerPresence.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandPlayShaking.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandPokemonOut.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandShop.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandStop.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandStuckCharacter.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandTeleport.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandThrowPokebal.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\Commands\CommandTranslationCamera.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\GlobalScriptVariables.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Script\System\ScriptCommandsSystem.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\Game\Utils\ChargementImages.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\AI\AI.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\CustomEntityManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\EntityLoadEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\MonsterDescription.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\PokemonDescriptor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\RawStatistics.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\SavegameManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\Settings.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\SettingsChangeEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\SettingsChangeEventType.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Data\Statistics.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\BattleComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\BattleEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\EndFightReasonEnum.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\Fight.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\FightComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\Skill.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\SkillComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\SkillDescriptor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\SkillsHolderComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\StatisticsChangeEvent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\System\BattleSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\System\FightStartSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Inventory\Inventory.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Inventory\Object.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawnAreaComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawner.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Pokeball.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\PokeballComponent.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\PokeballLaunchReasonEnum.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\PokemonGameEventDispatcher.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\PokemonGameEventDispatcherDeclaration.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\PrefabEntityManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\AbstractNoGUISceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\AbstractSceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\SceneFight.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\SceneHolderCore.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\SceneMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\SceneToBattleSwitcher.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Scene\SceneToMapSwitcher.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\System\PokeballSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\Weather.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\WGameCore.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\World\WorldImpl.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Gameplay\World\WorldScene.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\AbstractGameGUI.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\Bar.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\DialogMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\GUIBattle.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\GUIMap.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\IDialogMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\Image_Area.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\Inventory_Area.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\MapMouseCursor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\MessageDialogBox.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\MovableWindow.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemon.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemonData.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\ToolBar.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\TrainerCard.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowBag.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowMouseCursor.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowRenderer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowSettings.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowShop.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\GUI\WindowTeam.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Graphic\ShakerManager.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Physic\System\SkillEntityCollisionResponse.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Physic\System\WorldEntityCollisionResponse.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandAddPokemon.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandBlockCollision.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandChoice.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandCinematic.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandDirection.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandExpulse.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandFollow.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandHeal.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandHideCharacter.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandHideGUI.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandJump.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandKillEntity.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandMessage.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandMove.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandPlayAnimation.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandPlayCrumbling.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandPlayerPresence.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandPlayShaking.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandPokemonOut.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandShop.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandStop.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandStuckCharacter.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandTeleport.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandThrowPokebal.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\Commands\CommandTranslationCamera.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\GlobalScriptVariables.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Script\System\ScriptCommandsSystem.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Utils\ChargementImages.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Game\Utils\IDs.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
+    <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
+    <ClInclude Include="Code\Game\Gameplay\AI\AI.h" />
+    <ClInclude Include="Code\Game\Gameplay\CustomEntityManager.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\EntityLoadEvent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\MonsterDescription.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\PokemonDescriptor.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\RawStatistics.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\SavegameManager.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\Settings.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\SettingsChangeEvent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\SettingsChangeEventType.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\Statistics.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\BattleComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\BattleEvent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\EndFightReasonEnum.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\Fight.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\FightComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\Skill.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\SkillComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\SkillDescriptor.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\SkillsHolderComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\StatisticsChangeEvent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\System\BattleSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\System\FightStartSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Inventory\Inventory.h" />
+    <ClInclude Include="Code\Game\Gameplay\Inventory\Object.h" />
+    <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawnAreaComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawner.h" />
+    <ClInclude Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Pokeball.h" />
+    <ClInclude Include="Code\Game\Gameplay\PokeballComponent.h" />
+    <ClInclude Include="Code\Game\Gameplay\PokeballLaunchReasonEnum.h" />
+    <ClInclude Include="Code\Game\Gameplay\PrefabEntityManager.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\AbstractNoGUISceneMap.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\AbstractSceneMap.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneFight.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneMap.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneToBattleSwitcher.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneToMapSwitcher.h" />
+    <ClInclude Include="Code\Game\Gameplay\System\PokeballSystem.h" />
+    <ClInclude Include="Code\Game\Gameplay\Weather.h" />
+    <ClInclude Include="Code\Game\Gameplay\WGameCore.h" />
+    <ClInclude Include="Code\Game\Gameplay\World\WorldImpl.h" />
+    <ClInclude Include="Code\Game\Gameplay\World\WorldScene.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\AbstractGameGUI.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\Bar.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\DialogMenu.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\GUIBattle.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\GUIMap.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\IDialogMenu.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\Image_Area.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\Inventory_Area.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\MapMouseCursor.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\MessageDialogBox.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\MovableWindow.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemon.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemonData.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\ToolBar.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\TrainerCard.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowBag.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowMouseCursor.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowRenderer.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowSettings.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowShop.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\WindowTeam.h" />
+    <ClInclude Include="Code\Game\Graphic\ShakerManager.h" />
+    <ClInclude Include="Code\Game\Physic\System\SkillEntityCollisionResponse.h" />
+    <ClInclude Include="Code\Game\Physic\System\WorldEntityCollisionResponse.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandAddPokemon.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandBlockCollision.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandChoice.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandCinematic.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandDirection.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandExpulse.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandFollow.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandHeal.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandHideCharacter.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandHideGUI.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandJump.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandKillEntity.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandMessage.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandMove.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandPlayAnimation.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandPlayCrumbling.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandPlayerPresence.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandPlayShaking.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandPokemonOut.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandShop.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandStop.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandStuckCharacter.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandTeleport.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandThrowPokebal.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandTranslationCamera.h" />
+    <ClInclude Include="Code\Game\Script\GlobalScriptVariables.h" />
+    <ClInclude Include="Code\Game\Script\System\ScriptCommandsSystem.h" />
+    <ClInclude Include="Code\Game\Utils\ChargementImages.h" />
+    <ClInclude Include="Code\Game\Utils\IDs.h" />
+    <ClInclude Include="Code\Game\Utils\resource.h" />
+    <ClInclude Include="Code\Game\Gameplay\PokemonGameEventDispatcher.h" />
+    <ClInclude Include="Code\Game\Gameplay\Data\MapEvent.h" />
   </ItemGroup>
 </Project>

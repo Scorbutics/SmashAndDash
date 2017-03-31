@@ -18,6 +18,28 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="World\Block.cpp" />
+    <ClCompile Include="World\BlockRenderable.cpp" />
+    <ClCompile Include="World\Chipset.cpp" />
+    <ClCompile Include="World\ChipsetHolder.cpp" />
+    <ClCompile Include="World\ChipsetRenderable.cpp" />
+    <ClCompile Include="World\Layer.cpp" />
+    <ClCompile Include="World\LayerE.cpp" />
+    <ClCompile Include="World\LayerRenderable.cpp" />
+    <ClCompile Include="World\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="World\Block.h" />
+    <ClInclude Include="World\BlockRenderable.h" />
+    <ClInclude Include="World\Chipset.h" />
+    <ClInclude Include="World\ChipsetHolder.h" />
+    <ClInclude Include="World\ChipsetRenderable.h" />
+    <ClInclude Include="World\Layer.h" />
+    <ClInclude Include="World\LayerE.h" />
+    <ClInclude Include="World\LayerRenderable.h" />
+    <ClInclude Include="World\World.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{66688DD9-292E-419F-BEA7-AE706BA382B4}</ProjectGuid>
     <RootNamespace>ska_world</RootNamespace>
@@ -117,35 +139,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Scene\HasGraphic.h" />
-    <ClInclude Include="Scene\HasLogic.h" />
-    <ClInclude Include="Scene\Scene.h" />
-    <ClInclude Include="Scene\SceneHolder.h" />
-    <ClInclude Include="Scene\SceneSwitcher.h" />
-    <ClInclude Include="Scene\SceneType.h" />
-    <ClInclude Include="World\Block.h" />
-    <ClInclude Include="World\BlockRenderable.h" />
-    <ClInclude Include="World\Chipset.h" />
-    <ClInclude Include="World\ChipsetHolder.h" />
-    <ClInclude Include="World\ChipsetRenderable.h" />
-    <ClInclude Include="World\Layer.h" />
-    <ClInclude Include="World\LayerE.h" />
-    <ClInclude Include="World\LayerRenderable.h" />
-    <ClInclude Include="World\World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="World\Block.cpp" />
-    <ClCompile Include="World\BlockRenderable.cpp" />
-    <ClCompile Include="World\Chipset.cpp" />
-    <ClCompile Include="World\ChipsetHolder.cpp" />
-    <ClCompile Include="World\ChipsetRenderable.cpp" />
-    <ClCompile Include="World\Layer.cpp" />
-    <ClCompile Include="World\LayerE.cpp" />
-    <ClCompile Include="World\LayerRenderable.cpp" />
-    <ClCompile Include="World\World.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,6 +1,6 @@
 #include "PokemonSoundRenderer.h"
 #include "../Gameplay/Data/Settings.h"
-#include "../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+#include "../Gameplay/PokemonGameEventDispatcher.h"
 
 const unsigned int PokemonSoundRenderer::SOUND_RENDERER_CHANNELS = 10;
 

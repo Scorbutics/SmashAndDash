@@ -1,10 +1,8 @@
 #pragma once
 #include "Script/System/ScriptBasicCommandsSystem.h"
-#include "Core/Scene/SceneSwitcher.h"
+//#include "Core/Scene/SceneSwitcher.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Utils/Observable.h"
-#include "Utils/Observer.h"
-#include "../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
 
 class WorldScene;
 
@@ -12,10 +10,8 @@ namespace ska {
 	class World;
 }
 
-using SceneChangeObservable = ska::Observable<ska::SceneSwitcher<WorldScene&>>;
-
 class ScriptCommandsSystem :
-	public ska::ScriptBasicCommandsSystem, public SceneChangeObservable
+	public ska::ScriptBasicCommandsSystem
 {
 public:
 	ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged);

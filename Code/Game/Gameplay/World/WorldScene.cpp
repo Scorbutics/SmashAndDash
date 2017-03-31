@@ -17,15 +17,13 @@
 #include "Draw/DrawableContainer.h"
 #include "Core/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, ska::SceneHolder& sh, ska::InputContextManager& ril, ska::Window& w, Settings& settings, PokemonGameEventDispatcher& ged) :
-Scene(sh, ril),
+WorldScene::WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, Settings& settings) :
+SceneBase(entityManager, ged, w, ril, sh),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
 m_loadedOnce(false),
-m_ged(ged),
 m_settings(settings), m_player(0),
 m_saveManager(ged, "save1"),
-m_entityManager(entityManager),
 m_cameraSystem(nullptr),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
 m_forceSystem(m_entityManager),
@@ -116,10 +114,10 @@ ska::World& WorldScene::getWorld() {
 void WorldScene::load(ska::ScenePtr* lastScene) {
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
-	m_ged.ska::Observable<ska::WorldEvent>::notifyObservers(we);
+	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
-	m_ged.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
+	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 }
 
 bool WorldScene::unload() {
@@ -139,12 +137,12 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	}
 
 	const unsigned int idMob = dataSpawn->get<int>("Data id");
-	const unsigned int blockSize = m_world.getBlockSize();
+	const auto blockSize = m_world.getBlockSize();
 
-	int successfulSpawns = 0;
-	float angle = (float)((2 * M_PI* (rand() % 360)) / 360);
+	auto successfulSpawns = 0;
+	auto angle = static_cast<float>((2 * M_PI* (rand() % 360)) / 360);
 	for (unsigned int i = 0; i < nbrSpawns; i++) {
-		const unsigned int radius = rmin + rand() % (rmax - rmin + 1);
+		const auto radius = rmin + rand() % (rmax - rmin + 1);
 
 		ska::Point<int> dest;
 		dest.x = static_cast<int>(radius*cos(angle) + pos.x);
@@ -160,13 +158,13 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 		std::vector<ska::Point<int>> blockColPos;
 		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
-			bool spawnAllowed = true;
+			auto spawnAllowed = true;
 			for (unsigned int j = 0; j < idBlocks.size(); j++) {
-				const unsigned int bX = dest.x / blockSize;
-				const unsigned int bY = dest.y / blockSize;
+				const auto bX = dest.x / blockSize;
+				const auto bY = dest.y / blockSize;
 				if (bX < m_world.getNbrBlocX() && bY < m_world.getNbrBlocY()) {
 					const ska::Block* b = m_world.getHigherBlock(bX, bY);
-					if (b != NULL && b->getID() == idBlocks[i]) {
+					if (b != nullptr && b->getID() == idBlocks[i]) {
 						spawnAllowed = false;
 					}
 				}
@@ -174,12 +172,12 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 
 			if (spawnAllowed) {
-				int level = rand() % (dataSpawn->get<int>("Data level_min") + dataSpawn->get<int>("Data level_max") + 1) + dataSpawn->get<int>("Data level_min");
-				ska::EntityId mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
+				auto level = rand() % (dataSpawn->get<int>("Data level_min") + dataSpawn->get<int>("Data level_max") + 1) + dataSpawn->get<int>("Data level_min");
+				auto mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
 				/* 0 = Predifined */
 				/* 1 = Random */
 				/* 2 = Fixe */
-				int type = dataSpawn->get<int>("Data path_type");
+				auto type = dataSpawn->get<int>("Data path_type");
 				if (type == 1) {
 					ska::IARandomMovementComponent iamc;
 					iamc.delay = 500;
@@ -197,18 +195,18 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				fc.opponentScriptId = idMob;
 				m_entityManager.addComponent<FightComponent>(mob, fc);
 
-				ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
-				const ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
+				auto& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
+				const auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
 				ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
-				const ska::Rectangle targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
+				const auto targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
 				pc.x = targetBlock.x - hc.xOffset;
 				pc.y = targetBlock.y- hc.yOffset;
 
 				successfulSpawns++;
 			}
 		}
-		angle += (float)((2.0*M_PI) / nbrSpawns);
+		angle += static_cast<float>((2.0*M_PI) / nbrSpawns);
 
 	}
 	return successfulSpawns;
@@ -232,7 +230,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		buf += ".ini";
 
 		ska::IniReader mapReader(buf);
-		std::string startMapChipset = mapReader.get<std::string>("Chipset file");
+		auto startMapChipset = mapReader.get<std::string>("Chipset file");
 		if (startMapChipset == "STRINGNOTFOUND") {
 			throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
@@ -248,14 +246,14 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 
 	std::unordered_map<std::string, ska::EntityId> result;
 
-	const unsigned int blockSize = m_world.getBlockSize();
-	const ska::LayerE& layerE = m_world.getLayerEvent();
+	const auto blockSize = m_world.getBlockSize();
+	const auto& layerE = m_world.getLayerEvent();
 
 	//Chargement des NPC sur la map (personnages & pokémon)
-	for (int i = 0; i < layerE.getNbrLignes(); i++) {
+	for (auto i = 0; i < layerE.getNbrLignes(); i++) {
 		posEntityId.y = layerE.getBlocY(i);
 		posEntityId.x = layerE.getBlocX(i);
-		int id = layerE.getID(i);
+		auto id = layerE.getID(i);
 		if (id == 0) {
 			continue;
 		}
@@ -279,8 +277,8 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 
 		ska::ScriptSleepComponent ssc;
 
-		const std::string& params = layerE.getParam(i);
-		std::vector<std::string> totalArgs = ska::StringUtils::split(params, ',');
+		const auto& params = layerE.getParam(i);
+		auto totalArgs = ska::StringUtils::split(params, ',');
 		if (!totalArgs.empty()) {
 			ssc.args.reserve(totalArgs.size() - 1);
 			for (unsigned int i1 = 1; i1 < totalArgs.size(); i1++) {

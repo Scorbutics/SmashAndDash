@@ -1,198 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FpsCalculator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FpsRenderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\AnimatedTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\Animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\Draw\PriorityQueueDrawableContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\Draw\VectorDrawableContainer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\Font.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SDLFont.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SDLRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SDLSurface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SDLTexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SpriteAnimation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\SpriteAnimationManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\AbstractGraphicSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\CameraFixedSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\CameraFollowSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\CameraSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\DebugCollisionDrawerSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\DeleterSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\DirectionalAnimationSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\GraphicSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\System\ShadowSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\Texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\TextureData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\GraphicComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphic\HasShadowComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="FpsCalculator.cpp" />
+    <ClCompile Include="FpsRenderable.cpp" />
+    <ClCompile Include="Graphic\AnimatedTexture.cpp" />
+    <ClCompile Include="Graphic\Animation.cpp" />
+    <ClCompile Include="Graphic\GraphicComponent.cpp" />
+    <ClCompile Include="Graphic\HasShadowComponent.cpp" />
+    <ClCompile Include="Graphic\SpriteAnimation.cpp" />
+    <ClCompile Include="Graphic\SpriteAnimationManager.cpp" />
+    <ClCompile Include="Graphic\System\AbstractGraphicSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraFixedSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraFollowSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraSystem.cpp" />
+    <ClCompile Include="Graphic\System\DebugCollisionDrawerSystem.cpp" />
+    <ClCompile Include="Graphic\System\DeleterSystem.cpp" />
+    <ClCompile Include="Graphic\System\DirectionalAnimationSystem.cpp" />
+    <ClCompile Include="Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Graphic\System\ShadowSystem.cpp" />
+    <ClCompile Include="Graphic\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FpsCalculator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FpsRenderable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\AnimatedTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Animation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Color.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Draw\Drawable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Draw\DrawableContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Draw\DrawableFixedPriority.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Draw\PriorityQueueDrawableContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Draw\VectorDrawableContainer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Font.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\GraphicComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\HasShadowComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\PositionnedGraphicDrawable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SDLFont.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SDLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SDLSurface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SDLTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SpriteAnimation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\SpriteAnimationManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\AbstractGraphicSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\CameraAware.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\CameraFixedSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\CameraFollowSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\CameraSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\DebugCollisionDrawerSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\DeleterSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\DirectionalAnimationSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\GraphicSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\IGraphicSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\System\ShadowSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphic\TextureData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="FpsCalculator.h" />
+    <ClInclude Include="FpsRenderable.h" />
+    <ClInclude Include="Graphic\AnimatedTexture.h" />
+    <ClInclude Include="Graphic\Animation.h" />
+    <ClInclude Include="Graphic\GraphicComponent.h" />
+    <ClInclude Include="Graphic\HasShadowComponent.h" />
+    <ClInclude Include="Graphic\PositionnedGraphicDrawable.h" />
+    <ClInclude Include="Graphic\SpriteAnimation.h" />
+    <ClInclude Include="Graphic\SpriteAnimationManager.h" />
+    <ClInclude Include="Graphic\System\AbstractGraphicSystem.h" />
+    <ClInclude Include="Graphic\System\CameraFixedSystem.h" />
+    <ClInclude Include="Graphic\System\CameraFollowSystem.h" />
+    <ClInclude Include="Graphic\System\CameraSystem.h" />
+    <ClInclude Include="Graphic\System\DebugCollisionDrawerSystem.h" />
+    <ClInclude Include="Graphic\System\DeleterSystem.h" />
+    <ClInclude Include="Graphic\System\DirectionalAnimationSystem.h" />
+    <ClInclude Include="Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Graphic\System\ShadowSystem.h" />
+    <ClInclude Include="Graphic\Texture.h" />
   </ItemGroup>
 </Project>

@@ -18,6 +18,20 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AI\IADefinedMovementComponent.h" />
+    <ClInclude Include="AI\IARandomMovementComponent.h" />
+    <ClInclude Include="AI\Node.h" />
+    <ClInclude Include="AI\Path.h" />
+    <ClInclude Include="AI\System\IADefinedMovementSystem.h" />
+    <ClInclude Include="AI\System\IARandomMovementSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AI\Node.cpp" />
+    <ClCompile Include="AI\Path.cpp" />
+    <ClCompile Include="AI\System\IADefinedMovementSystem.cpp" />
+    <ClCompile Include="AI\System\IARandomMovementSystem.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8332DD40-918C-426F-AFF0-2F8BEAC20F67}</ProjectGuid>
     <RootNamespace>ska_ai</RootNamespace>
@@ -117,20 +131,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="AI\IADefinedMovementComponent.h" />
-    <ClInclude Include="AI\IARandomMovementComponent.h" />
-    <ClInclude Include="AI\Node.h" />
-    <ClInclude Include="AI\Path.h" />
-    <ClInclude Include="AI\System\IADefinedMovementSystem.h" />
-    <ClInclude Include="AI\System\IARandomMovementSystem.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AI\Node.cpp" />
-    <ClCompile Include="AI\Path.cpp" />
-    <ClCompile Include="AI\System\IADefinedMovementSystem.cpp" />
-    <ClCompile Include="AI\System\IARandomMovementSystem.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

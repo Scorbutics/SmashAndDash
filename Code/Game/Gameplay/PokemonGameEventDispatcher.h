@@ -1,16 +1,11 @@
 #pragma once
+#include "Data/Events/ExtensibleGameEventDispatcher.h"
+#include "./Fight/StatisticsChangeEvent.h"
+#include "./Fight/BattleEvent.h"
+#include "./Data/EntityLoadEvent.h"
+#include "./Data/SettingsChangeEvent.h"
+#include "Data/MapEvent.h"
 
-#include "Data/GameEventDispatcher.h"
 
-template <class ...ET>
-class SEventDispatcher :
-	public ska::GameEventDispatcher,
-	public ska::Observable<ET>... {
-public:
-	SEventDispatcher() = default;
-	SEventDispatcher(const SEventDispatcher&) = delete;
-	virtual ~SEventDispatcher() = default;
+using PokemonGameEventDispatcher = ska::ExtensibleGameEventDispatcher<BattleEvent, StatisticsChangeEvent, SettingsChangeEvent, EntityLoadEvent, MapEvent>;
 
-private:
-
-};

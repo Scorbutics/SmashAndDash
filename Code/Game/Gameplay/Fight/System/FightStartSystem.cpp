@@ -57,8 +57,9 @@ void FightStartSystem::refresh() {
 					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
 					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
-					auto scene = ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc, m_ged));
-					m_sceneHolder.nextScene(scene);
+					
+					/*auto scene = ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc, m_ged));
+					m_sceneHolder.nextScene(scene);*/
 				}
 				m_t0 = ska::TimeUtils::getTicks();
 				break;

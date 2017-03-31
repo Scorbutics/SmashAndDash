@@ -18,6 +18,47 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FpsCalculator.cpp" />
+    <ClCompile Include="FpsRenderable.cpp" />
+    <ClCompile Include="Graphic\AnimatedTexture.cpp" />
+    <ClCompile Include="Graphic\Animation.cpp" />
+    <ClCompile Include="Graphic\GraphicComponent.cpp" />
+    <ClCompile Include="Graphic\HasShadowComponent.cpp" />
+    <ClCompile Include="Graphic\SpriteAnimation.cpp" />
+    <ClCompile Include="Graphic\SpriteAnimationManager.cpp" />
+    <ClCompile Include="Graphic\System\AbstractGraphicSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraFixedSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraFollowSystem.cpp" />
+    <ClCompile Include="Graphic\System\CameraSystem.cpp" />
+    <ClCompile Include="Graphic\System\DebugCollisionDrawerSystem.cpp" />
+    <ClCompile Include="Graphic\System\DeleterSystem.cpp" />
+    <ClCompile Include="Graphic\System\DirectionalAnimationSystem.cpp" />
+    <ClCompile Include="Graphic\System\GraphicSystem.cpp" />
+    <ClCompile Include="Graphic\System\ShadowSystem.cpp" />
+    <ClCompile Include="Graphic\Texture.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FpsCalculator.h" />
+    <ClInclude Include="FpsRenderable.h" />
+    <ClInclude Include="Graphic\AnimatedTexture.h" />
+    <ClInclude Include="Graphic\Animation.h" />
+    <ClInclude Include="Graphic\GraphicComponent.h" />
+    <ClInclude Include="Graphic\HasShadowComponent.h" />
+    <ClInclude Include="Graphic\PositionnedGraphicDrawable.h" />
+    <ClInclude Include="Graphic\SpriteAnimation.h" />
+    <ClInclude Include="Graphic\SpriteAnimationManager.h" />
+    <ClInclude Include="Graphic\System\AbstractGraphicSystem.h" />
+    <ClInclude Include="Graphic\System\CameraFixedSystem.h" />
+    <ClInclude Include="Graphic\System\CameraFollowSystem.h" />
+    <ClInclude Include="Graphic\System\CameraSystem.h" />
+    <ClInclude Include="Graphic\System\DebugCollisionDrawerSystem.h" />
+    <ClInclude Include="Graphic\System\DeleterSystem.h" />
+    <ClInclude Include="Graphic\System\DirectionalAnimationSystem.h" />
+    <ClInclude Include="Graphic\System\GraphicSystem.h" />
+    <ClInclude Include="Graphic\System\ShadowSystem.h" />
+    <ClInclude Include="Graphic\Texture.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}</ProjectGuid>
     <RootNamespace>ska_draw</RootNamespace>
@@ -119,69 +160,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="FpsCalculator.cpp" />
-    <ClCompile Include="FpsRenderable.cpp" />
-    <ClCompile Include="Graphic\AnimatedTexture.cpp" />
-    <ClCompile Include="Graphic\Animation.cpp" />
-    <ClCompile Include="Graphic\Draw\PriorityQueueDrawableContainer.cpp" />
-    <ClCompile Include="Graphic\Draw\VectorDrawableContainer.cpp" />
-    <ClCompile Include="Graphic\Font.cpp" />
-    <ClCompile Include="Graphic\GraphicComponent.cpp" />
-    <ClCompile Include="Graphic\HasShadowComponent.cpp" />
-    <ClCompile Include="Graphic\SDLFont.cpp" />
-    <ClCompile Include="Graphic\SDLRenderer.cpp" />
-    <ClCompile Include="Graphic\SDLSurface.cpp" />
-    <ClCompile Include="Graphic\SDLTexture.cpp" />
-    <ClCompile Include="Graphic\SpriteAnimation.cpp" />
-    <ClCompile Include="Graphic\SpriteAnimationManager.cpp" />
-    <ClCompile Include="Graphic\System\AbstractGraphicSystem.cpp" />
-    <ClCompile Include="Graphic\System\CameraFixedSystem.cpp" />
-    <ClCompile Include="Graphic\System\CameraFollowSystem.cpp" />
-    <ClCompile Include="Graphic\System\CameraSystem.cpp" />
-    <ClCompile Include="Graphic\System\DebugCollisionDrawerSystem.cpp" />
-    <ClCompile Include="Graphic\System\DeleterSystem.cpp" />
-    <ClCompile Include="Graphic\System\DirectionalAnimationSystem.cpp" />
-    <ClCompile Include="Graphic\System\GraphicSystem.cpp" />
-    <ClCompile Include="Graphic\System\ShadowSystem.cpp" />
-    <ClCompile Include="Graphic\Texture.cpp" />
-    <ClCompile Include="Graphic\TextureData.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FpsCalculator.h" />
-    <ClInclude Include="FpsRenderable.h" />
-    <ClInclude Include="Graphic\AnimatedTexture.h" />
-    <ClInclude Include="Graphic\Animation.h" />
-    <ClInclude Include="Graphic\Color.h" />
-    <ClInclude Include="Graphic\Draw\Drawable.h" />
-    <ClInclude Include="Graphic\Draw\DrawableContainer.h" />
-    <ClInclude Include="Graphic\Draw\DrawableFixedPriority.h" />
-    <ClInclude Include="Graphic\Draw\PriorityQueueDrawableContainer.h" />
-    <ClInclude Include="Graphic\Draw\VectorDrawableContainer.h" />
-    <ClInclude Include="Graphic\Font.h" />
-    <ClInclude Include="Graphic\GraphicComponent.h" />
-    <ClInclude Include="Graphic\HasShadowComponent.h" />
-    <ClInclude Include="Graphic\PositionnedGraphicDrawable.h" />
-    <ClInclude Include="Graphic\SDLFont.h" />
-    <ClInclude Include="Graphic\SDLRenderer.h" />
-    <ClInclude Include="Graphic\SDLSurface.h" />
-    <ClInclude Include="Graphic\SDLTexture.h" />
-    <ClInclude Include="Graphic\SpriteAnimation.h" />
-    <ClInclude Include="Graphic\SpriteAnimationManager.h" />
-    <ClInclude Include="Graphic\System\AbstractGraphicSystem.h" />
-    <ClInclude Include="Graphic\System\CameraAware.h" />
-    <ClInclude Include="Graphic\System\CameraFixedSystem.h" />
-    <ClInclude Include="Graphic\System\CameraFollowSystem.h" />
-    <ClInclude Include="Graphic\System\CameraSystem.h" />
-    <ClInclude Include="Graphic\System\DebugCollisionDrawerSystem.h" />
-    <ClInclude Include="Graphic\System\DeleterSystem.h" />
-    <ClInclude Include="Graphic\System\DirectionalAnimationSystem.h" />
-    <ClInclude Include="Graphic\System\GraphicSystem.h" />
-    <ClInclude Include="Graphic\System\IGraphicSystem.h" />
-    <ClInclude Include="Graphic\System\ShadowSystem.h" />
-    <ClInclude Include="Graphic\Texture.h" />
-    <ClInclude Include="Graphic\TextureData.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

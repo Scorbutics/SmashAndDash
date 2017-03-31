@@ -1,16 +1,14 @@
 #include "AbstractNoGUISceneMap.h"
-#include "../Weather.h"
+//#include "../Weather.h"
 #include "World/World.h"
-#include "World/LayerE.h"
-#include "ECS/ECSDefines.h"
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril) :
-Scene(sh, ril)
-{
+
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh) :
+SceneBase(em, ged, w, ril, sh) {
 }
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(Scene& oldScene) :
-Scene(oldScene) {
+AbstractNoGUISceneMap::AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene) :
+SceneBase(em, ged, w, ril, oldScene) {
 
 }
 

@@ -9,13 +9,13 @@ namespace ska {
 
 	class InputContextManager {
 	public:
-		InputContextManager(RawInputListener& ril);
+		explicit InputContextManager(RawInputListener& ril);
 		InputContextManager(const InputContextManager& icm);
 
 		void operator=(const InputContextManager& icm);
 		static InputContextManager instantiateEmpty(InputContextManager& icm);
 		void refresh(); 
-		void addContext(EnumContextManager ecm, InputContextPtr& icp);
+		void addContext(EnumContextManager ecm, InputContextPtr&& icp);
 		void disableContext(EnumContextManager ecm, bool disable);
 		const InputActionContainer& getActions() const;
 		const InputRangeContainer& getRanges() const;

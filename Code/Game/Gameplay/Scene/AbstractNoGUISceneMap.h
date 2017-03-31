@@ -1,17 +1,16 @@
 #pragma once
+#include "Core/Scene/SceneBase.h"
 #include "Core/Scene/Scene.h"
+#include "../PokemonGameEventDispatcher.h"
 
-namespace ska {
-	class World;
-	class EntityManager;
-}
+class CustomEntityManager;
 
 class AbstractNoGUISceneMap :
-	public ska::Scene {
+	public ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher> {
 
 public:
-	AbstractNoGUISceneMap(ska::SceneHolder& sh, ska::InputContextManager& ril);
-	explicit AbstractNoGUISceneMap(Scene& oldScene);
+	AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh);
+	AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene);
 	AbstractNoGUISceneMap& operator=(const AbstractNoGUISceneMap&) = delete;
 
 	virtual void load(ska::ScenePtr* lastScene) override;
