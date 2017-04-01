@@ -1,7 +1,9 @@
 assign #arg0#, |jump_direction|
 assign #arg1#, |block_id|
 remove_component InputComponent, 0
-jump 0, 1040
 block_authorize [|block_id|], 0, true
-move 0, [|jump_direction|], 90, true, ./Levels/jump_wall_callback.txt, 0, [|block_id|]
+move 0, [|jump_direction|], 40, true
+wait 200
+jump 0, 900
+move 0, [|jump_direction|], 50, true, ./Levels/jump_wall_callback.txt, 0, [|block_id|]
 end
