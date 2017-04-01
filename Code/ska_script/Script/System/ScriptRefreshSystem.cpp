@@ -13,7 +13,7 @@
 #include "ECS/Basics/Script/ScriptPositionedGetter.h"
 #include "Data/BlockContainer.h"
 
-ska::ScriptRefreshSystem::ScriptRefreshSystem(ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc, EntityManager& entityManager) :
+ska::ScriptRefreshSystem::ScriptRefreshSystem(EntityManager& entityManager, ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc) :
 ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
 ScriptPositionSystemAccess(entityManager),
 m_scriptPositionedGetter(spg), m_blockContainer(bc), m_icm(icm), m_scriptAutoSystem(scriptAutoSystem) {

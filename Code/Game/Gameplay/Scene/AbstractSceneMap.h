@@ -1,9 +1,7 @@
 #pragma once
 #include "AbstractNoGUISceneMap.h"
-#include "Physic/System/CollisionSystem.h"
 #include "Physic/System/WorldCollisionResponse.h"
 #include "Physic/System/EntityCollisionResponse.h"
-//#include "Utils/Observer.h"
 
 class WorldScene;
 class FightComponent;
@@ -11,6 +9,7 @@ class FightComponent;
 namespace ska {
 	class CameraSystem;
 	class Window;
+	class CollisionSystem;
 }
 
 using SceneChangeObserver = ska::Observer<MapEvent>;
@@ -37,9 +36,9 @@ private:
 protected:
 	WorldScene& m_worldScene;
 	ska::Window& m_window;
-	ska::CollisionSystem m_collisionSystem;
 
 	ska::WorldCollisionResponse m_worldCollisionResponse;
 	ska::EntityCollisionResponse m_entityCollisionResponse;
+	ska::CollisionSystem* m_collisionSystem;
 };
 

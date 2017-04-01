@@ -6,7 +6,7 @@
 #include "ECS/Basics/Graphic/DialogComponent.h"
 #include "Utils/NumberUtils.h"
 
-ska::GraphicSystem::GraphicSystem(ska::CameraSystem* camera, ska::EntityManager& entityManager) :
+ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::CameraSystem* camera) :
     AbstractGraphicSystem(camera),
     System(entityManager) {
 	m_drawables = nullptr;

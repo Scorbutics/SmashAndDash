@@ -1,13 +1,6 @@
 #pragma once
 #include "Core/Scene/SceneBase.h"
-#include "Physic/System/ForceSystem.h"
-#include "Physic/System/GravitySystem.h"
 #include "Inputs/System/InputSystem.h"
-#include "Physic/System/MovementSystem.h"
-#include "Graphic/System/GraphicSystem.h"
-#include "Graphic/System/ShadowSystem.h"
-#include "Graphic/System/DirectionalAnimationSystem.h"
-#include "Graphic/System/DeleterSystem.h"
 
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
@@ -23,6 +16,8 @@ namespace ska {
 	class IniReader;
 	class CameraSystem;
 	class Window;
+	class ShadowSystem;
+	class GraphicSystem;
 }
 class CustomEntityManager;
 
@@ -65,26 +60,13 @@ private:
 
 	/* Special system : camera (linked to World) */
 	ska::CameraSystem* m_cameraSystem;
+
 	WorldImpl m_world;
-
-	/* Systems */
-	/* Logics */
-	ska::ForceSystem m_forceSystem;
-	ska::GravitySystem m_gravitySystem;
-	ska::MovementSystem m_movementSystem;
-	ska::DirectionalAnimationSystem m_daSystem;
-	ska::DeleterSystem m_deleterSystem;
-	ska::InputSystem m_inputSystem;
-
-	/* Graphics */
-	ska::GraphicSystem m_graphicSystem;
-	ska::ShadowSystem m_shadowSystem;
-
 	Pokeball m_pokeball;
-
 	GUIMap m_gui;
-
 	ska::Music m_worldBGM;
-
+	
+	ska::GraphicSystem* m_graphicSystem;
+	ska::ShadowSystem* m_shadowSystem;
 };
 

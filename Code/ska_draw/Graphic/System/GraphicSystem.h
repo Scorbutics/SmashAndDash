@@ -8,7 +8,7 @@
 namespace ska {
     class GraphicSystem : public AbstractGraphicSystem, public System<std::unordered_set<EntityId>, GraphicComponent, PositionComponent> {
     public:
-        GraphicSystem(CameraSystem* camera, EntityManager& entityManager);
+		GraphicSystem(EntityManager& entityManager, CameraSystem* camera);
         GraphicSystem& operator=(const GraphicSystem&) = delete;
         int getTopLayerPriority() const;
         virtual void update() override;

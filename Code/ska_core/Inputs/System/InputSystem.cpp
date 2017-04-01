@@ -1,6 +1,6 @@
 #include "InputSystem.h"
 
-ska::InputSystem::InputSystem(const InputContextManager& icm, EntityManager& entityManager) : System(entityManager), m_icm(icm) {
+ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) : System(entityManager), m_icm(icm) {
 }
 
 void ska::InputSystem::refresh() {

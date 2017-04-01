@@ -4,7 +4,7 @@
 #include "ECS/Basics/Physic/CollisionComponent.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
-ska::CollisionSystem::CollisionSystem(CollisionProfile& cp, EntityManager& entityManager, GameEventDispatcher& ged) :
+ska::CollisionSystem::CollisionSystem(EntityManager& entityManager, CollisionProfile& cp, GameEventDispatcher& ged) :
 	System(entityManager),
 	m_collisionProfile(cp),
 	m_ged(ged) {

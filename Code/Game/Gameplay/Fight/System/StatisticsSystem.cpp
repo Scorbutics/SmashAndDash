@@ -1,7 +1,7 @@
 #include "StatisticsSystem.h"
 #include "../../Scene/SceneMap.h"
 
-StatisticsSystem::StatisticsSystem(ska::Window& w, ska::EntityManager& em, ska::InputContextManager& icm, WorldScene& ws, PokemonGameEventDispatcher& ged) : System(em),
+StatisticsSystem::StatisticsSystem(ska::EntityManager& em, ska::Window& w, ska::InputContextManager& icm, WorldScene& ws, PokemonGameEventDispatcher& ged) : System(em),
 m_playerICM(icm), m_worldScene(ws), m_window(w), m_ged(ged) {
 
 }

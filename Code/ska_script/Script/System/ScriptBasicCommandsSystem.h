@@ -6,11 +6,11 @@ namespace ska {
 	class ScriptBasicCommandsSystem : public ScriptAutoSystem {
 		friend class BasicScriptCommandHelper;
 	public :
-		ScriptBasicCommandsSystem(World& w, EntityManager& entityManager, Savegame& saveGame);
+		ScriptBasicCommandsSystem(EntityManager& entityManager, World& w, Savegame& saveGame);
 		virtual ~ScriptBasicCommandsSystem();
 
 	protected:
-		ScriptBasicCommandsSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame);
+		ScriptBasicCommandsSystem(EntityManager& entityManager, World& w, const ScriptCommandHelper& sch, Savegame& saveGame);
 		struct BasicScriptCommandHelper : public ScriptCommandHelper {
 		    BasicScriptCommandHelper() = default;
 		    virtual ~BasicScriptCommandHelper() = default;

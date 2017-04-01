@@ -8,7 +8,7 @@
 #include "../../CustomEntityManager.h"
 #include "../../Data/MapEvent.h"
 
-FightStartSystem::FightStartSystem(ska::Window& w, CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
+FightStartSystem::FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
 System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(cem),
 m_cem(cem),
 m_worldScene(ws),

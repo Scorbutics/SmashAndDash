@@ -21,7 +21,7 @@ bool AbstractNoGUISceneMap::unload() {
 }
 
 void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
-	Scene::graphicUpdate(drawables);
+	SceneBase::graphicUpdate(drawables);
 
 	/*
 	ska::World& world = core.getWorld();
@@ -49,7 +49,7 @@ void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 }
 
 void AbstractNoGUISceneMap::eventUpdate(unsigned int ellapsedTime) {
-	Scene::eventUpdate(ellapsedTime);
+	SceneBase::eventUpdate(ellapsedTime);
 
 	//WGameCore& core = WGameCore::getInstance();
 	//ska::World& world = core.getWorld();

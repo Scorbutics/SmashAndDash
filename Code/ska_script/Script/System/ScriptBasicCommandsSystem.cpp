@@ -18,11 +18,13 @@
 #include "../Command/CommandRestoreComponent.h"
 #include "../Command/CommandBlockAuthorize.h"
 
-ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(World& w, EntityManager& entityManager, Savegame& saveGame) : ScriptAutoSystem(w, BasicScriptCommandHelper(w, entityManager), entityManager, saveGame) {
+ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(EntityManager& entityManager, World& w, Savegame& saveGame) : 
+	ScriptAutoSystem(entityManager, w, BasicScriptCommandHelper(w, entityManager), saveGame) {
 
 }
 
-ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame) : ScriptAutoSystem(w, sch, entityManager, saveGame) {
+ska::ScriptBasicCommandsSystem::ScriptBasicCommandsSystem(EntityManager& entityManager, World& w, const ScriptCommandHelper& sch, Savegame& saveGame) : 
+	ScriptAutoSystem(entityManager, w, sch, saveGame) {
 
 }
 

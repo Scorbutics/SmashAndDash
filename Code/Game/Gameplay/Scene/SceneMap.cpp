@@ -1,3 +1,12 @@
+#include "AI/System/IARandomMovementSystem.h"
+#include "AI/System/IADefinedMovementSystem.h"
+#include "../Mobs/System/MobSpawningSystem.h"
+#include "Script/System/ScriptRefreshSystem.h"
+#include "../../Script/System/ScriptCommandsSystem.h"
+#include "../Fight/System/FightStartSystem.h"
+#include "Graphic/System/CameraFollowSystem.h"
+
+
 #include "Core/Window.h"
 #include "../World/WorldScene.h"
 #include "SceneMap.h"
@@ -8,25 +17,19 @@
 SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(em, ged, w, ril, sh, ws, sameMap),
 m_fileName(fileName),
-m_chipsetName(chipsetName),
-m_iaRandomMovementSystem(m_entityManager),
-m_iaDefinedMovementSystem(m_entityManager, &m_scriptAutoSystem),
-m_mobSpawningSystem(ws, m_entityManager, MOB_SPAWNING_DELAY),
-m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityManager),
-m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
-m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
-m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
-	addLogic(m_scriptSystem);
-	addLogic(m_iaRandomMovementSystem);
-	addLogic(m_iaDefinedMovementSystem);
-	addLogic(m_mobSpawningSystem);
-	addLogic(m_fightStartSystem);
-	addLogic(m_cameraSystem);
-
+m_chipsetName(chipsetName) {
+	
+	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
+	addLogic<ska::IARandomMovementSystem>();
+	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem.get());
+	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(*m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld());
+	addLogic<MobSpawningSystem>(ws, MOB_SPAWNING_DELAY);
+	addLogic<FightStartSystem>(w, ged, ws, ril, ws.getPlayer());
+	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 }
 
 ska::CameraSystem& SceneMap::getCamera() {
-	return m_cameraSystem;
+	return *m_cameraSystem;
 }
 
 /*SceneMap::SceneMap(ska::Window& w, PokemonGameEventDispatcher& ged, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
@@ -53,20 +56,15 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(em, ged, w, ril, oldScene, ws, sameMap),
 m_fileName(fileName),
-m_chipsetName(chipsetName),
-m_iaRandomMovementSystem(m_entityManager),
-m_iaDefinedMovementSystem(m_entityManager, &m_scriptAutoSystem),
-m_mobSpawningSystem(ws, m_entityManager, MOB_SPAWNING_DELAY),
-m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityManager),
-m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
-m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
-m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
-	addLogic(m_scriptSystem);
-	addLogic(m_iaRandomMovementSystem);
-	addLogic(m_iaDefinedMovementSystem);
-	addLogic(m_mobSpawningSystem);
-	addLogic(m_fightStartSystem);
-	addLogic(m_cameraSystem);
+m_chipsetName(chipsetName) {
+
+	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
+	addLogic<ska::IARandomMovementSystem>();
+	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem.get());
+	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(*m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld());
+	addLogic<MobSpawningSystem>(ws, MOB_SPAWNING_DELAY);
+	addLogic<FightStartSystem>(w, ged, ws, ril, ws.getPlayer());
+	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 
 	ged.ska::Observable<MapEvent>::addObserver(*this);
 
@@ -84,14 +82,14 @@ bool SceneMap::unload() {
 }
 
 void SceneMap::reinit() {
-	m_scriptSystem.clearNamedScriptedEntities();
+	m_scriptSystem->clearNamedScriptedEntities();
 	auto entities = m_worldScene.reinit(m_fileName, m_chipsetName);
 	for (const auto& e : entities) {
-		m_scriptSystem.registerNamedScriptedEntity(e.first, e.second);
+		m_scriptSystem->registerNamedScriptedEntity(e.first, e.second);
 	}
 
 	/* Player Script ID = 0 */
-	m_scriptSystem.registerNamedScriptedEntity("0", m_worldScene.getPlayer());
+	m_scriptSystem->registerNamedScriptedEntity("0", m_worldScene.getPlayer());
 }
 
 

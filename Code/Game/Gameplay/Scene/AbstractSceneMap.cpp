@@ -1,8 +1,7 @@
-//#include "../Weather.h"
+#include "Physic/System/CollisionSystem.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../World/WorldScene.h"
 #include "../CustomEntityManager.h"
-//#include "World/LayerE.h"
 #include "SceneToMapSwitcher.h"
 #include "SceneToBattleSwitcher.h"
 #include "AbstractSceneMap.h"
@@ -14,10 +13,10 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap), m_observersDefined(false),
 	m_worldScene(ws),
 m_window(w),
-m_collisionSystem(ws.getWorld(), m_entityManager, ged),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager) {
-	addLogic(m_collisionSystem);
+	
+	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 }
 
@@ -27,11 +26,10 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_window(w),
-m_collisionSystem(ws.getWorld(), m_entityManager, ged),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager),
 m_observersDefined(true) {
-	addLogic(m_collisionSystem);
+	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 	
 	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
 	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);

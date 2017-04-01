@@ -1,3 +1,11 @@
+#include "Physic/System/ForceSystem.h"
+#include "Physic/System/MovementSystem.h"
+#include "Graphic/System/GraphicSystem.h"
+#include "Graphic/System/ShadowSystem.h"
+#include "Graphic/System/DirectionalAnimationSystem.h"
+#include "Graphic/System/DeleterSystem.h"
+#include "Physic/System/GravitySystem.h"
+
 #include "Utils/StringUtils.h"
 #include "Utils/RectangleUtils.h"
 #include "Rectangle.h"
@@ -26,26 +34,18 @@ m_settings(settings), m_player(0),
 m_saveManager(ged, "save1"),
 m_cameraSystem(nullptr),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
-m_forceSystem(m_entityManager),
-m_gravitySystem(m_entityManager),
-m_movementSystem(m_entityManager),
-m_daSystem(m_entityManager),
-m_deleterSystem(m_entityManager),
-m_inputSystem(m_inputCManager, m_entityManager),
-m_graphicSystem(nullptr, m_entityManager),
-m_shadowSystem(nullptr, m_entityManager),
 m_gui(w, ril, ged),
 m_worldBGM(DEFAULT_BGM) {
 
-	addGraphic(m_graphicSystem);
-	addGraphic(m_shadowSystem);
+	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::CameraSystem*>(nullptr);
+	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
-	addLogic(m_inputSystem);
-	addLogic(m_movementSystem);
-	addLogic(m_gravitySystem);
-	addLogic(m_forceSystem);
-	addLogic(m_daSystem);
-	addLogic(m_deleterSystem);
+	addLogic<ska::InputSystem>(m_inputCManager);
+	addLogic<ska::MovementSystem>();
+	addLogic<ska::GravitySystem>();
+	addLogic<ska::ForceSystem>();
+	addLogic<ska::DirectionalAnimationSystem>();
+	addLogic<ska::DeleterSystem>();
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
@@ -60,8 +60,8 @@ void WorldScene::linkCamera(ska::CameraSystem* cs) {
 	if (m_cameraSystem == nullptr || cs == nullptr) {
 		m_cameraSystem = cs;
 
-		m_graphicSystem.linkCamera(cs);
-		m_shadowSystem.linkCamera(cs);
+		m_graphicSystem->linkCamera(cs);
+		m_shadowSystem->linkCamera(cs);
 		m_world.linkCamera(cs);
 	}
 }
@@ -82,13 +82,13 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	//Deuxième couche
 	drawables.addHead(m_world.getLayerRenderable(1));
 
-	Scene::graphicUpdate(drawables);
+	SceneBase::graphicUpdate(drawables);
 
 	/* We use the maximum drawing priority of characters to draw the top layer */
-	m_world.getLayerRenderable(2).setPriority(m_graphicSystem.getTopLayerPriority());
+	m_world.getLayerRenderable(2).setPriority(m_graphicSystem->getTopLayerPriority());
 	drawables.add(m_world.getLayerRenderable(2));
 
-	m_pokeball.setPriority(m_graphicSystem.getTopLayerPriority() + 1);
+	m_pokeball.setPriority(m_graphicSystem->getTopLayerPriority() + 1);
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
@@ -104,7 +104,7 @@ void WorldScene::eventUpdate(unsigned int ellapsedTime) {
 	//GUI
 	m_gui.refresh();
 
-	return Scene::eventUpdate(ellapsedTime);
+	return SceneBase::eventUpdate(ellapsedTime);
 }
 
 ska::World& WorldScene::getWorld() {
@@ -221,7 +221,7 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 		ska::Point<int> startPos;
 		startPos.x = reader.get<int>("Trainer start_posx");
 		startPos.y = reader.get<int>("Trainer start_posy");
-		std::string startMapName = reader.get<std::string>("Trainer start_map_name");
+		auto startMapName = reader.get<std::string>("Trainer start_map_name");
 
 		std::string buf = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR;
 		buf += startMapName;
@@ -305,6 +305,5 @@ SavegameManager& WorldScene::getSaveGame() {
 	return m_saveManager;
 }
 
-WorldScene::~WorldScene() {
-	//removeObserver(m_soundEvents);
+WorldScene::~WorldScene() {	
 }

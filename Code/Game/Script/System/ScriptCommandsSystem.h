@@ -14,7 +14,7 @@ class ScriptCommandsSystem :
 	public ska::ScriptBasicCommandsSystem
 {
 public:
-	ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged);
+	ScriptCommandsSystem(ska::EntityManager& entityManager, ska::World& w, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged);
 	virtual ~ScriptCommandsSystem();
 
 protected:

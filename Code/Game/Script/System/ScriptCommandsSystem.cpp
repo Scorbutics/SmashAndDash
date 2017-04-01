@@ -24,8 +24,8 @@
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
 
-ScriptCommandsSystem::ScriptCommandsSystem(ska::World& w, ska::EntityManager& entityManager, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged) :
-ScriptBasicCommandsSystem(w, ScriptCommandHelper(*this, w, entityManager, ged), entityManager, saveGame) {
+ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::World& w, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged) :
+ScriptBasicCommandsSystem(entityManager, w, ScriptCommandHelper(*this, w, entityManager, ged), saveGame) {
 }
 
 void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std::unordered_map<std::string, ska::CommandPtr>& c) const {

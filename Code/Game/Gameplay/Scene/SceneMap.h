@@ -9,19 +9,13 @@
 #include "AbstractSceneMap.h"
 #endif
 
-#include "AI/System/IARandomMovementSystem.h"
-#include "AI/System/IADefinedMovementSystem.h"
-#include "../Mobs/System/MobSpawningSystem.h"
-#include "Script/System/ScriptRefreshSystem.h"
-#include "../../Script/System/ScriptCommandsSystem.h"
-#include "../Fight/System/FightStartSystem.h"
-#include "Graphic/System/CameraFollowSystem.h"
-
-
 class WorldScene;
 
 namespace ska {
 	class Window;
+	class ScriptAutoSystem;
+	class ScriptRefreshSystem;
+	class CameraSystem;
 }
 
 class SceneMap :
@@ -41,15 +35,8 @@ private:
 
 	const std::string m_fileName;
 	const std::string m_chipsetName;
-
-	ska::IARandomMovementSystem m_iaRandomMovementSystem;
-	ska::IADefinedMovementSystem m_iaDefinedMovementSystem;
-	MobSpawningSystem m_mobSpawningSystem;
-
-	ska::ScriptRefreshSystem m_scriptSystem;
-	ScriptCommandsSystem m_scriptAutoSystem;
-
-	FightStartSystem m_fightStartSystem;
-	ska::CameraFollowSystem m_cameraSystem;
+	std::unique_ptr<ska::ScriptAutoSystem> m_scriptAutoSystem;
+	ska::CameraSystem* m_cameraSystem;
+	ska::ScriptRefreshSystem* m_scriptSystem;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;

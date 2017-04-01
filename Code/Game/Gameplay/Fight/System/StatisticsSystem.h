@@ -12,7 +12,7 @@ namespace ska {
 
 class StatisticsSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, BattleComponent> {
 public:
-	StatisticsSystem(ska::Window& w, ska::EntityManager& em, ska::InputContextManager& icm, WorldScene& ws, PokemonGameEventDispatcher& ged);
+	StatisticsSystem(ska::EntityManager& em, ska::Window& w, ska::InputContextManager& icm, WorldScene& ws, PokemonGameEventDispatcher& ged);
 	StatisticsSystem(const StatisticsSystem&) = delete;
 	StatisticsSystem operator=(const StatisticsSystem&) = delete;
 	virtual ~StatisticsSystem();

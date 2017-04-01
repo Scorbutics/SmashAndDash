@@ -63,7 +63,7 @@ namespace ska {
 			EntityManager& m_entityManager;
 		};
 
-		ScriptAutoSystem(World& w, const ScriptCommandHelper& sch, EntityManager& entityManager, Savegame& saveGame);
+		ScriptAutoSystem(EntityManager& entityManager, World& w, const ScriptCommandHelper& sch, Savegame& saveGame);
 	};
 
 }

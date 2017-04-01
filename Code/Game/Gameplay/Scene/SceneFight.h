@@ -48,13 +48,10 @@ private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath) const;
 	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;
 
-	PokemonGameEventDispatcher& m_ged;
 	ska::InputContextManager m_iaICM;
 	PokemonDescriptor m_descriptor;
 
-	ska::CameraFixedSystem m_cameraSystem;
-	PokeballSystem m_pokeballSystem;
-	StatisticsSystem m_statsSystem;
+	ska::CameraFixedSystem *m_cameraSystem;
 
 	const int m_opponentScriptId;
 	const unsigned int m_level;
@@ -67,13 +64,8 @@ private:
 	bool m_sceneLoaded;
 	int m_loadState;
 
-	BattleSystem m_battleSystem;
-	SkillRefreshSystem m_skillRefreshSystem;
-
 	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
-
-	ska::IARandomMovementSystem m_randomMovementSystem;
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_guiBattle;

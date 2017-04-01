@@ -24,11 +24,7 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 
 SceneFight::SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc) :
 AbstractSceneMap_(em, ged, w, ril, oldScene, ws, true),
-m_ged(ged),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
-m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight(), fightPos),
-m_pokeballSystem(m_entityManager),
-m_statsSystem(w, m_entityManager, ril, ws, ged),
 m_opponentScriptId(fc.opponentScriptId),
 m_level(fc.level),
 m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
@@ -38,18 +34,16 @@ m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
 m_sceneLoaded(false),
 m_loadState(0),
-m_battleSystem(m_entityManager, m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
-m_skillRefreshSystem(m_entityManager),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_skillEntityCollisionResponse(m_collisionSystem, ged, m_entityManager),
-m_randomMovementSystem(m_entityManager),
+m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
 m_guiBattle(w, ril, ged) {
-	addLogic(m_cameraSystem);
-	addLogic(m_pokeballSystem);
-	addLogic(m_battleSystem);
-	addLogic(m_skillRefreshSystem);
-	addLogic(m_statsSystem);
-	addLogic(m_randomMovementSystem);
+
+	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
+	addLogic<PokeballSystem>();
+	addLogic<BattleSystem>(m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
+	addLogic<SkillRefreshSystem>();
+	addLogic<StatisticsSystem>(w, ril, ws, ged);
+	addLogic<ska::IARandomMovementSystem>();
 
 	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
 	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
@@ -59,7 +53,7 @@ m_guiBattle(w, ril, ged) {
 }
 
 ska::CameraSystem& SceneFight::getCamera() {
-	return m_cameraSystem;
+	return *m_cameraSystem;
 }
 
 void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
@@ -125,7 +119,7 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 	AbstractSceneMap::load(lastScene);
 
-	m_worldScene.linkCamera(&m_cameraSystem);
+	m_worldScene.linkCamera(m_cameraSystem);
 	m_worldScene.load(lastScene);
 
 	SkillsHolderComponent shc;
@@ -223,8 +217,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		pc.y = targetBlock.y - hc.yOffset;
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		BattleEvent be(BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
-		m_ged.ska::Observable<BattleEvent>::notifyObservers(be);
+		BattleEvent be(BATTLE_START, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
+		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		m_sceneLoaded = true;
 		m_loadState = 0;

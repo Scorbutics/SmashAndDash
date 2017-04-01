@@ -11,7 +11,7 @@ namespace ska {
         public AbstractGraphicSystem,
         public System<std::unordered_set<EntityId>, PositionComponent, HitboxComponent, HasShadowComponent> {
     public:
-        ShadowSystem(CameraSystem* camera, EntityManager& entityManager);
+		ShadowSystem(EntityManager& entityManager, CameraSystem* camera);
         ShadowSystem& operator=(const ShadowSystem&) = delete;
         virtual ~ShadowSystem();
         virtual void update() override;
