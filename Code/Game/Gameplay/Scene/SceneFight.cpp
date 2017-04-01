@@ -1,3 +1,4 @@
+#include "Core/Window.h"
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
 #include "Task/RepeatableTask.h"
@@ -25,9 +26,9 @@ SceneFight::SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 AbstractSceneMap_(em, ged, w, ril, oldScene, ws, true),
 m_ged(ged),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH(), fightPos),
-m_pokeballSystem(ws.getEntityManager()),
-m_statsSystem(w, ws.getEntityManager(), m_holder, ril, ws, ged),
+m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight(), fightPos),
+m_pokeballSystem(m_entityManager),
+m_statsSystem(w, m_entityManager, ril, ws, ged),
 m_opponentScriptId(fc.opponentScriptId),
 m_level(fc.level),
 m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
@@ -37,11 +38,11 @@ m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
 m_sceneLoaded(false),
 m_loadState(0),
-m_battleSystem(ws.getEntityManager(), m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
-m_skillRefreshSystem(ws.getEntityManager()),
-m_worldEntityCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_skillEntityCollisionResponse(m_collisionSystem, ged, ws.getEntityManager()),
-m_randomMovementSystem(ws.getEntityManager()),
+m_battleSystem(m_entityManager, m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent),
+m_skillRefreshSystem(m_entityManager),
+m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
+m_skillEntityCollisionResponse(m_collisionSystem, ged, m_entityManager),
+m_randomMovementSystem(m_entityManager),
 m_guiBattle(w, ril, ged),
 m_taskQueue(m_holder) {
 	m_logics.push_back(&m_cameraSystem);
@@ -130,12 +131,12 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 	SkillsHolderComponent shc;
 	loadSkills(m_pokemon, m_pokemonId, shc);
-	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_pokemonId, shc);
+	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, shc);
 
 	SkillsHolderComponent shcOpponent;
 	loadSkills(m_opponent, m_opponentId, shcOpponent);
 
-	m_worldScene.getEntityManager().addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
+	m_entityManager.addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
 
 	m_descriptor.load(m_opponent, "Description");
 
@@ -148,12 +149,12 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		if (m_loadState == 0) {
 			m_loadState++;
 
-			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_trainerId)) {
+			if (!m_entityManager.hasComponent<ska::InputComponent>(m_trainerId)) {
 				return false;
 			}
 
-			auto& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_trainerId);
-			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_trainerId);
+			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
+			m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 
 			//auto& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			//DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
@@ -174,26 +175,26 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		if (m_loadState == 1) {
 			m_loadState++;
 
-			auto& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			auto& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_trainerId);
-			auto& opponentPc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_opponentId);
-			auto& opponentHc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_opponentId);
+			auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
+			auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_trainerId);
+			auto& opponentPc = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);
+			auto& opponentHc = m_entityManager.getComponent<ska::HitboxComponent>(m_opponentId);
 
 			/* Création d'une entité : Pokéball (Position + Pokeball) */
-			pokeball = m_worldScene.getEntityManager().createEntity();
+			pokeball = m_entityManager.createEntity();
 			PokeballComponent pokeballc;
 
 			pokeballc.finalPos = { static_cast<int>(opponentPc.x + opponentHc.xOffset + opponentHc.width / 2), static_cast<int>(opponentPc.y + opponentHc.yOffset + opponentHc.height / 2) };
-			m_worldScene.getEntityManager().addComponent<PokeballComponent>(pokeball, pokeballc);
+			m_entityManager.addComponent<PokeballComponent>(pokeball, pokeballc);
 			ska::PositionComponent pokePc;
 			pokePc = pc;
 			pokePc.x += hc.xOffset + hc.width/2;
 			pokePc.y += hc.yOffset + hc.height/2;
-			m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(pokeball, pokePc);
+			m_entityManager.addComponent<ska::PositionComponent>(pokeball, pokePc);
 			t.forward(ic, pokePc);
 			return true;
 		}
-		return m_worldScene.getEntityManager().hasComponent<PokeballComponent>(pokeball)/*wScreen.getPokeball().isVisible()*/;
+		return m_entityManager.hasComponent<PokeballComponent>(pokeball)/*wScreen.getPokeball().isVisible()*/;
 	}, *dialogRawTask));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>* finalRawTask;
@@ -204,26 +205,26 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 		   Ajout d'un composant de combat au Pokémon
 		   Ajout d'une HP Bar */
 
-		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_pokemonId, BattleComponent());
-		m_worldScene.getEntityManager().addComponent<BattleComponent>(m_opponentId, BattleComponent());
+		m_entityManager.addComponent<BattleComponent>(m_pokemonId, BattleComponent());
+		m_entityManager.addComponent<BattleComponent>(m_opponentId, BattleComponent());
 
 		ska::IARandomMovementComponent iarmc;
 		iarmc.emitter = m_pokemonId;
 		iarmc.delay = 300;
 		iarmc.type = ska::RandomMovementType::CIRCLE_AROUND;
 
-		m_worldScene.getEntityManager().addComponent<ska::IARandomMovementComponent>(m_trainerId, iarmc);
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_pokemonId, ic);
+		m_entityManager.addComponent<ska::IARandomMovementComponent>(m_trainerId, iarmc);
+		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, ic);
 
-		auto& hc = m_worldScene.getEntityManager().getComponent<ska::HitboxComponent>(m_pokemonId);
+		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 		const auto targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
-		m_worldScene.getEntityManager().addComponent<ska::PositionComponent>(m_pokemonId, pc);
+		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, pc);
 
-		BattleEvent be(BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_worldScene.getEntityManager());
+		BattleEvent be(BATTLE_START, m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
 		m_ged.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		m_sceneLoaded = true;
@@ -253,12 +254,12 @@ bool SceneFight::unload() {
 			/* Resets GUI */
 			m_guiBattle.clear();
 
-			if (!m_worldScene.getEntityManager().hasComponent<ska::InputComponent>(m_pokemonId)) {
+			if (!m_entityManager.hasComponent<ska::InputComponent>(m_pokemonId)) {
 				return false;
 			}
 
-			auto& ic = m_worldScene.getEntityManager().getComponent<ska::InputComponent>(m_pokemonId);
-			m_worldScene.getEntityManager().removeComponent<ska::InputComponent>(m_pokemonId);
+			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
+			m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
 			//ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
 			//DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
 			//dc.dialog.hide(false);
@@ -278,9 +279,9 @@ bool SceneFight::unload() {
 
 		m_loadState = 0;
 		m_worldScene.unload();
-		m_worldScene.getEntityManager().removeComponent<ska::IARandomMovementComponent>(m_trainerId);
-		m_worldScene.getEntityManager().addComponent<ska::InputComponent>(m_trainerId, ic);
-		m_worldScene.getEntityManager().removeEntity(m_pokemonId);
+		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
+		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ic);
+		m_entityManager.removeEntity(m_pokemonId);
 		return false;
 	}, *dialogRawTask));
 

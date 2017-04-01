@@ -7,8 +7,8 @@
 
 class SceneToBattleSwitcher {
 public:
-	SceneToBattleSwitcher(FightComponent& fc, WorldScene& ws) :
-		m_ws(ws), m_fightComponent(fc) {}
+	SceneToBattleSwitcher(FightComponent& fc, ska::Point<int> fightPos, WorldScene& ws) :
+		m_ws(ws), m_fightComponent(fc), m_fightPos(fightPos) {}
 	SceneToBattleSwitcher& operator=(const SceneToBattleSwitcher&) = delete;
 	~SceneToBattleSwitcher() = default;
 

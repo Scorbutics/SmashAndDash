@@ -297,20 +297,8 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fi
 	return result;
 }
 
-unsigned int WorldScene::getScreenW() const {
-	return m_screenW;
-}
-
-unsigned int WorldScene::getScreenH() const {
-	return m_screenH;
-}
-
 ska::EntityId WorldScene::getPlayer() const{
 	return m_player;
-}
-
-CustomEntityManager& WorldScene::getEntityManager() const{
-	return m_entityManager;
 }
 
 SavegameManager& WorldScene::getSaveGame() {

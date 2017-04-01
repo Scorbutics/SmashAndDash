@@ -14,11 +14,12 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap), m_observersDefined(false),
 	m_worldScene(ws),
 m_window(w),
-m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
-m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_entityCollisionResponse(ged, ws.getEntityManager()) {
+m_collisionSystem(ws.getWorld(), m_entityManager, ged),
+m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
+m_entityCollisionResponse(ged, m_entityManager) {
 	m_logics.push_back(&m_collisionSystem);
-	//ged.ska::Observable<MapEvent>::addObserver(*this);
+	ged.ska::Observable<MapEvent>::addObserver(*this);
+
 }
 
 AbstractSceneMap::AbstractSceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const bool sameMap) :
@@ -27,14 +28,14 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap),
 m_worldScene(ws),
 m_window(w),
-m_collisionSystem(ws.getWorld(), ws.getEntityManager(), ged),
-m_worldCollisionResponse(ws.getWorld(), ged, ws.getEntityManager()),
-m_entityCollisionResponse(ged, ws.getEntityManager()),
+m_collisionSystem(ws.getWorld(), m_entityManager, ged),
+m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
+m_entityCollisionResponse(ged, m_entityManager),
 m_observersDefined(true) {
 	m_logics.push_back(&m_collisionSystem);
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
-	
+	ged.ska::Observable<MapEvent>::addObserver(*this);
 
 }
 
@@ -48,9 +49,9 @@ void AbstractSceneMap::load(ska::ScenePtr*) {
 
 		if (!m_sameMap) {
 			/* If the map changes, we delete all entities (except player) */
-			m_worldScene.getEntityManager().removeEntities(toNotDelete);
+			m_entityManager.removeEntities(toNotDelete);
 		} else {
-			m_worldScene.getEntityManager().refreshEntities();
+			m_entityManager.refreshEntities();
 		}
 	}
 
@@ -58,7 +59,7 @@ void AbstractSceneMap::load(ska::ScenePtr*) {
 
 bool AbstractSceneMap::onTeleport(const MapEvent& me) {
 	if(me.eventType == MapEvent::BATTLE) {
-		SceneToBattleSwitcher stbs(*me.fightComponent, m_worldScene);
+		SceneToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldScene);
 		stbs.switchTo(*this);
 	} else {
 		SceneToMapSwitcher stms(me.mapName, me.chipsetName, m_worldScene);
@@ -90,7 +91,9 @@ void AbstractSceneMap::eventUpdate(unsigned int ellapsedTime) {
 }
 
 AbstractSceneMap::~AbstractSceneMap() {
+	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
 	if (m_observersDefined) {
+		
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
 	}

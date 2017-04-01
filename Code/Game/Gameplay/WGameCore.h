@@ -18,11 +18,8 @@ public:
 	virtual ~WGameCore() = default;
 
 	//Inventory& getInventory();
-	Settings& getSettings();
 	//PokemonManager& getPokemonManager();
 	//TrainerCard& getTrainerCard();
-	ska::World& getWorld();
-	//WorldScene& getWorldScene();
 
 private:
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team

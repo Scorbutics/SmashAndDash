@@ -46,13 +46,10 @@ public:
 	void linkCamera(ska::CameraSystem* cs) override;
 
 	ska::World& getWorld();
-	CustomEntityManager& getEntityManager() const;
 	SavegameManager& getSaveGame();
 	ska::EntityId getPlayer() const;
 	bool loadedOnce();
 	std::vector<ska::IniReader>& getMobSettings() override;
-	unsigned int getScreenW() const;
-	unsigned int getScreenH() const;
 
 	const std::string& getFileName() const;
 

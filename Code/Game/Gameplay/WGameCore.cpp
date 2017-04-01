@@ -20,14 +20,6 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 
 }
 
-Settings& WGameCore::getSettings() {
-    return m_settings;
-}
-
-ska::World& WGameCore::getWorld() {
-	return m_worldScene->getWorld();
-}
-
 
 
 

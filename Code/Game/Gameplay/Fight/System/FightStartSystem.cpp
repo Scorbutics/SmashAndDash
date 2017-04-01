@@ -6,13 +6,13 @@
 #include "../../Scene/SceneFight.h"
 #include "../../World/WorldScene.h"
 #include "../../CustomEntityManager.h"
+#include "../../Data/MapEvent.h"
 
-FightStartSystem::FightStartSystem(ska::Window& w, ska::SceneHolder& sceneHolder, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
-System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(ws.getEntityManager()),
-m_cem(ws.getEntityManager()),
+FightStartSystem::FightStartSystem(ska::Window& w, CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
+System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(cem),
+m_cem(cem),
 m_worldScene(ws),
 m_icm(icm),
-m_sceneHolder(sceneHolder),
 m_player(player),
 m_window(w),
 m_ged(ged) {
@@ -58,8 +58,10 @@ void FightStartSystem::refresh() {
 					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
 					
-					/*auto scene = ska::ScenePtr(new SceneFight(m_window, m_sceneHolder, m_worldScene, m_icm, pcPlayer, fc, m_ged));
-					m_sceneHolder.nextScene(scene);*/
+					MapEvent me(MapEvent::BATTLE);
+					me.fightComponent = &fc;
+					me.fightPos = pcPlayer;
+					m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 				}
 				m_t0 = ska::TimeUtils::getTicks();
 				break;

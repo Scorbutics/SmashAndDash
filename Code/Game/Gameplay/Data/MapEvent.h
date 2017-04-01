@@ -7,13 +7,13 @@ struct MapEvent {
 		MAP
 	};
 
-	explicit MapEvent(MapEventType met) : eventType(met), fightComponent(nullptr), fightPos(nullptr){
+	explicit MapEvent(MapEventType met) : eventType(met), fightComponent(nullptr), fightPos() {
 	}
 
 	const MapEventType eventType;
 	
 	FightComponent* fightComponent;
-	ska::Point<int>* fightPos;
+	ska::Point<int> fightPos;
 
 	std::string mapName;
 	std::string chipsetName;

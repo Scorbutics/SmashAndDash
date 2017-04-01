@@ -1,3 +1,4 @@
+#include "Core/Window.h"
 #include "../World/WorldScene.h"
 #include "SceneMap.h"
 #include "../CustomEntityManager.h"
@@ -8,13 +9,13 @@ SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska
 AbstractSceneMap_(em, ged, w, ril, sh, ws, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
-m_iaRandomMovementSystem(ws.getEntityManager()),
-m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
-m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
-m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), ws.getEntityManager()),
-m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
-m_fightStartSystem(w, sh, ged, ws, ril, ws.getPlayer()),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
+m_iaRandomMovementSystem(m_entityManager),
+m_iaDefinedMovementSystem(m_entityManager, &m_scriptAutoSystem),
+m_mobSpawningSystem(ws, m_entityManager, MOB_SPAWNING_DELAY),
+m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityManager),
+m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
+m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
+m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
 	m_logics.push_back(&m_iaDefinedMovementSystem);
@@ -22,7 +23,6 @@ m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
 	m_logics.push_back(&m_fightStartSystem);
 	m_logics.push_back(&m_cameraSystem);
 
-	ged.ska::Observable<MapEvent>::addObserver(*this);
 }
 
 ska::CameraSystem& SceneMap::getCamera() {
@@ -54,13 +54,13 @@ SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska
 AbstractSceneMap_(em, ged, w, ril, oldScene, ws, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
-m_iaRandomMovementSystem(ws.getEntityManager()),
-m_iaDefinedMovementSystem(ws.getEntityManager(), &m_scriptAutoSystem),
-m_mobSpawningSystem(ws, ws.getEntityManager(), MOB_SPAWNING_DELAY),
-m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), ws.getEntityManager()),
-m_scriptAutoSystem(ws.getWorld(), ws.getEntityManager(), ws.getSaveGame(), ged),
-m_fightStartSystem(w, m_holder, ged, ws, ril, ws.getPlayer()),
-m_cameraSystem(ws.getEntityManager(), ws.getScreenW(), ws.getScreenH()) {
+m_iaRandomMovementSystem(m_entityManager),
+m_iaDefinedMovementSystem(m_entityManager, &m_scriptAutoSystem),
+m_mobSpawningSystem(ws, m_entityManager, MOB_SPAWNING_DELAY),
+m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityManager),
+m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
+m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
+m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
 	m_logics.push_back(&m_scriptSystem);
 	m_logics.push_back(&m_iaRandomMovementSystem);
 	m_logics.push_back(&m_iaDefinedMovementSystem);
@@ -96,5 +96,5 @@ void SceneMap::reinit() {
 
 
 SceneMap::~SceneMap() {
-	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
+	
 }
