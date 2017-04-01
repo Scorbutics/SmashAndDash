@@ -77,6 +77,5 @@ private:
 
 	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_guiBattle;
-	ska::TaskQueue& m_taskQueue;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;

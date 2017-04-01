@@ -58,6 +58,8 @@ namespace ska {
         }
 
         virtual ~GameCore() {
+			m_eventDispatcher.template removeMultipleObservers<SoundEvent, WorldEvent>(m_soundManager, m_soundManager);
+
         	TTF_Quit();
             Mix_CloseAudio();
             Mix_Quit();
@@ -130,10 +132,10 @@ namespace ska {
         }
 
         void eventUpdate(unsigned int ellapsedTime) {
-            m_entityManager.refresh();
-            /* Scene dependent event update */
+			m_entityManager.refresh();
+
+			m_sceneHolder.update();
             m_sceneHolder.eventUpdate(ellapsedTime);
-            m_sceneHolder.update();
         }
 
 

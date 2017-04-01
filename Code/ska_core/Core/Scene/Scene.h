@@ -24,9 +24,19 @@ namespace ska {
 		virtual ~Scene() = default;
 
 	protected:
+		
 		SceneHolder& m_holder;
 
-		//TODO encapsulation + forte
+		//TODO vers SceneBase et template puis modifier les vector avec des unique_ptr
+		void addLogic(ISystem& s){
+			m_logics.push_back(&s);
+		}
+
+		void addGraphic(IGraphicSystem& s){
+			m_graphics.push_back(&s);
+		}
+
+	private:
 		std::vector<ISystem*> m_logics;
 		std::vector<IGraphicSystem*> m_graphics;
 

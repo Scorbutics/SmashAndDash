@@ -43,14 +43,13 @@ m_skillRefreshSystem(m_entityManager),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_skillEntityCollisionResponse(m_collisionSystem, ged, m_entityManager),
 m_randomMovementSystem(m_entityManager),
-m_guiBattle(w, ril, ged),
-m_taskQueue(m_holder) {
-	m_logics.push_back(&m_cameraSystem);
-	m_logics.push_back(&m_pokeballSystem);
-	m_logics.push_back(&m_battleSystem);
-	m_logics.push_back(&m_skillRefreshSystem);
-	m_logics.push_back(&m_statsSystem);
-	m_logics.push_back(&m_randomMovementSystem);
+m_guiBattle(w, ril, ged) {
+	addLogic(m_cameraSystem);
+	addLogic(m_pokeballSystem);
+	addLogic(m_battleSystem);
+	addLogic(m_skillRefreshSystem);
+	addLogic(m_statsSystem);
+	addLogic(m_randomMovementSystem);
 
 	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
 	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
@@ -233,14 +232,14 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 	}, *pokeballRawTask));
 
 
-	m_taskQueue.queueTask(dialogTask);
-	m_taskQueue.queueTask(pokeballTask);
-	m_taskQueue.queueTask(finalTask);
+	m_holder.queueTask(dialogTask);
+	m_holder.queueTask(pokeballTask);
+	m_holder.queueTask(finalTask);
 
 }
 
 bool SceneFight::unload() {
-	m_worldScene.unload();
+	//m_worldScene.unload();
 
 	/* Triggers end fight cinematic to the next scene */
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
@@ -287,10 +286,10 @@ bool SceneFight::unload() {
 
 	if (m_sceneLoaded) {
 		m_sceneLoaded = false;
-		m_taskQueue.queueTask(dialogTask);
-		m_taskQueue.queueTask(finalTask);
+		m_holder.queueTask(dialogTask);
+		m_holder.queueTask(finalTask);
 	}
-	return m_taskQueue.hasRunningTask();
+	return m_holder.hasRunningTask();
 }
 
 void SceneFight::eventUpdate(unsigned int ellapsedTime) {

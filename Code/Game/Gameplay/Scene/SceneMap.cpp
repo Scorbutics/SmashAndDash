@@ -16,12 +16,12 @@ m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityMa
 m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
 m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
 m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
-	m_logics.push_back(&m_scriptSystem);
-	m_logics.push_back(&m_iaRandomMovementSystem);
-	m_logics.push_back(&m_iaDefinedMovementSystem);
-	m_logics.push_back(&m_mobSpawningSystem);
-	m_logics.push_back(&m_fightStartSystem);
-	m_logics.push_back(&m_cameraSystem);
+	addLogic(m_scriptSystem);
+	addLogic(m_iaRandomMovementSystem);
+	addLogic(m_iaDefinedMovementSystem);
+	addLogic(m_mobSpawningSystem);
+	addLogic(m_fightStartSystem);
+	addLogic(m_cameraSystem);
 
 }
 
@@ -61,12 +61,12 @@ m_scriptSystem(m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld(), m_entityMa
 m_scriptAutoSystem(ws.getWorld(), m_entityManager, ws.getSaveGame(), ged),
 m_fightStartSystem(w, m_entityManager, ged, ws, ril, ws.getPlayer()),
 m_cameraSystem(m_entityManager, m_window.getWidth(), m_window.getHeight()) {
-	m_logics.push_back(&m_scriptSystem);
-	m_logics.push_back(&m_iaRandomMovementSystem);
-	m_logics.push_back(&m_iaDefinedMovementSystem);
-	m_logics.push_back(&m_mobSpawningSystem);
-	m_logics.push_back(&m_fightStartSystem);
-	m_logics.push_back(&m_cameraSystem);
+	addLogic(m_scriptSystem);
+	addLogic(m_iaRandomMovementSystem);
+	addLogic(m_iaDefinedMovementSystem);
+	addLogic(m_mobSpawningSystem);
+	addLogic(m_fightStartSystem);
+	addLogic(m_cameraSystem);
 
 	ged.ska::Observable<MapEvent>::addObserver(*this);
 
@@ -85,7 +85,7 @@ bool SceneMap::unload() {
 
 void SceneMap::reinit() {
 	m_scriptSystem.clearNamedScriptedEntities();
-	std::unordered_map<std::string, ska::EntityId> entities = m_worldScene.reinit(m_fileName, m_chipsetName);
+	auto entities = m_worldScene.reinit(m_fileName, m_chipsetName);
 	for (const auto& e : entities) {
 		m_scriptSystem.registerNamedScriptedEntity(e.first, e.second);
 	}

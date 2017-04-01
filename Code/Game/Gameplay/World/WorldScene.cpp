@@ -37,15 +37,15 @@ m_shadowSystem(nullptr, m_entityManager),
 m_gui(w, ril, ged),
 m_worldBGM(DEFAULT_BGM) {
 
-	m_graphics.push_back(&m_graphicSystem);
-	m_graphics.push_back(&m_shadowSystem);
+	addGraphic(m_graphicSystem);
+	addGraphic(m_shadowSystem);
 
-	m_logics.push_back(&m_inputSystem);
-	m_logics.push_back(&m_movementSystem);
-	m_logics.push_back(&m_gravitySystem);
-	m_logics.push_back(&m_forceSystem);
-	m_logics.push_back(&m_daSystem);
-	m_logics.push_back(&m_deleterSystem);
+	addLogic(m_inputSystem);
+	addLogic(m_movementSystem);
+	addLogic(m_gravitySystem);
+	addLogic(m_forceSystem);
+	addLogic(m_daSystem);
+	addLogic(m_deleterSystem);
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
@@ -59,14 +59,14 @@ const std::string& WorldScene::getFileName() const {
 void WorldScene::linkCamera(ska::CameraSystem* cs) {
 	if (m_cameraSystem == nullptr || cs == nullptr) {
 		m_cameraSystem = cs;
-		for (auto& g : m_graphics) {
-			g->linkCamera(cs);
-		}
+
+		m_graphicSystem.linkCamera(cs);
+		m_shadowSystem.linkCamera(cs);
 		m_world.linkCamera(cs);
 	}
 }
 
-bool WorldScene::loadedOnce() {
+bool WorldScene::loadedOnce() const{
 	return m_loadedOnce;
 }
 

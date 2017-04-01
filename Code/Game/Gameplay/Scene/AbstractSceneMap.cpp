@@ -17,9 +17,8 @@ m_window(w),
 m_collisionSystem(ws.getWorld(), m_entityManager, ged),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager) {
-	m_logics.push_back(&m_collisionSystem);
-	ged.ska::Observable<MapEvent>::addObserver(*this);
-
+	addLogic(m_collisionSystem);
+	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 }
 
 AbstractSceneMap::AbstractSceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const bool sameMap) :
@@ -32,14 +31,21 @@ m_collisionSystem(ws.getWorld(), m_entityManager, ged),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager),
 m_observersDefined(true) {
-	m_logics.push_back(&m_collisionSystem);
-	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
-	ged.ska::Observable<MapEvent>::addObserver(*this);
+	addLogic(m_collisionSystem);
+	
+	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
+	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
 }
 
 void AbstractSceneMap::load(ska::ScenePtr*) {
+	if (m_observersDefined) {
+		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
+	}
+	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
+
 	m_worldScene.linkCamera(&getCamera());
 	auto firstTime = !m_worldScene.loadedOnce();
 	if (!firstTime) {
@@ -69,6 +75,7 @@ bool AbstractSceneMap::onTeleport(const MapEvent& me) {
 }
 
 bool AbstractSceneMap::unload() {
+
 	return m_worldScene.unload();
 }
 
@@ -93,7 +100,6 @@ void AbstractSceneMap::eventUpdate(unsigned int ellapsedTime) {
 AbstractSceneMap::~AbstractSceneMap() {
 	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
 	if (m_observersDefined) {
-		
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
 	}
