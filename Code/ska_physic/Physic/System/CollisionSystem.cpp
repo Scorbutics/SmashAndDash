@@ -20,6 +20,10 @@ void ska::CollisionSystem::refresh() {
 			lastBlockColPosX = wcc.blockColPosX;
 			lastBlockColPosY = wcc.blockColPosY;
 			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
+			/* Il faut rafraîchir l'ensemble des systèmes directement ici (au travers de l'EntityManager), 
+			car il est possible de créer un autre WorldCollisionComponent dans le même tour de boucle. 
+			Si le refresh n'est pas fait, il sera supprimé par le prochain rafraîchissement de l'EntityManager */
+			m_entityManager.refreshEntity(entityId);
 		}
 
 		const auto entityHitboxX = createHitBox(entityId, true);

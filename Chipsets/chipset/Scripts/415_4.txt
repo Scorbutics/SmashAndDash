@@ -1,5 +1,5 @@
-log script chipset jump right
 if #arg4# == 1
+	log script chipset jump right
 	script ./Levels/jump_wall.txt, 2000, #arg4#, 415
 endif
 end

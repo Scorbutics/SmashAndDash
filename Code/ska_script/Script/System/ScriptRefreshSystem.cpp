@@ -1,15 +1,9 @@
 #include <limits>
 #include "ScriptRefreshSystem.h"
-#include "../ScriptComponent.h"
-#include "Utils/SkaConstants.h"
-#include "Utils/StringUtils.h"
 #include "Utils/FileUtils.h"
-#include "Utils/TimeUtils.h"
 #include "ECS/EntityManager.h"
-#include "Exceptions/InvalidPathException.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "ECS/Basics/Script/ScriptTriggerType.h"
-#include "ECS/Basics/Graphic/DebugGraphicComponent.h"
 #include "ECS/Basics/Script/ScriptPositionedGetter.h"
 #include "Data/BlockContainer.h"
 
@@ -79,13 +73,13 @@ void ska::ScriptRefreshSystem::refresh() {
 			worldScripts.insert(worldScripts.end(), tmp2.begin(), tmp2.end());
 		}
 
-
+		//TODO ajouter vérification de changement de bloc ? pour éviter de détecter tous les lancements d'évènements de collisions
 		if (entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
-			const WorldCollisionComponent& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
-			std::clog << "Block collision" << std::endl;
+			const auto& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
+			//std::clog << "Block collision" << std::endl;
 			if ((wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY) ||
 				(wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX)) {
-
+				
 				auto tmp = m_scriptPositionedGetter.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::TOUCH, 0);
 				worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
 

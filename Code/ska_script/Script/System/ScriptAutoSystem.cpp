@@ -165,7 +165,7 @@ ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
 }
 
 void ska::ScriptAutoSystem::refresh() {
-	ScriptComponent* nextScript = getHighestPriorityScript();
+	auto nextScript = getHighestPriorityScript();
 	if (nextScript == nullptr) {
 		return;
 	}
@@ -215,12 +215,12 @@ void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&
 
 ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 	float maxPriorityScriptValue = -1;
-	ScriptComponent* maxPriorityScript = NULL;
-	unsigned int currentTimeTicks = TimeUtils::getTicks();
+	ScriptComponent* maxPriorityScript = nullptr;
+	auto currentTimeTicks = TimeUtils::getTicks();
 
-	for (EntityId entityId : m_processed) {
-		ScriptComponent& script = m_entityManager.getComponent<ScriptComponent>(entityId);
-		float currentVal = getPriority(script, currentTimeTicks);
+	for (auto entityId : m_processed) {
+		auto& script = m_entityManager.getComponent<ScriptComponent>(entityId);
+		auto currentVal = getPriority(script, currentTimeTicks);
 		if (maxPriorityScriptValue < currentVal) {
 			maxPriorityScriptValue = currentVal;
 			maxPriorityScript = &script;
@@ -233,7 +233,7 @@ ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 
 bool ska::ScriptAutoSystem::canBePlayed(ScriptComponent& script) {
 	transferActiveToDelay(script);
-	bool cannotBePlayed =
+	auto cannotBePlayed =
 		EnumScriptState::RUNNING == script.state
 		|| EnumScriptState::DEAD == script.state
 		|| script.active > 0

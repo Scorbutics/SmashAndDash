@@ -28,7 +28,7 @@ namespace ska {
 
 		void refresh();
 		bool isVisible() const override;
-		void initButtons(const Window& w);
+		//void initButtons(const Window& w);
 		void hide(bool x);
 
 		void display() const override;
@@ -39,7 +39,7 @@ namespace ska {
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
-		TimeScrollableWindowIG<>* m_wAction;
+		
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
 		const Window& m_window;
@@ -71,6 +71,7 @@ namespace ska {
 			return m_windowAnnuary[name];
 		}
 
+		TimeScrollableWindowIG<>* m_wAction;
 		TimeScrollableWindowIG<KeyEventListener> m_wMaster;
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 	};

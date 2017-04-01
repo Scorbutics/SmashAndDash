@@ -17,10 +17,6 @@ public:
 	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
 	virtual ~WGameCore() = default;
 
-	//Inventory& getInventory();
-	//PokemonManager& getPokemonManager();
-	//TrainerCard& getTrainerCard();
-
 private:
 	//PokemonManager m_pkmnManager; //Une instance de gestion des pokémon de la team
 	TrainerCard m_trainerCard;
