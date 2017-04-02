@@ -30,10 +30,10 @@ public:
 	WorldScene(const WorldScene&) = delete;
 	WorldScene& operator=(const WorldScene&) = delete;
 
-	virtual void load(ska::ScenePtr* scene) override;
-	virtual bool unload() override;
-	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(unsigned int ellapsedTime) override;
+	virtual void afterLoad(ska::ScenePtr* scene) override;
+	virtual bool beforeUnload() override;
+	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 	virtual ~WorldScene();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;

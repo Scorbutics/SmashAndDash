@@ -37,10 +37,10 @@ public:
 	SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc);
 	SceneFight(const SceneFight&) = delete;
 	SceneFight& operator=(const SceneFight&) = delete;
-	virtual void load(ska::ScenePtr* lastScene) override;
-	virtual bool unload() override;
-	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(unsigned int ellapsedTime) override;
+	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
+	virtual bool beforeUnload() override;
+	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneFight();
 

@@ -45,8 +45,8 @@ m_guiBattle(w, ril, ged) {
 	addLogic<StatisticsSystem>(w, ril, ws, ged);
 	addLogic<ska::IARandomMovementSystem>();
 
-	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
-	ged.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
+	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -56,9 +56,7 @@ ska::CameraSystem& SceneFight::getCamera() {
 	return *m_cameraSystem;
 }
 
-void SceneFight::graphicUpdate(ska::DrawableContainer& drawables) {
-	AbstractSceneMap::graphicUpdate(drawables);
-
+void SceneFight::onGraphicUpdate(ska::DrawableContainer& drawables) {
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
 	m_guiBattle.graphicUpdate(drawables);
 }
@@ -112,15 +110,13 @@ void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId, S
 	}
 }
 
-void SceneFight::load(ska::ScenePtr* lastScene) {
+void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
+	AbstractSceneMap::beforeLoad(lastScene);
 	if (m_sceneLoaded) {
 		return;
 	}
-
-	AbstractSceneMap::load(lastScene);
-
-	m_worldScene.linkCamera(m_cameraSystem);
-	m_worldScene.load(lastScene);
+	
+	//m_worldScene.linkCamera(m_cameraSystem);
 
 	SkillsHolderComponent shc;
 	loadSkills(m_pokemon, m_pokemonId, shc);
@@ -232,7 +228,8 @@ void SceneFight::load(ska::ScenePtr* lastScene) {
 
 }
 
-bool SceneFight::unload() {
+bool SceneFight::beforeUnload() {
+	AbstractSceneMap::beforeUnload();
 	//m_worldScene.unload();
 
 	/* Triggers end fight cinematic to the next scene */
@@ -271,7 +268,7 @@ bool SceneFight::unload() {
 		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>&, ska::InputComponent ic) {
 
 		m_loadState = 0;
-		m_worldScene.unload();
+		//m_worldScene.unload();
 		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ic);
 		m_entityManager.removeEntity(m_pokemonId);
@@ -286,10 +283,12 @@ bool SceneFight::unload() {
 	return m_holder.hasRunningTask();
 }
 
-void SceneFight::eventUpdate(unsigned int ellapsedTime) {
-	AbstractSceneMap::eventUpdate(ellapsedTime);
+void SceneFight::onEventUpdate(unsigned int ellapsedTime) {
+	AbstractSceneMap::onEventUpdate(ellapsedTime);
 	m_guiBattle.eventUpdate(ellapsedTime);
 }
 
 SceneFight::~SceneFight() {
+	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
 }

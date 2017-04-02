@@ -13,7 +13,7 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 
 	/* Let's start on the map scene */
 	m_worldScene = makeScene<WorldScene>(m_settings);
-	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false);
+	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
 	//m_fpsCalculator.setDisplayPriority(INT_MAX);

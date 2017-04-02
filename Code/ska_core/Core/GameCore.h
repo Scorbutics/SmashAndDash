@@ -81,9 +81,12 @@ namespace ska {
         }
 
 		template<class SC, class ... Args>
-		void navigateToScene(Args&&... args) {
-			m_sceneHolder.nextScene(makeScene<SC, Args...>(std::forward<Args>(args)...));
+		SC& navigateToScene(Args&&... args) {
+			auto sc = makeScene<SC, Args...>(std::forward<Args>(args)...);
+			auto result = sc.get();
+			m_sceneHolder.nextScene(std::move(sc));
 			m_sceneHolder.update();
+			return *result;
 		}
 
     protected:

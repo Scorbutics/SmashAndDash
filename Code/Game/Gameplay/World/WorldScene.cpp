@@ -74,15 +74,13 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 	return m_world.getMobSettings();
 }
 
-void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
+void WorldScene::onGraphicUpdate(ska::DrawableContainer& drawables) {
 
 	//Première couche
 	drawables.addHead(m_world.getLayerRenderable(0));
 
 	//Deuxième couche
 	drawables.addHead(m_world.getLayerRenderable(1));
-
-	SceneBase::graphicUpdate(drawables);
 
 	/* We use the maximum drawing priority of characters to draw the top layer */
 	m_world.getLayerRenderable(2).setPriority(m_graphicSystem->getTopLayerPriority());
@@ -98,20 +96,19 @@ void WorldScene::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.add(m_gui);
 }
 
-void WorldScene::eventUpdate(unsigned int ellapsedTime) {
+void WorldScene::onEventUpdate(unsigned int ellapsedTime) {
 	m_world.update();
 
 	//GUI
 	m_gui.refresh();
 
-	return SceneBase::eventUpdate(ellapsedTime);
 }
 
 ska::World& WorldScene::getWorld() {
 	return m_world;
 }
 
-void WorldScene::load(ska::ScenePtr* lastScene) {
+void WorldScene::afterLoad(ska::ScenePtr* lastScene) {
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
@@ -120,7 +117,7 @@ void WorldScene::load(ska::ScenePtr* lastScene) {
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 }
 
-bool WorldScene::unload() {
+bool WorldScene::beforeUnload() {
 	linkCamera(nullptr);
 	return false;
 }

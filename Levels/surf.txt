@@ -22,11 +22,9 @@ if [|same_value|] == 0
 		assign 30, |move_power|
 		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, #arg0#
 	else
-		animation 0, 2
-		remove_component ForceComponent, 0
-		expulse 0
-		restore_component ForceComponent, 0
-		script ./Levels/surf_callback.txt, 1000, #arg0#
+		assign 10, |move_power|
+		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, #arg0#
+		animation 0, 2	
 	endif
 	
 endif

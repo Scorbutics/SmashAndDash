@@ -12,16 +12,8 @@ SceneBase(em, ged, w, ril, oldScene) {
 
 }
 
-void AbstractNoGUISceneMap::load(ska::ScenePtr*) {
-
-}
-
-bool AbstractNoGUISceneMap::unload() {
-	return false;
-}
-
-void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
-	SceneBase::graphicUpdate(drawables);
+void AbstractNoGUISceneMap::onGraphicUpdate(ska::DrawableContainer& drawables) {
+	//SceneBase::graphicUpdate(drawables);
 
 	/*
 	ska::World& world = core.getWorld();
@@ -48,8 +40,8 @@ void AbstractNoGUISceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.addHead(*world.getWeather());*/
 }
 
-void AbstractNoGUISceneMap::eventUpdate(unsigned int ellapsedTime) {
-	SceneBase::eventUpdate(ellapsedTime);
+void AbstractNoGUISceneMap::onEventUpdate(unsigned int ellapsedTime) {
+	//SceneBase::eventUpdate(ellapsedTime);
 
 	//WGameCore& core = WGameCore::getInstance();
 	//ska::World& world = core.getWorld();

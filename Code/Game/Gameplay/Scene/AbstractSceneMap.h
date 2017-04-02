@@ -22,10 +22,7 @@ public:
 	AbstractSceneMap& operator=(const AbstractSceneMap&) = delete;
 
 	bool onTeleport(const MapEvent& me);
-	virtual void load(ska::ScenePtr* lastScene) override;
-	virtual bool unload() override;
-	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void eventUpdate(unsigned int ellapsedTime) override;
+	
 	virtual ska::CameraSystem& getCamera() = 0;
 	virtual ~AbstractSceneMap();
 
@@ -34,6 +31,10 @@ private:
 	bool m_observersDefined;
 
 protected:
+	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
+	virtual void afterLoad(ska::ScenePtr* lastScene) override;
+	virtual void onEventUpdate(unsigned int ellapsedTime) override;
+
 	WorldScene& m_worldScene;
 	ska::Window& m_window;
 

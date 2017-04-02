@@ -274,7 +274,7 @@ bool ska::ScriptAutoSystem::play(ScriptComponent& script, Savegame& savegame) {
 
 	/* Read commands */
 	while (!eof(script)) {
-		const std::string cmd = nextLine(script);
+		const auto cmd = nextLine(script);
 		if (cmd != "") {
 			script.lastResult = interpret(script, savegame, cmd);
 			/* We need to "manageCurrentState" to keep a valid state for the script at each command except the last one (when scriptStop is true) */

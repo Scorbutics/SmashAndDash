@@ -8,10 +8,10 @@
 #include "ECS/Basics/Script/ScriptSleepComponent.h"
 #include "Graphic/System/CameraSystem.h"
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) :
-	m_blockSize(tailleBloc),
-	m_autoScriptsPlayed(false),
-	m_lBot(*this),
+ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) : m_windDirection(0), m_nbrBlockX(0), m_nbrBlockY(0),
+                                                                                           m_blockSize(tailleBloc),
+	m_autoScriptsPlayed(false), m_cameraSystem(nullptr),
+                                                                                           m_lBot(*this),
 	m_lMid(*this, &m_lBot),
 	m_lTop(*this, &m_lMid),
 	m_layerE(*this),
@@ -201,7 +201,7 @@ void ska::World::load(const std::string& fileName, const std::string& chipsetNam
 
 		m_layerE.changeLevel(eventLayerName);
 
-		if (m_cameraSystem != NULL) {
+		if (m_cameraSystem != nullptr) {
 			m_cameraSystem->worldResized(getPixelWidth(), getPixelHeight());
 		}
 	}

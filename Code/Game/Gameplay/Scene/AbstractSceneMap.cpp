@@ -15,9 +15,7 @@ m_sameMap(sameMap), m_observersDefined(false),
 m_window(w),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager) {
-	
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
-	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 }
 
 AbstractSceneMap::AbstractSceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const bool sameMap) :
@@ -30,14 +28,9 @@ m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager),
 m_observersDefined(true) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
-	
-	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
-	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
-
 }
 
-void AbstractSceneMap::load(ska::ScenePtr*) {
+void AbstractSceneMap::beforeLoad(ska::ScenePtr*) {
 	if (m_observersDefined) {
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
 		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
@@ -45,8 +38,11 @@ void AbstractSceneMap::load(ska::ScenePtr*) {
 	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
 	m_worldScene.linkCamera(&getCamera());
-	auto firstTime = !m_worldScene.loadedOnce();
-	if (!firstTime) {
+}
+
+void AbstractSceneMap::afterLoad(ska::ScenePtr*){
+	/* If already loaded... */
+	if (m_worldScene.loadedOnce()) {
 		/* Do not delete the player between 2 maps, just TP it */
 		std::unordered_set<ska::EntityId> toNotDelete;
 		toNotDelete.insert(m_worldScene.getPlayer());
@@ -58,7 +54,6 @@ void AbstractSceneMap::load(ska::ScenePtr*) {
 			m_entityManager.refreshEntities();
 		}
 	}
-
 }
 
 bool AbstractSceneMap::onTeleport(const MapEvent& me) {
@@ -72,27 +67,11 @@ bool AbstractSceneMap::onTeleport(const MapEvent& me) {
 	return true;
 }
 
-bool AbstractSceneMap::unload() {
 
-	return m_worldScene.unload();
-}
-
-void AbstractSceneMap::graphicUpdate(ska::DrawableContainer& drawables) {
-	m_worldScene.graphicUpdate(drawables);
-	AbstractNoGUISceneMap::graphicUpdate(drawables);
-
-	//Affiche le Pokémon ou l'objet sur le curseur de la souris
-	//mouseCursor.displaySelectedPokemon();
-	//mouseCursor.displaySelectedObject();
-
-}
-
-void AbstractSceneMap::eventUpdate(unsigned int ellapsedTime) {
+void AbstractSceneMap::onEventUpdate(unsigned int ellapsedTime) {
 	/* Raw input acquisition */
 	m_inputCManager.refresh();
-
-	AbstractNoGUISceneMap::eventUpdate(ellapsedTime);
-	m_worldScene.eventUpdate(ellapsedTime);
+	
 }
 
 AbstractSceneMap::~AbstractSceneMap() {
