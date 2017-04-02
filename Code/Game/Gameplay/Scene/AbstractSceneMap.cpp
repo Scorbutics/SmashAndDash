@@ -67,13 +67,6 @@ bool AbstractSceneMap::onTeleport(const MapEvent& me) {
 	return true;
 }
 
-
-void AbstractSceneMap::onEventUpdate(unsigned int ellapsedTime) {
-	/* Raw input acquisition */
-	m_inputCManager.refresh();
-	
-}
-
 AbstractSceneMap::~AbstractSceneMap() {
 	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
 	if (m_observersDefined) {

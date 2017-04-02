@@ -4,17 +4,17 @@ ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextMa
 }
 
 void ska::InputSystem::refresh() {
-	for (EntityId entityId : m_processed) {
-		InputComponent& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
-		ForceComponent& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
-		PositionComponent& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
+	for (const auto& entityId : m_processed) {
+		auto& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
+		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
+		auto& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 
 		Point<float> movePower;
-		bool moveX = false;
-		bool moveY = false;
-		const float factor = 0.709F;
-		const InputToggleContainer& itc = m_icm.getToggles();
-		const InputActionContainer& iac = m_icm.getActions();
+		auto moveX = false;
+		auto moveY = false;
+		const auto factor = 0.709F;
+		const auto& itc = m_icm.getToggles();
+		const auto& iac = m_icm.getActions();
 
 		if (itc[MoveUp]) {
 			movePower.y = -static_cast<float>(inputComponent.movePower);

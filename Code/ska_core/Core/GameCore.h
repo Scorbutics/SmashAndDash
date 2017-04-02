@@ -136,6 +136,8 @@ namespace ska {
 
         void eventUpdate(unsigned int ellapsedTime) {
 			m_entityManager.refresh();
+			/* Raw input acquisition */
+			m_playerICM.refresh();
 
 			m_sceneHolder.update();
             m_sceneHolder.eventUpdate(ellapsedTime);

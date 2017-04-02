@@ -33,7 +33,6 @@ private:
 protected:
 	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
 	virtual void afterLoad(ska::ScenePtr* lastScene) override;
-	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 	WorldScene& m_worldScene;
 	ska::Window& m_window;
