@@ -1,6 +1,7 @@
 #include "Core/Window.h"
 #include "../World/WorldScene.h"
 #include "SceneFight.h"
+#include "SceneGUIBattle.h"
 #include "Task/RepeatableTask.h"
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
@@ -35,8 +36,7 @@ m_opponentId(fc.fighterOpponent),
 m_sceneLoaded(false),
 m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
-m_guiBattle(w, ril, ged) {
+m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager) {
 
 	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
 	addLogic<PokeballSystem>();
@@ -44,6 +44,8 @@ m_guiBattle(w, ril, ged) {
 	addLogic<SkillRefreshSystem>();
 	addLogic<StatisticsSystem>(w, ril, ws, ged);
 	addLogic<ska::IARandomMovementSystem>();
+
+	addSubScene<SceneGUIBattle>();
 
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
 	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
@@ -55,12 +57,6 @@ m_guiBattle(w, ril, ged) {
 ska::CameraSystem& SceneFight::getCamera() {
 	return *m_cameraSystem;
 }
-
-void SceneFight::onGraphicUpdate(ska::DrawableContainer& drawables) {
-	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
-	m_guiBattle.graphicUpdate(drawables);
-}
-
 
 void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) const{
 	ska::IniReader skillData(skillPath);
@@ -115,7 +111,7 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 	if (m_sceneLoaded) {
 		return;
 	}
-	
+
 	//m_worldScene.linkCamera(m_cameraSystem);
 
 	SkillsHolderComponent shc;
@@ -241,9 +237,6 @@ bool SceneFight::beforeUnload() {
 		if (m_loadState == 0) {
 			m_loadState++;
 
-			/* Resets GUI */
-			m_guiBattle.clear();
-
 			if (!m_entityManager.hasComponent<ska::InputComponent>(m_pokemonId)) {
 				return false;
 			}
@@ -281,11 +274,6 @@ bool SceneFight::beforeUnload() {
 		m_holder.queueTask(finalTask);
 	}
 	return m_holder.hasRunningTask();
-}
-
-void SceneFight::onEventUpdate(unsigned int ellapsedTime) {
-	AbstractSceneMap::onEventUpdate(ellapsedTime);
-	m_guiBattle.eventUpdate(ellapsedTime);
 }
 
 SceneFight::~SceneFight() {

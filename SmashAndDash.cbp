@@ -116,7 +116,6 @@
 		<Unit filename="Code/Game/Gameplay/PokeballComponent.h" />
 		<Unit filename="Code/Game/Gameplay/PokeballLaunchReasonEnum.h" />
 		<Unit filename="Code/Game/Gameplay/PokemonGameEventDispatcher.h" />
-		<Unit filename="Code/Game/Gameplay/PokemonGameEventDispatcherDeclaration.h" />
 		<Unit filename="Code/Game/Gameplay/PrefabEntityManager.cpp" />
 		<Unit filename="Code/Game/Gameplay/PrefabEntityManager.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/AbstractNoGUISceneMap.cpp" />
@@ -127,11 +126,13 @@
 		<Unit filename="Code/Game/Gameplay/Scene/DebugAbstractSceneMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneFight.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneFight.h" />
+		<Unit filename="Code/Game/Gameplay/Scene/SceneGUIBattle.cpp" />
+		<Unit filename="Code/Game/Gameplay/Scene/SceneGUIBattle.h" />
+		<Unit filename="Code/Game/Gameplay/Scene/SceneGUIMap.cpp" />
+		<Unit filename="Code/Game/Gameplay/Scene/SceneGUIMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.h" />
-		<Unit filename="Code/Game/Gameplay/Scene/SceneToBattleSwitcher.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToBattleSwitcher.h" />
-		<Unit filename="Code/Game/Gameplay/Scene/SceneToMapSwitcher.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToMapSwitcher.h" />
 		<Unit filename="Code/Game/Gameplay/System/PokeballSystem.cpp" />
 		<Unit filename="Code/Game/Gameplay/System/PokeballSystem.h" />

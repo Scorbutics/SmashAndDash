@@ -37,12 +37,13 @@ public:
 	SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc);
 	SceneFight(const SceneFight&) = delete;
 	SceneFight& operator=(const SceneFight&) = delete;
-	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
-	virtual bool beforeUnload() override;
-	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void onEventUpdate(unsigned int ellapsedTime) override;
+
 	virtual ska::CameraSystem& getCamera() override;
 	virtual ~SceneFight();
+
+protected:
+    virtual void beforeLoad(ska::ScenePtr* lastScene) override;
+	virtual bool beforeUnload() override;
 
 private:
 	void createSkill(SkillDescriptor& sd, const std::string& skillPath) const;
@@ -67,7 +68,5 @@ private:
 	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
 
-	/* TODO GUI Battle specific part with Bars and also skills displayed */
-	GUIBattle m_guiBattle;
 };
 typedef std::unique_ptr<SceneFight> SceneFightPtr;
