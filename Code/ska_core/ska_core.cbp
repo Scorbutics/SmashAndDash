@@ -54,6 +54,7 @@
 		<Unit filename="Core/Window.h" />
 		<Unit filename="Data/BlockContainer.h" />
 		<Unit filename="Data/Events/CollisionEvent.h" />
+		<Unit filename="Data/Events/GameLibrariesInitializedEvent.h" />
 		<Unit filename="Data/Events/SoundEvent.cpp" />
 		<Unit filename="Data/Events/SoundEvent.h" />
 		<Unit filename="Data/Events/WorldEvent.h" />

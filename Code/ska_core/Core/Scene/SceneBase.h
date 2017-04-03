@@ -14,20 +14,20 @@ namespace ska {
 	public:
 		SceneBase(EM& em, ED& ed, Window& w, InputContextManager& ril, SceneHolder& sh) :
 			Scene(sh),
-			m_entityManager(em), 
-			m_eventDispatcher(ed), 
-			m_window(w), 
-			m_inputCManager(ril) {
-			
-		}
-		
-		SceneBase(EM& em, ED& ed, Window& w, InputContextManager& ril, Scene& oldScene) :
-			Scene(oldScene), 
 			m_entityManager(em),
 			m_eventDispatcher(ed),
-			m_window(w), 
+			m_window(w),
 			m_inputCManager(ril) {
-			
+
+		}
+
+		SceneBase(EM& em, ED& ed, Window& w, InputContextManager& ril, Scene& oldScene) :
+			Scene(oldScene),
+			m_entityManager(em),
+			m_eventDispatcher(ed),
+			m_window(w),
+			m_inputCManager(ril) {
+
 		}
 
 		virtual void graphicUpdate(DrawableContainer& drawables) override final {
@@ -112,35 +112,34 @@ namespace ska {
 		}
 
 		template<class SC1, class SC, class ... Args>
-		SC* makeNextSceneAndTransmitSubscenes(SC1& oldScene, Args&&... args) {
+		SC* makeNextSceneAndTransmitLinkedSubscenes(SC1& oldScene, Args&&... args) {
 			auto nScene = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
 			auto result = nScene.get();
 			m_holder.nextScene(std::move(nScene));
-			result->transmitSubscenes(oldScene);
+			result->transmitLinkedSubscenes(oldScene);
 			m_holder.update();
 			return result;
 		}
 
 		virtual ~SceneBase() = default;
 
-		
+
 	private:
 		template<class SC>
-		void transmitSubscenes(SC& scene) {
-			m_subScenes = std::move(scene.m_subScenes);
+		void transmitLinkedSubscenes(SC& scene) {
 			m_linkedSubScenes = scene.m_linkedSubScenes;
 		}
 
 		std::vector<std::unique_ptr<ISystem>> m_logics;
 		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
-		
+
 		std::vector<std::unique_ptr<Scene>> m_subScenes;
 		std::unordered_set<Scene*> m_linkedSubScenes;
 
 	protected:
-		virtual void beforeLoad(std::unique_ptr<Scene>* lastScene) {			
+		virtual void beforeLoad(std::unique_ptr<Scene>* lastScene) {
 		}
-		
+
 		virtual void afterLoad(std::unique_ptr<Scene>* lastScene) {
 		}
 
@@ -154,7 +153,7 @@ namespace ska {
 
 		virtual void onGraphicUpdate(DrawableContainer& drawables) {
 		}
-		
+
 		virtual void onEventUpdate(unsigned int ellapsedTime) {
 		}
 

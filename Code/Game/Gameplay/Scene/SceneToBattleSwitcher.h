@@ -14,7 +14,7 @@ public:
 
 	template<class EM, class ED>
 	void switchTo(ska::SceneBase<EM, ED>& lastScene) const {
-		lastScene.template makeNextSceneAndTransmitSubscenes<ska::SceneBase<EM, ED>, SceneFight>(lastScene, m_ws, m_fightPos, m_fightComponent);
+		lastScene.template makeNextSceneAndTransmitLinkedSubscenes<ska::SceneBase<EM, ED>, SceneFight>(lastScene, m_ws, m_fightPos, m_fightComponent);
 	}
 
 protected:

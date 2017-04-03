@@ -34,7 +34,6 @@ m_settings(settings), m_player(0),
 m_saveManager(ged, "save1"),
 m_cameraSystem(nullptr),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
-m_gui(w, ril, ged),
 m_worldBGM(DEFAULT_BGM) {
 
 	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::CameraSystem*>(nullptr);
@@ -49,7 +48,6 @@ m_worldBGM(DEFAULT_BGM) {
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
-	m_gui.bind(m_settings);
 }
 
 const std::string& WorldScene::getFileName() const {
@@ -91,17 +89,10 @@ void WorldScene::onGraphicUpdate(ska::DrawableContainer& drawables) {
 
 	/* Hello, world */
 	m_world.graphicUpdate(drawables);
-
-	//Affiche la GUI
-	drawables.add(m_gui);
 }
 
 void WorldScene::onEventUpdate(unsigned int ellapsedTime) {
 	m_world.update();
-
-	//GUI
-	m_gui.refresh();
-
 }
 
 ska::World& WorldScene::getWorld() {
@@ -142,8 +133,8 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 		const auto radius = rmin + rand() % (rmax - rmin + 1);
 
 		ska::Point<int> dest;
-		dest.x = static_cast<int>(radius*cos(angle) + pos.x);
-		dest.y = static_cast<int>(radius*sin(angle) + pos.y);
+		dest.x = static_cast<int>(radius*ska::NumberUtils::cosinus(angle) + pos.x);
+		dest.y = static_cast<int>(radius*ska::NumberUtils::sinus(angle) + pos.y);
 		dest.x = (dest.x / blockSize) * blockSize;
 		dest.y = (dest.y / blockSize) * blockSize;
 
@@ -302,5 +293,5 @@ SavegameManager& WorldScene::getSaveGame() {
 	return m_saveManager;
 }
 
-WorldScene::~WorldScene() {	
+WorldScene::~WorldScene() {
 }

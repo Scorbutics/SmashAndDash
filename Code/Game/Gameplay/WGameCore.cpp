@@ -11,8 +11,12 @@ WGameCore::WGameCore(const std::string& title, const unsigned int w, const unsig
 	addInputContext(ska::EnumContextManager::CONTEXT_MAP, std::make_unique<ska::KeyboardInputMapContext>());
 	addInputContext(ska::EnumContextManager::CONTEXT_GUI, std::make_unique<ska::KeyboardInputGUIContext>());
 
+	m_guiMapScene = makeScene<SceneGUIMap>();
+    m_guiMapScene->bindGUI(m_settings);
+
 	/* Let's start on the map scene */
 	m_worldScene = makeScene<WorldScene>(m_settings);
+	m_worldScene->ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher>::linkSubScene(*m_guiMapScene.get());
 	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");

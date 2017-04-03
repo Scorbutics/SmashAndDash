@@ -15,7 +15,7 @@ public:
 
 	template<class EM, class ED>
 	void switchTo(ska::SceneBase<EM, ED>& lastScene) const {
-		lastScene.template makeNextSceneAndTransmitSubscenes<ska::SceneBase<EM, ED>, SceneMap>(lastScene, m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName);
+		lastScene.template makeNextSceneAndTransmitLinkedSubscenes<ska::SceneBase<EM, ED>, SceneMap>(lastScene, m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName);
 	}
 
 protected:

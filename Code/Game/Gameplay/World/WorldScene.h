@@ -7,7 +7,6 @@
 #include "WorldImpl.h"
 #include "Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
-#include "../../Graphic/GUI/GUIMap.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 
@@ -30,10 +29,6 @@ public:
 	WorldScene(const WorldScene&) = delete;
 	WorldScene& operator=(const WorldScene&) = delete;
 
-	virtual void afterLoad(ska::ScenePtr* scene) override;
-	virtual bool beforeUnload() override;
-	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
-	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 	virtual ~WorldScene();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
@@ -47,6 +42,12 @@ public:
 	std::vector<ska::IniReader>& getMobSettings() override;
 
 	const std::string& getFileName() const;
+
+protected:
+    virtual void afterLoad(ska::ScenePtr* scene) override;
+	virtual bool beforeUnload() override;
+	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
 	const unsigned int m_screenW;
@@ -63,9 +64,8 @@ private:
 
 	WorldImpl m_world;
 	Pokeball m_pokeball;
-	GUIMap m_gui;
 	ska::Music m_worldBGM;
-	
+
 	ska::GraphicSystem* m_graphicSystem;
 	ska::ShadowSystem* m_shadowSystem;
 };
