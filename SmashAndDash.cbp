@@ -250,6 +250,11 @@
 		<Unit filename="Code/Game/Utils/IDs.h" />
 		<Unit filename="Code/Game/Utils/resource.h" />
 		<Unit filename="Code/Game/main.cpp" />
+		<Unit filename="icon1.ico" />
+		<Unit filename="resource.rc">
+			<Option compilerVar="WINDRES" />
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
