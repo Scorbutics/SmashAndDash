@@ -14,12 +14,14 @@ namespace ska {
 	class ClickEvent;
 	class HoverEvent;
 	class InputContextManager;
+    class GUIEvent;
 
 	class GUI :
 		public DrawableFixedPriority,
 		public MouseObservable,
 		public KeyObservable,
-		public TimeObservable {
+		public TimeObservable,
+		public ska::Observer<GUIEvent> {
 
 	public:
 		GUI(const Window& w, InputContextManager& playerICM);
@@ -39,7 +41,8 @@ namespace ska {
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
-		
+		bool onGUIEvent(GUIEvent& ge);
+
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
 		const Window& m_window;

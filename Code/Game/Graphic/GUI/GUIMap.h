@@ -9,10 +9,13 @@
 class Settings;
 class WindowTeam;
 
+using DialogEventObserver = ska::Observer<DialogEvent>;
+
 class GUIMap :
 	public AbstractGameGUI,
 	public ska::Observer<SettingsChangeEvent>,
-	public ska::Observer<EntityLoadEvent> {
+	public ska::Observer<EntityLoadEvent>,
+	public DialogEventObserver {
 public:
 	GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
 	GUIMap& operator=(const GUIMap&) = delete;
@@ -20,6 +23,7 @@ public:
 	void initButtons(const ska::Window& w);
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
+	bool onDialogEvent(DialogEvent& de);
 	void bind(Settings& sets);
 
 	~GUIMap();

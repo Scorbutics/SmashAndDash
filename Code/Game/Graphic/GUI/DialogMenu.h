@@ -14,7 +14,7 @@ namespace ska {
 	class MouseObservable;
 }
 
-class DialogMenu : public IDialogMenu, public ska::TimeScrollableWindowIG<> {
+class DialogMenu : public IDialogMenu, public ska::TimeScrollableWindowIG<ska::KeyEventListener> {
 public:
 	DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const std::string& menuResource, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
 	DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, const std::string& text, const std::string& imageResource, const ska::Rectangle rect, const int timeout = -1, const bool scroll = true);

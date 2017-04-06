@@ -14,7 +14,7 @@
 //et on blit certaines parties de l'image à tel ou tel endroit de sorte à créer une fenêtre.
 ///////////////////////////////////////////////
 DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const std::string& text, const std::string&, const std::string&, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-TimeScrollableWindowIG<>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+TimeScrollableWindowIG<ska::KeyEventListener>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_fontSize(fontSize),
 m_ligne(0),
 m_sensScroll(F_OUT),

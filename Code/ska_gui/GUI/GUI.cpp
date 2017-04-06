@@ -10,16 +10,17 @@
 
 
 ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
-m_window(w),
-m_playerICM(playerICM),
-m_hovered(nullptr),
-m_clicked(nullptr),
-m_lastFocused(nullptr),
-m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
-m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
+    ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
+    m_window(w),
+    m_playerICM(playerICM),
+    m_hovered(nullptr),
+    m_clicked(nullptr),
+    m_lastFocused(nullptr),
+    m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
+    m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
 	m_wAction = addWindow(std::make_unique<TimeScrollableWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
-	DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
+    DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 	m_wAction->setPriority(0);
 	m_hide = false;
 }
@@ -306,6 +307,11 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 	if (e.getState() == MOUSE_CLICK) {
 		pushWindowToFront(tthis);
 	}
+}
+
+bool ska::GUI::onGUIEvent(GUIEvent& ge) {
+    //ge
+    return false;
 }
 
 void ska::GUI::pushWindowToFront(Widget* w) {

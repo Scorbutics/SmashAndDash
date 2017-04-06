@@ -1,15 +1,17 @@
 #include <memory>
 #include "GUIMap.h"
 #include "../../Gameplay/Data/Settings.h"
+#include "DialogMenu.h"
 #include "WindowTeam.h"
 #include "WindowSettings.h"
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
 #include <Core/Window.h>
 
-GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) : 
+GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
 	AbstractGameGUI(w, playerICM, ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
-	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)){
+	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
+	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)){
 
 	initButtons(w);
 
@@ -31,6 +33,7 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
+	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
 }
 
 void GUIMap::bind(Settings& sets) {
@@ -114,13 +117,30 @@ void GUIMap::initButtons(const ska::Window& w) {
 		});
 		fifthButton->addWidget(std::move(bsFifth));
 		m_wAction->addWidget(std::move(fifthButton));
-	
+
+}
+
+bool GUIMap::onDialogEvent(DialogEvent& de) {
+    if(getWindow(de.name) == nullptr) {
+        auto dialogWindow = addWindow(std::make_unique<DialogMenu>(*this, *this, *this, de.message, de.box), de.name);
+        /*dialogWindow->addHandler<ska::TimeEventHandler>([] (ska::Widget*, ska::TimeEvent& te) {
+            te.
+        });*/
+        dialogWindow->ska::HandledWidget<ska::TimeEventListener, ska::ClickEventListener, ska::KeyEventListener>::addHandler<ska::KeyEventListener>([] (ska::Widget* tthis, ska::KeyEvent& ke) {
+            if(ke.getScanCode() == SDL_SCANCODE_RETURN) {
+                auto target = static_cast<DialogMenu*>(tthis);
+                //TODO delete when rewinded
+                //target->scrollRewind();
+            }
+        });
+    }
+    return true;
 }
 
 bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
 	auto wsettings = reinterpret_cast<WindowSettings*>(getWindow("settings"));
 
-	if((sce.eventType & SettingsChangeEventType::MUSIC_VOLUME) == SettingsChangeEventType::MUSIC_VOLUME) {	
+	if((sce.eventType & SettingsChangeEventType::MUSIC_VOLUME) == SettingsChangeEventType::MUSIC_VOLUME) {
 		wsettings->setMusicVolume(sce.settings.getSoundVolume()/100);
 	}
 
@@ -149,11 +169,12 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 	spd1->type2 = ele.description->type2;
 
 	wTeam.insertPokemon(nullptr, move(spd1));
-	
+
 	return true;
 }
 
 GUIMap::~GUIMap() {
+    m_ged.ska::Observable<DialogEvent>::removeObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);
 }
