@@ -25,6 +25,13 @@ ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
 	m_hide = false;
 }
 
+unsigned int ska::GUI::getMaxHeight() {
+    return m_window.getHeight();
+}
+
+unsigned int ska::GUI::getMaxWidth() {
+    return m_window.getWidth();
+}
 
 void ska::GUI::display() const {
 	if (m_hide) {

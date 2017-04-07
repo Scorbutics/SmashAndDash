@@ -213,6 +213,7 @@
 		<Unit filename="Utils/TimeUtils.cpp" />
 		<Unit filename="Utils/TimeUtils.h" />
 		<Unit filename="Utils/TupleUtils.h" />
+		<Unit filename="Utils/VectorUtils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

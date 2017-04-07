@@ -55,15 +55,21 @@ namespace ska {
 		MouseCursor m_mouseCursor;
 
 	protected:
-		template <class Win, class ...HL>
+		template <class Win>
 		Win* addWindow(std::unique_ptr<Win>&& w, const std::string& name) {
 			auto result = m_wMaster.addWidget(std::move(w));
-			auto t = reinterpret_cast<DynamicWindowIG<HL...>*>(result);
+			auto t = reinterpret_cast<Win*>(result);
 			m_windowAnnuary[name] = t;
 			t->template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
 			return result;
+		}
+
+        template <class Win>
+		void removeWindow(Win* w, const std::string& name) {
+			m_wMaster.removeWidget(w);
+			m_windowAnnuary.erase(name);
 		}
 
 		void pushWindowToFront(Widget* w);
@@ -73,6 +79,9 @@ namespace ska {
 		Widget* getWindow(const std::string& name) {
 			return m_windowAnnuary[name];
 		}
+
+		unsigned int getMaxHeight();
+		unsigned int getMaxWidth();
 
 		TimeScrollableWindowIG<>* m_wAction;
 		TimeScrollableWindowIG<KeyEventListener> m_wMaster;

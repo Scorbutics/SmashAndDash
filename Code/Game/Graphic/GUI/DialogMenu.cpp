@@ -60,7 +60,7 @@ DialogMenu(timeObs, gui, keyboardObs, text, imageResource, ska::Button::MENU_DEF
 }
 
 DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const DialogMenu& dm) :
-TimeScrollableWindowIG<>(&timeObs, &mouseObs, &keyObs, dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+TimeScrollableWindowIG<ska::KeyEventListener>(&timeObs, &mouseObs, &keyObs, dm.getBox(), ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	operator=(dm);
 }
 
@@ -74,7 +74,7 @@ void DialogMenu::display() const {
 	}
 
 
-	TimeScrollableWindowIG<>::display();
+	TimeScrollableWindowIG<ska::KeyEventListener>::display();
 
 	/* Draw the associated image */
 	//m_image.render(m_rectImage.x, m_rectImage.y);

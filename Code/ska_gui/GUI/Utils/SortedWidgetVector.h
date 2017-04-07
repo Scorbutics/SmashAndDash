@@ -58,6 +58,10 @@ namespace ska {
 			return false;
 		}
 
+		typename std::vector<T>::iterator erase (typename std::vector<T>::const_iterator position) {
+		    return m_data.erase(position);
+		}
+
 		T& back() {
 			return m_data.back();
 		}
