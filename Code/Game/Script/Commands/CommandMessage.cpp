@@ -33,7 +33,7 @@ std::string CommandMessage::execute(ska::ScriptComponent&, std::vector<std::stri
 	menu->hide(false);
 	wScreen.getGUI().addDialog(menu);*/
 
-	DialogEvent de("test", "scriptDialog", ska::Rectangle{0, 0, 8*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE}, true);
+	DialogEvent de("test", "scriptDialog", ska::Rectangle{0, 8*TAILLEBLOCFENETRE, 10*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE}, true);
     m_ged.ska::Observable<DialogEvent>::notifyObservers(de);
 
 	return "";

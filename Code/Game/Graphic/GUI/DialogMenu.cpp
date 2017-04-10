@@ -28,6 +28,8 @@ m_isScrolling(false) {
 	m_scrollingRect = getBox();
 	m_scrollingRect.y += m_scrollingRect.h;
 
+	hide(false);
+
 	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1.F, ska::Point<int>(16, 112)));
 	addHandler<ska::TimeEventListener>([](ska::Widget*, ska::TimeEvent&) {
 		//scrollTo()
@@ -184,8 +186,7 @@ bool DialogMenu::refresh() {
 				m_show = true;
 				m_isScrolling = false;
 			}
-		}
-		else {
+		} else {
 			//Scroll out
 			if ((m_scrollingRect.y + SCROLL_SPEED * TAILLEBLOCFENETRE / 2) <= box.y + box.h)  {
 				m_scrollingRect.y += SCROLL_SPEED*TAILLEBLOCFENETRE / 2;
