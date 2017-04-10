@@ -30,11 +30,8 @@ m_isScrolling(false) {
 
 	hide(false);
 
-	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1.F, ska::Point<int>(16, 112)));
-	addHandler<ska::TimeEventListener>([](ska::Widget*, ska::TimeEvent&) {
-		//scrollTo()
-		//TODO
-	});
+	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, 11, 1.F, ska::Point<int>(16, 16)));
+
 	/*if (!imageResource.empty()) {
 		m_image.load(imageResource);
 	}

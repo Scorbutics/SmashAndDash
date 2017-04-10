@@ -1,4 +1,5 @@
 #include <string>
+#include <limits>
 #include "CommandMessage.h"
 #include "../../Graphic/GUI/MessageDialogBox.h"
 
@@ -22,18 +23,14 @@ std::string CommandMessage::execute(ska::ScriptComponent&, std::vector<std::stri
 	}
 
 	const auto& talkerId = args[0];
-	//const std::string& text = args[1];
+	const std::string& text = args[1];
 
 	std::string imageId;
 	if (talkerId != "f") {
 		imageId = atoi(talkerId.c_str()) >= 0 ? talkerId : ("pnj" + ska::StringUtils::intToStr(abs(atoi(talkerId.c_str()))));
 	}
 
-	/*IDialogMenuPtr menu = IDialogMenuPtr(new MessageDialogBox(text, (talkerId != "f" ? "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" + imageId + ".png" : ""), wScreen.getHeight(), wScreen.getWidth()));
-	menu->hide(false);
-	wScreen.getGUI().addDialog(menu);*/
-
-	DialogEvent de("test", "scriptDialog", ska::Rectangle{0, 8*TAILLEBLOCFENETRE, 10*TAILLEBLOCFENETRE, 4*TAILLEBLOCFENETRE}, true);
+	DialogEvent de(text, "scriptDialog", ska::Rectangle{0, std::numeric_limits<int>::max(), -1, 4*TAILLEBLOCFENETRE}, true);
     m_ged.ska::Observable<DialogEvent>::notifyObservers(de);
 
 	return "";

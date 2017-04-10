@@ -120,17 +120,21 @@ void GUIMap::initButtons(const ska::Window& w) {
 
 bool GUIMap::onDialogEvent(DialogEvent& de) {
     if(getWindow(de.name) == nullptr) {
-        auto dialogWindow = addWindow(std::make_unique<DialogMenu>(*this, *this, *this, de.message, de.box), de.name);
+        ska::Rectangle absoluteRect;
+        absoluteRect.w = (de.box.w < 0) ? getMaxWidth() - 1 : de.box.w;
+        absoluteRect.h = (de.box.h < 0) ? getMaxHeight() - 1 : de.box.h;
+        absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > getMaxHeight() ? getMaxHeight() : de.box.y);
+        absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > getMaxWidth() ? getMaxWidth() : de.box.x);
 
-        /*dialogWindow->addHandler<ska::TimeEventHandler>([] (ska::Widget*, ska::TimeEvent& te) {
-            te.
-        });*/
+        auto dialogWindow = addWindow(std::make_unique<DialogMenu>(*this, *this, *this, de.message, absoluteRect), de.name);
         if(de.scroll) {
+            dialogWindow->scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8);
+
             dialogWindow->addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {
                 if(ke.getScanCode() == SDL_SCANCODE_RETURN) {
                     auto target = static_cast<DialogMenu*>(tthis);
                     //TODO delete when rewinded
-                    target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() - target->getBox().h), 8);
+                    target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() + 1), 8);
                 }
             });
         }

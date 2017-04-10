@@ -49,10 +49,16 @@ void ska::GUI::display() const {
 
 void ska::GUI::refreshKeyboard() {
 	const auto& textTyped = m_playerICM.getTextInput();
-
+    //TODO réécrire
 	const auto& isDeleting = m_playerICM.getActions()[DeleteChar];
 	if (isDeleting) {
 		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_BACKSPACE);
+		KeyObservable::notifyObservers(ke);
+	}
+
+	const auto& isValidating = m_playerICM.getActions()[DoAction];
+	if (isValidating) {
+		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_RETURN);
 		KeyObservable::notifyObservers(ke);
 	}
 
