@@ -30,9 +30,7 @@ namespace ska {
 
 		void refresh();
 		bool isVisible() const override;
-		//void initButtons(const Window& w);
 		void hide(bool x);
-
 		void display() const override;
 
 
@@ -54,6 +52,8 @@ namespace ska {
 		Widget* m_lastFocused;
 		MouseCursor m_mouseCursor;
 
+		std::vector<std::string> m_windowsToDelete;
+
 	protected:
 		template <class Win>
 		Win* addWindow(std::unique_ptr<Win>&& w, const std::string& name) {
@@ -66,9 +66,8 @@ namespace ska {
 			return result;
 		}
 
-        template <class Win>
-		void removeWindow(Win* w, const std::string& name) {
-			m_wMaster.removeWidget(w);
+		void removeWindow(const std::string& name) {
+			m_wMaster.removeWidget(m_windowAnnuary[name]);
 			m_windowAnnuary.erase(name);
 		}
 

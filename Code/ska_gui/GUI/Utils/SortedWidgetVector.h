@@ -71,6 +71,10 @@ namespace ska {
 			m_data.clear();
 		}
 
+		void pop_back() {
+		    m_data.pop_back();
+		}
+
 		bool empty() const {
 			return m_data.empty();
 		}

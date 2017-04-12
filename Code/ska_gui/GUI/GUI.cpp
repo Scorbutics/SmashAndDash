@@ -5,6 +5,7 @@
 #include "Windows/GUIScrollButtonWindowIG.h"
 #include "Components/Concrete/ButtonSprite.h"
 #include "Events/FocusEvent.h"
+#include "Data/Events/GUIEvent.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
@@ -142,6 +143,10 @@ void ska::GUI::refreshMouse() {
 void ska::GUI::refresh() {
 	if (m_hide) {
 		return;
+	}
+
+	for(auto& wName : m_windowsToDelete) {
+        removeWindow(wName);
 	}
 
 	refreshMouse();
@@ -323,7 +328,9 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 }
 
 bool ska::GUI::onGUIEvent(GUIEvent& ge) {
-    //ge
+    if(ge.type == ska::GUIEventType::REMOVE_WINDOW) {
+        m_windowsToDelete.push_back(ge.windowName);
+    }
     return false;
 }
 

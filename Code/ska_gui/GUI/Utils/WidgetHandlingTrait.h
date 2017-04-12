@@ -18,15 +18,14 @@ namespace ska {
 		}
 
         static void manageHandledRemove(SubWidget* w, WidgetContainer<std::unique_ptr<Widget>>& handledWidgets, std::vector<std::unique_ptr<Widget>>& widgets, WidgetContainer<Widget*>& globalList) {
-			auto widget = static_cast<IHandledWidget*>(w.get());
+			auto widget = static_cast<IHandledWidget*>(w);
 			auto activeWidget = !widget->isMaskEmpty();
 			if (activeWidget) {
                 handledWidgets.erase(std::remove_if(handledWidgets.begin(), handledWidgets.end(),
                  [w](std::unique_ptr<Widget>& it){
                     return it.get() == w;
-                 }),
-                 handledWidgets.end());
-                ska::VectorUtils::removeValue(globalList, w.get());
+                 }));
+                ska::VectorUtils::removeValue<WidgetContainer<Widget*>, Widget*>(globalList, w);
 			} else {
 				WidgetHandlingTrait<SubWidget, false>::manageHandledRemove(w, handledWidgets, widgets, globalList);
 			}
@@ -47,7 +46,7 @@ namespace ska {
                                 return it.get() == w;
                              }),
                              widgets.end());
-			ska::VectorUtils::removeValue(globalList, w.get());
+			ska::VectorUtils::removeValue(globalList, w);
 		}
 	};
 }

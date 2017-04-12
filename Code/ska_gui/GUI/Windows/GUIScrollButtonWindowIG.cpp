@@ -6,7 +6,7 @@ m_realPos(0, 0) {
 
 }
 
-bool ska::GUIScrollButtonWindowIG::scrollTo(const Point<int>& targetPos, unsigned int speed) {
+ska::WorkNode<ska::TimeScrollableWindowIG<>>& ska::GUIScrollButtonWindowIG::scrollTo(const Point<int>& targetPos, unsigned int speed) {
 	if (!isMoving()) {
 		m_realPos = getRelativePosition();
 	}
@@ -14,7 +14,7 @@ bool ska::GUIScrollButtonWindowIG::scrollTo(const Point<int>& targetPos, unsigne
 	return TimeScrollableWindowIG::scrollTo(targetPos, speed);
 }
 
-bool ska::GUIScrollButtonWindowIG::scrollRewind() {
+ska::WorkNode<ska::TimeScrollableWindowIG<>>& ska::GUIScrollButtonWindowIG::scrollRewind() {
 	scrollStop();
 	return TimeScrollableWindowIG::scrollTo(m_realPos, 5);
 }

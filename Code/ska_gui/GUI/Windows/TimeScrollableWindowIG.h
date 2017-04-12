@@ -3,6 +3,7 @@
 #include "../Utils/TimeObserver.h"
 #include "../Utils/TimeObservable.h"
 #include "../Events/TimeEventListener.h"
+#include "Task/WorkNode.h"
 
 namespace ska {
 
@@ -39,10 +40,10 @@ namespace ska {
 		TimeScrollableWindowIG<HL...>& operator=(const TimeScrollableWindowIG<HL...>&) = delete;
 
 
-		virtual bool scrollTo(const Point<int>& relativeTargetPos, unsigned int steps) {
+		virtual WorkNode<TimeScrollableWindowIG<HL...>>& scrollTo(const Point<int>& relativeTargetPos, unsigned int steps) {
 			/* If we're already scrolling, do not scroll. First, wait to finish the current scroll. */
 			if (m_moving) {
-				return false;
+				return m_scrollCallback;
 			}
 
 			m_destinationPos = relativeTargetPos;
@@ -61,7 +62,7 @@ namespace ska {
 			if (NumberUtils::isLowValue(m_slope.y, 1.0) && m_destinationPos.y != pos.y) {
 				m_slope.y = NumberUtils::calculateSlopeSign(m_destinationPos.y, pos.y);
 			}
-			return true;
+			return m_scrollCallback;
 		}
 
 		void scrollStop() {
@@ -88,6 +89,7 @@ namespace ska {
 
 		bool refreshInternal() {
 			if (!m_moving) {
+                m_scrollCallback.executeAndPop(*this);
 				return false;
 			}
 
@@ -123,6 +125,8 @@ namespace ska {
 		Point<int> m_destinationPos;
 		Point<double> m_slope;
 		bool m_moving;
+
+		WorkNode<TimeScrollableWindowIG<HL...>> m_scrollCallback;
 
 		TimeObservable *const m_timeObservable;
 

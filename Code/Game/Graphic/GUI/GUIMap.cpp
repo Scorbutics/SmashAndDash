@@ -126,15 +126,19 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > getMaxHeight() ? getMaxHeight() : de.box.y);
         absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > getMaxWidth() ? getMaxWidth() : de.box.x);
 
-        auto dialogWindow = addWindow(std::make_unique<DialogMenu>(*this, *this, *this, de.message, absoluteRect), de.name);
+        auto dialogWindow = addWindow(std::make_unique<DialogMenu>(*this, *this, *this, de.message, de.name, absoluteRect, 12), de.name);
         if(de.scroll) {
             dialogWindow->scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8);
 
             dialogWindow->addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {
                 if(ke.getScanCode() == SDL_SCANCODE_RETURN) {
                     auto target = static_cast<DialogMenu*>(tthis);
-                    //TODO delete when rewinded
-                    target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() + 1), 8);
+                    target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() + 1), 8)
+                    .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
+                          ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
+                          ge.windowName = static_cast<DialogMenu&>(caller).getName();
+                          m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+                    });
                 }
             });
         }
