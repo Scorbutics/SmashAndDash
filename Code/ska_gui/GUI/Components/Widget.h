@@ -19,7 +19,7 @@ namespace ska {
 	}
 
 	class Widget :
-		public DrawableFixedPriority{
+		public DrawableFixedPriority {
 
 	public:
 		Widget();

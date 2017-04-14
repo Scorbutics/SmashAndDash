@@ -7,7 +7,7 @@
 #include "Components/Concrete/MouseCursor.h"
 #include "Utils/TimeObservable.h"
 #include "Windows/TimeScrollableWindowIG.h"
-
+#include "Data/Events/GameEventDispatcher.h"
 
 namespace ska {
 	class Window;
@@ -21,11 +21,11 @@ namespace ska {
 		public MouseObservable,
 		public KeyObservable,
 		public TimeObservable,
-		public ska::Observer<GUIEvent> {
+		public Observer<GUIEvent> {
 
 	public:
-		GUI(const Window& w, InputContextManager& playerICM);
-
+		GUI(GameEventDispatcher& ged, const Window& w, InputContextManager& playerICM);
+        virtual ~GUI();
 		GUI& operator=(const GUI&) = delete;
 
 		void refresh();
@@ -54,10 +54,21 @@ namespace ska {
 
 		std::vector<std::string> m_windowsToDelete;
 
+		TimeScrollableWindowIG<>* m_wAction;
+		std::unordered_map<std::string, Widget*> m_windowAnnuary;
+
+		GameEventDispatcher& m_ged;
+        TimeScrollableWindowIG<KeyEventListener> m_wMaster;
+
 	protected:
-		template <class Win>
-		Win* addWindow(std::unique_ptr<Win>&& w, const std::string& name) {
-			auto result = m_wMaster.addWidget(std::move(w));
+		template <class L, class EH>
+		void addMasterHandler(const EH& handler) {
+		    m_wMaster.template addHandler<L>(handler);
+		}
+
+		template <class Win, class ... WinArgs>
+		Win* addWindow(const std::string& name, WinArgs&&... args) {
+			auto result = m_wMaster.addWidget(std::make_unique<Win>(m_wMaster, std::forward<WinArgs>(args)...));
 			auto t = reinterpret_cast<Win*>(result);
 			m_windowAnnuary[name] = t;
 			t->template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
@@ -67,7 +78,7 @@ namespace ska {
 		}
 
 		void removeWindow(const std::string& name) {
-			m_wMaster.removeWidget(m_windowAnnuary[name]);
+			m_wMaster.template removeWidget(static_cast<BaseHandledWidget*>(m_windowAnnuary[name]));
 			m_windowAnnuary.erase(name);
 		}
 
@@ -81,9 +92,5 @@ namespace ska {
 
 		unsigned int getMaxHeight();
 		unsigned int getMaxWidth();
-
-		TimeScrollableWindowIG<>* m_wAction;
-		TimeScrollableWindowIG<KeyEventListener> m_wMaster;
-		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 	};
 }

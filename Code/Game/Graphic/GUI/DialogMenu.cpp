@@ -3,8 +3,8 @@
 #include "GUI/Components/Concrete/ScrollingMultiLineLabel.h"
 #include "../../Utils/IDs.h"
 
-DialogMenu::DialogMenu(ska::TimeObservable& timeObs, ska::MouseObservable& mouseObs, ska::KeyObservable& keyObs, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-TimeScrollableWindowIG<ska::KeyEventListener>(&timeObs, &mouseObs, &keyObs, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+DialogMenu::DialogMenu(ska::Widget& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
+TimeScrollableWindowIG<ska::KeyEventListener>(parent, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_fontSize(fontSize),
 m_timeout(timeout),
 m_name(name),

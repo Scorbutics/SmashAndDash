@@ -10,7 +10,7 @@
 #define SCROLL_BUTTON_SPEED 3
 
 
-ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
+ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::Window& w, ska::InputContextManager& playerICM) :
     ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
     m_window(w),
     m_playerICM(playerICM),
@@ -18,12 +18,19 @@ ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
     m_clicked(nullptr),
     m_lastFocused(nullptr),
     m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
+    m_ged(ged),
     m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
-	m_wAction = addWindow(std::make_unique<TimeScrollableWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
+	m_wAction = addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 	m_wAction->setPriority(0);
 	m_hide = false;
+
+	m_ged.ska::Observable<GUIEvent>::addObserver(*this);
+}
+
+ska::GUI::~GUI() {
+    m_ged.ska::Observable<GUIEvent>::removeObserver(*this);
 }
 
 unsigned int ska::GUI::getMaxHeight() {
@@ -148,6 +155,7 @@ void ska::GUI::refresh() {
 	for(auto& wName : m_windowsToDelete) {
         removeWindow(wName);
 	}
+    m_windowsToDelete.clear();
 
 	refreshMouse();
 	refreshKeyboard();

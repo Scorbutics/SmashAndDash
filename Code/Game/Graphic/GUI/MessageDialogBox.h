@@ -8,9 +8,11 @@ namespace ska {
 	class MouseObservable;
 }
 
-class MessageDialogBox : public IDialogMenu {
+class MessageDialogBox :
+    public IDialogMenu {
+
 public:
-	MessageDialogBox(ska::TimeObservable& timeObs, ska::MouseObservable& gui, ska::KeyObservable& keyboardObs, ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
+	MessageDialogBox(ska::Widget& parent, ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
 	void operator=(const MessageDialogBox&) = delete;
 
 	void display() const override;
