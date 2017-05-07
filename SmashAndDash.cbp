@@ -70,6 +70,7 @@
 		<Unit filename="Code/Game/Gameplay/AI/AI.h" />
 		<Unit filename="Code/Game/Gameplay/CustomEntityManager.cpp" />
 		<Unit filename="Code/Game/Gameplay/CustomEntityManager.h" />
+		<Unit filename="Code/Game/Gameplay/Data/DialogEvent.h" />
 		<Unit filename="Code/Game/Gameplay/Data/EntityLoadEvent.h" />
 		<Unit filename="Code/Game/Gameplay/Data/MonsterDescription.h" />
 		<Unit filename="Code/Game/Gameplay/Data/PokemonDescriptor.cpp" />
@@ -250,6 +251,10 @@
 		<Unit filename="Code/Game/Utils/IDs.h" />
 		<Unit filename="Code/Game/Utils/resource.h" />
 		<Unit filename="Code/Game/main.cpp" />
+		<Unit filename="icon1.ico" />
+		<Unit filename="resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

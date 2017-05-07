@@ -5,25 +5,41 @@
 #include "Windows/GUIScrollButtonWindowIG.h"
 #include "Components/Concrete/ButtonSprite.h"
 #include "Events/FocusEvent.h"
+#include "Data/Events/GUIEvent.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
 
-ska::GUI::GUI(const ska::Window& w, ska::InputContextManager& playerICM) :
-m_window(w),
-m_playerICM(playerICM),
-m_hovered(nullptr),
-m_clicked(nullptr),
-m_lastFocused(nullptr),
-m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
-m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
+ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::Window& w, ska::InputContextManager& playerICM) :
+    ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
+    m_window(w),
+    m_playerICM(playerICM),
+    m_hovered(nullptr),
+    m_clicked(nullptr),
+    m_lastFocused(nullptr),
+    m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
+    m_ged(ged),
+    m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
-	m_wAction = addWindow(std::make_unique<TimeScrollableWindowIG<>>(m_wMaster, Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ""), "actions");
-	DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
+	m_wAction = addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
+    DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 	m_wAction->setPriority(0);
 	m_hide = false;
+
+	m_ged.ska::Observable<GUIEvent>::addObserver(*this);
 }
 
+ska::GUI::~GUI() {
+    m_ged.ska::Observable<GUIEvent>::removeObserver(*this);
+}
+
+unsigned int ska::GUI::getMaxHeight() {
+    return m_window.getHeight();
+}
+
+unsigned int ska::GUI::getMaxWidth() {
+    return m_window.getWidth();
+}
 
 void ska::GUI::display() const {
 	if (m_hide) {
@@ -41,10 +57,16 @@ void ska::GUI::display() const {
 
 void ska::GUI::refreshKeyboard() {
 	const auto& textTyped = m_playerICM.getTextInput();
-
+    //TODO réécrire
 	const auto& isDeleting = m_playerICM.getActions()[DeleteChar];
 	if (isDeleting) {
 		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_BACKSPACE);
+		KeyObservable::notifyObservers(ke);
+	}
+
+	const auto& isValidating = m_playerICM.getActions()[DoAction];
+	if (isValidating) {
+		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_RETURN);
 		KeyObservable::notifyObservers(ke);
 	}
 
@@ -129,6 +151,11 @@ void ska::GUI::refresh() {
 	if (m_hide) {
 		return;
 	}
+
+	for(auto& wName : m_windowsToDelete) {
+        removeWindow(wName);
+	}
+    m_windowsToDelete.clear();
 
 	refreshMouse();
 	refreshKeyboard();
@@ -306,6 +333,13 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 	if (e.getState() == MOUSE_CLICK) {
 		pushWindowToFront(tthis);
 	}
+}
+
+bool ska::GUI::onGUIEvent(GUIEvent& ge) {
+    if(ge.type == ska::GUIEventType::REMOVE_WINDOW) {
+        m_windowsToDelete.push_back(ge.windowName);
+    }
+    return false;
 }
 
 void ska::GUI::pushWindowToFront(Widget* w) {

@@ -15,7 +15,7 @@ namespace ska {
 	using ListenerMask = std::bitset<SKA_GUI_MAX_WIDGET_EVENT_LISTENER>;
 	using MaskUnit = unsigned int;
 
-	/* Dummy indicator class (for compile time class comparisons) */
+	/* Indicator class (for compile time class comparisons) */
 	class IHandledWidget {
 	public:
 		virtual ~IHandledWidget(){}
@@ -23,8 +23,22 @@ namespace ska {
 		virtual	bool isMaskEmpty() const = 0;
 	};
 
+	class BaseHandledWidget : public Widget, public IHandledWidget {
+    public:
+        BaseHandledWidget() : Widget() {
+        }
+
+        BaseHandledWidget(Widget& parent) : Widget(parent) {
+        }
+
+        BaseHandledWidget(Widget& parent, Point<int>& position) : Widget(parent, position) {
+        }
+
+        virtual ~BaseHandledWidget() = default;
+	};
+
 	template <class ...HL>
-	class HandledWidget : public Widget, public IHandledWidget {
+	class HandledWidget : public BaseHandledWidget {
 	public:
 		HandledWidget() :
 			m_currentMaskIndex(sizeof ...(HL)-1),
@@ -35,7 +49,7 @@ namespace ska {
 		}
 
 		explicit HandledWidget(Widget& parent)  :
-			Widget(parent),
+			BaseHandledWidget(parent),
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
 			/* Bracket initializer trick */
@@ -43,7 +57,8 @@ namespace ska {
 			(void)_;
 		}
 
-		HandledWidget(Widget& parent, Point<int>& position) : Widget(parent, position),
+		HandledWidget(Widget& parent, Point<int>& position) :
+		    BaseHandledWidget(parent, position),
 			m_currentMaskIndex(sizeof ...(HL)-1),
 			m_handlers(std::make_tuple<HL...>(instantiateHandler<HL>()...)) {
 			/* Bracket initializer trick */

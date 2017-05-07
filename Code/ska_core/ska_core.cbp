@@ -54,11 +54,14 @@
 		<Unit filename="Core/Window.h" />
 		<Unit filename="Data/BlockContainer.h" />
 		<Unit filename="Data/Events/CollisionEvent.h" />
+		<Unit filename="Data/Events/EventDispatcher.h" />
+		<Unit filename="Data/Events/ExtensibleGameEventDispatcher.h" />
+		<Unit filename="Data/Events/GUIEvent.h" />
+		<Unit filename="Data/Events/GameEventDispatcher.h" />
 		<Unit filename="Data/Events/GameLibrariesInitializedEvent.h" />
 		<Unit filename="Data/Events/SoundEvent.cpp" />
 		<Unit filename="Data/Events/SoundEvent.h" />
 		<Unit filename="Data/Events/WorldEvent.h" />
-		<Unit filename="Data/GameEventDispatcher.h" />
 		<Unit filename="Data/Savegame.h" />
 		<Unit filename="Draw/CameraAware.h" />
 		<Unit filename="Draw/Color.h" />
@@ -129,7 +132,6 @@
 		<Unit filename="ECS/StaticCounterGlobal.cpp" />
 		<Unit filename="ECS/StaticCounterGlobal.h" />
 		<Unit filename="ECS/System.h" />
-		<Unit filename="EventDispatcher.h" />
 		<Unit filename="Exceptions/CorruptedFileException.h" />
 		<Unit filename="Exceptions/FileException.h" />
 		<Unit filename="Exceptions/GenericException.cpp" />
@@ -180,6 +182,8 @@
 		<Unit filename="Task/Task.h" />
 		<Unit filename="Task/TaskQueue.cpp" />
 		<Unit filename="Task/TaskQueue.h" />
+		<Unit filename="Task/WorkNode.cpp" />
+		<Unit filename="Task/WorkNode.h" />
 		<Unit filename="Utils/Demangle.cpp" />
 		<Unit filename="Utils/Demangle.h" />
 		<Unit filename="Utils/FileUtils.h" />
@@ -211,6 +215,7 @@
 		<Unit filename="Utils/TimeUtils.cpp" />
 		<Unit filename="Utils/TimeUtils.h" />
 		<Unit filename="Utils/TupleUtils.h" />
+		<Unit filename="Utils/VectorUtils.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -12,7 +12,7 @@ ska::ScrollingMultiLineLabel::ScrollingMultiLineLabel(Widget& parent, const std:
 
 	Widget::setHeight(static_cast<unsigned int>(m_textLines.size() * fontSize));
 
-	auto firstLineLabel = addWidget(std::make_unique<Label>(*this, m_textLines[m_currentLine], m_fontSize, Point<int>()));
+	auto firstLineLabel = addWidget(std::make_unique<Label>(*this, m_textLines.empty() ? " " : m_textLines[m_currentLine], m_fontSize, Point<int>()));
 	addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
 		refresh();
 	});
@@ -36,7 +36,7 @@ void ska::ScrollingMultiLineLabel::refresh() {
 		currentLabelLine->setClip(nullptr);
 
 		m_currentLine++;
-		addWidget(std::make_unique<Label>(*this, m_textLines[m_currentLine], m_fontSize, Point<int>(0, m_fontSize * (m_currentLine))));
+		addWidget(std::make_unique<Label>(*this, m_textLines.empty() ? " " : m_textLines[m_currentLine], m_fontSize, Point<int>(0, m_fontSize * (m_currentLine))));
 		currentLabelLine = static_cast<Label*>(getWidget(m_currentLine));
 	}
 	currentLabelLine->setClip(&m_displayingArea);

@@ -32,7 +32,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std
 	BasicScriptCommandHelper::setupCommands(w, c);
 	using std::move;
 	c["move"] = move(ska::CommandPtr(new CommandMove(m_entityManager)));
-	c["message"] = move(ska::CommandPtr(new CommandMessage(m_entityManager)));
+	c["message"] = move(ska::CommandPtr(new CommandMessage(m_ged, m_entityManager)));
 	c["choice"] = move(ska::CommandPtr(new CommandChoice(m_entityManager)));
 	c["heal"] = move(ska::CommandPtr(new CommandHeal(m_entityManager)));
 	c["stop"] = move(ska::CommandPtr(new CommandStop(m_entityManager)));
