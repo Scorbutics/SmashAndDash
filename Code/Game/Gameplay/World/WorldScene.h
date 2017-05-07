@@ -32,7 +32,7 @@ public:
 	virtual ~WorldScene();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
-	std::unordered_map<std::string, ska::EntityId> reinit(std::string fileName, std::string chipsetName);
+	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
 	void linkCamera(ska::CameraSystem* cs) override;
 
 	ska::World& getWorld();

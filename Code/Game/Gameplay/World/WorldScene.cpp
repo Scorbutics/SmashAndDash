@@ -200,7 +200,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	return successfulSpawns;
 }
 
-std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(std::string fileName, std::string chipsetName) {
+std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(const std::string& fileName, const std::string& chipsetName) {
 
 	m_world.load(fileName, chipsetName);
 	if (!m_loadedOnce) {

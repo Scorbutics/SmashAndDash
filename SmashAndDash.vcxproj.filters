@@ -81,6 +81,8 @@
     <ClCompile Include="Code\Game\Script\GlobalScriptVariables.cpp" />
     <ClCompile Include="Code\Game\Script\System\ScriptCommandsSystem.cpp" />
     <ClCompile Include="Code\Game\Utils\ChargementImages.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIMap.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIBattle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -186,5 +188,7 @@
     <ClInclude Include="Code\Game\Utils\resource.h" />
     <ClInclude Include="Code\Game\Gameplay\PokemonGameEventDispatcher.h" />
     <ClInclude Include="Code\Game\Gameplay\Data\MapEvent.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIBattle.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIMap.h" />
   </ItemGroup>
 </Project>

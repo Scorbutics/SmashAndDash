@@ -150,6 +150,8 @@
     <ClCompile Include="Code\Game\Gameplay\Scene\AbstractSceneMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Scene\SceneFight.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIBattle.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Scene\SceneMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\System\PokeballSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Weather.cpp" />
@@ -251,6 +253,8 @@
     <ClInclude Include="Code\Game\Gameplay\Scene\AbstractSceneMap.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\DebugAbstractSceneMap.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneFight.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIBattle.h" />
+    <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIMap.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneMap.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneToBattleSwitcher.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneToMapSwitcher.h" />

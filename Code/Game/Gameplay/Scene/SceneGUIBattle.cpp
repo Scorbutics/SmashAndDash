@@ -14,6 +14,7 @@ void SceneGUIBattle::onGraphicUpdate(ska::DrawableContainer& drawables) {
 bool SceneGUIBattle::beforeUnload() {
     /* Resets GUI */
     m_gui.clear();
+	return false;
 }
 
 void SceneGUIBattle::onEventUpdate(unsigned int ellapsedTime) {
