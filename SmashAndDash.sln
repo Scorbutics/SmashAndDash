@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SmashAndDash", "SmashAndDash.vcxproj", "{1864B5EC-411F-4C77-8C52-B39EAD4B2DA1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -53,6 +53,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ska_draw", "Code\ska_draw\ska_draw.vcxproj", "{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A8719202-D043-4D78-A1C5-3EC97CFB2B8A} = {A8719202-D043-4D78-A1C5-3EC97CFB2B8A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ska_gui_test", "Code\ska_gui_test\ska_gui_test.vcxproj", "{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A8719202-D043-4D78-A1C5-3EC97CFB2B8A} = {A8719202-D043-4D78-A1C5-3EC97CFB2B8A}
+		{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65} = {FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}
+		{8FBDACFA-3964-4952-8ADC-836BF4FDF0D1} = {8FBDACFA-3964-4952-8ADC-836BF4FDF0D1}
 	EndProjectSection
 EndProject
 Global
@@ -127,6 +134,14 @@ Global
 		{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}.Release|Win32.ActiveCfg = Release|Win32
 		{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}.Release|Win32.Build.0 = Release|Win32
 		{FC4EB4A0-2033-47EA-B5E9-EFB0DAE59A65}.Release|x64.ActiveCfg = Release|Win32
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Debug|Win32.Build.0 = Debug|Win32
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Debug|x64.ActiveCfg = Debug|x64
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Debug|x64.Build.0 = Debug|x64
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Release|Win32.ActiveCfg = Release|Win32
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Release|Win32.Build.0 = Release|Win32
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Release|x64.ActiveCfg = Release|x64
+		{0BDEFB9D-461C-44A9-89B3-28A57441EA5F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
