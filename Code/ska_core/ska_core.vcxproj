@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -94,6 +94,7 @@
     <ClInclude Include="Exceptions\ScriptSyntaxError.h" />
     <ClInclude Include="Exceptions\ScriptUnknownCommandException.h" />
     <ClInclude Include="Exceptions\TerminateProcessException.h" />
+    <ClInclude Include="GameApp.h" />
     <ClInclude Include="Inputs\EnumContextManager.h" />
     <ClInclude Include="Inputs\InputAction.h" />
     <ClInclude Include="Inputs\InputContext.h" />
@@ -170,6 +171,7 @@
     <ClCompile Include="ECS\EntityManager.cpp" />
     <ClCompile Include="ECS\StaticCounterGlobal.cpp" />
     <ClCompile Include="Exceptions\GenericException.cpp" />
+    <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="Inputs\InputContextManager.cpp" />
     <ClCompile Include="Inputs\KeyboardInputContext.cpp" />
     <ClCompile Include="Inputs\KeyboardInputGUIContext.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="Inputs\Readers\IniReader.cpp" />
     <ClCompile Include="Inputs\Readers\Readinifile.cpp" />
     <ClCompile Include="Inputs\System\InputSystem.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Task\TaskQueue.cpp" />
     <ClCompile Include="Utils\Demangle.cpp" />
@@ -196,31 +199,32 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A8719202-D043-4D78-A1C5-3EC97CFB2B8A}</ProjectGuid>
     <RootNamespace>ska_core</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>

@@ -14,7 +14,7 @@ namespace ska {
 	class ClickEvent;
 	class HoverEvent;
 	class InputContextManager;
-    class GUIEvent;
+    struct GUIEvent;
 
 	class GUI :
 		public DrawableFixedPriority,
@@ -78,7 +78,8 @@ namespace ska {
 		}
 
 		void removeWindow(const std::string& name) {
-			m_wMaster.template removeWidget(static_cast<BaseHandledWidget*>(m_windowAnnuary[name]));
+			auto wPtr = m_windowAnnuary[name];
+			m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
 			m_windowAnnuary.erase(name);
 		}
 
@@ -90,7 +91,7 @@ namespace ska {
 			return m_windowAnnuary[name];
 		}
 
-		unsigned int getMaxHeight();
-		unsigned int getMaxWidth();
+		unsigned int getMaxHeight() const;
+		unsigned int getMaxWidth() const;
 	};
 }

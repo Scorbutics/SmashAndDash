@@ -50,7 +50,6 @@
     <ClCompile Include="Code\Game\Graphic\GUI\WindowShop.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\WindowTeam.cpp" />
     <ClCompile Include="Code\Game\Graphic\ShakerManager.cpp" />
-    <ClCompile Include="Code\Game\main.cpp" />
     <ClCompile Include="Code\Game\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Game\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandAddPokemon.cpp" />

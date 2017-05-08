@@ -124,6 +124,7 @@
     <ClInclude Include="Utils\TupleUtils.h" />
     <ClInclude Include="Core\Scene\SceneBase.h" />
     <ClInclude Include="Data\ExtensibleGameEventDispatcher.h" />
+    <ClInclude Include="GameApp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Scene\Scene.cpp" />
@@ -180,5 +181,7 @@
     <ClCompile Include="Utils\SpritePath.cpp" />
     <ClCompile Include="Utils\StringUtils.cpp" />
     <ClCompile Include="Utils\TimeUtils.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="GameApp.cpp" />
   </ItemGroup>
 </Project>

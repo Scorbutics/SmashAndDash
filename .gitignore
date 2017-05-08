@@ -227,3 +227,14 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+*.o
+*.o
+/.objs/Code/Game/Audio/PokemonSoundRenderer.o
+/.vs/VSWorkspaceState.json
+/.vs/SmashAndDash/v15/Solution.VC.db-wal
+/.vs/SmashAndDash/v15/Solution.VC.db-shm
+/.vs/SmashAndDash/v15/Solution.VC.db
+/.vs/SmashAndDash/v15/Browse.VC.opendb
+/.vs/SmashAndDash/v15/Browse.VC.db
+/.vs/slnx.sqlite
+/.vs

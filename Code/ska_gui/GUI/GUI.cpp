@@ -33,11 +33,11 @@ ska::GUI::~GUI() {
     m_ged.ska::Observable<GUIEvent>::removeObserver(*this);
 }
 
-unsigned int ska::GUI::getMaxHeight() {
+unsigned int ska::GUI::getMaxHeight() const{
     return m_window.getHeight();
 }
 
-unsigned int ska::GUI::getMaxWidth() {
+unsigned int ska::GUI::getMaxWidth() const{
     return m_window.getWidth();
 }
 

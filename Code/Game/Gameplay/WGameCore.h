@@ -16,7 +16,11 @@ class WGameCore :
 	public ska::GameCore<CustomEntityManager, PokemonGameEventDispatcher, ska::VectorDrawableContainer, PokemonSoundRenderer> {
 
 public:
-	WGameCore(const std::string& title, const unsigned int w, const unsigned int h);
+	WGameCore();
+
+	virtual int onTerminate(ska::TerminateProcessException& te) override;
+	virtual int onException(ska::GenericException& ge) override;
+
 	virtual ~WGameCore() = default;
 
 private:
