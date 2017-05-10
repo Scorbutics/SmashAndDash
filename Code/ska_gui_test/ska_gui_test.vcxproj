@@ -136,9 +136,11 @@
     <ClCompile Include="ClickEventListener_test.cpp" />
     <ClCompile Include="HandledWidget_test.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="WidgetPanel_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandledWidgetTest.h" />
+    <ClInclude Include="WidgetTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

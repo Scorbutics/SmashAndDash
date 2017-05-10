@@ -97,11 +97,11 @@ namespace ska {
 		}
 
 		Widget* backAddedWidget() {
-			return m_addedSortedWidgets.back();
+			return m_addedSortedWidgets.empty() ? nullptr : m_addedSortedWidgets.back();
 		}
 
 		Widget* backWidget() {
-			return m_globalList.back();
+			return m_globalList.empty() ? nullptr : m_globalList.back();
 		}
 
 		virtual ~WidgetPanel() = default;
