@@ -9,6 +9,11 @@
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 			<Depends filename="Code/ska_draw/ska_draw.cbp" />
 		</Project>
+		<Project filename="Code/ska_gui_test/ska_gui_test.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+			<Depends filename="Code/ska_draw/ska_draw.cbp" />
+			<Depends filename="Code/ska_gui/ska_gui.cbp" />
+		</Project>
 		<Project filename="Code/ska_physic/ska_physic.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 		</Project>
@@ -36,6 +41,5 @@
 			<Depends filename="Code/ska_world/ska_world.cbp" />
 			<Depends filename="Code/ska_ai/ska_ai.cbp" />
 		</Project>
-		<Project filename="Code/ska_gui_test/ska_gui_test.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

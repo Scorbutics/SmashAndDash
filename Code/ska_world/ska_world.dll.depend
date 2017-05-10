@@ -1,0 +1,459 @@
+# depslib dependency file v1.0
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\scene.cpp
+	"Inputs/InputContextManager.h"
+	"Graphic/Draw/DrawableContainer.h"
+	"Graphic/System/IGraphicSystem.h"
+	"ECS/ISystem.h"
+	"SceneHolder.h"
+	"Scene.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontextmanager.h
+	<vector>
+	<bitset>
+	<unordered_map>
+	"InputContext.h"
+	"EnumContextManager.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontext.h
+	<unordered_map>
+	<memory>
+	"InputAction.h"
+	"InputRange.h"
+	"InputToggle.h"
+	"RawInputListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputaction.h
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputrange.h
+	<vector>
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputtoggle.h
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\rawinputlistener.h
+	"KeyInput.h"
+	"MouseInput.h"
+	"../Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyinput.h
+	<SDL.h>
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\enumcontextmanager.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawablecontainer.h
+	"DrawableFixedPriority.h"
+	<climits>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawablefixedpriority.h
+	"Drawable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawable.h
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\igraphicsystem.h
+	"ECS/ISystem.h"
+	"CameraAware.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\isystem.h
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\cameraaware.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\sceneholder.h
+	"SceneType.h"
+	"Scene.h"
+	"Task/TaskQueue.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\scenetype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\scene.h
+	<memory>
+	"HasGraphic.h"
+	"HasLogic.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\hasgraphic.h
+	<queue>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\scene\haslogic.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\taskqueue.h
+	<queue>
+	<memory>
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\block.cpp
+	"Block.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\block.h
+	<vector>
+	<memory>
+	"Point.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\blockrenderable.cpp
+	"BlockRenderable.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\blockrenderable.h
+	<vector>
+	<memory>
+	"Graphic/Animation.h"
+	"Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\animation.h
+	"Rectangle.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipset.cpp
+	<fstream>
+	"Exceptions/CorruptedFileException.h"
+	"Exceptions/FileException.h"
+	"../World/Block.h"
+	"../World/BlockRenderable.h"
+	"Utils/SkaConstants.h"
+	"Utils/StringUtils.h"
+	"Chipset.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\corruptedfileexception.h
+	"FileException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\fileexception.h
+	"InputException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\inputexception.h
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipset.h
+	<unordered_map>
+	<memory>
+	"Graphic/Color.h"
+	"Point.h"
+	"Graphic/SDLSurface.h"
+	"Graphic/Texture.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"Graphic/Animation.h"
+	"ChipsetRenderable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\color.h
+	<SDL.h>
+	"Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdlsurface.h
+	<SDL.h>
+	"Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texture.h
+	<memory>
+	"Utils/ResourceTemplate.h"
+	"SDLTexture.h"
+	"TextureData.h"
+	"Utils/SkaConstants.h"
+	"Rectangle.h"
+	"Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdltexture.h
+	<string>
+	"Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texturedata.h
+	<string>
+	"Color.h"
+	"SDLRenderer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdlrenderer.h
+	<SDL.h>
+	"Rectangle.h"
+
+1490777826 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptsleepcomponent.h
+	<vector>
+	<string>
+	"../../Component.h"
+	"ScriptTriggerType.h"
+
+1490802296 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490798787 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componenthandler.h
+	<iostream>
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+	"../Utils/Demangle.h"
+
+1490794928 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490790681 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\staticcounterglobal.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490604206 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\demangle.h
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scripttriggertype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipsetrenderable.h
+	<unordered_map>
+	<memory>
+	"Graphic/Texture.h"
+	"Graphic/Animation.h"
+	"../World/BlockRenderable.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipsetholder.cpp
+	"Exceptions/CorruptedFileException.h"
+	"Exceptions/FileException.h"
+	"Graphic/SDLSurface.h"
+	"Utils/StringUtils.h"
+	"Block.h"
+	"Utils/SkaConstants.h"
+	"Chipset.h"
+	"ChipsetHolder.h"
+	"Graphic/Animation.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipsetholder.h
+	<unordered_map>
+	<memory>
+	"Point.h"
+	"Graphic/Color.h"
+	"Chipset.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\chipsetrenderable.cpp
+	<utility>
+	"../World/BlockRenderable.h"
+	"Utils/StringUtils.h"
+	"ChipsetRenderable.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layer.cpp
+	<iostream>
+	<string>
+	<fstream>
+	"Layer.h"
+	"World.h"
+	"Exceptions/CorruptedFileException.h"
+	"Exceptions/IndexOutOfBoundsException.h"
+	"Utils/StringUtils.h"
+	"Exceptions/FileException.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layer.h
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<memory>
+	"Block.h"
+	"LayerRenderable.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layerrenderable.h
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<memory>
+	"BlockRenderable.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\world.h
+	<iostream>
+	<string>
+	<unordered_set>
+	<memory>
+	<vector>
+	"Inputs/Readers/IniReader.h"
+	"Graphic/Texture.h"
+	"Graphic/Animation.h"
+	"../Scene/Scene.h"
+	"Graphic/System/CameraAware.h"
+	"ChipsetHolder.h"
+	"Layer.h"
+	"LayerE.h"
+	"ECS/Basics/Physic/CollisionProfile.h"
+	"Data/BlockContainer.h"
+	"ECS/Basics/Script/ScriptPositionedGetter.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\readers\inireader.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<sstream>
+	"../../Utils/StringUtils.h"
+	"../../Exceptions/InvalidPathException.h"
+	"../../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\invalidpathexception.h
+	"InputException.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layere.h
+	<iostream>
+	<string>
+	<vector>
+	<memory>
+	"Utils/Refreshable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\refreshable.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\collisionprofile.h
+	<vector>
+	<unordered_set>
+	"Rectangle.h"
+	"Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\blockcontainer.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptpositionedgetter.h
+	"ECS/Basics/Script/ScriptTriggerType.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\indexoutofboundsexception.h
+	"GenericException.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layere.cpp
+	<limits>
+	<iostream>
+	<string>
+	<fstream>
+	<sstream>
+	"Utils/StringUtils.h"
+	"Utils/SkaConstants.h"
+	"LayerE.h"
+	"Layer.h"
+	"World.h"
+	"Exceptions/CorruptedFileException.h"
+	"Exceptions/NumberFormatException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\numberformatexception.h
+	"GenericException.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\layerrenderable.cpp
+	<iostream>
+	<string>
+	<fstream>
+	"Exceptions/IndexOutOfBoundsException.h"
+	"Utils/StringUtils.h"
+	"World.h"
+	"LayerRenderable.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_world\world\world.cpp
+	<algorithm>
+	"World.h"
+	"Layer.h"
+	"Block.h"
+	"Utils/StringUtils.h"
+	"Utils/RectangleUtils.h"
+	"LayerE.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"Graphic/System/CameraSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+	"../Rectangle.h"
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\camerasystem.h
+	<unordered_set>
+	"Rectangle.h"
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Graphic/CameraFocusedComponent.h"
+
+1490690983 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\system.h
+	<unordered_set>
+	"ECSDefines.h"
+	"EntityManager.h"
+	"ISystem.h"
+	"../Utils/Observer.h"
+	"../Utils/Refreshable.h"
+
+1490684422 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\entitymanager.h
+	<bitset>
+	<unordered_set>
+	<array>
+	<unordered_map>
+	<string>
+	"ECSDefines.h"
+	"ComponentHandler.h"
+	"../Exceptions/IllegalStateException.h"
+	"../Exceptions/IllegalArgumentException.h"
+	"../Utils/Observable.h"
+	"ComponentSerializer.h"
+	"../Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490795023 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\positioncomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+	"../../../Utils/PhysicUtils.h"
+	"../../../Point.h"
+	"HitboxComponent.h"
+	"../Graphic/DirectionalAnimationComponent.h"
+	"../../../Utils/NumberUtils.h"
+	"../../ComponentHandler.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\physicutils.h
+	"Force.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\force.h
+	"../Rectangle.h"
+
+1490777539 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\hitboxcomponent.h
+	"../../Component.h"
+
+1490775404 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\directionalanimationcomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+
+1490790575 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\camerafocusedcomponent.h
+	"../../Component.h"
+	"../../ComponentHandler.h"
+
