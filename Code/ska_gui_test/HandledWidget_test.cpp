@@ -123,8 +123,12 @@ TEST_CASE("[HandledWidget]Parentes (isAParent)") {
 }
 
 
-//TODO
 TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
+	//Ici il faut montrer que le lien de parenté n'est PAS un lien d'appartenance, 
+	//c'est à dire que la notion de widget fils est seulement utile par exemple 
+	//pour les positions relatives et la durée de vie d'un widget
+	//Il est donc normal que seulement le widget parent (car c'est sur celui-ci qu'on envoi l'évènement) qui soit notifié.
+
 	HandledWidgetTest<ska::ClickEventListener> parent;
 	ska::Point<int> pParent(0, 0);
 	parent.move(pParent);
@@ -147,45 +151,66 @@ TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
 		childTriggered = true;
 	});
 	
-	SUBCASE("directNotify dans parent et enfant") {
+	SUBCASE("directNotify dans parent") {
 		//On clique à la fois dans le parent et l'enfant
-		ska::Point<int> pClickEvent(25, 25);
-		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
-
-		CHECK(parent.directNotify(ce));
-		CHECK(parentTriggered);
-		//CHECK(ce.getTarget() == &child);
-		CHECK(!childTriggered);
-	}
-
-	SUBCASE("notify dans parent et enfant") {
-		//On clique à la fois dans le parent et l'enfant
-		ska::Point<int> pClickEvent(25, 25);
-		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
-
-		CHECK(parent.notify(ce));
-		CHECK(parentTriggered);
-		//CHECK(ce.getTarget() == &child);
-		CHECK(!childTriggered);
-	}
-
-	SUBCASE("directNotify dans parent uniquement") {
 		ska::Point<int> pClickEvent(1, 1);
 		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
-
+		
 		CHECK(parent.directNotify(ce));
 		CHECK(parentTriggered);
-		//CHECK(ce.getTarget() == &parent);
 		CHECK(!childTriggered);
 	}
 
-	SUBCASE("notify dans parent uniquement") {
+	SUBCASE("notify dans parent") {
+		//On clique à la fois dans le parent et l'enfant
 		ska::Point<int> pClickEvent(1, 1);
 		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
 
 		CHECK(parent.notify(ce));
 		CHECK(parentTriggered);
-		//CHECK(ce.getTarget() == &parent);
 		CHECK(!childTriggered);
 	}
+
+	SUBCASE("directNotify dans enfant") {
+		ska::Point<int> pClickEvent(25, 25);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(child.directNotify(ce));
+		CHECK(childTriggered);
+		CHECK(!parentTriggered);
+	}
+
+	SUBCASE("notify dans enfant") {
+		ska::Point<int> pClickEvent(25, 25);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(child.notify(ce));
+		CHECK(childTriggered);
+		CHECK(!parentTriggered);
+	}
+}
+
+TEST_CASE("[HandledWidget]Focus") {
+	HandledWidgetTest<ska::ClickEventListener> widget;
+	CHECK(!widget.isFocused());
+	widget.focus(true);
+	CHECK(widget.isFocused());
+	widget.focus(false);
+	CHECK(!widget.isFocused());
+}
+
+TEST_CASE("[HandledWidget]Visibilite") {
+	HandledWidgetTest<ska::ClickEventListener> widget;
+	CHECK(widget.isVisible());
+	widget.show(false);
+	CHECK(!widget.isVisible());
+	widget.show(true);
+	CHECK(widget.isVisible());
+}
+
+TEST_CASE("[HandledWidget]Priorite de dessin") {
+	HandledWidgetTest<ska::ClickEventListener> widget;
+	widget.setPriority(14);
+	CHECK(widget.getPriority() == 14);
+	CHECK(widget.getPriority2D() == 14);
 }
