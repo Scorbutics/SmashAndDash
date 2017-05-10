@@ -1,8 +1,8 @@
 #include "HoverEventListener.h"
 #include "ClickEvent.h"
 
-ska::HoverEventListener::HoverEventListener(Widget& tthis) :
-EventListener<HoverEvent>(tthis) {
+ska::HoverEventListener::HoverEventListener() :
+EventListener<HoverEvent>() {
 
 }
 

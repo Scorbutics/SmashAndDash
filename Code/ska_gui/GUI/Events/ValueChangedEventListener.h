@@ -10,8 +10,8 @@ namespace ska {
 	template <class T>
 	class ValueChangedEventListener : public EventListener<ValueChangedEvent<T>> {
 	public:
-		explicit ValueChangedEventListener(Widget& tthis) : 
-			EventListener<ValueChangedEvent<T>>(tthis) {
+		ValueChangedEventListener() : 
+			EventListener<ValueChangedEvent<T>>() {
 		}
 
 		virtual ~ValueChangedEventListener() = default;

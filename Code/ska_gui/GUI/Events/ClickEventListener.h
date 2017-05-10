@@ -10,7 +10,7 @@ namespace ska {
 	using ClickEventHandler = std::function<void(Widget*, ClickEvent&)>;
 	class ClickEventListener : public EventListener<ClickEvent> {
 	public:
-		explicit ClickEventListener(Widget& tthis);
+		ClickEventListener();
 		virtual bool notify(Widget& tthis, ClickEvent& e) override;
 		virtual ~ClickEventListener() = default;
 

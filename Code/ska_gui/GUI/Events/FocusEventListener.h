@@ -11,7 +11,7 @@ namespace ska {
 
 	class FocusEventListener : public EventListener<FocusEvent> {
 	public:
-		explicit FocusEventListener(Widget& tthis);
+		FocusEventListener();
 		virtual bool notify(Widget& tthis, FocusEvent& e) override;
 		virtual ~FocusEventListener() = default;
 

@@ -10,7 +10,7 @@ namespace ska {
 	using TimeEventHandler = std::function<void(Widget*, TimeEvent&)>;
 	class TimeEventListener : public EventListener<TimeEvent> {
 	public:
-		explicit TimeEventListener(Widget& tthis) : EventListener<TimeEvent>(tthis) {
+		TimeEventListener() : EventListener<TimeEvent>() {
 		}
 
 		virtual bool notify(Widget& tthis, TimeEvent& e) override {

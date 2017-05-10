@@ -1,8 +1,8 @@
 #include "ClickEventListener.h"
 #include "ClickEvent.h"
 
-ska::ClickEventListener::ClickEventListener(Widget& tthis) :
-EventListener<ClickEvent>(tthis) {
+ska::ClickEventListener::ClickEventListener() :
+EventListener<ClickEvent>() {
 
 }
 

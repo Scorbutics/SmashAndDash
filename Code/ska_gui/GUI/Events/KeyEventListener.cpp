@@ -1,8 +1,8 @@
 #include "KeyEventListener.h"
 #include "KeyEvent.h"
 
-ska::KeyEventListener::KeyEventListener(Widget& tthis) : 
-	EventListener<KeyEvent>(tthis) {
+ska::KeyEventListener::KeyEventListener() : 
+	EventListener<KeyEvent>() {
 
 }
 

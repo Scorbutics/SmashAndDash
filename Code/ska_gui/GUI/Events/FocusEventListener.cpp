@@ -1,8 +1,8 @@
 #include "FocusEventListener.h"
 #include "FocusEvent.h"
 
-ska::FocusEventListener::FocusEventListener(Widget& tthis) :
-EventListener<FocusEvent>(tthis) {
+ska::FocusEventListener::FocusEventListener() :
+EventListener<FocusEvent>() {
 
 }
 

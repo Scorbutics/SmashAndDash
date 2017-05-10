@@ -25,7 +25,7 @@ namespace ska {
 	template <class E>
 	class EventListener : public IEventListener<E> {
 	public:
-		explicit EventListener(Widget&) {
+		EventListener() {
 		}
 
 		void addHandler(const EventHandler<E>& h) {

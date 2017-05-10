@@ -3,12 +3,7 @@
 #include "./GUI/Components/HandledWidget.h"
 #include "./GUI/Events/ClickEventListener.h"
 #include "./GUI/Events/ClickEvent.h"
-
-template <class ... EL>
-struct HandledWidgetTest : public ska::HandledWidget<EL...> {
-    void display() const override {
-    }
-};
+#include "HandledWidgetTest.h"
 
 
 TEST_CASE("[HandledWidget]Position par defaut") {
@@ -125,4 +120,72 @@ TEST_CASE("[HandledWidget]Parentes (isAParent)") {
     CHECK(!otherWidget.isAParent(parent));
     CHECK(!child.isAParent(otherWidget));
     CHECK(!parent.isAParent(otherWidget));
+}
+
+
+//TODO
+TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
+	HandledWidgetTest<ska::ClickEventListener> parent;
+	ska::Point<int> pParent(0, 0);
+	parent.move(pParent);
+	parent.setWidth(1000);
+	parent.setHeight(1000);
+	
+	HandledWidgetTest<ska::ClickEventListener> child(parent);
+	ska::Point<int> pRelChild(20, 20);
+	child.move(pRelChild);
+	child.setWidth(100);
+	child.setHeight(100);
+
+	auto parentTriggered = false;
+	parent.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+		parentTriggered = true;
+	});
+
+	auto childTriggered = false;
+	child.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+		childTriggered = true;
+	});
+	
+	SUBCASE("directNotify dans parent et enfant") {
+		//On clique à la fois dans le parent et l'enfant
+		ska::Point<int> pClickEvent(25, 25);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(parent.directNotify(ce));
+		CHECK(parentTriggered);
+		//CHECK(ce.getTarget() == &child);
+		CHECK(!childTriggered);
+	}
+
+	SUBCASE("notify dans parent et enfant") {
+		//On clique à la fois dans le parent et l'enfant
+		ska::Point<int> pClickEvent(25, 25);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(parent.notify(ce));
+		CHECK(parentTriggered);
+		//CHECK(ce.getTarget() == &child);
+		CHECK(!childTriggered);
+	}
+
+	SUBCASE("directNotify dans parent uniquement") {
+		ska::Point<int> pClickEvent(1, 1);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(parent.directNotify(ce));
+		CHECK(parentTriggered);
+		//CHECK(ce.getTarget() == &parent);
+		CHECK(!childTriggered);
+	}
+
+	SUBCASE("notify dans parent uniquement") {
+		ska::Point<int> pClickEvent(1, 1);
+		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
+
+		CHECK(parent.notify(ce));
+		CHECK(parentTriggered);
+		//CHECK(ce.getTarget() == &parent);
+		CHECK(!childTriggered);
+	}
 }

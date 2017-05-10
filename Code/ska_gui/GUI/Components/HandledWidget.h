@@ -137,7 +137,7 @@ namespace ska {
 			const MaskUnit& mu = WidgetMaskHelper::getMask<T>();
 			m_maskHandlerIndexes[mu] = m_currentMaskIndex;
 			m_currentMaskIndex--;
-			return T(static_cast<Widget&>(*this));
+			return T();
 		}
 
 		template <class T>

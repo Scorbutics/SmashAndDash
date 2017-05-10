@@ -12,7 +12,7 @@ namespace ska {
 
 	class HoverEventListener : public EventListener<HoverEvent> {
 	public:
-		explicit HoverEventListener(Widget& tthis);
+		HoverEventListener();
 		virtual bool notify(Widget& tthis, HoverEvent& e) override;
 		virtual ~HoverEventListener() = default;
 
