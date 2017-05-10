@@ -36,5 +36,6 @@
 			<Depends filename="Code/ska_world/ska_world.cbp" />
 			<Depends filename="Code/ska_ai/ska_ai.cbp" />
 		</Project>
+		<Project filename="Code/ska_gui_test/ska_gui_test.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>
