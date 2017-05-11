@@ -2,6 +2,9 @@
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
 		<Project filename="Code/ska_core/ska_core.cbp" />
+		<Project filename="Code/ska_core_test/ska_core_test.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+		</Project>
 		<Project filename="Code/ska_draw/ska_draw.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 		</Project>
