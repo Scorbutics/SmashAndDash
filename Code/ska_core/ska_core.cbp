@@ -45,6 +45,7 @@
 		<Unit filename="Core/Scene/HasLogic.h" />
 		<Unit filename="Core/Scene/Scene.cpp" />
 		<Unit filename="Core/Scene/Scene.h" />
+		<Unit filename="Core/Scene/SceneBase.h" />
 		<Unit filename="Core/Scene/SceneHolder.h" />
 		<Unit filename="Core/Scene/SceneHolderCore.cpp" />
 		<Unit filename="Core/Scene/SceneHolderCore.h" />
@@ -149,6 +150,8 @@
 		<Unit filename="Exceptions/ScriptSyntaxError.h" />
 		<Unit filename="Exceptions/ScriptUnknownCommandException.h" />
 		<Unit filename="Exceptions/TerminateProcessException.h" />
+		<Unit filename="GameApp.cpp" />
+		<Unit filename="GameApp.h" />
 		<Unit filename="Inputs/EnumContextManager.h" />
 		<Unit filename="Inputs/InputAction.h" />
 		<Unit filename="Inputs/InputContext.h" />
@@ -200,6 +203,7 @@
 		<Unit filename="Utils/OSSpecific/FileUtilsWin.h" />
 		<Unit filename="Utils/Observable.h" />
 		<Unit filename="Utils/Observer.h" />
+		<Unit filename="Utils/OutputUtils.h" />
 		<Unit filename="Utils/PhysicUtils.cpp" />
 		<Unit filename="Utils/PhysicUtils.h" />
 		<Unit filename="Utils/RectangleUtils.cpp" />
@@ -216,6 +220,7 @@
 		<Unit filename="Utils/TimeUtils.h" />
 		<Unit filename="Utils/TupleUtils.h" />
 		<Unit filename="Utils/VectorUtils.h" />
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
