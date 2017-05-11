@@ -9,12 +9,12 @@ MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska:
 m_mouseCursor(mouseCursor) {
 
 	auto count = -1;
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
-	m_slots.push_back(addWidget(std::make_unique<SlotPokemon>(*this, ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE))));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
 
 	for(auto& s : m_slots) {
 		s->show(false);
