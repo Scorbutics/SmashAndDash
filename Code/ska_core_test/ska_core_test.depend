@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1494499790 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core_test\main.cpp
+	<SDL.h>
+	<doctest.h>
+
+1494504168 source:c:\documents\perso\dev\c++\smashanddash\code\ska_core_test\rectangleutils_test.cpp
+	<doctest.h>
+	"Utils/RectangleUtils.h"
+
+1494504207 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+	"../Rectangle.h"
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1491203150 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+

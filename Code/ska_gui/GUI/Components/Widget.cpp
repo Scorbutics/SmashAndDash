@@ -5,8 +5,8 @@ m_visible(true),
 m_focused(false) {
 	m_box.x = 0;
 	m_box.y = 0;
-	m_box.w = 0;
-	m_box.h = 0;
+	m_box.w = 1;
+	m_box.h = 1;
 
 }
 
@@ -16,8 +16,8 @@ m_visible(true),
 m_focused(false) {
 	m_box.x = 0;
 	m_box.y = 0;
-	m_box.w = 0;
-	m_box.h = 0;
+	m_box.w = 1;
+	m_box.h = 1;
 }
 
 ska::Widget::Widget(Widget& parent, Point<int>& position) :
@@ -26,8 +26,8 @@ m_visible(true),
 m_focused(false) {
 	m_box.x = position.x;
 	m_box.y = position.y;
-	m_box.w = 0;
-	m_box.h = 0;
+	m_box.w = 1;
+	m_box.h = 1;
 
 }
 

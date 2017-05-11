@@ -12,7 +12,7 @@ namespace ska {
 		virtual ~LabeledHorizontalSlider() = default;
 	private:
 		int m_oldIntValue;
-		Label* m_label;
+		Label& m_label;
 	};
 
 }

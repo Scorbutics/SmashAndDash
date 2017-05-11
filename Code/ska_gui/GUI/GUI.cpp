@@ -19,11 +19,11 @@ ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::Window& w, ska::InputCon
     m_lastFocused(nullptr),
     m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
     m_ged(ged),
-    m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
+    m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, ""),
+    m_wAction(addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "")) {
 
-	m_wAction = addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
-	m_wAction->setPriority(0);
+	m_wAction.setPriority(0);
 	m_hide = false;
 
 	m_ged.ska::Observable<GUIEvent>::addObserver(*this);

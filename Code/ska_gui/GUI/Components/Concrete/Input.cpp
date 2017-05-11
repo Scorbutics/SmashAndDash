@@ -11,7 +11,7 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, Point<i
 	WidgetPanel<ValueChangedEventListener<std::wstring>, ClickEventListener, KeyEventListener, FocusEventListener>(parent, relativePos),
 	m_keyFocus(false) {
 
-	auto button = std::make_unique<Button>(parent, relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](Widget* tthis, ClickEvent& e) {
+	auto& button = addWidget<Button>(relativePos, Button::MENU_DEFAULT_THEME_PATH + "textfield", nullptr, [&](Widget* tthis, ClickEvent& e) {
 		if (!m_keyFocus && e.getState() == MOUSE_CLICK) {
 			m_keyFocus = true;
 			SDL_StartTextInput();
@@ -21,16 +21,13 @@ ska::Input::Input(Widget& parent, const std::string& text, int fontSize, Point<i
 		b->forceState(ButtonState::PRESSED);
 	});
 
-	auto label = std::make_unique<Label>(*this, text, fontSize, Point<int>(5, button->getBox().h / 2 - fontSize/2));
-	Widget::setWidth(button->getBox().w);
-	Widget::setHeight(button->getBox().h);
+	auto& label = addWidget<Label>(text, fontSize, Point<int>(5, button.getBox().h / 2 - fontSize/2));
+	Widget::setWidth(button.getBox().w);
+	Widget::setHeight(button.getBox().h);
 
 	m_clip.y = 0;
 	m_clip.w = getBox().w - 10;
-	adaptDisplayWithText(*label);
-
-	addWidget(std::move(button));
-	addWidget(std::move(label));
+	adaptDisplayWithText(label);
 
 	addHandler<FocusEventListener>([&](Widget*, FocusEvent& e) {
 		auto f = e.getState() == MOUSE_FOCUS;

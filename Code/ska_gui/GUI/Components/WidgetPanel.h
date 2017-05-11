@@ -25,12 +25,13 @@ namespace ska {
 			HandledWidget<HL...>(parent, position) {
 		}
 
-		template <class SubWidget>
-		SubWidget* addWidget(std::unique_ptr<SubWidget>&& w) {
+		template <class SubWidget, class ... Args>
+		SubWidget& addWidget(Args&&... args) {
+			auto w = std::make_unique<SubWidget>(*this, std::forward<Args>(args)...);
 			w->setPriority(static_cast<int>(m_globalList.size()));
-			auto result = static_cast<SubWidget*>(w.get());
+			auto& result = static_cast<SubWidget&>(*w.get());
 			WidgetHandlingTrait<SubWidget>::manageHandledAdd(std::move(w), m_handledWidgets, m_widgets, m_globalList);
-			m_addedSortedWidgets.push_back(result);
+			m_addedSortedWidgets.push_back(&result);
 			return result;
 		}
 

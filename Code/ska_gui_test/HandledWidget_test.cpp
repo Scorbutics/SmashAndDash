@@ -14,8 +14,8 @@ TEST_CASE("[HandledWidget]Position par defaut") {
 
 TEST_CASE("[HandledWidget]Dimensions par defaut") {
     HandledWidgetTest<ska::ClickEventListener> t;
-    CHECK(t.getBox().w == 0);
-    CHECK(t.getBox().h == 0);
+    CHECK(t.getBox().w == 1);
+    CHECK(t.getBox().h == 1);
 }
 
 TEST_CASE("[HandledWidget]Evenement de clic direct") {
@@ -124,8 +124,8 @@ TEST_CASE("[HandledWidget]Parentes (isAParent)") {
 
 
 TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
-	//Ici il faut montrer que le lien de parenté n'est PAS un lien d'appartenance, 
-	//c'est à dire que la notion de widget fils est seulement utile par exemple 
+	//Ici il faut montrer que le lien de parenté n'est PAS un lien d'appartenance,
+	//c'est à dire que la notion de widget fils est seulement utile par exemple
 	//pour les positions relatives et la durée de vie d'un widget
 	//Il est donc normal que seulement le widget parent (car c'est sur celui-ci qu'on envoi l'évènement) qui soit notifié.
 
@@ -134,7 +134,7 @@ TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
 	parent.move(pParent);
 	parent.setWidth(1000);
 	parent.setHeight(1000);
-	
+
 	HandledWidgetTest<ska::ClickEventListener> child(parent);
 	ska::Point<int> pRelChild(20, 20);
 	child.move(pRelChild);
@@ -150,12 +150,12 @@ TEST_CASE("[HandledWidget]Propagation d'evenements avec liens de parente") {
 	child.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
 		childTriggered = true;
 	});
-	
+
 	SUBCASE("directNotify dans parent") {
 		//On clique à la fois dans le parent et l'enfant
 		ska::Point<int> pClickEvent(1, 1);
 		ska::ClickEvent ce(ska::MouseEventType::MOUSE_CLICK, pClickEvent);
-		
+
 		CHECK(parent.directNotify(ce));
 		CHECK(parentTriggered);
 		CHECK(!childTriggered);

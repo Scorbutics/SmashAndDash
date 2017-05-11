@@ -4,6 +4,7 @@
 #include "Draw/DrawableFixedPriority.h"
 #include "Utils/MouseObservable.h"
 #include "Windows/DynamicWindowIG.h"
+#include "Windows/DynamicWindowIG.h"
 #include "Components/Concrete/MouseCursor.h"
 #include "Utils/TimeObservable.h"
 #include "Windows/TimeScrollableWindowIG.h"
@@ -54,7 +55,7 @@ namespace ska {
 
 		std::vector<std::string> m_windowsToDelete;
 
-		TimeScrollableWindowIG<>* m_wAction;
+		TimeScrollableWindowIG<>& m_wAction;
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 
 		GameEventDispatcher& m_ged;
@@ -67,11 +68,11 @@ namespace ska {
 		}
 
 		template <class Win, class ... WinArgs>
-		Win* addWindow(const std::string& name, WinArgs&&... args) {
-			auto result = m_wMaster.addWidget(std::make_unique<Win>(m_wMaster, std::forward<WinArgs>(args)...));
-			auto t = reinterpret_cast<Win*>(result);
-			m_windowAnnuary[name] = t;
-			t->template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
+		Win& addWindow(const std::string& name, WinArgs&&... args) {
+			auto& result = m_wMaster.addWidget<Win>(std::forward<WinArgs>(args)...);
+			auto& t = reinterpret_cast<Win&>(result);
+			m_windowAnnuary[name] = &t;
+			t.template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
 			return result;

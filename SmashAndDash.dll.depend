@@ -1,0 +1,2091 @@
+# depslib dependency file v1.0
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\audio\pokemonsoundrenderer.cpp
+	"PokemonSoundRenderer.h"
+	"../Gameplay/Data/Settings.h"
+	"../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\audio\pokemonsoundrenderer.h
+	"Utils/Observer.h"
+	"Audio/SoundRenderer.h"
+	"../Gameplay/Data/SettingsChangeEvent.h"
+	"../Gameplay/PokemonGameEventDispatcher.h"
+	"../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_audio\\audio\soundrenderer.h
+	<SDL_mixer.h>
+	"Utils/Observer.h"
+	"Data/Events/WorldEvent.h"
+	"Data/Events/SoundEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\worldevent.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\soundevent.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\settingschangeevent.h
+	"SettingsChangeEventType.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\settingschangeeventtype.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokemongameeventdispatcher.h
+	"Data/GameEventDispatcher.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\gameeventdispatcher.h
+	"EventDispatcher.h"
+	"Data/Events/SoundEvent.h"
+	"Data/Events/CollisionEvent.h"
+	"Data/Events/WorldEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\eventdispatcher.h
+	"Utils/Observer.h"
+	"Utils/Observable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\collisionevent.h
+	"ECS/ECSDefines.h"
+
+1490794928 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokemongameeventdispatcherdeclaration.h
+	"../Gameplay./PokemonGameEventDispatcher.h"
+	"./Fight/StatisticsChangeEvent.h"
+	"./Fight/BattleEvent.h"
+	"./Data/EntityLoadEvent.h"
+	"./Data/SettingsChangeEvent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay.\pokemongameeventdispatcher.h
+	"Data/GameEventDispatcher.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\statisticschangeevent.h
+	"ECS/ECSDefines.h"
+	"../Data/RawStatistics.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\rawstatistics.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\battleevent.h
+	"Graphic/System/CameraFixedSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\camerafixedsystem.h
+	"CameraSystem.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\camerasystem.h
+	<unordered_set>
+	"Rectangle.h"
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Graphic/CameraFocusedComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1490690983 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\system.h
+	<unordered_set>
+	"ECSDefines.h"
+	"EntityManager.h"
+	"ISystem.h"
+	"../Utils/Observer.h"
+	"../Utils/Refreshable.h"
+
+1490684422 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\entitymanager.h
+	<bitset>
+	<unordered_set>
+	<array>
+	<unordered_map>
+	<string>
+	"ECSDefines.h"
+	"ComponentHandler.h"
+	"../Exceptions/IllegalStateException.h"
+	"../Exceptions/IllegalArgumentException.h"
+	"../Utils/Observable.h"
+	"ComponentSerializer.h"
+	"../Utils/StringUtils.h"
+
+1490798787 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componenthandler.h
+	<iostream>
+	<vector>
+	<typeinfo>
+	<string>
+	"ECSDefines.h"
+	"StaticCounterGlobal.h"
+	"ComponentSerializer.h"
+	"../Utils/Demangle.h"
+
+1490790681 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\staticcounterglobal.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componentserializer.h
+	<string>
+	"ECSDefines.h"
+
+1490604206 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\demangle.h
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\isystem.h
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\refreshable.h
+
+1490795023 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\positioncomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+	"../../../Utils/PhysicUtils.h"
+	"../../../Point.h"
+	"HitboxComponent.h"
+	"../Graphic/DirectionalAnimationComponent.h"
+	"../../../Utils/NumberUtils.h"
+	"../../ComponentHandler.h"
+
+1490802296 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\component.h
+	<memory>
+	<string>
+	<unordered_map>
+	"ComponentHandler.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\physicutils.h
+	"Force.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\force.h
+	"../Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490777539 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\hitboxcomponent.h
+	"../../Component.h"
+
+1490775404 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\directionalanimationcomponent.h
+	"../../Component.h"
+	"../../../Utils/StringUtils.h"
+
+1490790575 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\camerafocusedcomponent.h
+	"../../Component.h"
+	"../../ComponentHandler.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\entityloadevent.h
+	"Inputs/Readers/IniReader.h"
+	"Statistics.h"
+	"MonsterDescription.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\readers\inireader.h
+	<unordered_map>
+	<iostream>
+	<string>
+	<sstream>
+	"../../Utils/StringUtils.h"
+	"../../Exceptions/InvalidPathException.h"
+	"../../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\invalidpathexception.h
+	"InputException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\inputexception.h
+	"GenericException.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\statistics.h
+	<string>
+	"RawStatistics.h"
+	"Inputs/Readers/IniReader.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\monsterdescription.h
+	"Inputs/Readers/IniReader.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\settings.h
+	"SettingsChangeEvent.h"
+	"../PokemonGameEventDispatcher.h"
+	"../PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\ai\ai.cpp
+	"AI.h"
+	"../../Utils\IDs.h"
+	"..\WGameCore.h"
+	"../../Utils\ChargementImages.h"
+	"../../Gameplay/Fight/Skill.h"
+	"../../ska/Utils/RectangleUtils.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\ai\ai.h
+	<iostream>
+	<string>
+	<vector>
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\utils\ids.h
+	"Utils/SkaConstants.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\wgamecore.h
+	"GUI/Windows/Window.h"
+	"Scene/Scene.h"
+	"PokemonGameEventDispatcherDeclaration.h"
+	"../Audio/PokemonSoundRenderer.h"
+	"CustomEntityManager.h"
+	"Scene/SceneHolderCore.h"
+	"../Graphic/GUI/TrainerCard.h"
+	"World/WorldScene.h"
+	"FpsCalculator.h"
+	"Data/Settings.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\window.h
+	<iostream>
+	<SDL.h>
+	"Graphic/SDLRenderer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdlrenderer.h
+	<SDL.h>
+	"Rectangle.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\scene.h
+	<memory>
+	"HasGraphic.h"
+	"HasLogic.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\hasgraphic.h
+	<queue>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\haslogic.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\customentitymanager.h
+	"PrefabEntityManager.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\prefabentitymanager.h
+	"ECS/EntityManager.h"
+	"Point.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\sceneholdercore.h
+	"Scene/SceneHolder.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\sceneholder.h
+	"SceneType.h"
+	"Scene.h"
+	"Task/TaskQueue.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\scenetype.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\taskqueue.h
+	<queue>
+	<memory>
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\trainercard.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldscene.h
+	"Scene/Scene.h"
+	"Physic/System/ForceSystem.h"
+	"Physic/System/GravitySystem.h"
+	"Inputs/System/InputSystem.h"
+	"Physic/System/MovementSystem.h"
+	"Graphic/System/GraphicSystem.h"
+	"Graphic/System/ShadowSystem.h"
+	"Graphic/System/DirectionalAnimationSystem.h"
+	"Graphic/System/DeleterSystem.h"
+	"../Data/SavegameManager.h"
+	"../Mobs/MobSpawner.h"
+	"WorldImpl.h"
+	"Rectangle.h"
+	"../../Gameplay/Pokeball.h"
+	"../../Graphic/GUI/GUIMap.h"
+	"Audio/Music.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\forcesystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+
+1490777575 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\movementcomponent.h
+	"../../Component.h"
+
+1490777487 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\forcecomponent.h
+	"../../Component.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\gravitysystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/GravityAffectedComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+
+1490777506 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\gravityaffectedcomponent.h
+	"../../Component.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\system\inputsystem.h
+	<unordered_set>
+	"../../ECS/System.h"
+	"../../ECS/Basics/Input/InputComponent.h"
+	"../../ECS/Basics/Physic/ForceComponent.h"
+	"../../ECS/Basics/Physic/PositionComponent.h"
+	"../../Utils/Observer.h"
+	"../InputContextManager.h"
+
+1490777391 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\input\inputcomponent.h
+	"../../Component.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontextmanager.h
+	<vector>
+	<bitset>
+	<unordered_map>
+	"InputContext.h"
+	"EnumContextManager.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontext.h
+	<unordered_map>
+	<memory>
+	"InputAction.h"
+	"InputRange.h"
+	"InputToggle.h"
+	"RawInputListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputaction.h
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputrange.h
+	<vector>
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputtoggle.h
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\rawinputlistener.h
+	"KeyInput.h"
+	"MouseInput.h"
+	"../Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyinput.h
+	<SDL.h>
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\enumcontextmanager.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\movementsystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\graphicsystem.h
+	<unordered_set>
+	"../GraphicComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/System.h"
+	"AbstractGraphicSystem.h"
+
+1490779218 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\graphiccomponent.h
+	<vector>
+	<limits>
+	"ECS/Component.h"
+	"AnimatedTexture.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\animatedtexture.h
+	"Animation.h"
+	"Texture.h"
+	"Rectangle.h"
+	"Point.h"
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\animation.h
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texture.h
+	<memory>
+	"Utils/ResourceTemplate.h"
+	"SDLTexture.h"
+	"TextureData.h"
+	"Utils/SkaConstants.h"
+	"Rectangle.h"
+	"Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdltexture.h
+	<string>
+	"Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\color.h
+	<SDL.h>
+	"Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texturedata.h
+	<string>
+	"Color.h"
+	"SDLRenderer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\abstractgraphicsystem.h
+	"IGraphicSystem.h"
+	"../PositionnedGraphicDrawable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\igraphicsystem.h
+	"ECS/ISystem.h"
+	"CameraAware.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\cameraaware.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\positionnedgraphicdrawable.h
+	"GraphicComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Draw/Drawable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawable.h
+	<memory>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\shadowsystem.h
+	<unordered_set>
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/System.h"
+	"../HasShadowComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"AbstractGraphicSystem.h"
+
+1490779236 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\hasshadowcomponent.h
+	"ECS/Component.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\directionalanimationsystem.h
+	<unordered_set>
+	"../GraphicComponent.h"
+	"ECS/Basics/Graphic/DirectionalAnimationComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/System.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\deletersystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Graphic/DeleterComponent.h"
+
+1490775506 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\deletercomponent.h
+	"../../Component.h"
+	"../../../Utils/TimeUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\timeutils.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\savegamemanager.h
+	<vector>
+	"../PokemonGameEventDispatcher.h"
+	"Data/Savegame.h"
+	"../PokemonGameEventDispatcherDeclaration.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\savegame.h
+	<string>
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\mobspawner.h
+	<vector>
+	"Rectangle.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldimpl.h
+	"World/World.h"
+	"Utils/Observer.h"
+	"../Data/SettingsChangeEvent.h"
+	"../PokemonGameEventDispatcher.h"
+	"../Weather.h"
+	"../PokemonGameEventDispatcherDeclaration.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\world.h
+	<iostream>
+	<string>
+	<unordered_set>
+	<memory>
+	<vector>
+	"Inputs/Readers/IniReader.h"
+	"Graphic/Texture.h"
+	"Graphic/Animation.h"
+	"../Scene/Scene.h"
+	"Graphic/System/CameraAware.h"
+	"ChipsetHolder.h"
+	"Layer.h"
+	"LayerE.h"
+	"ECS/Basics/Physic/CollisionProfile.h"
+	"Data/BlockContainer.h"
+	"ECS/Basics/Script/ScriptPositionedGetter.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\chipsetholder.h
+	<unordered_map>
+	<memory>
+	"Point.h"
+	"Graphic/Color.h"
+	"Chipset.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\chipset.h
+	<unordered_map>
+	<memory>
+	"Graphic/Color.h"
+	"Point.h"
+	"Graphic/SDLSurface.h"
+	"Graphic/Texture.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"Graphic/Animation.h"
+	"ChipsetRenderable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\sdlsurface.h
+	<SDL.h>
+	"Color.h"
+
+1490777826 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptsleepcomponent.h
+	<vector>
+	<string>
+	"../../Component.h"
+	"ScriptTriggerType.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scripttriggertype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\chipsetrenderable.h
+	<unordered_map>
+	<memory>
+	"Graphic/Texture.h"
+	"Graphic/Animation.h"
+	"../World/BlockRenderable.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\blockrenderable.h
+	<vector>
+	<memory>
+	"Graphic/Animation.h"
+	"Point.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\layer.h
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<memory>
+	"Block.h"
+	"LayerRenderable.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\block.h
+	<vector>
+	<memory>
+	"Point.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\layerrenderable.h
+	<iostream>
+	<fstream>
+	<string>
+	<vector>
+	<memory>
+	"BlockRenderable.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawablefixedpriority.h
+	"Drawable.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\layere.h
+	<iostream>
+	<string>
+	<vector>
+	<memory>
+	"Utils/Refreshable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\collisionprofile.h
+	<vector>
+	<unordered_set>
+	"Rectangle.h"
+	"Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\blockcontainer.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptpositionedgetter.h
+	"ECS/Basics/Script/ScriptTriggerType.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\weather.h
+	<iostream>
+	<string>
+	<vector>
+	"Graphic/Texture.h"
+	"Point.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokeball.h
+	"Point.h"
+	"PokeballLaunchReasonEnum.h"
+	"Graphic/Animation.h"
+	"Graphic/Texture.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokeballlaunchreasonenum.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.h
+	"AbstractGameGUI.h"
+	"Utils/Observer.h"
+	"../../Gameplay/Data/SettingsChangeEvent.h"
+	"WindowMouseCursor.h"
+	"../../Gameplay/Data/EntityLoadEvent.h"
+	"../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.h
+	"GUI/GUI.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+	"../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
+	<vector>
+	<memory>
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"Utils/MouseObservable.h"
+	"Windows/DynamicWindowIG.h"
+	"Components/Concrete/MouseCursor.h"
+	"Utils/TimeObservable.h"
+	"Windows/TimeScrollableWindowIG.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\mouseobservable.h
+	"Utils/Observable.h"
+	"../Events/HoverEvent.h"
+	"../Events/ClickEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\hoverevent.h
+	"WidgetEvent.h"
+	"Point.h"
+	"HoverEventListener.h"
+	"MouseEventType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\widgetevent.h
+	"IWidgetEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\iwidgetevent.h
+	"EventListener.h"
+	"StopType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\eventlistener.h
+	<functional>
+	<deque>
+	"StopType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\stoptype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\hovereventlistener.h
+	<functional>
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\mouseeventtype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\clickevent.h
+	"Point.h"
+	"HoverEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\dynamicwindowig.h
+	"../Components/Hoverable.h"
+	"../Utils/MouseObserver.h"
+	"../Utils/KeyObserver.h"
+	"../Utils/KeyObservable.h"
+	"../Utils/MouseObservable.h"
+	"../Events/ClickEventListener.h"
+	"WindowIG.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\hoverable.h
+	"HandledWidget.h"
+	"../Events/HoverEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\handledwidget.h
+	<iostream>
+	<unordered_map>
+	<bitset>
+	<tuple>
+	"Widget.h"
+	"../Events/IWidgetEvent.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widget.h
+	"Point.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"Utils/RectangleUtils.h"
+	"Utils/TupleUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+	"../Rectangle.h"
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\tupleutils.h
+	<utility>
+	<functional>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\widgetmaskhelper.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\mouseobserver.h
+	"Utils/Observer.h"
+	"../Events/ClickEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\keyobserver.h
+	"Utils/Observer.h"
+	"../Events/KeyEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\keyevent.h
+	"WidgetEvent.h"
+	"KeyEventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\keyeventlistener.h
+	<functional>
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\keyobservable.h
+	"Utils/Observable.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\clickeventlistener.h
+	<functional>
+	"ClickEvent.h"
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\windowig.h
+	"../Components/WidgetPanel.h"
+	"Graphic/Texture.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widgetpanel.h
+	<memory>
+	<vector>
+	<type_traits>
+	<algorithm>
+	"HandledWidget.h"
+	"../Utils/WidgetHandlingTrait.h"
+	"../Events/StopType.h"
+	"../Events/IWidgetEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\widgethandlingtrait.h
+	"WidgetContainer.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\widgetcontainer.h
+	"SortedWidgetVector.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\sortedwidgetvector.h
+	<vector>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\mousecursor.h
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"Point.h"
+	"Graphic/Texture.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\timeobservable.h
+	"Utils/Observable.h"
+	"../Events/TimeEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\timeevent.h
+	"WidgetEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\timescrollablewindowig.h
+	"DynamicWindowIG.h"
+	"../Utils/TimeObserver.h"
+	"../Utils/TimeObservable.h"
+	"../Events/TimeEventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\timeobserver.h
+	"Utils/Observer.h"
+	"../Events/TimeEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\timeeventlistener.h
+	<functional>
+	"EventListener.h"
+	"TimeEvent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowmousecursor.h
+	"SlotPokemonData.h"
+	"GUI/Components/Concrete/Image.h"
+	"GUI/Events/ValueChangedEvent.h"
+	"GUI/Utils/TimeObservable.h"
+	"GUI/Windows/TimeScrollableWindowIG.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\slotpokemondata.h
+	<memory>
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\image.h
+	"../Widget.h"
+	"Graphic/Texture.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\valuechangedevent.h
+	"ValueChangedEventListener.h"
+	"WidgetEvent.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\valuechangedeventlistener.h
+	"EventListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_audio\\audio\music.h
+	"Utils/ResourceTemplate.h"
+	"SDLMusic.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_audio\\audio\sdlmusic.h
+	<string>
+	<SDL_mixer.h>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\fpscalculator.h
+	<array>
+	"FpsRenderable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\fpsrenderable.h
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"Graphic/Texture.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\utils\chargementimages.h
+	<iostream>
+	<string>
+	<vector>
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.h
+	<iostream>
+	<string>
+	<vector>
+	<memory>
+	"Inputs/Readers/IniReader.h"
+	"Graphic/Texture.h"
+	"Physic/Particle.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\particle.h
+	<memory>
+	<iostream>
+	<vector>
+	"Point.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\customentitymanager.cpp
+	"CustomEntityManager.h"
+	"./Fight/FightComponent.h"
+	"./Mobs/MobSpawnAreaComponent.h"
+	"Graphic/GraphicComponent.h"
+	"./Fight/SkillComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/Basics/Physic/CollidableComponent.h"
+	"Utils/SpritePath.h"
+	"./Fight/SkillsHolderComponent.h"
+	"Utils/NumberUtils.h"
+	"../Utils/IDs.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\fightcomponent.h
+	"ECS/Component.h"
+	"ECS/ECSDefines.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\mobspawnareacomponent.h
+	"ECS/Component.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skillcomponent.h
+	"ECS/Component.h"
+	"Utils/TimeUtils.h"
+
+1490777990 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\collidablecomponent.h
+	<unordered_set>
+	"../../Component.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\spritepath.h
+	<string>
+	<vector>
+	"Singleton_template.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\singleton_template.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skillsholdercomponent.h
+	"ECS/Component.h"
+	<array>
+	"SkillDescriptor.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skilldescriptor.h
+	"../Data/RawStatistics.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\pokemondescriptor.cpp
+	"PokemonDescriptor.h"
+	"Inputs/Readers/IniReader.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\pokemondescriptor.h
+	<iostream>
+	"Inputs/Readers/IniReader.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\savegamemanager.cpp
+	<iostream>
+	<fstream>
+	"SavegameManager.h"
+	"../../Utils/ChargementImages.h"
+	"Utils/StringUtils.h"
+	"Utils/FileUtils.h"
+	"../../Gameplay/Data/Statistics.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\fileutils.h
+	<string>
+	"SkaConstants.h"
+	"./OSSpecific/FileUtilsUnix.h"
+	"./OSSpecific/FileUtilsWin.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\osspecific\fileutilsunix.h
+	"../SkaConstants.h"
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\osspecific\fileutilswin.h
+	"../SkaConstants.h"
+	<string>
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\settings.cpp
+	<fstream>
+	"Settings.h"
+	"Inputs/Readers/IniReader.h"
+	"../Weather.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\data\statistics.cpp
+	"Statistics.h"
+	"../../Utils/IDs.h"
+	"Utils/NumberUtils.h"
+	"Inputs/Readers/IniReader.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\fight.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.cpp
+	<iostream>
+	"Skill.h"
+	"Physic/LinearParticle.h"
+	"../WGameCore.h"
+	"../../Utils/ChargementImages.h"
+	"Utils/SpritePath.h"
+	"../../Gameplay/Data/Statistics.h"
+	"Utils/StringUtils.h"
+	"Utils/RectangleUtils.h"
+	"../../Utils/IDs.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\linearparticle.h
+	"Particle.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.cpp
+	"BattleSystem.h"
+	"../SkillComponent.h"
+	"Inputs/Readers/IniReader.h"
+	"Inputs/InputContextManager.h"
+	"../../CustomEntityManager.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+	"Graphic/GraphicComponent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Graphic/DirectionalAnimationComponent.h"
+	"../BattleComponent.h"
+	"../SkillsHolderComponent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\battlecomponent.h
+	"ECS/Component.h"
+	"../Data/RawStatistics.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\fightstartsystem.cpp
+	"FightStartSystem.h"
+	"../../../Utils/IDs.h"
+	"Utils/RectangleUtils.h"
+	"Utils/TimeUtils.h"
+	"Utils/NumberUtils.h"
+	"../../Scene/SceneFight.h"
+	"../../World/WorldScene.h"
+	"../../CustomEntityManager.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\fightstartsystem.h
+	<unordered_set>
+	"ECS/Basics/Physic/PositionComponent.h"
+	"../FightComponent.h"
+	"ECS/System.h"
+	"Scene/SceneHolder.h"
+	"Inputs/InputContextManager.h"
+	"Graphic/GraphicComponent.h"
+	"../../../Gameplay/PokemonGameEventDispatcher.h"
+	"../../PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenefight.h
+	<memory>
+	"DebugAbstractSceneMap.h"
+	"AbstractSceneMap.h"
+	"Graphic/System/CameraFixedSystem.h"
+	"Inputs/Readers/IniReader.h"
+	"../Data/PokemonDescriptor.h"
+	"../System/PokeballSystem.h"
+	"../../Gameplay/Fight/System/BattleSystem.h"
+	"../../Gameplay/Fight/System/SkillRefreshSystem.h"
+	"../../Physic/System/SkillEntityCollisionResponse.h"
+	"../../Physic/System/WorldEntityCollisionResponse.h"
+	"../../Gameplay/Fight/System/StatisticsSystem.h"
+	"../../Graphic/GUI/GUIBattle.h"
+	"AI/System/IARandomMovementSystem.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\debugabstractscenemap.h
+	"AbstractSceneMap.h"
+	"Graphic/System/DebugCollisionDrawerSystem.h"
+	"Physic/System/DebugWorldCollisionResponse.h"
+	"Data/GameEventDispatcher.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractscenemap.h
+	"AbstractNoGUISceneMap.h"
+	"Physic/System/CollisionSystem.h"
+	"Physic/System/WorldCollisionResponse.h"
+	"Physic/System/EntityCollisionResponse.h"
+	"Point.h"
+	"Data/GameEventDispatcher.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractnoguiscenemap.h
+	"Scene/Scene.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\collisionsystem.h
+	<unordered_set>
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Physic/CollidableComponent.h"
+	"Data/Events/CollisionEvent.h"
+	"Rectangle.h"
+	"ECS/System.h"
+	"Data/GameEventDispatcher.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\worldcollisionresponse.h
+	"Data/GameEventDispatcher.h"
+	"Utils/Observer.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\entitycollisionresponse.h
+	"Utils/Observer.h"
+	"Data/GameEventDispatcher.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\debugcollisiondrawersystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/WorldCollisionComponent.h"
+	"ECS/Basics/Graphic/DebugGraphicComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+
+1490777768 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\worldcollisioncomponent.h
+	"../../Component.h"
+	"../../ECSDefines.h"
+	"../../../Point.h"
+
+1490775485 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\graphic\debuggraphiccomponent.h
+	<queue>
+	"../../Component.h"
+	"../../ECSDefines.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\system\debugworldcollisionresponse.h
+	"Utils/Observer.h"
+	"Data/GameEventDispatcher.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\system\pokeballsystem.h
+	"ECS/System.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"../PokeballComponent.h"
+	"Graphic/Texture.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Graphic/GraphicComponent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokeballcomponent.h
+	"ECS/Component.h"
+	"Point.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"../SkillComponent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\physic\system\skillentitycollisionresponse.h
+	"Physic/System/EntityCollisionResponse.h"
+	"../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\physic\system\worldentitycollisionresponse.h
+	"Data/GameEventDispatcher.h"
+	"Physic/System/WorldCollisionResponse.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\statisticssystem.h
+	<unordered_set>
+	"ECS/System.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Scene/SceneHolder.h"
+	"../BattleComponent.h"
+	"../../World/WorldScene.h"
+	"../../PokemonGameEventDispatcher.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guibattle.h
+	<memory>
+	<unordered_map>
+	"Utils/Observer.h"
+	"Utils/Observable.h"
+	"ECS/ECSDefines.h"
+	"Scene/HasGraphic.h"
+	"Scene/HasLogic.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+	"../../Gameplay/Fight/BattleEvent.h"
+	"../../Gameplay/Fight/StatisticsChangeEvent.h"
+	"DialogMenu.h"
+	"../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.h
+	"IDialogMenu.h"
+	"GUI/Windows/DynamicWindowIG.h"
+	"GUI/Utils/TimeObservable.h"
+	"GUI/Windows/TimeScrollableWindowIG.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\idialogmenu.h
+	"Rectangle.h"
+	"Graphic/Draw/Drawable.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\\ai\system\iarandommovementsystem.h
+	<unordered_set>
+	"../IARandomMovementComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/System.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\\ai\iarandommovementcomponent.h
+	"ECS/Component.h"
+	"Point.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.cpp
+	"SkillRefreshSystem.h"
+	"Utils/TimeUtils.h"
+	"Utils/NumberUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/RectangleUtils.h"
+	"Inputs/Readers/IniReader.h"
+	"Inputs/InputContextManager.h"
+	"../../CustomEntityManager.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\statisticssystem.cpp
+	"StatisticsSystem.h"
+	"../../Scene/SceneMap.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenemap.h
+	<memory>
+	"DebugAbstractSceneMap.h"
+	"AbstractSceneMap.h"
+	"AI/System/IARandomMovementSystem.h"
+	"AI/System/IADefinedMovementSystem.h"
+	"../Mobs/System/MobSpawningSystem.h"
+	"Script/System/ScriptRefreshSystem.h"
+	"../../Script/System/ScriptCommandsSystem.h"
+	"../Fight/System/FightStartSystem.h"
+	"Graphic/System/CameraFollowSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\\ai\system\iadefinedmovementsystem.h
+	<unordered_set>
+	"../IADefinedMovementComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/System.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_ai\\ai\iadefinedmovementcomponent.h
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/Component.h"
+	"Point.h"
+	"Utils/TimeUtils.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\system\mobspawningsystem.h
+	<unordered_set>
+	"ECS/Basics/Physic/PositionComponent.h"
+	"../MobSpawnAreaComponent.h"
+	"ECS/System.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\system\scriptrefreshsystem.h
+	<unordered_set>
+	"ECS/Basics/Script/ScriptAwareComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"Inputs/InputContextManager.h"
+	"ECS/System.h"
+	"ScriptAutoSystem.h"
+
+1490777810 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptawarecomponent.h
+	"../../Component.h"
+	"../Physic/PositionComponent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\system\scriptautosystem.h
+	<unordered_set>
+	<string>
+	<unordered_map>
+	"../Command/Command.h"
+	"Data/Savegame.h"
+	"../ScriptComponent.h"
+	"ECS/System.h"
+	"ECS/Basics/Script/ScriptRegisterer.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\command\command.h
+	<fstream>
+	<memory>
+	<string>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\scriptcomponent.h
+	<fstream>
+	<string>
+	<vector>
+	<limits>
+	<unordered_map>
+	"ECS/Component.h"
+	"ScriptState.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"ECS/ECSDefines.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\scriptstate.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\script\scriptregisterer.h
+	"ECS/ECSDefines.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\system\scriptcommandssystem.h
+	"Script/System/ScriptBasicCommandsSystem.h"
+	"Scene/SceneSwitcher.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+	"Utils/Observable.h"
+	"Utils/Observer.h"
+	"../../Gameplay/PokemonGameEventDispatcherDeclaration.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\system\scriptbasiccommandssystem.h
+	"ScriptAutoSystem.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\scene\sceneswitcher.h
+	<iostream>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\system\camerafollowsystem.h
+	"CameraSystem.h"
+	"Rectangle.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\inventory\inventory.cpp
+	<fstream>
+	"Inventory.h"
+	"Utils/StringUtils.h"
+	"../../Utils/ChargementImages.h"
+	"Utils/RectangleUtils.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\inventory\inventory.h
+	<list>
+	<memory>
+	"Object.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\inventory\object.h
+	<string>
+	<vector>
+	"Point.h"
+	"Graphic/Texture.h"
+	"Graphic/Animation.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\inventory\object.cpp
+	"Object.h"
+	<fstream>
+	"Inputs/Readers/IniReader.h"
+	"Utils/StringUtils.h"
+	"../../Utils/IDs.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\system\mobspawningsystem.cpp
+	"MobSpawningSystem.h"
+	"../../../Utils/ChargementImages.h"
+	"../../../Utils/IDs.h"
+	"../../World/WorldImpl.h"
+	"Utils/TimeUtils.h"
+	"../MobSpawner.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\pokeball.cpp
+	<math.h>
+	"../Utils/IDs.h"
+	"Pokeball.h"
+	"../Utils/ChargementImages.h"
+	"Weather.h"
+	"Graphic/Draw/VectorDrawableContainer.h"
+	"Utils/RectangleUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\vectordrawablecontainer.h
+	<vector>
+	<functional>
+	"DrawableContainer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\draw\drawablecontainer.h
+	"DrawableFixedPriority.h"
+	<climits>
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\prefabentitymanager.cpp
+	"PrefabEntityManager.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Graphic/CameraFocusedComponent.h"
+	"ECS/Basics/Physic/GravityAffectedComponent.h"
+	"ECS/Basics/Script/ScriptAwareComponent.h"
+	"Graphic/GraphicComponent.h"
+	"ECS/Basics/Graphic/DirectionalAnimationComponent.h"
+	"ECS/Basics/Input/InputComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"Graphic/HasShadowComponent.h"
+	"ECS/Basics/Physic/CollidableComponent.h"
+	"Utils/SpritePath.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractnoguiscenemap.cpp
+	"AbstractNoGUISceneMap.h"
+	"../Weather.h"
+	"World/World.h"
+	"World/LayerE.h"
+	"ECS/ECSDefines.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractscenemap.cpp
+	"../Weather.h"
+	"../World/WorldScene.h"
+	"../CustomEntityManager.h"
+	"World/LayerE.h"
+	"Scene/SceneSwitcher.h"
+	"AbstractSceneMap.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\debugabstractscenemap.cpp
+	"DebugAbstractSceneMap.h"
+	"../World/WorldScene.h"
+	"../CustomEntityManager.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenefight.cpp
+	"../World/WorldScene.h"
+	"SceneFight.h"
+	"Task/RepeatableTask.h"
+	"../CustomEntityManager.h"
+	"../Fight/FightComponent.h"
+	"../Data/PokemonDescriptor.h"
+	"Task/TaskQueue.h"
+	"../../Graphic/GUI/Bar.h"
+	"../PokemonGameEventDispatcher.h"
+	"Data/Events/CollisionEvent.h"
+	"AI/IARandomMovementComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\repeatabletask.h
+	<memory>
+	"Runnable.h"
+	"Task.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\runnable.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\task.h
+	<functional>
+	<vector>
+	"../Utils/Identity.h"
+	"../Utils/TupleUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\identity.h
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\bar.h
+	<iostream>
+	<string>
+	"Graphic/Texture.h"
+	"Graphic/Draw/DrawableFixedPriority.h"
+	"ECS/ECSDefines.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\sceneholdercore.cpp
+	"SceneHolderCore.h"
+	"Exceptions/SceneDiedException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\scenediedexception.h
+	"GenericException.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenemap.cpp
+	"../World/WorldScene.h"
+	"SceneMap.h"
+	"../CustomEntityManager.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenetobattleswitcher.cpp
+	"SceneToBattleSwitcher.h"
+	"SceneFight.h"
+	"../World/WorldScene.h"
+	"Scene/SceneHolder.h"
+	"../Fight/FightComponent.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenetobattleswitcher.h
+	"Scene/SceneSwitcher.h"
+	"Point.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+	"../PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenetomapswitcher.cpp
+	"SceneToMapSwitcher.h"
+	"SceneMap.h"
+	"../World/WorldScene.h"
+	"Scene/SceneHolder.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\scenetomapswitcher.h
+	"Scene/SceneSwitcher.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+	"../PokemonGameEventDispatcherDeclaration.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\system\pokeballsystem.cpp
+	"PokeballSystem.h"
+	"ECS/Basics/Graphic/DeleterComponent.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\weather.cpp
+	<iostream>
+	<string>
+	"Weather.h"
+	"World/World.h"
+	"Utils/NumberUtils.h"
+
+1490684422 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\wgamecore.cpp
+	"WGameCore.h"
+	"Inputs/KeyboardInputMapContext.h"
+	"Inputs/KeyboardInputGUIContext.h"
+	"Scene/SceneMap.h"
+	"Graphic/Draw/VectorDrawableContainer.h"
+	"Exceptions/SceneDiedException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyboardinputmapcontext.h
+	"KeyboardInputContext.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyboardinputcontext.h
+	"InputContext.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyboardinputguicontext.h
+	"KeyboardInputContext.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldimpl.cpp
+	<list>
+	"WorldImpl.h"
+	"../WGameCore.h"
+	"../CustomEntityManager.h"
+	"Graphic/Draw/DrawableContainer.h"
+	"Physic/ParticleManager.h"
+	"../../Utils/IDs.h"
+	"World/Layer.h"
+	"World/LayerE.h"
+	"Utils/SpritePath.h"
+	"Exceptions/CorruptedFileException.h"
+	"Utils/StringUtils.h"
+	"Utils/RectangleUtils.h"
+	"Inputs/Readers/IniReader.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\particlemanager.h
+	<iostream>
+	<string>
+	<memory>
+	<vector>
+	"Particle.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\corruptedfileexception.h
+	"FileException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\fileexception.h
+	"InputException.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldscene.cpp
+	"Utils/StringUtils.h"
+	"Utils/RectangleUtils.h"
+	"Rectangle.h"
+	"Inputs/Readers/IniReader.h"
+	"World/Block.h"
+	"AI/IARandomMovementComponent.h"
+	"AI/IADefinedMovementComponent.h"
+	"WorldScene.h"
+	"../Data/Settings.h"
+	"World/LayerE.h"
+	"../../Utils/IDs.h"
+	"Exceptions/CorruptedFileException.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"Exceptions/ScriptSyntaxError.h"
+	"../Fight/FightComponent.h"
+	"../CustomEntityManager.h"
+	"Graphic/Draw/DrawableContainer.h"
+	"GUI/Windows/Window.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\scriptsyntaxerror.h
+	"ScriptException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\scriptexception.h
+	"GenericException.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.cpp
+	"AbstractGameGUI.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\bar.cpp
+	<iostream>
+	<string>
+	"Bar.h"
+	"ECS/ECSDefines.h"
+	"ECS/EntityManager.h"
+	"../../Utils/IDs.h"
+	"../../Gameplay/Data/RawStatistics.h"
+	"ECS/EntityManager.h"
+	"Utils/Observable.h"
+	"Graphic/System/CameraSystem.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
+	"DialogMenu.h"
+	"GUI/Components/Concrete/Button.h"
+	"GUI/Components/Concrete/ScrollingMultiLineLabel.h"
+	"../../Utils/IDs.h"
+	"Utils/TimeUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\button.h
+	"../Hoverable.h"
+	"../../Events/ClickEventListener.h"
+	"Graphic/Texture.h"
+	"../../Events/ValueChangedEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\scrollingmultilinelabel.h
+	"../WidgetPanel.h"
+	"../../Events/TimeEventListener.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dynamicwindowarea.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guibattle.cpp
+	"GUIBattle.h"
+	"Bar.h"
+	"GUI/Components/Concrete/Button.h"
+	"../../Gameplay/Fight/SkillsHolderComponent.h"
+	"../../Gameplay/Fight/BattleComponent.h"
+	"Graphic/Draw/DrawableContainer.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
+	<memory>
+	<limits>
+	"GUIMap.h"
+	"../../Gameplay/Data/Settings.h"
+	"WindowTeam.h"
+	"WindowSettings.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowteam.h
+	<list>
+	"SlotPokemon.h"
+	"GUI/Windows/MoveableWindow.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\slotpokemon.h
+	"SlotPokemonData.h"
+	"GUI/Components/Concrete/ButtonSprite.h"
+	"GUI/Components/Concrete/Label.h"
+	"GUI/Windows/WindowIG.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\buttonsprite.h
+	"Button.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\label.h
+	"../Widget.h"
+	"Graphic/Texture.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\moveablewindow.h
+	"DynamicWindowIG.h"
+	"../Components/Concrete/Button.h"
+	"../Components/Concrete/ButtonQuit.h"
+	"../Events/HoverEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\buttonquit.h
+	"Button.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowsettings.h
+	"GUI/Components/UiBinder.h"
+	"GUI/Windows/MoveableWindow.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\uibinder.h
+	<functional>
+	<unordered_map>
+	"../Events/ValueChangedEventListener.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\image_area.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\inventory_area.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\mapmousecursor.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\messagedialogbox.cpp
+	"MessageDialogBox.h"
+	"Inputs/InputContextManager.h"
+	"Rectangle.h"
+	"../../Utils/IDs.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\messagedialogbox.h
+	<string>
+	"DialogMenu.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\movablewindow.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\slotpokemon.cpp
+	"SlotPokemon.h"
+	"Utils/SpritePath.h"
+	"../../Gameplay/Fight/StatisticsChangeEvent.h"
+	"../../Utils/IDs.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\toolbar.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\trainercard.cpp
+	<iostream>
+	<cstdlib>
+	"TrainerCard.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowbag.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowmousecursor.cpp
+	<limits>
+	"Utils/SpritePath.h"
+	"WindowMouseCursor.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowrenderer.cpp
+	"WindowRenderer.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowrenderer.h
+	"Rectangle.h"
+	"Utils/Singleton_template.h"
+	"Graphic/Texture.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowsettings.cpp
+	"WindowSettings.h"
+	"../../Gameplay/Data/Settings.h"
+	"GUI/GUI.h"
+	"GUI/Components/Concrete/Label.h"
+	"GUI/Components/Concrete/CheckBox.h"
+	"GUI/Components/Concrete/LabeledHorizontalSlider.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\checkbox.h
+	"Button.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\labeledhorizontalslider.h
+	"HorizontalSlider.h"
+	"Label.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\horizontalslider.h
+	"../../Events/ValueChangedEvent.h"
+	"../../Events/ClickEventListener.h"
+	"../WidgetPanel.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowshop.cpp
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowteam.cpp
+	<algorithm>
+	"WindowTeam.h"
+	"SlotPokemon.h"
+	"SlotPokemonData.h"
+	"WindowMouseCursor.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\shakermanager.cpp
+	"ShakerManager.h"
+	"Rectangle.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\shakermanager.h
+	"Rectangle.h"
+
+1490690027 source:c:\documents\perso\dev\c++\smashanddash\code\game\main.cpp
+	<cstdlib>
+	<time.h>
+	<iostream>
+	<string>
+	<fstream>
+	<memory>
+	<vector>
+	<sstream>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	"Gameplay/WGameCore.h"
+	"Exceptions/GenericException.h"
+	"Exceptions/TerminateProcessException.h"
+	"MessagePopup.h"
+	"./Utils/IDs.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\terminateprocessexception.h
+	"GenericException.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\messagepopup.h
+	<string>
+	"MessageType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\messagetype.h
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\physic\system\skillentitycollisionresponse.cpp
+	"SkillEntityCollisionResponse.h"
+	"ECS/Basics/Physic/CollisionComponent.h"
+	"../../Gameplay/Data/RawStatistics.h"
+	"ECS/Basics/Physic/WorldCollisionComponent.h"
+	"Physic/System/CollisionSystem.h"
+	"../../Gameplay/Fight/SkillComponent.h"
+	"../../Gameplay/Fight/BattleComponent.h"
+	"ECS/EntityManager.h"
+
+1490778029 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\collisioncomponent.h
+	"../../Component.h"
+	"../../ECSDefines.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\physic\system\worldentitycollisionresponse.cpp
+	"WorldEntityCollisionResponse.h"
+	"ECS/Basics/Physic/CollisionComponent.h"
+	"Data/Events/CollisionEvent.h"
+	"ECS/Basics/Physic/WorldCollisionComponent.h"
+	"ECS/EntityManager.h"
+	"../../Gameplay/Fight/SkillComponent.h"
+	"../../Gameplay/Fight/BattleComponent.h"
+
+1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandaddpokemon.cpp
+	"CommandAddPokemon.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandaddpokemon.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\command\abstractfunctioncommand.h
+	"AbstractCommand.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\command\abstractcommand.h
+	<sstream>
+	<vector>
+	"Command.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandblockcollision.cpp
+	<string>
+	"CommandBlockCollision.h"
+	"Exceptions/ScriptException.h"
+	"../../Utils/IDs.h"
+	"Script/System/ScriptAutoSystem.h"
+	"ECS/Basics/Input/InputComponent.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Utils/StringUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandblockcollision.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandchoice.cpp
+	<string>
+	"CommandChoice.h"
+	"Utils/StringUtils.h"
+	"Script/ScriptUtils.h"
+	"../../Graphic/GUI/MessageDialogBox.h"
+	"Rectangle.h"
+	"../../Utils/IDs.h"
+	"Script/System/ScriptAutoSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandchoice.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_script\\script\scriptutils.h
+	<string>
+	<unordered_map>
+	"../Script/ScriptComponent.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandcinematic.cpp
+	"CommandCinematic.h"
+	"../../Gameplay/WGameCore.h"
+	"../../Graphic/GUI/DialogMenu.h"
+	"Utils/StringUtils.h"
+	"Rectangle.h"
+	"../../Utils/IDs.h"
+	"Graphic/SpriteAnimation.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandcinematic.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\spriteanimation.h
+	"Animation.h"
+	"Texture.h"
+	"Point.h"
+	"Rectangle.h"
+	<memory>
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commanddirection.cpp
+	"CommandDirection.h"
+	"Utils/StringUtils.h"
+	"Script/ScriptComponent.h"
+	"ECS/Basics/Graphic/DirectionalAnimationComponent.h"
+	"ECS/EntityManager.h"
+	"Script/System/ScriptAutoSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commanddirection.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandexpulse.cpp
+	<string>
+	"CommandExpulse.h"
+	"Exceptions/ScriptException.h"
+	"../../Utils/IDs.h"
+	"Script/System/ScriptAutoSystem.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"AI/IADefinedMovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"Utils/StringUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+	"Utils/RectangleUtils.h"
+	"World/World.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandexpulse.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandfollow.cpp
+	"CommandFollow.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandfollow.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandheal.cpp
+	"CommandHeal.h"
+	"../../Gameplay/WGameCore.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandheal.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandhidecharacter.cpp
+	"CommandHideCharacter.h"
+	"Utils/StringUtils.h"
+	"Script/ScriptComponent.h"
+	"Graphic/GraphicComponent.h"
+	"ECS/EntityManager.h"
+	"Utils/SpritePath.h"
+	"Script/System/ScriptAutoSystem.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandhidecharacter.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandhidegui.cpp
+	"CommandHideGUI.h"
+	"../../Gameplay/WGameCore.h"
+	"Utils/StringUtils.h"
+	"../../Graphic/GUI/ToolBar.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandhidegui.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\toolbar.h
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandjump.cpp
+	<string>
+	"CommandJump.h"
+	"Exceptions/ScriptException.h"
+	"../../Utils/IDs.h"
+	"Script/System/ScriptAutoSystem.h"
+	"ECS/Basics/Physic/ForceComponent.h"
+	"AI/IADefinedMovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"Utils/StringUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandjump.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandkillentity.cpp
+	"CommandKillEntity.h"
+	"Utils/StringUtils.h"
+	"ECS/EntityManager.h"
+	"Script/ScriptComponent.h"
+	"Script/System/ScriptAutoSystem.h"
+	<string>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandkillentity.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandmessage.cpp
+	<string>
+	"CommandMessage.h"
+	"../../Graphic/GUI/MessageDialogBox.h"
+	"../../Utils/IDs.h"
+	"Utils/StringUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandmessage.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandmove.cpp
+	<string>
+	"CommandMove.h"
+	"Exceptions/ScriptException.h"
+	"../../Utils/IDs.h"
+	"Script/System/ScriptAutoSystem.h"
+	"ECS/Basics/Physic/MovementComponent.h"
+	"AI/IADefinedMovementComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+	"ECS/Basics/Script/ScriptSleepComponent.h"
+	"ECS/Basics/Script/ScriptTriggerType.h"
+	"Utils/StringUtils.h"
+	"Utils/PhysicUtils.h"
+	"Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandmove.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayanimation.cpp
+	"CommandPlayAnimation.h"
+	"../../Utils/IDs.h"
+	"Utils/SpritePath.h"
+	"ECS/EntityManager.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"Graphic/GraphicComponent.h"
+	"ECS/Basics/Graphic/DeleterComponent.h"
+	"Script/ScriptUtils.h"
+	"Utils/StringUtils.h"
+	"Script/System/ScriptAutoSystem.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayanimation.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplaycrumbling.cpp
+	"CommandPlayCrumbling.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplaycrumbling.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayerpresence.cpp
+	"CommandPlayerPresence.h"
+	"Utils/StringUtils.h"
+	"Rectangle.h"
+	"../../Utils/IDs.h"
+	"Utils/RectangleUtils.h"
+	"ECS/ECSDefines.h"
+	"ECS/EntityManager.h"
+	"Script/ScriptComponent.h"
+	"ECS/Basics/Physic/PositionComponent.h"
+	"ECS/Basics/Physic/HitboxComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayerpresence.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayshaking.cpp
+	"CommandPlayShaking.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandplayshaking.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandpokemonout.cpp
+	"CommandPokemonOut.h"
+	"Utils/StringUtils.h"
+	"Rectangle.h"
+	"../../Utils/IDs.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandpokemonout.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandshop.cpp
+	"CommandShop.h"
+	"../../Graphic/GUI/WindowShop.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandshop.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowshop.h
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandstop.cpp
+	"CommandStop.h"
+	"../../Utils/IDs.h"
+	"Script/ScriptComponent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandstop.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandstuckcharacter.cpp
+	"CommandStuckCharacter.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandstuckcharacter.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandteleport.cpp
+	"CommandTeleport.h"
+	<string>
+	"Script/ScriptComponent.h"
+	"Script/System/ScriptAutoSystem.h"
+	"Exceptions/SceneDiedException.h"
+	"Exceptions/InvalidPathException.h"
+	"World/World.h"
+	"../../Utils/IDs.h"
+	"Utils/StringUtils.h"
+	"../../Gameplay/Scene/SceneToMapSwitcher.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandteleport.h
+	"Script/Command/AbstractFunctionCommand.h"
+	"../../Gameplay/World/WorldScene.h"
+	"Scene/SceneSwitcher.h"
+	"Utils/Observable.h"
+	"../../Gameplay/PokemonGameEventDispatcher.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandthrowpokebal.cpp
+	"CommandThrowPokebal.h"
+	"../../Gameplay/WGameCore.h"
+	"Utils/StringUtils.h"
+	"Rectangle.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandthrowpokebal.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandtranslationcamera.cpp
+	"CommandTranslationCamera.h"
+	"Rectangle.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\commands\commandtranslationcamera.h
+	"Script/Command/AbstractFunctionCommand.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\globalscriptvariables.cpp
+	"GlobalScriptVariables.h"
+	<map>
+	"../Gameplay/Data/Statistics.h"
+	"Utils/StringUtils.h"
+	"../Utils/IDs.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\script\globalscriptvariables.h
+	<unordered_map>
+	"Utils/Singleton_template.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\script\system\scriptcommandssystem.cpp
+	"ScriptCommandsSystem.h"
+	"../Commands/CommandAddPokemon.h"
+	"../Commands/CommandChoice.h"
+	"../Commands/CommandCinematic.h"
+	"../Commands/CommandDirection.h"
+	"../Commands/CommandFollow.h"
+	"../Commands/CommandHeal.h"
+	"../Commands/CommandHideCharacter.h"
+	"../Commands/CommandHideGUI.h"
+	"../Commands/CommandKillEntity.h"
+	"../Commands/CommandMessage.h"
+	"../Commands/CommandMove.h"
+	"../Commands/CommandPlayAnimation.h"
+	"../Commands/CommandPlayCrumbling.h"
+	"../Commands/CommandPlayerPresence.h"
+	"../Commands/CommandPlayShaking.h"
+	"../Commands/CommandPokemonOut.h"
+	"../Commands/CommandShop.h"
+	"../Commands/CommandStop.h"
+	"../Commands/CommandStuckCharacter.h"
+	"../Commands/CommandTeleport.h"
+	"../Commands/CommandThrowPokebal.h"
+	"../Commands/CommandTranslationCamera.h"
+	"../Commands/CommandExpulse.h"
+	"../Commands/CommandJump.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\game\utils\chargementimages.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	<string>
+	"ChargementImages.h"
+	"World/World.h"
+	"Utils/NumberUtils.h"
+	"../Gameplay/Mobs/MobSpawner.h"
+
