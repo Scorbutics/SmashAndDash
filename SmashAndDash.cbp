@@ -30,6 +30,54 @@
 					<Add directory="." />
 				</Linker>
 			</Target>
+			<Target title="Debug">
+				<Option output="SmashAndDash" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++14" />
+				</Compiler>
+				<Linker>
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2main.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_image.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
+					<Add library="libska_core.a" />
+					<Add library="libska_draw.a" />
+					<Add library="libska_gui.a" />
+					<Add library="libska_physic.a" />
+					<Add library="libska_script.a" />
+					<Add library="libska_audio.a" />
+					<Add library="libska_world.a" />
+					<Add library="libska_ai.a" />
+					<Add directory="." />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="SmashAndDash" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-std=c++14" />
+				</Compiler>
+				<Linker>
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2main.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_image.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
+					<Add library="C:/TDM-GCC-64/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
+					<Add library="libska_core.a" />
+					<Add library="libska_draw.a" />
+					<Add library="libska_gui.a" />
+					<Add library="libska_physic.a" />
+					<Add library="libska_script.a" />
+					<Add library="libska_audio.a" />
+					<Add library="libska_world.a" />
+					<Add library="libska_ai.a" />
+					<Add directory="." />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add directory="Code/ska_core/" />
@@ -72,6 +120,7 @@
 		<Unit filename="Code/Game/Gameplay/CustomEntityManager.h" />
 		<Unit filename="Code/Game/Gameplay/Data/DialogEvent.h" />
 		<Unit filename="Code/Game/Gameplay/Data/EntityLoadEvent.h" />
+		<Unit filename="Code/Game/Gameplay/Data/MapEvent.h" />
 		<Unit filename="Code/Game/Gameplay/Data/MonsterDescription.h" />
 		<Unit filename="Code/Game/Gameplay/Data/PokemonDescriptor.cpp" />
 		<Unit filename="Code/Game/Gameplay/Data/PokemonDescriptor.h" />
@@ -250,7 +299,6 @@
 		<Unit filename="Code/Game/Utils/ChargementImages.h" />
 		<Unit filename="Code/Game/Utils/IDs.h" />
 		<Unit filename="Code/Game/Utils/resource.h" />
-		<Unit filename="Code/Game/main.cpp" />
 		<Unit filename="icon1.ico" />
 		<Unit filename="resources.rc">
 			<Option compilerVar="WINDRES" />
