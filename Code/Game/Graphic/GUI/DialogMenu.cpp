@@ -9,7 +9,7 @@ m_fontSize(fontSize),
 m_timeout(timeout),
 m_name(name),
 m_scroll(scroll) {
-	addWidget(std::make_unique<ska::ScrollingMultiLineLabel>(*this, text, m_fontSize, 1.F, ska::Point<int>(16, 16)));
+	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 1.F, ska::Point<int>(16, 16));
 }
 
 int DialogMenu::getPriority() const {

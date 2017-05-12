@@ -1,4 +1,5 @@
 #include <memory>
+#include <SDL.h>
 #include "GUIMap.h"
 #include "../../Gameplay/Data/Settings.h"
 #include "DialogMenu.h"
@@ -22,12 +23,12 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 		m_attachedToCursor->move(e.getMousePosition() + ska::Point<int>(16, 16));
 	});
 
-	m_team = addWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	m_team = &addWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
     //m_team->setPriority(0);
 
-	auto wsettings = addWindow<WindowSettings>("settings", ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
-    wsettings->show(false);
+	auto& wsettings = addWindow<WindowSettings>("settings", ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+    wsettings.show(false);
     //wsettings->setPriority(1);
 
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
@@ -61,34 +62,32 @@ void GUIMap::initButtons(const ska::Window& w) {
 
     };
 
-    auto firstButton = std::make_unique<ska::GUIScrollButtonWindowIG>(wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
-    auto bs = std::make_unique<ska::ButtonSprite>(*firstButton, ska::Point<int>(1, 1), "", 102, [&](ska::Widget*, const ska::ClickEvent& e) {
+    auto& firstButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+	auto& bs = firstButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 102, [&](ska::Widget*, const ska::ClickEvent& e) {
         if (e.getState() == ska::MOUSE_CLICK) {
             auto widget = getWindow("team");
             widget->show(!widget->isVisible());
         }
     });
-    bs->setName("POKEBALL BUTTON");
-    firstButton->addWidget(std::move(bs));
-    firstButton->setName("POKEBALL MENU");
+    bs.setName("POKEBALL BUTTON");
+    firstButton.setName("POKEBALL MENU");
 
-    firstButton->addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    wAction.addWidget(std::move(firstButton));
+    firstButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
     wAction.setName("ACTIONS");
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "pokedex.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
-    auto secondButton = std::make_unique<ska::GUIScrollButtonWindowIG>(wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
-    secondButton->addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    wAction.addWidget(std::move(secondButton));
+    auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    secondButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
+    
     //m_buttonList[1]->name("Pokédex");
     //m_buttonList[1]->setActionClic("pokedex");
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "bag.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
-    auto thirdButton = std::make_unique<ska::GUIScrollButtonWindowIG>(wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
-    thirdButton->addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    wAction.addWidget(std::move(thirdButton));
+    auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    thirdButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
+    
     //m_buttonList[2]->name("PokéSac");
     /*m_buttonList[2]->setClickHandler([&] {
     m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
@@ -98,25 +97,22 @@ void GUIMap::initButtons(const ska::Window& w) {
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "card.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
-    auto fourthButton = std::make_unique<ska::GUIScrollButtonWindowIG>(wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
-    fourthButton->addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    wAction.addWidget(std::move(fourthButton));
+    auto& fourthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    fourthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
+    
     //m_buttonList[3]->setActionClic("trainer_card");
     //m_buttonList[3]->name("Carte dresseur");
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "tape.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
-    auto fifthButton = std::make_unique<ska::GUIScrollButtonWindowIG>(wAction, buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
-    fifthButton->addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    std::unique_ptr<ska::ButtonSprite> bsFifth = std::make_unique<ska::ButtonSprite>(*fifthButton, ska::Point<int>(1, 1), "", 104, [&](ska::Widget*, const ska::ClickEvent& e) {
+    auto& fifthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    fifthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
+	fifthButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 104, [&](ska::Widget*, const ska::ClickEvent& e) {
         if (e.getState() == ska::MOUSE_CLICK) {
             auto widget = getWindow("settings");
             widget->show(!widget->isVisible());
         }
     });
-    fifthButton->addWidget(std::move(bsFifth));
-    wAction.addWidget(std::move(fifthButton));
-
 }
 
 bool GUIMap::onDialogEvent(DialogEvent& de) {
@@ -127,9 +123,9 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > getMaxHeight() ? getMaxHeight() : de.box.y);
         absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > getMaxWidth() ? getMaxWidth() : de.box.x);
 
-        auto dialogWindow = addWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
+        auto& dialogWindow = addWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
         if(de.scroll) {
-            dialogWindow->scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8).then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
+            dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8).then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
                 auto& sdialogWindow = static_cast<DialogMenu&>(caller);
                 sdialogWindow.addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {
                     if(ke.getScanCode() == SDL_SCANCODE_RETURN) {

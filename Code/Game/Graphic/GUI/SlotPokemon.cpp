@@ -11,12 +11,12 @@ WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventLis
 
 	Widget& tthis = *this;
 
-	m_sprite = addWidget(std::make_unique<ska::ButtonSprite>(tthis, ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0, 0, 0, 0 }, [&](Widget*, ska::ClickEvent&) {}));
-	m_name = addWidget(std::make_unique<ska::Label>(*this, "Nom : ", m_fontSize, ska::Point<int>(112, 4)));
-	m_level = addWidget(std::make_unique<ska::Label>(*this, "Niveau : ", m_fontSize, ska::Point<int>(112, 22)));
-	m_hp = addWidget(std::make_unique<ska::Label>(*this, "Type 1 : ", m_fontSize, ska::Point<int>(112, 40)));
-	m_type1 = addWidget(std::make_unique<ska::Label>(*this, "PVs : ", m_fontSize, ska::Point<int>(208, 22)));
-	m_type2 = addWidget(std::make_unique<ska::Label>(*this, "Type 2 : ", m_fontSize, ska::Point<int>(208, 40)));
+	m_sprite = &addWidget<ska::ButtonSprite>(ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0, 0, 0, 0 }, [&](Widget*, ska::ClickEvent&) {});
+	m_name = &addWidget<ska::Label>("Nom : ", m_fontSize, ska::Point<int>(112, 4));
+	m_level = &addWidget<ska::Label>("Niveau : ", m_fontSize, ska::Point<int>(112, 22));
+	m_hp = &addWidget<ska::Label>("Type 1 : ", m_fontSize, ska::Point<int>(112, 40));
+	m_type1 = &addWidget<ska::Label>("PVs : ", m_fontSize, ska::Point<int>(208, 22));
+	m_type2 = &addWidget<ska::Label>("Type 2 : ", m_fontSize, ska::Point<int>(208, 40));
 
 	addHandler<ska::ClickEventListener>([this](Widget*, ska::ClickEvent& e) {
 		if (e.getState() == ska::MouseEventType::MOUSE_CLICK) {

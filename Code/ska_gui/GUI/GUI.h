@@ -55,7 +55,7 @@ namespace ska {
 
 		std::vector<std::string> m_windowsToDelete;
 
-		TimeScrollableWindowIG<>& m_wAction;
+		TimeScrollableWindowIG<>* m_wAction;
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
 
 		GameEventDispatcher& m_ged;
