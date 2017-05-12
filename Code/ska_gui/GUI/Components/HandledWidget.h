@@ -154,6 +154,12 @@ namespace ska {
 	template <>
 	class HandledWidget<> : public Widget, public IHandledWidget {
 	public:
+        HandledWidget() : Widget() {
+        }
+
+        explicit HandledWidget(Widget& parent) : Widget(parent) {
+        }
+
 		bool notify(IWidgetEvent&) override {
 			return false;
 		}
