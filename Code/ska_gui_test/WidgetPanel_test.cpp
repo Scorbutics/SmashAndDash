@@ -1,6 +1,8 @@
 #include <doctest.h>
 #include "GUI/Components/WidgetPanel.h"
 #include "GUI/Events/ClickEventListener.h"
+#include "GUI/Events/KeyEventListener.h"
+#include "GUI/Events/KeyEvent.h"
 #include "HandledWidgetTest.h"
 #include "WidgetTest.h"
 
@@ -102,6 +104,7 @@ TEST_CASE("[WidgetPanel]Propagation d'evenements avec blocage") {
 		//notifié
 		CHECK(hwt2Notified);
 
+		//notification du conteneur
 		CHECK(widgetPanelNotified);
 	}
 
@@ -121,4 +124,37 @@ TEST_CASE("[WidgetPanel]Propagation d'evenements avec blocage") {
 		//le conteneur est quand même notifié
 		CHECK(widgetPanelNotified);
 	}
+}
+
+TEST_CASE("[WidgetPanel]Propagation d'evenements avec types de handlers differents") {
+	ska::WidgetPanel<ska::ClickEventListener> wp;
+
+	auto& hwt = wp.addWidget<HandledWidgetTest<ska::KeyEventListener>>();
+	auto& hwt2 = wp.addWidget<HandledWidgetTest<ska::ClickEventListener>>();
+	wp.addWidget<HandledWidgetTest<>>();
+	wp.addWidget<WidgetTest>();
+
+	ska::Point<int> pClickEvent(0, 0);
+	ska::ClickEvent ce(ska::MOUSE_CLICK, pClickEvent);
+
+    auto widgetPanelNotified = false;
+    wp.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
+        widgetPanelNotified = true;
+    });
+
+    auto hwtNotified = false;
+    hwt.addHandler<ska::KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& e) {
+        hwtNotified = true;
+    });
+
+    auto hwt2Notified = false;
+    hwt2.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
+        hwt2Notified = true;
+    });
+
+    CHECK(wp.notify(ce));
+    CHECK(!hwtNotified);
+    CHECK(hwt2Notified);
+    CHECK(widgetPanelNotified);
+
 }
