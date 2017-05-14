@@ -32,6 +32,7 @@ namespace ska {
 			auto& result = static_cast<SubWidget&>(*w.get());
 			WidgetHandlingTrait<SubWidget>::manageHandledAdd(std::move(w), m_handledWidgets, m_widgets, m_globalList);
 			m_addedSortedWidgets.push_back(&result);
+			resort();
 			return result;
 		}
 
@@ -111,6 +112,7 @@ namespace ska {
 		static void resetTexture() {}
 
 		void resort() {
+			organizeHandledWidgets();
 			this->sortZIndexWidgets(false);
 		}
 
@@ -122,13 +124,13 @@ namespace ska {
 		}
 
 	protected:
-		Widget* getWidget(size_t index) {
+		Widget* getWidget(std::size_t index) {
 			return m_addedSortedWidgets[index];
 		}
 
 	private:
 		void organizeHandledWidgets() {
-			size_t cursor = 0;
+			std::size_t cursor = 0;
 			for (auto& w : m_handledWidgets) {
 				m_handledWidgets.organize(w, cursor);
 				cursor++;
@@ -158,7 +160,7 @@ namespace ska {
 				return v1 < v2;
 			};
 
-			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
+/*			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
 				auto v1 = w1->isVisible() ? 1 : 0;
 				auto v2 = w2->isVisible() ? 1 : 0;
 
@@ -167,13 +169,13 @@ namespace ska {
 				}
 
 				return v1 < v2;
-			};
+			};*/
 
 			if (asc) {
 				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorInf);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
 			} else {
-				sort(m_globalList.begin(), m_globalList.end(), comparatorAscRaw);
+				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorSup);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
 			}
 		}

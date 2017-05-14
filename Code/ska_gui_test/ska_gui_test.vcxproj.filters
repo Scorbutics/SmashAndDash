@@ -27,6 +27,9 @@
     <ClCompile Include="WidgetPanel_test.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="SortedWidgetVector_test.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandledWidgetTest.h">

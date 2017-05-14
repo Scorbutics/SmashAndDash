@@ -9,7 +9,6 @@ namespace ska {
 	public:
 
 		SortedWidgetVector() : m_lastVisibleHandledWidget(-1) {
-
 		}
 
 		void push_back(T&& w) {
@@ -85,6 +84,10 @@ namespace ska {
 
 		bool isVisibleAtIndex(std::size_t cursor) const {
 			return static_cast<int>(cursor) <= m_lastVisibleHandledWidget;
+		}
+
+		bool operator==(const SortedWidgetVector<T>& v) const {
+			return m_data == v.m_data;
 		}
 
 	private:

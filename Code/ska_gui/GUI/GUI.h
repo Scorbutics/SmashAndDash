@@ -75,13 +75,15 @@ namespace ska {
 			t.template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
+			m_wMaster.resort();
 			return result;
 		}
 
-		void removeWindow(const std::string& name) {
+		BaseHandledWidget* removeWindow(const std::string& name) {
 			auto wPtr = m_windowAnnuary[name];
 			m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
 			m_windowAnnuary.erase(name);
+			return static_cast<BaseHandledWidget*>(wPtr);
 		}
 
 		void pushWindowToFront(Widget* w);

@@ -18,7 +18,7 @@ namespace ska {
 			Observer<TimeEvent>(std::bind(&TimeScrollableWindowIG::timeEvent, this, std::placeholders::_1)), m_moving(false),
 			m_timeObservable(nullptr) {
 
-				HandledWidget<ClickEventListener, HoverEventListener, TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
+			HandledWidget<ClickEventListener, HoverEventListener, TimeEventListener, HL...>::template addHandler<TimeEventListener>([&](Widget*, TimeEvent&) {
 				refreshInternal();
 			});
 		}

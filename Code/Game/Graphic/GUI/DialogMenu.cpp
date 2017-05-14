@@ -13,7 +13,7 @@ m_scroll(scroll) {
 }
 
 int DialogMenu::getPriority() const {
-	return GUI_DEFAULT_DISPLAY_PRIORITY;
+	return GUI_DEFAULT_DISPLAY_PRIORITY - 1;
 }
 
 void DialogMenu::display() const {
