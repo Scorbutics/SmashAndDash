@@ -4,14 +4,13 @@
 #include "Draw/DrawableFixedPriority.h"
 #include "Utils/MouseObservable.h"
 #include "Windows/DynamicWindowIG.h"
-#include "Windows/DynamicWindowIG.h"
 #include "Components/Concrete/MouseCursor.h"
 #include "Utils/TimeObservable.h"
 #include "Windows/TimeScrollableWindowIG.h"
 #include "Data/Events/GameEventDispatcher.h"
 
 namespace ska {
-	class Window;
+	class BaseWindow;
 	class ClickEvent;
 	class HoverEvent;
 	class InputContextManager;
@@ -25,7 +24,7 @@ namespace ska {
 		public Observer<GUIEvent> {
 
 	public:
-		GUI(GameEventDispatcher& ged, const Window& w, InputContextManager& playerICM);
+		GUI(GameEventDispatcher& ged, const BaseWindow& w, InputContextManager& playerICM);
         virtual ~GUI();
 		GUI& operator=(const GUI&) = delete;
 
@@ -44,7 +43,7 @@ namespace ska {
 
 		std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
 		bool m_hide;
-		const Window& m_window;
+		const BaseWindow& m_window;
 
 		InputContextManager& m_playerICM;
 

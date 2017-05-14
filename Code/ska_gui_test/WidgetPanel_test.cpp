@@ -18,10 +18,6 @@ TEST_CASE("[WidgetPanel]Ajout de widgets") {
 	auto& hwt = wp.addWidget<HandledWidgetTest<ska::ClickEventListener>>();
 	CHECK(wp.backWidget() == &hwt);
 	CHECK(wp.backAddedWidget() == &hwt);
-
-	auto& wt = wp.addWidget<WidgetTest>();
-	CHECK(wp.backWidget() == &wt);
-	CHECK(wp.backAddedWidget() == &wt);
 }
 
 
@@ -226,13 +222,14 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 
 
 	SUBCASE("Avec un resort avant") {
-		//Au début car invisible
-		expectedOrder.push_back(&hwt3);
-
+		DisplayCounter::reset();
 		//Trié par ordre de priorité croissant
 		expectedOrder.push_back(&hwt2);
 		expectedOrder.push_back(&hwt);
 		expectedOrder.push_back(&hwt4);
+
+		//A la fin car invisible
+		expectedOrder.push_back(&hwt3);
 
 		wp.resort();
 
@@ -252,8 +249,6 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 		wp.display();
 		CHECK(DisplayCounter::getInstances() == expectedOrder);
 	}
-
-
 
 }
 

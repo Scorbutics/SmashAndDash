@@ -125,6 +125,7 @@
     <ClInclude Include="Core\Scene\SceneBase.h" />
     <ClInclude Include="Data\ExtensibleGameEventDispatcher.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Core\BaseWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Scene\Scene.cpp" />
@@ -183,5 +184,6 @@
     <ClCompile Include="Utils\TimeUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Core\BaseWindow.cpp" />
   </ItemGroup>
 </Project>

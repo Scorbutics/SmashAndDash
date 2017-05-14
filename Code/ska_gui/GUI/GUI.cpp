@@ -3,14 +3,12 @@
 #include "GUI.h"
 #include "Components/Concrete/Button.h"
 #include "Windows/GUIScrollButtonWindowIG.h"
-#include "Components/Concrete/ButtonSprite.h"
 #include "Events/FocusEvent.h"
 #include "Data/Events/GUIEvent.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
-
-ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::Window& w, ska::InputContextManager& playerICM) :
+ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::BaseWindow& w, ska::InputContextManager& playerICM) :
     ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
     m_window(w),
     m_playerICM(playerICM),

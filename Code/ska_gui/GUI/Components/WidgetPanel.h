@@ -139,8 +139,8 @@ namespace ska {
 
 		void sortZIndexWidgets(bool asc) {
 			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
-				auto v1 = w1->isVisible() ? 1 : 0;
-				auto v2 = w2->isVisible() ? 1 : 0;
+				auto v1 = w1->isVisible() ? 0 : 1;
+				auto v2 = w2->isVisible() ? 0 : 1;
 
 				if (v1 == v2) {
 					return (w1->getPriority() < w2->getPriority());
@@ -150,8 +150,8 @@ namespace ska {
 			};
 
 			auto comparatorDesc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
-				auto v1 = w1->isVisible() ? 1 : 0;
-				auto v2 = w2->isVisible() ? 1 : 0;
+				auto v1 = w1->isVisible() ? 0 : 1;
+				auto v2 = w2->isVisible() ? 0 : 1;
 
 				if(v1 == v2) {
 					return (w1->getPriority() > w2->getPriority());
@@ -160,22 +160,22 @@ namespace ska {
 				return v1 < v2;
 			};
 
-/*			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
-				auto v1 = w1->isVisible() ? 1 : 0;
-				auto v2 = w2->isVisible() ? 1 : 0;
+			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
+				auto v1 = w1->isVisible() ? 0 : 1;
+				auto v2 = w2->isVisible() ? 0 : 1;
 
 				if (v1 == v2) {
 					return (w1->getPriority() < w2->getPriority());
 				}
 
 				return v1 < v2;
-			};*/
+			};
 
 			if (asc) {
 				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorInf);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
 			} else {
-				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorSup);
+				sort(m_globalList.begin(), m_globalList.end(), comparatorAscRaw);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
 			}
 		}

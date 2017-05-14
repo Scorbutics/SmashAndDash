@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameCore.h" />
+    <ClInclude Include="Core\BaseWindow.h" />
     <ClInclude Include="Core\Scene\HasGraphic.h" />
     <ClInclude Include="Core\Scene\HasLogic.h" />
     <ClInclude Include="Core\Scene\Scene.h" />
@@ -139,6 +140,7 @@
     <ClInclude Include="Utils\TupleUtils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\BaseWindow.cpp" />
     <ClCompile Include="Core\Scene\Scene.cpp" />
     <ClCompile Include="Core\Scene\SceneHolderCore.cpp" />
     <ClCompile Include="Core\Window.cpp" />

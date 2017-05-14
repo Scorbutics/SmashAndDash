@@ -3,26 +3,20 @@
 #include <iostream>
 #include <SDL.h>
 #include "../Draw/SDLRenderer.h"
+#include "BaseWindow.h"
 
 namespace ska {
-	class Window {
+	class Window : public BaseWindow {
 	public:
-		Window(const std::string& title, const unsigned int w, const unsigned int h);
+		Window(const std::string& title, unsigned int w, unsigned int h);
 		Window& operator=(const Window&) = delete;
-
 		virtual ~Window();
-		unsigned int getWidth() const;
-		unsigned int getHeight() const;
 
 		void showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const ;
-
 		void display() const;
-		void resize(unsigned int w, unsigned int h);
 
 	private:
 		const std::string& m_wName;
-		unsigned int m_height;
-		unsigned int m_width;
 
 		SDL_Window * m_screen;
 		SDLRenderer m_renderer;
