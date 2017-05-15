@@ -44,7 +44,7 @@ namespace ska {
 			auto& buttonQuit = this->template addWidget<ButtonQuit>(Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), Button::MENU_DEFAULT_THEME_PATH + "close_button");
 			buttonQuit.setPriority(std::numeric_limits<int>::max() - 1);
 			
-			button.setPriority(std::numeric_limits<int>::max() );
+			button.setPriority(std::numeric_limits<int>::max());
 			
 		}
 

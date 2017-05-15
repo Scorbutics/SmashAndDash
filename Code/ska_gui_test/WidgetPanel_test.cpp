@@ -86,12 +86,12 @@ TEST_CASE("[WidgetPanel]Propagation d'evenements avec blocage") {
         widgetPanelNotified = true;
     });
 
-    auto hwt2Notified = false;
-    hwt2.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
-        hwt2Notified = true;
-    });
-
 	SUBCASE("Stop callback") {
+		auto hwt2Notified = false;
+		hwt2.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
+			hwt2Notified = true;
+		});
+
         auto widgetNotified = false;
         hwt.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
             e.stopPropagation(ska::StopType::STOP_CALLBACK);
@@ -109,6 +109,12 @@ TEST_CASE("[WidgetPanel]Propagation d'evenements avec blocage") {
 	}
 
     SUBCASE("Stop widget") {
+		auto hwt2Notified = false;
+		hwt2.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
+			e.stopPropagation(ska::StopType::STOP_WIDGET);
+			hwt2Notified = true;
+		});
+
         auto widgetNotified = false;
         hwt.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& e) {
             e.stopPropagation(ska::StopType::STOP_WIDGET);
@@ -116,10 +122,10 @@ TEST_CASE("[WidgetPanel]Propagation d'evenements avec blocage") {
         });
 
 		CHECK(wp.notify(ce));
-		CHECK(widgetNotified);
+		CHECK(hwt2Notified);
 
 		//stoppé
-		CHECK(!hwt2Notified);
+		CHECK(!widgetNotified);
 
 		//le conteneur est quand même notifié
 		CHECK(widgetPanelNotified);
@@ -223,10 +229,10 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 
 	SUBCASE("Avec un resort avant") {
 		DisplayCounter::reset();
-		//Trié par ordre de priorité croissant
-		expectedOrder.push_back(&hwt2);
-		expectedOrder.push_back(&hwt);
+		//Trié par ordre de priorité décroissant
 		expectedOrder.push_back(&hwt4);
+		expectedOrder.push_back(&hwt);
+		expectedOrder.push_back(&hwt2);
 
 		//A la fin car invisible
 		expectedOrder.push_back(&hwt3);
@@ -235,6 +241,34 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 
 		wp.display();
 		CHECK(DisplayCounter::getInstances() == expectedOrder);
+
+
+		std::vector<int> order;
+		std::vector<int> expectedEventOrder;
+		expectedEventOrder.push_back(2);
+		expectedEventOrder.push_back(1);
+		expectedEventOrder.push_back(4);
+
+		hwt.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& e) {
+			order.push_back(1);
+		});
+
+		hwt2.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& e) {
+			order.push_back(2);
+		});
+
+		hwt3.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& e) {
+			order.push_back(3);
+		});
+
+		hwt4.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& e) {
+			order.push_back(4);
+		});
+
+		//On vérifie que l'ordre de notification reste correct (par ordre de priorité croissante !) :
+		wp.notify(he);
+
+		CHECK(order == expectedEventOrder);
 	}
 
 	SUBCASE("Sans resort"){
@@ -264,9 +298,9 @@ TEST_CASE("[WidgetPanel]Evenements par priorite") {
 
 	std::vector<int> order;
 	std::vector<int> expectedOrder;
-	expectedOrder.push_back(1);
-	expectedOrder.push_back(2);
 	expectedOrder.push_back(3);
+	expectedOrder.push_back(2);
+	expectedOrder.push_back(1);
 	expectedOrder.push_back(0);
 
 	hwt.setPriority(287);

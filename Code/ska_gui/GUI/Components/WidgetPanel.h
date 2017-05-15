@@ -9,6 +9,7 @@
 #include "../Events/StopType.h"
 #include "../Events/IWidgetEvent.h"
 #include "Utils/VectorUtils.h"
+#include "../../../Game/Utils/IDs.h"
 
 namespace ska {
 
@@ -28,7 +29,7 @@ namespace ska {
 		template <class SubWidget, class ... Args>
 		SubWidget& addWidget(Args&&... args) {
 			auto w = std::make_unique<SubWidget>(*this, std::forward<Args>(args)...);
-			w->setPriority(static_cast<int>(m_globalList.size()));
+			w->setPriority(GUI_DEFAULT_DISPLAY_PRIORITY - 1 - static_cast<int>(m_globalList.size()));
 			auto& result = static_cast<SubWidget&>(*w.get());
 			WidgetHandlingTrait<SubWidget>::manageHandledAdd(std::move(w), m_handledWidgets, m_widgets, m_globalList);
 			m_addedSortedWidgets.push_back(&result);
@@ -113,7 +114,7 @@ namespace ska {
 
 		void resort() {
 			organizeHandledWidgets();
-			this->sortZIndexWidgets(false);
+			this->sortZIndexWidgets();
 		}
 
 		void clear() {
@@ -137,24 +138,13 @@ namespace ska {
 			}
 		}
 
-		void sortZIndexWidgets(bool asc) {
+		void sortZIndexWidgets() {
 			auto comparatorAsc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
 				auto v1 = w1->isVisible() ? 0 : 1;
 				auto v2 = w2->isVisible() ? 0 : 1;
 
 				if (v1 == v2) {
 					return (w1->getPriority() < w2->getPriority());
-				}
-
-				return v1 < v2;
-			};
-
-			auto comparatorDesc = [](const std::unique_ptr<Widget>& w1, const std::unique_ptr<Widget>& w2) {
-				auto v1 = w1->isVisible() ? 0 : 1;
-				auto v2 = w2->isVisible() ? 0 : 1;
-
-				if(v1 == v2) {
-					return (w1->getPriority() > w2->getPriority());
 				}
 
 				return v1 < v2;
@@ -171,24 +161,8 @@ namespace ska {
 				return v1 < v2;
 			};
 
-			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
-				auto v1 = w1->isVisible() ? 0 : 1;
-				auto v2 = w2->isVisible() ? 0 : 1;
-
-				if (v1 == v2) {
-					return (w1->getPriority() < w2->getPriority());
-				}
-
-				return v1 < v2;
-			};
-
-			if (asc) {
-				sort(m_globalList.begin(), m_globalList.end(), comparatorDescRaw);
-				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
-			} else {
-				sort(m_globalList.begin(), m_globalList.end(), comparatorAscRaw);
-				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
-			}
+			std::sort(m_globalList.begin(), m_globalList.end(), comparatorDescRaw);
+			std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorAsc);
 		}
 
 		std::vector<std::unique_ptr<Widget>> m_widgets;
