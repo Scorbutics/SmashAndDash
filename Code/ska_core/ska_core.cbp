@@ -40,6 +40,8 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Unit filename="Core/BaseWindow.cpp" />
+		<Unit filename="Core/BaseWindow.h" />
 		<Unit filename="Core/GameCore.h" />
 		<Unit filename="Core/Scene/HasGraphic.h" />
 		<Unit filename="Core/Scene/HasLogic.h" />

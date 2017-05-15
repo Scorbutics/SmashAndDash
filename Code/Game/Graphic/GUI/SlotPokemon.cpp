@@ -9,7 +9,7 @@ WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventLis
 	m_fontSize(11) {
 	m_data = nullptr;
 
-	Widget& tthis = *this;
+	//Widget& tthis = *this;
 
 	m_sprite = &addWidget<ska::ButtonSprite>(ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0, 0, 0, 0 }, [&](Widget*, ska::ClickEvent&) {});
 	m_name = &addWidget<ska::Label>("Nom : ", m_fontSize, ska::Point<int>(112, 4));

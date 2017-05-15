@@ -79,7 +79,7 @@ void GUIMap::initButtons(const ska::Window& w) {
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "pokedex.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
     auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
     secondButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    
+
     //m_buttonList[1]->name("Pokédex");
     //m_buttonList[1]->setActionClic("pokedex");
 
@@ -87,7 +87,7 @@ void GUIMap::initButtons(const ska::Window& w) {
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "bag.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
     auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
     thirdButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    
+
     //m_buttonList[2]->name("PokéSac");
     /*m_buttonList[2]->setClickHandler([&] {
     m_wBag->setPos(ska::Point<int>(m_wTeam->getRect().w, 0));
@@ -99,7 +99,7 @@ void GUIMap::initButtons(const ska::Window& w) {
     //m_buttonList.push_back(DialogMenuPtr(new DialogMenu("", "." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Icones" FILE_SEPARATOR "card.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "toolsmenu.png", buf, 22, false)));
     auto& fourthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
     fourthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    
+
     //m_buttonList[3]->setActionClic("trainer_card");
     //m_buttonList[3]->name("Carte dresseur");
 
@@ -120,8 +120,8 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         ska::Rectangle absoluteRect;
         absoluteRect.w = (de.box.w < 0) ? getMaxWidth() - 1 : de.box.w;
         absoluteRect.h = (de.box.h < 0) ? getMaxHeight() - 1 : de.box.h;
-        absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > getMaxHeight() ? getMaxHeight() : de.box.y);
-        absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > getMaxWidth() ? getMaxWidth() : de.box.x);
+        absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > static_cast<int>(getMaxHeight()) ? getMaxHeight() : de.box.y);
+        absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > static_cast<int>(getMaxWidth()) ? getMaxWidth() : de.box.x);
 
         auto& dialogWindow = addWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
         if(de.scroll) {

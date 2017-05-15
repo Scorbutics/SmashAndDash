@@ -8,7 +8,7 @@ ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& style
 WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventListener>(parent, relativePos),
 	m_percents(0),
 	m_sliding(false) {
-	auto& b = addWidget<Button>(Point<int>(0, 0), styleName, nullptr, [this](Widget*, ClickEvent& e) {
+	addWidget<Button>(Point<int>(0, 0), styleName, nullptr, [this](Widget*, ClickEvent& e) {
 		m_sliding = e.getState() == MOUSE_CLICK;
 		if (m_sliding) {
 			m_lastPercents = m_percents;

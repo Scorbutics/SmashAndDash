@@ -29,6 +29,18 @@ public:
 
 	StaticWindowTest(const ska::Rectangle& box, const std::string& styleName) : ska::WindowIG<T...>(box, styleName) {
 	}
+
+	virtual void display() const override {
+	    ska::WindowIG<T...>::display();
+	    m_callbackDisplay();
+	}
+
+	void whenDisplayed(std::function<void(void)> callback) {
+	    m_callbackDisplay = callback;
+	}
+
+private:
+    std::function<void(void)> m_callbackDisplay;
 };
 
 class SubGUIMock : public ska::GUI {
@@ -66,9 +78,16 @@ public:
 
 };
 
-TEST_CASE("[GUI]") {
-	
-	SubGUIMock gui;
-	gui.mockAddWindow<StaticWindowTest<ska::ClickEventListener>>("noname", ska::Rectangle{ 0 }, "nostyle");
-	//TODO
+TEST_CASE("[GUI]Affichage fenetre") {
+    SubGUIMock gui;
+    auto displayed = false;
+
+	gui.mockAddWindow<StaticWindowTest<ska::ClickEventListener>>("noname", ska::Rectangle{ 0 }, "nostyle")
+	.whenDisplayed([&]() {
+        displayed = true;
+    });
+
+    gui.display();
+
+	CHECK(displayed);
 }

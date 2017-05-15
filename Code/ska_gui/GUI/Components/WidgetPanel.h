@@ -160,6 +160,17 @@ namespace ska {
 				return v1 < v2;
 			};
 
+            auto comparatorDescRaw = [](const Widget* w1, const Widget* w2) {
+				auto v1 = w1->isVisible() ? 0 : 1;
+				auto v2 = w2->isVisible() ? 0 : 1;
+
+				if (v1 == v2) {
+					return (w1->getPriority() > w2->getPriority());
+				}
+
+				return v1 < v2;
+			};
+
 			auto comparatorAscRaw = [](const Widget* w1, const Widget* w2) {
 				auto v1 = w1->isVisible() ? 0 : 1;
 				auto v2 = w2->isVisible() ? 0 : 1;
@@ -172,7 +183,7 @@ namespace ska {
 			};
 
 			if (asc) {
-				sort(m_globalList.begin(), m_globalList.end(), Drawable::staticOperatorInf);
+				sort(m_globalList.begin(), m_globalList.end(), comparatorDescRaw);
 				std::sort(m_handledWidgets.begin(), m_handledWidgets.end(), comparatorDesc);
 			} else {
 				sort(m_globalList.begin(), m_globalList.end(), comparatorAscRaw);

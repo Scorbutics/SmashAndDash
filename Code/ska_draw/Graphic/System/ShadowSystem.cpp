@@ -28,8 +28,8 @@ void ska::ShadowSystem::refresh() {
 		const int relPosX = pos.x + hc.xOffset - cameraX;
 		const int relPosY = pos.y + hc.yOffset - cameraY - m_shadow.getHeight()/3;
 		const int priority = pos.y + (camera == nullptr ? 0 : camera->h*pos.z) - 10;
-		if (!(((relPosX + m_shadow.getWidth()) < 0 || camera != nullptr && relPosX >= camera->w) ||
-			((relPosY + m_shadow.getHeight()) < 0 || camera != nullptr && relPosY >= camera->h))) {
+		if (!((((relPosX + m_shadow.getWidth()) < 0) || (camera != nullptr && relPosX >= camera->w)) ||
+			(((relPosY + m_shadow.getHeight()) < 0) || (camera != nullptr && relPosY >= camera->h)))) {
 			m_pgd.push_back(ska::PositionnedGraphicDrawable(m_shadow, relPosX, relPosY, priority, priority));
 		}
 	}

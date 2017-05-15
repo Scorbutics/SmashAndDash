@@ -2541,7 +2541,7 @@
 1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\linearparticle.h
 	"Particle.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+1494504207 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
 	"../Rectangle.h"
 	"../Point.h"
 
@@ -3040,7 +3040,7 @@
 	"AbstractNoGUISceneMap.h"
 	"World/World.h"
 
-1491203149 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractscenemap.cpp
+1494856999 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\abstractscenemap.cpp
 	"Physic/System/CollisionSystem.h"
 	"../PokemonGameEventDispatcher.h"
 	"../World/WorldScene.h"
@@ -3089,10 +3089,11 @@
 	"Data/Events/CollisionEvent.h"
 	"AI/IARandomMovementComponent.h"
 
-1490957091 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\window.h
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\window.h
 	<iostream>
 	<SDL.h>
 	"../Draw/SDLRenderer.h"
+	"BaseWindow.h"
 
 1491230934 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\sceneguibattle.h
 	"Core/Scene/SceneBase.h"
@@ -3139,11 +3140,11 @@
 	"../../Gameplay/Data/EntityLoadEvent.h"
 	"../../Gameplay/PokemonGameEventDispatcher.h"
 
-1491203150 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.h
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.h
 	"GUI/GUI.h"
 	"../../Gameplay/PokemonGameEventDispatcher.h"
 
-1494414725 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
 	<vector>
 	<memory>
 	"Draw/DrawableFixedPriority.h"
@@ -3202,7 +3203,7 @@
 	"HandledWidget.h"
 	"../Events/HoverEvent.h"
 
-1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\handledwidget.h
+1494600537 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\handledwidget.h
 	<iostream>
 	<unordered_map>
 	<bitset>
@@ -3247,7 +3248,7 @@
 	"../Components/WidgetPanel.h"
 	"Graphic/Texture.h"
 
-1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widgetpanel.h
+1494861653 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widgetpanel.h
 	<memory>
 	<vector>
 	<type_traits>
@@ -3265,7 +3266,7 @@
 1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\widgetcontainer.h
 	"SortedWidgetVector.h"
 
-1491982564 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\sortedwidgetvector.h
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\sortedwidgetvector.h
 	<vector>
 
 1491982340 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\vectorutils.h
@@ -3283,7 +3284,7 @@
 1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\events\timeevent.h
 	"WidgetEvent.h"
 
-1492004021 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\timescrollablewindowig.h
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\timescrollablewindowig.h
 	"DynamicWindowIG.h"
 	"../Utils/TimeObserver.h"
 	"../Utils/TimeObservable.h"
@@ -3609,8 +3610,9 @@
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\scriptexception.h
 	"GenericException.h"
 
-1492082509 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.cpp
+1494832958 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\abstractgamegui.cpp
 	"AbstractGameGUI.h"
+	"Core/Window.h"
 
 1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\bar.cpp
 	<iostream>
@@ -3631,7 +3633,7 @@
 	"Draw/DrawableFixedPriority.h"
 	"ECS/ECSDefines.h"
 
-1492083531 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
+1494861084 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
 	"DialogMenu.h"
 	"GUI/Components/Concrete/Button.h"
 	"GUI/Components/Concrete/ScrollingMultiLineLabel.h"
@@ -3667,8 +3669,9 @@
 	"../../Gameplay/Fight/BattleComponent.h"
 	"Draw/DrawableContainer.h"
 
-1492084565 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
+1494857034 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
 	<memory>
+	<SDL.h>
 	"GUIMap.h"
 	"../../Gameplay/Data/Settings.h"
 	"DialogMenu.h"
@@ -3695,7 +3698,7 @@
 	"../Widget.h"
 	"Graphic/Texture.h"
 
-1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\moveablewindow.h
+1494572214 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\moveablewindow.h
 	"DynamicWindowIG.h"
 	"../Components/Concrete/Button.h"
 	"../Components/Concrete/ButtonQuit.h"
@@ -3736,7 +3739,7 @@
 
 1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\movablewindow.cpp
 
-1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\slotpokemon.cpp
+1494860731 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\slotpokemon.cpp
 	"SlotPokemon.h"
 	"Utils/SpritePath.h"
 	"../../Gameplay/Fight/StatisticsChangeEvent.h"
@@ -3751,7 +3754,7 @@
 
 1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowbag.cpp
 
-1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowmousecursor.cpp
+1494832958 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowmousecursor.cpp
 	<limits>
 	"Utils/SpritePath.h"
 	"WindowMouseCursor.h"
@@ -3764,7 +3767,7 @@
 	"Utils/Singleton_template.h"
 	"Graphic/Texture.h"
 
-1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowsettings.cpp
+1494832958 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowsettings.cpp
 	"WindowSettings.h"
 	"../../Gameplay/Data/Settings.h"
 	"GUI/GUI.h"
@@ -3775,7 +3778,7 @@
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\checkbox.h
 	"Button.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\labeledhorizontalslider.h
+1494506565 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\concrete\labeledhorizontalslider.h
 	"HorizontalSlider.h"
 	"Label.h"
 
@@ -3786,7 +3789,7 @@
 
 1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowshop.cpp
 
-1490603466 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowteam.cpp
+1494572214 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\windowteam.cpp
 	<algorithm>
 	"WindowTeam.h"
 	"SlotPokemon.h"
@@ -4165,4 +4168,6 @@
 	"../Gameplay/Mobs/MobSpawner.h"
 
 1491396814 source:c:\documents\perso\dev\c++\smashanddash\resources.rc
+
+1494852187 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\basewindow.h
 

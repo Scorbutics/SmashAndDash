@@ -10,8 +10,9 @@
 AbstractSceneMap::AbstractSceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, WorldScene& ws, const bool sameMap) :
 AbstractNoGUISceneMap(em, ged, w, ril, sh),
 SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
-m_sameMap(sameMap), m_observersDefined(false),
-	m_worldScene(ws),
+m_sameMap(sameMap),
+m_observersDefined(false),
+m_worldScene(ws),
 m_window(w),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_entityCollisionResponse(ged, m_entityManager) {
@@ -22,11 +23,11 @@ AbstractSceneMap::AbstractSceneMap(CustomEntityManager& em, PokemonGameEventDisp
 AbstractNoGUISceneMap(em, ged, w, ril, oldScene),
 SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
+m_observersDefined(true),
 m_worldScene(ws),
 m_window(w),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_entityCollisionResponse(ged, m_entityManager),
-m_observersDefined(true) {
+m_entityCollisionResponse(ged, m_entityManager) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
 

@@ -8,11 +8,12 @@ namespace ska {
 		unsigned int getWidth() const;
 		unsigned int getHeight() const;
 		void resize(unsigned int w, unsigned int h);
-	
+
 		virtual ~BaseWindow() = default;
 
 	private:
-		unsigned int m_width;
 		unsigned int m_height;
+		unsigned int m_width;
+
 	};
 }
