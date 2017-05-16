@@ -35,6 +35,7 @@ namespace ska {
 
 
 	private:
+	    ska::Widget& frontWindow();
 		void refreshMouse();
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
@@ -56,9 +57,9 @@ namespace ska {
 
 		TimeScrollableWindowIG<>* m_wAction;
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
-
 		GameEventDispatcher& m_ged;
         TimeScrollableWindowIG<KeyEventListener> m_wMaster;
+        TimeScrollableWindowIG<KeyEventListener>* m_wFocusable;
 
 	protected:
 		template <class L, class EH>
@@ -67,20 +68,28 @@ namespace ska {
 		}
 
 		template <class Win, class ... WinArgs>
-		Win& addWindow(const std::string& name, WinArgs&&... args) {
-			auto& result = m_wMaster.addWidget<Win>(std::forward<WinArgs>(args)...);
+		Win& addFocusableWindow(const std::string& name, WinArgs&&... args) {
+			auto& result = m_wFocusable->addWidget<Win>(std::forward<WinArgs>(args)...);
 			auto& t = reinterpret_cast<Win&>(result);
 			m_windowAnnuary[name] = &t;
 			t.template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
-			m_wMaster.resort();
+			m_wFocusable->resort();
+			return result;
+		}
+
+		template <class Win, class ... WinArgs>
+		Win& addWindow(const std::string& name, WinArgs&&... args) {
+			auto& result = m_wMaster.addWidget<Win>(std::forward<WinArgs>(args)...);
+			auto& t = reinterpret_cast<Win&>(result);
+			m_windowAnnuary[name] = &t;
 			return result;
 		}
 
 		BaseHandledWidget* removeWindow(const std::string& name) {
 			auto wPtr = m_windowAnnuary[name];
-			m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
+			m_wFocusable->removeWidget(static_cast<BaseHandledWidget*>(wPtr));
 			m_windowAnnuary.erase(name);
 			return static_cast<BaseHandledWidget*>(wPtr);
 		}

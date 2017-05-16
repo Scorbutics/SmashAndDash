@@ -55,6 +55,11 @@ public:
 		return addWindow<Win>(name, std::forward<WinArgs>(args)...);
 	}
 
+    template <class Win, class ... WinArgs>
+	Win& mockAddFocusableWindow(const std::string& name, WinArgs&&... args) {
+		return addFocusableWindow<Win>(name, std::forward<WinArgs>(args)...);
+	}
+
 	template <class L, class EH>
 	void mockAddMasterHandler(const EH& handler) {
 		addMasterHandler<L, EH>(handler);

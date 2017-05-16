@@ -23,11 +23,11 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 		m_attachedToCursor->move(e.getMousePosition() + ska::Point<int>(16, 16));
 	});
 
-	m_team = &addWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	m_team = &addFocusableWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
     //m_team->setPriority(0);
 
-	auto& wsettings = addWindow<WindowSettings>("settings", ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	auto& wsettings = addFocusableWindow<WindowSettings>("settings", ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
     wsettings.show(false);
     //wsettings->setPriority(1);
 
@@ -125,7 +125,8 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
 
         auto& dialogWindow = addWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
         if(de.scroll) {
-            dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8).then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
+            dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8)
+            .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
                 auto& sdialogWindow = static_cast<DialogMenu&>(caller);
                 sdialogWindow.addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {
                     if(ke.getScanCode() == SDL_SCANCODE_RETURN) {

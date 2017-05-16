@@ -3144,7 +3144,7 @@
 	"GUI/GUI.h"
 	"../../Gameplay/PokemonGameEventDispatcher.h"
 
-1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
+1494934575 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
 	<vector>
 	<memory>
 	"Draw/DrawableFixedPriority.h"
@@ -3244,11 +3244,11 @@
 	"ClickEvent.h"
 	"EventListener.h"
 
-1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\windowig.h
+1494933129 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\windowig.h
 	"../Components/WidgetPanel.h"
 	"Graphic/Texture.h"
 
-1494861653 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widgetpanel.h
+1494917667 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\components\widgetpanel.h
 	<memory>
 	<vector>
 	<type_traits>
@@ -3258,6 +3258,7 @@
 	"../Events/StopType.h"
 	"../Events/IWidgetEvent.h"
 	"Utils/VectorUtils.h"
+	"../../../Game/Utils/IDs.h"
 
 1491982423 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\utils\widgethandlingtrait.h
 	"WidgetContainer.h"
@@ -3633,7 +3634,7 @@
 	"Draw/DrawableFixedPriority.h"
 	"ECS/ECSDefines.h"
 
-1494861084 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
+1494925502 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
 	"DialogMenu.h"
 	"GUI/Components/Concrete/Button.h"
 	"GUI/Components/Concrete/ScrollingMultiLineLabel.h"
@@ -3669,7 +3670,7 @@
 	"../../Gameplay/Fight/BattleComponent.h"
 	"Draw/DrawableContainer.h"
 
-1494857034 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
+1494925397 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
 	<memory>
 	<SDL.h>
 	"GUIMap.h"
@@ -3698,7 +3699,7 @@
 	"../Widget.h"
 	"Graphic/Texture.h"
 
-1494572214 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\moveablewindow.h
+1494917667 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\windows\moveablewindow.h
 	"DynamicWindowIG.h"
 	"../Components/Concrete/Button.h"
 	"../Components/Concrete/ButtonQuit.h"

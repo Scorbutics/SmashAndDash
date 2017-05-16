@@ -18,10 +18,14 @@ ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::BaseWindow& w, ska::Inpu
     m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
     m_ged(ged),
     m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
-	m_wAction = &addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
+
+    m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
-	
+
+	m_wAction = &addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
+
 	m_wAction->setPriority(0);
+	m_wFocusable->setPriority(1);
 	m_hide = false;
 
 	m_ged.ska::Observable<GUIEvent>::addObserver(*this);
@@ -345,16 +349,20 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
     return false;
 }
 
+ska::Widget& ska::GUI::frontWindow() {
+    return *m_wFocusable->backWidget();
+}
+
 void ska::GUI::pushWindowToFront(Widget* w) {
-	auto firstWidget = m_wMaster.backWidget();
-	if (w != firstWidget) {
-		auto firstPriority = firstWidget->getPriority();
+	auto& firstWidget = frontWindow();
+	if (w != &firstWidget) {
+		auto firstPriority = firstWidget.getPriority();
 		auto priority = w->getPriority();
-		firstWidget->setPriority(priority);
+		firstWidget.setPriority(priority);
 		w->setPriority(firstPriority);
 		w->focus(true);
-		firstWidget->focus(false);
-		m_wMaster.resort();
+		firstWidget.focus(false);
+		m_wFocusable->resort();
 	}
 }
 

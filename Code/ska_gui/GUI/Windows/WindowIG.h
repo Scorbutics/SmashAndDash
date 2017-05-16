@@ -33,13 +33,14 @@ namespace ska{
 			if (!this->isVisible()) {
 				return;
 			}
-			Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
-			//Rectangle maxSizeMenuSprite = { 0, 0, m_menuTiles.getWidth(), m_menuTiles.getHeight() };
-			const auto& box = this->getBox();
-			const auto& pos = this->getAbsolutePosition();
 
-			/* Draw the window using menu tiles */
+            /* Draw the window using menu tiles */
 			if (m_drawStyle) {
+                Rectangle backgroundTileClip = { 0, 0, TAILLEBLOCFENETRE, TAILLEBLOCFENETRE };
+                //Rectangle maxSizeMenuSprite = { 0, 0, m_menuTiles.getWidth(), m_menuTiles.getHeight() };
+                const auto& box = this->getBox();
+                const auto& pos = this->getAbsolutePosition();
+
 				for (auto i = 0; i < box.w; i += backgroundTileClip.w) {
 					for (auto j = 0; j < box.h; j += backgroundTileClip.h) {
 						const Point<int> backgroundTilePos(pos.x + i, pos.y + j);

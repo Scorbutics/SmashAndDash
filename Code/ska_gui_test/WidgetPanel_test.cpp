@@ -265,7 +265,9 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 			order.push_back(4);
 		});
 
-		//On vérifie que l'ordre de notification reste correct (par ordre de priorité croissante !) :
+		//On vérifie que l'ordre de notification reste correct (par ordre de priorité inversé par rapport à l'affichage !)
+		//en effet, l'ordre de déclenchement des évènements doit être de la fenêtre au premier plan
+		//(donc la dernière affichée) vers la fenêtre au dernier plan
 		wp.notify(he);
 
 		CHECK(order == expectedEventOrder);
@@ -277,7 +279,7 @@ TEST_CASE("[WidgetPanel]Affichage par priorite") {
 		//Trié par ordre d'ajout
 		expectedOrder.push_back(&hwt4);
 		expectedOrder.push_back(&hwt2);
-		expectedOrder.push_back(&hwt);		
+		expectedOrder.push_back(&hwt);
 		expectedOrder.push_back(&hwt3);
 
 		wp.display();
