@@ -46,6 +46,10 @@ namespace ska {
 					return true;
 				}
 				if (m_lastVisibleHandledWidget >= 0) {
+					if(static_cast<std::size_t>(m_lastVisibleHandledWidget) >= m_data.size()) {
+						m_lastVisibleHandledWidget = static_cast<int>(m_data.size() - 1);
+					}
+
 					/* Otherwise this widget just turned invisible, so we swap it with the last visible widget */
 					std::swap(m_data[cursor], m_data[static_cast<std::size_t>(m_lastVisibleHandledWidget)]);
 					m_lastVisibleHandledWidget--;

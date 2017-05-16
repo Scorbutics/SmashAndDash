@@ -95,8 +95,9 @@ namespace ska {
 
 		BaseHandledWidget* removeWindow(const std::string& name) {
 			auto wPtr = m_windowAnnuary[name];
-            m_wFocusable->removeWidget(static_cast<BaseHandledWidget*>(wPtr));
-            m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
+			if (!m_wFocusable->removeWidget(static_cast<BaseHandledWidget*>(wPtr))) {
+				m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
+			}
 			m_windowAnnuary.erase(name);
 			return static_cast<BaseHandledWidget*>(wPtr);
 		}

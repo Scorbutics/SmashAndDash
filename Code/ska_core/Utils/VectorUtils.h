@@ -8,12 +8,14 @@ namespace ska {
         ~VectorUtils() = default;
 
         template<class V, class T>
-        static void removeValue(V& v, T val) {
+        static bool removeValue(V& v, T val) {
             auto it = std::find(v.begin(), v.end(), val);
             if(it != v.end()) {
                 std::swap(*it, v.back());
                 v.pop_back();
+				return true;
             }
+			return false;
         }
 
     private:

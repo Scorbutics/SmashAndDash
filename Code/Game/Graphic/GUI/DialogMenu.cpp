@@ -20,6 +20,10 @@ bool DialogMenu::isVisible() const {
     return TimeScrollableWindowIG<ska::KeyEventListener>::isVisible();
 }
 
+int DialogMenu::getPriority() const {
+	return ska::DrawableFixedPriority::getPriority();
+}
+
 
 const std::string& DialogMenu::getName() const {
     return m_name;

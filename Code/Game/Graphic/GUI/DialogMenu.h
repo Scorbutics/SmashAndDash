@@ -20,6 +20,7 @@ public:
 
     void display() const override;
 	bool isVisible() const override;
+	virtual int getPriority() const override;
 
 private:
 	unsigned int m_fontSize;

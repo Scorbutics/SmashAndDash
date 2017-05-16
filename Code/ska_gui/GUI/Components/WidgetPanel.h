@@ -38,9 +38,11 @@ namespace ska {
 		}
 
         template <class SubWidget>
-		void removeWidget(SubWidget* w) {
-			WidgetHandlingTrait<SubWidget>::manageHandledRemove(w, m_handledWidgets, m_widgets, m_globalList);
-            ska::VectorUtils::removeValue<std::vector<Widget*>, Widget*>(m_addedSortedWidgets, w);
+		bool removeWidget(SubWidget* w) {
+			auto removed = false;
+			removed |= WidgetHandlingTrait<SubWidget>::manageHandledRemove(w, m_handledWidgets, m_widgets, m_globalList);
+			removed |= ska::VectorUtils::removeValue<std::vector<Widget*>, Widget*>(m_addedSortedWidgets, w);
+			return removed;
 		}
 
 		/* Called from GUI */
