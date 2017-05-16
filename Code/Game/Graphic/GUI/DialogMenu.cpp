@@ -12,10 +12,6 @@ m_scroll(scroll) {
 	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 1.F, ska::Point<int>(16, 16));
 }
 
-int DialogMenu::getPriority() const {
-	return GUI_DEFAULT_DISPLAY_PRIORITY + 1;
-}
-
 void DialogMenu::display() const {
     TimeScrollableWindowIG<ska::KeyEventListener>::display();
 }

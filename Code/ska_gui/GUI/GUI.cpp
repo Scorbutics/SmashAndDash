@@ -349,19 +349,19 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
     return false;
 }
 
-ska::Widget& ska::GUI::frontWindow() {
-    return *m_wFocusable->backWidget();
+ska::Widget* ska::GUI::frontWindow() {
+    return m_wFocusable->backWidget();
 }
 
 void ska::GUI::pushWindowToFront(Widget* w) {
-	auto& firstWidget = frontWindow();
-	if (w != &firstWidget) {
-		auto firstPriority = firstWidget.getPriority();
+	auto firstWidget = frontWindow();
+	if (w != firstWidget) {
+		auto firstPriority = firstWidget->getPriority();
 		auto priority = w->getPriority();
-		firstWidget.setPriority(priority);
+		firstWidget->setPriority(priority);
 		w->setPriority(firstPriority);
 		w->focus(true);
-		firstWidget.focus(false);
+		firstWidget->focus(false);
 		m_wFocusable->resort();
 	}
 }

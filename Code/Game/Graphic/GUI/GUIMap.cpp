@@ -123,7 +123,7 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > static_cast<int>(getMaxHeight()) ? getMaxHeight() : de.box.y);
         absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > static_cast<int>(getMaxWidth()) ? getMaxWidth() : de.box.x);
 
-        auto& dialogWindow = addWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
+        auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
         if(de.scroll) {
             dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8)
             .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {

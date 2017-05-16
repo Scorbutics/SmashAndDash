@@ -3144,7 +3144,7 @@
 	"GUI/GUI.h"
 	"../../Gameplay/PokemonGameEventDispatcher.h"
 
-1494934575 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
+1494945309 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\\gui\gui.h
 	<vector>
 	<memory>
 	"Draw/DrawableFixedPriority.h"
@@ -3634,13 +3634,13 @@
 	"Draw/DrawableFixedPriority.h"
 	"ECS/ECSDefines.h"
 
-1494925502 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
+1494943064 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.cpp
 	"DialogMenu.h"
 	"GUI/Components/Concrete/Button.h"
 	"GUI/Components/Concrete/ScrollingMultiLineLabel.h"
 	"../../Utils/IDs.h"
 
-1492083463 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.h
+1494943059 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\dialogmenu.h
 	"IDialogMenu.h"
 	"GUI/Windows/DynamicWindowIG.h"
 	"GUI/Utils/TimeObservable.h"
@@ -3670,7 +3670,7 @@
 	"../../Gameplay/Fight/BattleComponent.h"
 	"Draw/DrawableContainer.h"
 
-1494925397 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
+1494941222 source:c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guimap.cpp
 	<memory>
 	<SDL.h>
 	"GUIMap.h"
