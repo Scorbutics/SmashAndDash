@@ -8,6 +8,10 @@ WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska
 MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
 m_mouseCursor(mouseCursor) {
 
+	auto& title = addWidget<ska::Label>("Equipe Pokémon", 11, ska::Point<int>(130, 0));
+	title.setPriority(std::numeric_limits<int>::max());
+	title.setFontColor(255, 255, 255, 255);
+
 	auto count = -1;
 	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
 	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));

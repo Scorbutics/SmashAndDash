@@ -10,12 +10,14 @@ namespace ska {
 	class MoveableWindow : public DynamicWindowIG<HL...> {
 	public:
 		MoveableWindow(MouseObservable& guiObservable, KeyObservable& keyboardObservable, const Rectangle& box, const std::string& styleName) :
-			DynamicWindowIG<HL...>(&guiObservable, &keyboardObservable, box, styleName) {
+			DynamicWindowIG<HL...>(&guiObservable, &keyboardObservable, box, styleName),
+			m_moving(false) {
 			initHandlers();
 		}
 
 		MoveableWindow(Widget& parent, const Rectangle& box, const std::string& styleName) :
-			DynamicWindowIG<HL...>(parent, box, styleName) {
+			DynamicWindowIG<HL...>(parent, box, styleName),
+			m_moving(false) {
 			initHandlers();
 		}
 
@@ -26,8 +28,7 @@ namespace ska {
 				if (e.getState() == MOUSE_CLICK) {
 					m_moving = true;
 					m_offsetWindowOrigin = e.getPosition(*tthis);
-				}
-				else if (e.getState() == MOUSE_RELEASE) {
+				} else if (e.getState() == MOUSE_RELEASE) {
 					m_moving = false;
 				}
 			});
@@ -43,9 +44,9 @@ namespace ska {
 
 			auto& buttonQuit = this->template addWidget<ButtonQuit>(Point<int>(this->getBox().w - TAILLEBLOCFENETRE / 2, 0), Button::MENU_DEFAULT_THEME_PATH + "close_button");
 			buttonQuit.setPriority(std::numeric_limits<int>::max() - 1);
-			
+
 			button.setPriority(std::numeric_limits<int>::max());
-			
+
 		}
 
 		bool m_moving;

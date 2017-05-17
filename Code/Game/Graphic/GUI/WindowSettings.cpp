@@ -19,7 +19,7 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 	auto& title = addWidget<ska::Label>("Paramètres", 11, ska::Point<int>(95, 0));
 	title.setPriority(std::numeric_limits<int>::max());
 	title.setFontColor(255, 255, 255, 255);
-	
+
 	addWidget<ska::Label>("Météo", 11, ska::Point<int>(40, 32));
 
 	m_weatherController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 32), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
@@ -54,8 +54,6 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 
 	addWidget<ska::Label>("Volume", 11, ska::Point<int>(16, 80));
 	m_volController = &addWidget<ska::LabeledHorizontalSlider>(ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160);
-
-	resort();
 }
 
 void WindowSettings::bind(Settings& sets) {

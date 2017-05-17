@@ -50,7 +50,7 @@ void ska::HorizontalSlider::forceValue(float v) {
 		m_percents = 0;
 	}
 
-	auto button = getWidget(1);
+	auto button = getWidget(0);
 	const auto& buttonPos = button->getRelativePosition();
 	auto newPos = Point<int>(static_cast<int>(m_percents * getBox().w - button->getBox().w / 2), buttonPos.y);
 	button->move(newPos);
