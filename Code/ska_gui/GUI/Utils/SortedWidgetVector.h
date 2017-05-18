@@ -48,6 +48,8 @@ namespace ska {
 				if (m_lastVisibleHandledWidget >= 0) {
 					if(static_cast<std::size_t>(m_lastVisibleHandledWidget) >= m_data.size()) {
 						auto i = static_cast<int>(m_data.size() - 1);
+						// ReSharper disable once CppPossiblyErroneousEmptyStatements
+						//TODO replace with find
 						for (; !m_data[i]->isVisible() && i >= 0; i--);
 						if (i >= 0) {
 							m_lastVisibleHandledWidget = i;

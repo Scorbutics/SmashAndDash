@@ -1,25 +1,8 @@
 #include <doctest.h>
 #include "GUI/Events/ClickEventListener.h"
 #include "GUI/GUI.h"
-#include "Inputs/RawInputListener.h"
+#include "WindowsUtil.h"
 #include "Inputs/InputContextManager.h"
-#include "Core/Window.h"
-
-ska::GameEventDispatcher& GetGED () {
-	static ska::GameEventDispatcher ged;
-	return ged;
-}
-
-ska::BaseWindow& GetWindow() {
-	static ska::Window w("title", 100, 100);
-	return w;
-}
-
-ska::InputContextManager& GetICM() {
-	static ska::RawInputListener ril;
-	static ska::InputContextManager playerICM(ril);
-	return playerICM;
-}
 
 template<class ... T>
 class StaticWindowTest : public ska::WindowIG<T...> {
@@ -82,6 +65,20 @@ public:
 	}
 
 };
+
+TEST_CASE("[GUI]Affichage fenetre") {
+    SubGUIMock gui;
+    auto displayed = false;
+
+	gui.mockAddWindow<StaticWindowTest<ska::ClickEventListener>>("noname", ska::Rectangle{ 0 }, "nostyle")
+	.whenDisplayed([&]() {
+        displayed = true;
+    });
+
+    gui.display();
+
+	CHECK(displayed);
+}
 
 TEST_CASE("[GUI]Affichage fenetre") {
     SubGUIMock gui;

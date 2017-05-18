@@ -33,12 +33,21 @@
     <ClCompile Include="GUI_test.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicWindowIG_test.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowsUtil.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandledWidgetTest.h">
       <Filter>Fichiers sources</Filter>
     </ClInclude>
     <ClInclude Include="WidgetTest.h">
+      <Filter>Fichiers sources</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsUtil.h">
       <Filter>Fichiers sources</Filter>
     </ClInclude>
   </ItemGroup>
