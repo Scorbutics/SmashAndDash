@@ -10,7 +10,6 @@
 				<Option output="../../ska_draw" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
-				<Option external_deps="../ska_core/bin/Debug/libska_core.a;" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />

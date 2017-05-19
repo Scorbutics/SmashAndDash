@@ -10,13 +10,13 @@
 
 ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::BaseWindow& w, ska::InputContextManager& playerICM) :
     ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
+    m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
     m_window(w),
     m_playerICM(playerICM),
+    m_ged(ged),
     m_hovered(nullptr),
     m_clicked(nullptr),
     m_lastFocused(nullptr),
-    m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
-    m_ged(ged),
     m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
 
     m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "");

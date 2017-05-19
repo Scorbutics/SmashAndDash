@@ -97,12 +97,15 @@
 			<Add directory="../.." />
 		</Linker>
 		<Unit filename="ClickEventListener_test.cpp" />
+		<Unit filename="DynamicWindowIG_test.cpp" />
 		<Unit filename="GUI_test.cpp" />
 		<Unit filename="HandledWidgetTest.h" />
 		<Unit filename="HandledWidget_test.cpp" />
 		<Unit filename="SortedWidgetVector_test.cpp" />
 		<Unit filename="WidgetPanel_test.cpp" />
 		<Unit filename="WidgetTest.h" />
+		<Unit filename="WindowsUtil.cpp" />
+		<Unit filename="WindowsUtil.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
