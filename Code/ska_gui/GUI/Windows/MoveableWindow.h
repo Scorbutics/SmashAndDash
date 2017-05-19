@@ -32,7 +32,8 @@ namespace ska {
 					m_moving = false;
 				}
 			});
-			button.setWidth(this->getBox().w - TAILLEBLOCFENETRE / 2);
+			auto wButtonWidth = this->getBox().w - TAILLEBLOCFENETRE / 2;
+			button.setWidth((wButtonWidth > 0) ? wButtonWidth : this->getBox().w);
 			button.setHeight(TAILLEBLOCFENETRE / 2);
 			button.template addHandler<HoverEventListener> ([&](Widget*, HoverEvent& e) {
 				if (m_moving && e.getState() != MOUSE_ENTER) {

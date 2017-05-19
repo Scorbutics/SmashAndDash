@@ -39,6 +39,9 @@
     <ClCompile Include="WindowsUtil.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="MoveableWindow_test.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandledWidgetTest.h">

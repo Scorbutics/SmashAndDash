@@ -32,6 +32,24 @@ TEST_CASE("[WidgetPanel]Vidage de widgets") {
 	CHECK(wp.backAddedWidget() == nullptr);
 }
 
+TEST_CASE("[WidgetPanel]Visibilite des Widgets") {
+	ska::WidgetPanel<ska::ClickEventListener> wp;
+
+	wp.addWidget<HandledWidgetTest<ska::ClickEventListener>>();
+	wp.addWidget<HandledWidgetTest<ska::ClickEventListener>>();
+	wp.addWidget<WidgetTest>();
+	DisplayCounter::reset();
+
+	wp.display();
+	CHECK(DisplayCounter::getDisplayCounter() == 2);
+
+	DisplayCounter::reset();
+	wp.showWidgets(false);
+
+	wp.display();
+	CHECK(DisplayCounter::getDisplayCounter() == 0);
+}
+
 TEST_CASE("[WidgetPanel]Propagation d'evenements dans les widgets contenus") {
 	ska::WidgetPanel<ska::ClickEventListener> wp;
 

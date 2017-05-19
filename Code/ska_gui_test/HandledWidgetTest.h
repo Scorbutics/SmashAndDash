@@ -27,6 +27,10 @@ public:
 protected:
 	void increment() const {
 		displayCounter++;
+		pushOnly();
+	}
+
+	void pushOnly() const{
 		instances.push_back(this);
 	}
 
@@ -47,7 +51,11 @@ struct HandledWidgetTest : public ska::HandledWidget<EL...>, public DisplayCount
 	}
 
 	void display() const override {
-		DisplayCounter::increment();
+		if (ska::HandledWidget<EL...>::isVisible()) {
+			DisplayCounter::increment();
+		} else {
+			DisplayCounter::pushOnly();
+		}
 	}
 
 };
