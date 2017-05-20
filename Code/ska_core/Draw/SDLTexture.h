@@ -1,6 +1,4 @@
 #pragma once
-
-#include <string>
 #include "Color.h"
 
 namespace ska {
@@ -15,6 +13,10 @@ namespace ska {
 	public:
 		SDLTexture();
 		SDLTexture(TextureData& p);
+		
+		SDLTexture(SDLTexture&) = delete;
+		SDLTexture& operator=(const SDLTexture&) = delete;
+
 		void load(const SDLRenderer& renderer, const std::string& id, int r = -1, int g = -1, int b = -1, int a = -1);
 		void loadFromText(const SDLRenderer& renderer, unsigned int fontSize, const std::string& text, Color c);
 		void free();

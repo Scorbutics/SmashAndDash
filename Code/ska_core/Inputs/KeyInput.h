@@ -4,17 +4,15 @@
 #include <bitset>
 
 namespace ska {
-	class KeyInput
-	{
+	class KeyInput {
 
 	public:
 		KeyInput() = default;
 
-		bool trigger(int key);
-		bool toggle(int key);
+		bool trigger(int key) const;
+		bool toggle(int key) const;
 
 		void setKeyState(int key, bool state);
-		void setLastKeyState(int key, bool state);
 
 		void resetTriggers();
 

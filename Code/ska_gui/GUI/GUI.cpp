@@ -22,9 +22,6 @@ ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::BaseWindow& w, ska::Inpu
     m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 
-	m_wAction = &addWindow<TimeScrollableWindowIG<>>("actions", Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
-
-	m_wAction->setPriority(0);
 	m_wFocusable->setPriority(1);
 	m_hide = false;
 

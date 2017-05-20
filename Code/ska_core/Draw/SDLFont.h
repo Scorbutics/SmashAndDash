@@ -1,16 +1,19 @@
-#ifndef DEF_SDLFONT
-#define DEF_SDLFONT
+#pragma once
 
 #include <map>
-#include <memory>
 #include <SDL_ttf.h>
 
 namespace ska {
-	class SDLFont
-	{
+	class SDLFont {
 	public:
 		SDLFont();
-		SDLFont(unsigned int fontSize);
+		
+		SDLFont(SDLFont&) = delete;
+		SDLFont(SDLFont&&) = default;
+		SDLFont& operator=(const SDLFont&) = delete;
+		SDLFont& operator=(SDLFont&&) = default;
+
+		explicit SDLFont(unsigned int fontSize);
 		~SDLFont();
 
 		TTF_Font* getInstance();
@@ -22,4 +25,3 @@ namespace ska {
 
 	};
 }
-#endif

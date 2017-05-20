@@ -10,11 +10,12 @@ namespace ska {
 	public:
 	    SDLRenderer();
 		SDLRenderer(SDL_Window * window, int index, Uint32 flags);
-		SDLRenderer(SDLRenderer&& r);
-
-		SDLRenderer& operator=(SDLRenderer&& r);
+		
+		SDLRenderer(SDLRenderer&& r) = default;
+		SDLRenderer& operator=(SDLRenderer&& r) = default;
 		SDLRenderer(const SDLRenderer& r) = delete;
         SDLRenderer& operator=(const SDLRenderer& r) = delete;
+
         static void setDefaultRenderer(SDLRenderer* renderer);
         static SDLRenderer* getDefaultRenderer();
 

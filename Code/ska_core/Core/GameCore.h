@@ -59,8 +59,9 @@ namespace ska {
 		}
 
     protected:
-        void addInputContext(EnumContextManager em, InputContextPtr&& c) {
-            m_playerICM.addContext(em, std::move(c));
+		template<class I, class ... Args>
+        void addInputContext(EnumContextManager em, Args&&... args) {
+            m_playerICM.addContext(em, std::make_unique<I>(m_rawInputListener, std::forward<Args>(args)...));
         }
 
     private:

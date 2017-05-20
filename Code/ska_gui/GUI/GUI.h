@@ -42,9 +42,6 @@ namespace ska {
 
 		bool onGUIEvent(GUIEvent& ge);
 
-		//TODO move
-		TimeScrollableWindowIG<>* m_wAction;
-
 		//GUI data
 		bool m_hide;
         MouseCursor m_mouseCursor;

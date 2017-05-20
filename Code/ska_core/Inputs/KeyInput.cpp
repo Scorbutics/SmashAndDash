@@ -9,11 +9,11 @@ void ska::KeyInput::setKeyState(int key, bool state) {
 	m_keys[key] = state;
 }
 
-bool ska::KeyInput::toggle(int key) {
+bool ska::KeyInput::toggle(int key) const {
 	return m_toggle[key];
 }
 
-bool ska::KeyInput::trigger(int key) {
+bool ska::KeyInput::trigger(int key) const {
 	return m_keys[key];
 }
 

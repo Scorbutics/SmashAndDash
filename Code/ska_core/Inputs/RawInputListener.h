@@ -2,14 +2,13 @@
 
 #include "KeyInput.h"
 #include "MouseInput.h"
-#include "../Rectangle.h"
 
 namespace ska {
 	class RawInputListener {
 	public:
 		RawInputListener() = default;
-		KeyInput& getKeyInput();
-		MouseInput& getMouseInput();
+		const KeyInput& getKeyInput() const;
+		const MouseInput& getMouseInput() const;
 		const std::wstring& getTextInput() const;
 		void update();
 		virtual ~RawInputListener() = default;

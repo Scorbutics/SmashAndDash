@@ -137,6 +137,7 @@
     <ClCompile Include="DynamicWindowIG_test.cpp" />
     <ClCompile Include="GUI_test.cpp" />
     <ClCompile Include="HandledWidget_test.cpp" />
+    <ClCompile Include="InputContextTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MoveableWindow_test.cpp" />
     <ClCompile Include="SortedWidgetVector_test.cpp" />
@@ -145,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HandledWidgetTest.h" />
+    <ClInclude Include="InputContextTest.h" />
+    <ClInclude Include="MoveableWindowTest.h" />
     <ClInclude Include="WidgetTest.h" />
     <ClInclude Include="WindowsUtil.h" />
   </ItemGroup>

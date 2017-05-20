@@ -15,7 +15,7 @@ ska::MouseInput::~MouseInput() {
 }
 
 
-ska::Point<int> ska::MouseInput::getMouseLastPos() {
+ska::Point<int> ska::MouseInput::getMouseLastPos() const {
 	return m_mouseLastPos;
 }
 
@@ -30,11 +30,11 @@ void ska::MouseInput::setMouseState(int touche, int state) {
 
 }
 
-int ska::MouseInput::trigger(int touche) {
+int ska::MouseInput::trigger(int touche) const {
 	return m_mouseState[touche];
 }
 
-int ska::MouseInput::toggle(int touche) {
+int ska::MouseInput::toggle(int touche) const {
 	return m_mouseToggle[touche];
 }
 
@@ -46,7 +46,7 @@ void ska::MouseInput::setMousePos(SDL_Event event) {
 	m_mouseyrel = event.motion.yrel;
 }
 
-ska::Point<int> ska::MouseInput::getMousePos() {
+ska::Point<int> ska::MouseInput::getMousePos() const {
 	Point<int> buf;
 	buf.x = m_mousex;
 	buf.y = m_mousey;
@@ -70,11 +70,11 @@ bool ska::MouseInput::mouseClick(int touche) {
 	return false;
 }
 
-ska::Point<int> ska::MouseInput::getMouseClickPos() {
+ska::Point<int> ska::MouseInput::getMouseClickPos() const {
 	return m_clickPos;
 }
 
-ska::Point<int> ska::MouseInput::getMouseTranslation() {
+ska::Point<int> ska::MouseInput::getMouseTranslation() const {
 	Point<int> mouseTrans;
 	mouseTrans.x = m_mousex - m_mouseLastPos.x;
 	mouseTrans.y = m_mousey - m_mouseLastPos.y;

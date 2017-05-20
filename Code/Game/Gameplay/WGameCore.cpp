@@ -11,8 +11,8 @@ WGameCore::WGameCore():
 	m_settings(m_eventDispatcher, "gamesettings.ini") {
 
 	/* Configure inputs types */
-	addInputContext(ska::EnumContextManager::CONTEXT_MAP, std::make_unique<ska::KeyboardInputMapContext>());
-	addInputContext(ska::EnumContextManager::CONTEXT_GUI, std::make_unique<ska::KeyboardInputGUIContext>());
+	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
+	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
 
 	m_guiMapScene = makeScene<SceneGUIMap>();
     m_guiMapScene->bindGUI(m_settings);

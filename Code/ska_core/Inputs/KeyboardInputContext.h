@@ -4,15 +4,16 @@
 namespace ska {
 	class KeyboardInputContext : public InputContext {
 	public:
-		KeyboardInputContext();
+		explicit KeyboardInputContext(RawInputListener& ril);
 
-		virtual void queryActions(RawInputListener& ril, InputActionContainer& actions) override;
-		virtual void queryRanges(RawInputListener& ril, InputRangeContainer& ranges) override;
-		virtual void queryToggles(RawInputListener& ril, InputToggleContainer& toggles) override;
-		virtual const std::wstring& queryText(RawInputListener& ril) override;
+		virtual void queryActions(InputActionContainer& actions) override;
+		virtual void queryRanges(InputRangeContainer& ranges) override;
+		virtual void queryToggles(InputToggleContainer& toggles) override;
+		virtual const std::wstring& queryText() override;
 
 		virtual ~KeyboardInputContext();
-
+	private:
+		RawInputListener& m_ril;
 	};
 }
 

@@ -4,7 +4,7 @@
 namespace ska {
 	class KeyboardInputGUIContext : public KeyboardInputContext {
 	public:
-		KeyboardInputGUIContext();
+		explicit KeyboardInputGUIContext(ska::RawInputListener& );
 		virtual ~KeyboardInputGUIContext();
 
 	protected:

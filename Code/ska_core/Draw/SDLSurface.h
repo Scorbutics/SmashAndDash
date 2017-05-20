@@ -11,6 +11,10 @@ namespace ska {
 
 	public:
 		SDLSurface();
+
+		SDLSurface(const SDLSurface&) = delete;
+		SDLSurface& operator=(const SDLSurface&) = delete;
+
 		~SDLSurface();
 
 		void load(const std::string& file);

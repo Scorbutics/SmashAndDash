@@ -1,17 +1,13 @@
-#include <iostream>
+#include "SDL.h"
 #include "RawInputListener.h"
-#include "../Utils/SkaConstants.h"
 #include "../Exceptions/TerminateProcessException.h"
 #include "../Utils/StringUtils.h"
 
-// int GetDirectionFromChar(char directionChar);
-// char GetCharFromDirection(int dir);
-
-ska::KeyInput& ska::RawInputListener::getKeyInput() {
+const ska::KeyInput& ska::RawInputListener::getKeyInput() const {
     return m_keyIn;
 }
 
-ska::MouseInput& ska::RawInputListener::getMouseInput() {
+const ska::MouseInput& ska::RawInputListener::getMouseInput() const {
 	return m_mouseIn;
 }
 
@@ -30,10 +26,10 @@ void ska::RawInputListener::update() {
 	while(SDL_PollEvent(&event)) {
 		switch (event.type) {
             case SDL_KEYDOWN:
-                m_keyIn.setKeyState(event.key.keysym.scancode, 1);
+                m_keyIn.setKeyState(event.key.keysym.scancode, true);
                 break;
             case SDL_KEYUP:
-				m_keyIn.setKeyState(event.key.keysym.scancode, 0);
+				m_keyIn.setKeyState(event.key.keysym.scancode, false);
                 break;
             case SDL_MOUSEMOTION:
 				m_mouseIn.setMousePos(event);
@@ -51,8 +47,7 @@ void ska::RawInputListener::update() {
 				break;
             case SDL_QUIT:
 				throw TerminateProcessException("Program quitted");
-                break;
-            default:
+		default:
                 break;
 		}
 
@@ -62,33 +57,12 @@ void ska::RawInputListener::update() {
 			switch(event.window.event) {
 
 				case SDL_WINDOWEVENT_RESIZED:
-					/*wScreen.resize(event.window.data1, event.window.data2);
-					wScreen.flip();*/
-						break;
+					break;
 
 				case SDL_WINDOWEVENT_EXPOSED:
-						break;
+					break;
+
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					//wScreen.flip();
-					//int width, height;
-					/*
-					if(event.resize.w > -abs(wScreen.getORel().x) + w->getNbrBlocX()*TAILLEBLOC)
-						width = -abs(wScreen.getORel().x) + w->getNbrBlocX()*TAILLEBLOC;
-					else
-						width = event.resize.w;
-
-					if(event.resize.h > -abs(wScreen.getORel().y) + w->getNbrBlocY()*TAILLEBLOC)
-						height = -abs(wScreen.getORel().y) + w->getNbrBlocY()*TAILLEBLOC;
-					else
-						height = event.resize.h;*/
-
-					//*screen = SDL_SetVideoMode(width, height, 32, SDL_HWSURFACE | SDL_RESIZABLE);
-					/*
-					wm->getGUI()->getDialog()->setPos(0, (*screen)->h - TAILLEBLOCFENETRE*4);
-					wm->getGUI()->getImgDialog()->setPos(0, (*screen)->h - TAILLEBLOCFENETRE*9);
-					wm->getGUI()->getAttackPokemonWindow()->setPos(0, (*screen)->h - TAILLEBLOCFENETRE*2);
-					wm->getGUI()->getToolbar()->setPos((*screen)->w-7*TAILLEBLOCFENETRE, 0);*/
-
 					break;
 
 				default:
@@ -101,48 +75,3 @@ void ska::RawInputListener::update() {
 	}
 
 }
-
-// 
-// int GetDirectionFromChar(char directionChar) {    
-// 	switch (directionChar) {
-// 	case 'b':
-// 		return 0;
-// 	
-// 	case 'd':
-// 		return 1;
-// 
-// 	case 'h':
-// 		return 2;
-// 
-// 	case 'g':
-// 	default:
-// 		return 3;
-// 	}
-// }
-// 
-// char GetCharFromDirection(int dir)
-// {
-//     char c;
-//     switch(dir)
-//     {
-//         case 0:
-//         c = 'b';
-//         break;
-// 
-//         case 1:
-//         c = 'd';
-//         break;
-// 
-//         case 2:
-//         c = 'h';
-//         break;
-// 
-//         case 3:
-//         default:
-//         c = 'g';
-//         break;
-//     }
-//     return c;
-// }
-
-

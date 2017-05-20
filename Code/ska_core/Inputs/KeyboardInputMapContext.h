@@ -4,7 +4,7 @@
 namespace ska {
 	class KeyboardInputMapContext : public KeyboardInputContext {
 	public:
-		KeyboardInputMapContext();
+		explicit KeyboardInputMapContext(ska::RawInputListener& ril);
 		virtual ~KeyboardInputMapContext();
 
 	protected:

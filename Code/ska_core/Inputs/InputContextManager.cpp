@@ -1,6 +1,4 @@
 #include "InputContextManager.h"
-#include "KeyboardInputMapContext.h"
-#include "KeyboardInputGUIContext.h"
 
 /* Default InputContextManager settings.
    Contexts should be added depending of the current Scene in order to
@@ -35,29 +33,15 @@ void ska::InputContextManager::refresh() {
 	fill(m_ranges.begin(), m_ranges.end(), empty);
 	m_toggles.reset();
 	for (auto& c : m_contexts) {
-		c.second->queryActions(m_ril, m_actions);
-		c.second->queryRanges(m_ril, m_ranges);
-		c.second->queryToggles(m_ril, m_toggles);
-		m_textInput = c.second->queryText(m_ril);
+		c.second->queryActions(m_actions);
+		c.second->queryRanges(m_ranges);
+		c.second->queryToggles(m_toggles);
+		m_textInput = c.second->queryText();
 	}
 }
 
 ska::InputContextManager ska::InputContextManager::instantiateEmpty(InputContextManager& icm) {
 	return InputContextManager(icm.m_ril);
-}
-
-ska::InputContextManager::InputContextManager(const InputContextManager& icm) : m_ril(icm.m_ril) {
-	*this = icm;
-}
-
-void ska::InputContextManager::operator=(const InputContextManager& icm) {
-	m_ril = icm.m_ril;
-	m_ranges = icm.m_ranges;
-	m_toggles = icm.m_toggles;
-	m_textInput = icm.m_textInput;
-	/* Cannot copy contexts : they are uniques */
-	//m_contexts = icm.m_contexts;
-	m_actions = icm.m_actions;
 }
 
 const ska::InputRangeContainer& ska::InputContextManager::getRanges() const {

@@ -30,5 +30,6 @@ public:
 private:
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;
+	ska::TimeScrollableWindowIG<>* m_wAction;
 
 };

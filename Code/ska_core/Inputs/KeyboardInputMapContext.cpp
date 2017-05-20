@@ -2,7 +2,7 @@
 #include "KeyboardInputMapContext.h"
 
 
-ska::KeyboardInputMapContext::KeyboardInputMapContext() {
+ska::KeyboardInputMapContext::KeyboardInputMapContext(ska::RawInputListener& ril) : KeyboardInputContext(ril) {
 }
 
 void ska::KeyboardInputMapContext::buildCodeMap(std::unordered_map<int, InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {

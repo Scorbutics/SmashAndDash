@@ -2,7 +2,7 @@
 #include "KeyboardInputGUIContext.h"
 
 
-ska::KeyboardInputGUIContext::KeyboardInputGUIContext() {
+ska::KeyboardInputGUIContext::KeyboardInputGUIContext(ska::RawInputListener& ril) : ska::KeyboardInputContext(ril) {
 }
 
 void ska::KeyboardInputGUIContext::buildCodeMap(std::unordered_map<int, InputAction>& codeMap, std::unordered_map<int, InputToggle>& toggles) {

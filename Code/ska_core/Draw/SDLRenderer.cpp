@@ -15,18 +15,8 @@ ska::SDLRenderer::SDLRenderer() :
     m_renderer(nullptr) {
 }
 
-ska::SDLRenderer::SDLRenderer(SDLRenderer&& r) :
-    m_renderer(nullptr) {
-    operator=(std::move(r));
-}
-
 void ska::SDLRenderer::setDefaultRenderer(SDLRenderer* r) {
 	m_currentDefaultRenderer = r;
-}
-
-ska::SDLRenderer& ska::SDLRenderer::operator=(SDLRenderer&& r) {
-    m_renderer = std::move(r.m_renderer);
-    return *this;
 }
 
 void ska::SDLRenderer::load(SDL_Window* window, int index, Uint32 flags) {

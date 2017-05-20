@@ -1,11 +1,9 @@
-#ifndef DEF_MOUSEINPUT
-#define DEF_MOUSEINPUT
-
+#pragma once
+#include <SDL.h>
 #include "../Point.h"
 
 namespace ska {
-	class MouseInput
-	{
+	class MouseInput {
 	public:
 		MouseInput();
 
@@ -15,12 +13,12 @@ namespace ska {
 		void setMouseState(int touche, int x);
 		bool mouseClick(int touche);
 
-		Point<int> getMouseClickPos();
-		Point<int> getMouseLastPos();
-		Point<int> getMousePos();
-		Point<int> getMouseTranslation();
-		int trigger(int touche);
-		int toggle(int touche);
+		Point<int> getMouseClickPos() const;
+		Point<int> getMouseLastPos() const;
+		Point<int> getMousePos() const;
+		Point<int> getMouseTranslation() const;
+		int trigger(int touche) const;
+		int toggle(int touche) const;
 
 		void resetTriggers();
 		void resetAll();
@@ -36,4 +34,3 @@ namespace ska {
 		Point<int> m_clickPos, m_mouseLastPos;
 	};
 }
-#endif
