@@ -96,7 +96,7 @@ namespace ska {
                     }
                 }
             } catch (ska::SceneDiedException&) {
-                return false;
+                return true;
             }
         }
 

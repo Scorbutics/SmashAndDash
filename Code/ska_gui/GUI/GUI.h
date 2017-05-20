@@ -90,6 +90,10 @@ namespace ska {
 			return result;
 		}
 
+		void resort() {
+			m_wMaster.resort();
+		}
+
 		BaseHandledWidget* removeWindow(const std::string& name) {
 			auto wPtr = m_windowAnnuary[name];
 			if (!m_wFocusable->removeWidget(static_cast<BaseHandledWidget*>(wPtr))) {

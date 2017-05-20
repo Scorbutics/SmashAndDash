@@ -48,9 +48,10 @@ void GUIMap::initButtons(const ska::Window& w) {
     buf.x = 0;
     buf.y = 0;
 
-    //m_wAction->clear();
 	m_wAction = &addWindow<ska::TimeScrollableWindowIG<>>("actions", ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, "");
 	m_wAction->setPriority(0);
+	resort();
+
     auto& wAction = static_cast<ska::TimeScrollableWindowIG<>&>(*m_wAction);
     wAction.move(ska::Point<int>(w.getWidth() - 13 * TAILLEBLOCFENETRE, w.getHeight() - wAction.getBox().h / 2));
 
