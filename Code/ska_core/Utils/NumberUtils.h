@@ -17,7 +17,7 @@ namespace ska{
 		static double random();
 
 		template <class T>
-		static void hashCombine(size_t& seed, T& value) {
+		static void hashCombine(std::size_t& seed, T& value) {
 			seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 		}
 
@@ -42,7 +42,8 @@ namespace ska{
 		static double absolute(double i);
 		static unsigned int absolute(int i);
 
-		static unsigned int squareroot(const unsigned int i);
+		static unsigned int squarerooti(const unsigned int i);
+		static double squareroot(const double i);
 		static unsigned int getMax10Pow(const int num);
 
 		static bool isLowValue(double v, double threshold);

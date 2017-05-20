@@ -275,7 +275,7 @@ void Pokeball::update() {
 		}
 
 		//calcul des coordonnées à l'aide de l'équation de parabole préalablement calculée dans Pokeball::launch
-		m_pokeballPos.y = (int)(m_a*m_pokeballPos.x*m_pokeballPos.x + m_b*m_pokeballPos.x + m_c);
+		m_pokeballPos.y = static_cast<int>(m_a * m_pokeballPos.x * m_pokeballPos.x + m_b * m_pokeballPos.x + m_c);
 	}
 	else if (!m_isInactive)  {
 		//sinon lorsqu'elle tombe par terre

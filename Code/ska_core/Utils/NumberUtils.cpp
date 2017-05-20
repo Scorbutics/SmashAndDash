@@ -48,15 +48,19 @@ double ska::NumberUtils::arctan(double slope) {
 
 float ska::NumberUtils::random(float min, float max) {
 	const double coeff = random();
-	return (float)(coeff * (max - min + 1) + min);
+	return static_cast<float>(coeff * (max - min + 1) + min);
 }
 
-unsigned int ska::NumberUtils::squareroot(const unsigned int i) {
-	return (unsigned int) sqrt(i);
+unsigned int ska::NumberUtils::squarerooti(const unsigned int i) {
+	return static_cast<unsigned int>(sqrt(i));
+}
+
+double ska::NumberUtils::squareroot(const double i) {
+	return sqrt(i);
 }
 
 double ska::NumberUtils::random() {
-	return rand() / ((double)RAND_MAX);
+	return rand() / static_cast<double>(RAND_MAX);
 }
 
 unsigned int ska::NumberUtils::getMax10Pow(const int num)

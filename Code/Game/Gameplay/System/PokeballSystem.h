@@ -15,7 +15,7 @@ public:
 protected:
 	virtual void refresh() override;
 private:
-	void throwBall(ska::EntityId entityId);
+	void throwBall(ska::EntityId entityId) const;
 	ska::AnimatedTexture m_sprite;
 	ska::AnimatedTexture m_openPokeball;
 	ska::AnimatedTexture m_vortex;

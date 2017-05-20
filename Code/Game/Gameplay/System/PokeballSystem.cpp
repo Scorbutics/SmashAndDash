@@ -1,5 +1,6 @@
 #include "PokeballSystem.h"
 #include "ECS/Basics/Graphic/DeleterComponent.h"
+#include "../../Utils/IDs.h"
 
 #define POWER 5
 
@@ -13,9 +14,6 @@ System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionCompon
 }
 
 PokeballSystem::~PokeballSystem() {
-
-
-
 }
 
 void PokeballSystem::refresh() {
@@ -34,15 +32,12 @@ void PokeballSystem::refresh() {
 			//ska::Rectangle animPos = m_gestionAnim.getRectOfCurrentFrame(), oRel = { 0 };
 			if (pc.x < pokec.finalPos.x) {
 				pc.x += pokec.speed;
-			}
-			else {
+			} else {
 				pc.x -= pokec.speed;
 			}
 
 			//calcul des coordonnées à l'aide de l'équation de parabole préalablement calculée dans Pokeball::launch
-			pc.y = (int)(pokec.a*pc.x*pc.x + pokec.b*pc.x + pokec.c);
-
-			//m_sprite.render(pc.x, m_pokeballPos.y, &animPos);
+			pc.y = static_cast<int>(pokec.a * pc.x * pc.x + pokec.b * pc.x + pokec.c);
 		} else if (!pokec.isInactive && !pokec.isOpenning)  {
 			//sinon lorsqu'elle tombe par terre
 			pokec.isOpenning = true;
@@ -73,7 +68,7 @@ void PokeballSystem::refresh() {
 	}
 }
 
-void PokeballSystem::throwBall(ska::EntityId entityId) {
+void PokeballSystem::throwBall(ska::EntityId entityId) const {
 	PokeballComponent& pokec = m_entityManager.getComponent<PokeballComponent>(entityId);
 	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
 
@@ -83,8 +78,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 		leftPos = pc;
 		rightPos = pokec.finalPos;
 		pokec.sens = 1;
-	}
-	else {
+	} else {
 		rightPos = pc;
 		leftPos = pokec.finalPos;
 		pokec.sens = 0;
@@ -93,9 +87,8 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 	//pente de la droite passant par la mousePos et la pos centrale du hero
 	float p;
 	if (rightPos.x != leftPos.x) {
-		p = (float)(rightPos.y - leftPos.y) / (rightPos.x - leftPos.x);
-	}
-	else {
+		p = static_cast<float>(rightPos.y - leftPos.y) / (rightPos.x - leftPos.x);
+	} else {
 		p = 100000;
 	}
 
@@ -109,7 +102,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 
 
 	//experimental (théorème de l'arrangement) :
-	pokec.a = -(float)5 * ((leftPos.x - rightPos.x + 2 * POWER) + 2 * ska::NumberUtils::squareroot((float)(abs(POWER*(POWER + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
+	pokec.a = -static_cast<float>(5) * ((leftPos.x - rightPos.x + 2 * POWER) + 2 * ska::NumberUtils::squareroot(static_cast<double>(abs(POWER * (POWER + rightPos.x - leftPos.x))))) / ((rightPos.x - leftPos.x)*(rightPos.x - leftPos.x));
 	pokec.b = p - pokec.a*(rightPos.x + leftPos.x);
 	pokec.c = leftPos.y - pokec.a*leftPos.x*leftPos.x - pokec.b*leftPos.x;
 
@@ -122,5 +115,6 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 	/* Initialisation Graphique */
 	ska::GraphicComponent gc;
 	gc.sprite.push_back(m_sprite);
+	//gc.desiredPriority = GUI_DEFAULT_DISPLAY_PRIORITY;
 	m_entityManager.addComponent<ska::GraphicComponent>(entityId, gc);
 }
