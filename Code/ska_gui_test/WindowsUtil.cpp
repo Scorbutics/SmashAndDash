@@ -26,6 +26,10 @@ InputContextTest* SetICT(InputContextTest* ict) {
 	return rIct;
 }
 
+InputContextTest* GetICT() {
+    return SetICT(nullptr);
+}
+
 ska::InputContextManager& GetICM() {
 	static ska::InputContextManager playerICM(GetRawInputListener());
 	static auto initialized = false;

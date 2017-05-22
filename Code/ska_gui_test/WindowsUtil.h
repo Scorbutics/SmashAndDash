@@ -7,5 +7,5 @@
 ska::GameEventDispatcher& GetGED();
 ska::RawInputListener& GetRawInputListener();
 ska::BaseWindow& GetWindow();
-InputContextTest* SetICT(InputContextTest* ict);
+InputContextTest* GetICT();
 ska::InputContextManager& GetICM();

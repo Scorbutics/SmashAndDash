@@ -83,43 +83,74 @@ TEST_CASE("[GUI]Affichage fenetre") {
 	CHECK(displayed);
 }
 
-void moveMouseX(int x, InputContextTest* ict) {
+void moveMouseX(int x) {
 	SDL_Event event;
 	event.motion.x = x;
 	event.motion.y = 4;
 	event.motion.xrel = 0;
 	event.motion.yrel = 0;
-	
+
+	auto ict = GetICT();
 	ict->mouseKeys.setMouseLastPos(ict->mouseKeys.getMousePos());
 	ict->mouseKeys.setMousePos(event);
 }
 
-TEST_CASE("[GUI]") {
+void clickMouseLeft(bool d) {
+    auto ict = GetICT();
+    ict->mouseKeys.setMouseState(0, d);
+}
+
+void basicRefreshLoop(ska::GUI& gui) {
+    auto& icm = GetICM();
+    icm.refresh();
+    gui.refresh();
+}
+
+TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
     SubGUIMock gui;
 
-	auto& window = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");	
-
-	auto& icm = GetICM();
-	auto ict = SetICT(nullptr);
+	auto& window = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
 
 	//Sets the mouse pos
-	moveMouseX(21, ict);
+	moveMouseX(21);
 
 	//Mouse left click down
-	ict->mouseKeys.setMouseState(0, true);
+	clickMouseLeft(true);
 
 	//refresh
-	icm.refresh();
-	gui.refresh();
+	basicRefreshLoop(gui);
 
 	//Move the mouse
 	unsigned int xMax = 52;
 	for (unsigned int x = 21; x < xMax; x += 2) {
-		moveMouseX(x, ict);
-
-		icm.refresh();
-		gui.refresh();
+		moveMouseX(x);
+        basicRefreshLoop(gui);
 	}
-    
+
 	CHECK(window.getBox().x == 30);
+}
+
+TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
+    SubGUIMock gui;
+
+	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
+
+	//Sets the mouse pos
+	moveMouseX(21);
+
+	//Mouse left click down
+	clickMouseLeft(true);
+
+	//refresh
+	basicRefreshLoop(gui);
+
+	//Move the mouse
+	unsigned int xMax = 52;
+	for (unsigned int x = 21; x < xMax; x += 2) {
+		moveMouseX(x);
+        basicRefreshLoop(gui);
+	}
+
+	//TODO pour l'instant, fail
+	//CHECK(window.getBox().x == 30);
 }

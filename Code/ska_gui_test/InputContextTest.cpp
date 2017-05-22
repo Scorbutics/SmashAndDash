@@ -1,4 +1,3 @@
-#pragma once
 #include "InputContextTest.h"
 
 
@@ -30,7 +29,7 @@ void InputContextTest::queryToggles(ska::InputToggleContainer& toggles) {
 }
 
 void InputContextTest::buildCodeMap(std::unordered_map< int, ska::InputAction>& codeMap, std::unordered_map<int, ska::InputToggle>& toggles) {
-	
+
 	codeMap[SDL_SCANCODE_ESCAPE] = ska::Quit;
 	codeMap[SDL_SCANCODE_RETURN] = ska::DoAction;
 
@@ -43,5 +42,5 @@ void InputContextTest::buildCodeMap(std::unordered_map< int, ska::InputAction>& 
 
 	/* Right */
 	codeMap[SDL_NUM_SCANCODES + 1] = ska::RClic;
-	
+
 }
