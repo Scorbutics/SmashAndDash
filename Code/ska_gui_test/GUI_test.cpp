@@ -151,6 +151,14 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
         basicRefreshLoop(gui);
 	}
 
-	//TODO pour l'instant, fail
-	//CHECK(window.getBox().x == 30);
+	CHECK(window.getBox().x == 30);
+}
+
+TEST_CASE("[GUI]Changement de focus des fenetres") {
+	SubGUIMock gui;
+
+	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
+	auto& window2 = gui.mockAddWindow<MoveableWindowTest<>>("noname2", ska::Rectangle{ 150, 0, 100, 40 }, "nostyle");
+
+	
 }
