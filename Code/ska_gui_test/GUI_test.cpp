@@ -208,12 +208,45 @@ TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, OUT") {
 	//It's the last mouse pos which is used to OVER event, so another one is triggered
     CHECK(states.size() == 3);
     CHECK(states[2] == expected[2]);
-
+	
+	//TODO avoid this mouse move would be nice
     moveMouse(0, 1);
 
     //Now we should also have mouse OUT event
     basicRefreshLoop(gui);
 
+	CHECK(states == expected);
+}
+
+TEST_CASE("[GUI]Evenements : CLICK et RELEASE") {
+	resetMouse();
+
+	SubGUIMock gui;
+
+	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 5, 4, 120, 40 }, "nostyle");
+
+	std::vector<ska::MouseEventType> states;
+	std::vector<ska::MouseEventType> expected;
+	expected.push_back(ska::MouseEventType::MOUSE_CLICK);
+	expected.push_back(ska::MouseEventType::MOUSE_RELEASE);
+
+	window.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+		states.push_back(ce.getState());
+	});
+
+	//Sets the mouse pos IN
+	moveMouse(21, 5);
+
+	//Left clic down
+	clickMouseLeft(true);
+	
+	basicRefreshLoop(gui);
+	CHECK(states.size() == 1);
+
+	//Left clic up
+	clickMouseLeft(false);
+
+	basicRefreshLoop(gui);
 	CHECK(states == expected);
 }
 
