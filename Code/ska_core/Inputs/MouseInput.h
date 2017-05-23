@@ -31,6 +31,7 @@ namespace ska {
 
 		int m_mouseState[8];
 		int m_mouseToggle[8];
-		Point<int> m_clickPos, m_mouseLastPos;
+		Point<int> m_clickPos;
+		Point<int> m_mouseLastPos;
 	};
 }

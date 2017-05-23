@@ -6,6 +6,14 @@
 #include "InputContextTest.h"
 #include "MoveableWindowTest.h"
 
+template <class T>
+void printVector(std::vector<T>& v) {
+    for(const auto& e : v) {
+        std::cout << "[" << e << "]";
+    }
+    std::cout << std::endl;
+}
+
 template<class ... T>
 class StaticWindowTest : public ska::WindowIG<T...> {
 public:
@@ -83,16 +91,19 @@ TEST_CASE("[GUI]Affichage fenetre") {
 	CHECK(displayed);
 }
 
-void moveMouseX(int x) {
+void reportMouseLastPos() {
+    auto ict = GetICT();
+	ict->mouseKeys.setMouseLastPos(ict->mouseKeys.getMousePos());
+}
+
+void moveMouse(int x, int y) {
 	SDL_Event event;
 	event.motion.x = x;
-	event.motion.y = 4;
-	event.motion.xrel = 0;
-	event.motion.yrel = 0;
+	event.motion.y = y;
+	event.motion.xrel = x - GetICT()->mouseKeys.getMousePos().x;
+	event.motion.yrel = y - GetICT()->mouseKeys.getMousePos().y;
 
-	auto ict = GetICT();
-	ict->mouseKeys.setMouseLastPos(ict->mouseKeys.getMousePos());
-	ict->mouseKeys.setMousePos(event);
+	GetICT()->mouseKeys.setMousePos(event);
 }
 
 void clickMouseLeft(bool d) {
@@ -104,6 +115,7 @@ void basicRefreshLoop(ska::GUI& gui) {
     auto& icm = GetICM();
     icm.refresh();
     gui.refresh();
+    reportMouseLastPos();
 }
 
 TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
@@ -112,7 +124,7 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
 	auto& window = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
 
 	//Sets the mouse pos
-	moveMouseX(21);
+	moveMouse(21, 4);
 
 	//Mouse left click down
 	clickMouseLeft(true);
@@ -123,7 +135,7 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
 	//Move the mouse
 	unsigned int xMax = 52;
 	for (unsigned int x = 21; x < xMax; x += 2) {
-		moveMouseX(x);
+		moveMouse(x, 4);
         basicRefreshLoop(gui);
 	}
 
@@ -136,7 +148,7 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
 	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
 
 	//Sets the mouse pos
-	moveMouseX(21);
+	moveMouse(21, 4);
 
 	//Mouse left click down
 	clickMouseLeft(true);
@@ -147,11 +159,56 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
 	//Move the mouse
 	unsigned int xMax = 52;
 	for (unsigned int x = 21; x < xMax; x += 2) {
-		moveMouseX(x);
+		moveMouse(x, 4);
         basicRefreshLoop(gui);
 	}
 
 	CHECK(window.getBox().x == 30);
+}
+
+TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, RELEASE") {
+	SubGUIMock gui;
+
+	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 5, 4, 120, 40 }, "nostyle");
+
+	std::vector<ska::MouseEventType> states;
+	std::vector<ska::MouseEventType> expected;
+	expected.push_back(ska::MouseEventType::MOUSE_ENTER);
+	expected.push_back(ska::MouseEventType::MOUSE_OVER);
+	expected.push_back(ska::MouseEventType::MOUSE_OVER);
+	expected.push_back(ska::MouseEventType::MOUSE_RELEASE);
+
+	window.addHandler<ska::HoverEventListener>([&] (ska::Widget* tthis, ska::HoverEvent& ce) {
+        states.push_back(ce.getState());
+    });
+
+    //Sets the mouse pos IN
+	moveMouse(21, 5);
+	basicRefreshLoop(gui);
+
+	CHECK(states.size() == 2);
+	CHECK(states[0] == expected[0]);
+	CHECK(states[1] == expected[1]);
+
+	//Sets the mouse pos OUT
+	moveMouse(1, 1);
+	basicRefreshLoop(gui);
+
+	//It's the last mouse pos which is used to OVER event, so another one is triggered
+    CHECK(states.size() == 3);
+    CHECK(states[2] == expected[2]);
+
+    moveMouse(0, 1);
+
+    //Now we should also have mouse OUT event
+    basicRefreshLoop(gui);
+    moveMouse(0, 0);
+    basicRefreshLoop(gui);
+
+	printVector(states);
+	printVector(expected);
+
+	CHECK(states == expected);
 }
 
 TEST_CASE("[GUI]Changement de focus des fenetres") {
@@ -160,5 +217,11 @@ TEST_CASE("[GUI]Changement de focus des fenetres") {
 	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
 	auto& window2 = gui.mockAddWindow<MoveableWindowTest<>>("noname2", ska::Rectangle{ 150, 0, 100, 40 }, "nostyle");
 
-	
+	auto p1 = window.getPriority();
+	auto p2 = window2.getPriority();
+
+	CHECK(p1 > p2);
+
+
+
 }

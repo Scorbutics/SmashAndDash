@@ -101,6 +101,10 @@
 		<Unit filename="GUI_test.cpp" />
 		<Unit filename="HandledWidgetTest.h" />
 		<Unit filename="HandledWidget_test.cpp" />
+		<Unit filename="InputContextTest.cpp" />
+		<Unit filename="InputContextTest.h" />
+		<Unit filename="MoveableWindowTest.h" />
+		<Unit filename="MoveableWindow_test.cpp" />
 		<Unit filename="SortedWidgetVector_test.cpp" />
 		<Unit filename="WidgetPanel_test.cpp" />
 		<Unit filename="WidgetTest.h" />

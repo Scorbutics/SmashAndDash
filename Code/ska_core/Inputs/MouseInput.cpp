@@ -6,7 +6,6 @@ ska::MouseInput::MouseInput() {
 	m_mousey = 0;
 	m_mousexrel = 0;
 	m_mouseyrel = 0;
-	m_clickPos.x = m_clickPos.y = 0;
 	resetAll();
 }
 
@@ -19,9 +18,9 @@ ska::Point<int> ska::MouseInput::getMouseLastPos() const {
 	return m_mouseLastPos;
 }
 
-void ska::MouseInput::setMouseState(int touche, int state) {	
+void ska::MouseInput::setMouseState(int touche, int state) {
 	m_mouseToggle[touche] = state;
-		
+
 	m_mouseState[touche] = state;
 	if (mouseClick(touche)) {
 		m_clickPos.x = m_mousex;
