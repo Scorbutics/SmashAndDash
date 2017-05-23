@@ -118,7 +118,14 @@ void basicRefreshLoop(ska::GUI& gui) {
     reportMouseLastPos();
 }
 
+void resetMouse() {
+	clickMouseLeft(false);
+	moveMouse(0, 0);
+}
+
 TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
+	resetMouse();
+
     SubGUIMock gui;
 
 	auto& window = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
@@ -143,6 +150,8 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (focusable)") {
 }
 
 TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
+	resetMouse();
+
     SubGUIMock gui;
 
 	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
@@ -166,7 +175,9 @@ TEST_CASE("[GUI]Deplacement d'une fenetre (non focusable)") {
 	CHECK(window.getBox().x == 30);
 }
 
-TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, RELEASE") {
+TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, OUT") {
+	resetMouse();
+
 	SubGUIMock gui;
 
 	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 5, 4, 120, 40 }, "nostyle");
@@ -176,7 +187,7 @@ TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, RELEASE") {
 	expected.push_back(ska::MouseEventType::MOUSE_ENTER);
 	expected.push_back(ska::MouseEventType::MOUSE_OVER);
 	expected.push_back(ska::MouseEventType::MOUSE_OVER);
-	expected.push_back(ska::MouseEventType::MOUSE_RELEASE);
+	expected.push_back(ska::MouseEventType::MOUSE_OUT);
 
 	window.addHandler<ska::HoverEventListener>([&] (ska::Widget* tthis, ska::HoverEvent& ce) {
         states.push_back(ce.getState());
@@ -202,11 +213,6 @@ TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, RELEASE") {
 
     //Now we should also have mouse OUT event
     basicRefreshLoop(gui);
-    moveMouse(0, 0);
-    basicRefreshLoop(gui);
-
-	printVector(states);
-	printVector(expected);
 
 	CHECK(states == expected);
 }
@@ -221,7 +227,5 @@ TEST_CASE("[GUI]Changement de focus des fenetres") {
 	auto p2 = window2.getPriority();
 
 	CHECK(p1 > p2);
-
-
 
 }
