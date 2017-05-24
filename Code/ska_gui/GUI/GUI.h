@@ -35,7 +35,7 @@ namespace ska {
 
 
 	private:
-	    ska::Widget* frontWindow();
+	    Widget* frontWindow();
 		void refreshMouse();
 		void refreshKeyboard();
 		void windowSorter(Widget* tthis, ClickEvent& e);
@@ -54,10 +54,10 @@ namespace ska {
 		Widget* m_hovered;
 		Widget* m_clicked;
 		Widget* m_lastFocused;
+        Point<int> m_lastLastMousePos;
 
 		//Widgets
 		std::unordered_map<std::string, Widget*> m_windowAnnuary;
-		//std::unordered_set<std::string> m_focusableWindowAnnuary;
 		std::vector<std::string> m_windowsToDelete;
         std::vector<std::unique_ptr<Widget>> m_topWindowWidgets;
         TimeScrollableWindowIG<KeyEventListener> m_wMaster;
@@ -74,7 +74,6 @@ namespace ska {
 			auto& result = m_wFocusable->addWidget<Win>(std::forward<WinArgs>(args)...);
 			auto& t = reinterpret_cast<Win&>(result);
 			m_windowAnnuary[name] = &t;
-			//m_focusableWindowAnnuary.insert(name);
 			t.template addHeadHandler<ClickEventListener>([&](Widget* tthis, ClickEvent& e) {
 				windowSorter(tthis, e);
 			});
@@ -85,8 +84,7 @@ namespace ska {
 		template <class Win, class ... WinArgs>
 		Win& addWindow(const std::string& name, WinArgs&&... args) {
 			auto& result = m_wMaster.addWidget<Win>(std::forward<WinArgs>(args)...);
-			auto& t = reinterpret_cast<Win&>(result);
-			m_windowAnnuary[name] = &t;
+			m_windowAnnuary[name] = &reinterpret_cast<Win&>(result);
 			return result;
 		}
 

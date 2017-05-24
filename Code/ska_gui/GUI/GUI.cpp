@@ -76,13 +76,12 @@ void ska::GUI::refreshKeyboard() {
 }
 
 void ska::GUI::refreshMouse() {
-	const auto& in = m_playerICM.getActions();
+    const auto& in = m_playerICM.getActions();
 	const auto& moveWindow = m_playerICM.getToggles()[MoveWindow];
 	const auto& mousePos = m_playerICM.getRanges()[MousePos];
 	const auto& lastMousePos = m_playerICM.getRanges()[LastMousePos];
 
-
-	if (mousePos != lastMousePos) {
+    if (m_lastLastMousePos != lastMousePos) {
 		m_mouseCursor.move(mousePos);
 
 		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover :
@@ -107,6 +106,7 @@ void ska::GUI::refreshMouse() {
 		m_hovered = hove.getTarget();
 
 	}
+    m_lastLastMousePos = lastMousePos;
 
 	auto click = in[LClic];
 	if (click) {
@@ -144,6 +144,8 @@ void ska::GUI::refreshMouse() {
 		m_clicked = nullptr;
 		ClickObservable::notifyObservers(ce);
 	}
+
+
 }
 
 void ska::GUI::refresh() {

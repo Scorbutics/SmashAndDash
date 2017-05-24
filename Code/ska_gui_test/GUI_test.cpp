@@ -208,9 +208,6 @@ TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, OUT") {
 	//It's the last mouse pos which is used to OVER event, so another one is triggered
     CHECK(states.size() == 3);
     CHECK(states[2] == expected[2]);
-	
-	//TODO avoid this mouse move would be nice
-    moveMouse(0, 1);
 
     //Now we should also have mouse OUT event
     basicRefreshLoop(gui);
@@ -239,7 +236,7 @@ TEST_CASE("[GUI]Evenements : CLICK et RELEASE") {
 
 	//Left clic down
 	clickMouseLeft(true);
-	
+
 	basicRefreshLoop(gui);
 	CHECK(states.size() == 1);
 
