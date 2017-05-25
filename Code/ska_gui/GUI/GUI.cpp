@@ -81,7 +81,7 @@ void ska::GUI::refreshMouse() {
 	const auto& mousePos = m_playerICM.getRanges()[MousePos];
 	const auto& lastMousePos = m_playerICM.getRanges()[LastMousePos];
 
-    if (m_lastLastMousePos != lastMousePos) {
+    if (m_lastLastMousePos != lastMousePos || lastMousePos != mousePos) {
 		m_mouseCursor.move(mousePos);
 
 		/* Toujours utiliser lastMousePos et non pas mousePos pour les hover :

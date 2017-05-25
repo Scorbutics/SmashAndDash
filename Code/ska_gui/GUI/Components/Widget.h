@@ -3,7 +3,6 @@
 #include "Point.h"
 #include "Draw/DrawableFixedPriority.h"
 #include "Utils/RectangleUtils.h"
-#include "Utils/TupleUtils.h"
 
 namespace ska {
 	class IWidgetEvent;
@@ -23,7 +22,7 @@ namespace ska {
 
 	public:
 		Widget();
-		Widget(Widget& parent);
+		explicit Widget(Widget& parent);
 
 		Widget(Widget& parent, Point<int>& position);
 

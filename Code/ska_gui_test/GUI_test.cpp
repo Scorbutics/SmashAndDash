@@ -248,14 +248,35 @@ TEST_CASE("[GUI]Evenements : CLICK et RELEASE") {
 }
 
 TEST_CASE("[GUI]Changement de focus des fenetres") {
+	resetMouse();
+
 	SubGUIMock gui;
 
-	auto& window = gui.mockAddWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 40 }, "nostyle");
-	auto& window2 = gui.mockAddWindow<MoveableWindowTest<>>("noname2", ska::Rectangle{ 150, 0, 100, 40 }, "nostyle");
+	auto& window = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname", ska::Rectangle{ 0, 0, 120, 150 }, "nostyle");
+	auto& window2 = gui.mockAddFocusableWindow<MoveableWindowTest<>>("noname2", ska::Rectangle{ 150, 0, 100, 140 }, "nostyle");
 
 	auto p1 = window.getPriority();
 	auto p2 = window2.getPriority();
 
 	CHECK(p1 > p2);
+	CHECK(!window.isFocused());
+	CHECK(!window2.isFocused());
 
+	//Sets the mouse pos IN window
+	moveMouse(21, 135);
+	//Left clic down
+	clickMouseLeft(true);
+	basicRefreshLoop(gui);	
+
+	CHECK(window.isFocused());
+	CHECK(!window2.isFocused());
+
+	//Sets the mouse pos IN window2
+	moveMouse(164, 125);
+
+	basicRefreshLoop(gui);
+
+	basicRefreshLoop(gui);
+	CHECK(!window.isFocused());
+	CHECK(window2.isFocused());
 }
