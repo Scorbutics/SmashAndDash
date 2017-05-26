@@ -22,7 +22,7 @@ void ska::BlockRenderable::refresh() {
 	}
 }
 
-ska::Rectangle ska::BlockRenderable::determineFrame(Rectangle, const Rectangle* rectAnim) const {
+ska::Rectangle ska::BlockRenderable::determineFrame(ska::Point<int>, const Rectangle* rectAnim) const {
 	auto buf = m_spritePosInChipset;
 
 	if (m_auto_animation) {

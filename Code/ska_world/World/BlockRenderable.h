@@ -13,7 +13,7 @@ namespace ska {
 		~BlockRenderable() = default;
 
 		void refresh();
-		Rectangle determineFrame(Rectangle pos, const Rectangle* rectAnim = NULL) const;
+		Rectangle determineFrame(ska::Point<int>, const Rectangle* rectAnim = NULL) const;
 		void setSpriteFrame(unsigned int x);
 
 	private:

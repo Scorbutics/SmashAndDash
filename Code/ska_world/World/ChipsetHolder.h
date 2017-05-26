@@ -18,7 +18,7 @@ namespace ska {
 
 		bool attach(const unsigned int blockSize, const std::string& chipsetName);
 		std::vector<ScriptSleepComponent*> getScript(const std::string& id, const ScriptTriggerType& type, bool& autoBlackList);
-		void render(Rectangle pos, const BlockRenderable& block) const;
+		void render(ska::Point<int> pos, const BlockRenderable& block) const;
 		void update(BlockRenderable& block);
 		const std::string& getName() const;
 		void generateBlock(Color& key, Block** outputBlock, BlockRenderable** outputRenderable);

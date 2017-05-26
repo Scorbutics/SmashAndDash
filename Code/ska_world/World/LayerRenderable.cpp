@@ -1,45 +1,39 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-
 #include "Exceptions/IndexOutOfBoundsException.h"
 #include "Utils/StringUtils.h"
 
 #include "World.h"
 #include "LayerRenderable.h"
 
-ska::LayerRenderable::LayerRenderable(World& w) : m_world(w) {
+ska::LayerRenderable::LayerRenderable(World& w) : 
+	m_world(w) {
 	m_block.reserve(20);
 }
 
 void ska::LayerRenderable::update() {
-	//Rectangle absoluteCurrentPos;
-	const Rectangle* cameraPos = m_world.getView();
+	const auto* cameraPos = m_world.getView();
 
-	if (cameraPos == NULL) {
+	if (cameraPos == nullptr) {
 		return;
 	}
 
 	/* TODO external view ? (avoid camera reference)*/
-	const unsigned int absORelX = NumberUtils::absolute(cameraPos->x);
-	const unsigned int absORelY = NumberUtils::absolute(cameraPos->y);
-	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
-	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
+	const auto absORelX = NumberUtils::absolute(cameraPos->x);
+	const auto absORelY = NumberUtils::absolute(cameraPos->y);
+	const auto cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
+	const auto cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
+	const auto cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
+	const auto cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
 
-	const unsigned int layerPixelsX = m_world.getPixelWidth();
-	const unsigned int layerPixelsY = m_world.getPixelHeight();
+	const auto layerPixelsX = m_world.getPixelWidth();
+	const auto layerPixelsY = m_world.getPixelHeight();
 
-	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
-		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
-			unsigned int currentXBlock = i*m_world.getBlockSize();
-			unsigned int currentYBlock = j*m_world.getBlockSize();
-			/*absoluteCurrentPos.x = currentXBlock - absORelX;
-			absoluteCurrentPos.y = currentYBlock - absORelY;*/
+	for (auto i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
+		for (auto j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
+			auto currentXBlock = i * m_world.getBlockSize();
+			auto currentYBlock = j * m_world.getBlockSize();
 
 			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
-				BlockRenderable* b = m_block[i][j];
+				auto b = m_block[i][j];
 				if (b != nullptr) {
 					m_world.getChipset().update(*b);
 				}
@@ -50,36 +44,31 @@ void ska::LayerRenderable::update() {
 }
 
 void ska::LayerRenderable::display() const {
+	const auto* cameraPos = m_world.getView();
 
-	Rectangle absoluteCurrentPos;
-	const Rectangle* cameraPos = m_world.getView();
-
-	if (cameraPos == NULL) {
+	if (cameraPos == nullptr) {
 		return;
 	}
 
 	/* TODO external view ? (avoid camera reference)*/
-	const unsigned int absORelX = NumberUtils::absolute(cameraPos->x);
-	const unsigned int absORelY = NumberUtils::absolute(cameraPos->y);
-	const unsigned int cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
-	const unsigned int cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
-	const unsigned int cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
+	const auto absORelX = NumberUtils::absolute(cameraPos->x);
+	const auto absORelY = NumberUtils::absolute(cameraPos->y);
+	const auto cameraPositionStartBlockX = absORelX / m_world.getBlockSize();
+	const auto cameraPositionStartBlockY = absORelY / m_world.getBlockSize();
+	const auto cameraPositionEndBlockX = (absORelX + cameraPos->w) / m_world.getBlockSize();
+	const auto cameraPositionEndBlockY = (absORelY + cameraPos->h) / m_world.getBlockSize();
 
-	const unsigned int layerPixelsX = m_world.getPixelWidth();
-	const unsigned int layerPixelsY = m_world.getPixelHeight();
+	const auto layerPixelsX = m_world.getPixelWidth();
+	const auto layerPixelsY = m_world.getPixelHeight();
 
-	for (unsigned int i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
-		for (unsigned int j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
-
-			unsigned int currentXBlock = i*m_world.getBlockSize();
-			unsigned int currentYBlock = j*m_world.getBlockSize();
-			absoluteCurrentPos.x = currentXBlock - absORelX;
-			absoluteCurrentPos.y = currentYBlock - absORelY;
-
+	for (auto i = cameraPositionStartBlockX; i <= cameraPositionEndBlockX; i++) {
+		for (auto j = cameraPositionStartBlockY; j <= cameraPositionEndBlockY; j++) {
+			auto currentXBlock = i * m_world.getBlockSize();
+			auto currentYBlock = j * m_world.getBlockSize();
 			if (currentXBlock < layerPixelsX && currentYBlock < layerPixelsY) {
-				BlockRenderable* b = m_block[i][j];
+				auto b = m_block[i][j];
 				if (b != nullptr) {
+					const ska::Point<int> absoluteCurrentPos(currentXBlock - absORelX, currentYBlock - absORelY);
 					/* TODO passer la propriété BLOCK_PROP_WIND_SENSITIVITY en script de chipset */
 					m_world.getChipset().render(absoluteCurrentPos, *b);
 				}
@@ -100,10 +89,8 @@ ska::BlockRenderable* ska::LayerRenderable::getBlock(const unsigned int i, const
 	if (i < m_block.size() && j < m_block[i].size()) {
 		return m_block[i][j];
 	}
-	else {
-		throw IndexOutOfBoundsException("block at coordinates (" + StringUtils::intToStr(i) + "; " + StringUtils::intToStr(j) + ") cannot be accessed");
-	}
-
+	
+	throw IndexOutOfBoundsException("block at coordinates (" + StringUtils::intToStr(i) + "; " + StringUtils::intToStr(j) + ") cannot be accessed");
 }
 
 void ska::LayerRenderable::reset(std::vector<std::vector<BlockRenderable*>>& block) {

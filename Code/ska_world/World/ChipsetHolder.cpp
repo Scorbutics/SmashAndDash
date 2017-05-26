@@ -57,7 +57,7 @@ void ska::ChipsetHolder::generateBlock(Color& key, Block** outputBlock, BlockRen
 	return m_chipset->generateBlock(key, outputBlock, outputRenderable);
 }
 
-void ska::ChipsetHolder::render(Rectangle pos, const BlockRenderable& block) const {
+void ska::ChipsetHolder::render(ska::Point<int> pos, const BlockRenderable& block) const {
 	m_chipset->getRenderable().render(pos, block);
 }
 
