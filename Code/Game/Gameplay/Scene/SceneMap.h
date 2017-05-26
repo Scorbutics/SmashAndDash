@@ -36,5 +36,8 @@ private:
 	std::unique_ptr<ska::ScriptAutoSystem> m_scriptAutoSystem;
 	ska::CameraSystem* m_cameraSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
+
+	ska::WorldCollisionResponse m_worldCollisionResponse;
+	ska::EntityCollisionResponse m_entityCollisionResponse;
 };
 typedef std::unique_ptr<SceneMap> SceneMapPtr;

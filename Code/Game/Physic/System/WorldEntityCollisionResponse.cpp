@@ -1,10 +1,8 @@
 #include "WorldEntityCollisionResponse.h"
-#include "ECS/Basics/Physic/CollisionComponent.h"
 #include "Data/Events/CollisionEvent.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "ECS/EntityManager.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
-#include "../../Gameplay/Fight/BattleComponent.h"
 
 WorldEntityCollisionResponse::WorldEntityCollisionResponse(ska::CollisionProfile& w, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
 WorldCollisionResponse(bind(&WorldEntityCollisionResponse::onWorldCollision, this, std::placeholders::_1), w, ged, em){

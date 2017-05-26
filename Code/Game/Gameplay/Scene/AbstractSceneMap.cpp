@@ -13,9 +13,7 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap),
 m_observersDefined(false),
 m_worldScene(ws),
-m_window(w),
-m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_entityCollisionResponse(ged, m_entityManager) {
+m_window(w) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
 
@@ -25,17 +23,11 @@ SceneChangeObserver(bind(&AbstractSceneMap::onTeleport, this, std::placeholders:
 m_sameMap(sameMap),
 m_observersDefined(true),
 m_worldScene(ws),
-m_window(w),
-m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_entityCollisionResponse(ged, m_entityManager) {
+m_window(w) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
 
 void AbstractSceneMap::beforeLoad(ska::ScenePtr*) {
-	if (m_observersDefined) {
-		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
-	}
 	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
 	m_worldScene.linkCamera(&getCamera());
@@ -70,8 +62,4 @@ bool AbstractSceneMap::onTeleport(const MapEvent& me) {
 
 AbstractSceneMap::~AbstractSceneMap() {
 	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
-	if (m_observersDefined) {
-		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_worldCollisionResponse);
-		m_eventDispatcher.ska::Observable<ska::CollisionEvent>::removeObserver(m_entityCollisionResponse);
-	}
 }

@@ -15,10 +15,12 @@
 #define MOB_SPAWNING_DELAY 5000
 
 SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-AbstractSceneMap_(em, ged, w, ril, sh, ws, sameMap),
-m_fileName(fileName),
-m_chipsetName(chipsetName) {
-	
+	AbstractSceneMap_(em, ged, w, ril, sh, ws, sameMap),
+	m_fileName(fileName),
+	m_chipsetName(chipsetName),
+	m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
+	m_entityCollisionResponse(ged, m_entityManager) {
+		
 	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
 	addLogic<ska::IARandomMovementSystem>();
 	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem.get());
@@ -35,7 +37,9 @@ ska::CameraSystem& SceneMap::getCamera() {
 SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
 AbstractSceneMap_(em, ged, w, ril, oldScene, ws, sameMap),
 m_fileName(fileName),
-m_chipsetName(chipsetName) {
+m_chipsetName(chipsetName),
+m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
+m_entityCollisionResponse(ged, m_entityManager) {
 
 	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
 	addLogic<ska::IARandomMovementSystem>();
@@ -59,4 +63,5 @@ void SceneMap::afterLoad(ska::ScenePtr* lastScene) {
 }
 
 SceneMap::~SceneMap() {
+
 }

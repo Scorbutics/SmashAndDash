@@ -3,7 +3,6 @@
 #include "ECS/Basics/Physic/MovementComponent.h"
 #include "ECS/EntityManager.h"
 #include "CollisionSystem.h"
-#include "ECS/EntityManager.h"
 #include "ECS/Basics/Physic/CollisionComponent.h"
 
 ska::EntityCollisionResponse::EntityCollisionResponse(GameEventDispatcher& ged, EntityManager& em) :

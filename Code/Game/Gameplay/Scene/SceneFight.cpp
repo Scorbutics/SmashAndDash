@@ -48,8 +48,8 @@ m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager) {
 
 	addSubScene<SceneGUIBattle>();
 
-	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
+	/*ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);*/
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -157,8 +157,8 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId);
 	}));
 
-	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>* pokeballRawTask;
-	auto pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>& t, ska::InputComponent ic) {
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::EntityId>>* pokeballRawTask;
+	auto pokeballTask = ska::RunnablePtr(pokeballRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::EntityId>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::EntityId>>& t, ska::InputComponent ic) {
 		static ska::EntityId pokeball;
 		if (m_loadState == 1) {
 			m_loadState++;
@@ -179,14 +179,15 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 			pokePc.x += hc.xOffset + hc.width/2;
 			pokePc.y += hc.yOffset + hc.height/2;
 			m_entityManager.addComponent<ska::PositionComponent>(pokeball, pokePc);
-			t.forward(ic, pokePc);
+			t.forward(ic, pokeball);
 			return true;
 		}
 		return m_entityManager.hasComponent<PokeballComponent>(pokeball)/*wScreen.getPokeball().isVisible()*/;
 	}, *dialogRawTask));
 
-	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>* finalRawTask;
-	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>([&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::PositionComponent>, ska::TaskSender<>>&, ska::InputComponent ic, ska::PositionComponent pc) {
+	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::EntityId>, ska::TaskSender<>>* finalRawTask;
+	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent, ska::EntityId>, ska::TaskSender<>>(
+		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent, ska::EntityId>, ska::TaskSender<>>&, ska::InputComponent ic, ska::EntityId pokeball) {
 
 		/* Ajout InputComponent au Pokémon,
 		   Ajout d'un IAMovementComponent au dresseur (m_player),
@@ -205,6 +206,7 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, ic);
 
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
+		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(pokeball);
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 		const auto targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
@@ -296,6 +298,6 @@ bool SceneFight::beforeUnload() {
 }
 
 SceneFight::~SceneFight() {
-	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);
+	/*m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
+	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);*/
 }
