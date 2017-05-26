@@ -5,6 +5,7 @@
 #include "Windows/GUIScrollButtonWindowIG.h"
 #include "Events/FocusEvent.h"
 #include "Data/Events/GUIEvent.h"
+#include "Windows/BalloonDialog.h"
 
 #define SCROLL_BUTTON_SPEED 3
 
@@ -345,6 +346,30 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
     if(ge.type == ska::GUIEventType::REMOVE_WINDOW) {
         m_windowsToDelete.push_back(ge.windowName);
     }
+
+	if(ge.type == ska::GUIEventType::ADD_BALLOON) {
+ 		auto& bd = addWindow<BalloonDialog>(ge.windowName, ska::Rectangle{ 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, ge.text, ge.delay, 16);
+		bd.addHandler<ska::TimeEventListener>([&](Widget* tthis, TimeEvent& te) {
+			auto& balloon = static_cast<BalloonDialog&>(*tthis);
+			if(balloon.isExpired()) {
+				balloon.show(false);
+			}
+		});
+		ge.balloonHandle = &bd;
+	}
+
+	if(ge.type == ska::GUIEventType::REFRESH_BALLOON) {
+		auto bd = static_cast<BalloonDialog*>(getWindow(ge.windowName));
+		if (bd != nullptr) {	
+			bd->move(ska::Point<int>(ge.balloonPosition.x, ge.balloonPosition.y - ge.balloonHandle->getBox().h));
+			if (!bd->isVisible()) {
+				ge.balloonHandle = nullptr;
+				GUIEvent geI(GUIEventType::REMOVE_WINDOW);
+				geI.windowName = ge.windowName;
+				onGUIEvent(geI);
+			}
+		}
+	}
     return false;
 }
 

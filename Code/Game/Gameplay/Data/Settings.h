@@ -14,19 +14,17 @@ public:
 
 	void operator=(const Settings&) = delete;
 
+	void load();
     void save();
 
-    const std::string& getFileName() const;
     bool getGuiTransparency() const;
     bool getFogActive() const;
     bool getWeatherActive() const;
     float getSoundVolume() const;
-    //int* getParticles();
 
     ~Settings() = default;
 
 private:
-	void load();
 	void sendEvent(SettingsChangeEventType scet) const;
 
     const std::string m_fileName;

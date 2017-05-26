@@ -36,7 +36,7 @@ m_cameraSystem(nullptr),
 m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
 m_worldBGM(DEFAULT_BGM) {
 
-	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::CameraSystem*>(nullptr);
+	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(ged, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
 	addLogic<ska::InputSystem>(m_inputCManager);

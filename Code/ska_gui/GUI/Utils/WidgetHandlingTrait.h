@@ -21,10 +21,11 @@ namespace ska {
 			auto widget = static_cast<IHandledWidget*>(w);
 			auto activeWidget = !widget->isMaskEmpty();
 			if (activeWidget) {
-				auto itRemoved = handledWidgets.erase(std::remove_if(handledWidgets.begin(), handledWidgets.end(),
-                 [w](std::unique_ptr<Widget>& it){
-                    return it.get() == w;
-                 }));
+				auto itToRemove = std::remove_if(handledWidgets.begin(), handledWidgets.end(),
+					[w](std::unique_ptr<Widget>& it) {
+					return it.get() == w;
+				});
+				auto itRemoved = itToRemove != handledWidgets.end() ? handledWidgets.erase(itToRemove) : handledWidgets.end();
 
 				auto removed = itRemoved != handledWidgets.end();
 				 removed |= ska::VectorUtils::removeValue<WidgetContainer<Widget*>, Widget*>(globalList, w);

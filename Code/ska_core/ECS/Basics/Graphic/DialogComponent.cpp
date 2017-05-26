@@ -1,4 +1,4 @@
 #include "DialogComponent.h"
 
-ska::DialogComponent::DialogComponent() {
+ska::DialogComponent::DialogComponent() : handle(nullptr) {
 }

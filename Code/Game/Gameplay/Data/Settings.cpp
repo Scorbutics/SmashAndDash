@@ -5,10 +5,8 @@
 #include "../Weather.h"
 
 Settings::Settings(PokemonGameEventDispatcher& ged, const std::string& file) :
-	m_fileName(file),
-	m_ged(ged) {
-	load();
-}
+	m_fileName(file), m_fogActive(false), m_weatherActive(false), m_guiTransparency(false), m_soundVol(0),
+	m_ged(ged){}
 
 void Settings::setSoundVolume(float sndVol) {
     m_soundVol = sndVol*100;

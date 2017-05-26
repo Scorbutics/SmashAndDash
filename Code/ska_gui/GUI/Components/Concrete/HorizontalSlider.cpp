@@ -8,6 +8,14 @@ ska::HorizontalSlider::HorizontalSlider(Widget& parent, const std::string& style
 WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventListener>(parent, relativePos),
 	m_percents(0),
 	m_sliding(false) {
+
+	Rectangle clipImage{ 0, 0, 0, 0 };
+	clipImage.w = pixelWidth;
+	clipImage.h = std::numeric_limits<int>::max();
+
+	auto& img = addWidget<Image>(styleName + "_bar.png", Point<int>(0, 0), false, &clipImage);
+	img.setWidth(pixelWidth);
+
 	addWidget<Button>(Point<int>(0, 0), styleName, nullptr, [this](Widget*, ClickEvent& e) {
 		m_sliding = e.getState() == MOUSE_CLICK;
 		if (m_sliding) {
@@ -18,11 +26,6 @@ WidgetPanel<ValueChangedEventListener<float>, HoverEventListener, ClickEventList
 		}
 	});
 
-	Rectangle clipImage{ 0, 0, 0, 0 };
-	clipImage.w = pixelWidth;
-	clipImage.h = std::numeric_limits<int>::max();
-	auto& img = addWidget<Image>(styleName + "_bar.png", Point<int>(0, 0), false, &clipImage);
-	img.setWidth(pixelWidth);
 	Widget::setWidth(pixelWidth);
 	Widget::setHeight(img.getBox().h);
 
@@ -50,7 +53,7 @@ void ska::HorizontalSlider::forceValue(float v) {
 		m_percents = 0;
 	}
 
-	auto button = getWidget(0);
+	auto button = getWidget(1);
 	const auto& buttonPos = button->getRelativePosition();
 	auto newPos = Point<int>(static_cast<int>(m_percents * getBox().w - button->getBox().w / 2), buttonPos.y);
 	button->move(newPos);

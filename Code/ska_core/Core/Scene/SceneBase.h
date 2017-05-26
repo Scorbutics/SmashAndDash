@@ -83,14 +83,22 @@ namespace ska {
 
 		bool unload() override final {
 			auto result = !beforeUnload();
-			for (auto& s : m_subScenes) {
-				result &= !s->unload();
+			//If main scene beforeUnload is finished, THEN we can unload subscenes
+			if (result) {
+				for (auto& s : m_subScenes) {
+					result &= !s->unload();
+				}
+				
+				for (auto& s : m_linkedSubScenes) {
+					result &= !s->unload();
+				}
 			}
 
-			for (auto& s : m_linkedSubScenes) {
-				result &= !s->unload();
+			//If everything is unloaded, THEN we can call main scene afterUnload
+			bool afterUnloadResult = result;
+			if(result) {
+				afterUnloadResult = afterUnload();
 			}
-			const auto afterUnloadResult = afterUnload();
 			return !(result && !afterUnloadResult);
 		}
 

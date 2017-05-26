@@ -8,6 +8,7 @@
 #include "Utils/TimeObservable.h"
 #include "Windows/TimeScrollableWindowIG.h"
 #include "Data/Events/GameEventDispatcher.h"
+#include "Exceptions/IllegalStateException.h"
 
 namespace ska {
 	class BaseWindow;
@@ -94,6 +95,10 @@ namespace ska {
 
 		BaseHandledWidget* removeWindow(const std::string& name) {
 			auto wPtr = m_windowAnnuary[name];
+			if(wPtr == nullptr) {
+				throw ska::IllegalStateException("The window name '" + name + "' doesn't exists in annuary");
+			}
+
 			if (!m_wFocusable->removeWidget(static_cast<BaseHandledWidget*>(wPtr))) {
 				m_wMaster.removeWidget(static_cast<BaseHandledWidget*>(wPtr));
 			}

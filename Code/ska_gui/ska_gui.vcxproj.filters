@@ -34,6 +34,7 @@
     <ClCompile Include="GUI\Utils\WidgetMaskHelper.cpp" />
     <ClCompile Include="GUI\Windows\GUIScrollButtonWindowIG.cpp" />
     <ClCompile Include="MessagePopup.cpp" />
+    <ClCompile Include="GUI\Windows\BalloonDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI\Components\Concrete\Button.h" />
@@ -91,5 +92,6 @@
     <ClInclude Include="GUI\Windows\WindowIG.h" />
     <ClInclude Include="MessagePopup.h" />
     <ClInclude Include="MessageType.h" />
+    <ClInclude Include="GUI\Windows\BalloonDialog.h" />
   </ItemGroup>
 </Project>

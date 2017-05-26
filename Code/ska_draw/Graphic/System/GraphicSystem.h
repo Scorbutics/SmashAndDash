@@ -4,11 +4,13 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/System.h"
 #include "AbstractGraphicSystem.h"
+#include <Data/Events/EventDispatcher.h>
+#include <Data/Events/GameEventDispatcher.h>
 
 namespace ska {
     class GraphicSystem : public AbstractGraphicSystem, public System<std::unordered_set<EntityId>, GraphicComponent, PositionComponent> {
     public:
-		GraphicSystem(EntityManager& entityManager, CameraSystem* camera);
+		GraphicSystem(EntityManager& entityManager, ska::GameEventDispatcher& ged, CameraSystem* camera);
         GraphicSystem& operator=(const GraphicSystem&) = delete;
         int getTopLayerPriority() const;
         virtual void update() override;
@@ -16,6 +18,7 @@ namespace ska {
     protected:
         virtual void refresh() override;
     private:
+		ska::GameEventDispatcher& m_ged;
         int m_topLayerPriority;
     };
 }

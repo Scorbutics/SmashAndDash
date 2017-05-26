@@ -11,6 +11,7 @@
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/Events/CollisionEvent.h"
 #include "AI/IARandomMovementComponent.h"
+#include "ECS/Basics/Graphic/DialogComponent.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block);
 
@@ -112,8 +113,6 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 		return;
 	}
 
-	//m_worldScene.linkCamera(m_cameraSystem);
-
 	SkillsHolderComponent shc;
 	loadSkills(m_pokemon, m_pokemonId, shc);
 	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, shc);
@@ -130,7 +129,6 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
 	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
-		//static int dialogId = 0;
 		if (m_loadState == 0) {
 			m_loadState++;
 
@@ -140,18 +138,23 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 
 			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
 			m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
+			
+			ska::GUIEvent ge(ska::GUIEventType::ADD_BALLOON);
+			ge.text = "Un " + m_descriptor.getName() + " sauvage apparaît !";
+			ge.delay = delay;
+			ge.windowName = "trainerBalloon";
+			m_eventDispatcher.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
 
-			//auto& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			//DialogComponent dc(DialogMenu("Un " + m_descriptor.getName() + " sauvage apparaît !", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
-			//dc.dialog.hide(false);
+			ska::DialogComponent dc;
+			dc.handle = ge.balloonHandle;
+			dc.name = ge.windowName;
 
-			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
+			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		//return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
-		return false;
+		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId);
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<ska::InputComponent, ska::PositionComponent>>* pokeballRawTask;
@@ -233,7 +236,6 @@ bool SceneFight::beforeUnload() {
 	const unsigned int delay = 3000;
 
 	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
-		//static auto dialogId = 0;
 		if (m_loadState == 0) {
 			m_loadState++;
 
@@ -243,17 +245,35 @@ bool SceneFight::beforeUnload() {
 
 			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
 			m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
-			//ska::PositionComponent& pc = m_worldScene.getEntityManager().getComponent<ska::PositionComponent>(m_trainerId);
-			//DialogComponent dc(DialogMenu("Le " + m_descriptor.getName() + " a été battu.", { 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, delay, false));
-			//dc.dialog.hide(false);
 
-			//m_worldScene.getEntityManager().addComponent<DialogComponent>(m_trainerId, dc);
+			BattleEvent be(BATTLE_END, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
+			m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
+
+			m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
+			m_entityManager.removeComponent<BattleComponent>(m_opponentId);
+
+			if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
+				auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
+				dac.type = ska::DirectionalAnimationType::MOVEMENT;
+				dac.looked = 0;
+			}
+
+			ska::GUIEvent ge(ska::GUIEventType::ADD_BALLOON);
+			ge.text = "Le " + m_descriptor.getName() + " a été battu.";
+			ge.delay = delay;
+			ge.windowName = "trainerBalloon";
+			m_eventDispatcher.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+
+			ska::DialogComponent dc;
+			dc.handle = ge.balloonHandle;
+			dc.name = ge.windowName;
+			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
+
 			t.forward(ic);
 			return true;
 		}
 		// Continue until dialog is still visible
-		//return m_worldScene.getEntityManager().hasComponent<DialogComponent>(m_trainerId);
-		return false;
+		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId);
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
@@ -261,7 +281,6 @@ bool SceneFight::beforeUnload() {
 		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>&, ska::InputComponent ic) {
 
 		m_loadState = 0;
-		//m_worldScene.unload();
 		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ic);
 		m_entityManager.removeEntity(m_pokemonId);

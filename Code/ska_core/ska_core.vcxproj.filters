@@ -126,6 +126,11 @@
     <ClInclude Include="Data\ExtensibleGameEventDispatcher.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="Core\BaseWindow.h" />
+    <ClInclude Include="Data\Events\GUIEvent.h" />
+    <ClInclude Include="Data\Events\EventDispatcher.h" />
+    <ClInclude Include="Data\Events\ExtensibleGameEventDispatcher.h" />
+    <ClInclude Include="Data\Events\GameEventDispatcher.h" />
+    <ClInclude Include="Data\Events\GameLibrariesInitializedEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Scene\Scene.cpp" />

@@ -31,6 +31,11 @@
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Data\BlockContainer.h" />
     <ClInclude Include="Data\Events\CollisionEvent.h" />
+    <ClInclude Include="Data\Events\EventDispatcher.h" />
+    <ClInclude Include="Data\Events\ExtensibleGameEventDispatcher.h" />
+    <ClInclude Include="Data\Events\GameEventDispatcher.h" />
+    <ClInclude Include="Data\Events\GameLibrariesInitializedEvent.h" />
+    <ClInclude Include="Data\Events\GUIEvent.h" />
     <ClInclude Include="Data\Events\SoundEvent.h" />
     <ClInclude Include="Data\Events\WorldEvent.h" />
     <ClInclude Include="Data\ExtensibleGameEventDispatcher.h" />

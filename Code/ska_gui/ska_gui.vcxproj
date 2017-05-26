@@ -44,6 +44,7 @@
     <ClCompile Include="GUI\Events\TimeEvent.cpp" />
     <ClCompile Include="GUI\GUI.cpp" />
     <ClCompile Include="GUI\Utils\WidgetMaskHelper.cpp" />
+    <ClCompile Include="GUI\Windows\BalloonDialog.cpp" />
     <ClCompile Include="GUI\Windows\GUIScrollButtonWindowIG.cpp" />
     <ClCompile Include="MessagePopup.cpp" />
   </ItemGroup>
@@ -96,6 +97,7 @@
     <ClInclude Include="GUI\Utils\WidgetContainer.h" />
     <ClInclude Include="GUI\Utils\WidgetHandlingTrait.h" />
     <ClInclude Include="GUI\Utils\WidgetMaskHelper.h" />
+    <ClInclude Include="GUI\Windows\BalloonDialog.h" />
     <ClInclude Include="GUI\Windows\DynamicWindowIG.h" />
     <ClInclude Include="GUI\Windows\GUIScrollButtonWindowIG.h" />
     <ClInclude Include="GUI\Windows\MoveableWindow.h" />

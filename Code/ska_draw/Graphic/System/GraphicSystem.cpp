@@ -6,9 +6,11 @@
 #include "ECS/Basics/Graphic/DialogComponent.h"
 #include "Utils/NumberUtils.h"
 
-ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::CameraSystem* camera) :
-    AbstractGraphicSystem(camera),
-    System(entityManager) {
+ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::GameEventDispatcher& ged, ska::CameraSystem* camera) :
+	AbstractGraphicSystem(camera),
+	System(entityManager), 
+	m_ged(ged), 
+	m_topLayerPriority(0) {
 	m_drawables = nullptr;
 }
 
@@ -40,14 +42,16 @@ void ska::GraphicSystem::refresh() {
 		}
 
 		if (m_entityManager.hasComponent<DialogComponent>(entityId)) {
-			//DialogComponent& dc = m_entityManager.getComponent<DialogComponent>(entityId);
-			/*dc.dialog.move({ static_cast<int>(pos.x - cameraX), static_cast<int>(pos.y - cameraY - dc.dialog.getBox().h) });
-			dc.dialog.refresh();
-			if (dc.dialog.isVisible()) {
-				m_drawables->add(dc.dialog);
-			} else {*/
+			auto& dc = m_entityManager.getComponent<DialogComponent>(entityId);
+			GUIEvent ge(GUIEventType::REFRESH_BALLOON);
+			ge.balloonHandle = dc.handle;
+			ge.windowName = dc.name;
+			ge.balloonPosition = { static_cast<int>(pos.x - cameraX), static_cast<int>(pos.y - cameraY) };
+			m_ged.ska::Observable<GUIEvent>::notifyObservers(ge);
+
+			if(ge.balloonHandle == nullptr) {
 				m_entityManager.removeComponent<DialogComponent>(entityId);
-			//}
+			}
 		}
 	}
 	for (auto& pgd : m_pgd) {

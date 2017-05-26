@@ -16,10 +16,11 @@ WGameCore::WGameCore():
 
 	m_guiMapScene = makeScene<SceneGUIMap>();
     m_guiMapScene->bindGUI(m_settings);
+	m_settings.load();
 
 	/* Let's start on the map scene */
 	m_worldScene = makeScene<WorldScene>(m_settings);
-	m_worldScene->ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher>::linkSubScene(*m_guiMapScene.get());
+	m_worldScene->linkSubScene(*m_guiMapScene.get());
 	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");

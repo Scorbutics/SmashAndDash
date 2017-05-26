@@ -62,10 +62,11 @@ bool GUIBattle::onBattleStart(BattleEvent& be) {
 		//TODO max hp venant des stats du fichier ini
 		addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
 		addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
-		return true;
 	} else {
-		return true;
+		removeHPBar(be.getBattler());
+		removeHPBar(be.getOpponent());
 	}
+	return true;
 }
 
 /* TODO put the sprite in the GUI */
@@ -103,4 +104,11 @@ GUIBattle::~GUIBattle() {
 	m_ged.ska::Observable<StatisticsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);
 	clear();
+}
+
+void GUIBattle::removeHPBar(const ska::EntityId& entity) {
+	auto it = m_bars.find(entity);
+	if (it != m_bars.end()) {
+		m_bars.erase(it);
+	}
 }

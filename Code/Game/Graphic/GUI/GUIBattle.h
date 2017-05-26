@@ -32,6 +32,7 @@ public:
 	GUIBattle& operator=(const GUIBattle&) = delete;
 
 	void clear();
+	void removeHPBar(const ska::EntityId& entity);
 	bool onBattleStart(BattleEvent& be);
 	bool onStatisticsChange(StatisticsChangeEvent& sce);
 
