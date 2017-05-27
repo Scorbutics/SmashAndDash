@@ -83,7 +83,6 @@
     <ClInclude Include="ECS\ISystem.h" />
     <ClInclude Include="ECS\StaticCounterGlobal.h" />
     <ClInclude Include="ECS\System.h" />
-    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Exceptions\FileException.h" />
     <ClInclude Include="Exceptions\GenericException.h" />
@@ -122,6 +121,7 @@
     <ClInclude Include="Task\Runnable.h" />
     <ClInclude Include="Task\Task.h" />
     <ClInclude Include="Task\TaskQueue.h" />
+    <ClInclude Include="Ticked.h" />
     <ClInclude Include="Utils\Demangle.h" />
     <ClInclude Include="Utils\FileUtils.h" />
     <ClInclude Include="Utils\Force.h" />

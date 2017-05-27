@@ -25,7 +25,7 @@ class WorldScene : public ska::SceneBase<CustomEntityManager, PokemonGameEventDi
 	public ska::CameraAware {
 
 public:
-	WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, Settings& settings);
+	WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, ska::Ticked& ticked, Settings& settings);
 	WorldScene(const WorldScene&) = delete;
 	WorldScene& operator=(const WorldScene&) = delete;
 

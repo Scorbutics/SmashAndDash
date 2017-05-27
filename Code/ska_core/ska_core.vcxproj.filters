@@ -63,7 +63,6 @@
     <ClInclude Include="ECS\ISystem.h" />
     <ClInclude Include="ECS\StaticCounterGlobal.h" />
     <ClInclude Include="ECS\System.h" />
-    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Exceptions\FileException.h" />
     <ClInclude Include="Exceptions\GenericException.h" />
@@ -131,6 +130,7 @@
     <ClInclude Include="Data\Events\ExtensibleGameEventDispatcher.h" />
     <ClInclude Include="Data\Events\GameEventDispatcher.h" />
     <ClInclude Include="Data\Events\GameLibrariesInitializedEvent.h" />
+    <ClInclude Include="Ticked.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Scene\Scene.cpp" />

@@ -19,7 +19,7 @@ WGameCore::WGameCore():
 	m_settings.load();
 
 	/* Let's start on the map scene */
-	m_worldScene = makeScene<WorldScene>(m_settings);
+	m_worldScene = makeScene<WorldScene>(*this, m_settings);
 	m_worldScene->linkSubScene(*m_guiMapScene.get());
 	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
@@ -28,7 +28,9 @@ WGameCore::WGameCore():
 
 }
 
-unsigned int WGameCore::ticksWanted() const {
+float WGameCore::ticksWanted() const {
+	static const unsigned int FPS = 63;
+	static const float TICKS = 1000.F / FPS;
 	return TICKS;
 }
 

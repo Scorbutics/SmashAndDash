@@ -1,10 +1,11 @@
 #pragma once
 #include "Exceptions/TerminateProcessException.h"
+#include "Ticked.h"
 
 namespace ska {
 	class GenericException;
 
-	class GameApp {
+	class GameApp : public Ticked {
 	protected:
 		GameApp();
 
@@ -16,9 +17,9 @@ namespace ska {
 
 		virtual void run() = 0;
 
-		virtual unsigned int ticksWanted() const {
-			const unsigned int FPS = 60;
-			const unsigned int TICKS = 1000 / FPS;
+		virtual float ticksWanted() const override {
+			const static auto FPS = 60U;
+			const static float TICKS = 1000.F / FPS;
 			return TICKS;
 		}
 

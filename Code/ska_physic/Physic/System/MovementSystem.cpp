@@ -1,8 +1,12 @@
 #include "MovementSystem.h"
 #include "Utils/NumberUtils.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "Ticked.h"
 
-ska::MovementSystem::MovementSystem(EntityManager& entityManager) : System(entityManager) {
+ska::MovementSystem::MovementSystem(ska::EntityManager& entityManager, Ticked& ticked) :
+	ska::System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, ForceComponent> (entityManager), 
+	m_ticks(ticked.ticksWanted()) {
+
 }
 
 void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
@@ -34,7 +38,7 @@ void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
 		}
 
 		//(v(t) - v(t-1))/(t - (t-1)) = dv/dt (t) = a(t)
-		const auto dt = 1;//(ellapsedTime);
+		const auto dt = 1;;//ellapsedTime / m_ticks;
 		moveComponent.vx += moveComponent.ax * dt;
 		moveComponent.vy += moveComponent.ay * dt;
 		moveComponent.vz += moveComponent.az * dt;

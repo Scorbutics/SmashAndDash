@@ -25,7 +25,7 @@
 #include "Draw/DrawableContainer.h"
 #include "Core/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, Settings& settings) :
+WorldScene::WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, ska::Ticked& ticked, Settings& settings) :
 SceneBase(entityManager, ged, w, ril, sh),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
@@ -40,7 +40,7 @@ m_worldBGM(DEFAULT_BGM) {
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
 	addLogic<ska::InputSystem>(m_inputCManager);
-	addLogic<ska::MovementSystem>();
+	addLogic<ska::MovementSystem>(ticked);
 	addLogic<ska::GravitySystem>();
 	addLogic<ska::ForceSystem>();
 	addLogic<ska::DirectionalAnimationSystem>();

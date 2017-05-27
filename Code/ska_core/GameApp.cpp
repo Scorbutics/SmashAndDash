@@ -1,3 +1,4 @@
+#include <iostream>
 #include <ctime>
 #include <SDL.h>
 #include <SDL_image.h>
@@ -6,7 +7,7 @@
 
 #include "GameApp.h"
 #include "Exceptions/IllegalStateException.h"
-#include <iostream>
+
 
 ska::GameApp::GameApp() {
 	/* TODO : ne plus utiliser srand...  */
