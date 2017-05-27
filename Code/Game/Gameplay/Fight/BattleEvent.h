@@ -1,11 +1,14 @@
 #pragma once
-
-#include "Graphic/System/CameraFixedSystem.h"
+#include "ECS/EntityManager.h"
 
 enum BattleEventType {
 	BATTLE_START,
 	BATTLE_END
 };
+
+namespace ska {
+	class CameraSystem;
+}
 
 class BattleEvent {
 public:

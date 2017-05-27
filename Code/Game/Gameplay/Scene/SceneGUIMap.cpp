@@ -6,7 +6,7 @@ SceneGUIMap::SceneGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ge
     m_gui(w, ril, ged) {
 
 }
-void SceneGUIMap::onGraphicUpdate(ska::DrawableContainer& drawables) {
+void SceneGUIMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	drawables.add(m_gui);
 }
 

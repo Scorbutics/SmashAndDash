@@ -10,7 +10,7 @@ ska::CollisionSystem::CollisionSystem(EntityManager& entityManager, CollisionPro
 	m_ged(ged) {
 }
 
-void ska::CollisionSystem::refresh() {
+void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 	for (auto entityId : m_processed) {
 
 		std::vector<Point<int>> lastBlockColPosX;

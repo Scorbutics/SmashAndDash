@@ -3,14 +3,10 @@
 #include <unordered_set>
 #include <array>
 #include <unordered_map>
-#include <string>
 #include "ECSDefines.h"
 #include "ComponentHandler.h"
-#include "../Exceptions/IllegalStateException.h"
-#include "../Exceptions/IllegalArgumentException.h"
 #include "../Utils/Observable.h"
 #include "ComponentSerializer.h"
-#include "../Utils/StringUtils.h"
 
 namespace ska {
 

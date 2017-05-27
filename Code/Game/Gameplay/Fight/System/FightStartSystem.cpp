@@ -19,7 +19,7 @@ m_ged(ged) {
 	m_t0 = ska::TimeUtils::getTicks();
 }
 
-void FightStartSystem::refresh() {
+void FightStartSystem::refresh(unsigned int ellapsedTime) {
 	ska::PositionComponent& pcPlayer = m_entityManager.getComponent<ska::PositionComponent>(m_player);
 	ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(m_player);
 	ska::Point<int> pPlayer = { pcPlayer.x, pcPlayer.y };

@@ -8,7 +8,7 @@ m_fixed({ point.x, point.y, 0, 0}) {
 	m_pos = &m_fixed;
 }
 
-void ska::CameraFixedSystem::refresh() {
+void ska::CameraFixedSystem::refresh(unsigned int ellapsedTime) {
 	focusOn(*m_pos, nullptr);
 }
 

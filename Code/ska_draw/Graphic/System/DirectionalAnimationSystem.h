@@ -11,7 +11,7 @@ namespace ska {
 		explicit DirectionalAnimationSystem(EntityManager& entityManager);
 		DirectionalAnimationSystem& operator=(const DirectionalAnimationSystem&) = delete;
 		virtual ~DirectionalAnimationSystem();
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 	};
 }

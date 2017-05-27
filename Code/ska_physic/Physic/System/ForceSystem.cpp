@@ -3,7 +3,7 @@
 ska::ForceSystem::ForceSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
-void ska::ForceSystem::refresh() {
+void ska::ForceSystem::refresh(unsigned int ellapsedTime) {
 	for (auto entityId : m_processed) {
 		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
 		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);

@@ -16,7 +16,7 @@ namespace ska {
 
 		void operator=(const Scene&) = delete;
 
-		virtual void graphicUpdate(DrawableContainer& drawables) override = 0;
+		virtual void graphicUpdate(unsigned ellapsedTime, DrawableContainer& drawables) override = 0;
 		virtual void eventUpdate(unsigned int) override = 0;
 		virtual void load(std::unique_ptr<Scene>* lastScene) = 0;
 		virtual bool unload() = 0;

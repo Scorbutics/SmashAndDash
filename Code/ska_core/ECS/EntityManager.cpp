@@ -1,4 +1,6 @@
 #include "EntityManager.h"
+#include "../Exceptions/IllegalStateException.h"
+#include "../Utils/StringUtils.h"
 
 std::unordered_map<std::string, ska::ComponentSerializer*> ska::EntityManager::NAME_MAPPED_COMPONENT;
 

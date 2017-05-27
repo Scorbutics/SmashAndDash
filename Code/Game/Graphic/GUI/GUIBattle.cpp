@@ -89,7 +89,7 @@ void GUIBattle::eventUpdate(unsigned int) {
 	//}
 }
 
-void GUIBattle::graphicUpdate(ska::DrawableContainer& drawables) {
+void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	for (auto& b : m_bars) {
 		drawables.add(*b.second);
 	}

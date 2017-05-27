@@ -7,7 +7,7 @@
 ska::IADefinedMovementSystem::IADefinedMovementSystem(EntityManager& entityManager, ScriptRegisterer* scriptSystem) : System(entityManager), m_scriptSystem(scriptSystem) {
 }
 
-void ska::IADefinedMovementSystem::refresh() {
+void ska::IADefinedMovementSystem::refresh(unsigned int ellapsedTime) {
 	std::vector<EntityId> entityWithComponentsToDelete;
 
 	for (EntityId entityId : m_processed) {

@@ -10,7 +10,7 @@ namespace ska {
 		CameraFixedSystem& operator=(const CameraFixedSystem&) = delete;
 		~CameraFixedSystem();
 
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
 		Rectangle m_fixed;
 

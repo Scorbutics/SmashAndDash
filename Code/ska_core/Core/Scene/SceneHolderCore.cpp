@@ -1,8 +1,8 @@
 #include "SceneHolderCore.h"
 #include "../../Exceptions/SceneDiedException.h"
 
-void ska::SceneHolderCore::graphicUpdate(DrawableContainer& drawables) {
-	m_currentScene->graphicUpdate(drawables);
+void ska::SceneHolderCore::graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) {
+	m_currentScene->graphicUpdate(ellapsedTime, drawables);
 }
 
 void ska::SceneHolderCore::eventUpdate(unsigned ellapsedTime) {

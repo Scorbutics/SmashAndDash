@@ -7,6 +7,6 @@ namespace ska {
 		HasGraphic() {}
 		virtual ~HasGraphic() {}
 
-		virtual void graphicUpdate(DrawableContainer& drawables) = 0;
+		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) = 0;
 	};
 }

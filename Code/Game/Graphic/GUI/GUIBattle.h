@@ -36,7 +36,7 @@ public:
 	bool onBattleStart(BattleEvent& be);
 	bool onStatisticsChange(StatisticsChangeEvent& sce);
 
-	void graphicUpdate(ska::DrawableContainer& drawables) override;
+	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	void eventUpdate(unsigned int ellapsedTime) override;
 
 private:

@@ -13,7 +13,7 @@ public:
 	virtual ~SkillRefreshSystem();
 
 protected:
-	virtual void refresh() override;
+	virtual void refresh(unsigned int ellapsedTime) override;
 
 private:
 

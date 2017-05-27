@@ -14,7 +14,7 @@ namespace ska {
 		explicit IADefinedMovementSystem(EntityManager& entityManager, ScriptRegisterer* scriptSystem = nullptr);
 		virtual ~IADefinedMovementSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
 		ScriptRegisterer* m_scriptSystem;
 	};

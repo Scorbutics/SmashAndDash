@@ -8,7 +8,7 @@ namespace ska {
 		CameraFollowSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH);
 		~CameraFollowSystem();
 
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
 		Rectangle m_follow;
 	};

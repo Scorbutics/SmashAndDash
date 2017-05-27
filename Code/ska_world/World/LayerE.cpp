@@ -18,7 +18,7 @@ ska::LayerE::LayerE(World& world) : m_world(world) {
 }
 
 
-void ska::LayerE::refresh() {
+void ska::LayerE::refresh(unsigned int ellapsedTime) {
 	/* TODO Chipset relative scripts */
 }
 
@@ -100,7 +100,7 @@ void ska::LayerE::changeLevel(const std::string& fichier) {
 		while (getline(flux, line)) {
 
 			i++;
-			size_t nextIndex = 0;
+			std::size_t nextIndex = 0;
 			ss.clear();
 
 			const std::string x = StringUtils::extractTo(nextIndex, line, ':');

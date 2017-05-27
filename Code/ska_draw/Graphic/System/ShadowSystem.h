@@ -14,9 +14,9 @@ namespace ska {
 		ShadowSystem(EntityManager& entityManager, CameraSystem* camera);
         ShadowSystem& operator=(const ShadowSystem&) = delete;
         virtual ~ShadowSystem();
-        virtual void update() override;
+        virtual void update(unsigned int ellapsedTime) override;
     protected:
-        virtual void refresh() override;
+        virtual void refresh(unsigned int ellapsedTime) override;
 
     private:
         AnimatedTexture m_shadow;

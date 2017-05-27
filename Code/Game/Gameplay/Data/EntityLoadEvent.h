@@ -1,7 +1,10 @@
 #pragma once
+#include <memory>
+
 #include "Inputs/Readers/IniReader.h"
 #include "Statistics.h"
 #include "MonsterDescription.h"
+
 
 struct EntityLoadEvent {
 	EntityLoadEvent(ska::IniReader& reader, unsigned int pkmnid, unsigned int hp) :

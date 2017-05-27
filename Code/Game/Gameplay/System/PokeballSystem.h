@@ -13,7 +13,7 @@ public:
 	virtual ~PokeballSystem();
 
 protected:
-	virtual void refresh() override;
+	virtual void refresh(unsigned int ellapsedTime) override;
 private:
 	void throwBall(ska::EntityId entityId) const;
 	ska::AnimatedTexture m_sprite;

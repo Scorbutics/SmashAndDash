@@ -12,7 +12,7 @@ namespace ska {
 		MovementSystem& operator=(const MovementSystem&) = delete;
 		virtual ~MovementSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 	};
 }

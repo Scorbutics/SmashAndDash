@@ -20,7 +20,7 @@ namespace ska {
 		CollisionSystem& operator=(const CollisionSystem&) = delete;
 		virtual ~CollisionSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
 		inline Rectangle createHitBox(EntityId entityId, bool xaxis) const;
 		CollisionProfile& m_collisionProfile;

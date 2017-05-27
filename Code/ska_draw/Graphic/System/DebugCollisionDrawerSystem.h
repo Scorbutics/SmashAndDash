@@ -11,7 +11,7 @@ namespace ska {
 	public:
 		DebugCollisionDrawerSystem(EntityManager& em);
 		EntityId createDebugCollisionEntity(const Point<int>& p, int offset) const;
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 		virtual ~DebugCollisionDrawerSystem() = default;
 	};
 }

@@ -4,7 +4,7 @@
 ska::GravitySystem::GravitySystem(EntityManager& entityManager) : System(entityManager) {
 }
 
-void ska::GravitySystem::refresh() {
+void ska::GravitySystem::refresh(unsigned int ellapsedTime) {
 	for (auto entityId : m_processed) {
 		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
 		auto& gaComponent = m_entityManager.getComponent<GravityAffectedComponent>(entityId);

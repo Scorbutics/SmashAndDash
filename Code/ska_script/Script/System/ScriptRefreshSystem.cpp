@@ -14,7 +14,7 @@ m_scriptPositionedGetter(spg), m_blockContainer(bc), m_icm(icm), m_scriptAutoSys
 
 }
 
-void ska::ScriptRefreshSystem::refresh() {
+void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 	const InputActionContainer& iac = m_icm.getActions();
 	EntityManager& entityManager = ScriptPositionSystemAccess::m_entityManager;
 	std::vector<EntityId> toDelete;
@@ -129,12 +129,12 @@ void ska::ScriptRefreshSystem::refresh() {
 	}
 
 
-	m_scriptAutoSystem.update();
+	m_scriptAutoSystem.update(ellapsedTime);
 
 }
 
-void ska::ScriptRefreshSystem::update() {
-	ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update();
+void ska::ScriptRefreshSystem::update(unsigned int ellapsedTime) {
+	ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update(ellapsedTime);
 }
 
 void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {

@@ -25,7 +25,7 @@ public:
 	virtual ~BattleSystem();
 
 protected:
-	virtual void refresh() override;
+	virtual void refresh(unsigned int ellapsedTime) override;
 
 private:
 	CustomEntityManager& m_customEM;

@@ -72,7 +72,7 @@ std::vector<ska::IniReader>& WorldScene::getMobSettings() {
 	return m_world.getMobSettings();
 }
 
-void WorldScene::onGraphicUpdate(ska::DrawableContainer& drawables) {
+void WorldScene::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 
 	//Première couche
 	drawables.addHead(m_world.getLayerRenderable(0));
@@ -88,7 +88,7 @@ void WorldScene::onGraphicUpdate(ska::DrawableContainer& drawables) {
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
-	m_world.graphicUpdate(drawables);
+	m_world.graphicUpdate(ellapsedTime, drawables);
 }
 
 void WorldScene::onEventUpdate(unsigned int ellapsedTime) {

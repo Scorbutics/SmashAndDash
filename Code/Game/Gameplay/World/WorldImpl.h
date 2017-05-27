@@ -27,7 +27,7 @@ public:
 
 	bool onSettingsChange(SettingsChangeEvent& sce);
 
-	virtual void graphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 
 private:
 	Weather m_fog;

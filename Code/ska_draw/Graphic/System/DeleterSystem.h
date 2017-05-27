@@ -10,7 +10,7 @@ namespace ska {
 		explicit DeleterSystem(EntityManager& entityManager);
 		DeleterSystem& operator=(const DeleterSystem&) = delete;
 		virtual ~DeleterSystem();
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	};
 }
 

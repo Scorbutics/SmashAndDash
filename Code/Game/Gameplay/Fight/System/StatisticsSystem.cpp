@@ -6,7 +6,7 @@ m_playerICM(icm), m_worldScene(ws), m_window(w), m_ged(ged) {
 
 }
 
-void StatisticsSystem::refresh() {
+void StatisticsSystem::refresh(unsigned int ellapsedTime) {
 	for (const auto entityId : m_processed) {
 		auto& bc = m_entityManager.getComponent<BattleComponent>(entityId);
 

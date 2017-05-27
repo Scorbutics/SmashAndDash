@@ -10,7 +10,7 @@ ska::ShadowSystem::ShadowSystem(ska::EntityManager& entityManager, ska::CameraSy
 	m_shadow.load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, 13), 2, 1, 1, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 127);
 }
 
-void ska::ShadowSystem::refresh() {
+void ska::ShadowSystem::refresh(unsigned int ellapsedTime) {
 	const ska::Rectangle* camera = m_camera == nullptr ? nullptr : m_camera->getDisplay();
 	const unsigned int cameraX = (camera == nullptr || camera->x < 0 ? 0 : camera->x);
 	const unsigned int cameraY = (camera == nullptr || camera->y < 0 ? 0 : camera->y);
@@ -40,8 +40,8 @@ void ska::ShadowSystem::refresh() {
 
 }
 
-void ska::ShadowSystem::update() {
-	System::update();
+void ska::ShadowSystem::update(unsigned int ellapsedTime) {
+	System::update(ellapsedTime);
 }
 
 ska::ShadowSystem::~ShadowSystem() {

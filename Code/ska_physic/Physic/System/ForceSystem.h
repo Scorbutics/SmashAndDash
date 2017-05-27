@@ -11,7 +11,7 @@ namespace ska {
 		void operator=(const ForceSystem& fs) = delete;
 		virtual ~ForceSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 	};
 }

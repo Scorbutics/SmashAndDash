@@ -17,6 +17,7 @@ namespace ska {
     class GameCore : 
 		public GameApp {
     public:
+
         GameCore() :
             m_soundManager(m_eventDispatcher),
             m_playerICM(m_rawInputListener) {
@@ -34,8 +35,6 @@ namespace ska {
         virtual ~GameCore() {
 			m_eventDispatcher.template removeMultipleObservers<SoundEvent, WorldEvent>(m_soundManager, m_soundManager);
         };
-
-
 
         void run() override {
             auto continuer = true;
@@ -73,17 +72,15 @@ namespace ska {
             unsigned long t = 0;
 			unsigned long t0 = 0;
 
-            static const auto FPS = 63;
-            static const auto TICKS = 1000 / FPS;
-
             try {
+				const auto ti = ticksWanted();
                 for (;;) {
                     t = ska::TimeUtils::getTicks();
 					
 					const auto ellapsedTime = t - t0;
 
-					if (ellapsedTime > TICKS)  {
-                        graphicUpdate();
+					if (ellapsedTime > ti)  {
+                        graphicUpdate(ellapsedTime);
 						eventUpdate(ellapsedTime);
 
                         m_mainWindow->display();
@@ -92,7 +89,7 @@ namespace ska {
                         t0 = t;
                     } else {
                         /* Temporisation entre 2 frames */
-						TimeUtils::wait(TICKS - (ellapsedTime));
+						TimeUtils::wait(ti - (ellapsedTime));
                     }
                 }
             } catch (ska::SceneDiedException&) {
@@ -100,8 +97,8 @@ namespace ska {
             }
         }
 
-        void graphicUpdate(void) {
-        	m_sceneHolder.graphicUpdate(m_drawables);
+        void graphicUpdate(unsigned int ellapsedTime) {
+        	m_sceneHolder.graphicUpdate(ellapsedTime, m_drawables);
             //TODO : dans GUI
             //m_drawables.add(m_fpsCalculator.getRenderable());
             m_drawables.draw();

@@ -54,7 +54,7 @@ namespace ska {
 		std::unordered_map<std::string, EntityId> m_namedScriptedEntities;
 
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 		struct ScriptCommandHelper {
 			ScriptCommandHelper(World&, EntityManager& parent) : m_entityManager(parent) {}
 			virtual ~ScriptCommandHelper() = default;

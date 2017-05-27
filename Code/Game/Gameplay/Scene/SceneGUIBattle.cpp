@@ -6,9 +6,9 @@ SceneGUIBattle::SceneGUIBattle(CustomEntityManager& em, PokemonGameEventDispatch
     m_gui(w, ril, ged) {
 
 }
-void SceneGUIBattle::onGraphicUpdate(ska::DrawableContainer& drawables) {
+void SceneGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
-	m_gui.graphicUpdate(drawables);
+	m_gui.graphicUpdate(ellapsedTime, drawables);
 }
 
 bool SceneGUIBattle::beforeUnload() {

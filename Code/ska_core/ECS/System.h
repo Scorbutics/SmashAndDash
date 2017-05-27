@@ -5,6 +5,7 @@
 #include "ISystem.h"
 #include "../Utils/Observer.h"
 #include "../Utils/Refreshable.h"
+#include "../Exceptions/IllegalStateException.h"
 
 namespace ska {
 
@@ -30,8 +31,8 @@ namespace ska {
 
 		void operator=(const System<Storage, ComponentType...>& sys) = delete;
 
-		void update() override {
-			refresh();
+		void update(unsigned int ellapsedTime) override {
+			refresh(ellapsedTime);
 			if (!m_toDelete.empty()) {
 				for (auto entity : m_toDelete) {
 					m_entityManager.removeEntity(entity);

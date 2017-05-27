@@ -12,7 +12,7 @@ namespace ska {
 		IARandomMovementSystem& operator=(const IARandomMovementSystem&) = delete;
 		virtual ~IARandomMovementSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 	};
 }

@@ -14,7 +14,7 @@ namespace ska {
 		LayerE(World& world);
 		void operator=(const LayerE&) = delete;
 
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 		int getBlocX(int ligne) const;
 		int getBlocY(int ligne) const;

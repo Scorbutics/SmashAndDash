@@ -12,7 +12,7 @@ SceneBase(em, ged, w, ril, oldScene) {
 
 }
 
-void AbstractNoGUISceneMap::onGraphicUpdate(ska::DrawableContainer& drawables) {
+void AbstractNoGUISceneMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	//SceneBase::graphicUpdate(drawables);
 
 	/*

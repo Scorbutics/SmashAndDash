@@ -46,7 +46,7 @@ public:
 protected:
     virtual void afterLoad(ska::ScenePtr* scene) override;
 	virtual bool beforeUnload() override;
-	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:

@@ -16,7 +16,7 @@ System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionCompon
 PokeballSystem::~PokeballSystem() {
 }
 
-void PokeballSystem::refresh() {
+void PokeballSystem::refresh(unsigned int ellapsedTime) {
 	for (ska::EntityId entityId : m_processed) {
 		PokeballComponent& pokec = m_entityManager.getComponent<PokeballComponent>(entityId);
 		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);

@@ -3,7 +3,7 @@
 ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) : System(entityManager), m_icm(icm) {
 }
 
-void ska::InputSystem::refresh() {
+void ska::InputSystem::refresh(unsigned int ellapsedTime) {
 	for (const auto& entityId : m_processed) {
 		auto& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
 		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);

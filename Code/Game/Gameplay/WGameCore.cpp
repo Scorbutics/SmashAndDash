@@ -28,6 +28,10 @@ WGameCore::WGameCore():
 
 }
 
+unsigned int WGameCore::ticksWanted() const {
+	return TICKS;
+}
+
 ska::GameApp& ska::GameApp::get() {
 	static WGameCore wgc;
 	return wgc;

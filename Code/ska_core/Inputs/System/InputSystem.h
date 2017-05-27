@@ -13,7 +13,7 @@ namespace ska {
 		InputSystem& operator=(const InputSystem&) = delete;
 		virtual ~InputSystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
 		const InputContextManager& m_icm;
 	};

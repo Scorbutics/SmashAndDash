@@ -13,7 +13,7 @@ public:
     virtual ~SceneGUIBattle() = default;
 
 protected:
-	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual bool beforeUnload() override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 

@@ -164,7 +164,7 @@ ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
 	return m_saveGame;
 }
 
-void ska::ScriptAutoSystem::refresh() {
+void ska::ScriptAutoSystem::refresh(unsigned int ellapsedTime) {
 	auto nextScript = getHighestPriorityScript();
 	if (nextScript == nullptr) {
 		return;

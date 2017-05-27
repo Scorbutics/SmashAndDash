@@ -12,7 +12,7 @@ namespace ska {
 		GravitySystem& operator=(const GravitySystem&) = delete;
 		virtual ~GravitySystem();
 	protected:
-		virtual void refresh() override;
+		virtual void refresh(unsigned int ellapsedTime) override;
 
 	};
 }

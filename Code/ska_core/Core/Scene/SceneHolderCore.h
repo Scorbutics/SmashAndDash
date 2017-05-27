@@ -10,7 +10,7 @@ namespace ska {
         SceneHolderCore() = default;
         ~SceneHolderCore() = default;
 
-		void graphicUpdate(DrawableContainer& drawables) override;
+		void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override;
 		void eventUpdate(unsigned int ellapsedTime) override;
 
         void update() override;

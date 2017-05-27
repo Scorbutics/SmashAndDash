@@ -30,21 +30,21 @@ namespace ska {
 
 		}
 
-		virtual void graphicUpdate(DrawableContainer& drawables) override final {
-			onGraphicUpdate(drawables);
+		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override final {
+			onGraphicUpdate(ellapsedTime, drawables);
 
 			/* Graphics */
 			for (auto& s : m_graphics) {
 				s->setDrawables(drawables);
-				s->update();
+				s->update(ellapsedTime);
 			}
 
 			for (auto& s : m_subScenes) {
-				s->graphicUpdate(drawables);
+				s->graphicUpdate(ellapsedTime, drawables);
 			}
 
 			for (auto& s : m_linkedSubScenes) {
-				s->graphicUpdate(drawables);
+				s->graphicUpdate(ellapsedTime, drawables);
 			}
 
 		}
@@ -54,7 +54,7 @@ namespace ska {
 
 			/* Logics */
 			for (auto& s : m_logics) {
-				s->update();
+				s->update(ellapsedTime);
 			}
 
 			for (auto& s : m_subScenes) {
@@ -159,7 +159,7 @@ namespace ska {
 			return false;
 		}
 
-		virtual void onGraphicUpdate(DrawableContainer& drawables) {
+		virtual void onGraphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) {
 		}
 
 		virtual void onEventUpdate(unsigned int ellapsedTime) {

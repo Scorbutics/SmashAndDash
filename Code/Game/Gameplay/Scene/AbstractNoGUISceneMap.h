@@ -15,7 +15,7 @@ public:
 	virtual ~AbstractNoGUISceneMap();
 
 protected:
-	virtual void onGraphicUpdate(ska::DrawableContainer& drawables) override;
+	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 };

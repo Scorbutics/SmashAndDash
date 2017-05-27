@@ -13,10 +13,10 @@ namespace ska {
 		GraphicSystem(EntityManager& entityManager, ska::GameEventDispatcher& ged, CameraSystem* camera);
         GraphicSystem& operator=(const GraphicSystem&) = delete;
         int getTopLayerPriority() const;
-        virtual void update() override;
+        virtual void update(unsigned int ellapsedTime) override;
         virtual ~GraphicSystem();
     protected:
-        virtual void refresh() override;
+        virtual void refresh(unsigned int ellapsedTime) override;
     private:
 		ska::GameEventDispatcher& m_ged;
         int m_topLayerPriority;

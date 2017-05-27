@@ -16,6 +16,12 @@ namespace ska {
 
 		virtual void run() = 0;
 
+		virtual unsigned int ticksWanted() const {
+			const unsigned int FPS = 60;
+			const unsigned int TICKS = 1000 / FPS;
+			return TICKS;
+		}
+
 		virtual ~GameApp();
 	};
 }

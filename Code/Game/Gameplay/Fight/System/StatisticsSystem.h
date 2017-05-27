@@ -18,7 +18,7 @@ public:
 	virtual ~StatisticsSystem();
 
 protected:
-	virtual void refresh() override;
+	virtual void refresh(unsigned int ellapsedTime) override;
 
 private:
 	ska::InputContextManager& m_playerICM;

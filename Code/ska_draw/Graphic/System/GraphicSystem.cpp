@@ -14,7 +14,7 @@ ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::GameEv
 	m_drawables = nullptr;
 }
 
-void ska::GraphicSystem::refresh() {
+void ska::GraphicSystem::refresh(unsigned int ellapsedTime) {
 	auto camera = m_camera == nullptr ? nullptr : m_camera->getDisplay();
 	const unsigned int cameraX = (camera == nullptr || camera->x < 0 ? 0 : camera->x);
 	const unsigned int cameraY = (camera == nullptr || camera->y < 0 ? 0 : camera->y);
@@ -61,8 +61,8 @@ void ska::GraphicSystem::refresh() {
 	m_drawables = nullptr;
 }
 
-void ska::GraphicSystem::update() {
-	System::update();
+void ska::GraphicSystem::update(unsigned int ellapsedTime) {
+	System::update(ellapsedTime);
 }
 
 int ska::GraphicSystem::getTopLayerPriority() const {

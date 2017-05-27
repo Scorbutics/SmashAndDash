@@ -6,7 +6,7 @@
 ska::CameraFollowSystem::CameraFollowSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH) : CameraSystem(entityManager, screenW, screenH) {
 }
 
-void ska::CameraFollowSystem::refresh() {
+void ska::CameraFollowSystem::refresh(unsigned int ellapsedTime) {
 	auto mainEntityIt = m_processed.begin();
 	if(mainEntityIt != m_processed.end()) {
 		auto entityId = *mainEntityIt;

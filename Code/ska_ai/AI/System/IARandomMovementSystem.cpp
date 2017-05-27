@@ -8,7 +8,7 @@
 ska::IARandomMovementSystem::IARandomMovementSystem(EntityManager& entityManager) : System(entityManager) {
 }
 
-void ska::IARandomMovementSystem::refresh() {
+void ska::IARandomMovementSystem::refresh(unsigned int ellapsedTime) {
 	for (auto entityId : m_processed) {
 		auto& fc = m_entityManager.getComponent<ForceComponent>(entityId);
 		auto& iamc = m_entityManager.getComponent<IARandomMovementComponent>(entityId);

@@ -5,7 +5,7 @@ namespace ska {
 		ISystem() = default;
 		virtual ~ISystem() = default;
 
-		virtual void update() = 0;
+		virtual void update(unsigned int ellapsedTime) = 0;
 	};
 
 }

@@ -16,7 +16,7 @@ m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
 
 }
 
-void BattleSystem::refresh() {
+void BattleSystem::refresh(unsigned int ellapsedTime) {
 
 	for (ska::EntityId entityId : m_processed) {
 		const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();

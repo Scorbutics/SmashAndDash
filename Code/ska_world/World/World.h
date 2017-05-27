@@ -79,7 +79,7 @@ namespace ska {
 		Point<int> alignOnBlock(const Rectangle& hitbox) const;
 
 		void linkCamera(CameraSystem* cs) override;
-		virtual void graphicUpdate(DrawableContainer& drawables) override = 0;
+		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override = 0;
 
 		virtual ~World() = default;
 
