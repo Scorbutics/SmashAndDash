@@ -12,6 +12,7 @@ ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::GameEv
 	m_ged(ged), 
 	m_topLayerPriority(0) {
 	m_drawables = nullptr;
+	name("GraphicSystem");
 }
 
 void ska::GraphicSystem::refresh(unsigned int ellapsedTime) {

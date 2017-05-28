@@ -21,6 +21,9 @@ namespace ska {
 			m_entityManager.addObserver(*this);
             //m_systemComponentMask.reset();
             std::clog << "Initializing system with components : " << std::endl;
+			
+			m_named = false;
+
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
 			std::clog << "End system initialization" << std::endl << std::endl;
@@ -32,6 +35,11 @@ namespace ska {
 		void operator=(const System<Storage, ComponentType...>& sys) = delete;
 
 		void update(unsigned int ellapsedTime) override {
+			if(!m_named) {
+				std::clog << "\tUPDATE System " << m_name << " with Mask \t" << m_systemComponentMask << std::endl;
+				m_named = true;
+			}
+
 			refresh(ellapsedTime);
 			if (!m_toDelete.empty()) {
 				for (auto entity : m_toDelete) {
@@ -102,5 +110,12 @@ namespace ska {
 		EntityManager& m_entityManager;
 		Storage m_processed;
 
+		void name(const std::string& n) {
+			m_name = n;
+		}
+
+	private:
+		bool m_named;
+		std::string m_name;
 	};
 }

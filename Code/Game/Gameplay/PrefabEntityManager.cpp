@@ -20,8 +20,8 @@ ska::PrefabEntityManager::PrefabEntityManager() {
 ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int id, const unsigned int worldBlockSize) {
 	EntityId hero = createEntity();
 	PositionComponent pc;
-	pc.x = startPos.x*worldBlockSize;
-	pc.y = startPos.y*worldBlockSize;
+	pc.x = startPos.x * worldBlockSize;
+	pc.y = startPos.y * worldBlockSize;
 	pc.z = 0;
 	addComponent<PositionComponent>(hero, pc);
 	MovementComponent mc;
@@ -57,8 +57,8 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	EntityId hero = createCharacter(startPos, 0, worldBlockSize);
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
-	ic.movePower = 100;
-	ic.jumpPower = 130 << 3;
+	ic.movePower = 200;
+	ic.jumpPower = 1200;
 	addComponent<InputComponent>(hero, ic);
 	ScriptAwareComponent sac;
 	addComponent<ScriptAwareComponent>(hero, sac);

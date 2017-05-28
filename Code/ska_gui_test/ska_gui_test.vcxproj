@@ -78,6 +78,11 @@
     <ReferencePath>..\ska_gui;..\ska_core;..\ska_draw;$(ReferencePath)</ReferencePath>
     <LibraryPath>..\..\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\ska_gui;..\ska_core;..\ska_draw;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <ReferencePath>..\ska_gui;..\ska_core;..\ska_draw;$(ReferencePath)</ReferencePath>
+    <LibraryPath>..\..\Debug;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>

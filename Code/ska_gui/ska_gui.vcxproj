@@ -162,6 +162,11 @@
     <ReferencePath>..\ska_draw;..\ska_core;$(ReferencePath)</ReferencePath>
     <LibraryPath>..\..\x64\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ReferencePath>..\ska_draw;..\ska_core;$(ReferencePath)</ReferencePath>
+    <LibraryPath>..\..\Debug;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>..\ska_draw;..\ska_core;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

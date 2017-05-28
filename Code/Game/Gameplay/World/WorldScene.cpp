@@ -227,6 +227,13 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(const std::str
 
 		m_loadedOnce = true;
 	} else {
+		auto& mc = m_entityManager.getComponent<ska::MovementComponent>(m_player);
+		mc.ax = 0;
+		mc.ay = 0;
+		mc.az = 0;
+		mc.vx = 0;
+		mc.vy = 0;
+		mc.vz = 0;
 		m_entityManager.refreshEntity(m_player);
 	}
 

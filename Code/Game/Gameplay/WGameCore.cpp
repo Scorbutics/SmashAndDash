@@ -24,12 +24,10 @@ WGameCore::WGameCore():
 	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
-	//m_fpsCalculator.setDisplayPriority(INT_MAX);
-
 }
 
 float WGameCore::ticksWanted() const {
-	static const unsigned int FPS = 63;
+	static const unsigned int FPS = 50;
 	static const float TICKS = 1000.F / FPS;
 	return TICKS;
 }

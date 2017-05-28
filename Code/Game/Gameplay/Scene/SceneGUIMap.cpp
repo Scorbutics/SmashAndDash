@@ -15,5 +15,5 @@ void SceneGUIMap::bindGUI(Settings& s) {
 }
 
 void SceneGUIMap::onEventUpdate(unsigned int ellapsedTime) {
-	m_gui.refresh();
+	m_gui.refresh(ellapsedTime);
 }

@@ -3,6 +3,7 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 
 ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {
+	name("DirectionalAnimationSystem");
 }
 
 void ska::DirectionalAnimationSystem::refresh(unsigned int ellapsedTime) {
@@ -28,8 +29,8 @@ void ska::DirectionalAnimationSystem::refresh(unsigned int ellapsedTime) {
 			texture.stop(false);
 		}
 
-		const auto xMove = static_cast<int>(mov.vx + mov.ax + 0.5);
-		const auto yMove = static_cast<int>(mov.vy + mov.ay + 0.5);
+		const auto xMove = static_cast<int>(mov.vx + 0.5);
+		const auto yMove = static_cast<int>(mov.vy + 0.5);
 
 
 		//If it begins to be difficult to maintain, create two components with two different systems to handle each movement type

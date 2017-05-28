@@ -7,6 +7,7 @@
 #include "WindowSettings.h"
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
 #include <Core/Window.h>
+#include "FPSLabel.h"
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
 	AbstractGameGUI(w, playerICM, ged),
@@ -25,11 +26,12 @@ GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameE
 
 	m_team = &addFocusableWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
-    //m_team->setPriority(0);
 
-	auto& wsettings = addFocusableWindow<WindowSettings>("settings", ska::Point<int>(8 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	auto& wsettings = addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
     wsettings.show(false);
-    //wsettings->setPriority(1);
+    
+
+	addWindow<FPSLabel>("displayFPS");
 
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);

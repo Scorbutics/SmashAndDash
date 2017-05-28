@@ -66,7 +66,10 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>Debug;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(IncludePath)</IncludePath>
     <LibraryPath>x64\Debug;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x64;$(LibraryPath)</LibraryPath>
@@ -79,13 +82,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;fmodex_vc.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_ttf.lib;SDL2_image.lib;ska_ai.lib;ska_audio.lib;ska_core.lib;ska_draw.lib;ska_gui.lib;ska_physic.lib;ska_script.lib;ska_world.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -167,6 +170,7 @@
     <ClCompile Include="Code\Game\Graphic\GUI\Bar.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\DialogMenu.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\DynamicWindowArea.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\FPSLabel.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\GUIMap.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\Image_Area.cpp" />
@@ -270,6 +274,7 @@
     <ClInclude Include="Code\Game\Graphic\GUI\AbstractGameGUI.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\Bar.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\DialogMenu.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\FPSLabel.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\IDialogMenu.h" />

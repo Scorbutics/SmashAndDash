@@ -17,6 +17,7 @@ namespace ska {
 	class Window;
 	class ShadowSystem;
 	class GraphicSystem;
+	class Ticked;
 }
 class CustomEntityManager;
 

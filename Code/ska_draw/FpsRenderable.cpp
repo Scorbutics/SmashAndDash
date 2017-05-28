@@ -9,7 +9,12 @@ ska::FpsRenderable::FpsRenderable() :
 
 void ska::FpsRenderable::update(const double value) {
 	if (TimeUtils::getTicks() - m_t0 > DELAY) {
-		m_fps.loadFromText(34, StringUtils::intToStr(static_cast<int>(value)), Color(255, 0, 0, 0));
+		if(value < 0) {
+			m_fps.loadFromText(34, "inf.", Color(255, 0, 0, 0));
+		} else {
+			m_fps.loadFromText(34, StringUtils::intToStr(static_cast<int>(value)), Color(255, 0, 0, 0));
+		}
+		
 		m_t0 = TimeUtils::getTicks();
 	}
 }

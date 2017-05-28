@@ -8,6 +8,7 @@ ska::CollisionSystem::CollisionSystem(EntityManager& entityManager, CollisionPro
 	System(entityManager),
 	m_collisionProfile(cp),
 	m_ged(ged) {
+	name("CollisionSystem");
 }
 
 void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
@@ -26,20 +27,22 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 			m_entityManager.refreshEntity(entityId);
 		}
 
-		const auto entityHitboxX = createHitBox(entityId, true);
-		const auto entityHitboxY = createHitBox(entityId, false);
+		const auto dt = 1.0F;
 
+		const auto entityHitboxX = createHitBox(entityId, dt, true);
+		const auto entityHitboxY = createHitBox(entityId, dt, false);
+		
 		auto entityCollided = false;
 		CollisionComponent col;
 		for (auto itEntity : m_processed) {
 			if (itEntity != entityId) {
-				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, true))) {
+				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, dt, true))) {
 					col.origin = entityId;
 					col.target = itEntity;
 					entityCollided = true;
 					col.xaxis = true;
 				}
-				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, false))) {
+				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, dt, false))) {
 					col.origin = entityId;
 					col.target = itEntity;
 					entityCollided = true;
@@ -87,14 +90,14 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 	}
 }
 
-ska::Rectangle ska::CollisionSystem::createHitBox(EntityId entityId, bool xaxis) const{
+ska::Rectangle ska::CollisionSystem::createHitBox(EntityId entityId, float dt, bool xaxis) const{
 	auto& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 	auto& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 	auto& movementComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 	Rectangle hitBox;
-	hitBox.x = static_cast<int>(positionComponent.x + (xaxis ? (movementComponent.vx + movementComponent.ax) : 0) + hitboxComponent.xOffset + 0.5);
-	hitBox.y = static_cast<int>(positionComponent.y + (!xaxis ? (movementComponent.vy + movementComponent.ay) : 0) + hitboxComponent.yOffset + 0.5);
+	hitBox.x = static_cast<int>(positionComponent.x + (xaxis ? (movementComponent.vx * dt) : 0) + hitboxComponent.xOffset + 0.5);
+	hitBox.y = static_cast<int>(positionComponent.y + (!xaxis ? (movementComponent.vy * dt) : 0) + hitboxComponent.yOffset + 0.5);
 	hitBox.w = hitboxComponent.width;
 	hitBox.h = hitboxComponent.height;
 	return hitBox;

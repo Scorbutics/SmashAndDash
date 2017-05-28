@@ -5,7 +5,7 @@ namespace ska {
 	public:
 	    InputComponent();
 	    ~InputComponent() = default;
-		unsigned int movePower;
-		unsigned int jumpPower;
+		float movePower;
+		float jumpPower;
 	};
 }

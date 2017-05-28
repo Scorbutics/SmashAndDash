@@ -16,7 +16,7 @@ namespace ska {
 		void display() const override;
 
 	private:
-		static const int DELAY = 1000;
+		static const int DELAY = 200;
 		Texture m_fps;
 		unsigned int m_t0;
 		bool m_toggleVisible;

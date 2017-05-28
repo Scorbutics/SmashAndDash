@@ -27,6 +27,7 @@ public:
 	void bind(Settings& sets);
 
 	~GUIMap();
+
 private:
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;

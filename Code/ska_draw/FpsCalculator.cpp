@@ -2,6 +2,7 @@
 #include "FpsCalculator.h"
 
 ska::FpsCalculator::FpsCalculator() : m_tickindex(0), m_ticksum(0) {
+	m_ticklist.fill(0);
 }
 
 void ska::FpsCalculator::setDisplayPriority(int p) {
@@ -26,8 +27,9 @@ double ska::FpsCalculator::calculate(long newtick) {
 		m_tickindex = 0;
 	}
 
-	const double average = ((double)m_ticksum / MAXSAMPLES);
-	m_renderable.update(1000 / average);
+	const auto average = (static_cast<double>(m_ticksum) / MAXSAMPLES);
+	m_renderable.update((average == 0.0) ? -1 : (1000 / average));
+	
 	return average;
 
 }

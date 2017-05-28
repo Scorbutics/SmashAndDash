@@ -1,6 +1,7 @@
 #include "InputSystem.h"
 
 ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) : System(entityManager), m_icm(icm) {
+	name("InputSystem");
 }
 
 void ska::InputSystem::refresh(unsigned int ellapsedTime) {
@@ -12,31 +13,32 @@ void ska::InputSystem::refresh(unsigned int ellapsedTime) {
 		Point<float> movePower;
 		auto moveX = false;
 		auto moveY = false;
-		const auto factor = 0.709F;
+		const auto factor = 0.717F;
 		const auto& itc = m_icm.getToggles();
 		const auto& iac = m_icm.getActions();
 
 		if (itc[MoveUp]) {
-			movePower.y = -static_cast<float>(inputComponent.movePower);
+			movePower.y = -inputComponent.movePower;
 			moveY = true;
 		}
 
 		if (itc[MoveLeft]) {
-			movePower.x = -static_cast<float>(inputComponent.movePower);
+			movePower.x = -inputComponent.movePower;
 			moveX = true;
 		}
 
 		if (itc[MoveDown]) {
-			movePower.y = static_cast<float>(inputComponent.movePower);
+			movePower.y = inputComponent.movePower;
 			moveY = true;
 		}
 
 		if (itc[MoveRight]) {
-			movePower.x = static_cast<float>(inputComponent.movePower);
+			movePower.x = inputComponent.movePower;
 			moveX = true;
 		}
 
 		if (iac[Jump] && posComponent.z < 0.001) {
+			//Jump is an "impulse", not really a force, so it's more directly applied (we divide it by dt)
 			forceComponent.z += inputComponent.jumpPower;
 		}
 

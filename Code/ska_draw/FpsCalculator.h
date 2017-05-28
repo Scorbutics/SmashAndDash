@@ -14,7 +14,7 @@ namespace ska {
 	private:
 		const static int MAXSAMPLES = 100;
 		int m_tickindex;
-		int m_ticksum;
+		double m_ticksum;
 		std::array<int, MAXSAMPLES> m_ticklist;
 		FpsRenderable m_renderable;
 	};

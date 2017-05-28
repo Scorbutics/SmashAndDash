@@ -22,7 +22,7 @@ namespace ska {
             m_soundManager(m_eventDispatcher),
             m_playerICM(m_rawInputListener) {
 
-			ska::IniReader reader("gamesettings.ini");
+			IniReader reader("gamesettings.ini");
 			auto widthBlocks = reader.get<int>("Window width_blocks");
 			auto heightBlocks = reader.get<int>("Window height_blocks");
 			const auto& title = reader.get<std::string>("Window title");
@@ -69,28 +69,25 @@ namespace ska {
 		}
 
         bool refreshInternal() {
-            unsigned long t = 0;
-			unsigned long t0 = 0;
+	        unsigned long t0 = 0;
+	        auto accumulator = 0.0;
 
-            try {
+			try {
 				const auto ti = ticksWanted();
                 for (;;) {
-                    t = ska::TimeUtils::getTicks();
+                    unsigned long t = ska::TimeUtils::getTicks();
 					
 					const auto ellapsedTime = t - t0;
+					t0 = t;
 
-					if (ellapsedTime > ti)  {
-                        graphicUpdate(ellapsedTime);
-						eventUpdate(ellapsedTime);
+                	accumulator += ellapsedTime;
 
-                        m_mainWindow->display();
-                        
-                        //m_fpsCalculator.calculate(t - t0);
-                        t0 = t;
-                    } else {
-                        /* Temporisation entre 2 frames */
-						TimeUtils::wait(ti - (ellapsedTime));
+					while (accumulator >= ti) {
+						eventUpdate(ti);
+						accumulator -= ti;
                     }
+
+					graphicUpdate(ellapsedTime);
                 }
             } catch (ska::SceneDiedException&) {
                 return true;
@@ -99,10 +96,10 @@ namespace ska {
 
         void graphicUpdate(unsigned int ellapsedTime) {
         	m_sceneHolder.graphicUpdate(ellapsedTime, m_drawables);
-            //TODO : dans GUI
-            //m_drawables.add(m_fpsCalculator.getRenderable());
             m_drawables.draw();
             m_drawables.clear();
+
+			m_mainWindow->display();
         }
 
         void eventUpdate(unsigned int ellapsedTime) {

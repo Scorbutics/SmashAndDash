@@ -149,7 +149,7 @@ void ska::GUI::refreshMouse() {
 
 }
 
-void ska::GUI::refresh() {
+void ska::GUI::refresh(unsigned int ellapsedTime) {
 	if (m_hide) {
 		return;
 	}
@@ -168,7 +168,7 @@ void ska::GUI::refresh() {
 	refreshKeyboard();
 
 	//Time-based events
-	TimeEvent te;
+	TimeEvent te(ellapsedTime);
 	TimeObservable::notifyObservers(te);
 
 }

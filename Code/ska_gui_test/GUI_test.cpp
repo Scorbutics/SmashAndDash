@@ -114,7 +114,7 @@ void clickMouseLeft(bool d) {
 void basicRefreshLoop(ska::GUI& gui) {
     auto& icm = GetICM();
     icm.refresh();
-    gui.refresh();
+    gui.refresh(16);
     reportMouseLastPos();
 }
 
