@@ -48,9 +48,6 @@ m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager) {
 
 	addSubScene<SceneGUIBattle>();
 
-	/*ged.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	ged.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);*/
-
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
 }
@@ -298,6 +295,4 @@ bool SceneFight::beforeUnload() {
 }
 
 SceneFight::~SceneFight() {
-	/*m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_entityCollisionResponse);
-	m_eventDispatcher.ska::Observable<ska::CollisionEvent>::addObserver(m_worldCollisionResponse);*/
 }

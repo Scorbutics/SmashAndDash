@@ -27,22 +27,20 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 			m_entityManager.refreshEntity(entityId);
 		}
 
-		const auto dt = 1.0F;
-
-		const auto entityHitboxX = createHitBox(entityId, dt, true);
-		const auto entityHitboxY = createHitBox(entityId, dt, false);
+		const auto entityHitboxX = createHitBox(entityId, true);
+		const auto entityHitboxY = createHitBox(entityId, false);
 		
 		auto entityCollided = false;
 		CollisionComponent col;
 		for (auto itEntity : m_processed) {
 			if (itEntity != entityId) {
-				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, dt, true))) {
+				if (RectangleUtils::collisionBoxABoxB(entityHitboxX, createHitBox(itEntity, true))) {
 					col.origin = entityId;
 					col.target = itEntity;
 					entityCollided = true;
 					col.xaxis = true;
 				}
-				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, dt, false))) {
+				if (RectangleUtils::collisionBoxABoxB(entityHitboxY, createHitBox(itEntity, false))) {
 					col.origin = entityId;
 					col.target = itEntity;
 					entityCollided = true;
@@ -90,14 +88,14 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 	}
 }
 
-ska::Rectangle ska::CollisionSystem::createHitBox(EntityId entityId, float dt, bool xaxis) const{
+ska::Rectangle ska::CollisionSystem::createHitBox(EntityId entityId, bool xaxis) const{
 	auto& positionComponent = m_entityManager.getComponent<PositionComponent>(entityId);
 	auto& hitboxComponent = m_entityManager.getComponent<HitboxComponent>(entityId);
 	auto& movementComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 	Rectangle hitBox;
-	hitBox.x = static_cast<int>(positionComponent.x + (xaxis ? (movementComponent.vx * dt) : 0) + hitboxComponent.xOffset + 0.5);
-	hitBox.y = static_cast<int>(positionComponent.y + (!xaxis ? (movementComponent.vy * dt) : 0) + hitboxComponent.yOffset + 0.5);
+	hitBox.x = ska::NumberUtils::round(positionComponent.x + (xaxis ? (movementComponent.vx) : 0) + hitboxComponent.xOffset);
+	hitBox.y = ska::NumberUtils::round(positionComponent.y + (!xaxis ? (movementComponent.vy) : 0) + hitboxComponent.yOffset);
 	hitBox.w = hitboxComponent.width;
 	hitBox.h = hitboxComponent.height;
 	return hitBox;

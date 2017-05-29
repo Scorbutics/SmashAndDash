@@ -1,6 +1,8 @@
 #include "DirectionalAnimationSystem.h"
 #include "Utils/RectangleUtils.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "Data/Events/CollisionEvent.h"
 
 ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {
 	name("DirectionalAnimationSystem");
@@ -21,17 +23,16 @@ void ska::DirectionalAnimationSystem::refresh(unsigned int ellapsedTime) {
 		auto spritePos = texture.getOffsetBase();
 		const int spriteHeight = texture.getHeight();
 
-
-		if (static_cast<int>(mov.vx) == 0 && static_cast<int>(mov.vy) == 0) {
+		if ((static_cast<int>(mov.vx) == 0 && static_cast<int>(mov.vy) == 0) ||
+			!(static_cast<int>(mov.ax) == 0 && static_cast<int>(mov.ay) == 0)) {
 			texture.stop(true);
 			texture.reset();
 		} else {
 			texture.stop(false);
 		}
 
-		const auto xMove = static_cast<int>(mov.vx + 0.5);
-		const auto yMove = static_cast<int>(mov.vy + 0.5);
-
+		auto xMove = ska::NumberUtils::round(mov.vx);
+		auto yMove = ska::NumberUtils::round(mov.vy);
 
 		//If it begins to be difficult to maintain, create two components with two different systems to handle each movement type
 		switch(dac.type) {

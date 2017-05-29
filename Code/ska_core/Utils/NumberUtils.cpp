@@ -14,6 +14,11 @@ unsigned int ska::NumberUtils::absolute(int i) {
 	return abs(i);
 }
 
+int ska::NumberUtils::round(float f) {	
+	return f > 0 ? f + 0.5 : f - 0.5;
+}
+
+
 float ska::NumberUtils::exponential(float i) {
 	return exp(i);
 }

@@ -22,11 +22,13 @@ void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
 			if (col.xaxis) {
 				moveComponent.vx = 0;
 				moveComponent.ax = 0;
+				forceComponent.x = 0;
 			}
 
 			if (col.yaxis) {
 				moveComponent.vy = 0;
 				moveComponent.ay = 0;
+				forceComponent.y = 0;
 			}
 
 		}

@@ -69,7 +69,7 @@ namespace ska {
 		}
 
         bool refreshInternal() {
-	        unsigned long t0 = 0;
+	        unsigned long t0 = ska::TimeUtils::getTicks();
 	        auto accumulator = 0.0;
 
 			try {

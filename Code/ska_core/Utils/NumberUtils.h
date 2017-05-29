@@ -3,8 +3,7 @@
 #include "../Exceptions/IllegalArgumentException.h"
 
 namespace ska{
-	class NumberUtils
-	{
+	class NumberUtils {
 
 	private:
 		NumberUtils();
@@ -41,6 +40,7 @@ namespace ska{
 
 		static double absolute(double i);
 		static unsigned int absolute(int i);
+		static int round(float f);
 
 		static unsigned int squarerooti(const unsigned int i);
 		static double squareroot(const double i);

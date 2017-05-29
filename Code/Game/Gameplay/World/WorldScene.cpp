@@ -1,4 +1,3 @@
-#include "Physic/System/ForceSystem.h"
 #include "Physic/System/MovementSystem.h"
 #include "Graphic/System/GraphicSystem.h"
 #include "Graphic/System/ShadowSystem.h"
@@ -42,7 +41,6 @@ m_worldBGM(DEFAULT_BGM) {
 	addLogic<ska::InputSystem>(m_inputCManager);
 	addLogic<ska::MovementSystem>(ticked);
 	addLogic<ska::GravitySystem>();
-	addLogic<ska::ForceSystem>();
 	addLogic<ska::DirectionalAnimationSystem>();
 	addLogic<ska::DeleterSystem>();
 
