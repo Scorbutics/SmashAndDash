@@ -83,6 +83,7 @@
     <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Scene\SceneGUIBattle.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\FPSLabel.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\SkillsBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -191,5 +192,6 @@
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIBattle.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\SceneGUIMap.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\FPSLabel.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\SkillsBar.h" />
   </ItemGroup>
 </Project>

@@ -232,9 +232,10 @@ bool SceneFight::beforeUnload() {
 
 	/* Triggers end fight cinematic to the next scene */
 	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
-	const unsigned int delay = 3000;
+	const auto delay = 3000U;
 
 	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
+		static ska::EntityId pokeball = -1;
 		if (m_loadState == 0) {
 			m_loadState++;
 
@@ -268,11 +269,28 @@ bool SceneFight::beforeUnload() {
 			dc.name = ge.windowName;
 			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
 
+			/* Création d'une entité : Pokéball (Position + Pokeball) */
+			pokeball = m_entityManager.createEntity();
+			auto& pokemonPc = m_entityManager.getComponent<ska::PositionComponent>(m_pokemonId);
+			auto& pokemonHp = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
+			auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
+			auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_trainerId);
+			PokeballComponent pokeballc;
+
+			pokeballc.finalPos = { static_cast<int>(pokemonPc.x + pokemonHp.xOffset + pokemonHp.width / 2), static_cast<int>(pokemonPc.y + pokemonHp.yOffset + pokemonHp.height / 2) };
+			m_entityManager.addComponent<PokeballComponent>(pokeball, pokeballc);
+			ska::PositionComponent pokePc;
+			pokePc = pc;
+			pokePc.x += hc.xOffset + hc.width / 2;
+			pokePc.y += hc.yOffset + hc.height / 2;
+			m_entityManager.addComponent<ska::PositionComponent>(pokeball, pokePc);
+
 			t.forward(ic);
 			return true;
 		}
-		// Continue until dialog is still visible
-		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId);
+		// Continue until dialog and pokeball is still visible
+		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId) ||
+			m_entityManager.hasComponent<PokeballComponent>(pokeball);
 	}));
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;

@@ -238,3 +238,7 @@ pip-log.txt
 /.vs/SmashAndDash/v15/Browse.VC.db
 /.vs/slnx.sqlite
 /.vs
+/stderr.txt
+/SmashAndDash.layout
+/ska_gui_test.exe
+/libska_core.a

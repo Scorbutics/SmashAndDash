@@ -178,6 +178,7 @@
     <ClCompile Include="Code\Game\Graphic\GUI\MapMouseCursor.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\MessageDialogBox.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\MovableWindow.cpp" />
+    <ClCompile Include="Code\Game\Graphic\GUI\SkillsBar.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\SlotPokemon.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\ToolBar.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\TrainerCard.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Code\Game\Graphic\GUI\MapMouseCursor.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\MessageDialogBox.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\MovableWindow.h" />
+    <ClInclude Include="Code\Game\Graphic\GUI\SkillsBar.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemon.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\SlotPokemonData.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\ToolBar.h" />

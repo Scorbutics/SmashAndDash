@@ -5,17 +5,21 @@
 #include "WindowMouseCursor.h"
 #include "../../Gameplay/Data/EntityLoadEvent.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
+#include "GUIBattle.h"
 
 class Settings;
 class WindowTeam;
+class SkillsBar;
 
 using DialogEventObserver = ska::Observer<DialogEvent>;
 
 class GUIMap :
-	public AbstractGameGUI,
+	public ska::GUI,
 	public ska::Observer<SettingsChangeEvent>,
 	public ska::Observer<EntityLoadEvent>,
-	public DialogEventObserver {
+	public DialogEventObserver,
+	public BattleStartObserver {
+
 public:
 	GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
 	GUIMap& operator=(const GUIMap&) = delete;
@@ -23,14 +27,17 @@ public:
 	void initButtons(const ska::Window& w);
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
+	bool onBattleStart(BattleEvent& be);
 	bool onDialogEvent(DialogEvent& de);
 	void bind(Settings& sets);
 
 	~GUIMap();
 
 private:
+	PokemonGameEventDispatcher& m_ged;
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;
 	ska::TimeScrollableWindowIG<>* m_wAction;
+	SkillsBar* m_skillBar;
 
 };

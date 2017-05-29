@@ -18,5 +18,5 @@ bool SceneGUIBattle::beforeUnload() {
 }
 
 void SceneGUIBattle::onEventUpdate(unsigned int ellapsedTime) {
-	m_gui.eventUpdate(ellapsedTime);
+	//m_gui.eventUpdate(ellapsedTime);
 }
