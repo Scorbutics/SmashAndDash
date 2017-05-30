@@ -23,7 +23,7 @@ namespace ska {
 
 		virtual ~Scene() = default;
 
-	protected:	
+	protected:
 		SceneHolder& m_holder;
 
 	};

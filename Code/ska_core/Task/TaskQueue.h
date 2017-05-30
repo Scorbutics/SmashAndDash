@@ -14,7 +14,7 @@ namespace ska {
 		virtual ~TaskQueue() = default;
 
 		bool hasRunningTask() const;
-		void queueTask(RunnablePtr& t);
+		ska::Runnable& queueTask(RunnablePtr& t);
 		void refresh();
 
 	private:

@@ -4,6 +4,7 @@
 #include "SceneHolder.h"
 #include "../../Draw/IGraphicSystem.h"
 #include "../../ECS/ISystem.h"
+#include "Task/Task.h"
 
 namespace ska {
 	class Window;
@@ -17,7 +18,8 @@ namespace ska {
 			m_entityManager(em),
 			m_eventDispatcher(ed),
 			m_window(w),
-			m_inputCManager(ril) {
+			m_inputCManager(ril),
+			m_state(0) {
 
 		}
 
@@ -26,7 +28,8 @@ namespace ska {
 			m_entityManager(em),
 			m_eventDispatcher(ed),
 			m_window(w),
-			m_inputCManager(ril) {
+			m_inputCManager(ril),
+			m_state(0) {
 
 		}
 
@@ -69,6 +72,8 @@ namespace ska {
 
 		void load(std::unique_ptr<Scene>* lastScene) override final {
 			beforeLoad(lastScene);
+			m_state = 1;
+			
 
 			for (auto& s : m_subScenes) {
 				s->load(lastScene);
@@ -78,28 +83,63 @@ namespace ska {
 				s->load(lastScene);
 			}
 
+			m_state = 2;
+			
 			afterLoad(lastScene);
+
+			m_state = 3;
+			
 		}
 
+
+
 		bool unload() override final {
-			auto result = !beforeUnload();
-			//If main scene beforeUnload is finished, THEN we can unload subscenes
-			if (result) {
-				for (auto& s : m_subScenes) {
-					result &= !s->unload();
+			if (m_state == 3) {
+				auto beforeUnloaded = !beforeUnload();
+				if(beforeUnloaded) {
+					m_state = 2;
 				}
-				
+			}
+			
+			//If main scene beforeUnload is finished, THEN we can unload subscenes
+			if (m_state == 2) {
+				auto wTransitions = waitTransitions();
+				if (wTransitions) {
+					m_state = 1;	
+				}
+			}
+
+			if(m_state == 1) {
+				auto subscenesUnloaded = true;
+				for (auto& s : m_subScenes) {
+					subscenesUnloaded &= !s->unload();
+				}
+
 				for (auto& s : m_linkedSubScenes) {
-					result &= !s->unload();
+					subscenesUnloaded &= !s->unload();
+				}
+
+				if (subscenesUnloaded) {
+					m_state = 0;
 				}
 			}
 
 			//If everything is unloaded, THEN we can call main scene afterUnload
-			bool afterUnloadResult = result;
-			if(result) {
-				afterUnloadResult = afterUnload();
+			if(m_state == 0) {
+				auto afterUnloaded = !afterUnload();
+				if (afterUnloaded) {
+					m_state = -1;
+				}
 			}
-			return !(result && !afterUnloadResult);
+			
+			if(m_state == -1) {
+				auto wTransitions = waitTransitions();
+				if (wTransitions) {
+					m_state = -2;
+				}
+			}
+
+			return m_state != -2;
 		}
 
 		void linkSubScene(Scene& subScene) {
@@ -133,6 +173,10 @@ namespace ska {
 
 
 	private:
+		bool waitTransitions() const {
+			return !m_holder.hasRunningTask();
+		}
+
 		template<class SC>
 		void transmitLinkedSubscenes(SC& scene) {
 			m_linkedSubScenes = scene.m_linkedSubScenes;
@@ -144,7 +188,20 @@ namespace ska {
 		std::vector<std::unique_ptr<Scene>> m_subScenes;
 		std::unordered_set<Scene*> m_linkedSubScenes;
 
+		int m_state;
+
 	protected:
+		
+/*		template<typename  R, typename ...TR, typename ...TS>
+		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t) {
+			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t));
+		}
+
+		template<typename R, typename ...TR, typename ...TS>
+		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t, ITask<TR...>& previous) {
+			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t, previous));
+		}*/
+
 		virtual void beforeLoad(std::unique_ptr<Scene>* lastScene) {
 		}
 

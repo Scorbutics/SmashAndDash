@@ -1,6 +1,5 @@
 #pragma once
 #include <functional>
-#include <vector>
 #include "../Utils/Identity.h"
 #include "../Utils/TupleUtils.h"
 
@@ -38,13 +37,6 @@ namespace ska {
 			m_previous = &previous;
 		}
 
-		template <int ...N>
-		RR run(meta::SeqList<N...>) {
-			return (m_previous != nullptr) ?
-				m_f(*this, std::get<N>(m_previous->m_forwardArgs)...) :
-				m_f(*this, std::get<N>(m_empty)...);
-		}
-
 		virtual RR operator()() {
 			return run(meta::SeqRange<sizeof...(RA)>());
 		}
@@ -57,6 +49,14 @@ namespace ska {
 		}
 
 	private:
+		template <int ...N>
+		RR run(meta::SeqList<N...>) {
+			return (m_previous != nullptr) ?
+				m_f(*this, std::get<N>(m_previous->m_forwardArgs)...) :
+				m_f(*this, std::get<N>(m_empty)...);
+		}
+
+
 		std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)> m_f;
 		ITask<RA...>* m_previous;
 		std::tuple<RA...> m_empty;
