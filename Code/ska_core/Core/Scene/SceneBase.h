@@ -73,7 +73,6 @@ namespace ska {
 		void load(std::unique_ptr<Scene>* lastScene) override final {
 			beforeLoad(lastScene);
 			m_state = 1;
-			
 
 			for (auto& s : m_subScenes) {
 				s->load(lastScene);

@@ -17,5 +17,7 @@ namespace ska {
 	
 	private:
 		ScenePtr m_currentScene;
+	    bool m_sceneLoaded;
+		std::unique_ptr<Scene> m_lastScene;
     };
 }

@@ -223,7 +223,6 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 	m_holder.queueTask(dialogTask);
 	m_holder.queueTask(pokeballTask);
 	m_holder.queueTask(finalTask);
-
 }
 
 bool SceneFight::beforeUnload() {

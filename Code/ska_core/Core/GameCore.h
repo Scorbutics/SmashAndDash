@@ -53,7 +53,6 @@ namespace ska {
 			auto sc = makeScene<SC, Args...>(std::forward<Args>(args)...);
 			auto result = sc.get();
 			m_sceneHolder.nextScene(std::move(sc));
-			m_sceneHolder.update();
 			return *result;
 		}
 
@@ -70,10 +69,11 @@ namespace ska {
 
         bool refreshInternal() {
 	        unsigned long t0 = ska::TimeUtils::getTicks();
-	        auto accumulator = 0.0;
+			const auto ti = ticksWanted();
+			auto accumulator = ti;
 
 			try {
-				const auto ti = ticksWanted();
+				
                 for (;;) {
                     unsigned long t = ska::TimeUtils::getTicks();
 					
