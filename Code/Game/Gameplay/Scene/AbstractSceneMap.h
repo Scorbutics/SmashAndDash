@@ -22,7 +22,7 @@ public:
 	AbstractSceneMap& operator=(const AbstractSceneMap&) = delete;
 
 	bool onTeleport(const MapEvent& me);
-	
+
 	virtual ska::CameraSystem& getCamera() = 0;
 	virtual ~AbstractSceneMap();
 

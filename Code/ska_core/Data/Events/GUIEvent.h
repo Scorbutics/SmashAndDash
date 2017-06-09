@@ -14,7 +14,7 @@ namespace ska {
 
 
 	struct GUIEvent {
-		GUIEvent(const GUIEventType& t) : type(t), delay(0), balloonHandle(nullptr) {
+		GUIEvent(const GUIEventType& t) : balloonHandle(nullptr), delay(0), type(t) {
 		}
 
 		void operator=(const GUIEvent&) = delete;

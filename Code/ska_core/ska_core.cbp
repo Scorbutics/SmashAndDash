@@ -189,6 +189,7 @@
 		<Unit filename="Task/TaskQueue.h" />
 		<Unit filename="Task/WorkNode.cpp" />
 		<Unit filename="Task/WorkNode.h" />
+		<Unit filename="Ticked.h" />
 		<Unit filename="Utils/Demangle.cpp" />
 		<Unit filename="Utils/Demangle.h" />
 		<Unit filename="Utils/FileUtils.h" />

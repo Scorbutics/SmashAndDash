@@ -83,14 +83,12 @@ namespace ska {
 			}
 
 			m_state = 2;
-			
+
 			afterLoad(lastScene);
 
 			m_state = 3;
-			
+
 		}
-
-
 
 		bool unload() override final {
 			if (m_state == 3) {
@@ -99,12 +97,12 @@ namespace ska {
 					m_state = 2;
 				}
 			}
-			
+
 			//If main scene beforeUnload is finished, THEN we can unload subscenes
 			if (m_state == 2) {
 				auto wTransitions = waitTransitions();
 				if (wTransitions) {
-					m_state = 1;	
+					m_state = 1;
 				}
 			}
 
@@ -130,7 +128,7 @@ namespace ska {
 					m_state = -1;
 				}
 			}
-			
+
 			if(m_state == -1) {
 				auto wTransitions = waitTransitions();
 				if (wTransitions) {
@@ -147,6 +145,10 @@ namespace ska {
 
 		void unlinkSubScene(Scene& subScene) {
 			m_linkedSubScenes.erase(&subScene);
+		}
+
+		ska::Runnable& queueTask(RunnablePtr& t) {
+		    return m_holder.queueTask(t);
 		}
 
 		template<class SC, class ... Args>
@@ -172,7 +174,7 @@ namespace ska {
 
 
 	private:
-		bool waitTransitions() const {
+        bool waitTransitions() const {
 			return !m_holder.hasRunningTask();
 		}
 
@@ -190,7 +192,6 @@ namespace ska {
 		int m_state;
 
 	protected:
-		
 /*		template<typename  R, typename ...TR, typename ...TS>
 		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t) {
 			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t));

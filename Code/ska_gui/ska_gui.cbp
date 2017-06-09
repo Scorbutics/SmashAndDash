@@ -119,6 +119,8 @@
 		<Unit filename="GUI/Utils/WidgetHandlingTrait.h" />
 		<Unit filename="GUI/Utils/WidgetMaskHelper.cpp" />
 		<Unit filename="GUI/Utils/WidgetMaskHelper.h" />
+		<Unit filename="GUI/Windows/BalloonDialog.cpp" />
+		<Unit filename="GUI/Windows/BalloonDialog.h" />
 		<Unit filename="GUI/Windows/DynamicWindowIG.h" />
 		<Unit filename="GUI/Windows/GUIScrollButtonWindowIG.cpp" />
 		<Unit filename="GUI/Windows/GUIScrollButtonWindowIG.h" />

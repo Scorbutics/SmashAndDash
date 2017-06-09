@@ -201,6 +201,8 @@
 		<Unit filename="Code/Game/Graphic/GUI/DialogMenu.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/DialogMenu.h" />
 		<Unit filename="Code/Game/Graphic/GUI/DynamicWindowArea.cpp" />
+		<Unit filename="Code/Game/Graphic/GUI/FPSLabel.cpp" />
+		<Unit filename="Code/Game/Graphic/GUI/FPSLabel.h" />
 		<Unit filename="Code/Game/Graphic/GUI/GUIBattle.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/GUIBattle.h" />
 		<Unit filename="Code/Game/Graphic/GUI/GUIMap.cpp" />
@@ -216,6 +218,8 @@
 		<Unit filename="Code/Game/Graphic/GUI/MessageDialogBox.h" />
 		<Unit filename="Code/Game/Graphic/GUI/MovableWindow.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/MovableWindow.h" />
+		<Unit filename="Code/Game/Graphic/GUI/SkillsBar.cpp" />
+		<Unit filename="Code/Game/Graphic/GUI/SkillsBar.h" />
 		<Unit filename="Code/Game/Graphic/GUI/SlotPokemon.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/SlotPokemon.h" />
 		<Unit filename="Code/Game/Graphic/GUI/SlotPokemonData.h" />

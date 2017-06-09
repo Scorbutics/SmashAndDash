@@ -135,7 +135,7 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 
 			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
 			m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
-			
+
 			ska::GUIEvent ge(ska::GUIEventType::ADD_BALLOON);
 			ge.text = "Un " + m_descriptor.getName() + " sauvage apparaît !";
 			ge.delay = delay;
@@ -220,9 +220,9 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 	}, *pokeballRawTask));
 
 
-	m_holder.queueTask(dialogTask);
-	m_holder.queueTask(pokeballTask);
-	m_holder.queueTask(finalTask);
+	queueTask(dialogTask);
+	queueTask(pokeballTask);
+	queueTask(finalTask);
 }
 
 bool SceneFight::beforeUnload() {
@@ -305,10 +305,10 @@ bool SceneFight::beforeUnload() {
 
 	if (m_sceneLoaded) {
 		m_sceneLoaded = false;
-		m_holder.queueTask(dialogTask);
-		m_holder.queueTask(finalTask);
+		queueTask(dialogTask);
+		queueTask(finalTask);
 	}
-	return m_holder.hasRunningTask();
+	return false;
 }
 
 SceneFight::~SceneFight() {

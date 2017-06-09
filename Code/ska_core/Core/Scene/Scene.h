@@ -10,9 +10,12 @@ namespace ska {
 	class DrawableContainer;
 
 	class Scene : public HasGraphic, public HasLogic {
+        template <class EM, class ED>
+        friend class SceneBase;
+
 	public:
-		explicit Scene(SceneHolder& sh);
-		Scene(Scene& oldScene);
+		explicit Scene(SceneHolder& holder);
+        Scene(Scene& oldScene);
 
 		void operator=(const Scene&) = delete;
 
@@ -23,9 +26,8 @@ namespace ska {
 
 		virtual ~Scene() = default;
 
-	protected:
-		SceneHolder& m_holder;
-
+    private:
+        SceneHolder& m_holder;
 	};
 
 	using ScenePtr = std::unique_ptr<Scene>;
