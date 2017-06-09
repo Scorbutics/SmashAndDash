@@ -4,11 +4,6 @@
 ska::TaskQueue::TaskQueue() : m_previous(nullptr), m_current(nullptr) {
 }
 
-ska::Runnable& ska::TaskQueue::queueTask(RunnablePtr& t) {
-	m_tasks.push(move(t));
-	return *m_tasks.back();
-}
-
 bool ska::TaskQueue::hasRunningTask() const {
 	return !m_tasks.empty();
 }

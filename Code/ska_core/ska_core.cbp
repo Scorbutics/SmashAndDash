@@ -51,7 +51,6 @@
 		<Unit filename="Core/Scene/SceneHolder.h" />
 		<Unit filename="Core/Scene/SceneHolderCore.cpp" />
 		<Unit filename="Core/Scene/SceneHolderCore.h" />
-		<Unit filename="Core/Scene/SceneSwitcher.h" />
 		<Unit filename="Core/Scene/SceneType.h" />
 		<Unit filename="Core/Window.cpp" />
 		<Unit filename="Core/Window.h" />

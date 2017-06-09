@@ -7,6 +7,7 @@
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
 #include "Task/TaskQueue.h"
+#include "Transition/Map/PokeballTransition.h"
 
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/Events/CollisionEvent.h"
@@ -230,67 +231,9 @@ bool SceneFight::beforeUnload() {
 	//m_worldScene.unload();
 
 	/* Triggers end fight cinematic to the next scene */
-	ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>* dialogRawTask;
 	const auto delay = 3000U;
 
-	auto dialogTask = ska::RunnablePtr(dialogRawTask = new ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
-		static ska::EntityId pokeball = -1;
-		if (m_loadState == 0) {
-			m_loadState++;
-
-			if (!m_entityManager.hasComponent<ska::InputComponent>(m_pokemonId)) {
-				return false;
-			}
-
-			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
-			m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
-
-			BattleEvent be(BATTLE_END, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
-			m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
-
-			m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
-			m_entityManager.removeComponent<BattleComponent>(m_opponentId);
-
-			if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
-				auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
-				dac.type = ska::DirectionalAnimationType::MOVEMENT;
-				dac.looked = 0;
-			}
-
-			ska::GUIEvent ge(ska::GUIEventType::ADD_BALLOON);
-			ge.text = "Le " + m_descriptor.getName() + " a été battu.";
-			ge.delay = delay;
-			ge.windowName = "trainerBalloon";
-			m_eventDispatcher.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
-
-			ska::DialogComponent dc;
-			dc.handle = ge.balloonHandle;
-			dc.name = ge.windowName;
-			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
-
-			/* Création d'une entité : Pokéball (Position + Pokeball) */
-			pokeball = m_entityManager.createEntity();
-			auto& pokemonPc = m_entityManager.getComponent<ska::PositionComponent>(m_pokemonId);
-			auto& pokemonHp = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
-			auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
-			auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_trainerId);
-			PokeballComponent pokeballc;
-
-			pokeballc.finalPos = { static_cast<int>(pokemonPc.x + pokemonHp.xOffset + pokemonHp.width / 2), static_cast<int>(pokemonPc.y + pokemonHp.yOffset + pokemonHp.height / 2) };
-			m_entityManager.addComponent<PokeballComponent>(pokeball, pokeballc);
-			ska::PositionComponent pokePc;
-			pokePc = pc;
-			pokePc.x += hc.xOffset + hc.width / 2;
-			pokePc.y += hc.yOffset + hc.height / 2;
-			m_entityManager.addComponent<ska::PositionComponent>(pokeball, pokePc);
-
-			t.forward(ic);
-			return true;
-		}
-		// Continue until dialog and pokeball is still visible
-		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId) ||
-			m_entityManager.hasComponent<PokeballComponent>(pokeball);
-	}));
+	auto dialogTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
 
 	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
 	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>(
@@ -301,7 +244,7 @@ bool SceneFight::beforeUnload() {
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ic);
 		m_entityManager.removeEntity(m_pokemonId);
 		return false;
-	}, *dialogRawTask));
+	}, *dialogTask));
 
 	if (m_sceneLoaded) {
 		m_sceneLoaded = false;

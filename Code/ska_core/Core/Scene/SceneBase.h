@@ -147,7 +147,8 @@ namespace ska {
 			m_linkedSubScenes.erase(&subScene);
 		}
 
-		ska::Runnable& queueTask(RunnablePtr& t) {
+		template <class T>
+		ska::Runnable& queueTask(std::unique_ptr<T>& t) {
 		    return m_holder.queueTask(t);
 		}
 

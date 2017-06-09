@@ -184,6 +184,8 @@
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToBattleSwitcher.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToMapSwitcher.h" />
+		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/PokeballTransition.cpp" />
+		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/PokeballTransition.h" />
 		<Unit filename="Code/Game/Gameplay/System/PokeballSystem.cpp" />
 		<Unit filename="Code/Game/Gameplay/System/PokeballSystem.h" />
 		<Unit filename="Code/Game/Gameplay/WGameCore.cpp" />

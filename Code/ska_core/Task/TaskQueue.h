@@ -14,7 +14,13 @@ namespace ska {
 		virtual ~TaskQueue() = default;
 
 		bool hasRunningTask() const;
-		ska::Runnable& queueTask(RunnablePtr& t);
+
+		template<class T>
+		ska::Runnable& queueTask(std::unique_ptr<T>& t) {
+            m_tasks.push(move(t));
+            return *m_tasks.back();
+		}
+
 		void refresh();
 
 	private:
