@@ -16,15 +16,27 @@ namespace ska {
 	template <typename ...A>
 	class ITask {
 		template <typename RR, typename RA, typename SA> friend class Task;
-	protected:
+		template <typename RR, typename RA, typename SA> friend class CompoundTask;
+
+    public:
+        ITask() : m_forwarded(false) {
+        }
+
+        void forward(A ...args) {
+			m_forwardArgs = std::make_tuple(std::forward<A>(args)...);
+			m_forwarded = true;
+		}
+
+	private:
 		std::tuple<A...> m_forwardArgs;
+		bool m_forwarded;
 	};
 
 	template <typename RR, typename RA, typename SA>
 	class Task;
 
 	template <typename RR, typename ...RA, typename ...SA>
-	class Task<RR, TaskReceiver<RA...>, TaskSender<SA...>> : public ITask<SA...>{
+	class Task<RR, TaskReceiver<RA...>, TaskSender<SA...>> : public ITask<SA...> {
 	public:
 
 		explicit Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
@@ -40,11 +52,6 @@ namespace ska {
 		virtual RR operator()() {
 			return run(meta::SeqRange<sizeof...(RA)>());
 		}
-
-		void forward(SA ...args) {
-			ITask<SA...>::m_forwardArgs = std::make_tuple(std::forward<SA>(args)...);
-		}
-
 		virtual ~Task() {
 		}
 

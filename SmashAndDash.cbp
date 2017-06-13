@@ -8,8 +8,9 @@
 		<Build>
 			<Target title="default">
 				<Option output="SmashAndDash" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-std=c++14" />
 				</Compiler>
@@ -32,8 +33,9 @@
 			</Target>
 			<Target title="Debug">
 				<Option output="SmashAndDash" prefix_auto="1" extension_auto="1" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-std=c++14" />
 				</Compiler>
@@ -184,6 +186,8 @@
 		<Unit filename="Code/Game/Gameplay/Scene/SceneMap.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToBattleSwitcher.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/SceneToMapSwitcher.h" />
+		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/DialogTransition.cpp" />
+		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/DialogTransition.h" />
 		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/PokeballTransition.cpp" />
 		<Unit filename="Code/Game/Gameplay/Scene/Transition/Map/PokeballTransition.h" />
 		<Unit filename="Code/Game/Gameplay/System/PokeballSystem.cpp" />

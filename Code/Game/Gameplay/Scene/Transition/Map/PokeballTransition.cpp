@@ -17,30 +17,6 @@ PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& 
 			}
 
 			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
-			m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
-
-			BattleEvent be(BATTLE_END, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
-			m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
-
-			m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
-			m_entityManager.removeComponent<BattleComponent>(m_opponentId);
-
-			if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
-				auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
-				dac.type = ska::DirectionalAnimationType::MOVEMENT;
-				dac.looked = 0;
-			}
-
-			ska::GUIEvent ge(ska::GUIEventType::ADD_BALLOON);
-			ge.text = "Le " + m_pokemonName + " a été battu.";
-			ge.delay = delay;
-			ge.windowName = "trainerBalloon";
-			m_eventDispatcher.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
-
-			ska::DialogComponent dc;
-			dc.handle = ge.balloonHandle;
-			dc.name = ge.windowName;
-			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
 
 			/* Création d'une entité : Pokéball (Position + Pokeball) */
 			m_pokeball = m_entityManager.createEntity();

@@ -3,11 +3,13 @@
 #include "SceneFight.h"
 #include "SceneGUIBattle.h"
 #include "Task/RepeatableTask.h"
+#include "Task/CompoundTask.h"
 #include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
 #include "Task/TaskQueue.h"
 #include "Transition/Map/PokeballTransition.h"
+#include "Transition/Map/DialogTransition.h"
 
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/Events/CollisionEvent.h"
@@ -233,10 +235,14 @@ bool SceneFight::beforeUnload() {
 	/* Triggers end fight cinematic to the next scene */
 	const auto delay = 3000U;
 
-	auto dialogTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
+    std::unique_ptr<ska::CompoundTask<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>> firstTask;
+    {
+        auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
+        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
+        firstTask = std::make_unique<ska::CompoundTask<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>>(std::move(pokeballTask), std::move(dialogTask));
+    }
 
-	ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>* finalRawTask;
-	auto finalTask = ska::RunnablePtr(finalRawTask = new ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>(
+	auto finalTask = std::make_unique<ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>>(
 		[&](ska::Task<bool, ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>&, ska::InputComponent ic) {
 
 		m_loadState = 0;
@@ -244,11 +250,11 @@ bool SceneFight::beforeUnload() {
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ic);
 		m_entityManager.removeEntity(m_pokemonId);
 		return false;
-	}, *dialogTask));
+	}, *firstTask);
 
 	if (m_sceneLoaded) {
 		m_sceneLoaded = false;
-		queueTask(dialogTask);
+		queueTask(firstTask);
 		queueTask(finalTask);
 	}
 	return false;

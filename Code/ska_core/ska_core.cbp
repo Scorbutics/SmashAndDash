@@ -181,6 +181,7 @@
 		<Unit filename="Point.cpp" />
 		<Unit filename="Point.h" />
 		<Unit filename="Rectangle.h" />
+		<Unit filename="Task/CompoundTask.h" />
 		<Unit filename="Task/RepeatableTask.h" />
 		<Unit filename="Task/Runnable.h" />
 		<Unit filename="Task/Task.h" />
