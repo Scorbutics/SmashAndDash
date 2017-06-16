@@ -11,18 +11,14 @@ namespace ska {
 
 class PokeballTransition : public ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>> {
 public:
-    PokeballTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::CameraSystem* cs, const ska::EntityId& pokemonId, const ska::EntityId& opponentId, const ska::EntityId& trainerId, const std::string& pokemonName);
+    PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity);
     virtual ~PokeballTransition() = default;
 
 private:
     ska::EntityId m_pokeball;
     int m_loadState;
 
-	const ska::EntityId& m_pokemonId;
-	const ska::EntityId& m_opponentId;
 	const ska::EntityId& m_trainerId;
-    const std::string& m_pokemonName;
+	const ska::EntityId& m_pokemonId;
     CustomEntityManager& m_entityManager;
-    PokemonGameEventDispatcher& m_eventDispatcher;
-    ska::CameraSystem* m_cameraSystem;
 };

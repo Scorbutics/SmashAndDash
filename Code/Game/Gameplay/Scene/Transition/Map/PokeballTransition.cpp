@@ -7,16 +7,10 @@
 #include "ECS/Basics/Physic/HitboxComponent.h"
 #include "../../../PokeballComponent.h"
 
-PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::CameraSystem* cs, const ska::EntityId& pokemonId, const ska::EntityId& opponentId, const ska::EntityId& trainerId, const std::string& pokemonName) :
+PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity) :
     ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
 		if (m_loadState == 0) {
 			m_loadState++;
-
-			if (!m_entityManager.hasComponent<ska::InputComponent>(m_pokemonId)) {
-				return false;
-			}
-
-			auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
 
 			/* Création d'une entité : Pokéball (Position + Pokeball) */
 			m_pokeball = m_entityManager.createEntity();
@@ -34,21 +28,17 @@ PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& 
 			pokePc.y += hc.yOffset + hc.height / 2;
 			m_entityManager.addComponent<ska::PositionComponent>(m_pokeball, pokePc);
 
+            auto& ic = m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
 			t.forward(ic);
 			return true;
 		}
-		// Continue until dialog and pokeball is still visible
-		return m_entityManager.hasComponent<ska::DialogComponent>(m_trainerId) ||
-			m_entityManager.hasComponent<PokeballComponent>(m_pokeball);
+		// Continue until pokeball is still visible
+		return m_entityManager.hasComponent<PokeballComponent>(m_pokeball);
 	}),
 	m_pokeball(0),
 	m_loadState(0),
-	m_pokemonId(pokemonId),
-	m_opponentId(opponentId),
-	m_trainerId(trainerId),
-    m_pokemonName(pokemonName),
-    m_entityManager(em),
-    m_eventDispatcher(ged),
-    m_cameraSystem(cs) {
+	m_trainerId(sourceEntity),
+	m_pokemonId(destinationEntity),
+	m_entityManager(em) {
 
 }

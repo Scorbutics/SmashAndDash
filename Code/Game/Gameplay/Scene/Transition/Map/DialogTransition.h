@@ -11,18 +11,14 @@ namespace ska {
 
 class DialogTransition : public ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>> {
 public:
-    DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::CameraSystem* cs, const ska::EntityId& pokemonId, const ska::EntityId& opponentId, const ska::EntityId& trainerId, const std::string& pokemonName);
+    DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message);
     virtual ~DialogTransition() = default;
 
 private:
-    ska::EntityId m_pokeball;
     int m_loadState;
 
-	const ska::EntityId& m_pokemonId;
-	const ska::EntityId& m_opponentId;
 	const ska::EntityId& m_trainerId;
-    std::string m_pokemonName;
+    std::string m_message;
     CustomEntityManager& m_entityManager;
     PokemonGameEventDispatcher& m_eventDispatcher;
-    ska::CameraSystem* m_cameraSystem;
 };

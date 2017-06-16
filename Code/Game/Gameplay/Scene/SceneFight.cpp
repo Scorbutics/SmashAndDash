@@ -16,7 +16,20 @@
 #include "AI/IARandomMovementComponent.h"
 #include "ECS/Basics/Graphic/DialogComponent.h"
 
-void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block);
+template <typename T>
+struct un_unique_type {
+    typedef T raw;
+};
+
+template <typename T>
+struct un_unique_type<std::unique_ptr<T>> {
+    typedef T raw;
+};
+
+template <typename T>
+struct un_unique_type<std::unique_ptr<T>&> {
+    typedef T raw;
+};
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
 	stats.hp = data.get<int>(block + " hp");
@@ -235,11 +248,29 @@ bool SceneFight::beforeUnload() {
 	/* Triggers end fight cinematic to the next scene */
 	const auto delay = 3000U;
 
+	auto preTask = std::make_unique<ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<>>>(
+          [&](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<>>&) {
+        m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
+
+        BattleEvent be(BATTLE_END, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
+        m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
+
+        m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
+        m_entityManager.removeComponent<BattleComponent>(m_opponentId);
+
+        if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
+            auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
+            dac.type = ska::DirectionalAnimationType::MOVEMENT;
+            dac.looked = 0;
+        }
+        return false;
+    });
+
     std::unique_ptr<ska::CompoundTask<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>> firstTask;
     {
-        auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
-        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_cameraSystem, m_pokemonId, m_opponentId, m_trainerId, m_descriptor.getName());
-        firstTask = std::make_unique<ska::CompoundTask<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>>(std::move(pokeballTask), std::move(dialogTask));
+        auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId);
+        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, m_descriptor.getName());
+        firstTask = std::make_unique<un_unique_type<decltype(firstTask)>::raw>(std::move(pokeballTask), std::move(dialogTask), *preTask);
     }
 
 	auto finalTask = std::make_unique<ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>>(

@@ -190,8 +190,6 @@ namespace ska {
 		std::vector<std::unique_ptr<Scene>> m_subScenes;
 		std::unordered_set<Scene*> m_linkedSubScenes;
 
-		int m_state;
-
 	protected:
 /*		template<typename  R, typename ...TR, typename ...TS>
 		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t) {
@@ -256,5 +254,8 @@ namespace ska {
 		ED& m_eventDispatcher;
 		Window& m_window;
 		InputContextManager& m_inputCManager;
+
+    private:
+        int m_state;
 	};
 }

@@ -39,21 +39,29 @@ namespace ska {
 	class Task<RR, TaskReceiver<RA...>, TaskSender<SA...>> : public ITask<SA...> {
 	public:
 
-		explicit Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f) :
-			m_f(f) {
-			m_previous = nullptr;
+        using F = std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>;
+        using LAMBDA = typename meta::Identity<F>::type;
+
+		explicit Task(LAMBDA const& f) :
+			m_f(f),
+			m_previous(nullptr) {
 		}
 
-		Task(typename meta::Identity<std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)>>::type const& f, ITask<RA...>& previous) :
-			Task(f) {
-			m_previous = &previous;
+		Task(LAMBDA const& f, ITask<RA...>& previous) :
+			m_f(f),
+			m_previous(&previous) {
 		}
 
-		virtual RR operator()() {
+        virtual RR operator()() {
 			return run(meta::SeqRange<sizeof...(RA)>());
 		}
+
 		virtual ~Task() {
 		}
+
+        void forcePrevious(ITask<RA...>& previous) {
+            m_previous = &previous;
+        }
 
 	private:
 		template <int ...N>
@@ -64,7 +72,7 @@ namespace ska {
 		}
 
 
-		std::function<RR(Task<RR, TaskReceiver<RA...>, TaskSender<SA...>>&, RA...)> m_f;
+		F m_f;
 		ITask<RA...>* m_previous;
 		std::tuple<RA...> m_empty;
 	};
