@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_set>
-#include "Scene.h"
-#include "SceneHolder.h"
+#include "State.h"
+#include "StateHolder.h"
 #include "../../Draw/IGraphicSystem.h"
 #include "../../ECS/ISystem.h"
 #include "Task/Task.h"
@@ -11,10 +11,10 @@ namespace ska {
 	class InputContextManager;
 
 	template <class EM, class ED>
-	class SceneBase : public Scene {
+	class StateBase : public State {
 	public:
-		SceneBase(EM& em, ED& ed, Window& w, InputContextManager& ril, SceneHolder& sh) :
-			Scene(sh),
+		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, StateHolder& sh) :
+			State(sh),
 			m_entityManager(em),
 			m_eventDispatcher(ed),
 			m_window(w),
@@ -23,8 +23,8 @@ namespace ska {
 
 		}
 
-		SceneBase(EM& em, ED& ed, Window& w, InputContextManager& ril, Scene& oldScene) :
-			Scene(oldScene),
+		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, State& oldScene) :
+			State(oldScene),
 			m_entityManager(em),
 			m_eventDispatcher(ed),
 			m_window(w),
@@ -70,7 +70,7 @@ namespace ska {
 
 		}
 
-		void load(std::unique_ptr<Scene>* lastScene) override final {
+		void load(std::unique_ptr<State>* lastScene) override final {
 			beforeLoad(lastScene);
 			m_state = 1;
 
@@ -139,11 +139,11 @@ namespace ska {
 			return m_state != -2;
 		}
 
-		void linkSubScene(Scene& subScene) {
+		void linkSubScene(State& subScene) {
 			m_linkedSubScenes.insert(&subScene);
 		}
 
-		void unlinkSubScene(Scene& subScene) {
+		void unlinkSubScene(State& subScene) {
 			m_linkedSubScenes.erase(&subScene);
 		}
 
@@ -171,7 +171,7 @@ namespace ska {
 			return result;
 		}
 
-		virtual ~SceneBase() = default;
+		virtual ~StateBase() = default;
 
 
 	private:
@@ -187,8 +187,8 @@ namespace ska {
 		std::vector<std::unique_ptr<ISystem>> m_logics;
 		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
 
-		std::vector<std::unique_ptr<Scene>> m_subScenes;
-		std::unordered_set<Scene*> m_linkedSubScenes;
+		std::vector<std::unique_ptr<State>> m_subScenes;
+		std::unordered_set<State*> m_linkedSubScenes;
 
 	protected:
 /*		template<typename  R, typename ...TR, typename ...TS>
@@ -201,10 +201,10 @@ namespace ska {
 			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t, previous));
 		}*/
 
-		virtual void beforeLoad(std::unique_ptr<Scene>* lastScene) {
+		virtual void beforeLoad(std::unique_ptr<State>* lastScene) {
 		}
 
-		virtual void afterLoad(std::unique_ptr<Scene>* lastScene) {
+		virtual void afterLoad(std::unique_ptr<State>* lastScene) {
 		}
 
 		virtual bool beforeUnload() {

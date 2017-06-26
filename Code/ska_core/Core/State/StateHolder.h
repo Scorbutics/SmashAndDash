@@ -1,14 +1,14 @@
 #pragma once
-#include "Scene.h"
+#include "State.h"
 #include "../../Task/TaskQueue.h"
 
 namespace ska {
-	class SceneHolder : public TaskQueue {
+	class StateHolder : public TaskQueue {
 	public:
-		SceneHolder() = default;
-		SceneHolder(const SceneHolder&) = delete;
-		SceneHolder& operator=(const SceneHolder&) = delete;
-		virtual ~SceneHolder() = default;
+		StateHolder() = default;
+		StateHolder(const StateHolder&) = delete;
+		StateHolder& operator=(const StateHolder&) = delete;
+		virtual ~StateHolder() = default;
 
 		virtual void update() = 0;
 

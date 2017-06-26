@@ -1,19 +1,19 @@
-#include "AbstractNoGUISceneMap.h"
+#include "AbstractNoGUIStateMap.h"
 //#include "../Weather.h"
 #include "World/World.h"
 
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh) :
-SceneBase(em, ged, w, ril, sh) {
+AbstractNoGUIStateMap::AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh) :
+	StateBase(em, ged, w, ril, sh) {
 }
 
-AbstractNoGUISceneMap::AbstractNoGUISceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene) :
-SceneBase(em, ged, w, ril, oldScene) {
+AbstractNoGUIStateMap::AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene) :
+	StateBase(em, ged, w, ril, oldScene) {
 
 }
 
-void AbstractNoGUISceneMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
-	//SceneBase::graphicUpdate(drawables);
+void AbstractNoGUIStateMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
+	//StateBase::graphicUpdate(drawables);
 
 	/*
 	ska::World& world = core.getWorld();
@@ -40,8 +40,8 @@ void AbstractNoGUISceneMap::onGraphicUpdate(unsigned int ellapsedTime, ska::Draw
 	drawables.addHead(*world.getWeather());*/
 }
 
-void AbstractNoGUISceneMap::onEventUpdate(unsigned int ellapsedTime) {
-	//SceneBase::eventUpdate(ellapsedTime);
+void AbstractNoGUIStateMap::onEventUpdate(unsigned int ellapsedTime) {
+	//StateBase::eventUpdate(ellapsedTime);
 
 	//WGameCore& core = WGameCore::getInstance();
 	//ska::World& world = core.getWorld();
@@ -67,6 +67,6 @@ void AbstractNoGUISceneMap::onEventUpdate(unsigned int ellapsedTime) {
 }
 
 
-AbstractNoGUISceneMap::~AbstractNoGUISceneMap()
+AbstractNoGUIStateMap::~AbstractNoGUIStateMap()
 {
 }

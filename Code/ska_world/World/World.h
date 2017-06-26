@@ -1,15 +1,9 @@
-#ifndef DEF_WORLD
-#define DEF_WORLD
+#pragma once
 
-#include <iostream>
-#include <string>
 #include <unordered_set>
-#include <memory>
 #include <vector>
 #include "Inputs/Readers/IniReader.h"
 #include "Graphic/Texture.h"
-#include "Graphic/Animation.h"
-#include "Core/Scene/Scene.h"
 #include "Draw/CameraAware.h"
 #include "ChipsetHolder.h"
 #include "Layer.h"
@@ -17,6 +11,7 @@
 #include "ECS/Basics/Physic/CollisionProfile.h"
 #include "Data/BlockContainer.h"
 #include "ECS/Basics/Script/ScriptPositionedGetter.h"
+#include "Core/State/HasGraphic.h"
 
 namespace ska {
 	class CameraSystem;
@@ -106,5 +101,3 @@ namespace ska {
 		ChipsetHolder m_chipset;
 	};
 }
-
-#endif

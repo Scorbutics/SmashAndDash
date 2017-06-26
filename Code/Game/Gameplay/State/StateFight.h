@@ -2,11 +2,11 @@
 #include <memory>
 
 #ifdef SKA_DEBUG_GRAPHIC
-#define AbstractSceneMap_ DebugAbstractSceneMap
-#include "DebugAbstractSceneMap.h"
+#define AbstractSceneMap_ DebugAbstractStateMap
+#include "DebugAbstractStateMap.h"
 #else
-#define AbstractSceneMap_ AbstractSceneMap
-#include "AbstractSceneMap.h"
+#define AbstractStateMap_ AbstractStateMap
+#include "AbstractStateMap.h"
 #endif
 
 #include "Graphic/System/CameraFixedSystem.h"
@@ -14,14 +14,12 @@
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
-#include "../../Gameplay/Fight/System/SkillRefreshSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 #include "../../Graphic/GUI/GUIBattle.h"
-#include "AI/System/IARandomMovementSystem.h"
 
-class WorldScene;
+class WorldState;
 class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
@@ -31,15 +29,15 @@ namespace ska {
 	class TaskQueue;
 }
 
-class SceneFight :
-	public AbstractSceneMap_ {
+class StateFight :
+	public AbstractStateMap_ {
 public:
-	SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc);
-	SceneFight(const SceneFight&) = delete;
-	SceneFight& operator=(const SceneFight&) = delete;
+	StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
+	StateFight(const StateFight&) = delete;
+	StateFight& operator=(const StateFight&) = delete;
 
 	virtual ska::CameraSystem& getCamera() override;
-	virtual ~SceneFight();
+	virtual ~StateFight();
 
 protected:
     virtual void beforeLoad(ska::ScenePtr* lastScene) override;
@@ -69,4 +67,4 @@ private:
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
 
 };
-typedef std::unique_ptr<SceneFight> SceneFightPtr;
+typedef std::unique_ptr<StateFight> SceneFightPtr;

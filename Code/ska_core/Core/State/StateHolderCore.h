@@ -1,14 +1,14 @@
 #pragma once
-#include "SceneHolder.h"
+#include "StateHolder.h"
 
 namespace ska {
-    class SceneHolderCore : 
-		public SceneHolder,
+    class StateHolderCore : 
+		public StateHolder,
 		public HasGraphic,
 		public HasLogic {
     public:
-        SceneHolderCore() = default;
-        ~SceneHolderCore() = default;
+        StateHolderCore() = default;
+        ~StateHolderCore() = default;
 
 		void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override;
 		void eventUpdate(unsigned int ellapsedTime) override;
@@ -18,6 +18,6 @@ namespace ska {
 	private:
 		ScenePtr m_currentScene;
 	    bool m_sceneLoaded;
-		std::unique_ptr<Scene> m_lastScene;
+		std::unique_ptr<State> m_lastState;
     };
 }

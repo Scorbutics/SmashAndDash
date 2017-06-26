@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Scene/SceneBase.h"
+#include "Core/State/StateBase.h"
 #include "Inputs/System/InputSystem.h"
 
 #include "../Data/SavegameManager.h"
@@ -21,16 +21,16 @@ namespace ska {
 }
 class CustomEntityManager;
 
-class WorldScene : public ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher>,
+class WorldState : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher>,
 	public MobSpawner,
 	public ska::CameraAware {
 
 public:
-	WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, ska::Ticked& ticked, Settings& settings);
-	WorldScene(const WorldScene&) = delete;
-	WorldScene& operator=(const WorldScene&) = delete;
+	WorldState(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings);
+	WorldState(const WorldState&) = delete;
+	WorldState& operator=(const WorldState&) = delete;
 
-	virtual ~WorldScene();
+	virtual ~WorldState();
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);

@@ -3,12 +3,12 @@
 #include "Utils/RectangleUtils.h"
 #include "Utils/TimeUtils.h"
 #include "Utils/NumberUtils.h"
-#include "../../Scene/SceneFight.h"
-#include "../../World/WorldScene.h"
+#include "../../State/StateFight.h"
+#include "../../World/WorldState.h"
 #include "../../CustomEntityManager.h"
 #include "../../Data/MapEvent.h"
 
-FightStartSystem::FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldScene& ws, ska::InputContextManager& icm, const ska::EntityId player) :
+FightStartSystem::FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldState& ws, ska::InputContextManager& icm, const ska::EntityId player) :
 System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(cem),
 m_cem(cem),
 m_worldScene(ws),

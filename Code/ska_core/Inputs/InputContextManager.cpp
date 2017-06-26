@@ -1,8 +1,8 @@
 #include "InputContextManager.h"
 
 /* Default InputContextManager settings.
-   Contexts should be added depending of the current Scene in order to
-   enable or disable inputs in specific Scene */
+   Contexts should be added depending of the current State in order to
+   enable or disable inputs in specific State */
 ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril) {	
 	for (auto& c : m_contexts) {
 		c.second->buildCodeMap();

@@ -1,5 +1,5 @@
 #pragma once
-#include "AbstractSceneMap.h"
+#include "AbstractStateMap.h"
 #include "Graphic/System/DebugCollisionDrawerSystem.h"
 #include "Physic/System/DebugWorldCollisionResponse.h"
 #include "Data/Events/GameEventDispatcher.h"
@@ -8,10 +8,10 @@ namespace ska {
 	class Window;
 }
 
-class DebugAbstractSceneMap : public AbstractSceneMap {
+class DebugAbstractSceneMap : public AbstractStateMap {
 public:
-	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, ska::SceneHolder& sh, ska::InputContextManager& ril, const bool sameMap);
-	DebugAbstractSceneMap(ska::Window& w, WorldScene& ws, ska::GameEventDispatcher& ged, Scene& oldScene, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldState& ws, ska::GameEventDispatcher& ged, ska::StateHolder& sh, ska::InputContextManager& ril, const bool sameMap);
+	DebugAbstractSceneMap(ska::Window& w, WorldState& ws, ska::GameEventDispatcher& ged, State& oldScene, const bool sameMap);
 	virtual ~DebugAbstractSceneMap() = default;
 
 private:

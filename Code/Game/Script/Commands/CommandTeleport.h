@@ -1,8 +1,8 @@
 #pragma once
 #include "Script/Command/AbstractFunctionCommand.h"
 
-#include "../../Gameplay/World/WorldScene.h"
-//#include "Core/Scene/SceneSwitcher.h"
+#include "../../Gameplay/World/WorldState.h"
+//#include "Core/State/SceneSwitcher.h"
 #include "Utils/Observable.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 

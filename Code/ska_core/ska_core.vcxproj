@@ -21,13 +21,13 @@
   <ItemGroup>
     <ClInclude Include="Core\GameCore.h" />
     <ClInclude Include="Core\BaseWindow.h" />
-    <ClInclude Include="Core\Scene\HasGraphic.h" />
-    <ClInclude Include="Core\Scene\HasLogic.h" />
-    <ClInclude Include="Core\Scene\Scene.h" />
-    <ClInclude Include="Core\Scene\SceneBase.h" />
-    <ClInclude Include="Core\Scene\SceneHolder.h" />
-    <ClInclude Include="Core\Scene\SceneHolderCore.h" />
-    <ClInclude Include="Core\Scene\SceneType.h" />
+    <ClInclude Include="Core\State\HasGraphic.h" />
+    <ClInclude Include="Core\State\HasLogic.h" />
+    <ClInclude Include="Core\State\StateBase.h" />
+    <ClInclude Include="Core\State\StateHolder.h" />
+    <ClInclude Include="Core\State\StateHolderCore.h" />
+    <ClInclude Include="Core\State\StateType.h" />
+    <ClInclude Include="Core\State\State.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Data\BlockContainer.h" />
     <ClInclude Include="Data\Events\CollisionEvent.h" />
@@ -143,11 +143,13 @@
     <ClInclude Include="Utils\StringUtils.h" />
     <ClInclude Include="Utils\TimeUtils.h" />
     <ClInclude Include="Utils\TupleUtils.h" />
+    <ClInclude Include="Utils\ununique.h" />
+    <ClInclude Include="Utils\VectorUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\BaseWindow.cpp" />
-    <ClCompile Include="Core\Scene\Scene.cpp" />
-    <ClCompile Include="Core\Scene\SceneHolderCore.cpp" />
+    <ClCompile Include="Core\State\StateHolderCore.cpp" />
+    <ClCompile Include="Core\State\State.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Data\Events\SoundEvent.cpp" />
     <ClCompile Include="Draw\Font.cpp" />

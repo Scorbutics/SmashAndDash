@@ -1,10 +1,9 @@
 #pragma once
 #include "Script/System/ScriptBasicCommandsSystem.h"
-//#include "Core/Scene/SceneSwitcher.h"
+//#include "Core/State/SceneSwitcher.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
-#include "Utils/Observable.h"
 
-class WorldScene;
+class WorldState;
 
 namespace ska {
 	class World;

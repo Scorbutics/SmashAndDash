@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "Scene/SceneHolderCore.h"
+#include "State/StateHolderCore.h"
 #include "../Exceptions/SceneDiedException.h"
 #include "../Data/Events/WorldEvent.h"
 #include "../Data/Events/SoundEvent.h"
@@ -126,7 +126,7 @@ namespace ska {
         RawInputListener m_rawInputListener;
         InputContextManager m_playerICM;
 
-        SceneHolderCore m_sceneHolder;
+        StateHolderCore m_sceneHolder;
 
 
     };

@@ -6,7 +6,7 @@
 #include "../../Utils/IDs.h"
 #include "Utils/StringUtils.h"
 
-#include "../../Gameplay/Scene/SceneToMapSwitcher.h"
+#include "../../Gameplay/State/StateToMapSwitcher.h"
 #include "../../Gameplay/Data/MapEvent.h"
 
 CommandTeleport::CommandTeleport(const ska::World& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :

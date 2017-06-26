@@ -12,7 +12,7 @@
 #include "World/Block.h"
 #include "AI/IARandomMovementComponent.h"
 #include "AI/IADefinedMovementComponent.h"
-#include "WorldScene.h"
+#include "WorldState.h"
 #include "../Data/Settings.h"
 #include "World/LayerE.h"
 #include "../../Utils/IDs.h"
@@ -24,8 +24,8 @@
 #include "Draw/DrawableContainer.h"
 #include "Core/Window.h"
 
-WorldScene::WorldScene(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, ska::Ticked& ticked, Settings& settings) :
-SceneBase(entityManager, ged, w, ril, sh),
+WorldState::WorldState(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
+StateBase(entityManager, ged, w, ril, sh),
 m_screenW(w.getWidth()),
 m_screenH(w.getHeight()),
 m_loadedOnce(false),
@@ -48,11 +48,11 @@ m_worldBGM(DEFAULT_BGM) {
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
 }
 
-const std::string& WorldScene::getFileName() const {
+const std::string& WorldState::getFileName() const {
 	return m_world.getFileName();
 }
 
-void WorldScene::linkCamera(ska::CameraSystem* cs) {
+void WorldState::linkCamera(ska::CameraSystem* cs) {
 	if (m_cameraSystem == nullptr || cs == nullptr) {
 		m_cameraSystem = cs;
 
@@ -62,15 +62,15 @@ void WorldScene::linkCamera(ska::CameraSystem* cs) {
 	}
 }
 
-bool WorldScene::loadedOnce() const{
+bool WorldState::loadedOnce() const{
 	return m_loadedOnce;
 }
 
-std::vector<ska::IniReader>& WorldScene::getMobSettings() {
+std::vector<ska::IniReader>& WorldState::getMobSettings() {
 	return m_world.getMobSettings();
 }
 
-void WorldScene::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
+void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 
 	//Première couche
 	drawables.addHead(m_world.getLayerRenderable(0));
@@ -89,15 +89,15 @@ void WorldScene::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.graphicUpdate(ellapsedTime, drawables);
 }
 
-void WorldScene::onEventUpdate(unsigned int ellapsedTime) {
+void WorldState::onEventUpdate(unsigned int ellapsedTime) {
 	m_world.update();
 }
 
-ska::World& WorldScene::getWorld() {
+ska::World& WorldState::getWorld() {
 	return m_world;
 }
 
-void WorldScene::afterLoad(ska::ScenePtr* lastScene) {
+void WorldState::afterLoad(ska::ScenePtr* lastScene) {
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
@@ -106,12 +106,12 @@ void WorldScene::afterLoad(ska::ScenePtr* lastScene) {
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 }
 
-bool WorldScene::beforeUnload() {
+bool WorldState::beforeUnload() {
 	linkCamera(nullptr);
 	return false;
 }
 
-int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
+int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
 
 	if (nbrSpawns == 0) {
 		return 0;
@@ -198,7 +198,7 @@ int WorldScene::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	return successfulSpawns;
 }
 
-std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(const std::string& fileName, const std::string& chipsetName) {
+std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::string& fileName, const std::string& chipsetName) {
 
 	m_world.load(fileName, chipsetName);
 	if (!m_loadedOnce) {
@@ -290,13 +290,13 @@ std::unordered_map<std::string, ska::EntityId> WorldScene::reinit(const std::str
 	return result;
 }
 
-ska::EntityId WorldScene::getPlayer() const{
+ska::EntityId WorldState::getPlayer() const{
 	return m_player;
 }
 
-SavegameManager& WorldScene::getSaveGame() {
+SavegameManager& WorldState::getSaveGame() {
 	return m_saveManager;
 }
 
-WorldScene::~WorldScene() {
+WorldState::~WorldState() {
 }

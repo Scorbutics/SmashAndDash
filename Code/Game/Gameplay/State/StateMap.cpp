@@ -8,14 +8,15 @@
 
 
 #include "Core/Window.h"
-#include "../World/WorldScene.h"
-#include "SceneMap.h"
+#include "../World/WorldState.h"
+#include "StateMap.h"
 #include "../CustomEntityManager.h"
+#include "StateFight.h"
 
 #define MOB_SPAWNING_DELAY 5000
 
-SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-	AbstractSceneMap_(em, ged, w, ril, sh, ws, sameMap),
+StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+	AbstractStateMap_(em, ged, w, ril, sh, ws, sameMap),
 	m_fileName(fileName),
 	m_chipsetName(chipsetName),
 	m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
@@ -30,12 +31,12 @@ SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska
 	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 }
 
-ska::CameraSystem& SceneMap::getCamera() {
+ska::CameraSystem& StateMap::getCamera() {
 	return *m_cameraSystem;
 }
 
-SceneMap::SceneMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, Scene& oldScene, WorldScene& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-AbstractSceneMap_(em, ged, w, ril, oldScene, ws, sameMap),
+StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
+AbstractStateMap_(em, ged, w, ril, oldScene, ws, sameMap),
 m_fileName(fileName),
 m_chipsetName(chipsetName),
 m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
@@ -50,8 +51,8 @@ m_entityCollisionResponse(ged, m_entityManager) {
 	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 }
 
-void SceneMap::afterLoad(ska::ScenePtr* lastScene) {
-	AbstractSceneMap::afterLoad(lastScene);
+void StateMap::afterLoad(ska::ScenePtr* lastScene) {
+	AbstractStateMap::afterLoad(lastScene);
 	m_scriptSystem->clearNamedScriptedEntities();
 	auto entities = m_worldScene.reinit(m_fileName, m_chipsetName);
 	for (const auto& e : entities) {
@@ -62,6 +63,6 @@ void SceneMap::afterLoad(ska::ScenePtr* lastScene) {
 	m_scriptSystem->registerNamedScriptedEntity("0", m_worldScene.getPlayer());
 }
 
-SceneMap::~SceneMap() {
+StateMap::~StateMap() {
 
 }

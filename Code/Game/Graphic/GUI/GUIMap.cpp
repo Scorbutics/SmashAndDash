@@ -8,8 +8,6 @@
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
 #include <Core/Window.h>
 #include "FPSLabel.h"
-#include "Core/Scene/SceneType.h"
-#include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 
 GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :

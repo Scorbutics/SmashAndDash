@@ -1,7 +1,7 @@
 #pragma once
 
 namespace ska {
-	namespace SceneType
+	namespace StateType
 	{
 		enum Enum
 		{

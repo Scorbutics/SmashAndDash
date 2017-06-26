@@ -1,7 +1,7 @@
 #include "Core/Window.h"
-#include "../World/WorldScene.h"
-#include "SceneFight.h"
-#include "SceneGUIBattle.h"
+#include "../World/WorldState.h"
+#include "StateFight.h"
+#include "StateGUIBattle.h"
 #include "Task/RepeatableTask.h"
 #include "Task/CompoundTask.h"
 #include "../CustomEntityManager.h"
@@ -12,24 +12,11 @@
 #include "Transition/Map/DialogTransition.h"
 
 #include "../PokemonGameEventDispatcher.h"
-#include "Data/Events/CollisionEvent.h"
 #include "AI/IARandomMovementComponent.h"
 #include "ECS/Basics/Graphic/DialogComponent.h"
-
-template <typename T>
-struct un_unique_type {
-    typedef T raw;
-};
-
-template <typename T>
-struct un_unique_type<std::unique_ptr<T>> {
-    typedef T raw;
-};
-
-template <typename T>
-struct un_unique_type<std::unique_ptr<T>&> {
-    typedef T raw;
-};
+#include "Utils/ununique.h"
+#include "../Fight/System/SkillRefreshSystem.h"
+#include "AI/System/IARandomMovementSystem.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
 	stats.hp = data.get<int>(block + " hp");
@@ -40,8 +27,8 @@ void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const st
 	stats.attack = data.get<int>(block + " attack");
 }
 
-SceneFight::SceneFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::Scene& oldScene, WorldScene& ws, ska::Point<int> fightPos, FightComponent fc) :
-AbstractSceneMap_(em, ged, w, ril, oldScene, ws, true),
+StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
+AbstractStateMap_(em, ged, w, ril, oldScene, ws, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_opponentScriptId(fc.opponentScriptId),
 m_level(fc.level),
@@ -62,17 +49,19 @@ m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager) {
 	addLogic<StatisticsSystem>(w, ril, ws, ged);
 	addLogic<ska::IARandomMovementSystem>();
 
-	addSubScene<SceneGUIBattle>();
+	addSubScene<StateGUIBattle>();
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
 }
 
-ska::CameraSystem& SceneFight::getCamera() {
+ska::CameraSystem& StateFight::getCamera() {
 	return *m_cameraSystem;
 }
 
-void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) const{
+
+//TODO SRP
+void StateFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) const{
 	ska::IniReader skillData(skillPath);
 
 	if (!skillData.isLoaded()) {
@@ -112,7 +101,8 @@ void SceneFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	}
 }
 
-void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const{
+//TODO SRP
+void StateFight::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const{
 	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))) && i < shc.skills.size(); i++) {
 		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i)) + "_level") <= m_level) {
 			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))));
@@ -120,8 +110,8 @@ void SceneFight::loadSkills(const ska::IniReader& reader, const ska::EntityId, S
 	}
 }
 
-void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
-	AbstractSceneMap::beforeLoad(lastScene);
+void StateFight::beforeLoad(ska::ScenePtr* lastScene) {
+	AbstractStateMap::beforeLoad(lastScene);
 	if (m_sceneLoaded) {
 		return;
 	}
@@ -241,8 +231,8 @@ void SceneFight::beforeLoad(ska::ScenePtr* lastScene) {
 	queueTask(finalTask);
 }
 
-bool SceneFight::beforeUnload() {
-	AbstractSceneMap::beforeUnload();
+bool StateFight::beforeUnload() {
+	AbstractStateMap::beforeUnload();
 	//m_worldScene.unload();
 
 	/* Triggers end fight cinematic to the next scene */
@@ -270,7 +260,7 @@ bool SceneFight::beforeUnload() {
     {
         auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId);
         auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, m_descriptor.getName());
-        firstTask = std::make_unique<un_unique_type<decltype(firstTask)>::raw>(std::move(pokeballTask), std::move(dialogTask), *preTask);
+        firstTask = std::make_unique<ska::meta::un_unique_type<decltype(firstTask)>::raw>(std::move(pokeballTask), std::move(dialogTask), *preTask);
     }
 
 	auto finalTask = std::make_unique<ska::RepeatableTask<ska::TaskReceiver<ska::InputComponent>, ska::TaskSender<>>>(
@@ -291,5 +281,5 @@ bool SceneFight::beforeUnload() {
 	return false;
 }
 
-SceneFight::~SceneFight() {
+StateFight::~StateFight() {
 }

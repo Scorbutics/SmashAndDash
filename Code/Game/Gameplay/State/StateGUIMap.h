@@ -1,16 +1,16 @@
 #pragma once
-#include "Core/Scene/SceneBase.h"
+#include "Core/State/StateBase.h"
 #include "../CustomEntityManager.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../../Graphic/GUI/GUIMap.h"
 
 class Settings;
 
-class SceneGUIMap : public ska::SceneBase<CustomEntityManager, PokemonGameEventDispatcher> {
+class StateGUIMap : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
 public:
-    SceneGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::SceneHolder& sh);
+    StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh);
     void bindGUI(Settings& s);
-    virtual ~SceneGUIMap() = default;
+    virtual ~StateGUIMap() = default;
 
 protected:
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;

@@ -4,8 +4,7 @@
 #include <unordered_map>
 #include "Utils/Observer.h"
 #include "ECS/ECSDefines.h"
-#include "Core/Scene/HasGraphic.h"
-#include "Core/Scene/HasLogic.h"
+#include "Core/State/HasGraphic.h"
 
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../Gameplay/Fight/BattleEvent.h"

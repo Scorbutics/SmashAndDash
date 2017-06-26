@@ -1,7 +1,7 @@
 #include "WGameCore.h"
 #include "Inputs/KeyboardInputMapContext.h"
 #include "Inputs/KeyboardInputGUIContext.h"
-#include "Scene/SceneMap.h"
+#include "State/StateMap.h"
 #include "MessageType.h"
 #include "MessagePopup.h"
 
@@ -14,14 +14,14 @@ WGameCore::WGameCore():
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
 
-	m_guiMapScene = makeScene<SceneGUIMap>();
+	m_guiMapScene = makeScene<StateGUIMap>();
     m_guiMapScene->bindGUI(m_settings);
 	m_settings.load();
 
 	/* Let's start on the map scene */
-	m_worldScene = makeScene<WorldScene>(*this, m_settings);
+	m_worldScene = makeScene<WorldState>(*this, m_settings);
 	m_worldScene->linkSubScene(*m_guiMapScene.get());
-	navigateToScene<SceneMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
+	navigateToScene<StateMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
 }

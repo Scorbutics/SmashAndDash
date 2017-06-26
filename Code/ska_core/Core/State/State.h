@@ -4,32 +4,32 @@
 #include "HasLogic.h"
 
 namespace ska {
-	class SceneHolder;
+	class StateHolder;
 	class ISystem;
 	class IGraphicSystem;
 	class DrawableContainer;
 
-	class Scene : public HasGraphic, public HasLogic {
+	class State : public HasGraphic, public HasLogic {
         template <class EM, class ED>
-        friend class SceneBase;
+        friend class StateBase;
 
 	public:
-		explicit Scene(SceneHolder& holder);
-        Scene(Scene& oldScene);
+		explicit State(StateHolder& holder);
+        State(State& oldScene);
 
-		void operator=(const Scene&) = delete;
+		void operator=(const State&) = delete;
 
 		virtual void graphicUpdate(unsigned ellapsedTime, DrawableContainer& drawables) override = 0;
 		virtual void eventUpdate(unsigned int) override = 0;
-		virtual void load(std::unique_ptr<Scene>* lastScene) = 0;
+		virtual void load(std::unique_ptr<State>* lastScene) = 0;
 		virtual bool unload() = 0;
 
-		virtual ~Scene() = default;
+		virtual ~State() = default;
 
     private:
-        SceneHolder& m_holder;
+        StateHolder& m_holder;
 	};
 
-	using ScenePtr = std::unique_ptr<Scene>;
+	using ScenePtr = std::unique_ptr<State>;
 }
 

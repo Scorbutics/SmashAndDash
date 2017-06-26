@@ -8,8 +8,8 @@
 #include "Draw/VectorDrawableContainer.h"
 #include "PokemonGameEventDispatcher.h"
 #include "../Audio/PokemonSoundRenderer.h"
-#include "World/WorldScene.h"
-#include "Scene/SceneGUIMap.h"
+#include "World/WorldState.h"
+#include "State/StateGUIMap.h"
 #include "FpsCalculator.h"
 
 class WGameCore :
@@ -30,8 +30,8 @@ private:
 	TrainerCard m_trainerCard;
 	Settings m_settings;
 
-	std::unique_ptr<WorldScene> m_worldScene;
-	std::unique_ptr<SceneGUIMap> m_guiMapScene;
+	std::unique_ptr<WorldState> m_worldScene;
+	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
 	ska::FpsCalculator m_fpsCalculator;
 
