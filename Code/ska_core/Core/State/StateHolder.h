@@ -13,15 +13,11 @@ namespace ska {
 		virtual void update() = 0;
 
 		template<class S>
-		void nextScene(std::unique_ptr<S>&& scene) {
-			m_nextScene = std::move(scene);
+		void nextState(std::unique_ptr<S>&& state) {
+			m_nextState = std::move(state);
 		}
 
-		/*ScenePtr& getScene() {
-			return m_currentScene;
-		}*/
-
 	protected:
-		ScenePtr m_nextScene;
+		ScenePtr m_nextState;
 	};
 }

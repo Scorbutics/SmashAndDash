@@ -13,8 +13,8 @@ public:
 	~StateToBattleSwitcher() = default;
 
 	template<class EM, class ED>
-	void switchTo(ska::StateBase<EM, ED>& lastScene) const {
-		lastScene.template makeNextSceneAndTransmitLinkedSubscenes<ska::StateBase<EM, ED>, StateFight>(lastScene, m_ws, m_fightPos, m_fightComponent);
+	void switchTo(ska::StateBase<EM, ED>& lastState) const {
+		lastState.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateFight>(lastState, m_ws, m_fightPos, m_fightComponent);
 	}
 
 protected:

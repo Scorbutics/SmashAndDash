@@ -7,8 +7,8 @@ AbstractNoGUIStateMap::AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGam
 	StateBase(em, ged, w, ril, sh) {
 }
 
-AbstractNoGUIStateMap::AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene) :
-	StateBase(em, ged, w, ril, oldScene) {
+AbstractNoGUIStateMap::AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldState) :
+	StateBase(em, ged, w, ril, oldState) {
 
 }
 

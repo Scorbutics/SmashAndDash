@@ -66,7 +66,6 @@
     <ClInclude Include="Exceptions\InputException.h" />
     <ClInclude Include="Exceptions\InvalidPathException.h" />
     <ClInclude Include="Exceptions\NumberFormatException.h" />
-    <ClInclude Include="Exceptions\SceneDiedException.h" />
     <ClInclude Include="Exceptions\ScriptDiedException.h" />
     <ClInclude Include="Exceptions\ScriptException.h" />
     <ClInclude Include="Exceptions\ScriptNotActivatedException.h" />
@@ -133,6 +132,7 @@
     <ClInclude Include="Core\State\StateBase.h" />
     <ClInclude Include="Utils\ununique.h" />
     <ClInclude Include="Utils\VectorUtils.h" />
+    <ClInclude Include="Exceptions\StateDiedException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

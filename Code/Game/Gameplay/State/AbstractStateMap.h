@@ -33,7 +33,7 @@ protected:
 	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
 	virtual void afterLoad(ska::ScenePtr* lastScene) override;
 
-	WorldState& m_worldScene;
+	WorldState& m_worldState;
 	ska::Window& m_window;
 
 	ska::CollisionSystem* m_collisionSystem;

@@ -92,7 +92,7 @@
     <ClInclude Include="Exceptions\InputException.h" />
     <ClInclude Include="Exceptions\InvalidPathException.h" />
     <ClInclude Include="Exceptions\NumberFormatException.h" />
-    <ClInclude Include="Exceptions\SceneDiedException.h" />
+    <ClInclude Include="Exceptions\StateDiedException.h" />
     <ClInclude Include="Exceptions\ScriptDiedException.h" />
     <ClInclude Include="Exceptions\ScriptException.h" />
     <ClInclude Include="Exceptions\ScriptNotActivatedException.h" />

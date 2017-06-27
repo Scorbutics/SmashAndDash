@@ -4,7 +4,6 @@
 #include "StateHolder.h"
 #include "../../Draw/IGraphicSystem.h"
 #include "../../ECS/ISystem.h"
-#include "Task/Task.h"
 
 namespace ska {
 	class Window;
@@ -23,8 +22,8 @@ namespace ska {
 
 		}
 
-		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, State& oldScene) :
-			State(oldScene),
+		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, State& oldState) :
+			State(oldState),
 			m_entityManager(em),
 			m_eventDispatcher(ed),
 			m_window(w),
@@ -42,11 +41,11 @@ namespace ska {
 				s->update(ellapsedTime);
 			}
 
-			for (auto& s : m_subScenes) {
+			for (auto& s : m_subStates) {
 				s->graphicUpdate(ellapsedTime, drawables);
 			}
 
-			for (auto& s : m_linkedSubScenes) {
+			for (auto& s : m_linkedSubStates) {
 				s->graphicUpdate(ellapsedTime, drawables);
 			}
 
@@ -60,31 +59,31 @@ namespace ska {
 				s->update(ellapsedTime);
 			}
 
-			for (auto& s : m_subScenes) {
+			for (auto& s : m_subStates) {
 				s->eventUpdate(ellapsedTime);
 			}
 
-			for (auto& s : m_linkedSubScenes) {
+			for (auto& s : m_linkedSubStates) {
 				s->eventUpdate(ellapsedTime);
 			}
 
 		}
 
-		void load(std::unique_ptr<State>* lastScene) override final {
-			beforeLoad(lastScene);
+		void load(std::unique_ptr<State>* lastState) override final {
+			beforeLoad(lastState);
 			m_state = 1;
 
-			for (auto& s : m_subScenes) {
-				s->load(lastScene);
+			for (auto& s : m_subStates) {
+				s->load(lastState);
 			}
 
-			for (auto& s : m_linkedSubScenes) {
-				s->load(lastScene);
+			for (auto& s : m_linkedSubStates) {
+				s->load(lastState);
 			}
 
 			m_state = 2;
 
-			afterLoad(lastScene);
+			afterLoad(lastState);
 
 			m_state = 3;
 
@@ -108,11 +107,11 @@ namespace ska {
 
 			if(m_state == 1) {
 				auto subscenesUnloaded = true;
-				for (auto& s : m_subScenes) {
+				for (auto& s : m_subStates) {
 					subscenesUnloaded &= !s->unload();
 				}
 
-				for (auto& s : m_linkedSubScenes) {
+				for (auto& s : m_linkedSubStates) {
 					subscenesUnloaded &= !s->unload();
 				}
 
@@ -139,12 +138,12 @@ namespace ska {
 			return m_state != -2;
 		}
 
-		void linkSubScene(State& subScene) {
-			m_linkedSubScenes.insert(&subScene);
+		void linkSubState(State& subState) {
+			m_linkedSubStates.insert(&subState);
 		}
 
-		void unlinkSubScene(State& subScene) {
-			m_linkedSubScenes.erase(&subScene);
+		void unlinkSubState(State& subState) {
+			m_linkedSubStates.erase(&subState);
 		}
 
 		template <class T>
@@ -154,19 +153,19 @@ namespace ska {
 
 		template<class SC, class ... Args>
 		SC* makeNextScene(Args&&... args) {
-			auto nScene = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
-			auto result = nScene.get();
-			m_holder.nextScene(std::move(nScene));
+			auto nState = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
+			auto result = nState.get();
+			m_holder.nextState(std::move(nState));
 			m_holder.update();
 			return result;
 		}
 
 		template<class SC1, class SC, class ... Args>
-		SC* makeNextSceneAndTransmitLinkedSubscenes(SC1& oldScene, Args&&... args) {
-			auto nScene = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
-			auto result = nScene.get();
-			m_holder.nextScene(std::move(nScene));
-			result->transmitLinkedSubscenes(oldScene);
+		SC* makeNextStateAndTransmitLinkedSubstates(SC1& oldScene, Args&&... args) {
+			auto nState = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
+			auto result = nState.get();
+			m_holder.nextState(std::move(nState));
+			result->transmitLinkedSubstates(oldScene);
 			m_holder.update();
 			return result;
 		}
@@ -180,27 +179,17 @@ namespace ska {
 		}
 
 		template<class SC>
-		void transmitLinkedSubscenes(SC& scene) {
-			m_linkedSubScenes = scene.m_linkedSubScenes;
+		void transmitLinkedSubstates(SC& scene) {
+			m_linkedSubStates = scene.m_linkedSubStates;
 		}
 
 		std::vector<std::unique_ptr<ISystem>> m_logics;
 		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
 
-		std::vector<std::unique_ptr<State>> m_subScenes;
-		std::unordered_set<State*> m_linkedSubScenes;
+		std::vector<std::unique_ptr<State>> m_subStates;
+		std::unordered_set<State*> m_linkedSubStates;
 
 	protected:
-/*		template<typename  R, typename ...TR, typename ...TS>
-		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t) {
-			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t));
-		}
-
-		template<typename R, typename ...TR, typename ...TS>
-		void transition(typename meta::Identity<std::function<R(Task<R, TaskReceiver<TR...>, TaskSender<TS...>>&, TR...)>>::type const& t, ITask<TR...>& previous) {
-			m_holder.queueTask(std::make_unique<Task<R, TaskReceiver<TR...>, TaskSender<TS...>>>(t, previous));
-		}*/
-
 		virtual void beforeLoad(std::unique_ptr<State>* lastScene) {
 		}
 
@@ -222,10 +211,10 @@ namespace ska {
 		}
 
 		template<class SC, class ...Args>
-		SC* addSubScene(Args&& ... args){
+		SC* addSubState(Args&& ... args){
 			auto s = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, m_holder, std::forward<Args>(args)...);
 			SC* result = static_cast<SC*>(s.get());
-			m_subScenes.push_back(std::move(s));
+			m_subStates.push_back(std::move(s));
 			return result;
 		}
 

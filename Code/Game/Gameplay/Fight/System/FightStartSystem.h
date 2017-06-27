@@ -26,7 +26,6 @@ private:
 	CustomEntityManager& m_cem;
 	WorldState& m_worldScene;
 	ska::InputContextManager& m_icm;
-	//ska::StateHolder& m_sceneHolder;
 	const ska::EntityId m_player;
 	unsigned int m_t0;
 	ska::Window& m_window;

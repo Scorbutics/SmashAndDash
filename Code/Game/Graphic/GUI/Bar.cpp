@@ -16,7 +16,8 @@ m_cameraSystem(cam),
 m_barStyle(barStyleName),
 m_barContent(barContentName),
 m_maxValue(maxValue),
-m_visible(true) {
+m_visible(true),
+m_curValue(maxValue) {
 	//const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
     m_barSize.w = static_cast<int>((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
     m_barSize.h = static_cast<int>((m_barStyle.getHeight() * 5) /6);
@@ -48,7 +49,7 @@ void Bar::display() const {
 void Bar::setCurrentValue(unsigned int v) {
     m_curValue = v;
 
-    m_barSize.w = (int)((m_curValue * ((m_barStyle.getWidth() * 5) /6.)) / m_maxValue);
+    m_barSize.w = static_cast<int>((m_curValue * ((m_barStyle.getWidth() * 5) / 6.)) / m_maxValue);
 }
 
 bool Bar::isVisible() const {

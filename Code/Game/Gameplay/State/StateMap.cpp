@@ -54,13 +54,13 @@ m_entityCollisionResponse(ged, m_entityManager) {
 void StateMap::afterLoad(ska::ScenePtr* lastScene) {
 	AbstractStateMap::afterLoad(lastScene);
 	m_scriptSystem->clearNamedScriptedEntities();
-	auto entities = m_worldScene.reinit(m_fileName, m_chipsetName);
+	auto entities = m_worldState.reinit(m_fileName, m_chipsetName);
 	for (const auto& e : entities) {
 		m_scriptSystem->registerNamedScriptedEntity(e.first, e.second);
 	}
 
 	/* Player Script ID = 0 */
-	m_scriptSystem->registerNamedScriptedEntity("0", m_worldScene.getPlayer());
+	m_scriptSystem->registerNamedScriptedEntity("0", m_worldState.getPlayer());
 }
 
 StateMap::~StateMap() {

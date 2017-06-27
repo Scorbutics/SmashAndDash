@@ -1,36 +1,36 @@
 #include "StateHolderCore.h"
-#include "../../Exceptions/SceneDiedException.h"
+#include "../../Exceptions/StateDiedException.h"
 
 void ska::StateHolderCore::graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) {
-	m_currentScene->graphicUpdate(ellapsedTime, drawables);
+	m_currentState->graphicUpdate(ellapsedTime, drawables);
 }
 
 void ska::StateHolderCore::eventUpdate(unsigned ellapsedTime) {
-	m_currentScene->eventUpdate(ellapsedTime);
+	m_currentState->eventUpdate(ellapsedTime);
 }
 
 void ska::StateHolderCore::update() {
-	if (m_nextScene != nullptr) {
-		bool firstScene;
+	if (m_nextState != nullptr) {
+		bool firstState;
 		bool triggerChangeScene;
-		if (m_currentScene != nullptr) {
-			triggerChangeScene = !m_currentScene->unload();
-			firstScene = false;
+		if (m_currentState != nullptr) {
+			triggerChangeScene = !m_currentState->unload();
+			firstState = false;
 		}
 		else {
 			triggerChangeScene = true;
-			firstScene = true;
+			firstState = true;
 		}
 
 		if (triggerChangeScene) {
-			auto lastScene = move(firstScene ? std::unique_ptr<ska::State>(nullptr) : move(m_currentScene));
-			m_currentScene = move(m_nextScene);
-			m_nextScene = nullptr;
-			m_currentScene->load(firstScene ? nullptr : &lastScene);
+			auto lastScene = move(firstState ? std::unique_ptr<ska::State>(nullptr) : move(m_currentState));
+			m_currentState = move(m_nextState);
+			m_nextState = nullptr;
+			m_currentState->load(firstState ? nullptr : &lastScene);
 
 			/* We have to invalidate the current iterating (old) scene. */
-			if (!firstScene) {
-				throw ska::SceneDiedException("");
+			if (!firstState) {
+				throw ska::StateDiedException("");
 			}
 		}
 	}

@@ -14,14 +14,14 @@ WGameCore::WGameCore():
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
 
-	m_guiMapScene = makeScene<StateGUIMap>();
+	m_guiMapScene = makeState<StateGUIMap>();
     m_guiMapScene->bindGUI(m_settings);
 	m_settings.load();
 
 	/* Let's start on the map scene */
-	m_worldScene = makeScene<WorldState>(*this, m_settings);
-	m_worldScene->linkSubScene(*m_guiMapScene.get());
-	navigateToScene<StateMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubScene(*m_worldScene.get());
+	m_worldScene = makeState<WorldState>(*this, m_settings);
+	m_worldScene->linkSubState(*m_guiMapScene.get());
+	navigateToState<StateMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubState(*m_worldScene.get());
 
 	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
 }

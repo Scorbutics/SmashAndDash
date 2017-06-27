@@ -16,7 +16,7 @@ namespace ska {
         void update() override;
 	
 	private:
-		ScenePtr m_currentScene;
+		ScenePtr m_currentState;
 	    bool m_sceneLoaded;
 		std::unique_ptr<State> m_lastState;
     };

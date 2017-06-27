@@ -49,7 +49,7 @@ m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager) {
 	addLogic<StatisticsSystem>(w, ril, ws, ged);
 	addLogic<ska::IARandomMovementSystem>();
 
-	addSubScene<StateGUIBattle>();
+	addSubState<StateGUIBattle>();
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -60,6 +60,7 @@ ska::CameraSystem& StateFight::getCamera() {
 }
 
 
+//Skill factory...
 //TODO SRP
 void StateFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) const{
 	ska::IniReader skillData(skillPath);
@@ -91,7 +92,7 @@ void StateFight::createSkill(SkillDescriptor& sd, const std::string& skillPath) 
 	sd.id = skillData.get<int>("Description id");
 
 	sd.cooldown = skillData.get<unsigned int>("Stats cooldown");
-	sd.range = skillData.get<int>("Stats blocks_range") * static_cast<int>(m_worldScene.getWorld().getBlockSize());
+	sd.range = skillData.get<int>("Stats blocks_range") * static_cast<int>(m_worldState.getWorld().getBlockSize());
 
 	if (sd.style1 == "Buff" || sd.style2 == "Buff") {
 		LoadRawStatistics(sd.buffAlly, skillData, "BuffsAlly");
@@ -212,7 +213,7 @@ void StateFight::beforeLoad(ska::ScenePtr* lastScene) {
 		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(pokeball);
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
-		const auto targetBlock = m_worldScene.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
+		const auto targetBlock = m_worldState.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, pc);
@@ -233,7 +234,7 @@ void StateFight::beforeLoad(ska::ScenePtr* lastScene) {
 
 bool StateFight::beforeUnload() {
 	AbstractStateMap::beforeUnload();
-	//m_worldScene.unload();
+	//m_worldState.unload();
 
 	/* Triggers end fight cinematic to the next scene */
 	const auto delay = 3000U;

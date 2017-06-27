@@ -12,7 +12,7 @@ AbstractNoGUIStateMap(em, ged, w, ril, sh),
 SceneChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(false),
-m_worldScene(ws),
+m_worldState(ws),
 m_window(w) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
@@ -22,7 +22,7 @@ AbstractNoGUIStateMap(em, ged, w, ril, oldScene),
 SceneChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(true),
-m_worldScene(ws),
+m_worldState(ws),
 m_window(w) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
@@ -30,15 +30,15 @@ m_window(w) {
 void AbstractStateMap::beforeLoad(ska::ScenePtr*) {
 	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
-	m_worldScene.linkCamera(&getCamera());
+	m_worldState.linkCamera(&getCamera());
 }
 
 void AbstractStateMap::afterLoad(ska::ScenePtr*){
 	/* If already loaded... */
-	if (m_worldScene.loadedOnce()) {
+	if (m_worldState.loadedOnce()) {
 		/* Do not delete the player between 2 maps, just TP it */
 		std::unordered_set<ska::EntityId> toNotDelete;
-		toNotDelete.insert(m_worldScene.getPlayer());
+		toNotDelete.insert(m_worldState.getPlayer());
 
 		if (!m_sameMap) {
 			/* If the map changes, we delete all entities (except player) */
@@ -51,10 +51,10 @@ void AbstractStateMap::afterLoad(ska::ScenePtr*){
 
 bool AbstractStateMap::onTeleport(const MapEvent& me) {
 	if(me.eventType == MapEvent::BATTLE) {
-		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldScene);
+		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldState);
 		stbs.switchTo(*this);
 	} else {
-		StateToMapSwitcher stms(me.mapName, me.chipsetName, m_worldScene);
+		StateToMapSwitcher stms(me.mapName, me.chipsetName, m_worldState);
 		stms.switchTo(*this);
 	}
 	return true;

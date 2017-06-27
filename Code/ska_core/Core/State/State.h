@@ -15,13 +15,13 @@ namespace ska {
 
 	public:
 		explicit State(StateHolder& holder);
-        State(State& oldScene);
+        State(State& lastState);
 
 		void operator=(const State&) = delete;
 
 		virtual void graphicUpdate(unsigned ellapsedTime, DrawableContainer& drawables) override = 0;
 		virtual void eventUpdate(unsigned int) override = 0;
-		virtual void load(std::unique_ptr<State>* lastScene) = 0;
+		virtual void load(std::unique_ptr<State>* lastState) = 0;
 		virtual bool unload() = 0;
 
 		virtual ~State() = default;

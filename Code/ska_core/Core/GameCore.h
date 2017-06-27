@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "State/StateHolderCore.h"
-#include "../Exceptions/SceneDiedException.h"
+#include "../Exceptions/StateDiedException.h"
 #include "../Data/Events/WorldEvent.h"
 #include "../Data/Events/SoundEvent.h"
 #include "../Inputs/RawInputListener.h"
@@ -44,15 +44,15 @@ namespace ska {
         }
 
 		template<class SC, class ... Args>
-		std::unique_ptr<SC> makeScene(Args&&... args) {
-			return std::make_unique<SC>(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM, m_sceneHolder, std::forward<Args>(args)...);
+		std::unique_ptr<SC> makeState(Args&&... args) {
+			return std::make_unique<SC>(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM, m_stateHolder, std::forward<Args>(args)...);
         }
 
 		template<class SC, class ... Args>
-		SC& navigateToScene(Args&&... args) {
-			auto sc = makeScene<SC, Args...>(std::forward<Args>(args)...);
+		SC& navigateToState(Args&&... args) {
+			auto sc = makeState<SC, Args...>(std::forward<Args>(args)...);
 			auto result = sc.get();
-			m_sceneHolder.nextScene(std::move(sc));
+			m_stateHolder.nextState(std::move(sc));
 			return *result;
 		}
 
@@ -89,13 +89,13 @@ namespace ska {
 
 					graphicUpdate(ellapsedTime);
                 }
-            } catch (ska::SceneDiedException&) {
+            } catch (ska::StateDiedException&) {
                 return true;
             }
         }
 
         void graphicUpdate(unsigned int ellapsedTime) {
-        	m_sceneHolder.graphicUpdate(ellapsedTime, m_drawables);
+        	m_stateHolder.graphicUpdate(ellapsedTime, m_drawables);
             m_drawables.draw();
             m_drawables.clear();
 
@@ -107,8 +107,8 @@ namespace ska {
 			/* Raw input acquisition */
 			m_playerICM.refresh();
 
-			m_sceneHolder.update();
-            m_sceneHolder.eventUpdate(ellapsedTime);
+			m_stateHolder.update();
+            m_stateHolder.eventUpdate(ellapsedTime);
         }
 
 
@@ -126,7 +126,7 @@ namespace ska {
         RawInputListener m_rawInputListener;
         InputContextManager m_playerICM;
 
-        StateHolderCore m_sceneHolder;
+        StateHolderCore m_stateHolder;
 
 
     };

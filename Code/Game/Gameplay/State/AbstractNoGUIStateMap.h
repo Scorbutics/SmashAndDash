@@ -10,7 +10,7 @@ class AbstractNoGUIStateMap :
 
 public:
 	AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh);
-	AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldScene);
+	AbstractNoGUIStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldState);
 	AbstractNoGUIStateMap& operator=(const AbstractNoGUIStateMap&) = delete;
 	virtual ~AbstractNoGUIStateMap();
 
