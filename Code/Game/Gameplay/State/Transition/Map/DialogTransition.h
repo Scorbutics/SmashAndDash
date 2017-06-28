@@ -1,5 +1,5 @@
 #pragma once
-#include "Task/RepeatableTask.h"
+#include "Task/Task.h"
 #include "ECS/Basics/Input/InputComponent.h"
 #include "../../../PokemonGameEventDispatcher.h"
 
@@ -9,7 +9,8 @@ namespace ska {
     class CameraFixedSystem;
 }
 
-class DialogTransition : public ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>> {
+class DialogTransition : 
+	public ska::Task {
 public:
     DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message);
     virtual ~DialogTransition() = default;

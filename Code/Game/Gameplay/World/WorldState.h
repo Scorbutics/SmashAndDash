@@ -45,7 +45,7 @@ public:
 	const std::string& getFileName() const;
 
 protected:
-    virtual void afterLoad(ska::ScenePtr* scene) override;
+    virtual void afterLoad(ska::StatePtr* scene) override;
 	virtual bool beforeUnload() override;
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;

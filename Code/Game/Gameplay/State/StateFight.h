@@ -40,7 +40,7 @@ public:
 	virtual ~StateFight();
 
 protected:
-    virtual void beforeLoad(ska::ScenePtr* lastScene) override;
+    virtual void beforeLoad(ska::StatePtr* lastScene) override;
 	virtual bool beforeUnload() override;
 
 private:
@@ -65,6 +65,8 @@ private:
 
 	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
+	ska::InputComponent* m_ic;
+	ska::EntityId m_pokeball;
 
 };
 typedef std::unique_ptr<StateFight> SceneFightPtr;

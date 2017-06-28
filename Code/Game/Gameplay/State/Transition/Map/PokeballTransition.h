@@ -1,5 +1,5 @@
 #pragma once
-#include "Task/RepeatableTask.h"
+#include "Task/Task.h"
 #include "ECS/Basics/Input/InputComponent.h"
 #include "../../../PokemonGameEventDispatcher.h"
 
@@ -9,13 +9,15 @@ namespace ska {
     class CameraFixedSystem;
 }
 
-class PokeballTransition : public ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>> {
+class PokeballTransition : public ska::Task {
 public:
-    PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity);
+    PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder);
     virtual ~PokeballTransition() = default;
 
 private:
-    ska::EntityId m_pokeball;
+	bool run(ska::Task& t);
+
+    ska::EntityId& m_pokeball;
     int m_loadState;
 
 	const ska::EntityId& m_trainerId;

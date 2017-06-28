@@ -1,14 +1,10 @@
 #include "DialogTransition.h"
-#include "../../../Fight/BattleComponent.h"
 #include "../../../CustomEntityManager.h"
-#include "ECS/Basics/Graphic/DirectionalAnimationComponent.h"
 #include "ECS/Basics/Graphic/DialogComponent.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "ECS/Basics/Physic/HitboxComponent.h"
-#include "../../../PokeballComponent.h"
+#include "Task/Task.h"
 
 DialogTransition::DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message) :
-    ska::RepeatableTask<ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>([&, delay](ska::Task<bool, ska::TaskReceiver<>, ska::TaskSender<ska::InputComponent>>& t) {
+	ska::Task([&, delay](ska::Task& t) {
 		if (m_loadState == 0) {
 			m_loadState++;
 

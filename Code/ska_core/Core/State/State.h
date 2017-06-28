@@ -9,7 +9,10 @@ namespace ska {
 	class IGraphicSystem;
 	class DrawableContainer;
 
-	class State : public HasGraphic, public HasLogic {
+	class State : 
+		public HasGraphic, 
+		public HasLogic {
+
         template <class EM, class ED>
         friend class StateBase;
 
@@ -30,6 +33,6 @@ namespace ska {
         StateHolder& m_holder;
 	};
 
-	using ScenePtr = std::unique_ptr<State>;
+	using StatePtr = std::unique_ptr<State>;
 }
 

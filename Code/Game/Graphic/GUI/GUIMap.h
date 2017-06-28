@@ -1,11 +1,11 @@
 #pragma once
-#include "AbstractGameGUI.h"
 #include "Utils/Observer.h"
 #include "../../Gameplay/Data/SettingsChangeEvent.h"
 #include "WindowMouseCursor.h"
 #include "../../Gameplay/Data/EntityLoadEvent.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "GUIBattle.h"
+#include "GUI/GUI.h"
 
 class Settings;
 class WindowTeam;

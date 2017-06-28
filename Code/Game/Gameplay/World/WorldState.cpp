@@ -97,7 +97,7 @@ ska::World& WorldState::getWorld() {
 	return m_world;
 }
 
-void WorldState::afterLoad(ska::ScenePtr* lastScene) {
+void WorldState::afterLoad(ska::StatePtr* lastScene) {
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);

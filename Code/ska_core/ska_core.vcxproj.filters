@@ -89,7 +89,6 @@
     <ClInclude Include="Inputs\System\InputSystem.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
-    <ClInclude Include="Task\RepeatableTask.h" />
     <ClInclude Include="Task\Runnable.h" />
     <ClInclude Include="Task\Task.h" />
     <ClInclude Include="Task\TaskQueue.h" />

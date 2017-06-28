@@ -51,7 +51,7 @@ m_entityCollisionResponse(ged, m_entityManager) {
 	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 }
 
-void StateMap::afterLoad(ska::ScenePtr* lastScene) {
+void StateMap::afterLoad(ska::StatePtr* lastScene) {
 	AbstractStateMap::afterLoad(lastScene);
 	m_scriptSystem->clearNamedScriptedEntities();
 	auto entities = m_worldState.reinit(m_fileName, m_chipsetName);

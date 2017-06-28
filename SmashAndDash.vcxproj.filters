@@ -23,7 +23,6 @@
     <ClCompile Include="Code\Game\Gameplay\Weather.cpp" />
     <ClCompile Include="Code\Game\Gameplay\WGameCore.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldImpl.cpp" />
-    <ClCompile Include="Code\Game\Graphic\GUI\AbstractGameGUI.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\Bar.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\DialogMenu.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\DynamicWindowArea.cpp" />
@@ -79,7 +78,6 @@
     <ClCompile Include="Code\Game\Gameplay\State\Transition\Map\DialogTransition.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\Transition\Map\PokeballTransition.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldState.cpp" />
-    <ClCompile Include="Code\Game\Gameplay\State\AbstractNoGUIStateMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\AbstractStateMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\DebugAbstractStateMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\StateFight.cpp" />
@@ -127,7 +125,6 @@
     <ClInclude Include="Code\Game\Gameplay\Weather.h" />
     <ClInclude Include="Code\Game\Gameplay\WGameCore.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldImpl.h" />
-    <ClInclude Include="Code\Game\Graphic\GUI\AbstractGameGUI.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\Bar.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\DialogMenu.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\GUIBattle.h" />
@@ -187,7 +184,6 @@
     <ClInclude Include="Code\Game\Graphic\GUI\SkillsBar.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateToMapSwitcher.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldState.h" />
-    <ClInclude Include="Code\Game\Gameplay\State\AbstractNoGUIStateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\AbstractStateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\DebugAbstractStateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateFight.h" />

@@ -8,8 +8,8 @@
 #include "StateMap.h"
 
 AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
-AbstractNoGUIStateMap(em, ged, w, ril, sh),
-SceneChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
+StateBase(em, ged, w, ril, sh),
+StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(false),
 m_worldState(ws),
@@ -18,8 +18,8 @@ m_window(w) {
 }
 
 AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const bool sameMap) :
-AbstractNoGUIStateMap(em, ged, w, ril, oldScene),
-SceneChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
+StateBase(em, ged, w, ril, oldScene),
+StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(true),
 m_worldState(ws),
@@ -27,13 +27,13 @@ m_window(w) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
 }
 
-void AbstractStateMap::beforeLoad(ska::ScenePtr*) {
+void AbstractStateMap::beforeLoad(ska::StatePtr*) {
 	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
 	m_worldState.linkCamera(&getCamera());
 }
 
-void AbstractStateMap::afterLoad(ska::ScenePtr*){
+void AbstractStateMap::afterLoad(ska::StatePtr*){
 	/* If already loaded... */
 	if (m_worldState.loadedOnce()) {
 		/* Do not delete the player between 2 maps, just TP it */

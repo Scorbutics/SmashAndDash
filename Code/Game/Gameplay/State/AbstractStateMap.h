@@ -1,5 +1,5 @@
 #pragma once
-#include "AbstractNoGUIStateMap.h"
+#include "Core/State/StateBase.h"
 #include "Physic/System/WorldCollisionResponse.h"
 
 class WorldState;
@@ -11,10 +11,12 @@ namespace ska {
 	class CollisionSystem;
 }
 
-using SceneChangeObserver = ska::Observer<MapEvent>;
+using StateChangeObserver = ska::Observer<MapEvent>;
 
 class AbstractStateMap :
-	public AbstractNoGUIStateMap, public SceneChangeObserver {
+	public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher>, 
+	public StateChangeObserver {
+
 public:
 	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const bool sameMap);
 	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const bool sameMap);
@@ -30,8 +32,8 @@ private:
 	bool m_observersDefined;
 
 protected:
-	virtual void beforeLoad(ska::ScenePtr* lastScene) override;
-	virtual void afterLoad(ska::ScenePtr* lastScene) override;
+	virtual void beforeLoad(ska::StatePtr* lastScene) override;
+	virtual void afterLoad(ska::StatePtr* lastScene) override;
 
 	WorldState& m_worldState;
 	ska::Window& m_window;

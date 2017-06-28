@@ -18,6 +18,6 @@ namespace ska {
 		}
 
 	protected:
-		ScenePtr m_nextState;
+		StatePtr m_nextState;
 	};
 }
