@@ -38,7 +38,6 @@ namespace ska {
             return true;
         }
 
-    private:
         TPTR m_task1;
         TPTR m_task2;
         bool m_task1Done;

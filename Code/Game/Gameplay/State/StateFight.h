@@ -18,6 +18,7 @@
 #include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 #include "../../Graphic/GUI/GUIBattle.h"
+#include "../Fight/SkillFactory.h"
 
 class WorldState;
 class FightComponent;
@@ -44,16 +45,12 @@ protected:
 	virtual bool beforeUnload() override;
 
 private:
-	void createSkill(SkillDescriptor& sd, const std::string& skillPath) const;
-	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;
-
 	ska::InputContextManager m_iaICM;
 	PokemonDescriptor m_descriptor;
 
 	ska::CameraFixedSystem *m_cameraSystem;
 
 	const int m_opponentScriptId;
-	const unsigned int m_level;
 	const ska::IniReader m_opponent;
 	const ska::IniReader m_pokemon;
 	const ska::EntityId m_pokemonId;
@@ -67,6 +64,8 @@ private:
 	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
 	ska::InputComponent* m_ic;
 	ska::EntityId m_pokeball;
+
+	SkillFactory m_skillFactory;
 
 };
 typedef std::unique_ptr<StateFight> SceneFightPtr;

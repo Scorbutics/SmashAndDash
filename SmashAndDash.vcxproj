@@ -145,6 +145,7 @@
     <ClCompile Include="Code\Game\Gameplay\Data\Statistics.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\Fight.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\Skill.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\Fight\SkillFactory.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\System\BattleSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="Code\Game\Gameplay\Fight\Skill.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillComponent.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillDescriptor.h" />
+    <ClInclude Include="Code\Game\Gameplay\Fight\SkillFactory.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillsHolderComponent.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\StatisticsChangeEvent.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\System\BattleSystem.h" />
