@@ -43,15 +43,15 @@
 		<Unit filename="Core/BaseWindow.cpp" />
 		<Unit filename="Core/BaseWindow.h" />
 		<Unit filename="Core/GameCore.h" />
-		<Unit filename="Core/Scene/HasGraphic.h" />
-		<Unit filename="Core/Scene/HasLogic.h" />
-		<Unit filename="Core/Scene/Scene.cpp" />
-		<Unit filename="Core/Scene/Scene.h" />
-		<Unit filename="Core/Scene/SceneBase.h" />
-		<Unit filename="Core/Scene/SceneHolder.h" />
-		<Unit filename="Core/Scene/SceneHolderCore.cpp" />
-		<Unit filename="Core/Scene/SceneHolderCore.h" />
-		<Unit filename="Core/Scene/SceneType.h" />
+		<Unit filename="Core/State/HasGraphic.h" />
+		<Unit filename="Core/State/HasLogic.h" />
+		<Unit filename="Core/State/State.cpp" />
+		<Unit filename="Core/State/State.h" />
+		<Unit filename="Core/State/StateBase.h" />
+		<Unit filename="Core/State/StateHolder.h" />
+		<Unit filename="Core/State/StateHolderCore.cpp" />
+		<Unit filename="Core/State/StateHolderCore.h" />
+		<Unit filename="Core/State/StateType.h" />
 		<Unit filename="Core/Window.cpp" />
 		<Unit filename="Core/Window.h" />
 		<Unit filename="Data/BlockContainer.h" />
@@ -223,6 +223,7 @@
 		<Unit filename="Utils/TimeUtils.h" />
 		<Unit filename="Utils/TupleUtils.h" />
 		<Unit filename="Utils/VectorUtils.h" />
+		<Unit filename="Utils/ununique.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
