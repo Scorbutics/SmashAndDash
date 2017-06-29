@@ -7,6 +7,7 @@
 #include "StaticCounterGlobal.h"
 #include "ComponentSerializer.h"
 #include "../Utils/Demangle.h"
+#include "../Logging/Logger.h"
 
 namespace ska {
 	template <typename T>
@@ -17,7 +18,7 @@ namespace ska {
 	public:
 		ComponentHandler(): m_mask(StaticCounterGlobal::increment()) {
 			m_components.resize(SKA_ECS_MAX_ENTITIES);
-			std::clog << "Initializing component type " << getClassName() << " with mask " << m_mask << std::endl;
+			SKA_LOG_MESSAGE("Initializing component type ", getClassName(), " with mask ", m_mask);
 		}
 
 		unsigned int addEmpty(EntityId) override {

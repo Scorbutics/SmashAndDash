@@ -7,6 +7,8 @@
 #include "../Utils/Refreshable.h"
 #include "../Exceptions/IllegalStateException.h"
 
+#include "../Logging/Logger.h"
+
 namespace ska {
 
 	template <class Storage, class ... ComponentType>
@@ -16,17 +18,17 @@ namespace ska {
         virtual protected Refreshable {
 
 	public :
-		explicit System(EntityManager& entityManager) : Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+		explicit System(EntityManager& entityManager) : 
+			Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) {
 			m_entityManager.addObserver(*this);
-            //m_systemComponentMask.reset();
-            std::clog << "Initializing system with components : " << std::endl;
+            SKA_LOG_MESSAGE("Initializing system with components :\n");
 			
 			m_named = false;
 
 			/* Bracket initializer trick */
 			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
-			std::clog << "End system initialization" << std::endl << std::endl;
+			SKA_LOG_MESSAGE("End system initialization\n\n");;
 
 			(void)_;
 
@@ -36,7 +38,7 @@ namespace ska {
 
 		void update(unsigned int ellapsedTime) override {
 			if(!m_named) {
-				std::clog << "\tUPDATE System " << m_name << " with Mask \t" << m_systemComponentMask << std::endl;
+				SKA_LOG_MESSAGE("\tUPDATE System " + m_name + " with Mask \t", m_systemComponentMask);
 				m_named = true;
 			}
 
@@ -100,7 +102,7 @@ namespace ska {
 			if (mask >= m_systemComponentMask.size()) {
 				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
 			}
-			std::clog << "\t - " << m_entityManager.template getComponentName<T>() << " with mask " << mask << std::endl;
+			SKA_LOG_MESSAGE("\t - ", m_entityManager.template getComponentName<T>(), " with mask ", mask, "\n");
 
 			m_systemComponentMask[mask] = true;
 		}

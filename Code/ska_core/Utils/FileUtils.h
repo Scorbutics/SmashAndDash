@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "SkaConstants.h"
+#include <cstdio>
 
 namespace ska {
 
@@ -11,11 +11,17 @@ namespace ska {
 
 	public:
 		~FileUtilsTemplate() = default;
+
 		static std::string getCurrentDirectory() {
 			return T::getCurrentDirectory();
 		}
+
 		static void createDirectory(const std::string& directoryName) {
 			T::createDirectory(directoryName);
+		}
+
+		static void removeFile(const std::string& filename) {
+			remove(filename.c_str());
 		}
 	};
 

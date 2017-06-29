@@ -7,6 +7,7 @@
 
 #include "GameApp.h"
 #include "Exceptions/IllegalStateException.h"
+#include "Logging/Logger.h"
 
 
 ska::GameApp::GameApp() {
@@ -20,11 +21,11 @@ ska::GameApp::GameApp() {
 
 	/* Fix GDB Bug with named thread on windows (Mixer raises an exception when init) */
 	if (!SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1")) {
-		std::clog << "Attention : Windows nomme actuellement les threads créés par l'application alors que le programme tente de désactiver cette fonctionnalité." << std::endl;
+		SKA_LOG_MESSAGE("Attention : Windows nomme actuellement les threads créés par l'application alors que le programme tente de désactiver cette fonctionnalité.");
 	}
 
 	if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear")) {
-		std::clog << "Attention : Linear texture filtering impossible à activer." << std::endl;
+		SKA_LOG_MESSAGE("Attention : Linear texture filtering impossible à activer." );
 	}
 
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
@@ -32,11 +33,11 @@ ska::GameApp::GameApp() {
 	}
 
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) {
-		std::cerr << "Impossible d'initialiser SDL_mixer : " << Mix_GetError() << std::endl;
+		SKA_LOG_ERROR("Impossible d'initialiser SDL_mixer : ", Mix_GetError());
 	}
 
 	if (TTF_Init() == -1) {
-		std::cerr << "Erreur d'initialisation de TTF_Init : " << TTF_GetError() << std::endl;
+		SKA_LOG_ERROR("Erreur d'initialisation de TTF_Init : ", TTF_GetError());
 	}
 }
 

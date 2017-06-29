@@ -73,7 +73,7 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 
 
 	if(!sprite) {
-		std::clog << "Le brouillard est inexistant sur cette map" << std::endl;
+		SKA_LOG_MESSAGE("Le brouillard est inexistant sur cette map");
 		m_fog.hide(true);
 		return;
 	}

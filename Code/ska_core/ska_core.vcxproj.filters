@@ -132,6 +132,7 @@
     <ClInclude Include="Utils\ununique.h" />
     <ClInclude Include="Utils\VectorUtils.h" />
     <ClInclude Include="Exceptions\StateDiedException.h" />
+    <ClInclude Include="Logging\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

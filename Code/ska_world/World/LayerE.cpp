@@ -11,6 +11,7 @@
 #include "World.h"
 #include "Exceptions/CorruptedFileException.h"
 #include "Exceptions/NumberFormatException.h"
+#include "Logging/Logger.h"
 
 //Constructeur ouvrant un monde déjà créé
 ska::LayerE::LayerE(World& world) : m_world(world) {
@@ -51,7 +52,7 @@ std::string ska::LayerE::getAction(int ligne) const
 	if (ligne < m_nbrLignes && ligne >= 0) {
 		return m_action[ligne];
 	} else if (ligne != 0) {
-		std::cerr << "Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne " << ligne << " dans le fichier évènement " << m_nomFichier << std::endl;
+		SKA_LOG_ERROR("Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne ", ligne, " dans le fichier évènement ", m_nomFichier);
     }
     return "";
 
@@ -62,7 +63,7 @@ std::string ska::LayerE::getPath(int ligne) const
 	if (ligne < m_nbrLignes && ligne >= 0) {
 		return m_path[ligne];
 	} else if (ligne != 0) {
-		std::cerr << "Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne " << ligne << " dans le fichier évènement " << m_nomFichier << std::endl;
+		SKA_LOG_ERROR("Erreur (classe LayerE) : Buffer Overflow lors de la tentative d'accès à la ligne ", ligne, " dans le fichier évènement ", m_nomFichier);
     }
     return "";
 

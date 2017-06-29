@@ -180,18 +180,18 @@ void ska::ScriptAutoSystem::refresh(unsigned int ellapsedTime) {
 			if (StringUtils::isInt(entityScriptId, 10)) {
 				EntityId scriptEntity = StringUtils::strToInt(entityScriptId);
 				if (!m_entityManager.hasComponent<ScriptComponent>(scriptEntity)) {
-					std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " Script not found with id : " << entityScriptId << std::endl;
+					SKA_LOG_ERROR("ERREUR SCRIPT [", nextScript->extendedName, "] (l.", nextScript->currentLine, ") ", sde.what(), " Script not found with id : ", entityScriptId);
 				}
 				else {
 					killAndSave(m_entityManager.getComponent<ScriptComponent>(scriptEntity), m_saveGame);
 				}
 			} else {
-				std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << sde.what() << " This is not an integer id : " << entityScriptId << std::endl;
+				SKA_LOG_ERROR("ERREUR SCRIPT [", nextScript->extendedName, "] (l.", nextScript->currentLine, ") ", sde.what(), " This is not an integer id : ", entityScriptId);
 			}
 		}
 
 	} catch (ScriptException e) {
-		std::cerr << "ERREUR SCRIPT [" << nextScript->extendedName << "] (l." << nextScript->currentLine << ") " << e.what() << std::endl;
+		SKA_LOG_ERROR("ERREUR SCRIPT [", nextScript->extendedName, "] (l.", nextScript->currentLine, ") ", e.what());
 	}
 
 }

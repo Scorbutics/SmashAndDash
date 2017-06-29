@@ -115,6 +115,7 @@
     <ClInclude Include="Inputs\Readers\IniReader.h" />
     <ClInclude Include="Inputs\Readers\Readinifile.h" />
     <ClInclude Include="Inputs\System\InputSystem.h" />
+    <ClInclude Include="Logging\Logger.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Task\Runnable.h" />

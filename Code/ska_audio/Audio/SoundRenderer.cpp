@@ -2,6 +2,7 @@
 #include <SDL_mixer.h>
 #include "Music.h"
 #include "SoundRenderer.h"
+#include "Logging/Logger.h"
 
 ska::SoundRenderer::SoundRenderer(unsigned int channels) :
 	ska::Observer<SoundEvent>(bind(&SoundRenderer::handleSoundEvent, this, std::placeholders::_1)),
@@ -9,14 +10,14 @@ ska::SoundRenderer::SoundRenderer(unsigned int channels) :
 	m_currentPlayed(nullptr) {
 
 	if(Mix_AllocateChannels(channels) != static_cast<int>(channels)) {
-		std::cerr << "SoundManager error : " << Mix_GetError() << std::endl;
+		SKA_LOG_ERROR("SoundManager error : ", Mix_GetError());
 	}
 }
 
 void ska::SoundRenderer::play(Mix_Music* m_instance) {
 	Mix_PauseMusic();
 	if(Mix_PlayMusic(m_instance, -1) == -1) {
-		std::cerr << "SoundManager error : " << Mix_GetError() << std::endl;
+		SKA_LOG_ERROR("SoundManager error : ", Mix_GetError());
 		m_currentPlayed = nullptr;
 	} else {
 		m_currentPlayed = m_instance;

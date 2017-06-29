@@ -6,6 +6,7 @@
 #include "Font.h"
 #include "TextureData.h"
 #include "../Exceptions/FileException.h"
+#include "../Logging/Logger.h"
 
 ska::SDLTexture::SDLTexture() : m_r(0), m_g(0), m_b(0), m_texture(nullptr), m_w(0), m_h(0), m_alpha(0){
 }
@@ -28,7 +29,7 @@ void ska::SDLTexture::load(const SDLRenderer& renderer, const std::string& fileN
 	sprite.load(m_fileName);
 
 	if (sprite.getInstance() == nullptr) {
-		std::cerr << "Erreur lors du chargement de l'image \"" << m_fileName << "\" : " << SDL_GetError() << std::endl;
+		SKA_LOG_ERROR("Erreur lors du chargement de l'image \"", m_fileName, "\" : ", SDL_GetError());
 	} else {
 		SDL_SetColorKey(sprite.getInstance(), SDL_TRUE, SDL_MapRGBA(sprite.getFormat(), m_r, m_g, m_b, m_alpha));
 	}

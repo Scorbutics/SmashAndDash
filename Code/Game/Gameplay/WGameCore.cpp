@@ -38,13 +38,13 @@ ska::GameApp& ska::GameApp::get() {
 }
 
 int WGameCore::onTerminate(ska::TerminateProcessException& tpe) {
-	std::clog << tpe.what() << std::endl;
+	SKA_LOG_MESSAGE(tpe.what());
 	return 0;
 }
 
 int WGameCore::onException(ska::GenericException& e) {
 	/* Handles Generics Game exceptions */
-	std::cerr << e.what() << std::endl;
+	SKA_LOG_ERROR(e.what());
 	ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), nullptr);
 
 	return 0;

@@ -8,6 +8,7 @@
 #include "../Events/IWidgetEvent.h"
 #include "../Utils/WidgetMaskHelper.h"
 #include "Utils/TupleUtils.h"
+#include "Logging/Logger.h"
 
 #define SKA_GUI_MAX_WIDGET_EVENT_LISTENER 16
 
@@ -145,7 +146,7 @@ namespace ska {
 		void buildMask() {
 			unsigned int mask = WidgetMaskHelper::getMask<T>();
 			if (mask >= m_mask.size()) {
-				std::cerr << "Error" << std::endl;
+				SKA_LOG_ERROR("Error");
 				throw std::runtime_error("Too many listeners are used. Unable to continue.");
 			}
 			m_mask[mask] = true;

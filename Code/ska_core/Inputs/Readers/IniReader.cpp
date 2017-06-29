@@ -4,6 +4,7 @@
 #include <list>
 #include <algorithm>
 #include "IniReader.h"
+#include "../../Logging/Logger.h"
 
 void IniListSet(std::list<std::string>& lines, const std::string& path, const std::string& content);
 std::list<std::string>::iterator IniListSearchPath(std::list<std::string>& lines, const std::string& path);
@@ -47,8 +48,8 @@ bool ska::IniReader::load(const std::string& inifilename) {
 
 
 		//pour être valide, on oblige le fichier ".ini" à contenir les blocs entre crochets en DEBUT de ligne (caractère numéro 0, d'où posBlockStart = 0)
-		size_t posBlockStart = 0; 
-		size_t posBlockEnd = line.find(']');
+		std::size_t posBlockStart = 0; 
+		std::size_t posBlockEnd = line.find(']');
 		posVar = line.find('=');
 
 		if (line[posBlockStart] == '[' && posBlockEnd != std::string::npos) {
@@ -58,7 +59,7 @@ bool ska::IniReader::load(const std::string& inifilename) {
 			currentContent = line.substr(posVar+1, line.length());
 
 			if (currentBlock.empty()) {
-				std::cerr << "Erreur (classe IniReader) : le fichier .ini " + inifilename + " contient une variable \"" + currentVar + "\" sans bloc entre crochets correspondant." << std::endl;
+				SKA_LOG_ERROR("Erreur (classe IniReader) : le fichier .ini " + inifilename + " contient une variable \"" + currentVar + "\" sans bloc entre crochets correspondant.");
 			} else if (!currentContent.empty()) {
 				m_content[currentBlock + " " + currentVar] = currentContent;
 			}

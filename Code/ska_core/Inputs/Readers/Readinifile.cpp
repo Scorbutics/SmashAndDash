@@ -7,6 +7,7 @@
 #define MAXLENGTH 20
 
 #include "Readinifile.h"
+#include "../../Logging/Logger.h"
 
 
 bool isReadable(const std::string& fileName) {
@@ -15,42 +16,37 @@ bool isReadable(const std::string& fileName) {
 }
 
 int FindInFile(const std::string& stringFile, const std::string& s) {
-	std::string content, line;
+	std::string line;
 	std::stringstream streamContent;
-    size_t pos = 0;
+    std::size_t pos = 0;
 
 
 	std::ifstream f(stringFile.c_str(), std::ios::binary);
-    if(f.fail())
-    {
-		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+    if(f.fail()) {
+		SKA_LOG_ERROR("Erreur lors de l'ouverture du fichier " + stringFile);
         return -1;
     }
 
 
     streamContent << f.rdbuf();
-    content = streamContent.str();
-
+    auto content = streamContent.str();
     pos = content.find(s);
 
 	if (pos == std::string::npos)
         return -1; //pas trouvé
-    else
-        return (int)(pos + 1); //trouvé
-
-
+	
+	return static_cast<int>(pos + 1);
+	//trouvé
 }
 
 
 std::string GetINIValueFromFile(const std::string& stringFile, const std::string& s, const std::string& from) {
-	std::string line, data;
+	std::string line;
     int startPos = FindInFile(stringFile, from);
 	std::ifstream f(stringFile.c_str(), std::ios::binary);
 
-    std::size_t pos;
-
-    if(f.fail())
-		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+	if(f.fail())
+		SKA_LOG_ERROR("Erreur lors de l'ouverture du fichier " + stringFile);
 
     if(startPos != -1)
         f.seekg(startPos + from.length());
@@ -60,9 +56,9 @@ std::string GetINIValueFromFile(const std::string& stringFile, const std::string
     do
     {
         getline(f, line);
-        pos = line.find(s);
+        std::size_t pos = line.find(s);
 		if (pos != std::string::npos) {
-           data = line.substr(pos + s.length() + 1, line.length()-(pos+ s.length() + 1));
+           std::string data = line.substr(pos + s.length() + 1, line.length()-(pos+ s.length() + 1));
            if(data.size() != 0)
             return ska::StringUtils::rtrim(data);
            else
@@ -83,11 +79,10 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
 
 
     if(fr.fail())
-		std::cerr << "Erreur lors de l'ouverture du fichier " + stringFile;
+		SKA_LOG_ERROR("Erreur lors de l'ouverture du fichier " + stringFile);
 
-    if(startPos != -1)
-    {
-        startPos += (int)to.length();
+    if(startPos != -1) {
+        startPos += static_cast<int>(to.length());
         fr.seekg(startPos);
     }
     else
@@ -98,7 +93,7 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
         getline(fr, line);
         pos = line.find(s);
 		if (pos != std::string::npos)
-            pos = ((int)fr.tellg()) -2; // se place avant le \n (qui fait 2 caractères sous windows)
+            pos = static_cast<int>(fr.tellg()) -2; // se place avant le \n (qui fait 2 caractères sous windows)
 
 	} while (line.find("[") == std::string::npos && !fr.eof() && pos == std::string::npos);
     fr.close();
@@ -110,9 +105,8 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
         ReplaceStringInFile(stringFile, pos, value, GetINIValueFromFile(stringFile, s, to));
         return "STRINGFOUND";
     }
-    else
-        return "STRINGNOTFOUND";
-
+    
+    return "STRINGNOTFOUND";
 }
 
 
@@ -130,7 +124,7 @@ void ReplaceStringInFile(const std::string& fileName, int pos, const std::string
     streamContent << fr.rdbuf();
 
     if(fr.fail())
-		std::cerr << "Erreur lors de l'ouverture en lecture du fichier " + fileName;
+		SKA_LOG_ERROR("Erreur lors de l'ouverture en lecture du fichier " + fileName);
 
     buf = streamContent.str();
     buf = buf.substr(0, pos - oldValue.size());
@@ -160,11 +154,10 @@ void ResetFile(const std::string& fileName)
 
 int GetLengthOfFile(const std::string& fileName)
 {
-    int x;
 	std::ifstream fr(fileName.c_str(), std::ios::binary);
         // get length of file:
 	fr.seekg(0, std::ios::end);
-    x = (int)fr.tellg();
+	auto x = static_cast<int>(fr.tellg());
     return x;
 }
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "CommandLog.h"
+#include "Logging/Logger.h"
 
 ska::CommandLog::CommandLog(EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {
@@ -9,7 +10,7 @@ std::string ska::CommandLog::execute(ScriptComponent&, std::vector<std::string>&
 
 	std::string& message = args[0];
 
-	std::clog << message << std::endl;
+	SKA_LOG_MESSAGE(message);
 
 	return "";
 }

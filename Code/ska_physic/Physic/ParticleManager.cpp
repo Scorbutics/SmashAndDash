@@ -2,6 +2,7 @@
 #include "PhysicDefines.h"
 #include "GravityParticle.h"
 #include "Utils/NumberUtils.h"
+#include "Logging/Logger.h"
 
 ska::ParticleManager::ParticleManager()
 {
@@ -68,7 +69,7 @@ void ska::ParticleManager::remove(unsigned int index)
 		m_particles[index].reset();
         m_particles[index] = nullptr;
     } else {
-		std::cerr << "Erreur (classe ParticleManager) : impossible d'accéder à l'élément numéro " << index << " des sprites de particules" << std::endl;
+		SKA_LOG_MESSAGE("Erreur (classe ParticleManager) : impossible d'accéder à l'élément numéro ", index, " des sprites de particules");
 	}
 
 	if (m_particles.size() == 0)

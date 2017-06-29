@@ -3,6 +3,7 @@
 #include "../Exceptions/IllegalArgumentException.h"
 #include "Window.h"
 #include "../Draw/SDLRenderer.h"
+#include "../Logging/Logger.h"
 
 ska::Window::Window(const std::string& title, unsigned int w, unsigned int h) :
 	BaseWindow(w, h),
@@ -16,7 +17,7 @@ ska::Window::Window(const std::string& title, unsigned int w, unsigned int h) :
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 
 	if (m_screen == nullptr) {
-		std::cerr << "Erreur lors de la création de la fenêtre SDL :" << SDL_GetError() << std::endl;
+		SKA_LOG_ERROR("Erreur lors de la création de la fenêtre SDL :", SDL_GetError());
 		throw IllegalArgumentException("Bad instanciation : screen cannot be null");
 	}
 

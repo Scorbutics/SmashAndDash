@@ -93,7 +93,7 @@ void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 	std::string chipsetName = mapReader.get<std::string>("Chipset file");
 
 	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
-		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;
+		SKA_LOG_ERROR("Erreur : impossible de trouver le nom du chipset de la map de depart");
 	}
 
 	w.load(fichier, chipsetName);

@@ -5,6 +5,7 @@
 #include "Utils/StringUtils.h"
 #include "Utils/FileUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
+#include "Logging/Logger.h"
 
 SavegameManager::SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_ged(ged) {
@@ -21,7 +22,7 @@ int SavegameManager::getGameVariable(const unsigned int x) const {
 	if (x < m_game_variables.size()) {
 		return m_game_variables[x];
 	} else {
-		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
+		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro ", x);
 		return 0;
 	}
 }
@@ -30,7 +31,7 @@ bool SavegameManager::getGameSwitch(const unsigned int x) const {
 	if (x < m_game_switches.size()) {
 		return m_game_switches[x];
 	} else {
-		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
+		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro ", x);
 		return 0;
 	}
 }
@@ -39,7 +40,7 @@ void SavegameManager::setGameVariable(const unsigned int x, const int value) {
 	if (x < m_game_variables.size()) {
 		m_game_variables[x] = value;
 	} else {
-		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro " << x << std::endl;
+		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro ", x);
 	}
 
 }
@@ -48,7 +49,7 @@ void SavegameManager::setGameSwitch(const unsigned int x, const bool value) {
 	if (x < m_game_switches.size()) {
 		m_game_switches[x] = value;
 	} else {
-		std::cerr << "Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro " << x << std::endl;
+		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro ", x);
 	}
 
 }
@@ -82,7 +83,7 @@ void SavegameManager::savePokemonTeam() {
 
 	for (unsigned int i = 0; i < 6; i++) {
 		const std::string& id = ska::StringUtils::intToStr(i);
-		remove(("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini").c_str());
+		ska::FileUtils::removeFile(("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini").c_str());
 	}
 
 
@@ -195,7 +196,7 @@ void SavegameManager::loadTrainer() {
 	m_startMapChipsetName = mapReader.get<std::string>("Chipset file");
 
 	if(m_startMapChipsetName == "STRINGNOTFOUND")
-		std::cerr << "Erreur : impossible de trouver le nom du chipset de la map de depart" << std::endl;
+		SKA_LOG_ERROR("Erreur : impossible de trouver le nom du chipset de la map de depart");
 
 	/*hero = wScreen.getEntityFactory().getTrainer();
 	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
