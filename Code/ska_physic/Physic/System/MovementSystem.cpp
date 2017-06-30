@@ -15,24 +15,6 @@ void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
 		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
 
-		if (m_entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
-			auto& col = m_entityManager.getComponent<WorldCollisionComponent>(entityId);
-
-			/* World Collision */
-			if (col.xaxis) {
-				moveComponent.vx = 0;
-				moveComponent.ax = 0;
-				forceComponent.x = 0;
-			}
-
-			if (col.yaxis) {
-				moveComponent.vy = 0;
-				moveComponent.ay = 0;
-				forceComponent.y = 0;
-			}
-
-		}
-
 		//Position vector is the current position of the object (i.e. the last position + the last velocity with a delta time taken)
 		//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)
 		posComponent.x += static_cast<int>(moveComponent.vx);

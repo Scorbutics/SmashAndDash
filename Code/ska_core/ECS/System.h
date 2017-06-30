@@ -21,7 +21,7 @@ namespace ska {
 			Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) {
 			m_entityManager.addObserver(*this);
-            SKA_LOG_MESSAGE("Initializing system with components :\n");
+            SKA_LOG_MESSAGE("Initializing system with components :");
 
 			m_named = false;
 
@@ -101,7 +101,7 @@ namespace ska {
 			if (mask >= m_systemComponentMask.size()) {
 				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
 			}
-			SKA_LOG_MESSAGE("\t - ", m_entityManager.template getComponentName<T>(), " with mask ", mask, "\n");
+			SKA_LOG_MESSAGE("\t - ", m_entityManager.template getComponentName<T>(), " with mask ", mask);
 
 			m_systemComponentMask[mask] = true;
 		}

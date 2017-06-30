@@ -3,6 +3,7 @@
 #include "Utils/RectangleUtils.h"
 #include "ECS/Basics/Physic/CollisionComponent.h"
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "ECS/Basics/Physic/ForceComponent.h"
 
 ska::CollisionSystem::CollisionSystem(EntityManager& entityManager, CollisionProfile& cp, GameEventDispatcher& ged) :
 	System(entityManager),
@@ -54,6 +55,8 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 			}
 
 		}
+		
+		auto& movementComponent = m_entityManager.getComponent<MovementComponent>(entityId);
 
 		WorldCollisionComponent wcol;
 		auto collided = false;
@@ -77,6 +80,8 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 		if (collided) {
 			CollisionEvent ce(entityId, &wcol, nullptr, m_entityManager.getComponent<CollidableComponent>(entityId));
 			m_ged.ska::Observable<CollisionEvent>::notifyObservers(ce);
+			
+
 		}
 
 		if (entityCollided) {

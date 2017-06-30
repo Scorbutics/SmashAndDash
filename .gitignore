@@ -242,3 +242,5 @@ pip-log.txt
 /SmashAndDash.layout
 /ska_gui_test.exe
 /libska_core.a
+/Code/*.o
+*.layout
