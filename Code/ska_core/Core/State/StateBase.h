@@ -205,7 +205,7 @@ namespace ska {
 
 		template<class S, class ...Args>
 		S* addLogic(Args&& ... args) {
-			return addPriorizedLogic<S, Args...>(m_logics.size(), std::forward<Args>(args)...);
+			return addPriorizedLogic<S, Args...>(static_cast<int>(m_logics.size()), std::forward<Args>(args)...);
 		}
 
         template<class S, class ...Args>
@@ -224,7 +224,7 @@ namespace ska {
 
 		template<class S, class ...Args>
 		S* addGraphic(Args&& ... args) {
-			return addPriorizedGraphic<S, Args...>(m_graphics.size(), std::forward<Args>(args)...);
+			return addPriorizedGraphic<S, Args...>(static_cast<int>(m_graphics.size()), std::forward<Args>(args)...);
 		}
 
         template<class S, class ...Args>

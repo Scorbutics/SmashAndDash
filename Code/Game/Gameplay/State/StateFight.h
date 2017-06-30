@@ -19,6 +19,7 @@
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 #include "../../Graphic/GUI/GUIBattle.h"
 #include "../Fight/SkillFactory.h"
+#include "StateFightLoading.h"
 
 class WorldState;
 class FightComponent;
@@ -66,6 +67,7 @@ private:
 	ska::EntityId m_pokeball;
 
 	SkillFactory m_skillFactory;
+	StateFightLoading m_loader;
 
 };
 typedef std::unique_ptr<StateFight> SceneFightPtr;

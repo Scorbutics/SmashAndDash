@@ -30,7 +30,8 @@ m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
 m_ic(nullptr),
-m_skillFactory(ws, fc.level) {
+m_skillFactory(ws, fc.level),
+m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)) {
 
 	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
 	addLogic<PokeballSystem>();
@@ -74,41 +75,7 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 	auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, "Un " + m_descriptor.getName() + " sauvage apparaît !");
 	auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
 
-	auto finalTask = std::make_unique<ska::Task>([&](ska::Task& t) {
-		/* Ajout InputComponent au Pokémon,
-		   Ajout d'un IAMovementComponent au dresseur (m_player),
-		   Ajout d'un composant de combat au Pokémon
-		   Ajout d'une HP Bar */
-
-		m_entityManager.addComponent<BattleComponent>(m_pokemonId, BattleComponent());
-		m_entityManager.addComponent<BattleComponent>(m_opponentId, BattleComponent());
-
-		ska::IARandomMovementComponent iarmc;
-		iarmc.emitter = m_pokemonId;
-		iarmc.delay = 300;
-		iarmc.type = ska::RandomMovementType::CIRCLE_AROUND;
-
-		m_entityManager.addComponent<ska::IARandomMovementComponent>(m_trainerId, iarmc);
-		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, *m_ic);
-		m_ic = nullptr;
-
-		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
-		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_pokeball);
-		m_pokeball = 0;
-		ska::Rectangle hitbox{pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height)};
-
-		const auto targetBlock = m_worldState.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
-		pc.x = targetBlock.x - hc.xOffset;
-		pc.y = targetBlock.y - hc.yOffset;
-		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, pc);
-
-		BattleEvent be(BATTLE_START, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
-		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
-
-		m_sceneLoaded = true;
-		m_loadState = 0;
-		return false;
-	});
+	auto finalTask = m_loader.load();
 
 
 	queueTask(dialogTask);
@@ -118,34 +85,17 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 
 bool StateFight::beforeUnload() {
 	AbstractStateMap::beforeUnload();
-	//m_worldState.unload();
 
 	/* Triggers end fight cinematic to the next scene */
 	const auto delay = 3000U;
 
-	auto preTask = std::make_unique<ska::Task>([&](ska::Task&) {
-		m_ic = &m_entityManager.getComponent<ska::InputComponent>(m_pokemonId);
-        m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
-
-        BattleEvent be(BATTLE_END, *m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
-        m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
-
-        m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
-        m_entityManager.removeComponent<BattleComponent>(m_opponentId);
-
-        if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
-            auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
-            dac.type = ska::DirectionalAnimationType::MOVEMENT;
-            dac.looked = 0;
-        }
-        return false;
-    });
+	auto preTask = m_loader.unload();
 
     std::unique_ptr<ska::CompoundTask> firstTask;
     {
         auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
         auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, "Le " + m_descriptor.getName() + " a été battu.");
-        firstTask = std::make_unique<ska::meta::un_unique_type<decltype(firstTask)>::raw>(std::move(pokeballTask), std::move(dialogTask));
+        firstTask = std::make_unique<ska::CompoundTask>(std::move(pokeballTask), std::move(dialogTask));
     }
 
 	auto finalTask = std::make_unique<ska::Task>([&](ska::Task&) {
@@ -158,12 +108,11 @@ bool StateFight::beforeUnload() {
 		return false;
 	});
 
-	if (m_sceneLoaded) {
-		m_sceneLoaded = false;
-		queueTask(preTask);
-		queueTask(firstTask);
-		queueTask(finalTask);
-	}
+
+	queueTask(preTask);
+	queueTask(firstTask);
+	queueTask(finalTask);
+	
 	return false;
 }
 

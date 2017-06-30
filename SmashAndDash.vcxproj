@@ -155,6 +155,7 @@
     <ClCompile Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Pokeball.cpp" />
     <ClCompile Include="Code\Game\Gameplay\PrefabEntityManager.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\State\StateFightLoading.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\Transition\Map\DialogTransition.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\Transition\Map\PokeballTransition.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\AbstractStateMap.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="Code\Game\Gameplay\State\AbstractStateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\DebugAbstractStateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateFight.h" />
+    <ClInclude Include="Code\Game\Gameplay\State\StateFightLoading.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateGUIBattle.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateGUIMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateMap.h" />
