@@ -6,7 +6,9 @@ namespace ska {
 	class DrawableContainer;
 	class CameraSystem;
 
-	class IGraphicSystem : public ISystem, public CameraAware {
+	class IGraphicSystem :
+	    public ISystem,
+	    public CameraAware {
 	public:
 		IGraphicSystem() = default;
 		virtual ~IGraphicSystem() = default;

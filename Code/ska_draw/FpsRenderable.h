@@ -4,7 +4,8 @@
 #include "Graphic/Texture.h"
 
 namespace ska {
-	class FpsRenderable : public DrawableFixedPriority {
+	class FpsRenderable :
+	    public DrawableFixedPriority {
 	public:
 		FpsRenderable();
 		~FpsRenderable() = default;

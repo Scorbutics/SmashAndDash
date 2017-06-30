@@ -6,7 +6,6 @@
 #include "../Utils/Observer.h"
 #include "../Utils/Refreshable.h"
 #include "../Exceptions/IllegalStateException.h"
-
 #include "../Logging/Logger.h"
 
 namespace ska {
@@ -18,12 +17,12 @@ namespace ska {
         virtual protected Refreshable {
 
 	public :
-		explicit System(EntityManager& entityManager) : 
+		explicit System(EntityManager& entityManager) :
 			Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
 			m_entityManager(entityManager) {
 			m_entityManager.addObserver(*this);
             SKA_LOG_MESSAGE("Initializing system with components :\n");
-			
+
 			m_named = false;
 
 			/* Bracket initializer trick */

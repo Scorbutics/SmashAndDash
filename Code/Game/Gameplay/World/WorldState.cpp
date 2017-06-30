@@ -38,10 +38,11 @@ m_worldBGM(DEFAULT_BGM) {
 	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(ged, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
+	addLogic<ska::DirectionalAnimationSystem>();
 	addLogic<ska::InputSystem>(m_inputCManager);
 	addLogic<ska::MovementSystem>(ticked);
+
 	addLogic<ska::GravitySystem>();
-	addLogic<ska::DirectionalAnimationSystem>();
 	addLogic<ska::DeleterSystem>();
 
 	m_saveManager.loadGame(m_saveManager.getPathName());

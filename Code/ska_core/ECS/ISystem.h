@@ -1,6 +1,9 @@
 #pragma once
+#include "../Core/Priorized.h"
+
 namespace ska {
-	class ISystem {
+	class ISystem :
+	    public Priorized {
 	public:
 		ISystem() = default;
 		virtual ~ISystem() = default;

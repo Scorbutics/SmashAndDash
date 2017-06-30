@@ -145,6 +145,8 @@
 		<Unit filename="Code/Game/Gameplay/Fight/Skill.h" />
 		<Unit filename="Code/Game/Gameplay/Fight/SkillComponent.h" />
 		<Unit filename="Code/Game/Gameplay/Fight/SkillDescriptor.h" />
+		<Unit filename="Code/Game/Gameplay/Fight/SkillFactory.cpp" />
+		<Unit filename="Code/Game/Gameplay/Fight/SkillFactory.h" />
 		<Unit filename="Code/Game/Gameplay/Fight/SkillsHolderComponent.h" />
 		<Unit filename="Code/Game/Gameplay/Fight/StatisticsChangeEvent.h" />
 		<Unit filename="Code/Game/Gameplay/Fight/System/BattleSystem.cpp" />
@@ -170,8 +172,6 @@
 		<Unit filename="Code/Game/Gameplay/PokemonGameEventDispatcher.h" />
 		<Unit filename="Code/Game/Gameplay/PrefabEntityManager.cpp" />
 		<Unit filename="Code/Game/Gameplay/PrefabEntityManager.h" />
-		<Unit filename="Code/Game/Gameplay/State/AbstractNoGUIStateMap.cpp" />
-		<Unit filename="Code/Game/Gameplay/State/AbstractNoGUIStateMap.h" />
 		<Unit filename="Code/Game/Gameplay/State/AbstractStateMap.cpp" />
 		<Unit filename="Code/Game/Gameplay/State/AbstractStateMap.h" />
 		<Unit filename="Code/Game/Gameplay/State/DebugAbstractStateMap.cpp" />
@@ -200,8 +200,6 @@
 		<Unit filename="Code/Game/Gameplay/World/WorldImpl.h" />
 		<Unit filename="Code/Game/Gameplay/World/WorldState.cpp" />
 		<Unit filename="Code/Game/Gameplay/World/WorldState.h" />
-		<Unit filename="Code/Game/Graphic/GUI/AbstractGameGUI.cpp" />
-		<Unit filename="Code/Game/Graphic/GUI/AbstractGameGUI.h" />
 		<Unit filename="Code/Game/Graphic/GUI/Bar.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/Bar.h" />
 		<Unit filename="Code/Game/Graphic/GUI/DialogMenu.cpp" />

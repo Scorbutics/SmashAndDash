@@ -23,16 +23,19 @@ void ska::DirectionalAnimationSystem::refresh(unsigned int ellapsedTime) {
 		auto spritePos = texture.getOffsetBase();
 		const int spriteHeight = texture.getHeight();
 
-		if ((static_cast<int>(mov.vx) == 0 && static_cast<int>(mov.vy) == 0) ||
-			!(static_cast<int>(mov.ax) == 0 && static_cast<int>(mov.ay) == 0)) {
+		auto collided = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
+        auto xMove = collided ? 0 : ska::NumberUtils::round(mov.vx);
+		auto yMove = collided ? 0 : ska::NumberUtils::round(mov.vy);
+		if (static_cast<int>(xMove) == 0 &&
+			static_cast<int>(yMove) == 0 ) {
 			texture.stop(true);
 			texture.reset();
 		} else {
 			texture.stop(false);
 		}
 
-		auto xMove = ska::NumberUtils::round(mov.vx);
-		auto yMove = ska::NumberUtils::round(mov.vy);
+
+
 
 		//If it begins to be difficult to maintain, create two components with two different systems to handle each movement type
 		switch(dac.type) {

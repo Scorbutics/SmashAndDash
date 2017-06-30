@@ -1,24 +1,19 @@
 #pragma once
 #include "Drawable.h"
+#include "../Core/Priorized.h"
 
 namespace ska {
-	class DrawableFixedPriority : virtual public Drawable {
+	class DrawableFixedPriority :
+        virtual public Drawable,
+        public Priorized {
 	public:
-		DrawableFixedPriority() {
-			m_priority = 0;
-		}
-
-		virtual void setPriority(const int p) {
-			m_priority = p;
-		}
-
-		virtual ~DrawableFixedPriority() {}
+		DrawableFixedPriority() = default;
 
 		virtual int getPriority() const override {
-			return m_priority;
+            return Priorized::getPriority();
 		}
 
-	private:
-		int m_priority;
+		virtual ~DrawableFixedPriority() = default;
+
 	};
 }

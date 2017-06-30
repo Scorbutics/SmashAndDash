@@ -20,7 +20,6 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 AbstractStateMap_(em, ged, w, ril, oldScene, ws, true),
 m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
 m_opponentScriptId(fc.opponentScriptId),
-m_skillFactory(ws, fc.level),
 m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 m_pokemonId(fc.fighterPokemon),
@@ -30,7 +29,8 @@ m_sceneLoaded(false),
 m_loadState(0),
 m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
 m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
-m_ic(nullptr) {
+m_ic(nullptr),
+m_skillFactory(ws, fc.level) {
 
 	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
 	addLogic<PokeballSystem>();

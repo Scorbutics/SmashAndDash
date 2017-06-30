@@ -4,6 +4,8 @@
 #include "StateHolder.h"
 #include "../../Draw/IGraphicSystem.h"
 #include "../../ECS/ISystem.h"
+#include "../../Core/Priorized.h"
+#include <algorithm>
 
 namespace ska {
 	class Window;
@@ -172,24 +174,7 @@ namespace ska {
 
 		virtual ~StateBase() = default;
 
-
-	private:
-        bool waitTransitions() const {
-			return !m_holder.hasRunningTask();
-		}
-
-		template<class SC>
-		void transmitLinkedSubstates(SC& scene) {
-			m_linkedSubStates = scene.m_linkedSubStates;
-		}
-
-		std::vector<std::unique_ptr<ISystem>> m_logics;
-		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
-
-		std::vector<std::unique_ptr<State>> m_subStates;
-		std::unordered_set<State*> m_linkedSubStates;
-
-	protected:
+    protected:
 		virtual void beforeLoad(std::unique_ptr<State>* lastScene) {
 		}
 
@@ -220,9 +205,15 @@ namespace ska {
 
 		template<class S, class ...Args>
 		S* addLogic(Args&& ... args) {
+			return addPriorizedLogic<S, Args...>(m_logics.size(), std::forward<Args>(args)...);
+		}
+
+        template<class S, class ...Args>
+		S* addPriorizedLogic(int priority, Args&& ... args) {
 			auto s = std::make_unique<S>(m_entityManager, std::forward<Args>(args)...);
 			S* result = static_cast<S*>(s.get());
 			m_logics.push_back(std::move(s));
+			std::sort(m_logics.begin(), m_logics.end(), Priorized::comparatorInf<std::unique_ptr<ISystem>>);
 			return result;
 		}
 
@@ -233,9 +224,15 @@ namespace ska {
 
 		template<class S, class ...Args>
 		S* addGraphic(Args&& ... args) {
+			return addPriorizedGraphic<S, Args...>(m_graphics.size(), std::forward<Args>(args)...);
+		}
+
+        template<class S, class ...Args>
+		S* addPriorizedGraphic(int priority, Args&& ... args) {
 			auto s = std::make_unique<S>(m_entityManager, std::forward<Args>(args)...);
 			S* result = static_cast<S*>(s.get());
 			m_graphics.push_back(std::move(s));
+			std::sort( m_graphics.begin(), m_graphics.end(), Priorized::comparatorInf<std::unique_ptr<IGraphicSystem>>);
 			return result;
 		}
 
@@ -245,6 +242,23 @@ namespace ska {
 		InputContextManager& m_inputCManager;
 
     private:
+        bool waitTransitions() const {
+			return !m_holder.hasRunningTask();
+		}
+
+		template<class SC>
+		void transmitLinkedSubstates(SC& scene) {
+			m_linkedSubStates = scene.m_linkedSubStates;
+		}
+
+		std::vector<std::unique_ptr<ISystem>> m_logics;
+		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
+
+		std::vector<std::unique_ptr<State>> m_subStates;
+		std::unordered_set<State*> m_linkedSubStates;
         int m_state;
+
+
+
 	};
 }
