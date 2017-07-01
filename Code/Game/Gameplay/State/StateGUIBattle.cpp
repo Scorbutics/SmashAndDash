@@ -1,9 +1,9 @@
 #include "StateGUIBattle.h"
 #include "Draw/DrawableContainer.h"
 
-StateGUIBattle::StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh) :
-    StateBase(em, ged, w, ril, sh),
-    m_gui(w, ril, ged) {
+StateGUIBattle::StateGUIBattle(StateData& data, ska::StateHolder& sh) :
+    StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
+    m_gui(data.m_window, data.m_inputCManager, data.m_eventDispatcher) {
 
 }
 void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {

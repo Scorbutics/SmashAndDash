@@ -26,7 +26,7 @@ class WorldState : public ska::StateBase<CustomEntityManager, PokemonGameEventDi
 	public ska::CameraAware {
 
 public:
-	WorldState(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings);
+	WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings);
 	WorldState(const WorldState&) = delete;
 	WorldState& operator=(const WorldState&) = delete;
 
@@ -69,5 +69,8 @@ private:
 
 	ska::GraphicSystem* m_graphicSystem;
 	ska::ShadowSystem* m_shadowSystem;
+	
+	PokemonGameEventDispatcher& m_eventDispatcher;
+	CustomEntityManager& m_entityManager;
 };
 

@@ -10,15 +10,14 @@
 #include "Transition/Map/PokeballTransition.h"
 #include "Transition/Map/DialogTransition.h"
 
-#include "../PokemonGameEventDispatcher.h"
 #include "AI/IARandomMovementComponent.h"
-#include "Utils/ununique.h"
 #include "../Fight/System/SkillRefreshSystem.h"
 #include "AI/System/IARandomMovementSystem.h"
+#include "../Fight/System/BattleSystem.h"
 
-StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
-AbstractStateMap_(em, ged, w, ril, oldScene, ws, true),
-m_iaICM(ska::InputContextManager::instantiateEmpty(ril)),
+StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
+AbstractStateMap_(data, oldScene, ws, true),
+m_iaICM(ska::InputContextManager::instantiateEmpty(data.m_inputCManager)),
 m_opponentScriptId(fc.opponentScriptId),
 m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
@@ -27,17 +26,17 @@ m_trainerId(fc.trainer),
 m_opponentId(fc.fighterOpponent),
 m_sceneLoaded(false),
 m_loadState(0),
-m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
+m_worldEntityCollisionResponse(ws.getWorld(), data.m_eventDispatcher, m_entityManager),
+m_skillEntityCollisionResponse(*m_collisionSystem, data.m_eventDispatcher, m_entityManager),
 m_ic(nullptr),
 m_skillFactory(ws, fc.level),
 m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)) {
 
 	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
 	addLogic<PokeballSystem>();
-	addLogic<BattleSystem>(m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
+	addLogic<BattleSystem>(data.m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
 	addLogic<SkillRefreshSystem>();
-	addLogic<StatisticsSystem>(w, ril, ws, ged);
+	addLogic<StatisticsSystem>(data.m_window, data.m_inputCManager, ws, data.m_eventDispatcher);
 	addLogic<ska::IARandomMovementSystem>();
 
 	addSubState<StateGUIBattle>();

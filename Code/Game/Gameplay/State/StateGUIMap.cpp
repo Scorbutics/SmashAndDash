@@ -1,9 +1,9 @@
 #include "StateGUIMap.h"
 #include "Draw/DrawableContainer.h"
 
-StateGUIMap::StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh) :
-    StateBase(em, ged, w, ril, sh),
-    m_gui(w, ril, ged) {
+StateGUIMap::StateGUIMap(StateData& data, ska::StateHolder& sh) :
+    StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
+    m_gui(data.m_window, data.m_inputCManager, data.m_eventDispatcher) {
 
 }
 void StateGUIMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {

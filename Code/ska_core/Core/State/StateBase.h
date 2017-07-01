@@ -6,6 +6,7 @@
 #include "../../ECS/ISystem.h"
 #include "../../Core/Priorized.h"
 #include <algorithm>
+#include "StateData.h"
 
 namespace ska {
 	class Window;
@@ -13,23 +14,18 @@ namespace ska {
 
 	template <class EM, class ED>
 	class StateBase : public State {
+
 	public:
 		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, StateHolder& sh) :
 			State(sh),
-			m_entityManager(em),
-			m_eventDispatcher(ed),
-			m_window(w),
-			m_inputCManager(ril),
+			m_data(em, ed, w, ril),
 			m_state(0) {
 
 		}
 
 		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, State& oldState) :
 			State(oldState),
-			m_entityManager(em),
-			m_eventDispatcher(ed),
-			m_window(w),
-			m_inputCManager(ril),
+			m_data(em, ed, w, ril),
 			m_state(0) {
 
 		}
@@ -154,8 +150,8 @@ namespace ska {
 		}
 
 		template<class SC, class ... Args>
-		SC* makeNextScene(Args&&... args) {
-			auto nState = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
+		SC* makeNextState(Args&&... args) {
+			auto nState = std::make_unique<SC>(m_data, *this, std::forward<Args>(args)...);
 			auto result = nState.get();
 			m_holder.nextState(std::move(nState));
 			m_holder.update();
@@ -164,7 +160,7 @@ namespace ska {
 
 		template<class SC1, class SC, class ... Args>
 		SC* makeNextStateAndTransmitLinkedSubstates(SC1& oldScene, Args&&... args) {
-			auto nState = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, *this, std::forward<Args>(args)...);
+			auto nState = std::make_unique<SC>(m_data, *this, std::forward<Args>(args)...);
 			auto result = nState.get();
 			m_holder.nextState(std::move(nState));
 			result->transmitLinkedSubstates(oldScene);
@@ -197,7 +193,7 @@ namespace ska {
 
 		template<class SC, class ...Args>
 		SC* addSubState(Args&& ... args){
-			auto s = std::make_unique<SC>(m_entityManager, m_eventDispatcher, m_window, m_inputCManager, m_holder, std::forward<Args>(args)...);
+			auto s = std::make_unique<SC>(m_data, m_holder, std::forward<Args>(args)...);
 			SC* result = static_cast<SC*>(s.get());
 			m_subStates.push_back(std::move(s));
 			return result;
@@ -210,7 +206,7 @@ namespace ska {
 
         template<class S, class ...Args>
 		S* addPriorizedLogic(int priority, Args&& ... args) {
-			auto s = std::make_unique<S>(m_entityManager, std::forward<Args>(args)...);
+			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
 			S* result = static_cast<S*>(s.get());
 			m_logics.push_back(std::move(s));
 			std::sort(m_logics.begin(), m_logics.end(), Priorized::comparatorInf<std::unique_ptr<ISystem>>);
@@ -219,7 +215,7 @@ namespace ska {
 
 		template<class S, class ...Args>
 		std::unique_ptr<S> createLogic(Args&&... args){
-			return std::make_unique<S>(m_entityManager, std::forward<Args>(args)...);
+			return std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
 		}
 
 		template<class S, class ...Args>
@@ -229,17 +225,15 @@ namespace ska {
 
         template<class S, class ...Args>
 		S* addPriorizedGraphic(int priority, Args&& ... args) {
-			auto s = std::make_unique<S>(m_entityManager, std::forward<Args>(args)...);
+			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
 			S* result = static_cast<S*>(s.get());
 			m_graphics.push_back(std::move(s));
 			std::sort( m_graphics.begin(), m_graphics.end(), Priorized::comparatorInf<std::unique_ptr<IGraphicSystem>>);
 			return result;
 		}
 
-		EM& m_entityManager;
-		ED& m_eventDispatcher;
-		Window& m_window;
-		InputContextManager& m_inputCManager;
+		using StateData = StateData<EM, ED>;
+		StateData m_data;
 
     private:
         bool waitTransitions() const {

@@ -8,7 +8,7 @@ class Settings;
 
 class StateGUIBattle : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
 public:
-    StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh);
+    StateGUIBattle(StateData& data, ska::StateHolder& sh);
     //void bindGUI(Settings& s);
     virtual ~StateGUIBattle() = default;
 

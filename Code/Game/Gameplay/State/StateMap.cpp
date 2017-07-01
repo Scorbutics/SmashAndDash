@@ -6,48 +6,42 @@
 #include "../Fight/System/FightStartSystem.h"
 #include "Graphic/System/CameraFollowSystem.h"
 
-
 #include "Core/Window.h"
 #include "../World/WorldState.h"
+#include "../World/WorldStateChanger.h"
 #include "StateMap.h"
-#include "../CustomEntityManager.h"
-#include "StateFight.h"
 
 #define MOB_SPAWNING_DELAY 5000
 
-StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-	AbstractStateMap_(em, ged, w, ril, sh, ws, sameMap),
-	m_fileName(fileName),
-	m_chipsetName(chipsetName),
-	m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
-	m_entityCollisionResponse(ged, m_entityManager) {
-		
-	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
-	addLogic<ska::IARandomMovementSystem>();
-	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem.get());
-	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(*m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld());
-	addLogic<MobSpawningSystem>(ws, MOB_SPAWNING_DELAY);
-	addLogic<FightStartSystem>(w, ged, ws, ril, ws.getPlayer());
-	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
+StateMap::StateMap(StateData& data, ska::StateHolder& sh, WorldStateChanger& wsc) :
+	AbstractStateMap_(data, sh, wsc.worldState, wsc.sameMap),
+	m_fileName(wsc.worldFileName),
+	m_chipsetName(wsc.worldChipsetName),
+	m_worldCollisionResponse(wsc.worldState.getWorld(), data.m_eventDispatcher, m_entityManager),
+	m_entityCollisionResponse(data.m_eventDispatcher, m_entityManager) {
+	init(data, wsc.worldState);
 }
 
 ska::CameraSystem& StateMap::getCamera() {
 	return *m_cameraSystem;
 }
 
-StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap) :
-AbstractStateMap_(em, ged, w, ril, oldScene, ws, sameMap),
-m_fileName(fileName),
-m_chipsetName(chipsetName),
-m_worldCollisionResponse(ws.getWorld(), ged, m_entityManager),
-m_entityCollisionResponse(ged, m_entityManager) {
+StateMap::StateMap(StateData& data, State& oldScene, WorldStateChanger& wsc) :
+AbstractStateMap_(data, oldScene, wsc.worldState, wsc.sameMap),
+m_fileName(wsc.worldFileName),
+m_chipsetName(wsc.worldChipsetName),
+m_worldCollisionResponse(wsc.worldState.getWorld(), data.m_eventDispatcher, m_entityManager),
+m_entityCollisionResponse(data.m_eventDispatcher, m_entityManager) {
+	init(data, wsc.worldState);
+}
 
-	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), ged);
+void StateMap::init(StateData& data, WorldState& ws) {
+	m_scriptAutoSystem = createLogic<ScriptCommandsSystem>(ws.getWorld(), ws.getSaveGame(), data.m_eventDispatcher);
 	addLogic<ska::IARandomMovementSystem>();
 	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem.get());
-	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(*m_scriptAutoSystem, ril, ws.getWorld(), ws.getWorld());
+	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(*m_scriptAutoSystem, data.m_inputCManager, ws.getWorld(), ws.getWorld());
 	addLogic<MobSpawningSystem>(ws, MOB_SPAWNING_DELAY);
-	addLogic<FightStartSystem>(w, ged, ws, ril, ws.getPlayer());
+	addLogic<FightStartSystem>(data.m_window, data.m_eventDispatcher, ws, data.m_inputCManager, ws.getPlayer());
 	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_window.getWidth(), m_window.getHeight());
 }
 

@@ -7,7 +7,9 @@ namespace ska {
 
 class SkillsHolderComponent;
 
-class CustomEntityManager : public ska::PrefabEntityManager {
+class CustomEntityManager : 
+	public ska::PrefabEntityManager {
+
 public:
 	CustomEntityManager();
 	ska::EntityId createSkill(const SkillsHolderComponent& shc, unsigned int index);

@@ -24,22 +24,24 @@
 #include "Draw/DrawableContainer.h"
 #include "Core/Window.h"
 
-WorldState::WorldState(CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
-StateBase(entityManager, ged, w, ril, sh),
-m_screenW(w.getWidth()),
-m_screenH(w.getHeight()),
+WorldState::WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
+StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
+m_screenW(data.m_window.getWidth()),
+m_screenH(data.m_window.getHeight()),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
-m_saveManager(ged, "save1"),
+m_saveManager(data.m_eventDispatcher, "save1"),
 m_cameraSystem(nullptr),
-m_world(ged, TAILLEBLOC, w.getWidth(), w.getHeight()),
-m_worldBGM(DEFAULT_BGM) {
+m_world(data.m_eventDispatcher, TAILLEBLOC, data.m_window.getWidth(), data.m_window.getHeight()),
+m_worldBGM(DEFAULT_BGM),
+m_eventDispatcher(data.m_eventDispatcher),
+m_entityManager(data.m_entityManager) {
 
-	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(ged, nullptr);
+	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(data.m_eventDispatcher, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
 	addLogic<ska::DirectionalAnimationSystem>();
-	addLogic<ska::InputSystem>(m_inputCManager);
+	addLogic<ska::InputSystem>(data.m_inputCManager);
 	addLogic<ska::MovementSystem>(ticked);
 
 	addLogic<ska::GravitySystem>();
@@ -112,6 +114,7 @@ bool WorldState::beforeUnload() {
 	return false;
 }
 
+//TODO SRP
 int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
 
 	if (nbrSpawns == 0) {
@@ -199,6 +202,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	return successfulSpawns;
 }
 
+//TODO SRP
 std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::string& fileName, const std::string& chipsetName) {
 
 	m_world.load(fileName, chipsetName);

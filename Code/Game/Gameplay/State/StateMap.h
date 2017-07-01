@@ -10,6 +10,7 @@
 #include "AbstractStateMap.h"
 #endif
 
+struct WorldStateChanger;
 class WorldState;
 
 namespace ska {
@@ -23,14 +24,14 @@ class StateMap :
 	public AbstractStateMap_
 {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
-	//StateMap(ska::Window& w, ska::StateHolder& sh, PokemonGameEventDispatcher& ged, ska::InputContextManager& ril, WorldState& ws, const bool sameMap);
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const std::string fileName, const std::string chipsetName, const bool sameMap);
+	StateMap(StateData& data, ska::StateHolder& sh, WorldStateChanger& wsc);
+	StateMap(StateData& data, State& oldScene, WorldStateChanger& wsc);
 	virtual void afterLoad(ska::StatePtr* lastScene) override final;
 	virtual ska::CameraSystem& getCamera() override;
 	virtual ~StateMap();
 
 private:
+	void init(StateData& data, WorldState& ws);
 
 	const std::string m_fileName;
 	const std::string m_chipsetName;

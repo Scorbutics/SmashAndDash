@@ -24,6 +24,7 @@
     <ClInclude Include="Core\State\HasGraphic.h" />
     <ClInclude Include="Core\State\HasLogic.h" />
     <ClInclude Include="Core\State\StateBase.h" />
+    <ClInclude Include="Core\State\StateData.h" />
     <ClInclude Include="Core\State\StateHolder.h" />
     <ClInclude Include="Core\State\StateHolderCore.h" />
     <ClInclude Include="Core\State\StateType.h" />

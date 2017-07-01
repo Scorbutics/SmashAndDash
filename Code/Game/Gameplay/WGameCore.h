@@ -18,6 +18,7 @@ class WGameCore :
 public:
 	
 	WGameCore();
+	void init();
 
 	virtual int onTerminate(ska::TerminateProcessException& te) override;
 	virtual int onException(ska::GenericException& ge) override;

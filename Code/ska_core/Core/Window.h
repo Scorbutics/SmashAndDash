@@ -16,7 +16,7 @@ namespace ska {
 		void display() const;
 
 	private:
-		const std::string& m_wName;
+		const std::string m_wName;
 
 		SDL_Window * m_screen;
 		SDLRenderer m_renderer;

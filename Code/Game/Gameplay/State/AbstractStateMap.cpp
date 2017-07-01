@@ -7,24 +7,28 @@
 #include "AbstractStateMap.h"
 #include "StateMap.h"
 
-AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
-StateBase(em, ged, w, ril, sh),
+AbstractStateMap::AbstractStateMap(StateData& data, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
+StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
 StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(false),
+m_eventDispatcher(data.m_eventDispatcher),
+m_entityManager(data.m_entityManager),
 m_worldState(ws),
-m_window(w) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
+m_window(data.m_window) {
+	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
-AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, State& oldScene, WorldState& ws, const bool sameMap) :
-StateBase(em, ged, w, ril, oldScene),
+AbstractStateMap::AbstractStateMap(StateData& data, State& oldScene, WorldState& ws, const bool sameMap) :
+StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, oldScene),
 StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(true),
+m_eventDispatcher(data.m_eventDispatcher),
+m_entityManager(data.m_entityManager),
 m_worldState(ws),
-m_window(w) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), ged);
+m_window(data.m_window) {
+	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
 void AbstractStateMap::beforeLoad(ska::StatePtr*) {

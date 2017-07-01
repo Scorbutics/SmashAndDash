@@ -6,9 +6,10 @@
 
 class Settings;
 
-class StateGUIMap : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
+class StateGUIMap : 
+	public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
 public:
-    StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::StateHolder& sh);
+    StateGUIMap(StateData& data, ska::StateHolder& sh);
     void bindGUI(Settings& s);
     virtual ~StateGUIMap() = default;
 

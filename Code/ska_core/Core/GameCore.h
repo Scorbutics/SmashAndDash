@@ -11,6 +11,7 @@
 #include "Window.h"
 #include "GameApp.h"
 #include "../../Game/Utils/IDs.h"
+#include "State/StateData.h"
 
 namespace ska {
     template <class EM, class ED, class D, class S>
@@ -45,7 +46,8 @@ namespace ska {
 
 		template<class SC, class ... Args>
 		std::unique_ptr<SC> makeState(Args&&... args) {
-			return std::make_unique<SC>(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM, m_stateHolder, std::forward<Args>(args)...);
+			StateData<EM, ED> data(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM);
+			return std::make_unique<SC>(data, m_stateHolder, std::forward<Args>(args)...);
         }
 
 		template<class SC, class ... Args>

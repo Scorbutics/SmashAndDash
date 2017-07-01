@@ -4,26 +4,13 @@
 #include "State/StateMap.h"
 #include "MessageType.h"
 #include "MessagePopup.h"
+#include "World/WorldStateChanger.h"
 
 #define SKA_DEBUG
 
 WGameCore::WGameCore():
 	m_settings(m_eventDispatcher, "gamesettings.ini") {
 
-	/* Configure inputs types */
-	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
-	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
-
-	m_guiMapScene = makeState<StateGUIMap>();
-    m_guiMapScene->bindGUI(m_settings);
-	m_settings.load();
-
-	/* Let's start on the map scene */
-	m_worldScene = makeState<WorldState>(*this, m_settings);
-	m_worldScene->linkSubState(*m_guiMapScene.get());
-	navigateToState<StateMap>(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false).linkSubState(*m_worldScene.get());
-
-	//m_inv.load("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "inventory_square_highlight.png");
 }
 
 float WGameCore::ticksWanted() const {
@@ -34,7 +21,25 @@ float WGameCore::ticksWanted() const {
 
 ska::GameApp& ska::GameApp::get() {
 	static WGameCore wgc;
+	wgc.init();
 	return wgc;
+}
+
+void WGameCore::init() {
+	/* Configure inputs types */
+	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
+	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
+
+	m_guiMapScene = makeState<StateGUIMap>();
+	m_guiMapScene->bindGUI(m_settings);
+	m_settings.load();
+
+	/* Let's start on the map state */
+	m_worldScene = makeState<WorldState>(*this, m_settings);
+	m_worldScene->linkSubState(*m_guiMapScene.get());
+
+	WorldStateChanger wsc(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false);
+	navigateToState<StateMap>(wsc).linkSubState(*m_worldScene.get());
 }
 
 int WGameCore::onTerminate(ska::TerminateProcessException& tpe) {

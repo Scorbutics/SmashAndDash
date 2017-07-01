@@ -13,7 +13,6 @@
 #include "Inputs/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
-#include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
@@ -34,7 +33,7 @@ namespace ska {
 class StateFight :
 	public AbstractStateMap_ {
 public:
-	StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::Window& w, ska::InputContextManager& ril, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
+	StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
 	StateFight(const StateFight&) = delete;
 	StateFight& operator=(const StateFight&) = delete;
 

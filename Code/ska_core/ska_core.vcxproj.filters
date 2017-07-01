@@ -133,6 +133,7 @@
     <ClInclude Include="Utils\VectorUtils.h" />
     <ClInclude Include="Exceptions\StateDiedException.h" />
     <ClInclude Include="Logging\Logger.h" />
+    <ClInclude Include="Core\State\StateData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

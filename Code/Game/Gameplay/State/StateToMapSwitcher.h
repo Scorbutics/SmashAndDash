@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/State/StateBase.h"
 #include "../World/WorldState.h"
+#include "../World/WorldStateChanger.h"
 
 class StateMap;
 
@@ -15,7 +16,8 @@ public:
 
 	template<class EM, class ED>
 	void switchTo(ska::StateBase<EM, ED>& lastScene) const {
-		lastScene.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateMap>(lastScene, m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName);
+		WorldStateChanger wsc(m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName);
+		lastScene.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateMap>(lastScene, wsc);
 	}
 
 protected:

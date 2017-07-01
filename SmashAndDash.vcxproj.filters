@@ -86,6 +86,7 @@
     <ClCompile Include="Code\Game\Gameplay\State\StateMap.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\SkillFactory.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\StateFightLoading.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\World\WorldStateChanger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -194,10 +195,10 @@
     <ClInclude Include="Code\Game\Gameplay\State\StateMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateToBattleSwitcher.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateToMapSwitcher.h" />
-    <ClInclude Include="Code\Game\Gameplay\Scene\StateToMapSwitcher.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\Transition\Map\DialogTransition.h" />
     <ClInclude Include="Code\Game\Gameplay\Scene\Transition\Map\PokeballTransition.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillFactory.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateFightLoading.h" />
+    <ClInclude Include="Code\Game\Gameplay\World\WorldStateChanger.h" />
   </ItemGroup>
 </Project>
