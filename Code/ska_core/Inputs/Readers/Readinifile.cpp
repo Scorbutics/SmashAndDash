@@ -111,7 +111,7 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
 
 
 
-void ReplaceStringInFile(const std::string& fileName, int pos, const std::string& value, const std::string& oldValue) {
+void ReplaceStringInFile(const std::string& fileName, std::size_t pos, const std::string& value, const std::string& oldValue) {
     ResetFile(fileName+"tmp");
 
     int fileLength = GetLengthOfFile(fileName);

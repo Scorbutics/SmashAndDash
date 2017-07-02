@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 #include "Object.h"
+#include "Draw/Color.h"
 
 
 //Inventaire contenu dans la fenetre "pokebag"
@@ -43,7 +44,7 @@ class Inventory
 		std::list<unsigned int> m_amount;
 		std::list<ska::Texture> m_amountSurface;
 		static unsigned int m_fontSize;
-		SDL_Color m_color;
+		ska::Color m_color;
 		ska::Rectangle m_rectPos; //Position et dimensions de l'inventaire
 		ska::Texture m_squareSprite, m_squareSpriteHighlight; //apparence des cases où seront affichés les objets
 };

@@ -21,7 +21,7 @@ std::string SetINIValueToFile(const std::string& stringFile, const std::string& 
 bool isReadable(const std::string& fileName);
 int GetLengthOfFile(const std::string& fileName);
 void ResetFile(const std::string& fileName);
-void ReplaceStringInFile(const std::string& fileName, int pos, const std::string& value, const std::string& oldValue);
+void ReplaceStringInFile(const std::string& fileName, std::size_t pos, const std::string& value, const std::string& oldValue);
 
 std::string rtrim(const std::string& s);
 

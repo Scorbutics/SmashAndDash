@@ -1,9 +1,11 @@
 #pragma once
 #include <SDL.h>
 #include "../Rectangle.h"
+#include "../Point.h"
 
 namespace ska {
-    class SDLSurface;
+	struct Color;
+	class SDLSurface;
     class SDLTexture;
 
 	class SDLRenderer {
@@ -15,8 +17,9 @@ namespace ska {
 		SDLRenderer& operator=(SDLRenderer&& r) = default;
 		SDLRenderer(const SDLRenderer& r) = delete;
         SDLRenderer& operator=(const SDLRenderer& r) = delete;
+		void setRenderColor(const ska::Color& c) const;
 
-        static void setDefaultRenderer(SDLRenderer* renderer);
+		static void setDefaultRenderer(SDLRenderer* renderer);
         static SDLRenderer* getDefaultRenderer();
 
         void renderClear() const;
@@ -24,6 +27,8 @@ namespace ska {
         SDL_Texture* createTextureFromSurface(const SDLSurface& s) const;
         void renderPresent() const;
         int renderCopy(const SDLTexture& t, const Rectangle* clip, const Rectangle& dest) const;
+
+		void drawColorPoint(const Color& c, const Point<int>& pos) const;
 
 		~SDLRenderer();
 

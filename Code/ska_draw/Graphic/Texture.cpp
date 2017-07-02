@@ -23,7 +23,7 @@ void ska::Texture::freeAll() {
 void ska::Texture::load(const std::string& id, int r, int g, int b, int a) {
 	checkRenderer();
 
-	SDL_Color finalColor;
+	Color finalColor;
 	finalColor.a = static_cast<Uint8>(a);
 	finalColor.b = static_cast<Uint8>(b);
 	finalColor.g = static_cast<Uint8>(g);

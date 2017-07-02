@@ -16,6 +16,10 @@ ska::SDLRenderer::SDLRenderer() :
     m_renderer(nullptr) {
 }
 
+void ska::SDLRenderer::setRenderColor(const ska::Color & c) const{
+	SDL_SetRenderDrawColor(m_renderer, c.r, c.g, c.b, c.a);
+}
+
 void ska::SDLRenderer::setDefaultRenderer(SDLRenderer* r) {
 	m_currentDefaultRenderer = r;
 }
@@ -52,6 +56,11 @@ ska::SDLRenderer* ska::SDLRenderer::getDefaultRenderer() {
 
 int ska::SDLRenderer::renderCopy(const SDLTexture& t, const Rectangle* clip, const Rectangle& dest) const {
     return SDL_RenderCopy(m_renderer, t.m_texture, clip, &dest);
+}
+
+void ska::SDLRenderer::drawColorPoint(const Color& c, const Point<int>& pos) const {
+	SDL_SetRenderDrawColor(m_renderer, c.r, c.g, c.b, c.a);
+	SDL_RenderDrawPoint(m_renderer, pos.x, pos.y);
 }
 
 void ska::SDLRenderer::free() {

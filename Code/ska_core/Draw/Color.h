@@ -29,7 +29,7 @@ namespace ska {
 			*this = c;
 		}
 
-		Color(const SDL_Color& c) {
+		explicit Color(const SDL_Color& c) {
 			*this = c;
 		}
 
@@ -54,7 +54,46 @@ namespace ska {
 			a = c.a;
 		}
 
-		SDL_Color toNative() {
+		template<class T>
+		Color& operator*=(const T& factor) {
+			r *= factor;
+			g *= factor;
+			b *= factor;
+			a *= factor;
+			return *this;
+		}
+
+		template<class T>
+		Color operator*(const T& factor) {
+			Color result;
+			result.r = r * factor;
+			result.g = g * factor;
+			result.b = b * factor;
+			result.a = a * factor;
+			return result;
+		}
+
+		template<class T>
+		Color operator+(const T& adder) {
+			Color result;
+			result.r = r + adder;
+			result.g = g + adder;
+			result.b = b + adder;
+			result.a = a + adder;
+			return result;
+		}
+
+		template<>
+		Color operator+(const Color& cadder) {
+			Color result;
+			result.r = r + cadder.r;
+			result.g = g + cadder.g;
+			result.b = b + cadder.b;
+			result.a = a + cadder.a;
+			return result;
+		}
+
+		SDL_Color toNative() const {
 			return SDL_Color{ r, g, b, a };
 		}
 	};
@@ -69,9 +108,9 @@ namespace std {
 			using std::hash;
 
 			size_t hashSeed = k.r;
-			int g = (int)k.g;
-			int b = (int)k.b;
-			int a = (int)k.a;
+			const auto& g = static_cast<int>(k.g);
+			const auto& b = static_cast<int>(k.b);
+			const auto& a = static_cast<int>(k.a);
 			ska::NumberUtils::hashCombine<int>(hashSeed, g);
 			ska::NumberUtils::hashCombine<int>(hashSeed, b);
 			ska::NumberUtils::hashCombine<int>(hashSeed, a);

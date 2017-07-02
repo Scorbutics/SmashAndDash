@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include "../Exceptions/IllegalArgumentException.h"
 #include "Window.h"
 #include "../Draw/SDLRenderer.h"
@@ -32,6 +30,14 @@ ska::Window::Window(const std::string& title, unsigned int w, unsigned int h) :
 void ska::Window::display() const{
 	m_renderer.renderPresent();
 	m_renderer.renderClear();
+}
+
+ska::SDLRenderer& ska::Window::getRenderer() {
+	return m_renderer;
+}
+
+void ska::Window::setRenderColor(const Color & color) const {
+	m_renderer.setRenderColor(color);
 }
 
 void ska::Window::showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const {

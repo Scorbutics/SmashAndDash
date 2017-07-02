@@ -10,7 +10,7 @@ namespace ska {
 	public:
 		AnimatedTexture();
 
-		void loadFromText(unsigned int fontSize, std::string text, SDL_Color c, const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, bool isVertical = false);
+		void loadFromText(unsigned fontSize, std::string text, Color c, const unsigned horizontalFrames, const unsigned verticalFrames, const unsigned animatedFrames, bool isVertical = false);
 		void load(std::string id, const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, bool isVertical = false, int r = DEFAULT_T_RED, int g = DEFAULT_T_GREEN, int b = DEFAULT_T_BLUE, int a = -1);
 
 		void stop(const bool x);

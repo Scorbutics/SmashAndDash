@@ -85,6 +85,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ShowIncludes>true</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -99,6 +100,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ShowIncludes>true</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -150,7 +152,6 @@
     <ClCompile Include="Code\Game\Gameplay\Fight\System\FightStartSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.cpp" />
-    <ClCompile Include="Code\Game\Gameplay\Inventory\Inventory.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Inventory\Object.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Mobs\System\MobSpawningSystem.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Pokeball.cpp" />
@@ -176,8 +177,6 @@
     <ClCompile Include="Code\Game\Graphic\GUI\FPSLabel.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\GUIBattle.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\GUIMap.cpp" />
-    <ClCompile Include="Code\Game\Graphic\GUI\Image_Area.cpp" />
-    <ClCompile Include="Code\Game\Graphic\GUI\Inventory_Area.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\MapMouseCursor.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\MessageDialogBox.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\MovableWindow.cpp" />
@@ -252,7 +251,6 @@
     <ClInclude Include="Code\Game\Gameplay\Fight\System\FightStartSystem.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\System\SkillRefreshSystem.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\System\StatisticsSystem.h" />
-    <ClInclude Include="Code\Game\Gameplay\Inventory\Inventory.h" />
     <ClInclude Include="Code\Game\Gameplay\Inventory\Object.h" />
     <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawnAreaComponent.h" />
     <ClInclude Include="Code\Game\Gameplay\Mobs\MobSpawner.h" />
@@ -285,8 +283,6 @@
     <ClInclude Include="Code\Game\Graphic\GUI\GUIBattle.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\GUIMap.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\IDialogMenu.h" />
-    <ClInclude Include="Code\Game\Graphic\GUI\Image_Area.h" />
-    <ClInclude Include="Code\Game\Graphic\GUI\Inventory_Area.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\MapMouseCursor.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\MessageDialogBox.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\MovableWindow.h" />

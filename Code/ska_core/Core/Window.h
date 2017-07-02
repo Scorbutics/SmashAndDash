@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <SDL.h>
 #include "../Draw/SDLRenderer.h"
 #include "BaseWindow.h"
@@ -14,6 +13,8 @@ namespace ska {
 
 		void showMessageBox(Uint32 flags, const std::string& title, const std::string& message) const ;
 		void display() const;
+		SDLRenderer& getRenderer();
+		void setRenderColor(const Color& color) const;
 
 	private:
 		const std::string m_wName;

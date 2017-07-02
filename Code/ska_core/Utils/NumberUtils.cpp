@@ -15,7 +15,7 @@ unsigned int ska::NumberUtils::absolute(int i) {
 }
 
 int ska::NumberUtils::round(float f) {	
-	return f > 0 ? f + 0.5 : f - 0.5;
+	return static_cast<int>(f > 0 ? f + 0.5 : f - 0.5);
 }
 
 

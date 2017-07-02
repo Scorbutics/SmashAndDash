@@ -5,7 +5,7 @@ ska::AnimatedTexture::AnimatedTexture() {
 
 }
 
-void ska::AnimatedTexture::loadFromText(unsigned int fontSize, std::string text, SDL_Color c, const unsigned int horizontalFrames, const unsigned int verticalFrames, const unsigned int animatedFrames, bool isVertical) {
+void ska::AnimatedTexture::loadFromText(unsigned fontSize, std::string text, ska::Color c, const unsigned horizontalFrames, const unsigned verticalFrames, const unsigned animatedFrames, bool isVertical) {
 	m_sprite.loadFromText(fontSize, text, c);
 	recalculateFrames(horizontalFrames, verticalFrames, animatedFrames, isVertical);
 }
