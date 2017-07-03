@@ -2,16 +2,22 @@
 #include "ParticleFactory.h"
 #include "ParticleGroup.h"
 
+ska::ParticleFactory::ParticleFactory(): m_group(nullptr), m_lastActiveIndex(0){}
+
 ska::ParticleBuilder& ska::ParticleFactory::createNextParticles(ParticleGroup& group, unsigned int density) {
-	auto lastActiveIndex = group.activeIndex;
+	m_group = &group;
 	group.addIndex(density);
 
-	m_builder.target(group, lastActiveIndex, group.activeIndex);
+	m_builder.target(group, m_lastActiveIndex, group.activeIndex);
 
-	for(auto i = lastActiveIndex; i < group.activeIndex; i++) {
+	for(auto i = m_lastActiveIndex; i < group.activeIndex; i++) {
 		group.lifetime[i] = 0;
 	}
 	return m_builder;
+}
+
+void ska::ParticleFactory::updateCurrentActiveCounter() {
+	m_lastActiveIndex = m_group->activeIndex;
 }
 
 ska::ParticleBuilder::ParticleBuilder() :

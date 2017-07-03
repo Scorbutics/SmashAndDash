@@ -29,6 +29,7 @@ namespace ska {
         int renderCopy(const SDLTexture& t, const Rectangle* clip, const Rectangle& dest) const;
 
 		void drawColorPoint(const Color& c, const Point<int>& pos) const;
+		void drawColorRect(const Color& c, const Rectangle& r) const;
 
 		~SDLRenderer();
 

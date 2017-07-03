@@ -10,6 +10,8 @@ namespace ska {
 		virtual ~AttractorParticleUpdater() = default;
 
 		void update(unsigned int dt, ParticleGroup& group) const override;
+		void move(const Point<int>& point);
+
 		PolarPoint<float> m_force;
 		Point<int> m_origin;
 	};

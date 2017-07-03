@@ -27,11 +27,14 @@ namespace ska {
 
 	class ParticleFactory {
 	public:
-		ParticleFactory() = default;
+		ParticleFactory();
 		~ParticleFactory() = default;
 		ska::ParticleBuilder& createNextParticles(ParticleGroup& group, unsigned int density);
+		void updateCurrentActiveCounter();
 
 	private:
 		ParticleBuilder m_builder;
+		ParticleGroup* m_group;
+		std::size_t m_lastActiveIndex;
 	};
 }

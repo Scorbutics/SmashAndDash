@@ -6,7 +6,10 @@ ska::SDLGraphicParticleRenderer::SDLGraphicParticleRenderer(SDLRenderer& rendere
 }
 
 void ska::SDLGraphicParticleRenderer::display(const ParticleGroup& group) const {
+	ska::Rectangle r{ 0, 0, 5, 5 };
 	for (std::size_t i = 0; i < group.getLength(); i++) {
-		m_renderer.drawColorPoint(group.color[i], group.pos[i]);
+		r.x = group.pos[i].x - r.w / 2;
+		r.y = group.pos[i].y - r.h / 2;
+		m_renderer.drawColorRect(group.color[i], r);
 	}
 }

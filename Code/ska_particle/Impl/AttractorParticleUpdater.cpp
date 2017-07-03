@@ -14,3 +14,7 @@ void ska::AttractorParticleUpdater::update(unsigned int dt, ParticleGroup & grou
 		group.physics[i].acceleration += ska::Point<float>::cartesian(vector.radius, vector.angle);
 	}
 }
+
+void ska::AttractorParticleUpdater::move(const Point<int>& point) {
+	m_origin = point;
+}

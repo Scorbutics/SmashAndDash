@@ -9,27 +9,27 @@
 #include "../ska_particle/Impl/PhysicParticleUpdater.h"
 #include "../ska_particle/Impl/AttractorParticleUpdater.h"
 #include "../ska_particle/Impl/SDLGraphicParticleRenderer.h"
-#include "RandomColorGenerator.h"
 #include "Impl/BasicVelocityGenerator.h"
+#include "Impl/BasicColorGenerator.h"
 
 
 BenchmarkerCore::BenchmarkerCore() : 
 	m_window("ska Particle Benchmark", 800, 600),
-	m_particles(3) {
+	m_particles(50) {
 	
 	ska::Point<int> origin(400, 300);
 	ska::Point<int> maxDistance(10, 0);
 	m_particles.addGenerator<ska::BoxParticleGenerator>(origin, maxDistance);
-	ska::Color cStart(40, 40, 40, 255);
-	ska::Color cEnd(250, 250, 250, 255);
-	m_particles.addGenerator<ska::RandomColorGenerator>(cStart, cEnd);
+	ska::Color cEnd(10, 10, 40, 255);
+	ska::Color cStart(120, 120, 250, 255);
+	m_particles.addGenerator<ska::BasicColorGenerator>(cStart, cEnd);
 	ska::PolarPoint<float> initialVelocity(10.F, 1.57F);
 	m_particles.addGenerator<ska::BasicVelocityGenerator>(initialVelocity);
 
 	ska::PolarPoint<float> force;
-	force.radius = 0.5F;
+	force.radius = 1.0F;
 	force.angle = 5.9F;
-	m_particles.addUpdater<ska::AttractorParticleUpdater>(origin, force);
+	m_attractor = &m_particles.addUpdater<ska::AttractorParticleUpdater>(origin, force);
 	m_particles.addUpdater<ska::PhysicParticleUpdater>();
 	static const auto lifetime = 10000;
 	m_particles.addUpdater<ska::ColorParticleUpdater>(lifetime);
@@ -50,6 +50,7 @@ int BenchmarkerCore::onException(ska::GenericException& e) {
 
 void BenchmarkerCore::eventUpdate(const float ti) {
 	m_inputListener.update();
+	m_attractor->move(m_inputListener.getMouseInput().getMousePos());
 	m_particles.refresh(static_cast<unsigned>(ti));
 }
 

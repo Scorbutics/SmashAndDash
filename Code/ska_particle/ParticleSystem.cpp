@@ -9,11 +9,12 @@ void ska::ParticleSystem::refresh(unsigned int dt) {
 	for (const auto& e : m_generators) {
 		e->build(builder);
 	}
+	
 
 	for(const auto& u : m_updaters) {
 		u->update(dt, m_group);
 	}
-
+	m_factory.updateCurrentActiveCounter();
 }
 
 void ska::ParticleSystem::display() const {

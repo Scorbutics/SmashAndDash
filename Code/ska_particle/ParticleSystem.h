@@ -13,18 +13,27 @@ namespace ska {
 		explicit ParticleSystem(unsigned int density);
 
 		template <class G, class ... Args>
-		void addGenerator(Args&&... args) {
-			m_generators.push_back(std::make_unique<G>(std::forward<Args>(args)...));
+		G& addGenerator(Args&&... args) {
+			auto item = std::make_unique<G>(std::forward<Args>(args)...);
+			auto& result = *item.get();
+			m_generators.push_back(std::move(item));
+			return result;
 		}
 
 		template <class U, class ... Args>
-		void addUpdater(Args&&... args) {
-			m_updaters.push_back(std::make_unique<U>(std::forward<Args>(args)...));
+		U& addUpdater(Args&&... args) {
+			auto item = std::make_unique<U>(std::forward<Args>(args)...);
+			auto& result = *item.get();
+			m_updaters.push_back(std::move(item));
+			return result;
 		}
 
 		template <class R, class ... Args>
-		void addRenderer(Args&&... args) {
-			m_renderers.push_back(std::make_unique<R>(std::forward<Args>(args)...));
+		R& addRenderer(Args&&... args) {
+			auto item = std::make_unique<R>(std::forward<Args>(args)...);
+			auto& result = *item.get();
+			m_renderers.push_back(std::move(item));
+			return result;
 		}
 		
 		void refresh(unsigned int dt);

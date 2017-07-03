@@ -16,7 +16,7 @@ namespace ska {
 	
 	private:
 		std::size_t activeIndex;
-		static constexpr auto Size = 5000;
+		static constexpr auto Size = 100000;
 
 	public:
 		ParticleGroup() :
@@ -29,14 +29,18 @@ namespace ska {
 			return activeIndex;
 		}
 
+		void swapParticles(unsigned index, unsigned index2) {
+			std::swap(pos[index], pos[index2]);
+			std::swap(physics[index], physics[index2]);
+			std::swap(lifetime[index], lifetime[index2]);
+			std::swap(color[index], color[index2]);
+			std::swap(startColor[index], startColor[index2]);
+			std::swap(endColor[index], endColor[index2]);
+		}
+
 		void kill(std::size_t index) {
-			if (activeIndex > 0 && index < activeIndex) {
-				std::swap(pos[index], pos[activeIndex]);
-				std::swap(physics[index], physics[activeIndex]);
-				std::swap(lifetime[index], lifetime[activeIndex]);
-				std::swap(color[index], color[activeIndex]);
-				std::swap(startColor[index], startColor[activeIndex]);
-				std::swap(endColor[index], endColor[activeIndex]);
+			if (activeIndex > 0 && index <= activeIndex) {
+				swapParticles(index, activeIndex--);
 			}
 		}
 
@@ -44,7 +48,7 @@ namespace ska {
 			activeIndex += density;
 			if(activeIndex >= Size) {
 				activeIndex = Size - 1;
-				SKA_LOG_ERROR("Particle group full. Cannot add another particle");
+				std::cout << ("Particle group full. Cannot add another particle") << std::endl;
 			}
 		}
 

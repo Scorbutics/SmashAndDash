@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Impl\AttractorParticleUpdater.cpp" />
+    <ClCompile Include="Impl\BasicColorGenerator.cpp" />
     <ClCompile Include="Impl\BasicVelocityGenerator.cpp" />
     <ClCompile Include="Impl\BoxParticleGenerator.cpp" />
     <ClCompile Include="Impl\ColorParticleUpdater.cpp" />
@@ -32,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Impl\AttractorParticleUpdater.h" />
+    <ClInclude Include="Impl\BasicColorGenerator.h" />
     <ClInclude Include="Impl\BasicVelocityGenerator.h" />
     <ClInclude Include="Impl\BoxParticleGenerator.h" />
     <ClInclude Include="Impl\ColorParticleUpdater.h" />
