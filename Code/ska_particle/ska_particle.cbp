@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ska_particle" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../ska_particle" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+					<Add option="-fno-omit-frame-pointer" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../../ska_particle" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++14" />
+			<Add directory="../ska_core/" />
+			<Add directory="../ska_draw/" />
+		</Compiler>
+		<Unit filename="Impl/AttractorParticleUpdater.cpp" />
+		<Unit filename="Impl/AttractorParticleUpdater.h" />
+		<Unit filename="Impl/BasicColorGenerator.cpp" />
+		<Unit filename="Impl/BasicColorGenerator.h" />
+		<Unit filename="Impl/BasicVelocityGenerator.cpp" />
+		<Unit filename="Impl/BasicVelocityGenerator.h" />
+		<Unit filename="Impl/BoxParticleGenerator.cpp" />
+		<Unit filename="Impl/BoxParticleGenerator.h" />
+		<Unit filename="Impl/ColorParticleUpdater.cpp" />
+		<Unit filename="Impl/ColorParticleUpdater.h" />
+		<Unit filename="Impl/PhysicParticleUpdater.cpp" />
+		<Unit filename="Impl/PhysicParticleUpdater.h" />
+		<Unit filename="Impl/RandomColorGenerator.cpp" />
+		<Unit filename="Impl/RandomColorGenerator.h" />
+		<Unit filename="Impl/SDLGraphicParticleRenderer.cpp" />
+		<Unit filename="Impl/SDLGraphicParticleRenderer.h" />
+		<Unit filename="Impl/TimeParticleUpdater.cpp" />
+		<Unit filename="Impl/TimeParticleUpdater.h" />
+		<Unit filename="ParticleFactory.cpp" />
+		<Unit filename="ParticleFactory.h" />
+		<Unit filename="ParticleGenerator.h" />
+		<Unit filename="ParticleGroup.h" />
+		<Unit filename="ParticleRenderer.h" />
+		<Unit filename="ParticleSystem.cpp" />
+		<Unit filename="ParticleSystem.h" />
+		<Unit filename="ParticleUpdater.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -134,11 +134,11 @@ namespace ska {
 		}
 
 		template<class U>
-		static PolarPoint<T> polar(const U x, const U y) {
+		static PolarPoint<T>&& polar(const U x, const U y) {
 			PolarPoint<T> result;
 			result.angle = static_cast<float>(ska::NumberUtils::arctan(x, y));
 			result.radius = ska::NumberUtils::squareroot(x * x + y * y);
-			return result;
+			return std::forward<PolarPoint<T>>(result);
 		}
 	};
 

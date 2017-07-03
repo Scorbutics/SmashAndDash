@@ -8,7 +8,7 @@ namespace ska {
 		explicit TimeParticleUpdater(unsigned int maxLifetime);
 		virtual ~TimeParticleUpdater() = default;
 
-		void update(unsigned int dt, ParticleGroup& group) const override;
+		void update(unsigned int dt, ParticleGroup& group) override;
 		unsigned m_maxLifetime;
 	};
 }

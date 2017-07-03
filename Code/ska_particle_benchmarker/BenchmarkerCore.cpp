@@ -1,3 +1,4 @@
+#undef main
 #include "BenchmarkerCore.h"
 #include "../ska_core/Logging/Logger.h"
 #include "../ska_core/Utils/TimeUtils.h"
@@ -12,11 +13,10 @@
 #include "Impl/BasicVelocityGenerator.h"
 #include "Impl/BasicColorGenerator.h"
 
-
-BenchmarkerCore::BenchmarkerCore() : 
+BenchmarkerCore::BenchmarkerCore() :
 	m_window("ska Particle Benchmark", 800, 600),
-	m_particles(50) {
-	
+	m_particles(200) {
+
 	ska::Point<int> origin(400, 300);
 	ska::Point<int> maxDistance(10, 0);
 	m_particles.addGenerator<ska::BoxParticleGenerator>(origin, maxDistance);
@@ -36,7 +36,7 @@ BenchmarkerCore::BenchmarkerCore() :
 	m_particles.addUpdater<ska::TimeParticleUpdater>(lifetime);
 
 	m_particles.addRenderer<ska::SDLGraphicParticleRenderer>(m_window.getRenderer());
-	
+
 }
 
 int BenchmarkerCore::onTerminate(ska::TerminateProcessException&) {

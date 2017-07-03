@@ -13,10 +13,10 @@ namespace ska {
 
 	class ParticleGroup {
 		friend class ParticleFactory;
-	
+
 	private:
 		std::size_t activeIndex;
-		static constexpr auto Size = 100000;
+		static constexpr auto Size = 50000;
 
 	public:
 		ParticleGroup() :
@@ -48,7 +48,7 @@ namespace ska {
 			activeIndex += density;
 			if(activeIndex >= Size) {
 				activeIndex = Size - 1;
-				std::cout << ("Particle group full. Cannot add another particle") << std::endl;
+				//std::cout << ("Particle group full. Cannot add another particle") << std::endl;
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace ska {
 		std::array<Point<int>, Size> pos;
 		std::array<ParticlePhysicData, Size> physics;
 		std::array<int, Size> lifetime;
-		
+
 		std::array<Color, Size> color;
 		std::array<Color, Size> startColor;
 		std::array<Color, Size> endColor;

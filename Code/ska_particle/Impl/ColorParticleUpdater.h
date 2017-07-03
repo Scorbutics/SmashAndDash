@@ -8,7 +8,7 @@ namespace ska {
 		explicit ColorParticleUpdater(unsigned int maxLifetimeParticle);
 		virtual ~ColorParticleUpdater() = default;
 
-		void update(unsigned int dt, ParticleGroup& group) const override;
+		void update(unsigned int dt, ParticleGroup& group) override;
 	private:
 		const unsigned int m_maxLifetimeParticle;
 	};

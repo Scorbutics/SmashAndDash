@@ -83,22 +83,16 @@ namespace ska {
 			return result;
 		}
 
-		template<>
-		Color operator+(const Color& cadder) {
-			Color result;
-			result.r = r + cadder.r;
-			result.g = g + cadder.g;
-			result.b = b + cadder.b;
-			result.a = a + cadder.a;
-			return result;
-		}
-
 		SDL_Color toNative() const {
 			return SDL_Color{ r, g, b, a };
 		}
 	};
 
+    template<>
+    Color Color::operator+(const Color& adder);
 }
+
+
 
 namespace std {
 	template <>

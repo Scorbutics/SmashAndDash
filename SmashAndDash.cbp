@@ -178,6 +178,8 @@
 		<Unit filename="Code/Game/Gameplay/State/DebugAbstractStateMap.h" />
 		<Unit filename="Code/Game/Gameplay/State/StateFight.cpp" />
 		<Unit filename="Code/Game/Gameplay/State/StateFight.h" />
+		<Unit filename="Code/Game/Gameplay/State/StateFightLoading.cpp" />
+		<Unit filename="Code/Game/Gameplay/State/StateFightLoading.h" />
 		<Unit filename="Code/Game/Gameplay/State/StateGUIBattle.cpp" />
 		<Unit filename="Code/Game/Gameplay/State/StateGUIBattle.h" />
 		<Unit filename="Code/Game/Gameplay/State/StateGUIMap.cpp" />
@@ -200,6 +202,8 @@
 		<Unit filename="Code/Game/Gameplay/World/WorldImpl.h" />
 		<Unit filename="Code/Game/Gameplay/World/WorldState.cpp" />
 		<Unit filename="Code/Game/Gameplay/World/WorldState.h" />
+		<Unit filename="Code/Game/Gameplay/World/WorldStateChanger.cpp" />
+		<Unit filename="Code/Game/Gameplay/World/WorldStateChanger.h" />
 		<Unit filename="Code/Game/Graphic/GUI/Bar.cpp" />
 		<Unit filename="Code/Game/Graphic/GUI/Bar.h" />
 		<Unit filename="Code/Game/Graphic/GUI/DialogMenu.cpp" />

@@ -15,20 +15,23 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-DBUILD_DLL" />
+					<Add option="-pg" />
 					<Add option="-g" />
+					<Add option="-fno-omit-frame-pointer" />
+					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg -lgmon" />
 					<Add library="user32" />
 				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="ska_core" prefix_auto="1" extension_auto="1" />
+				<Option output="../../ska_core" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
-				<Option type="3" />
+				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
@@ -40,6 +43,9 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-std=c++14" />
+		</Compiler>
 		<Unit filename="Core/BaseWindow.cpp" />
 		<Unit filename="Core/BaseWindow.h" />
 		<Unit filename="Core/GameCore.h" />
@@ -67,6 +73,7 @@
 		<Unit filename="Data/Events/WorldEvent.h" />
 		<Unit filename="Data/Savegame.h" />
 		<Unit filename="Draw/CameraAware.h" />
+		<Unit filename="Draw/Color.cpp" />
 		<Unit filename="Draw/Color.h" />
 		<Unit filename="Draw/Drawable.h" />
 		<Unit filename="Draw/DrawableContainer.h" />
