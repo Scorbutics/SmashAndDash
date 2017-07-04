@@ -64,6 +64,14 @@ const ska::ParticleBuilder& ska::ParticleBuilder::setStartColor(const Color& c) 
 	return *this;
 }
 
+const ska::ParticleBuilder& ska::ParticleBuilder::setColor(const Color& c) const {
+    assert(m_group != nullptr);
+	for (auto i = m_indexStart; i < m_indexEnd; i++) {
+		m_group->color[i] = c;
+	}
+	return *this;
+}
+
 const ska::ParticleBuilder& ska::ParticleBuilder::setEndColor(const Color& c) const {
 	assert(m_group != nullptr);
 	for (auto i = m_indexStart; i < m_indexEnd; i++) {

@@ -17,6 +17,7 @@ namespace ska {
 		const ParticleBuilder& setVelocity(Point<float> velocity) const;
 		const ParticleBuilder& setPosition(Point<float> position) const;
 		const ParticleBuilder& setStartColor(const Color& c) const;
+		const ParticleBuilder& setColor(const Color& c) const;
 		const ParticleBuilder& setEndColor(const Color& c) const;
 
 	private:
