@@ -16,7 +16,7 @@ namespace ska {
 
 	private:
 		std::size_t activeIndex;
-		static constexpr auto Size = 50000;
+		static constexpr auto Size = 100000;
 
 	public:
 		ParticleGroup() :

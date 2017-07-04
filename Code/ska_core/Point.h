@@ -60,17 +60,11 @@ namespace ska {
 		}
 
 		Point<T> operator*(const unsigned int i) const {
-			Point<T> result = *this;
-			result.x *= i;
-			result.y *= i;
-			return result;
+			return Point<T>(x * i, y * i);
 		}
 
 		Point<T> operator+(const Point<T>& p) const {
-			Point<T> result = *this;
-			result.x += p.x;
-			result.y += p.y;
-			return result;
+			return Point<T>(x + p.x, y + p.y);
 		}
 
 		void operator+=(const Point<T>& p) {

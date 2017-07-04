@@ -32,7 +32,7 @@ BenchmarkerCore::BenchmarkerCore() :
 	m_attractor = &m_particles.addUpdater<ska::AttractorParticleUpdater>(origin, force);
 	m_particles.addUpdater<ska::PhysicParticleUpdater>();
 	static const auto lifetime = 10000;
-	//m_particles.addUpdater<ska::ColorParticleUpdater>(lifetime);
+	m_particles.addUpdater<ska::ColorParticleUpdater>(lifetime);
 	m_particles.addUpdater<ska::TimeParticleUpdater>(lifetime);
 
 	m_particles.addRenderer<ska::SDLGraphicParticleRenderer>(m_window.getRenderer());
