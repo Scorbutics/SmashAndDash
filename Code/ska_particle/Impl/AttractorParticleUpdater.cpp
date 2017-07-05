@@ -7,7 +7,8 @@ ska::AttractorParticleUpdater::AttractorParticleUpdater(Point<int>& origin, Pola
 }
 
 void ska::AttractorParticleUpdater::update(unsigned int dt, ParticleGroup & group) {
-	for (std::size_t i = 0; i < group.getLength(); i++) {
+	const auto& maxSize = group.getLength();
+	for (std::size_t i = 0; i < maxSize; i++) {
 
         const auto& cartesianVector = m_origin - group.pos[i];
         const auto& vec = ska::PolarPoint<float>::polar(cartesianVector.x, cartesianVector.y);

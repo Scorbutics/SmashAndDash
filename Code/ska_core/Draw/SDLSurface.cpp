@@ -42,6 +42,9 @@ SDL_Surface* ska::SDLSurface::getInstance() const {
 
 void ska::SDLSurface::loadFromText(const Font& font, const std::string& text, Color c) {
 	free();
+	if(font.getInstance() == nullptr) {
+		throw ska::IllegalArgumentException("Invalid font provided to a surface");
+	}
 	m_surface = TTF_RenderText_Blended(font.getInstance(), text.c_str(), c.toNative());
 }
 

@@ -22,8 +22,8 @@ namespace ska {
 
 	private:
 		ParticleGroup* m_group;
-		unsigned m_indexStart;
-		unsigned m_indexEnd;
+		std::size_t m_indexStart;
+		std::size_t m_indexEnd;
 	};
 
 	class ParticleFactory {

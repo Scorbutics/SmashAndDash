@@ -12,6 +12,7 @@ namespace ska{
 		~NumberUtils();
 
 		static float random(float min, float max);
+		static float fastInverseSquareroot(float number);
 		static double random(double min, double max);
 		static double random();
 
@@ -23,7 +24,7 @@ namespace ska{
 		static float exponential(float i);
 		static int random(int min, int max);
 		static double arctan(int x, int y);
-		static double arctan(double slope);
+		//static double arctan(double slope);
 
 		template <typename T>
 		static T maximum(T a, T b) {
@@ -36,19 +37,20 @@ namespace ska{
 		}
 
 		static double cosinus(double angle);
+		static float fastSin(float x);
 		static double sinus(double angle);
 
 		static double absolute(double i);
 		static unsigned int absolute(int i);
 		static int round(float f);
 
-		static unsigned int squarerooti(const unsigned int i);
 		static double squareroot(const double i);
 		static unsigned int getMax10Pow(const int num);
 
 		static bool isLowValue(double v, double threshold);
 
 		static int calculateSlopeSign(int dest, int src);
+		static float fastAtan2(float y, float x);
 
 	};
 }

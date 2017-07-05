@@ -6,9 +6,15 @@ ska::ColorParticleUpdater::ColorParticleUpdater(unsigned int maxLifetimeParticle
 }
 
 void ska::ColorParticleUpdater::update(unsigned int dt, ParticleGroup& group) {
-	for(std::size_t i = 0; i < group.getLength(); i++) {
-		const auto percentsLifetime = static_cast<float>(group.lifetime[i] * 100.F) / m_maxLifetimeParticle;
-		group.color[i] = (group.endColor[i] * percentsLifetime) + group.startColor[i] * (100 - percentsLifetime);
-		group.color[i].a = 255;
+	const auto& maxSize = group.getLength();
+	for (std::size_t i = 0; i < maxSize; i++) {
+		const auto& percentsLifetime = static_cast<float>(group.lifetime[i] * 100.F) / m_maxLifetimeParticle;
+		const auto& remainingPercentsLifetime = (100 - percentsLifetime);
+		auto& color = group.color[i];
+
+		color.r = static_cast<uint8_t>(group.endColor[i].r * percentsLifetime + group.startColor[i].r * remainingPercentsLifetime);
+		color.g = static_cast<uint8_t>(group.endColor[i].g * percentsLifetime + group.startColor[i].g * remainingPercentsLifetime);
+		color.b = static_cast<uint8_t>(group.endColor[i].b * percentsLifetime + group.startColor[i].b * remainingPercentsLifetime);
+		color.a = 255;
 	}
 }

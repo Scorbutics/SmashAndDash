@@ -34,7 +34,6 @@ namespace ska {
 
 		Point<T>(const int& r);
 
-
 		template <class U>
 		Point(const Point<U>& p);
 
@@ -59,17 +58,11 @@ namespace ska {
 		}
 
 		Point<T> operator-(const Point<T>& p) const {
-			Point<T> result = *this;
-			result.x -= p.x;
-			result.y -= p.y;
-			return result;
+			return Point<T>(x - p.x, y - p.y);
 		}
 
 		Point<T> operator/(const unsigned int i) const {
-			Point<T> result = *this;
-			result.x /= i;
-			result.y /= i;
-			return result;
+			return Point<T>(x / i, y / i);
 		}
 
 		Point<T> operator*(const unsigned int i) const {
@@ -81,18 +74,18 @@ namespace ska {
 		}
 
 		void operator+=(const Point<T>& p) {
-			*this = operator+(p);
+			x += p.x;
+			y += p.y;
 		}
 
 		void operator-=(const Point<T>& p) {
-			*this = operator-(p);
+			x -= p.x;
+			y -= p.y;
 		}
 
 		static Point<T> cartesian(const T radius, const double angle) {
-			Point<T> result;
-			result.x = radius * static_cast<float>(ska::NumberUtils::cosinus(angle));
-			result.y = radius * static_cast<float>(ska::NumberUtils::sinus(angle));
-			return result;
+			return Point<T>(radius * static_cast<float>(ska::NumberUtils::cosinus(angle)), 
+							radius * static_cast<float>(ska::NumberUtils::sinus(angle)));
 		}
 
 		/*
@@ -104,12 +97,12 @@ namespace ska {
 		*/
 		static Point<T> rotate(const Point<T>& origin, double angle, const Point<T>& currentPoint) {
 			/* First, we have to work with a (0;0) origin to make the rotation correctly */
-			Point<T> diff = currentPoint - origin;
+			const Point<T> diff(currentPoint.x - origin.x, 
+								currentPoint.y - origin.y);
 
 			/* Then we apply the multiplication with the rotation matrix with angle "angle" */
-			Point<T> result = diff;
-			result.x = static_cast<T>(diff.x * ska::NumberUtils::cosinus(angle) + diff.y * ska::NumberUtils::sinus(angle));
-			result.y = static_cast<T>(- diff.x * ska::NumberUtils::sinus(angle) + diff.y * ska::NumberUtils::cosinus(angle));
+			Point<T> result(static_cast<T>(diff.x * ska::NumberUtils::cosinus(angle) + diff.y * ska::NumberUtils::sinus(angle)),
+							static_cast<T>(- diff.x * ska::NumberUtils::sinus(angle) + diff.y * ska::NumberUtils::cosinus(angle)));
 
 			result.y = -result.y;
 
@@ -142,10 +135,9 @@ namespace ska {
 
 		template<class U>
 		static PolarPoint<T>&& polar(const U x, const U y) {
-			PolarPoint<T> result;
-			result.angle = static_cast<float>(ska::NumberUtils::arctan(x, y));
-			result.radius = ska::NumberUtils::squareroot(x * x + y * y);
-			return std::forward<PolarPoint<T>>(result);
+			return PolarPoint<T> (
+				NumberUtils::squareroot(static_cast<double>(x * x + y * y)),
+				static_cast<float>(NumberUtils::arctan(x, y)));
 		}
 	};
 
@@ -161,8 +153,8 @@ namespace ska {
 
 	template <class T>
 	Point<T>::Point(const int& r){
-		x = r;
-		y = r;
+		x = static_cast<T>(r);
+		y = static_cast<T>(r);
 	}
 
 	template <class T>
@@ -181,7 +173,8 @@ namespace ska {
 	template <class T>
 	template <class U>
 	PolarPoint<T>::PolarPoint(const PolarPoint<U>& p){
-		*this = p;
+		radius = p.radius;
+		angle = p.angle;
 	}
 }
 

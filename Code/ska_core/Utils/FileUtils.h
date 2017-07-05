@@ -1,6 +1,6 @@
 #pragma once
+#include <SDL.h>
 #include "SkaConstants.h"
-#include <cstdio>
 
 namespace ska {
 
@@ -14,6 +14,10 @@ namespace ska {
 
 		static std::string getCurrentDirectory() {
 			return T::getCurrentDirectory();
+		}
+
+		static std::string getExecutablePath() {
+			return SDL_GetBasePath();
 		}
 
 		static void createDirectory(const std::string& directoryName) {

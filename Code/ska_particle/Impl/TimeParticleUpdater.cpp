@@ -7,7 +7,8 @@ ska::TimeParticleUpdater::TimeParticleUpdater(unsigned int maxLifetime) :
 }
 
 void ska::TimeParticleUpdater::update(unsigned int dt, ParticleGroup& group) {
-	for(std::size_t i = 0; i < group.getLength(); i++) {
+	const auto& maxSize = group.getLength();
+	for (std::size_t i = 0; i < maxSize; i++) {
 		auto& lifetime = group.lifetime[i];
 		lifetime += dt;
 		if(static_cast<unsigned>(lifetime) >= m_maxLifetime) {

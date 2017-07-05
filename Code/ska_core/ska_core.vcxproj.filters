@@ -193,5 +193,6 @@
     <ClCompile Include="Core\BaseWindow.cpp" />
     <ClCompile Include="Core\State\State.cpp" />
     <ClCompile Include="Core\State\StateHolderCore.cpp" />
+    <ClCompile Include="Draw\Color.cpp" />
   </ItemGroup>
 </Project>

@@ -24,12 +24,12 @@
     <ClCompile Include="Impl\BasicVelocityGenerator.cpp" />
     <ClCompile Include="Impl\BoxParticleGenerator.cpp" />
     <ClCompile Include="Impl\ColorParticleUpdater.cpp" />
+    <ClCompile Include="Impl\RandomColorGenerator.cpp" />
     <ClCompile Include="Impl\SDLGraphicParticleRenderer.cpp" />
     <ClCompile Include="Impl\PhysicParticleUpdater.cpp" />
     <ClCompile Include="Impl\TimeParticleUpdater.cpp" />
     <ClCompile Include="ParticleFactory.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="RandomColorGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Impl\AttractorParticleUpdater.h" />
@@ -37,6 +37,7 @@
     <ClInclude Include="Impl\BasicVelocityGenerator.h" />
     <ClInclude Include="Impl\BoxParticleGenerator.h" />
     <ClInclude Include="Impl\ColorParticleUpdater.h" />
+    <ClInclude Include="Impl\RandomColorGenerator.h" />
     <ClInclude Include="Impl\SDLGraphicParticleRenderer.h" />
     <ClInclude Include="Impl\PhysicParticleUpdater.h" />
     <ClInclude Include="Impl\TimeParticleUpdater.h" />
@@ -46,7 +47,6 @@
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ParticleUpdater.h" />
-    <ClInclude Include="RandomColorGenerator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -100,7 +100,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>..\ska_core;..\ska_draw;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>..\ska_core;..\ska_draw;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>

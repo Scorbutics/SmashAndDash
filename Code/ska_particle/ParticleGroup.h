@@ -16,7 +16,7 @@ namespace ska {
 
 	private:
 		std::size_t activeIndex;
-		static constexpr auto Size = 100000;
+		static constexpr auto Size = 20000;
 
 	public:
 		ParticleGroup() :
@@ -25,11 +25,11 @@ namespace ska {
 
 		~ParticleGroup() = default;
 
-		std::size_t getLength() const{
+		const std::size_t& getLength() const {
 			return activeIndex;
 		}
 
-		void swapParticles(unsigned index, unsigned index2) {
+		void swapParticles(std::size_t index, std::size_t index2) {
 			std::swap(pos[index], pos[index2]);
 			std::swap(physics[index], physics[index2]);
 			std::swap(lifetime[index], lifetime[index2]);
@@ -46,7 +46,7 @@ namespace ska {
 
 		void addIndex(unsigned density) {
 			activeIndex += density;
-			if(activeIndex >= Size) {
+			if (activeIndex >= Size) {
 				activeIndex = Size - 1;
 				//std::cout << ("Particle group full. Cannot add another particle") << std::endl;
 			}

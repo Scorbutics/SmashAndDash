@@ -153,6 +153,7 @@
     <ClCompile Include="Core\State\State.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Data\Events\SoundEvent.cpp" />
+    <ClCompile Include="Draw\Color.cpp" />
     <ClCompile Include="Draw\Font.cpp" />
     <ClCompile Include="Draw\PriorityQueueDrawableContainer.cpp" />
     <ClCompile Include="Draw\SDLFont.cpp" />

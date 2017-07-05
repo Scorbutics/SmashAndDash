@@ -69,12 +69,18 @@ namespace ska {
 
 		template<class T>
 		Color operator*(const T& factor) {
-			return Color(r * factor, g * factor, b * factor, a * factor);
+			return Color(static_cast<uint8_t>(r * factor), 
+						static_cast<uint8_t>(g * factor), 
+						static_cast<uint8_t>(b * factor), 
+						static_cast<uint8_t>(a * factor));
 		}
 
 		template<class T>
 		Color operator+(const T& adder) {
-			return Color(r + adder, g + adder, b + adder, a + adder);
+			return Color(static_cast<uint8_t>(r + adder), 
+						static_cast<uint8_t>(g + adder), 
+						static_cast<uint8_t>(b + adder), 
+						static_cast<uint8_t>(a + adder));
 		}
 
 		SDL_Color toNative() const {
