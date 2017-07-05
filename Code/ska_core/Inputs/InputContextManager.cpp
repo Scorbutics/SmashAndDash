@@ -3,7 +3,7 @@
 /* Default InputContextManager settings.
    Contexts should be added depending of the current State in order to
    enable or disable inputs in specific State */
-ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril) {	
+ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril) {
 	for (auto& c : m_contexts) {
 		c.second->buildCodeMap();
 	}
@@ -13,7 +13,7 @@ ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril
 void ska::InputContextManager::addContext(EnumContextManager ecm, InputContextPtr&& icp) {
 	m_contexts[ecm] = std::move(icp);
 	m_contexts[ecm]->buildCodeMap();
-	
+
 }
 
 void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disable) {
@@ -29,8 +29,10 @@ void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disab
 void ska::InputContextManager::refresh() {
 	m_ril.update();
 	m_actions.reset();
-	InputRange empty;
-	fill(m_ranges.begin(), m_ranges.end(), empty);
+	for(auto& r : m_ranges ) {
+	    r.x = 0;
+        r.y = 0;
+    }
 	m_toggles.reset();
 	for (auto& c : m_contexts) {
 		c.second->queryActions(m_actions);

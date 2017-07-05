@@ -14,6 +14,18 @@ namespace ska {
 
 		Point<T>(){ x = 0; y = 0; }
 
+		Point(const Point<T>&) = default;
+		Point(Point<T>&&) = default;
+
+		Point<T>& operator=(Point<T>&&) = default;
+
+        Point<T>& operator=(const Point<T>& p) {
+            x = static_cast<T>(p.x);
+            y = static_cast<T>(p.y);
+            return *this;
+        }
+
+
 		template <class U>
 		Point(const U& r) {
 			x = r.x;
@@ -32,9 +44,10 @@ namespace ska {
 		}
 
 		template <class U>
-		void operator=(const Point<U>& p) {
+		Point<T>& operator=(const Point<U>& p) {
 			x = static_cast<T>(p.x);
 			y = static_cast<T>(p.y);
+			return *this;
 		}
 
 		bool operator==(const Point<T>& p) const {
@@ -135,7 +148,6 @@ namespace ska {
 			return std::forward<PolarPoint<T>>(result);
 		}
 	};
-
 
 	template<>
     inline bool Point<float>::operator==(const Point<float>& p) const {

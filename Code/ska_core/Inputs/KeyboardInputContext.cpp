@@ -7,8 +7,8 @@ ska::KeyboardInputContext::KeyboardInputContext(RawInputListener& ril) : m_ril(r
 
 void ska::KeyboardInputContext::queryRanges(InputRangeContainer& ranges)  {
 	auto& mouseKeys = m_ril.getMouseInput();
-	auto lastPos = mouseKeys.getMouseLastPos();
-	auto pos = mouseKeys.getMousePos();
+	auto& lastPos = mouseKeys.getMouseLastPos();
+	auto& pos = mouseKeys.getMousePos();
 
 	ranges[MousePos] = InputRange(static_cast<float>(pos.x), static_cast<float>(pos.y));
 	ranges[LastMousePos] = InputRange(static_cast<float>(lastPos.x), static_cast<float>(lastPos.y));

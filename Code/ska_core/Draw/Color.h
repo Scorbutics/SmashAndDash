@@ -29,9 +29,13 @@ namespace ska {
 			*this = c;
 		}
 
+		Color(Color&&) = default;
+
 		explicit Color(const SDL_Color& c) {
 			*this = c;
 		}
+
+		Color& operator= (Color&&) = default;
 
 		bool operator==(const Color& c) const {
 			return r == c.r
