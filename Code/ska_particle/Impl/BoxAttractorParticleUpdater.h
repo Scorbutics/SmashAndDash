@@ -3,11 +3,11 @@
 #include "../../ska_core/Point.h"
 
 namespace ska {
-	class AttractorParticleUpdater :
+	class BoxAttractorParticleUpdater :
 		public ParticleUpdater {
 	public:
-		AttractorParticleUpdater(Point<int>& origin, PolarPoint<float>& force);
-		virtual ~AttractorParticleUpdater() = default;
+		BoxAttractorParticleUpdater(Point<int>& origin, PolarPoint<float>& force);
+		virtual ~BoxAttractorParticleUpdater() = default;
 
 		void update(unsigned int dt, ParticleGroup& group) override;
 		void move(const Point<int>& point);

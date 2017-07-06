@@ -8,30 +8,29 @@
 #include "../ska_particle/Impl/ColorParticleUpdater.h"
 #include "../ska_particle/Impl/TimeParticleUpdater.h"
 #include "../ska_particle/Impl/PhysicParticleUpdater.h"
-#include "../ska_particle/Impl/AttractorParticleUpdater.h"
 #include "../ska_particle/Impl/SDLGraphicParticleRenderer.h"
 #include "Impl/BasicVelocityGenerator.h"
 #include "Impl/BasicColorGenerator.h"
+#include "Impl/SphereAttractorParticleUpdater.h"
 
 BenchmarkerCore::BenchmarkerCore() :
-	m_window("ska Particle Benchmark", 800, 600),
-	m_particles(200) {
+	m_window("ska Particle Benchmark", 1200, 800),
+	m_particles(400) {
 
-	ska::Point<int> origin(400, 300);
-	ska::Point<int> maxDistance(200, 0);
+	ska::Point<int> origin(950, 500);
+	ska::Point<int> maxDistance(300, 0);
 	m_particles.addGenerator<ska::BoxParticleGenerator>(origin, maxDistance);
-	ska::Color cEnd(10, 10, 40, 255);
-	ska::Color cStart(120, 120, 250, 255);
+	ska::Color cEnd(110, 10, 140, 255);
+	ska::Color cStart(120, 220, 150, 255);
 	m_particles.addGenerator<ska::BasicColorGenerator>(cStart, cEnd);
-	ska::PolarPoint<float> initialVelocity(10.F, 1.57F);
+	ska::PolarPoint<float> initialVelocity(00.F, 1.57F);
 	m_particles.addGenerator<ska::BasicVelocityGenerator>(initialVelocity);
 
 	ska::PolarPoint<float> force;
-	force.radius = 1.0F;
-	force.angle = 5.9F;
-	m_attractor = &m_particles.addUpdater<ska::AttractorParticleUpdater>(origin, force);
+	force.radius = 0.5F;
+	m_attractor = &m_particles.addUpdater<ska::SphereAttractorParticleUpdater>(origin, force);
 	m_particles.addUpdater<ska::PhysicParticleUpdater>();
-	static const auto lifetime = 10000;
+	static const auto lifetime = 40000;
 	m_particles.addUpdater<ska::ColorParticleUpdater>(lifetime);
 	m_particles.addUpdater<ska::TimeParticleUpdater>(lifetime);
 
@@ -74,21 +73,17 @@ void BenchmarkerCore::run() {
 
 		accumulator += ellapsedTime;
 
-
 		auto accIt = 0;
-		while (accumulator >= ti) {
-			accIt += ti;
-			m_fpsCalculator.calculate(accIt);
-			eventUpdate(ti);
-			accumulator -= ti;
-		}
+		accIt += ellapsedTime;
+		m_fpsCalculator.calculate(accIt);
+		eventUpdate(ti);
 
 		graphicUpdate(ellapsedTime);
 	}
 }
 
 float BenchmarkerCore::ticksWanted() const{
-	static const unsigned int FPS = 50;
+	static const unsigned int FPS = 60;
 	static const float TICKS = 1000.F / FPS;
 	return TICKS;
 }

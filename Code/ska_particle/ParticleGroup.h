@@ -2,7 +2,6 @@
 #include <array>
 #include "../ska_core/Point.h"
 #include "../ska_core/Draw/Color.h"
-#include "../ska_core/Logging/Logger.h"
 
 namespace ska {
 
@@ -16,7 +15,7 @@ namespace ska {
 
 	private:
 		std::size_t activeIndex;
-		static constexpr auto Size = 20000;
+		static constexpr auto Size = 70000;
 
 	public:
 		ParticleGroup() :

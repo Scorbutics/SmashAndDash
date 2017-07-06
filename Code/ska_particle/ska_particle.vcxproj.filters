@@ -33,9 +33,6 @@
     <ClCompile Include="Impl\SDLGraphicParticleRenderer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Impl\AttractorParticleUpdater.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Impl\TimeParticleUpdater.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -46,6 +43,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Impl\RandomColorGenerator.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Impl\BoxAttractorParticleUpdater.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Impl\SphereAttractorParticleUpdater.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,9 +83,6 @@
     <ClInclude Include="Impl\SDLGraphicParticleRenderer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Impl\AttractorParticleUpdater.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="Impl\TimeParticleUpdater.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -93,6 +93,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Impl\RandomColorGenerator.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Impl\BoxAttractorParticleUpdater.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Impl\SphereAttractorParticleUpdater.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

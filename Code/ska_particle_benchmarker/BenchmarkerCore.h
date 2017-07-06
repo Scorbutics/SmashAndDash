@@ -3,8 +3,8 @@
 #include "../ska_particle/ParticleSystem.h"
 #include "../ska_core/Core/Window.h"
 #include "Inputs/RawInputListener.h"
-#include "Impl/AttractorParticleUpdater.h"
 #include "FpsCalculator.h"
+#include "Impl/SphereAttractorParticleUpdater.h"
 
 class BenchmarkerCore : 
 	public ska::GameApp {
@@ -23,7 +23,7 @@ private:
 	ska::RawInputListener m_inputListener;
 	ska::Window m_window;
 	ska::ParticleSystem m_particles;
-	ska::AttractorParticleUpdater* m_attractor;
+	ska::SphereAttractorParticleUpdater* m_attractor;
 	ska::FpsCalculator m_fpsCalculator;
 };
 

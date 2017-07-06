@@ -32,7 +32,7 @@ double ska::NumberUtils::absolute(double i) {
 
 double ska::NumberUtils::cosinus(double angle) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return fastSin((M_PI / 2) - angle);
+	return fastSin(angle + M_PI/2);
 #else
 	return cos(angle);
 #endif
@@ -46,9 +46,11 @@ float ska::NumberUtils::fastSin(float x) {
 
 	auto y = B * x + C * x * std::abs(x);
 
-	const auto P = 0.225f;
+	return y;
 
-	return P * (y * std::abs(y) - y) + y;
+	/*const auto P = 0.225f;
+
+	return P * (y * std::abs(y) - y) + y;*/
 }
 
 double ska::NumberUtils::sinus(double angle) {
