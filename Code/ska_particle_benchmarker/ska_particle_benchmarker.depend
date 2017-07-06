@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1499078315 source:c:\documents\perso\dev\c++\smashanddash\code\ska_particle_benchmarker\benchmarkercore.cpp
+1499354002 source:c:\documents\perso\dev\c++\smashanddash\code\ska_particle_benchmarker\benchmarkercore.cpp
 	"BenchmarkerCore.h"
 	"../ska_core/Logging/Logger.h"
 	"../ska_core/Utils/TimeUtils.h"
@@ -14,12 +14,13 @@
 	"Impl/BasicVelocityGenerator.h"
 	"Impl/BasicColorGenerator.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_particle_benchmarker\benchmarkercore.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_particle_benchmarker\benchmarkercore.h
 	"../ska_core/GameApp.h"
 	"../ska_particle/ParticleSystem.h"
 	"../ska_core/Core/Window.h"
 	"Inputs/RawInputListener.h"
 	"Impl/AttractorParticleUpdater.h"
+	"FpsCalculator.h"
 
 1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_core\gameapp.h
 	"Exceptions/TerminateProcessException.h"
@@ -43,17 +44,17 @@
 	"ParticleFactory.h"
 	"ParticleGenerator.h"
 
-1499083803 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\particlegroup.h
+1499353969 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\particlegroup.h
 	<array>
 	"../ska_core/Point.h"
 	"../ska_core/Draw/Color.h"
 	"../ska_core/Logging/Logger.h"
 
-1499084209 c:\documents\perso\dev\c++\smashanddash\code\ska_core\point.h
+1499328881 c:\documents\perso\dev\c++\smashanddash\code\ska_core\point.h
 	"Utils/NumberUtils.h"
 	"Rectangle.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\numberutils.h
 	<functional>
 	"../Exceptions/IllegalArgumentException.h"
 
@@ -61,10 +62,10 @@
 	<string>
 	"GenericException.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\rectangle.h
+1499342249 c:\documents\perso\dev\c++\smashanddash\code\ska_core\rectangle.h
 	<SDL.h>
 
-1499076051 c:\documents\perso\dev\c++\smashanddash\code\ska_core\draw\color.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\draw\color.h
 	<SDL.h>
 	"../Utils/NumberUtils.h"
 
@@ -75,7 +76,7 @@
 
 1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\particlerenderer.h
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\particlefactory.h
+1499349924 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\particlefactory.h
 	<vector>
 	"../ska_core/Point.h"
 
@@ -101,15 +102,15 @@
 	<SDL.h>
 	<bitset>
 
-1495524670 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
+1499325204 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
 	<SDL.h>
 	"../Point.h"
 
-1499084209 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+1499328881 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
 	"Utils/NumberUtils.h"
 	"Rectangle.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
 	<functional>
 	"../Exceptions/IllegalArgumentException.h"
 
@@ -121,7 +122,7 @@
 	<exception>
 	<string>
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+1499342249 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
 	<SDL.h>
 
 1499088034 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\\impl\attractorparticleupdater.h
@@ -129,6 +130,55 @@
 	"../../ska_core/Point.h"
 
 1499085628 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\\particleupdater.h
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\fpscalculator.h
+	<array>
+	"FpsRenderable.h"
+
+1498811732 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\fpsrenderable.h
+	"Draw/DrawableFixedPriority.h"
+	"Graphic/Texture.h"
+
+1498811941 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\drawablefixedpriority.h
+	"Drawable.h"
+	"../Core/Priorized.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\drawable.h
+	<memory>
+
+1498808297 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\priorized.h
+
+1490955534 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texture.h
+	<memory>
+	"Utils/ResourceTemplate.h"
+	"Draw/SDLTexture.h"
+	"Draw/TextureData.h"
+	"Utils/SkaConstants.h"
+	"Rectangle.h"
+	"Draw/Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdltexture.h
+	"Color.h"
+
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\color.h
+	<SDL.h>
+	"../Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\texturedata.h
+	<string>
+	"Color.h"
+	"SDLRenderer.h"
+
+1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdlrenderer.h
+	<SDL.h>
+	"../Rectangle.h"
+	"../Point.h"
+
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
 
 1490884278 c:\documents\perso\dev\c++\smashanddash\code\ska_core\utils\timeutils.h
 
@@ -147,29 +197,6 @@
 	"Utils/SkaConstants.h"
 	"Rectangle.h"
 	"Draw/Color.h"
-
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\resourcetemplate.h
-	<memory>
-	<unordered_map>
-
-1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdltexture.h
-	"Color.h"
-
-1499076051 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\color.h
-	<SDL.h>
-	"../Utils/NumberUtils.h"
-
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\texturedata.h
-	<string>
-	"Color.h"
-	"SDLRenderer.h"
-
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdlrenderer.h
-	<SDL.h>
-	"../Rectangle.h"
-	"../Point.h"
-
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
 
 1499085636 c:\documents\perso\dev\c++\smashanddash\code\ska_particle\impl\colorparticleupdater.h
 	"../ParticleUpdater.h"

@@ -30,7 +30,10 @@
 				<Option compiler="gnu_gcc_compiler_x86_mode" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-march=corei7-avx" />
+					<Add option="-fexpensive-optimizations" />
+					<Add option="-O3" />
+					<Add option="-ffast-math" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />

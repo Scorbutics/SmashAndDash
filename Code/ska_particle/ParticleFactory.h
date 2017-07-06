@@ -15,6 +15,7 @@ namespace ska {
 
 		const ParticleBuilder& setAcceleration(Point<float> acceleration) const;
 		const ParticleBuilder& setVelocity(Point<float> velocity) const;
+		const ParticleBuilder& setRandomPosition(Point<float> position, Point<int> maxDistance) const;
 		const ParticleBuilder& setPosition(Point<float> position) const;
 		const ParticleBuilder& setStartColor(const Color& c) const;
 		const ParticleBuilder& setColor(const Color& c) const;

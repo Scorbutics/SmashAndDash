@@ -1,7 +1,7 @@
 #include "PhysicParticleUpdater.h"
 #include "../ParticleGroup.h"
 
-void ska::PhysicParticleUpdater::update(unsigned int dt, ParticleGroup & group) {
+void ska::PhysicParticleUpdater::update(unsigned int, ParticleGroup & group) {
 	const auto& maxSize = group.getLength();
 	for (std::size_t i = 0; i < maxSize; i++) {
 		auto& physics = group.physics[i];

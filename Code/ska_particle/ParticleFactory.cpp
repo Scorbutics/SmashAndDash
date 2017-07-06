@@ -56,6 +56,16 @@ const ska::ParticleBuilder& ska::ParticleBuilder::setPosition(Point<float> posit
 	return *this;
 }
 
+const ska::ParticleBuilder& ska::ParticleBuilder::setRandomPosition(Point<float> position, Point<int> maxDistance) const {
+	assert(m_group != nullptr);
+	for (auto i = m_indexStart; i < m_indexEnd; i++) {
+		m_group->pos[i] = position + Point<int>(
+			NumberUtils::random(- maxDistance.x, maxDistance.x),
+			NumberUtils::random(- maxDistance.y, maxDistance.y));
+	}
+	return *this;
+}
+
 const ska::ParticleBuilder& ska::ParticleBuilder::setStartColor(const Color& c) const{
 	assert(m_group != nullptr);
 	for (auto i = m_indexStart; i < m_indexEnd; i++) {

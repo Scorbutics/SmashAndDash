@@ -8,7 +8,7 @@
 ska::DebugCollisionDrawerSystem::DebugCollisionDrawerSystem(EntityManager& em) : System(em) {
 }
 
-void ska::DebugCollisionDrawerSystem::refresh(unsigned int ellapsedTime) {
+void ska::DebugCollisionDrawerSystem::refresh(unsigned int) {
 	std::vector<EntityId> removeComponents;
 	for (EntityId entityId : m_processed) {
 

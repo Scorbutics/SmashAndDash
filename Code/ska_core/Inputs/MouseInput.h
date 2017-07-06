@@ -16,7 +16,7 @@ namespace ska {
 		const Point<int>& getMouseClickPos() const;
 		const Point<int>& getMouseLastPos() const;
 		const Point<int>& getMousePos() const;
-		Point<int>&& getMouseTranslation() const;
+		Point<int> getMouseTranslation() const;
 		int trigger(int touche) const;
 		int toggle(int touche) const;
 

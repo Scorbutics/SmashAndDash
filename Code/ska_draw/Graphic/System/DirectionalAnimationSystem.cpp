@@ -8,7 +8,7 @@ ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entit
 	name("DirectionalAnimationSystem");
 }
 
-void ska::DirectionalAnimationSystem::refresh(unsigned int ellapsedTime) {
+void ska::DirectionalAnimationSystem::refresh(unsigned int) {
 	for (auto entityId : m_processed) {
 		auto& gc = m_entityManager.getComponent<GraphicComponent>(entityId);
 		auto& dac = m_entityManager.getComponent<DirectionalAnimationComponent>(entityId);

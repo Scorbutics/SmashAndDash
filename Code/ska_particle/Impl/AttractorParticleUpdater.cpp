@@ -6,14 +6,10 @@ ska::AttractorParticleUpdater::AttractorParticleUpdater(Point<int>& origin, Pola
 	m_force = forceVector;
 }
 
-void ska::AttractorParticleUpdater::update(unsigned int dt, ParticleGroup & group) {
+void ska::AttractorParticleUpdater::update(unsigned int, ParticleGroup & group) {
 	const auto& maxSize = group.getLength();
 	for (std::size_t i = 0; i < maxSize; i++) {
-
-        const auto& cartesianVector = m_origin - group.pos[i];
-        const auto& vec = ska::PolarPoint<float>::polar(cartesianVector.x, cartesianVector.y);
-        m_force.angle = vec.angle;
-
+        m_force.angle = static_cast<float>(NumberUtils::arctan(m_origin.x - group.pos[i].x, m_origin.y - group.pos[i].y));
 		group.physics[i].acceleration += ska::Point<float>::cartesian(m_force.radius, m_force.angle);
 	}
 }

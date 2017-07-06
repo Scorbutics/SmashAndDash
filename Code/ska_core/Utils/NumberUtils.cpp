@@ -17,7 +17,7 @@ unsigned int ska::NumberUtils::absolute(int i) {
 	return abs(i);
 }
 
-int ska::NumberUtils::round(float f) {	
+int ska::NumberUtils::round(float f) {
 	return static_cast<int>(f > 0 ? f + 0.5 : f - 0.5);
 }
 
@@ -40,7 +40,7 @@ double ska::NumberUtils::cosinus(double angle) {
 
 float ska::NumberUtils::fastSin(float x) {
 	// restrict x so that -M_PI < x < M_PI
-	x = fmod(x + M_PI, M_PI * 2) - M_PI; 
+	x = fmod(x + M_PI, M_PI * 2) - M_PI;
 	const float B = 4.0f / M_PI;
 	const float C = -4.0f / (M_PI*M_PI);
 
@@ -111,30 +111,52 @@ float ska::NumberUtils::random(float min, float max) {
 	return static_cast<float>(coeff * (max - min + 1) + min);
 }
 
-float ska::NumberUtils::fastInverseSquareroot(float number) {
-	const auto threehalfs = 1.5F;
+extern "C" {
+    //Pasted from Greg Walsh
+    float ComputeFastInverseSquareRoot(float x) {
+        union {
+            float x;
+            int i;
+        } u;
 
-	auto x2 = number * 0.5F;
-	auto y = number;
-	auto i = *reinterpret_cast<long *>(&y);
-	i = 0x5f3759df - (i >> 1);
-	y = *reinterpret_cast<float *>(&i);
-	y = y * (threehalfs - (x2 * y * y));
-    //y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
-	return y;
+        float xhalf = 0.5f * x;
+        u.x = x;
+        u.i = 0x5f3759df - (u.i >> 1);
+        u.x = u.x * (1.5f - xhalf * u.x * u.x);
+        return u.x;
+    }
+
+}
+
+float ska::NumberUtils::fastInverseSquareroot(float number) {
+    return ComputeFastInverseSquareRoot(number);
 }
 
 double ska::NumberUtils::squareroot(const double i) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return 1.F / fastInverseSquareroot(i);
+	return i * fastInverseSquareroot(i);
 #else
 	return sqrt(i);
 #endif
-	
+
+}
+
+// http://www.rgba.org/articles/sfrand/sfrand.htm
+static unsigned int mirand = 1;
+float sfrand(void) {
+    unsigned int a;
+    mirand *= 16807;
+    a = (mirand & 0x007fffff) | 0x40000000;
+    return(*((float*)&a) - 3.0f);
 }
 
 double ska::NumberUtils::random() {
-	return rand() / static_cast<double>(RAND_MAX);
+    #ifdef SKA_MATH_OPTIMIZATIONS
+    return sfrand() / static_cast<double>(RAND_MAX);
+    #else
+    return rand() / static_cast<double>(RAND_MAX);
+    #endif // SKA_MATH_OPTIMIZATIONS
+
 }
 
 unsigned int ska::NumberUtils::getMax10Pow(const int num) {

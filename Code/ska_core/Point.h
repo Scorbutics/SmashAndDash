@@ -84,7 +84,7 @@ namespace ska {
 		}
 
 		static Point<T> cartesian(const T radius, const double angle) {
-			return Point<T>(radius * static_cast<float>(ska::NumberUtils::cosinus(angle)), 
+			return Point<T>(radius * static_cast<float>(ska::NumberUtils::cosinus(angle)),
 							radius * static_cast<float>(ska::NumberUtils::sinus(angle)));
 		}
 
@@ -97,7 +97,7 @@ namespace ska {
 		*/
 		static Point<T> rotate(const Point<T>& origin, double angle, const Point<T>& currentPoint) {
 			/* First, we have to work with a (0;0) origin to make the rotation correctly */
-			const Point<T> diff(currentPoint.x - origin.x, 
+			const Point<T> diff(currentPoint.x - origin.x,
 								currentPoint.y - origin.y);
 
 			/* Then we apply the multiplication with the rotation matrix with angle "angle" */
@@ -134,10 +134,10 @@ namespace ska {
 		}
 
 		template<class U>
-		static PolarPoint<T>&& polar(const U x, const U y) {
-			return PolarPoint<T> (
+		static PolarPoint<T> polar(const U x, const U y) {
+			return std::move(PolarPoint<T> (
 				NumberUtils::squareroot(static_cast<double>(x * x + y * y)),
-				static_cast<float>(NumberUtils::arctan(x, y)));
+				static_cast<float>(NumberUtils::arctan(x, y))));
 		}
 	};
 

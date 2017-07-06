@@ -66,7 +66,6 @@ void ska::SDLRenderer::drawColorPoint(const Color& c, const Point<int>& pos) con
 void ska::SDLRenderer::drawColorRect(const Color& c, const Rectangle& r) const {
 	SDL_SetRenderDrawColor(m_renderer, c.r, c.g, c.b, c.a);
 	SDL_RenderFillRect(m_renderer, &r);
-	
 }
 
 void ska::SDLRenderer::free() {

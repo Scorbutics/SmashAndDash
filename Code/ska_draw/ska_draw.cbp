@@ -35,7 +35,8 @@
 				<Option compiler="gnu_gcc_compiler_x86_mode" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-march=corei7" />
+					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_DLL" />
 					<Add directory="../ska_core/" />

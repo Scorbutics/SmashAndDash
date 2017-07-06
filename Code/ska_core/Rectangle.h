@@ -2,5 +2,6 @@
 #include <SDL.h>
 
 namespace ska {
-	typedef SDL_Rect Rectangle;
+    using Rectangle = SDL_Rect;
+
 }

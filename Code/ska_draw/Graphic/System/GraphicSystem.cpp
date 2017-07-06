@@ -8,14 +8,14 @@
 
 ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::GameEventDispatcher& ged, ska::CameraSystem* camera) :
 	AbstractGraphicSystem(camera),
-	System(entityManager), 
-	m_ged(ged), 
+	System(entityManager),
+	m_ged(ged),
 	m_topLayerPriority(0) {
 	m_drawables = nullptr;
 	name("GraphicSystem");
 }
 
-void ska::GraphicSystem::refresh(unsigned int ellapsedTime) {
+void ska::GraphicSystem::refresh(unsigned int) {
 	auto camera = m_camera == nullptr ? nullptr : m_camera->getDisplay();
 	const unsigned int cameraX = (camera == nullptr || camera->x < 0 ? 0 : camera->x);
 	const unsigned int cameraY = (camera == nullptr || camera->y < 0 ? 0 : camera->y);
@@ -34,8 +34,8 @@ void ska::GraphicSystem::refresh(unsigned int ellapsedTime) {
 		const int relPosY = pos.y - cameraY - pos.z;
 
 		for (auto& sprite : gc.sprite) {
-			if (!((relPosX + sprite.getWidth()) < 0 || (camera != nullptr && relPosX >= camera->w) ||
-				(relPosY + sprite.getHeight()) < 0 || (camera != nullptr && relPosY >= camera->h))) {
+			if (!(static_cast<int>(relPosX + sprite.getWidth()) < 0 || (camera != nullptr && relPosX >= camera->w) ||
+				static_cast<int>(relPosY + sprite.getHeight()) < 0 || (camera != nullptr && relPosY >= camera->h))) {
 				m_topLayerPriority = ska::NumberUtils::maximum(pos.y, m_topLayerPriority);
 				const auto priority = gc.desiredPriority > std::numeric_limits<int>::min() ? gc.desiredPriority : pos.y + (camera == nullptr ? 0 : camera->h * pos.z);
 				m_pgd.push_back(ska::PositionnedGraphicDrawable(sprite, relPosX, relPosY, priority, m_topLayerPriority));

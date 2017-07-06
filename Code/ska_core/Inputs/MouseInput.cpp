@@ -63,7 +63,7 @@ const ska::Point<int>& ska::MouseInput::getMouseClickPos() const {
 	return m_clickPos;
 }
 
-ska::Point<int>&& ska::MouseInput::getMouseTranslation() const {
+ska::Point<int> ska::MouseInput::getMouseTranslation() const {
 	return std::move(Point<int>(m_mouse.x - m_mouseLastPos.x, m_mouse.y - m_mouseLastPos.y));
 }
 

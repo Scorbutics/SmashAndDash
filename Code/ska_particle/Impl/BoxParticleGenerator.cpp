@@ -8,8 +8,5 @@ ska::BoxParticleGenerator::BoxParticleGenerator(Point<int> origin, Point<int> ma
 }
 
 void ska::BoxParticleGenerator::build(ParticleBuilder& builder) const {
-	builder
-		.setPosition(m_origin +  Point<int>(
-			NumberUtils::random(- m_maxDistance.x, m_maxDistance.x),
-			NumberUtils::random(- m_maxDistance.y, m_maxDistance.y)));
+	builder.setRandomPosition(m_origin, m_maxDistance);
 }

@@ -1,1 +1,550 @@
 # depslib dependency file v1.0
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\button.cpp
+	<limits>
+	"Button.h"
+	"../Widget.h"
+	"../../Events/ClickEventListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\button.h
+	"../Hoverable.h"
+	"../../Events/ClickEventListener.h"
+	"Graphic/Texture.h"
+	"../../Events/ValueChangedEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\hoverable.h
+	"HandledWidget.h"
+	"../Events/HoverEvent.h"
+
+1498804115 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\handledwidget.h
+	<iostream>
+	<unordered_map>
+	<bitset>
+	<tuple>
+	"Widget.h"
+	"../Events/IWidgetEvent.h"
+	"../Utils/WidgetMaskHelper.h"
+	"Utils/TupleUtils.h"
+	"Logging/Logger.h"
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\widget.h
+	"Point.h"
+	"Draw/DrawableFixedPriority.h"
+	"Utils/RectangleUtils.h"
+
+1499328881 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+	"Utils/NumberUtils.h"
+	"Rectangle.h"
+
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalargumentexception.h
+	<string>
+	"GenericException.h"
+
+1491203150 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\genericexception.h
+	<exception>
+	<string>
+
+1499342249 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+	<SDL.h>
+
+1498811941 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\drawablefixedpriority.h
+	"Drawable.h"
+	"../Core/Priorized.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\drawable.h
+	<memory>
+
+1498808297 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\priorized.h
+
+1494504207 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+	"../Rectangle.h"
+	"../Point.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\iwidgetevent.h
+	"EventListener.h"
+	"StopType.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\eventlistener.h
+	<functional>
+	<deque>
+	"StopType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\stoptype.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\widgetmaskhelper.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\tupleutils.h
+	<utility>
+	<functional>
+
+1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\logging\logger.h
+	<iostream>
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\hoverevent.h
+	"WidgetEvent.h"
+	"Point.h"
+	"HoverEventListener.h"
+	"MouseEventType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\widgetevent.h
+	"IWidgetEvent.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\hovereventlistener.h
+	<functional>
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\mouseeventtype.h
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\clickeventlistener.h
+	<functional>
+	"ClickEvent.h"
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\clickevent.h
+	"Point.h"
+	"HoverEvent.h"
+
+1490955534 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texture.h
+	<memory>
+	"Utils/ResourceTemplate.h"
+	"Draw/SDLTexture.h"
+	"Draw/TextureData.h"
+	"Utils/SkaConstants.h"
+	"Rectangle.h"
+	"Draw/Color.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\resourcetemplate.h
+	<memory>
+	<unordered_map>
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdltexture.h
+	"Color.h"
+
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\color.h
+	<SDL.h>
+	"../Utils/NumberUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\texturedata.h
+	<string>
+	"Color.h"
+	"SDLRenderer.h"
+
+1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdlrenderer.h
+	<SDL.h>
+	"../Rectangle.h"
+	"../Point.h"
+
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\valuechangedevent.h
+	"ValueChangedEventListener.h"
+	"WidgetEvent.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\valuechangedeventlistener.h
+	"EventListener.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\buttonquit.cpp
+	"ButtonQuit.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\buttonquit.h
+	"Button.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\buttonsprite.cpp
+	<limits>
+	"ButtonSprite.h"
+	"Utils/SpritePath.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\buttonsprite.h
+	"Button.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\spritepath.h
+	<string>
+	<vector>
+	"Singleton_template.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\singleton_template.h
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\checkbox.cpp
+	"CheckBox.h"
+	"../../Events/ValueChangedEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\checkbox.h
+	"Button.h"
+
+1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\horizontalslider.cpp
+	<memory>
+	"Button.h"
+	"Image.h"
+	"HorizontalSlider.h"
+	"../../Events/ValueChangedEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\image.h
+	"../Widget.h"
+	"Graphic/Texture.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\horizontalslider.h
+	"../../Events/ValueChangedEvent.h"
+	"../../Events/ClickEventListener.h"
+	"../WidgetPanel.h"
+
+1495003368 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\widgetpanel.h
+	<memory>
+	<vector>
+	<type_traits>
+	<algorithm>
+	"HandledWidget.h"
+	"../Utils/WidgetHandlingTrait.h"
+	"../Events/StopType.h"
+	"../Events/IWidgetEvent.h"
+	"Utils/VectorUtils.h"
+	"../../../Game/Utils/IDs.h"
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\widgethandlingtrait.h
+	"WidgetContainer.h"
+	"Utils/VectorUtils.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\widgetcontainer.h
+	"SortedWidgetVector.h"
+
+1495175372 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\sortedwidgetvector.h
+	<vector>
+
+1495003368 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\vectorutils.h
+	<algorithm>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\utils\ids.h
+	"Utils/SkaConstants.h"
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\image.cpp
+	<limits>
+	"Image.h"
+
+1494506508 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\input.cpp
+	<SDL.h>
+	"Input.h"
+	"../../Events/KeyEvent.h"
+	"../../Events/ValueChangedEvent.h"
+	"Utils/StringUtils.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\input.h
+	"Label.h"
+	"Button.h"
+	"../WidgetPanel.h"
+	"../../Events/KeyEventListener.h"
+	"../../Events/FocusEventListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\label.h
+	"../Widget.h"
+	"Graphic/Texture.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\keyeventlistener.h
+	<functional>
+	"EventListener.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\focuseventlistener.h
+	<functional>
+	"FocusEvent.h"
+	"EventListener.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\focusevent.h
+	"WidgetEvent.h"
+	"MouseEventType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\keyevent.h
+	"WidgetEvent.h"
+	"KeyEventListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\stringutils.h
+	<string>
+	<vector>
+
+1490603467 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\label.cpp
+	<iostream>
+	"Label.h"
+
+1494506570 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\labeledhorizontalslider.cpp
+	"LabeledHorizontalSlider.h"
+	"Utils/StringUtils.h"
+
+1494506565 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\labeledhorizontalslider.h
+	"HorizontalSlider.h"
+	"Label.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\mousecursor.cpp
+	<SDL.h>
+	"MouseCursor.h"
+
+1490876067 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\mousecursor.h
+	"Draw/DrawableFixedPriority.h"
+	"Point.h"
+	"Graphic/Texture.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\radiobutton.cpp
+	"RadioButton.h"
+	"RadioButtonGroup.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\radiobutton.h
+	<memory>
+	"CheckBox.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\radiobuttongroup.h
+	<unordered_set>
+	"RadioButton.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\radiobuttongroup.cpp
+	"RadioButtonGroup.h"
+
+1494506636 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\scrollingmultilinelabel.cpp
+	"ScrollingMultiLineLabel.h"
+	"Label.h"
+	"Utils/StringUtils.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\concrete\scrollingmultilinelabel.h
+	"../WidgetPanel.h"
+	"../../Events/TimeEventListener.h"
+
+1494483717 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\timeeventlistener.h
+	<functional>
+	"EventListener.h"
+	"TimeEvent.h"
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\timeevent.h
+	"WidgetEvent.h"
+
+1494505848 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\components\widget.cpp
+	"Widget.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\clickevent.cpp
+	"ClickEvent.h"
+	"ClickEventListener.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1494483717 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\clickeventlistener.cpp
+	"ClickEventListener.h"
+	"ClickEvent.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\focusevent.cpp
+	"FocusEvent.h"
+	"FocusEventListener.h"
+	"../Utils/WidgetMaskHelper.h"
+	"../Components/Widget.h"
+
+1494483717 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\focuseventlistener.cpp
+	"FocusEventListener.h"
+	"FocusEvent.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\hoverevent.cpp
+	"HoverEvent.h"
+	"Utils/RectangleUtils.h"
+	"../Utils/WidgetMaskHelper.h"
+	"../Components/Widget.h"
+
+1494483717 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\hovereventlistener.cpp
+	"HoverEventListener.h"
+	"ClickEvent.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\keyevent.cpp
+	"KeyEvent.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1494483717 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\keyeventlistener.cpp
+	"KeyEventListener.h"
+	"KeyEvent.h"
+
+1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\events\timeevent.cpp
+	"TimeEvent.h"
+	"TimeEventListener.h"
+	"../Utils/WidgetMaskHelper.h"
+
+1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\gui.cpp
+	"Core/Window.h"
+	"Inputs/InputContextManager.h"
+	"GUI.h"
+	"Components/Concrete/Button.h"
+	"Windows/GUIScrollButtonWindowIG.h"
+	"Events/FocusEvent.h"
+	"Data/Events/GUIEvent.h"
+	"Windows/BalloonDialog.h"
+
+1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\window.h
+	<SDL.h>
+	"../Draw/SDLRenderer.h"
+	"BaseWindow.h"
+
+1494852187 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\basewindow.h
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontextmanager.h
+	<vector>
+	<bitset>
+	<unordered_map>
+	"InputContext.h"
+	"EnumContextManager.h"
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputcontext.h
+	<unordered_map>
+	<memory>
+	"InputAction.h"
+	"InputRange.h"
+	"InputToggle.h"
+	"RawInputListener.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputaction.h
+	<bitset>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputrange.h
+	<vector>
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\inputtoggle.h
+	<bitset>
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\rawinputlistener.h
+	"KeyInput.h"
+	"MouseInput.h"
+
+1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\keyinput.h
+	<SDL.h>
+	<bitset>
+
+1499325204 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
+	<SDL.h>
+	"../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\enumcontextmanager.h
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\gui.h
+	<vector>
+	<memory>
+	"Draw/DrawableFixedPriority.h"
+	"Utils/MouseObservable.h"
+	"Windows/DynamicWindowIG.h"
+	"Components/Concrete/MouseCursor.h"
+	"Utils/TimeObservable.h"
+	"Windows/TimeScrollableWindowIG.h"
+	"Data/Events/GameEventDispatcher.h"
+	"Exceptions/IllegalStateException.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\mouseobservable.h
+	"Utils/Observable.h"
+	"../Events/HoverEvent.h"
+	"../Events/ClickEvent.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observable.h
+	<vector>
+	<unordered_set>
+	"Observer.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\observer.h
+	<functional>
+	"../Exceptions/IllegalArgumentException.h"
+
+1495204216 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\dynamicwindowig.h
+	"../Components/Hoverable.h"
+	"../Utils/MouseObserver.h"
+	"../Utils/KeyObserver.h"
+	"../Utils/KeyObservable.h"
+	"../Utils/MouseObservable.h"
+	"../Events/ClickEventListener.h"
+	"WindowIG.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\mouseobserver.h
+	"Utils/Observer.h"
+	"../Events/ClickEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\keyobserver.h
+	"Utils/Observer.h"
+	"../Events/KeyEvent.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\keyobservable.h
+	"Utils/Observable.h"
+
+1494933129 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\windowig.h
+	"../Components/WidgetPanel.h"
+	"Graphic/Texture.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\timeobservable.h
+	"Utils/Observable.h"
+	"../Events/TimeEvent.h"
+
+1494832958 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\timescrollablewindowig.h
+	"DynamicWindowIG.h"
+	"../Utils/TimeObserver.h"
+	"../Utils/TimeObservable.h"
+	"../Events/TimeEventListener.h"
+	"Task/WorkNode.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\timeobserver.h
+	"Utils/Observer.h"
+	"../Events/TimeEvent.h"
+
+1492004454 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\task\worknode.h
+	<functional>
+	<memory>
+
+1491467945 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\gameeventdispatcher.h
+	"EventDispatcher.h"
+	"SoundEvent.h"
+	"CollisionEvent.h"
+	"WorldEvent.h"
+	"GUIEvent.h"
+
+1491203150 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\eventdispatcher.h
+	"Utils/Observer.h"
+	"Utils/Observable.h"
+
+1490949100 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\soundevent.h
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\collisionevent.h
+	"ECS/ECSDefines.h"
+
+1490857451 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\ecsdefines.h
+	<vector>
+	<unordered_map>
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\worldevent.h
+
+1497368170 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\guievent.h
+	"../../Point.h"
+
+1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\exceptions\illegalstateexception.h
+	"GenericException.h"
+
+1492004071 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\guiscrollbuttonwindowig.h
+	"Rectangle.h"
+	"Point.h"
+	"TimeScrollableWindowIG.h"
+
+1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\balloondialog.h
+	"WindowIG.h"
+	"../Events/TimeEventListener.h"
+
+1490603468 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\utils\widgetmaskhelper.cpp
+	"WidgetMaskHelper.h"
+
+1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\balloondialog.cpp
+	"BalloonDialog.h"
+	"../Components/Widget.h"
+	"../Components/Concrete/Button.h"
+	"../Components/Concrete/ScrollingMultiLineLabel.h"
+	"Utils/TimeUtils.h"
+
+1490884278 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\timeutils.h
+
+1492004081 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\gui\windows\guiscrollbuttonwindowig.cpp
+	"GUIScrollButtonWindowIG.h"
+
+1490944561 source:c:\documents\perso\dev\c++\smashanddash\code\ska_gui\messagepopup.cpp
+	<SDL.h>
+	"MessagePopup.h"
+	"Core/Window.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\messagepopup.h
+	<string>
+	"MessageType.h"
+
+1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_gui\messagetype.h
+
