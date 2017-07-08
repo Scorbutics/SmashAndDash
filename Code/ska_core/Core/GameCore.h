@@ -85,7 +85,7 @@ namespace ska {
                 	accumulator += ellapsedTime;
 
 					while (accumulator >= ti) {
-						eventUpdate(ti);
+						eventUpdate(static_cast<unsigned int>(ti));
 						accumulator -= ti;
                     }
 

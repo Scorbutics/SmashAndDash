@@ -1,6 +1,7 @@
 #include <cassert>
 #include "ParticleFactory.h"
 #include "ParticleGroup.h"
+#include <iostream>
 
 ska::ParticleFactory::ParticleFactory(): m_group(nullptr), m_lastActiveIndex(0){}
 
@@ -40,10 +41,20 @@ const ska::ParticleBuilder& ska::ParticleBuilder::setAcceleration(Point<float> a
 	return *this;
 }
 
-const ska::ParticleBuilder& ska::ParticleBuilder::setVelocity(Point<float> velocity) const {
+const ska::ParticleBuilder& ska::ParticleBuilder::setVelocity(PolarPoint<float> velocity, float spreading, unsigned int slices) const {
 	assert(m_group != nullptr);
-	for (auto i = m_indexStart; i < m_indexEnd; i++) {
-		m_group->physics[i].velocity = velocity;
+	if (slices == 0) {
+		for (auto i = m_indexStart; i < m_indexEnd; i++) {
+			m_group->physics[i].velocity = ska::Point<float>::cartesian(velocity.radius, velocity.angle + ska::NumberUtils::random(-spreading, spreading));
+		}
+	} else {
+		static const auto factor = 10000.F;
+		for (auto i = m_indexStart; i < m_indexEnd; i++) {
+			const long factoredSpreading = 2 * spreading * factor;
+			const auto currentSlice = slices == 1 ? 1 : ska::NumberUtils::random(1, slices);
+			const auto spreadingAngle = ((factoredSpreading / slices) * currentSlice) / factor;
+			m_group->physics[i].velocity = ska::Point<float>::cartesian(velocity.radius, velocity.angle + spreadingAngle);
+		}
 	}
 	return *this;
 }
@@ -59,7 +70,7 @@ const ska::ParticleBuilder& ska::ParticleBuilder::setPosition(Point<float> posit
 const ska::ParticleBuilder& ska::ParticleBuilder::setRandomPosition(Point<float> position, Point<int> maxDistance) const {
 	assert(m_group != nullptr);
 	for (auto i = m_indexStart; i < m_indexEnd; i++) {
-		m_group->pos[i] = position + Point<int>(
+		m_group->pos[i] = position + Point<float>(
 			NumberUtils::random(- maxDistance.x, maxDistance.x),
 			NumberUtils::random(- maxDistance.y, maxDistance.y));
 	}

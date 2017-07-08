@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Core\GameCore.h" />
     <ClInclude Include="Core\BaseWindow.h" />
+    <ClInclude Include="Core\Priorized.h" />
     <ClInclude Include="Core\State\HasGraphic.h" />
     <ClInclude Include="Core\State\HasLogic.h" />
     <ClInclude Include="Core\State\StateBase.h" />
@@ -30,6 +31,7 @@
     <ClInclude Include="Core\State\StateType.h" />
     <ClInclude Include="Core\State\State.h" />
     <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="Core\BasicGameCore.h" />
     <ClInclude Include="Data\BlockContainer.h" />
     <ClInclude Include="Data\Events\CollisionEvent.h" />
     <ClInclude Include="Data\Events\EventDispatcher.h" />
@@ -119,9 +121,11 @@
     <ClInclude Include="Logging\Logger.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Task\CompoundTask.h" />
     <ClInclude Include="Task\Runnable.h" />
     <ClInclude Include="Task\Task.h" />
     <ClInclude Include="Task\TaskQueue.h" />
+    <ClInclude Include="Task\WorkNode.h" />
     <ClInclude Include="Ticked.h" />
     <ClInclude Include="Utils\Demangle.h" />
     <ClInclude Include="Utils\FileUtils.h" />

@@ -1,14 +1,3 @@
-#include <iostream>
-
-#include "Skill.h"
-#include "Physic/LinearParticle.h"
-#include "../../Utils/ChargementImages.h"
-#include "Utils/SpritePath.h"
-#include "../../Gameplay/Data/Statistics.h"
-#include "Utils/StringUtils.h"
-#include "Utils/RectangleUtils.h"
-#include "../../Utils/IDs.h"
-
 /*const unsigned int Skill::m_fontSize = 30;
 
 //Déroulement des combats :

@@ -1,10 +1,11 @@
 #pragma once
 #include "../ska_core/GameApp.h"
-#include "../ska_particle/ParticleSystem.h"
+#include "../ska_particle/ParticleEffect.h"
 #include "../ska_core/Core/Window.h"
 #include "Inputs/RawInputListener.h"
 #include "FpsCalculator.h"
-#include "Impl/SphereAttractorParticleUpdater.h"
+#include "Impl/EulerAttractorParticleUpdater.h"
+#include "ParticleSystem.h"
 
 class BenchmarkerCore : 
 	public ska::GameApp {
@@ -20,10 +21,13 @@ public:
 	float ticksWanted() const override;
 
 private:
+	void buildFireworks();
+
 	ska::RawInputListener m_inputListener;
 	ska::Window m_window;
-	ska::ParticleSystem m_particles;
-	ska::SphereAttractorParticleUpdater* m_attractor;
+	ska::ParticleEffect m_particles;
+	ska::ParticleSystem m_particleSystem;
+	ska::EulerAttractorParticleUpdater* m_attractor;
 	ska::FpsCalculator m_fpsCalculator;
 };
 

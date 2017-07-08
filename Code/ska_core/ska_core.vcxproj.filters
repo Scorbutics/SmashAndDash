@@ -134,6 +134,10 @@
     <ClInclude Include="Exceptions\StateDiedException.h" />
     <ClInclude Include="Logging\Logger.h" />
     <ClInclude Include="Core\State\StateData.h" />
+    <ClInclude Include="Core\BasicGameCore.h" />
+    <ClInclude Include="Task\WorkNode.h" />
+    <ClInclude Include="Task\CompoundTask.h" />
+    <ClInclude Include="Core\Priorized.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

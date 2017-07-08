@@ -1,15 +1,20 @@
 #include <cstdlib>
 #include <cmath>
-#include "NumberUtils.h"
 #include <SDL_stdinc.h>
+#include "NumberUtils.h"
 
 #define SKA_MATH_OPTIMIZATIONS
 
+std::mt19937 ska::NumberUtils::RNG;
+
 int ska::NumberUtils::random(int min, int max) {
-	return rand() % (max - min + 1) + min;
+	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
+	return dist(RNG);
 }
 
-ska::NumberUtils::NumberUtils() {}
+ska::NumberUtils::NumberUtils() {
+	RNG.seed(std::random_device()());
+}
 
 ska::NumberUtils::~NumberUtils() {}
 
@@ -109,8 +114,9 @@ float ska::NumberUtils::fastAtan2(float y, float x) {
 }*/
 
 float ska::NumberUtils::random(float min, float max) {
-	const auto coeff = random();
-	return static_cast<float>(coeff * (max - min + 1) + min);
+	std::uniform_real_distribution<> dist(min, max);
+	const auto& result = dist(RNG);
+	return result;
 }
 
 extern "C" {
@@ -143,24 +149,6 @@ double ska::NumberUtils::squareroot(const double i) {
 
 }
 
-// http://www.rgba.org/articles/sfrand/sfrand.htm
-static unsigned int mirand = 1;
-float sfrand(void) {
-    unsigned int a;
-    mirand *= 16807;
-    a = (mirand & 0x007fffff) | 0x40000000;
-    return(*((float*)&a) - 3.0f);
-}
-
-double ska::NumberUtils::random() {
-    #ifdef SKA_MATH_OPTIMIZATIONS
-    return sfrand() / static_cast<double>(RAND_MAX);
-    #else
-    return rand() / static_cast<double>(RAND_MAX);
-    #endif // SKA_MATH_OPTIMIZATIONS
-
-}
-
 unsigned int ska::NumberUtils::getMax10Pow(const int num) {
 	unsigned int absNum = absolute(num), i = 0;
 	for (i = 0; absNum >= 1; i++, absNum /= 10);
@@ -169,6 +157,6 @@ unsigned int ska::NumberUtils::getMax10Pow(const int num) {
 }
 
 double ska::NumberUtils::random(double min, double max) {
-	const auto coeff = random();
-	return (coeff * (max - min + 1) + min);
+	std::uniform_int_distribution<> dist(min, max);
+	return dist(RNG);
 }

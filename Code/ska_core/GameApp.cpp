@@ -1,5 +1,4 @@
 #include <iostream>
-#include <ctime>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -8,11 +7,10 @@
 #include "GameApp.h"
 #include "Exceptions/IllegalStateException.h"
 #include "Logging/Logger.h"
+#include <random>
 
 
 ska::GameApp::GameApp() {
-	/* TODO : ne plus utiliser srand...  */
-	srand(static_cast<unsigned int>(time(nullptr)));
 
 	// Chargement des images, de l'audio et du texte
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {

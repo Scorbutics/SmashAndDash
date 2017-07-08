@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Physic\GravityParticle.cpp" />
-    <ClCompile Include="Physic\LinearParticle.cpp" />
-    <ClCompile Include="Physic\Particle.cpp" />
-    <ClCompile Include="Physic\ParticleManager.cpp" />
     <ClCompile Include="Physic\PhysicObject.cpp" />
     <ClCompile Include="Physic\RainParticle.cpp" />
     <ClCompile Include="Physic\RainParticleManager.cpp" />
@@ -34,10 +30,6 @@
     <ClCompile Include="Physic\System\WorldCollisionResponse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Physic\GravityParticle.h" />
-    <ClInclude Include="Physic\LinearParticle.h" />
-    <ClInclude Include="Physic\Particle.h" />
-    <ClInclude Include="Physic\ParticleManager.h" />
     <ClInclude Include="Physic\PhysicDefines.h" />
     <ClInclude Include="Physic\PhysicObject.h" />
     <ClInclude Include="Physic\RainParticle.h" />

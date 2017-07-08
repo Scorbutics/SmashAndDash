@@ -1,6 +1,5 @@
 #include "BoxParticleGenerator.h"
 #include "../ParticleFactory.h"
-#include "Utils/NumberUtils.h"
 
 ska::BoxParticleGenerator::BoxParticleGenerator(Point<int> origin, Point<int> maxDistance) :
 	m_origin(origin),
@@ -8,5 +7,9 @@ ska::BoxParticleGenerator::BoxParticleGenerator(Point<int> origin, Point<int> ma
 }
 
 void ska::BoxParticleGenerator::build(ParticleBuilder& builder) const {
-	builder.setRandomPosition(m_origin, m_maxDistance);
+	if (m_maxDistance.x != 0 || m_maxDistance.y != 0) {
+		builder.setRandomPosition(m_origin, m_maxDistance);
+	} else {
+		builder.setPosition(m_origin);
+	}
 }

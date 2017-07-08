@@ -9,12 +9,14 @@ namespace ska {
 	class BasicVelocityGenerator :
 		public ParticleGenerator {
 	public:
-		explicit BasicVelocityGenerator(PolarPoint<float>& initialVelocityVector);
+		BasicVelocityGenerator(PolarPoint<float> initialVelocityVector, float spreading, unsigned int slices);
 		virtual ~BasicVelocityGenerator() = default;
 
 		void build(ParticleBuilder& builder) const override;
 
 	private:
-		Point<float> m_initialVelocityVector;
+		PolarPoint<float> m_initialVelocityVector;
+		float m_spreading;
+		unsigned int m_slices;
 	};
 }

@@ -7,7 +7,6 @@
 #include <memory>
 #include "Inputs/Readers/IniReader.h"
 #include "Graphic/Texture.h"
-#include "Physic/Particle.h"
 /*
 
 class Skill

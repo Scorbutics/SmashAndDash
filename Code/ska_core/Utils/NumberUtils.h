@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <random>
 #include "../Exceptions/IllegalArgumentException.h"
 
 namespace ska{
@@ -8,14 +9,15 @@ namespace ska{
 	private:
 		NumberUtils();
 
+		static std::mt19937 RNG;
+
 	public:
 		~NumberUtils();
 
 		static float random(float min, float max);
 		static float fastInverseSquareroot(float number);
 		static double random(double min, double max);
-		static double random();
-
+		
 		template <class T>
 		static void hashCombine(std::size_t& seed, const T& value) {
 			seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -24,7 +26,6 @@ namespace ska{
 		static float exponential(float i);
 		static int random(int min, int max);
 		static double arctan(int x, int y);
-		//static double arctan(double slope);
 
 		template <typename T>
 		static T maximum(T a, T b) {

@@ -1,16 +1,8 @@
 #include "../Data/Settings.h"
 #include "WorldImpl.h"
-#include "../CustomEntityManager.h"
 #include "Draw/DrawableContainer.h"
-#include "Physic/ParticleManager.h"
 #include "../../Utils/IDs.h"
-#include "World/Layer.h"
-#include "World/LayerE.h"
 #include "Utils/SpritePath.h"
-
-#include "Exceptions/CorruptedFileException.h"
-#include "Utils/StringUtils.h"
-#include "Utils/RectangleUtils.h"
 #include "Inputs/Readers/IniReader.h"
 
 #define WEATHER_ALPHA_LVL 85

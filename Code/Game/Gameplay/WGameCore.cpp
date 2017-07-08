@@ -23,7 +23,7 @@ ska::GameApp& ska::GameApp::get() {
 	static WGameCore wgc;
 	wgc.init();
 	return wgc;
-}
+}	
 
 void WGameCore::init() {
 	/* Configure inputs types */
