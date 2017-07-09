@@ -16,6 +16,7 @@
 #include "Impl/SpreadingParticleEffectFactory.h"
 #include "Impl/SpreadingTextureParticleEffectFactory.h"
 #include "Utils/FileUtils.h"
+#include "Impl/SideBalancingParticleUpdater.h"
 
 BenchmarkerCore::BenchmarkerCore() :
 	m_window("ska Particle Benchmark", 1500, 900),
@@ -45,16 +46,19 @@ BenchmarkerCore::BenchmarkerCore() :
 	/**********************************************************/
 
 	ska::SpreadingParticleSystemData effectData;
-	effectData.lifetime = 1500;
+	//effectData.lifetime = 1500;
+	effectData.lifetime = 10000;
 	effectData.origin.x = 750;
 	effectData.origin.y = 450;	
-	effectData.initialVelocity.radius = 0.5F;
+	effectData.initialVelocity.radius = 0.0F;
 	effectData.initialVelocity.angle = 1.57F;
 	effectData.spreading = 0.27F;
 	effectData.density = 1;
-	effectData.maxParticles = 3;
+	effectData.maxParticles = 1;
 	effectData.spritePath = ska::FileUtils::getExecutablePath() + "/Particles/4.png";
-	m_particleSystem.makeEffect<ska::SpreadingTextureParticleEffectFactory>(m_window.getRenderer(), effectData);
+	auto& grassEffect = m_particleSystem.makeEffect<ska::SpreadingTextureParticleEffectFactory>(m_window.getRenderer(), effectData);
+	grassEffect.addUpdater<ska::SideBalancingParticleUpdater>(effectData.origin, 0.1F, 1.F);
+	//grassEffect.addUpdater<ska::PhysicParticleUpdater>();
 
 }
 

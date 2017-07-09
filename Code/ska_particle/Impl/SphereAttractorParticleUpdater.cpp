@@ -1,6 +1,4 @@
-#include "BoxAttractorParticleUpdater.h"
 #include "../ParticleGroup.h"
-#include <iostream>
 #include "SphereAttractorParticleUpdater.h"
 
 ska::SphereAttractorParticleUpdater::SphereAttractorParticleUpdater(Point<int>& origin, PolarPoint<float>& forceVector) :

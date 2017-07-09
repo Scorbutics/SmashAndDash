@@ -12,6 +12,7 @@ namespace ska {
 		void update(unsigned int dt, ParticleGroup& group) override;
 		void move(const Point<int>& point);
 
+	private:
 		PolarPoint<float> m_force;
 		Point<int> m_origin;
 	};

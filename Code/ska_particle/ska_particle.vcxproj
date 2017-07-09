@@ -29,6 +29,7 @@
     <ClCompile Include="Impl\RandomColorGenerator.cpp" />
     <ClCompile Include="Impl\ColoredRectGraphicParticleRenderer.cpp" />
     <ClCompile Include="Impl\PhysicParticleUpdater.cpp" />
+    <ClCompile Include="Impl\SideBalancingParticleUpdater.cpp" />
     <ClCompile Include="Impl\SphereAttractorParticleUpdater.cpp" />
     <ClCompile Include="Impl\SpreadingColorParticleEffectFactory.cpp" />
     <ClCompile Include="Impl\SpreadingParticleEffectFactory.cpp" />
@@ -42,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Impl\ConsoleParticleCountRenderer.h" />
+    <ClInclude Include="Impl\SideBalancingParticleUpdater.h" />
     <ClInclude Include="Impl\SpreadingColorParticleEffectFactory.h" />
     <ClInclude Include="Impl\BoxAttractorParticleUpdater.h" />
     <ClInclude Include="Impl\BasicColorGenerator.h" />
