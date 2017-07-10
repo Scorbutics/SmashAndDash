@@ -6,7 +6,10 @@
 namespace ska {
 	class RectangleUtils {
 	public:
-		static unsigned int distanceSquared(const Point<int>& pos1, const Point<int>& pos2);
+		template <class T>
+		static T distanceSquared(const Point<T>& pos1, const Point<T>& pos2) {
+			return (((pos1.x - pos2.x) * (pos1.x - pos2.x)) + ((pos1.y - pos2.y) * (pos1.y - pos2.y)));	
+		}
 
 		template <class T>
 		static bool isPositionInBox(const Point<T> &pos, const Rectangle &box) {

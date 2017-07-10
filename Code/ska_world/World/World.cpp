@@ -313,7 +313,7 @@ ska::Rectangle ska::World::placeOnNearestPracticableBlock(const Rectangle& hitBo
 	}
 
 	std::sort(blocksPos.begin(), blocksPos.end(), [hitBoxBlock](const decltype(*blocksPos.begin())& it1, decltype(*blocksPos.begin())& it2) -> bool {
-		return RectangleUtils::distanceSquared(it1, hitBoxBlock) < RectangleUtils::distanceSquared(it2, hitBoxBlock);
+		return RectangleUtils::distanceSquared<int>(it1, hitBoxBlock) < RectangleUtils::distanceSquared<int>(it2, hitBoxBlock);
 	});
 
 	for (const auto& r : blocksPos) {

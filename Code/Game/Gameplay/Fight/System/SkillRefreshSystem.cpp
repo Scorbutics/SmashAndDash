@@ -35,7 +35,7 @@ void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
 		mc.vy = directionalPoint.y;
 
 		/* Max range reached : delete the skill */
-		if (ska::RectangleUtils::distanceSquared(sc.origin, pc) > sc.range*sc.range) {
+		if (ska::RectangleUtils::distanceSquared<int>(sc.origin, pc) > sc.range*sc.range) {
 			scheduleDeferredRemove(entityId);
 		}
 

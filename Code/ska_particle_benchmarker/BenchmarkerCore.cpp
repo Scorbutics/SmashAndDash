@@ -21,8 +21,8 @@
 BenchmarkerCore::BenchmarkerCore() :
 	m_window("ska Particle Benchmark", 1500, 900),
 	m_particles(400, 70000) {
-	/*{
-		ska::Point<int> origin(950, 500);
+	{
+		/*ska::Point<int> origin(950, 500);
 		ska::Point<int> maxDistance(300, 0);
 		m_particles.addGenerator<ska::BoxParticleGenerator>(origin, maxDistance);
 		ska::Color cEnd(110, 10, 140, 255);
@@ -40,25 +40,24 @@ BenchmarkerCore::BenchmarkerCore() :
 		m_particles.addUpdater<ska::TimeParticleUpdater>(lifetime);
 
 		m_particles.addRenderer<ska::ColoredRectGraphicParticleRenderer>(m_window.getRenderer(), 1);
-		m_particles.addRenderer<ska::ConsoleParticleCountRenderer>(500);
+		m_particles.addRenderer<ska::ConsoleParticleCountRenderer>(500);*/
 
-	}*/
+	}
 	/**********************************************************/
 
 	ska::SpreadingParticleSystemData effectData;
-	//effectData.lifetime = 1500;
-	effectData.lifetime = 10000;
+	effectData.lifetime = 2000;
+	//effectData.lifetime = 10000;
 	effectData.origin.x = 750;
 	effectData.origin.y = 450;	
-	effectData.initialVelocity.radius = 0.0F;
+	effectData.initialVelocity.radius = 0.5F;
 	effectData.initialVelocity.angle = 1.57F;
-	effectData.spreading = 0.27F;
+	effectData.spreading = 0.8F;
 	effectData.density = 1;
-	effectData.maxParticles = 1;
+	effectData.maxParticles = 3;
 	effectData.spritePath = ska::FileUtils::getExecutablePath() + "/Particles/4.png";
 	auto& grassEffect = m_particleSystem.makeEffect<ska::SpreadingTextureParticleEffectFactory>(m_window.getRenderer(), effectData);
-	grassEffect.addUpdater<ska::SideBalancingParticleUpdater>(effectData.origin, 0.1F, 1.F);
-	//grassEffect.addUpdater<ska::PhysicParticleUpdater>();
+	grassEffect.addUpdater<ska::SideBalancingParticleUpdater>(effectData.origin, 1.F, 1.F);
 
 }
 

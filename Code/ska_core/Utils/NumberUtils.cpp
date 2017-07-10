@@ -18,6 +18,10 @@ ska::NumberUtils::NumberUtils() {
 
 ska::NumberUtils::~NumberUtils() {}
 
+double ska::NumberUtils::tangen(double x) {
+	return tan(x);
+}
+
 unsigned int ska::NumberUtils::absolute(int i) {
 	return abs(i);
 }

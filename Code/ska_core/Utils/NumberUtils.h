@@ -13,6 +13,7 @@ namespace ska{
 
 	public:
 		~NumberUtils();
+		static double tangen(double x);
 
 		static float random(float min, float max);
 		static float fastInverseSquareroot(float number);
