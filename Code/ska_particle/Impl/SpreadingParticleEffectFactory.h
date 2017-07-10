@@ -19,6 +19,7 @@ namespace ska {
 		Color cStart;
 		Color cEnd;
 		ska::PolarPoint<float> initialVelocity;
+		Point<int> originalBoxSize;
 		float spreading;
 		unsigned int lifetime;
 		int spreadingSlices;
