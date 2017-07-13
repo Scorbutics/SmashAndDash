@@ -14,7 +14,8 @@ namespace ska {
 			spreadingSlices(0),
 			density(2),
 			maxParticles(500),
-			particleDimension(3) { }
+			particleDimension(3),
+			generationDelay(0) { }
 		Point<int> origin;
 		Color cStart;
 		Color cEnd;
@@ -26,9 +27,10 @@ namespace ska {
 		unsigned int density;
 		unsigned int maxParticles;
 		unsigned int particleDimension;
+		unsigned int generationDelay;
 		std::string spritePath;
 	};
-	
+
 	class SpreadingParticleEffectFactory {
 	public:
 		static std::unique_ptr<ParticleEffect> createEffect(SDLRenderer& renderer, const SpreadingParticleSystemData& data);

@@ -50,13 +50,14 @@ BenchmarkerCore::BenchmarkerCore() :
 	//effectData.lifetime = 10000;
 	effectData.originalBoxSize.x = 15;
 	effectData.origin.x = 750;
-	effectData.origin.y = 450;	
+	effectData.origin.y = 450;
 	effectData.initialVelocity.radius = 0.5F;
 	effectData.initialVelocity.angle = 1.57F;
 	effectData.spreading = 0.8F;
 	effectData.density = 1;
-	effectData.maxParticles = 3;
-	effectData.spritePath = ska::FileUtils::getExecutablePath() + "/Particles/4.png";
+	effectData.generationDelay = 350;
+	effectData.maxParticles = 20;
+	effectData.spritePath = ska::FileUtils::getExecutablePath() + "Sprites/Particles/4.png";
 	auto& grassEffect = m_particleSystem.makeEffect<ska::SpreadingTextureParticleEffectFactory>(m_window.getRenderer(), effectData);
 	grassEffect.addUpdater<ska::SideBalancingParticleUpdater>(effectData.origin, 1.F, 1.F);
 
@@ -116,13 +117,13 @@ int BenchmarkerCore::onException(ska::GenericException& e) {
 void BenchmarkerCore::eventUpdate(const float ti) {
 	m_inputListener.update();
 	//m_attractor->move(m_inputListener.getMouseInput().getMousePos());
-	m_particles.refresh(static_cast<unsigned>(ti));
+	//m_particles.refresh(static_cast<unsigned>(ti));
 	m_particleSystem.refresh(static_cast<unsigned>(ti));
 }
 
 void BenchmarkerCore::graphicUpdate(const unsigned long) const {
 	static const ska::Color black(0,0,0,255);
-	m_particles.display();
+	//m_particles.display();
 	m_particleSystem.display();
 	m_fpsCalculator.getRenderable().display();
 	m_window.setRenderColor(black);
@@ -151,7 +152,7 @@ void BenchmarkerCore::run() {
 			accumulator -= ti;
 		}
 
-		graphicUpdate(ellapsedTime);		
+		graphicUpdate(ellapsedTime);
 	}
 }
 

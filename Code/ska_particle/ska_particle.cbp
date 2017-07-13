@@ -62,6 +62,8 @@
 		<Unit filename="Impl/ConsoleParticleCountRenderer.h" />
 		<Unit filename="Impl/EulerAttractorParticleUpdater.cpp" />
 		<Unit filename="Impl/EulerAttractorParticleUpdater.h" />
+		<Unit filename="Impl/GenerationDelayProperty.cpp" />
+		<Unit filename="Impl/GenerationDelayProperty.h" />
 		<Unit filename="Impl/PhysicParticleUpdater.cpp" />
 		<Unit filename="Impl/PhysicParticleUpdater.h" />
 		<Unit filename="Impl/RandomColorGenerator.cpp" />

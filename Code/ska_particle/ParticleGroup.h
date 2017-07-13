@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <vector>
 #include "../ska_core/Point.h"
 #include "../ska_core/Draw/Color.h"
@@ -16,21 +17,22 @@ namespace ska {
 
 	private:
 		std::size_t activeIndex;
-
 		const std::size_t groupSize;
 		unsigned int particleSize;
 
 	public:
 		explicit ParticleGroup(std::size_t gSize) :
 			activeIndex(0),
-			groupSize(gSize), 
+			groupSize(gSize),
 			particleSize(1),
 			pos(gSize),
 			physics(gSize),
 			lifetime(gSize),
 			color(gSize),
 			startColor(gSize),
-			endColor(gSize) { }
+			endColor(gSize),
+			timeSinceLastGeneration(0),
+			generationDelay(0) { }
 
 		~ParticleGroup() = default;
 
@@ -48,8 +50,11 @@ namespace ska {
 		}
 
 		void kill(std::size_t index) {
-			if (activeIndex > 0 && index < activeIndex) {
+			if (activeIndex > 0 && index < activeIndex - 1) {
 				swapParticles(index, --activeIndex);
+				std::cout << "Swaping particle " << index << " to " << activeIndex << std::endl;
+			} else if (index < activeIndex) {
+			    --activeIndex;
 			}
 		}
 
@@ -57,7 +62,7 @@ namespace ska {
 			activeIndex += density;
 			if (activeIndex >= groupSize) {
 				activeIndex = groupSize;
-				//std::cout << ("Particle group full. Cannot add another particle") << std::endl;
+				std::cout << ("Particle group full. Cannot add another particle") << std::endl;
 			}
 		}
 
@@ -71,5 +76,7 @@ namespace ska {
 		std::vector<Color> endColor;
 
 		ska::Texture appearance;
+		unsigned int timeSinceLastGeneration;
+		unsigned int generationDelay;
 	};
 }

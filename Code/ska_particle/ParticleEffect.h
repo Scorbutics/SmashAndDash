@@ -40,13 +40,16 @@ namespace ska {
 			m_renderers.push_back(std::move(item));
 			return result;
 		}
-		
+
 		void refresh(unsigned int dt);
 		void display() const;
 		virtual ~ParticleEffect() = default;
-		
+
 
 	private:
+	    void generate(unsigned int dt);
+	    void update(unsigned int dt);
+
 		using ParticleUpdaterPtr = std::unique_ptr<ParticleUpdater>;
 		using ParticleGeneratorPtr = std::unique_ptr<ParticleGenerator>;
 		using ParticleRendererPtr = std::unique_ptr<ParticleRenderer>;

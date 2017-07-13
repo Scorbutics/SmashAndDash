@@ -1,3 +1,4 @@
+#include <iostream>
 #include "BoxParticleGenerator.h"
 #include "../ParticleFactory.h"
 
