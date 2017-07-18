@@ -12,6 +12,11 @@
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 			<Depends filename="Code/ska_draw/ska_draw.cbp" />
 		</Project>
+		<Project filename="Code/ska_particle_test/ska_particle_test.cbp">
+			<Depends filename="Code/ska_core/ska_core.cbp" />
+			<Depends filename="Code/ska_draw/ska_draw.cbp" />
+			<Depends filename="Code/ska_particle/ska_particle.cbp" />
+		</Project>
 		<Project filename="Code/ska_particle_benchmarker/ska_particle_benchmarker.cbp">
 			<Depends filename="Code/ska_core/ska_core.cbp" />
 			<Depends filename="Code/ska_draw/ska_draw.cbp" />

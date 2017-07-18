@@ -47,7 +47,6 @@ BenchmarkerCore::BenchmarkerCore() :
 
 	ska::SpreadingParticleSystemData effectData;
 	effectData.lifetime = 2000;
-	//effectData.lifetime = 10000;
 	effectData.originalBoxSize.x = 15;
 	effectData.origin.x = 750;
 	effectData.origin.y = 450;

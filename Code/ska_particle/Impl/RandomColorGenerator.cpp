@@ -1,4 +1,5 @@
 #include "RandomColorGenerator.h"
+#include "../ParticleBuilder.h"
 #include "../ParticleFactory.h"
 #include "Utils/NumberUtils.h"
 

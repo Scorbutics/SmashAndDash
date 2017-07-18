@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include "Color.h"
-#include "SDLRenderer.h"
 
 namespace ska {
+    class SDLRenderer;
 
 	class TextureData {
 	public:

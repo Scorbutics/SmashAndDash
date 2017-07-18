@@ -1,3 +1,4 @@
+#include "../ParticleBuilder.h"
 #include "SpreadingParticleEffectFactory.h"
 #include "BasicColorGenerator.h"
 #include "ColorParticleUpdater.h"
@@ -13,7 +14,7 @@ std::unique_ptr<ska::ParticleEffect> ska::SpreadingParticleEffectFactory::create
 
 	particleSystem->addGenerator<BoxParticleGenerator>(data.origin, data.originalBoxSize);
 	particleSystem->addGenerator<BasicVelocityGenerator>(data.initialVelocity, data.spreading, data.spreadingSlices);
-	
+
 	particleSystem->addUpdater<TimeParticleUpdater>(data.lifetime);
 	particleSystem->addUpdater<PhysicParticleUpdater>();
 

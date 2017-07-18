@@ -1,3 +1,4 @@
+#include "../ParticleGenerator.h"
 #include "SpreadingTextureParticleEffectFactory.h"
 #include "SpreadingParticleEffectFactory.h"
 #include "TextureGraphicParticleRenderer.h"

@@ -1,4 +1,5 @@
 #include "BasicColorGenerator.h"
+#include "../ParticleBuilder.h"
 #include "../ParticleFactory.h"
 
 ska::BasicColorGenerator::BasicColorGenerator(Color start, Color end) :

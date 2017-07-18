@@ -1,5 +1,6 @@
 #include "BasicVelocityGenerator.h"
 #include "../ParticleFactory.h"
+#include "../ParticleBuilder.h"
 
 ska::BasicVelocityGenerator::BasicVelocityGenerator(PolarPoint<float> initialVelocityVector, float spreading, unsigned int slices) :
 	m_spreading(spreading),

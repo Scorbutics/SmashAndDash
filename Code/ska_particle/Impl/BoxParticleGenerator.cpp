@@ -1,5 +1,6 @@
 #include <iostream>
 #include "BoxParticleGenerator.h"
+#include "../ParticleBuilder.h"
 #include "../ParticleFactory.h"
 
 ska::BoxParticleGenerator::BoxParticleGenerator(Point<int> origin, Point<int> maxDistance) :

@@ -2,12 +2,14 @@
 #include <vector>
 #include <memory>
 #include "ParticleGroup.h"
-#include "ParticleUpdater.h"
-#include "ParticleRenderer.h"
+#include "ParticleBuilder.h"
 #include "ParticleFactory.h"
-#include "ParticleGenerator.h"
 
 namespace ska {
+    class ParticleUpdater;
+    class ParticleRenderer;
+    class ParticleGenerator;
+
 	class ParticleEffect {
 	public:
 		ParticleEffect(unsigned int density, std::size_t systemSize);
@@ -56,6 +58,7 @@ namespace ska {
 
 		unsigned int m_density;
 
+		ParticleBuilder m_builder;
 		ParticleFactory m_factory;
 		ParticleGroup m_group;
 		std::vector<ParticleUpdaterPtr> m_updaters;

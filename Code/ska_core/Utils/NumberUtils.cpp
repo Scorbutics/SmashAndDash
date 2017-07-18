@@ -5,15 +5,23 @@
 
 #define SKA_MATH_OPTIMIZATIONS
 
-std::mt19937 ska::NumberUtils::RNG;
+class RandomGeneratorHolder {
+public:
+    RandomGeneratorHolder() {
+        rng.seed(std::random_device()());
+    }
+
+    std::mt19937 rng;
+};
+
+RandomGeneratorHolder RGH;
 
 int ska::NumberUtils::random(int min, int max) {
 	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
-	return dist(RNG);
+	return dist(RGH.rng);
 }
 
 ska::NumberUtils::NumberUtils() {
-	RNG.seed(std::random_device()());
 }
 
 ska::NumberUtils::~NumberUtils() {}
@@ -119,7 +127,7 @@ float ska::NumberUtils::fastAtan2(float y, float x) {
 
 float ska::NumberUtils::random(float min, float max) {
 	std::uniform_real_distribution<> dist(min, max);
-	const auto& result = dist(RNG);
+	const auto& result = dist(RGH.rng);
 	return result;
 }
 
@@ -162,5 +170,5 @@ unsigned int ska::NumberUtils::getMax10Pow(const int num) {
 
 double ska::NumberUtils::random(double min, double max) {
 	std::uniform_int_distribution<> dist(min, max);
-	return dist(RNG);
+	return dist(RGH.rng);
 }

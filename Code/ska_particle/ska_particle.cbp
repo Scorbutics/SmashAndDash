@@ -86,6 +86,8 @@
 		<Unit filename="Impl/TextureGraphicParticleRenderer.h" />
 		<Unit filename="Impl/TimeParticleUpdater.cpp" />
 		<Unit filename="Impl/TimeParticleUpdater.h" />
+		<Unit filename="ParticleBuilder.cpp" />
+		<Unit filename="ParticleBuilder.h" />
 		<Unit filename="ParticleEffect.cpp" />
 		<Unit filename="ParticleEffect.h" />
 		<Unit filename="ParticleFactory.cpp" />

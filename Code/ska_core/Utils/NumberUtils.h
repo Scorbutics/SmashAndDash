@@ -9,8 +9,6 @@ namespace ska{
 	private:
 		NumberUtils();
 
-		static std::mt19937 RNG;
-
 	public:
 		~NumberUtils();
 		static double tangen(double x);
@@ -18,7 +16,7 @@ namespace ska{
 		static float random(float min, float max);
 		static float fastInverseSquareroot(float number);
 		static double random(double min, double max);
-		
+
 		template <class T>
 		static void hashCombine(std::size_t& seed, const T& value) {
 			seed ^= std::hash<T>()(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
