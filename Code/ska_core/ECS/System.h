@@ -111,11 +111,39 @@ namespace ska {
 		EntityManager& m_entityManager;
 		Storage m_processed;
 
+        template <class T>
+        T& getComponent(EntityId entityId) {
+            using componentTypeQueriedOK = meta::find<T, ComponentTypes...>::value;
+            static_assert(componentTypeQueriedOK);
+            return m_entityManager.getComponent<T>(entityId);
+		}
+
 		void name(const std::string& n) {
 			m_name = n;
 		}
 
 	private:
+	    class ComponentQueryMaker {
+		public:
+			ComponentQueryMaker( {
+			}
+
+			void operator=(const ComponentQueryMaker&) = delete;
+
+			template<class T>
+			void operator() (entityId) {
+				m_result = m_entityManager.getComponent<T>(entityId);
+			}
+
+			bool hasBeenNotified() const {
+				return m_result;
+			}
+
+		private:
+			bool m_result;
+
+		};
+
 		bool m_named;
 		std::string m_name;
 	};

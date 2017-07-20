@@ -47,26 +47,6 @@ namespace ska {
 		}
 
 		namespace detailindex {
-			/*template <class EL, class T, std::size_t N>
-			struct get_index_from_tuple_impl {
-
-				static EL& visit(T& t, std::size_t index) {
-					if (N - 1 == index) {
-						auto& found = std::get<N - 1>(t);
-						return found;
-					}
-					return get_index_from_tuple_impl<EL, N - 1>::visit(t, index);
-				}
-			};
-
-			template <class EL, class T>
-			struct get_index_from_tuple_impl<EL, T, 0> {
-				static EL& visit(T& t, std::size_t index) {
-					throw std::runtime_error("Cannot find tuple element");
-				}
-			};*/
-
-
 			template <class F, class T, size_t N>
 			struct visit_index_from_tuple_impl {
 
@@ -87,11 +67,6 @@ namespace ska {
 			};
 		}
 
-		/*template <class T, class... Args>
-		T& get_element_by_index(std::tuple<Args...>& t, std::size_t index) {
-			return detailindex::get_index_from_tuple_impl<T, std::tuple<Args...>, sizeof ...(Args)>::visit(t, index);
-		}
-*/
 		template<class F, class ...Args>
 		void visit_element_at_index(std::tuple<Args...>& t, size_t index, F& f) {
 			detailindex::visit_index_from_tuple_impl<F, std::tuple<Args...>, sizeof ...(Args)>::visit(f, t, index);
