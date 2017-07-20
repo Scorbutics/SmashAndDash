@@ -138,6 +138,7 @@
     <ClInclude Include="Task\WorkNode.h" />
     <ClInclude Include="Task\CompoundTask.h" />
     <ClInclude Include="Core\Priorized.h" />
+    <ClInclude Include="Utils\ContainsTypeTuple.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

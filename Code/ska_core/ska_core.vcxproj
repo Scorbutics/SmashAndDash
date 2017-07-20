@@ -127,6 +127,7 @@
     <ClInclude Include="Task\TaskQueue.h" />
     <ClInclude Include="Task\WorkNode.h" />
     <ClInclude Include="Ticked.h" />
+    <ClInclude Include="Utils\ContainsTypeTuple.h" />
     <ClInclude Include="Utils\Demangle.h" />
     <ClInclude Include="Utils\FileUtils.h" />
     <ClInclude Include="Utils\Force.h" />

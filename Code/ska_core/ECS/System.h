@@ -3,6 +3,7 @@
 #include "ECSDefines.h"
 #include "EntityManager.h"
 #include "ISystem.h"
+#include "../Utils/ContainsTypeTuple.h"
 #include "../Utils/Observer.h"
 #include "../Utils/Refreshable.h"
 #include "../Exceptions/IllegalStateException.h"
@@ -113,8 +114,8 @@ namespace ska {
 
         template <class T>
         T& getComponent(EntityId entityId) {
-            using componentTypeQueriedOK = meta::find<T, ComponentTypes...>::value;
-            static_assert(componentTypeQueriedOK);
+            using componentTypeQueriedOK = meta::contains<T, ComponentType...>;
+            static_assert(componentTypeQueriedOK::value, "Unable to use this component : it doesn't belong to the current system");
             return m_entityManager.getComponent<T>(entityId);
 		}
 
@@ -123,27 +124,6 @@ namespace ska {
 		}
 
 	private:
-	    class ComponentQueryMaker {
-		public:
-			ComponentQueryMaker( {
-			}
-
-			void operator=(const ComponentQueryMaker&) = delete;
-
-			template<class T>
-			void operator() (entityId) {
-				m_result = m_entityManager.getComponent<T>(entityId);
-			}
-
-			bool hasBeenNotified() const {
-				return m_result;
-			}
-
-		private:
-			bool m_result;
-
-		};
-
 		bool m_named;
 		std::string m_name;
 	};
