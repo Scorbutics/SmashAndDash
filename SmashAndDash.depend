@@ -2184,17 +2184,16 @@
 	"ECS/Basics/Physic/PositionComponent.h"
 	"ECS/Basics/Graphic/CameraFocusedComponent.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
+1499342249 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\rectangle.h
 	<SDL.h>
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\system.h
+1500627026 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\system.h
 	<unordered_set>
-	"ECSDefines.h"
-	"EntityManager.h"
+	"SystemMaskGenerator.h"
+	"ComponentSafeAccessor.h"
 	"ISystem.h"
 	"../Utils/Observer.h"
 	"../Utils/Refreshable.h"
-	"../Exceptions/IllegalStateException.h"
 	"../Logging/Logger.h"
 
 1496040620 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\entitymanager.h
@@ -2258,12 +2257,13 @@
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\force.h
 	"../Rectangle.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
+1499328881 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\point.h
 	"Utils/NumberUtils.h"
 	"Rectangle.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
+1500368395 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\numberutils.h
 	<functional>
+	<random>
 	"../Exceptions/IllegalArgumentException.h"
 
 1490777539 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\basics\physic\hitboxcomponent.h
@@ -2334,21 +2334,20 @@
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\utils\ids.h
 	"Utils/SkaConstants.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\skaconstants.h
 
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\game\utils\chargementimages.h
 	<iostream>
 	<string>
 	<vector>
 
-1490603466 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.h
+1499668536 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.h
 	<iostream>
 	<string>
 	<vector>
 	<memory>
 	"Inputs/Readers/IniReader.h"
 	"Graphic/Texture.h"
-	"Physic/Particle.h"
 
 1490955534 c:\documents\perso\dev\c++\smashanddash\code\ska_draw\\graphic\texture.h
 	<memory>
@@ -2366,14 +2365,13 @@
 1495434764 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdltexture.h
 	"Color.h"
 
-1499076051 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\color.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\color.h
 	<SDL.h>
 	"../Utils/NumberUtils.h"
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\texturedata.h
+1500369504 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\texturedata.h
 	<string>
 	"Color.h"
-	"SDLRenderer.h"
 
 1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\draw\sdlrenderer.h
 	<SDL.h>
@@ -2485,9 +2483,9 @@
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\savegame.h
 	<string>
 
-1498804115 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\fileutils.h
+1499322793 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\fileutils.h
+	<SDL.h>
 	"SkaConstants.h"
-	<cstdio>
 	"./OSSpecific/FileUtilsUnix.h"
 	"./OSSpecific/FileUtilsWin.h"
 
@@ -2528,25 +2526,16 @@
 
 1490948653 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\fight.cpp
 
-1490948668 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.cpp
-	<iostream>
-	"Skill.h"
-	"Physic/LinearParticle.h"
-	"../../Utils/ChargementImages.h"
-	"Utils/SpritePath.h"
-	"../../Gameplay/Data/Statistics.h"
-	"Utils/StringUtils.h"
-	"Utils/RectangleUtils.h"
-	"../../Utils/IDs.h"
+1499668536 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skill.cpp
 
 1490603468 c:\documents\perso\dev\c++\smashanddash\code\ska_physic\\physic\linearparticle.h
 	"Particle.h"
 
-1494504207 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
+1499754811 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\rectangleutils.h
 	"../Rectangle.h"
 	"../Point.h"
 
-1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.cpp
+1499322793 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.cpp
 	"BattleSystem.h"
 	"../SkillComponent.h"
 	"Inputs/Readers/IniReader.h"
@@ -2602,7 +2591,7 @@
 	<SDL.h>
 	<bitset>
 
-1495524670 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
+1499325204 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\mouseinput.h
 	<SDL.h>
 	"../Point.h"
 
@@ -2930,7 +2919,7 @@
 	"ECS/Component.h"
 	"Point.h"
 
-1496040620 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.cpp
+1499754811 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.cpp
 	"SkillRefreshSystem.h"
 	"Utils/TimeUtils.h"
 	"Utils/NumberUtils.h"
@@ -3114,7 +3103,7 @@
 
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\identity.h
 
-1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\tupleutils.h
+1500555250 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\tupleutils.h
 	<utility>
 	<functional>
 
@@ -4428,7 +4417,7 @@
 1498718714 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\skillfactory.h
 	"../World/WorldState.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\logging\logger.h
+1500625812 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\logging\logger.h
 	<iostream>
 
 1498808297 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\priorized.h
@@ -4489,4 +4478,17 @@
 	"../Fight/BattleEvent.h"
 	"../World/WorldState.h"
 	"../CustomEntityManager.h"
+
+1500626927 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\systemmaskgenerator.h
+	"ECSDefines.h"
+	"EntityManager.h"
+	"../Exceptions/IllegalStateException.h"
+
+1500626976 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\ecs\componentsafeaccessor.h
+	"ECSDefines.h"
+	"EntityManager.h"
+	"../Utils/ContainsTypeTuple.h"
+
+1500627666 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\containstypetuple.h
+	<type_traits>
 

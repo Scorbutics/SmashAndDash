@@ -42,14 +42,14 @@ namespace ska {
 		}
 
 		template <class T>
-		T& getComponent(EntityId entityId) {
+		T& getComponent(EntityId entityId) const {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			T& result = components.getComponent(entityId);
 			return result;
 		}
 
 		template <class T>
-		bool hasComponent(EntityId entityId) {
+		bool hasComponent(EntityId entityId) const {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			return m_componentMask[entityId][components.getMask()];
 		}
@@ -61,13 +61,13 @@ namespace ska {
 		}
 
 		template <class T>
-		unsigned int getMask() {
+		unsigned int getMask() const {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			return components.getMask();
 		}
 
         template <class T>
-		std::string getComponentName() {
+		std::string getComponentName() const {
 			ComponentHandler<T>& components = this->template getComponents<T>();
 			return components.getClassName();
 		}

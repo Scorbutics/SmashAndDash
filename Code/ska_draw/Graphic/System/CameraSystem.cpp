@@ -24,8 +24,8 @@ void ska::CameraSystem::focusOn(Rectangle& pos, EntityId* entityId) {
 	m_cameraRect.x = pos.x - m_cameraRect.w / 2;
 	m_cameraRect.y = pos.y - m_cameraRect.h / 2;
 
-	if (entityId != nullptr && m_entityManager.hasComponent<GraphicComponent>(*entityId)) {
-		auto& gc = m_entityManager.getComponent<GraphicComponent>(*entityId);
+	if (entityId != nullptr && m_componentAccessor.hasComponent<GraphicComponent>(*entityId)) {
+		auto& gc = m_componentAccessor.getComponent<GraphicComponent>(*entityId);
 		if (!gc.sprite.empty()) {
 			auto& texture = gc.sprite[0];
 			m_cameraRect.x += texture.getWidth() / 2;

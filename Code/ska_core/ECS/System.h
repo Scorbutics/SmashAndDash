@@ -1,130 +1,111 @@
 #pragma once
 #include <unordered_set>
-#include "ECSDefines.h"
-#include "EntityManager.h"
+#include "SystemMaskGenerator.h"
+#include "ComponentSafeAccessor.h"
 #include "ISystem.h"
-#include "../Utils/ContainsTypeTuple.h"
 #include "../Utils/Observer.h"
 #include "../Utils/Refreshable.h"
-#include "../Exceptions/IllegalStateException.h"
 #include "../Logging/Logger.h"
 
 namespace ska {
+    template <class ... ComponentType>
+    struct RequiredComponent;
 
-	template <class Storage, class ... ComponentType>
-	class System :
-	    public Observer<const EntityEventType, const EntityComponentsMask&, EntityId>,
-        virtual public ISystem,
-        virtual protected Refreshable {
+    template <class ... ComponentType>
+    struct PossibleComponent;
 
-	public :
-		explicit System(EntityManager& entityManager) :
-			Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
-			m_entityManager(entityManager) {
-			m_entityManager.addObserver(*this);
-            SKA_LOG_MESSAGE("Initializing system with components :");
 
-			m_named = false;
+    namespace detail {
+template <class Storage, class RComponentType, class PComponentType>
+	class System;
+        template <class Storage, class RComponentType>
+        using System = detail::SystemImpl <Storage, RequiredComponent<RComponentType>, PossibleComponent<>>;
 
-			/* Bracket initializer trick */
-			int _[] = { 0, (buildSystemMask<ComponentType>() , 0)... };
-			SKA_LOG_MESSAGE("End system initialization\n\n");;
+        template <class Storage, class ... RComponentType, class ... PComponentType>
+        class System <Storage, RequiredComponent<RComponentType...>, PossibleComponent<PComponentType...>> :
+            public Observer<const EntityEventType, const EntityComponentsMask&, EntityId>,
+            virtual public ISystem,
+            virtual protected Refreshable {
 
-			(void)_;
+        protected:
+            using SystemType = System <Storage, RequiredComponent<RComponentType...>, PossibleComponent<PComponentType...>>;
+            using MaskGenerator = SystemMaskGenerator<RComponentType...>;
 
-		}
+        public :
+            explicit System(EntityManager& entityManager) :
+                Observer(std::bind(&System::onComponentModified, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)),
+                m_entityManager(entityManager),
+                m_componentAccessor(entityManager) {
+                m_entityManager.addObserver(*this);
 
-		void operator=(const System<Storage, ComponentType...>& sys) = delete;
+                MaskGenerator smg(m_entityManager);
+                smg.generate(m_systemComponentMask);
+            }
 
-		void update(unsigned int ellapsedTime) override {
-			if(!m_named) {
-				SKA_LOG_MESSAGE("\tUPDATE System " + m_name + " with Mask \t", m_systemComponentMask);
-				m_named = true;
-			}
+            void operator=(const SystemType& sys) = delete;
 
-			refresh(ellapsedTime);
-			if (!m_toDelete.empty()) {
-				for (auto entity : m_toDelete) {
-					m_entityManager.removeEntity(entity);
-				}
-				m_toDelete.clear();
-			}
-		}
-
-		void scheduleDeferredRemove(EntityId e) {
-			m_toDelete.emplace(e);
-		}
-
-		virtual ~System(){ m_entityManager.removeObserver(*this); }
-
-	private:
-		std::unordered_set<EntityId> m_toDelete;
-		EntityComponentsMask m_systemComponentMask;
-
-		bool onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
-
-			/* An entity belongs to the system ONLY IF it has ALL the requiered components of the system */
-			EntityComponentsMask resultMask = mask & m_systemComponentMask;
-
-			switch (e) {
-			case COMPONENT_ADD:
-				if (resultMask == m_systemComponentMask && m_processed.count(entityId) == 0) {
-					m_processed.insert(entityId);
-				}
-				break;
-
-			case COMPONENT_REMOVE:
-				if (resultMask != m_systemComponentMask && m_processed.count(entityId) > 0) {
-					m_processed.erase(entityId);
-				}
-				break;
-
-            case COMPONENT_ALTER:
-                if(resultMask == m_systemComponentMask) {
-                    m_processed.insert(entityId);
-                } else {
-                    m_processed.erase(entityId);
+            void update(unsigned int ellapsedTime) override {
+                refresh(ellapsedTime);
+                if (!m_toDelete.empty()) {
+                    for (auto entity : m_toDelete) {
+                        m_entityManager.removeEntity(entity);
+                    }
+                    m_toDelete.clear();
                 }
-                break;
+            }
 
-			default:
-				break;
-			}
-			return true;
-		}
+            void scheduleDeferredRemove(EntityId e) {
+                m_toDelete.emplace(e);
+            }
 
-		template <class T>
-		void buildSystemMask() {
-			/* Retrieve all the components masks using the variadic template with ComponentType
-			   We "iterate" through each ComponentType with the bracket initializer trick and
-			   we add each component mask to the system component mask with a binary OR. */
-			unsigned int mask = m_entityManager.template getMask<T>();
-			if (mask >= m_systemComponentMask.size()) {
-				throw IllegalStateException("Too many components are used in the game. Unable to continue.");
-			}
-			SKA_LOG_MESSAGE("\t - ", m_entityManager.template getComponentName<T>(), " with mask ", mask);
+            virtual ~System(){ m_entityManager.removeObserver(*this); }
 
-			m_systemComponentMask[mask] = true;
-		}
+        private:
+            EntityManager& m_entityManager;
+            std::unordered_set<EntityId> m_toDelete;
+            EntityComponentsMask m_systemComponentMask;
+            Storage m_processed;
 
+            bool onComponentModified(const EntityEventType& e, const EntityComponentsMask& mask, EntityId entityId) {
 
-	protected:
-		EntityManager& m_entityManager;
-		Storage m_processed;
+                /* An entity belongs to the system ONLY IF it has ALL the requiered components of the system */
+                auto resultMask = mask & m_systemComponentMask;
 
-        template <class T>
-        T& getComponent(EntityId entityId) {
-            using componentTypeQueriedOK = meta::contains<T, ComponentType...>;
-            static_assert(componentTypeQueriedOK::value, "Unable to use this component : it doesn't belong to the current system");
-            return m_entityManager.getComponent<T>(entityId);
-		}
+                switch (e) {
+                case COMPONENT_ADD:
+                    if (resultMask == m_systemComponentMask && m_processed.count(entityId) == 0) {
+                        m_processed.insert(entityId);
+                    }
+                    break;
 
-		void name(const std::string& n) {
-			m_name = n;
-		}
+                case COMPONENT_REMOVE:
+                    if (resultMask != m_systemComponentMask && m_processed.count(entityId) > 0) {
+                        m_processed.erase(entityId);
+                    }
+                    break;
 
-	private:
-		bool m_named;
-		std::string m_name;
-	};
+                case COMPONENT_ALTER:
+                    if(resultMask == m_systemComponentMask) {
+                        m_processed.insert(entityId);
+                    } else {
+                        m_processed.erase(entityId);
+                    }
+                    break;
+
+                default:
+                    break;
+                }
+                return true;
+            }
+
+        protected:
+            using ComponentAccessor = ComponentSafeAccessor<RComponentType...>;
+            ComponentAccessor m_componentAccessor;
+
+            const Storage& getEntities() {
+                return m_processed;
+            }
+        };
+    }
+
 }

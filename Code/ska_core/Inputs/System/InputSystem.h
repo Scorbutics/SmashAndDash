@@ -7,7 +7,7 @@
 #include "../InputContextManager.h"
 
 namespace ska {
-	class InputSystem : public System<std::unordered_set<EntityId>, PositionComponent, InputComponent, ForceComponent> {
+	class InputSystem : public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, InputComponent, ForceComponent>, PossibleComponent<>> {
 	public:
 		InputSystem(EntityManager& entityManager, const InputContextManager& icm);
 		InputSystem& operator=(const InputSystem&) = delete;

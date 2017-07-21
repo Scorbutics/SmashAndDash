@@ -1,14 +1,16 @@
 #include "InputSystem.h"
 
-ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) : System(entityManager), m_icm(icm) {
-	name("InputSystem");
+ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) :
+    System(entityManager),
+    m_icm(icm) {
 }
 
 void ska::InputSystem::refresh(unsigned int) {
-	for (const auto& entityId : m_processed) {
-		auto& inputComponent = m_entityManager.getComponent<InputComponent>(entityId);
-		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
-		auto& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
+    const auto& processed = getEntities();
+	for (const auto& entityId : processed) {
+		auto& inputComponent = m_componentAccessor.getComponent<InputComponent>(entityId);
+		auto& forceComponent = m_componentAccessor.getComponent<ForceComponent>(entityId);
+		auto& posComponent = m_componentAccessor.getComponent<PositionComponent>(entityId);
 
 		Point<float> movePower;
 		auto moveX = false;
