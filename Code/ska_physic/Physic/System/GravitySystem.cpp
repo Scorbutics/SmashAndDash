@@ -2,14 +2,14 @@
 #include "Utils/SkaConstants.h"
 
 ska::GravitySystem::GravitySystem(EntityManager& entityManager) : System(entityManager) {
-	name("GravitySystem");
 }
 
 void ska::GravitySystem::refresh(unsigned int ellapsedTime) {
-	for (auto entityId : m_processed) {
-		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
-		auto& gaComponent = m_entityManager.getComponent<GravityAffectedComponent>(entityId);
-		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
+	const auto& processed = getEntities();
+	for (auto entityId : processed) {
+		auto& forceComponent = m_componentAccessor.get<ForceComponent>(entityId);
+		auto& gaComponent = m_componentAccessor.get<GravityAffectedComponent>(entityId);
+		auto& moveComponent = m_componentAccessor.get<MovementComponent>(entityId);
 
 		//PFD selon x et y avec la force de frottements fluides
 		//( en comptant qu'au préalable on a peut-être déjà appliqué une ou plusieurs force(s) )

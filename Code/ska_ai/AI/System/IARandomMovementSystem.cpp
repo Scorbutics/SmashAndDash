@@ -9,9 +9,10 @@ ska::IARandomMovementSystem::IARandomMovementSystem(EntityManager& entityManager
 }
 
 void ska::IARandomMovementSystem::refresh(unsigned int ellapsedTime) {
-	for (auto entityId : m_processed) {
-		auto& fc = m_entityManager.getComponent<ForceComponent>(entityId);
-		auto& iamc = m_entityManager.getComponent<IARandomMovementComponent>(entityId);
+	const auto& processed = getEntities();
+	for (auto entityId : processed) {
+		auto& fc = m_componentAccessor.get<ForceComponent>(entityId);
+		auto& iamc = m_componentAccessor.get<IARandomMovementComponent>(entityId);
 
 		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay) {
 
@@ -26,17 +27,19 @@ void ska::IARandomMovementSystem::refresh(unsigned int ellapsedTime) {
 				case RandomMovementType::CIRCLE_AROUND: {
                         char sens = NumberUtils::random(0, 1) == 0;
                         /* It has no sense to have a IARandomMovementComponent attached to an entity that has no PositionComponent, so we assume we can get it */
-                        auto& pc = m_entityManager.getComponent<PositionComponent>(entityId);
+                        auto& pc = *m_componentPossibleAccessor.get<PositionComponent>(entityId);
                         /* But we check the emitter */
-                        if (m_entityManager.hasComponent<PositionComponent>(iamc.emitter)) {
-                            auto& pcEmitter = m_entityManager.getComponent<PositionComponent>(iamc.emitter);
+						const auto& pcEmitterPtr = m_componentPossibleAccessor.get<PositionComponent>(iamc.emitter);
+                        if (pcEmitterPtr != nullptr) {
+                            auto& pcEmitter = *pcEmitterPtr;
                             auto diffPoint = Point<int>(pcEmitter.x, pcEmitter.y) - Point<int>(pc.x, pc.y);
                             auto horizontalDir = NumberUtils::maximum(NumberUtils::absolute(diffPoint.x), NumberUtils::absolute(diffPoint.y)) == NumberUtils::absolute(diffPoint.x);
                             iamc.direction = horizontalDir ? (sens ? 1 : 3) : (sens ? 0 : 2);
 
                             /* Change the direction the entity look at */
-                            if (m_entityManager.hasComponent<DirectionalAnimationComponent>(entityId)) {
-                                auto& dac = m_entityManager.getComponent<DirectionalAnimationComponent>(entityId);
+							const auto& dacPtr = m_componentPossibleAccessor.get<DirectionalAnimationComponent>(entityId);
+                            if (dacPtr != nullptr) {
+                                auto& dac = *dacPtr;
                                 dac.looked = iamc.emitter;
                                 dac.type = DirectionalAnimationType::MOVEMENT_THEN_FOLLOWING;
                             }

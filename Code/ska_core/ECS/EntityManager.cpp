@@ -26,7 +26,7 @@ void ska::EntityManager::commonAddComponent(EntityId entity, const unsigned int 
 }
 
 
-const std::string ska::EntityManager::serializeComponent(const EntityId entityId, const std::string& component, const std::string& field) {
+const std::string ska::EntityManager::serializeComponent(const EntityId entityId, const std::string& component, const std::string& field) const {
     if (NAME_MAPPED_COMPONENT.find(component) != NAME_MAPPED_COMPONENT.end()) {
         return NAME_MAPPED_COMPONENT[component]->getComponentField(entityId, field);
     }

@@ -17,8 +17,8 @@ m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
 }
 
 void BattleSystem::refresh(unsigned int ellapsedTime) {
-
-	for (ska::EntityId entityId : m_processed) {
+	const auto& processed = getEntities();
+	for (ska::EntityId entityId : processed) {
 		const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();
 		//BattleComponent& bc = m_entityManager.getComponent<BattleComponent>(entityId);
 
@@ -43,10 +43,10 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	}
 	//const ska::InputRangeContainer& irc = from == m_pokemon ? m_playerICM.getRanges() : m_opponentICM.getRanges();
 	//const ska::InputRange& mousePos = irc[ska::InputRangeType::MousePos];
-	auto& pc = m_entityManager.getComponent<ska::PositionComponent>(from);
-	auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(from);
-	auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(from);
-	SkillsHolderComponent& shc = m_entityManager.getComponent<SkillsHolderComponent>(from);
+	auto& pc = m_componentAccessor.get<ska::PositionComponent>(from);
+	auto& hc = m_componentAccessor.get<ska::HitboxComponent>(from);
+	auto& dac = m_componentAccessor.get<ska::DirectionalAnimationComponent>(from);
+	SkillsHolderComponent& shc = m_componentAccessor.get<SkillsHolderComponent>(from);
 
 	if (index >= shc.skills.size()) {
 		return;
@@ -60,15 +60,20 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	for (auto i = 0; i < n; i++) {
 		auto skill = m_customEM.createSkill(shc, i);
 
-		auto& sc = m_entityManager.getComponent<SkillComponent>(skill);
-		auto& gcSkill = m_entityManager.getComponent<ska::GraphicComponent>(skill);
+		const auto& scPtr = m_componentPossibleAccessor.get<SkillComponent>(skill);
+		if(scPtr == nullptr) {
+			continue;
+		}
+
+		auto& gcSkill = m_componentAccessor.get<ska::GraphicComponent>(skill);
+		auto& sc = *scPtr;
 		sc.origin = skillStartPos - ska::Point<int>(gcSkill.sprite[0].getWidth() / 2, gcSkill.sprite[0].getHeight() / 2);
-		m_entityManager.addComponent<ska::PositionComponent>(skill, sc.origin);
+		m_componentAccessor.add<ska::PositionComponent>(skill, sc.origin);
 
 		const auto target = from == m_pokemon ? m_opponent : m_pokemon;
-		const auto& pcTarget = m_entityManager.getComponent<ska::PositionComponent>(target);
-		const auto& hcTarget = m_entityManager.getComponent<ska::HitboxComponent>(target);
-		const auto pTarget = ska::Point<float>(hcTarget.xOffset, hcTarget.yOffset) + ska::Point<float>(pcTarget);
+		const auto& pcTarget = m_componentAccessor.get<ska::PositionComponent>(target);
+		const auto& hcTarget = m_componentAccessor.get<ska::HitboxComponent>(target);
+		const auto pTarget = ska::Point<int>(hcTarget.xOffset, hcTarget.yOffset) + ska::Point<int>(pcTarget);
 
 		sc.target = pTarget;
 		sc.battler = from;

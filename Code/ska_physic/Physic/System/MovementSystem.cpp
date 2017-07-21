@@ -4,16 +4,16 @@
 #include "Ticked.h"
 
 ska::MovementSystem::MovementSystem(ska::EntityManager& entityManager, Ticked& ticked) :
-	ska::System<std::unordered_set<EntityId>, PositionComponent, MovementComponent, ForceComponent> (entityManager), 
+	System(entityManager), 
 	m_ticks(ticked.ticksWanted()) {
-	name("MovementSystem");
 }
 
 void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
-	for (auto entityId : m_processed) {
-		auto& posComponent = m_entityManager.getComponent<PositionComponent>(entityId);
-		auto& moveComponent = m_entityManager.getComponent<MovementComponent>(entityId);
-		auto& forceComponent = m_entityManager.getComponent<ForceComponent>(entityId);
+	const auto& processed = getEntities();
+	for (auto entityId : processed) {
+		auto& posComponent = m_componentAccessor.get<PositionComponent>(entityId);
+		auto& moveComponent = m_componentAccessor.get<MovementComponent>(entityId);
+		auto& forceComponent = m_componentAccessor.get<ForceComponent>(entityId);
 
 		//Position vector is the current position of the object (i.e. the last position + the last velocity with a delta time taken)
 		//(x(t) - x(t-1))/(t - (t-1)) = dx/dt (t) = vx(t)

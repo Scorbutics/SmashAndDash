@@ -5,7 +5,7 @@
 namespace ska {
     class ParticleFactory;
     class ParticleGroup;
-    class Color;
+    struct Color;
 
     class ParticleBuilder {
         friend class ParticleFactory;

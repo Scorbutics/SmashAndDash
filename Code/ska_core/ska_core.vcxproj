@@ -80,12 +80,15 @@
     <ClInclude Include="ECS\Basics\Script\ScriptTriggerType.h" />
     <ClInclude Include="ECS\Component.h" />
     <ClInclude Include="ECS\ComponentHandler.h" />
+    <ClInclude Include="ECS\ComponentSafeAccessor.h" />
     <ClInclude Include="ECS\ComponentSerializer.h" />
+    <ClInclude Include="ECS\ComponentUnsafeAccessor.h" />
     <ClInclude Include="ECS\ECSDefines.h" />
     <ClInclude Include="ECS\EntityManager.h" />
     <ClInclude Include="ECS\ISystem.h" />
     <ClInclude Include="ECS\StaticCounterGlobal.h" />
     <ClInclude Include="ECS\System.h" />
+    <ClInclude Include="ECS\SystemMaskGenerator.h" />
     <ClInclude Include="Exceptions\CorruptedFileException.h" />
     <ClInclude Include="Exceptions\FileException.h" />
     <ClInclude Include="Exceptions\GenericException.h" />

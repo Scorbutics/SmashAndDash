@@ -3,10 +3,11 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "../MobSpawnAreaComponent.h"
 #include "ECS/System.h"
+#include "AI/System/IADefinedMovementSystem.h"
 
 class MobSpawner;
 
-class MobSpawningSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, MobSpawnAreaComponent> {
+class MobSpawningSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, MobSpawnAreaComponent>, ska::PossibleComponent<>> {
 public:
 	MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay);
 	virtual ~MobSpawningSystem();

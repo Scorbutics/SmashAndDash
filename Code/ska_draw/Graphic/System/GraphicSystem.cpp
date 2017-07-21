@@ -12,7 +12,6 @@ ska::GraphicSystem::GraphicSystem(ska::EntityManager& entityManager, ska::GameEv
 	m_ged(ged),
 	m_topLayerPriority(0) {
 	m_drawables = nullptr;
-	name("GraphicSystem");
 }
 
 void ska::GraphicSystem::refresh(unsigned int) {
@@ -26,10 +25,11 @@ void ska::GraphicSystem::refresh(unsigned int) {
 
 	m_topLayerPriority = std::numeric_limits<int>::min();
 	m_pgd.clear();
-
-	for (const auto& entityId : m_processed) {
-		auto& gc = m_entityManager.getComponent<ska::GraphicComponent>(entityId);
-		auto& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+	
+	const auto& processed = getEntities();
+	for (const auto& entityId : processed) {
+		auto& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
+		auto& pos = m_componentAccessor.get<ska::PositionComponent>(entityId);
 		const int relPosX = pos.x - cameraX;
 		const int relPosY = pos.y - cameraY - pos.z;
 
@@ -42,8 +42,9 @@ void ska::GraphicSystem::refresh(unsigned int) {
 			}
 		}
 
-		if (m_entityManager.hasComponent<DialogComponent>(entityId)) {
-			auto& dc = m_entityManager.getComponent<DialogComponent>(entityId);
+		const auto& dcPtr = m_componentPossibleAccessor.get<DialogComponent>(entityId);
+		if (dcPtr != nullptr) {
+			auto& dc = *dcPtr;
 			GUIEvent ge(GUIEventType::REFRESH_BALLOON);
 			ge.balloonHandle = dc.handle;
 			ge.windowName = dc.name;
@@ -51,7 +52,7 @@ void ska::GraphicSystem::refresh(unsigned int) {
 			m_ged.ska::Observable<GUIEvent>::notifyObservers(ge);
 
 			if(ge.balloonHandle == nullptr) {
-				m_entityManager.removeComponent<DialogComponent>(entityId);
+				m_componentAccessor.remove<DialogComponent>(entityId);
 			}
 		}
 	}

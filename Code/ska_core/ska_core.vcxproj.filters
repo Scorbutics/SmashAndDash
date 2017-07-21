@@ -139,6 +139,9 @@
     <ClInclude Include="Task\CompoundTask.h" />
     <ClInclude Include="Core\Priorized.h" />
     <ClInclude Include="Utils\ContainsTypeTuple.h" />
+    <ClInclude Include="ECS\ComponentSafeAccessor.h" />
+    <ClInclude Include="ECS\SystemMaskGenerator.h" />
+    <ClInclude Include="ECS\ComponentUnsafeAccessor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

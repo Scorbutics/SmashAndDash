@@ -31,7 +31,7 @@ namespace ska {
 		void refreshEntities();
         void refresh();
 
-		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field);
+		const std::string serializeComponent(const EntityId entityId, const std::string& component, const std::string& field) const;
 		void removeComponent(const EntityId entity, const std::string& component);
 		void addComponent(const EntityId entity, const std::string& component);
 

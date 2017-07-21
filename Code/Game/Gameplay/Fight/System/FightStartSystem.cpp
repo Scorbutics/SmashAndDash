@@ -9,19 +9,19 @@
 #include "../../Data/MapEvent.h"
 
 FightStartSystem::FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldState& ws, ska::InputContextManager& icm, const ska::EntityId player) :
-System<std::unordered_set<ska::EntityId>, ska::PositionComponent, FightComponent, ska::GraphicComponent>(cem),
-m_cem(cem),
-m_worldScene(ws),
-m_icm(icm),
-m_player(player),
-m_window(w),
-m_ged(ged) {
+	System(cem),
+	m_cem(cem),
+	m_worldScene(ws),
+	m_icm(icm),
+	m_player(player),
+	m_window(w),
+	m_ged(ged) {
 	m_t0 = ska::TimeUtils::getTicks();
 }
 
 void FightStartSystem::refresh(unsigned int ellapsedTime) {
-	ska::PositionComponent& pcPlayer = m_entityManager.getComponent<ska::PositionComponent>(m_player);
-	ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(m_player);
+	ska::PositionComponent& pcPlayer = m_componentAccessor.get<ska::PositionComponent>(m_player);
+	ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(m_player);
 	ska::Point<int> pPlayer = { pcPlayer.x, pcPlayer.y };
 
 	if (gc.sprite.empty()) {
@@ -33,9 +33,10 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 
 
 	const unsigned int currentDelay = ska::TimeUtils::getTicks() - m_t0;
-	for (ska::EntityId entityId : m_processed) {
-		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
-		ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(entityId);
+	const auto& processed = getEntities();
+	for (ska::EntityId entityId : processed) {
+		ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
+		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
 		ska::Point<int> p = { pc.x, pc.y };
 
 		if (gc.sprite.empty()) {
@@ -49,13 +50,13 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 			if (currentDelay >= BATTLE_START_TICKS) {
 				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
 					/* Start a fight */
-					FightComponent& fc = m_entityManager.getComponent<FightComponent>(entityId);
+					auto& fc = m_componentAccessor.get<FightComponent>(entityId);
 					/* TODO first available pokemon of the team */
 					fc.pokemonScriptId = 25;
 					fc.trainer = m_player;
 					const int blockSize = m_worldScene.getWorld().getBlockSize();
 					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
-					m_entityManager.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
+					m_componentAccessor.remove<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
 					
 					MapEvent me(MapEvent::BATTLE);

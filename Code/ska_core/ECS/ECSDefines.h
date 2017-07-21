@@ -6,8 +6,8 @@
 #define SKA_ECS_MAX_COMPONENTS 50
 
 namespace ska {
-	typedef unsigned int EntityId;
-	typedef unsigned int ComponentId;
+	using EntityId = unsigned int ;
+	using ComponentId = unsigned int ;
 	
-	typedef std::vector<EntityId> EntityIdContainer;
+	using EntityIdContainer = std::vector<EntityId>;
 }

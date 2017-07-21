@@ -4,12 +4,13 @@
 #include "ECS/System.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/Basics/Graphic/CameraFocusedComponent.h"
+#include "../GraphicComponent.h"
 
 namespace ska {
 	template <class T>
 	struct Point;
 
-	class CameraSystem : public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, CameraFocusedComponent>> {
+	class CameraSystem : public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, CameraFocusedComponent>, PossibleComponent<GraphicComponent>> {
 	public:
 		CameraSystem(EntityManager& entityManager, const unsigned int screenW, const unsigned int screenH);
 		CameraSystem& operator=(const CameraSystem&) = delete;

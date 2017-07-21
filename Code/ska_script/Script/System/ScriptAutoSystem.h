@@ -7,12 +7,13 @@
 #include "../ScriptComponent.h"
 #include "ECS/System.h"
 #include "ECS/Basics/Script/ScriptRegisterer.h"
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
 
 namespace ska {
 	class World;
 
 	class ScriptAutoSystem : public ScriptRegisterer,
-		public System<std::unordered_set<EntityId>, ScriptComponent> {
+		public System<std::unordered_set<EntityId>, RequiredComponent<ScriptComponent>, PossibleComponent<ScriptSleepComponent, ScriptComponent>> {
 	public:
 
 		Savegame& getSavegame();

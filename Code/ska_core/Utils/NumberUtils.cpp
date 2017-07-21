@@ -49,7 +49,7 @@ double ska::NumberUtils::absolute(double i) {
 
 double ska::NumberUtils::cosinus(double angle) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return fastSin(angle + M_PI/2);
+	return static_cast<double>(fastSin(static_cast<float>(angle + M_PI/2)));
 #else
 	return cos(angle);
 #endif
@@ -57,9 +57,9 @@ double ska::NumberUtils::cosinus(double angle) {
 
 float ska::NumberUtils::fastSin(float x) {
 	// restrict x so that -M_PI < x < M_PI
-	x = fmod(x + M_PI, M_PI * 2) - M_PI;
-	const float B = 4.0f / M_PI;
-	const float C = -4.0f / (M_PI*M_PI);
+	x = static_cast<float>(fmod(x + M_PI, M_PI * 2) - M_PI);
+	const float B = static_cast<float>(4.0f / M_PI);
+	const float C = static_cast<float>(-4.0f / (M_PI*M_PI));
 
 	auto y = B * x + C * x * std::abs(x);
 
@@ -72,15 +72,15 @@ float ska::NumberUtils::fastSin(float x) {
 
 double ska::NumberUtils::sinus(double angle) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return fastSin(angle);
+	return static_cast<double>(fastSin(static_cast<float>(angle)));
 #else
 	return sin(angle);
 #endif
 }
 
-double ska::NumberUtils::arctan(int x, int y) {
+double ska::NumberUtils::arctan(float x, float y) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return fastAtan2(y, x);
+	return static_cast<double>(fastAtan2(y, x));
 #else
 	return atan2(y, x);
 #endif
@@ -98,8 +98,8 @@ float ska::NumberUtils::fastAtan2(float y, float x) {
 	//http://pubs.opengroup.org/onlinepubs/009695399/functions/atan2.html
 	//Volkan SALMA
 
-	const float ONEQTR_PI = M_PI / 4.0;
-	const float THRQTR_PI = 3.0 * M_PI / 4.0;
+	const float ONEQTR_PI = static_cast<float>(M_PI / 4.0);
+	const float THRQTR_PI = static_cast<float>(3.0 * M_PI / 4.0);
 	float r, angle;
 	float abs_y = fabs(y) + 1e-10f;      // kludge to prevent 0/0 condition
 	if (x < 0.0f)
@@ -128,7 +128,7 @@ float ska::NumberUtils::fastAtan2(float y, float x) {
 float ska::NumberUtils::random(float min, float max) {
 	std::uniform_real_distribution<> dist(min, max);
 	const auto& result = dist(RGH.rng);
-	return result;
+	return static_cast<float>(result);
 }
 
 extern "C" {
@@ -154,7 +154,7 @@ float ska::NumberUtils::fastInverseSquareroot(float number) {
 
 double ska::NumberUtils::squareroot(const double i) {
 #ifdef SKA_MATH_OPTIMIZATIONS
-	return i * fastInverseSquareroot(i);
+	return i * fastInverseSquareroot(static_cast<const float>(i));
 #else
 	return sqrt(i);
 #endif
@@ -169,6 +169,6 @@ unsigned int ska::NumberUtils::getMax10Pow(const int num) {
 }
 
 double ska::NumberUtils::random(double min, double max) {
-	std::uniform_int_distribution<> dist(min, max);
+	std::uniform_real_distribution<> dist(min, max);
 	return dist(RGH.rng);
 }

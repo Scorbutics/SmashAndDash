@@ -6,6 +6,9 @@
 #include "ECS/Basics/Graphic/DirectionalAnimationComponent.h"
 #include "../BattleComponent.h"
 #include "../SkillsHolderComponent.h"
+#include "AI/System/IADefinedMovementSystem.h"
+#include "../SkillComponent.h"
+#include "Graphic/GraphicComponent.h"
 
 namespace ska {
 	class InputContextManager;
@@ -14,7 +17,7 @@ namespace ska {
 
 class CustomEntityManager;
 
-class BattleSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, ska::HitboxComponent, ska::DirectionalAnimationComponent, BattleComponent, SkillsHolderComponent> {
+class BattleSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::DirectionalAnimationComponent, BattleComponent, SkillsHolderComponent, ska::GraphicComponent>, ska::PossibleComponent<SkillComponent>> {
 public:
 	BattleSystem(CustomEntityManager& em, const ska::InputContextManager& playerICM, const ska::InputContextManager& opponentICM, const ska::EntityId pokemon, const ska::EntityId opponent, const ska::IniReader& pokemonReader, const ska::IniReader& opponentReader);
 	BattleSystem(const BattleSystem&) = delete;

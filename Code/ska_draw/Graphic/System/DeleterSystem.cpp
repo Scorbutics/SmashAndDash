@@ -6,8 +6,9 @@ ska::DeleterSystem::DeleterSystem(EntityManager& entityManager) : System(entityM
 
 void ska::DeleterSystem::refresh(unsigned int) {
 	std::vector<EntityId> toDelete;
-	for (const auto& entityId : m_processed) {
-		auto& dc = m_entityManager.getComponent<DeleterComponent>(entityId);
+	const auto& processed = getEntities();
+	for (const auto& entityId : processed) {
+		auto& dc = m_componentAccessor.get<DeleterComponent>(entityId);
 		const int elapsed = TimeUtils::getTicks() - dc.startTime;
 		if (elapsed >= dc.delay) {
 			toDelete.push_back(entityId);
@@ -15,7 +16,7 @@ void ska::DeleterSystem::refresh(unsigned int) {
 	}
 
 	for (const auto& entityId : toDelete) {
-		m_entityManager.removeEntity(entityId);
+		removeEntity(entityId);
 	}
 }
 

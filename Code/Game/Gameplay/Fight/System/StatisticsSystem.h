@@ -5,12 +5,13 @@
 #include "../BattleComponent.h"
 #include "../../World/WorldState.h"
 #include "../../PokemonGameEventDispatcher.h"
+#include "AI/System/IADefinedMovementSystem.h"
 
 namespace ska {
 	class Window;
 }
 
-class StatisticsSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::PositionComponent, BattleComponent> {
+class StatisticsSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, BattleComponent>, ska::PossibleComponent<>> {
 public:
 	StatisticsSystem(ska::EntityManager& em, ska::Window& w, ska::InputContextManager& icm, WorldState& ws, PokemonGameEventDispatcher& ged);
 	StatisticsSystem(const StatisticsSystem&) = delete;

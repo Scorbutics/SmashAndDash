@@ -35,7 +35,7 @@ const ska::ParticleBuilder& ska::ParticleBuilder::setVelocity(PolarPoint<float> 
 	} else {
 		static const auto factor = 10000.F;
 		for (auto i = m_indexStart; i < m_indexEnd; i++) {
-			const long factoredSpreading = 2 * spreading * factor;
+			const auto factoredSpreading = 2 * spreading * factor;
 			const auto currentSlice = slices == 1 ? 1 : ska::NumberUtils::random(1, slices);
 			const auto spreadingAngle = ((factoredSpreading / slices) * currentSlice) / factor;
 			m_group->physics[i].velocity = ska::Point<float>::cartesian(velocity.radius, velocity.angle + spreadingAngle);

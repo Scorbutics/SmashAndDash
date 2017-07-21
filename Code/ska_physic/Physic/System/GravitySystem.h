@@ -6,7 +6,7 @@
 #include "ECS/Basics/Physic/MovementComponent.h"
 
 namespace ska {
-	class GravitySystem : public System<std::unordered_set<EntityId>, ForceComponent, GravityAffectedComponent, MovementComponent> {
+	class GravitySystem : public System<std::unordered_set<EntityId>, RequiredComponent<ForceComponent, GravityAffectedComponent, MovementComponent>, PossibleComponent<>> {
 	public:
 		explicit GravitySystem(EntityManager& entityManager);
 		GravitySystem& operator=(const GravitySystem&) = delete;

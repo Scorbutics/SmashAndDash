@@ -13,8 +13,8 @@ void ska::BoxAttractorParticleUpdater::update(unsigned int, ParticleGroup & grou
 		ska::Point<float> diff(m_origin.x - group.pos[i].x, m_origin.y - group.pos[i].y) ;
 		const auto& diffNorm = ska::NumberUtils::squareroot(diff.x * diff.x + diff.y * diff.y);
 		
-		diff.x = (diff.x * m_force.radius) / diffNorm;
-		diff.y = (diff.y * m_force.radius) / diffNorm;
+		diff.x = static_cast<float>((diff.x * m_force.radius) / diffNorm);
+		diff.y = static_cast<float>((diff.y * m_force.radius) / diffNorm);
 			
 		group.physics[i].acceleration += diff;
 	}

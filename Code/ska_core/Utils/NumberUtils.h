@@ -24,7 +24,7 @@ namespace ska{
 
 		static float exponential(float i);
 		static int random(int min, int max);
-		static double arctan(int x, int y);
+		static double arctan(float x, float y);
 
 		template <typename T>
 		static T maximum(T a, T b) {

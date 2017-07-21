@@ -37,7 +37,7 @@ const std::string ska::ScriptAutoSystem::map(const std::string& key, const std::
 
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
 		EntityId entity = m_namedScriptedEntities.at(id);
-		return m_entityManager.serializeComponent(entity, keys[0], keys[1]);
+		return m_componentAccessor.serialize(entity, keys[0], keys[1]);
 	}
 
 	return "";
@@ -47,7 +47,7 @@ void ska::ScriptAutoSystem::removeComponent(const std::string& componentName, co
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
 		EntityId entity = m_namedScriptedEntities.at(id);
 		//const auto idInt = StringUtils::strToInt(id);
-		m_entityManager.removeComponent(entity, componentName);
+		m_componentAccessor.remove(entity, componentName);
 		//m_entityManager.refreshEntity(idInt);
 	}
 }
@@ -56,23 +56,25 @@ void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, c
 	if (m_namedScriptedEntities.find(id) != m_namedScriptedEntities.end()) {
 		EntityId entity = m_namedScriptedEntities.at(id);
 		//const auto idInt = StringUtils::strToInt(id);
-		m_entityManager.addComponent(entity, componentName);
+		m_componentAccessor.add(entity, componentName);
 		//m_entityManager.refreshEntity(idInt);
 	}
 }
 
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
 void ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scriptSleepEntity, const EntityId origin) {
-	if (!m_entityManager.hasComponent<ScriptSleepComponent>(scriptSleepEntity)) {
+	
+	const auto& scriptCPtr = m_componentPossibleAccessor.get<ScriptSleepComponent>(scriptSleepEntity);
+	if (scriptCPtr == nullptr) {
 		throw IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
 	}
 
 	/* If the script is already running, return */
-	if (m_entityManager.hasComponent<ScriptComponent>(scriptSleepEntity)) {
+	if (m_componentPossibleAccessor.get<ScriptComponent>(scriptSleepEntity) != nullptr) {
 		return;
 	}
 
-	ScriptSleepComponent& scriptData = m_entityManager.getComponent<ScriptSleepComponent>(scriptSleepEntity);
+	ScriptSleepComponent& scriptData = *scriptCPtr;
 
 	std::string extendedName;
 	std::string validPath;
@@ -141,7 +143,7 @@ void ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scri
 		i++;
 	}
 
-	m_entityManager.addComponent<ScriptComponent>(scriptSleepEntity, sc);
+	m_componentAccessor.add<ScriptComponent>(scriptSleepEntity, sc);
 }
 
 void ska::ScriptAutoSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {
@@ -179,11 +181,11 @@ void ska::ScriptAutoSystem::refresh(unsigned int ellapsedTime) {
 		} else {
 			if (StringUtils::isInt(entityScriptId, 10)) {
 				EntityId scriptEntity = StringUtils::strToInt(entityScriptId);
-				if (!m_entityManager.hasComponent<ScriptComponent>(scriptEntity)) {
+				const auto& scriptCPtr = m_componentPossibleAccessor.get<ScriptComponent>(scriptEntity);
+				if (scriptCPtr == nullptr) {
 					SKA_LOG_ERROR("ERREUR SCRIPT [", nextScript->extendedName, "] (l.", nextScript->currentLine, ") ", sde.what(), " Script not found with id : ", entityScriptId);
-				}
-				else {
-					killAndSave(m_entityManager.getComponent<ScriptComponent>(scriptEntity), m_saveGame);
+				} else {
+					killAndSave(*scriptCPtr, m_saveGame);
 				}
 			} else {
 				SKA_LOG_ERROR("ERREUR SCRIPT [", nextScript->extendedName, "] (l.", nextScript->currentLine, ") ", sde.what(), " This is not an integer id : ", entityScriptId);
@@ -206,9 +208,9 @@ void ska::ScriptAutoSystem::killAndSave(ScriptComponent& script, const Savegame&
 	}*/
 
 	if (!script.deleteEntityWhenFinished) {
-		m_entityManager.removeComponent<ScriptComponent>(script.entityId);
+		m_componentAccessor.remove<ScriptComponent>(script.entityId);
 	} else {
-		m_entityManager.removeEntity(script.entityId);
+		removeEntity(script.entityId);
 	}
 	script.state = EnumScriptState::DEAD;
 }
@@ -218,8 +220,9 @@ ska::ScriptComponent* ska::ScriptAutoSystem::getHighestPriorityScript() {
 	ScriptComponent* maxPriorityScript = nullptr;
 	auto currentTimeTicks = TimeUtils::getTicks();
 
-	for (auto entityId : m_processed) {
-		auto& script = m_entityManager.getComponent<ScriptComponent>(entityId);
+	const auto& processed = getEntities();
+	for (auto entityId : processed) {
+		auto& script = m_componentAccessor.get<ScriptComponent>(entityId);
 		auto currentVal = getPriority(script, currentTimeTicks);
 		if (maxPriorityScriptValue < currentVal) {
 			maxPriorityScriptValue = currentVal;

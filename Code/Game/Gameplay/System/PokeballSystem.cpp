@@ -5,7 +5,7 @@
 #define POWER 5
 
 PokeballSystem::PokeballSystem(ska::EntityManager& entityManager) :
-System<std::unordered_set<ska::EntityId>, PokeballComponent, ska::PositionComponent>(entityManager) {
+System(entityManager) {
 	m_sprite.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball.png", 4, 1, 4);
 	m_sprite.setDelay(200);
 	m_openPokeball.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-openned.png", 1, 1, 1);
@@ -17,15 +17,16 @@ PokeballSystem::~PokeballSystem() {
 }
 
 void PokeballSystem::refresh(unsigned int ellapsedTime) {
-	for (ska::EntityId entityId : m_processed) {
-		PokeballComponent& pokec = m_entityManager.getComponent<PokeballComponent>(entityId);
-		ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+	const auto& processed = getEntities();
+	for (ska::EntityId entityId : processed) {
+		PokeballComponent& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
+		ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 
 		if (!pokec.started) {
 			throwBall(entityId);
 		}
 
-		ska::GraphicComponent& gc = m_entityManager.getComponent<ska::GraphicComponent>(entityId);
+		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
 
 		//Si la Pokeball est en l'air
 		if ((pc.x > pokec.finalPos.x &&  pokec.sens == 0) || (pc.x < pokec.finalPos.x &&  pokec.sens == 1)) {
@@ -46,31 +47,31 @@ void PokeballSystem::refresh(unsigned int ellapsedTime) {
 			gc.sprite.push_back(m_openPokeball);
 
 			/* Lorsque la pokeball s'ouvre, on y ajoute un effet temporaire de "vortex" */
-			ska::EntityId vortexEntity = m_entityManager.createEntity();
+			ska::EntityId vortexEntity = createEntity();
 			ska::DeleterComponent vortexDeleter;
 			vortexDeleter.delay = 1500;
 			ska::PositionComponent vortexPc = pc;
 			vortexPc.x -= m_vortex.getWidth() / 2 - m_openPokeball.getWidth() / 2;
 			vortexPc.y -= m_vortex.getHeight() / 2 - m_openPokeball.getHeight() / 2;
 
-			m_entityManager.addComponent<ska::DeleterComponent>(vortexEntity, vortexDeleter);
-			m_entityManager.addComponent<ska::PositionComponent>(vortexEntity, vortexPc);
+			m_componentAccessor.add<ska::DeleterComponent>(vortexEntity, vortexDeleter);
+			m_componentAccessor.add<ska::PositionComponent>(vortexEntity, vortexPc);
 			ska::GraphicComponent vortexGc;
 			vortexGc.sprite.push_back(m_vortex);
-			m_entityManager.addComponent<ska::GraphicComponent>(vortexEntity, vortexGc);
+			m_componentAccessor.add<ska::GraphicComponent>(vortexEntity, vortexGc);
 
 			/* On fini par ajouter un deleter sur cette Pokeball (avec un delai plus élevé que celui du vortex) */
 			ska::DeleterComponent deleter;
 			deleter.delay = vortexDeleter.delay*2;
-			m_entityManager.addComponent<ska::DeleterComponent>(entityId, deleter);
+			m_componentAccessor.add<ska::DeleterComponent>(entityId, deleter);
 		}
 
 	}
 }
 
-void PokeballSystem::throwBall(ska::EntityId entityId) const {
-	PokeballComponent& pokec = m_entityManager.getComponent<PokeballComponent>(entityId);
-	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+void PokeballSystem::throwBall(ska::EntityId entityId) {
+	PokeballComponent& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
+	ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 
 	ska::Point<int> leftPos;
 	ska::Point<int> rightPos;
@@ -116,5 +117,5 @@ void PokeballSystem::throwBall(ska::EntityId entityId) const {
 	ska::GraphicComponent gc;
 	gc.sprite.push_back(m_sprite);
 	//gc.desiredPriority = GUI_DEFAULT_DISPLAY_PRIORITY;
-	m_entityManager.addComponent<ska::GraphicComponent>(entityId, gc);
+	m_componentAccessor.add<ska::GraphicComponent>(entityId, gc);
 }

@@ -7,8 +7,9 @@ m_playerICM(icm), m_worldScene(ws), m_window(w), m_ged(ged) {
 }
 
 void StatisticsSystem::refresh(unsigned int ellapsedTime) {
-	for (const auto entityId : m_processed) {
-		auto& bc = m_entityManager.getComponent<BattleComponent>(entityId);
+	const auto& processed = getEntities();
+	for (const auto entityId : processed) {
+		auto& bc = m_componentAccessor.get<BattleComponent>(entityId);
 
 		/* TODO handle more stats effects */
 		/* TODO : observer (eg hp < 0 could mean end trainer battle or end pokémon battle) */

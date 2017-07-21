@@ -5,14 +5,14 @@
 #include "Logging/Logger.h"
 
 ska::DirectionalAnimationSystem::DirectionalAnimationSystem(EntityManager& entityManager) : System(entityManager) {
-	name("DirectionalAnimationSystem");
 }
 
 void ska::DirectionalAnimationSystem::refresh(unsigned int) {
-	for (auto entityId : m_processed) {
-		auto& gc = m_entityManager.getComponent<GraphicComponent>(entityId);
-		auto& dac = m_entityManager.getComponent<DirectionalAnimationComponent>(entityId);
-		auto& mov = m_entityManager.getComponent<MovementComponent>(entityId);
+	const auto& processed = getEntities();
+	for (auto entityId : processed) {
+		auto& gc = m_componentAccessor.get<GraphicComponent>(entityId);
+		auto& dac = m_componentAccessor.get<DirectionalAnimationComponent>(entityId);
+		auto& mov = m_componentAccessor.get<MovementComponent>(entityId);
 
 		if (gc.sprite.empty()) {
 			break;
@@ -47,10 +47,10 @@ void ska::DirectionalAnimationSystem::refresh(unsigned int) {
 				break;
 			}
 
-			if (m_entityManager.hasComponent<PositionComponent>(dac.looked)) {
-				auto& pc = m_entityManager.getComponent<PositionComponent>(entityId);
-				auto& pcLooked = m_entityManager.getComponent<PositionComponent>(dac.looked);
-				dac.direction = RectangleUtils::getDirectionFromPos(pc, pcLooked);
+			const auto& pcPtr = m_componentPossibleAccessor.get<PositionComponent>(dac.looked);
+			if (pcPtr != nullptr) {
+				auto& pcLooked = *pcPtr;
+				dac.direction = RectangleUtils::getDirectionFromPos(*pcPtr, pcLooked);
 			}
 			break;
 		}

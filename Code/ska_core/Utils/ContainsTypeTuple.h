@@ -14,6 +14,7 @@ namespace ska {
             struct containsImpl<TypeToFind, Type> {
                 static constexpr bool value = std::is_same<TypeToFind, Type>::value;
             };
+
         }
 
         template <class TypeToFind, class ... Types>
@@ -21,6 +22,10 @@ namespace ska {
             static constexpr bool value = detail::containsImpl<TypeToFind, Types...>::value;
         };
 
+		template <class TypeToFind>
+		struct contains <TypeToFind>{
+			static constexpr bool value = false;
+		};
 
         #if __cplusplus > 201402L
             //CPP 17

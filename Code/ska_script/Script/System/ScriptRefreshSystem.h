@@ -7,15 +7,16 @@
 #include "Inputs/InputContextManager.h"
 #include "ECS/System.h"
 #include "ScriptAutoSystem.h"
+#include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
 namespace ska {
     class ScriptPositionedGetter;
     class BlockContainer;
 
-	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, PositionComponent, ScriptSleepComponent>;
-
+	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, ScriptSleepComponent>, PossibleComponent<>>;
+	using ScriptRefreshSystemBase = System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>, PossibleComponent<WorldCollisionComponent>>;
 	class ScriptRefreshSystem :
-		public System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>,
+		public ScriptRefreshSystemBase,
 		/* Allows easy access to each entity that contains ScriptSleepComponent and PositionComponent */
 		public ScriptPositionSystemAccess {
 
@@ -28,7 +29,7 @@ namespace ska {
 	protected:
 		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
-		EntityId findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const;
+		EntityId findNearScriptComponentEntity(const PositionComponent& entityPos, EntityId script) const;
 		void startScript(const EntityId scriptEntity, const EntityId origin);
 
 		ScriptPositionedGetter& m_scriptPositionedGetter;

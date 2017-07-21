@@ -26,6 +26,7 @@
     <ClCompile Include="Impl\ColorParticleUpdater.cpp" />
     <ClCompile Include="Impl\ConsoleParticleCountRenderer.cpp" />
     <ClCompile Include="Impl\EulerAttractorParticleUpdater.cpp" />
+    <ClCompile Include="Impl\GenerationDelayProperty.cpp" />
     <ClCompile Include="Impl\RandomColorGenerator.cpp" />
     <ClCompile Include="Impl\ColoredRectGraphicParticleRenderer.cpp" />
     <ClCompile Include="Impl\PhysicParticleUpdater.cpp" />
@@ -38,11 +39,13 @@
     <ClCompile Include="Impl\TextureAlphaParticleUpdater.cpp" />
     <ClCompile Include="Impl\TextureGraphicParticleRenderer.cpp" />
     <ClCompile Include="Impl\TimeParticleUpdater.cpp" />
+    <ClCompile Include="ParticleBuilder.cpp" />
     <ClCompile Include="ParticleFactory.cpp" />
     <ClCompile Include="ParticleEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Impl\ConsoleParticleCountRenderer.h" />
+    <ClInclude Include="Impl\GenerationDelayProperty.h" />
     <ClInclude Include="Impl\SideBalancingParticleUpdater.h" />
     <ClInclude Include="Impl\SpreadingColorParticleEffectFactory.h" />
     <ClInclude Include="Impl\BoxAttractorParticleUpdater.h" />
@@ -61,6 +64,7 @@
     <ClInclude Include="Impl\TextureAlphaParticleUpdater.h" />
     <ClInclude Include="Impl\TextureGraphicParticleRenderer.h" />
     <ClInclude Include="Impl\TimeParticleUpdater.h" />
+    <ClInclude Include="ParticleBuilder.h" />
     <ClInclude Include="ParticleGenerator.h" />
     <ClInclude Include="ParticleFactory.h" />
     <ClInclude Include="ParticleGroup.h" />

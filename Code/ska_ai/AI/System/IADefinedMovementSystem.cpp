@@ -10,11 +10,12 @@ ska::IADefinedMovementSystem::IADefinedMovementSystem(EntityManager& entityManag
 void ska::IADefinedMovementSystem::refresh(unsigned int ellapsedTime) {
 	std::vector<EntityId> entityWithComponentsToDelete;
 
-	for (EntityId entityId : m_processed) {
-		auto& mc = m_entityManager.getComponent<MovementComponent>(entityId);
-		auto& pc = m_entityManager.getComponent<PositionComponent>(entityId);
-		auto& iamc = m_entityManager.getComponent<IADefinedMovementComponent>(entityId);
-		const auto& hc = m_entityManager.getComponent<HitboxComponent>(entityId);
+	const auto& processed = getEntities();
+	for (EntityId entityId : processed) {
+		auto& mc = m_componentAccessor.get<MovementComponent>(entityId);
+		auto& pc = m_componentAccessor.get<PositionComponent>(entityId);
+		auto& iamc = m_componentAccessor.get<IADefinedMovementComponent>(entityId);
+		const auto& hc = m_componentAccessor.get<HitboxComponent>(entityId);
 		const auto& centerPos = PositionComponent::getCenterPosition(pc, hc);
 
 		if (iamc.directionIndex >= iamc.directions.size()) {
@@ -37,10 +38,10 @@ void ska::IADefinedMovementSystem::refresh(unsigned int ellapsedTime) {
 
 		bool collisioned;
 		if (iamc.ghost) {
-			m_entityManager.removeComponent<WorldCollisionComponent>(entityId);
+			m_componentAccessor.remove<WorldCollisionComponent>(entityId);
 			collisioned = false;
 		} else {
-			collisioned = m_entityManager.hasComponent<WorldCollisionComponent>(entityId);
+			collisioned = m_componentPossibleAccessor.get<WorldCollisionComponent>(entityId) != nullptr;
 		}
 		auto finished = false;
 		if (TimeUtils::getTicks() - iamc.lastTimeStarted >= iamc.delay || directionChanged || collisioned) {
@@ -55,8 +56,8 @@ void ska::IADefinedMovementSystem::refresh(unsigned int ellapsedTime) {
 				if (m_scriptSystem != nullptr && iamc.callbackActive) {
 					//TODO Event pour remplacer ça
 					/* triggers callback */
-					auto scriptEntity = m_entityManager.createEntity();
-					m_entityManager.addComponent<ScriptSleepComponent>(scriptEntity, iamc.callback);
+					auto scriptEntity = createEntity();
+					m_componentAccessor.add<ScriptSleepComponent>(scriptEntity, iamc.callback);
 					m_scriptSystem->registerScript(nullptr, scriptEntity, entityId);
 				}
 				/* removes component */
@@ -78,7 +79,7 @@ void ska::IADefinedMovementSystem::refresh(unsigned int ellapsedTime) {
 	}
 
 	for (EntityId id : entityWithComponentsToDelete) {
-		m_entityManager.removeComponent<IADefinedMovementComponent>(id);
+		m_componentAccessor.remove<IADefinedMovementComponent>(id);
 	}
 }
 

@@ -7,10 +7,10 @@
 #include "ECS/Basics/Physic/HitboxComponent.h"
 
 namespace ska {
-	class DebugCollisionDrawerSystem : public System<std::unordered_set<EntityId>, PositionComponent, HitboxComponent, DebugGraphicComponent> {
+	class DebugCollisionDrawerSystem : public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, HitboxComponent, DebugGraphicComponent>, PossibleComponent<WorldCollisionComponent>> {
 	public:
 		DebugCollisionDrawerSystem(EntityManager& em);
-		EntityId createDebugCollisionEntity(const Point<int>& p, int offset) const;
+		EntityId createDebugCollisionEntity(const Point<int>& p, int offset);
 		virtual void refresh(unsigned int ellapsedTime) override;
 		virtual ~DebugCollisionDrawerSystem() = default;
 	};

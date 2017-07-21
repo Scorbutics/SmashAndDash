@@ -14,10 +14,11 @@ System(em) {
 }
 
 void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
-	for (ska::EntityId entityId : m_processed) {
-		auto& sc = m_entityManager.getComponent<SkillComponent>(entityId);
-		auto& mc = m_entityManager.getComponent<ska::MovementComponent>(entityId);
-		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(entityId);
+	const auto& processed = getEntities();
+	for (ska::EntityId entityId : processed) {
+		auto& sc = m_componentAccessor.get<SkillComponent>(entityId);
+		auto& mc = m_componentAccessor.get<ska::MovementComponent>(entityId);
+		auto& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 
 		const unsigned int t = sc.currentTime;
 
@@ -35,7 +36,7 @@ void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
 		mc.vy = directionalPoint.y;
 
 		/* Max range reached : delete the skill */
-		if (ska::RectangleUtils::distanceSquared<int>(sc.origin, pc) > sc.range*sc.range) {
+		if (static_cast<unsigned int>(ska::RectangleUtils::distanceSquared<int>(sc.origin, pc)) > sc.range*sc.range) {
 			scheduleDeferredRemove(entityId);
 		}
 

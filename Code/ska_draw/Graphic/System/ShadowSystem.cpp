@@ -20,10 +20,11 @@ void ska::ShadowSystem::refresh(unsigned int) {
 	}
 
 	m_pgd.clear();
-
-	for (ska::EntityId entityId : m_processed) {
-		ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(entityId);
-		ska::HitboxComponent& hc = m_entityManager.getComponent<ska::HitboxComponent>(entityId);
+	
+	const auto& processed = getEntities();
+	for (ska::EntityId entityId : processed) {
+		auto& pos = m_componentAccessor.get<ska::PositionComponent>(entityId);
+		auto& hc = m_componentAccessor.get<ska::HitboxComponent>(entityId);
 
 		const int relPosX = pos.x + hc.xOffset - cameraX;
 		const int relPosY = pos.y + hc.yOffset - cameraY - m_shadow.getHeight()/3;

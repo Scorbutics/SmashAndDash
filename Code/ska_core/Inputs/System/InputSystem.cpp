@@ -8,9 +8,9 @@ ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextMa
 void ska::InputSystem::refresh(unsigned int) {
     const auto& processed = getEntities();
 	for (const auto& entityId : processed) {
-		auto& inputComponent = m_componentAccessor.getComponent<InputComponent>(entityId);
-		auto& forceComponent = m_componentAccessor.getComponent<ForceComponent>(entityId);
-		auto& posComponent = m_componentAccessor.getComponent<PositionComponent>(entityId);
+		auto& inputComponent = m_componentAccessor.get<InputComponent>(entityId);
+		auto& forceComponent = m_componentAccessor.get<ForceComponent>(entityId);
+		auto& posComponent = m_componentAccessor.get<PositionComponent>(entityId);
 
 		Point<float> movePower;
 		auto moveX = false;

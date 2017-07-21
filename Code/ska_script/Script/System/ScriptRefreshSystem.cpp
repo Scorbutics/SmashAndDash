@@ -8,7 +8,7 @@
 #include "Data/BlockContainer.h"
 
 ska::ScriptRefreshSystem::ScriptRefreshSystem(EntityManager& entityManager, ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc) :
-ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>(entityManager),
+	ScriptRefreshSystemBase(entityManager),
 ScriptPositionSystemAccess(entityManager),
 m_scriptPositionedGetter(spg), m_blockContainer(bc), m_icm(icm), m_scriptAutoSystem(scriptAutoSystem) {
 
@@ -16,22 +16,25 @@ m_scriptPositionedGetter(spg), m_blockContainer(bc), m_icm(icm), m_scriptAutoSys
 
 void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 	const InputActionContainer& iac = m_icm.getActions();
-	EntityManager& entityManager = ScriptPositionSystemAccess::m_entityManager;
+	auto& components = ScriptRefreshSystemBase::m_componentAccessor;
+	auto& componentsPossible = ScriptRefreshSystemBase::m_componentPossibleAccessor;
+	auto& componentsSP = ScriptPositionSystemAccess::m_componentAccessor;
 	std::vector<EntityId> toDelete;
 
-	for (const EntityId& entityId : ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::m_processed) {
-		ScriptAwareComponent& sac = entityManager.getComponent<ScriptAwareComponent>(entityId);
-		const PositionComponent& pc = entityManager.getComponent<PositionComponent>(entityId);
-		const HitboxComponent& hc = entityManager.getComponent<HitboxComponent>(entityId);
-		const DirectionalAnimationComponent& dac = entityManager.getComponent<DirectionalAnimationComponent>(entityId);
+	const auto& processed = ScriptRefreshSystemBase::getEntities();
+	for (const EntityId& entityId : processed) {
+		ScriptAwareComponent& sac = components.get<ScriptAwareComponent>(entityId);
+		const PositionComponent& pc = components.get<PositionComponent>(entityId);
+		const HitboxComponent& hc = components.get<HitboxComponent>(entityId);
+		const DirectionalAnimationComponent& dac = components.get<DirectionalAnimationComponent>(entityId);
 
 		const Point<int>& frontPos = PositionComponent::getFrontPosition(pc, hc, dac);
 		const Point<int>& centerPos = PositionComponent::getCenterPosition(pc, hc);
 
-		for (EntityId targets : ScriptPositionSystemAccess::m_processed) {
-			ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(targets);
-
-			EntityId scriptEntity;
+		const auto& subProcessed = ScriptPositionSystemAccess::getEntities();
+		EntityId scriptEntity;
+		for (EntityId targets : subProcessed) {
+			ScriptSleepComponent& scriptData = componentsSP.get<ScriptSleepComponent>(targets);
 
 			switch (scriptData.triggeringType) {
 			case EnumScriptTriggerType::AUTO:
@@ -45,7 +48,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 				}
 
 			case EnumScriptTriggerType::MOVE_IN:
-				scriptEntity = findNearScriptComponentEntity(entityManager, pc, targets);
+				scriptEntity = findNearScriptComponentEntity(pc, targets);
 				if (scriptEntity != std::numeric_limits<unsigned int>().max()) {
 					startScript(scriptEntity, entityId);
 				}
@@ -74,8 +77,9 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 		}
 
 		//TODO ajouter vérification de changement de bloc ? pour éviter de détecter tous les lancements d'évènements de collisions
-		if (entityManager.hasComponent<WorldCollisionComponent>(entityId)) {
-			const auto& wcc = entityManager.getComponent<WorldCollisionComponent>(entityId);
+		const auto& wccPtr = componentsPossible.get<WorldCollisionComponent>(entityId);
+		if (wccPtr != nullptr) {
+			const auto& wcc = *wccPtr;
 			//std::clog << "Block collision" << std::endl;
 			if ((wcc.blockColPosX != wcc.lastBlockColPosX && wcc.blockColPosX != wcc.lastBlockColPosY) ||
 				(wcc.blockColPosY != wcc.lastBlockColPosY && wcc.blockColPosY != wcc.lastBlockColPosX)) {
@@ -111,10 +115,10 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 		//TODO réception d'un évènement
 		for (const ScriptSleepComponent* ssc : worldScripts) {
 			if (ssc != nullptr) {
-				EntityId script = entityManager.createEntity();
-				entityManager.addComponent<PositionComponent>(script, pc);
-				entityManager.addComponent<ScriptSleepComponent>(script, *ssc);
-				entityManager.getComponent<ScriptSleepComponent>(script).deleteEntityWhenFinished = true;
+				EntityId script = ScriptRefreshSystemBase::createEntity();
+				components.add<PositionComponent>(script, pc);
+				components.add<ScriptSleepComponent>(script, *ssc);
+				componentsSP.get<ScriptSleepComponent>(script).deleteEntityWhenFinished = true;
 				startScript(script, entityId);
 				if (ssc->triggeringType == EnumScriptTriggerType::AUTO) {
 					toDelete.push_back(script);
@@ -125,7 +129,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 	}
 
 	for (EntityId targets : toDelete) {
-		entityManager.removeComponent<ScriptSleepComponent>(targets);
+		components.remove<ScriptSleepComponent>(targets);
 	}
 
 
@@ -134,7 +138,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 }
 
 void ska::ScriptRefreshSystem::update(unsigned int ellapsedTime) {
-	ska::System<std::unordered_set<EntityId>, PositionComponent, DirectionalAnimationComponent, HitboxComponent, ScriptAwareComponent>::update(ellapsedTime);
+	ScriptRefreshSystemBase::update(ellapsedTime);
 }
 
 void ska::ScriptRefreshSystem::registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity) {
@@ -149,11 +153,11 @@ void ska::ScriptRefreshSystem::startScript(const EntityId scriptEntity, const En
 	m_scriptAutoSystem.registerScript(nullptr, scriptEntity, origin);
 }
 
-ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(EntityManager& entityManager, const PositionComponent& entityPos, EntityId script) const {
+ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(const PositionComponent& entityPos, EntityId script) const {
 	const unsigned int blockSizeSquared = m_blockContainer.getBlockSize() * m_blockContainer.getBlockSize();
-
-	//ScriptSleepComponent& scriptData = entityManager.getComponent<ScriptSleepComponent>(script);
-	PositionComponent& scriptPos = entityManager.getComponent<PositionComponent>(script);
+	auto& componentsSP = ScriptPositionSystemAccess::m_componentAccessor;
+	
+	PositionComponent& scriptPos = componentsSP.get<PositionComponent>(script);
 
 	int varX = (scriptPos.x - entityPos.x);
 	int varY = (scriptPos.y - entityPos.y);
