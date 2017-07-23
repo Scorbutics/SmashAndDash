@@ -7,20 +7,22 @@ class StateMap;
 
 class StateToMapSwitcher {
 public:
-	StateToMapSwitcher(const std::string& map, const std::string& chipsetName, WorldState& ws) :
+	StateToMapSwitcher(const std::string& map, const std::string& chipsetName, WorldState& ws, const ska::Point<int>& screenSize) :
 		m_ws(ws),
 		m_mapName(map),
-		m_chipsetName(chipsetName) {}
+		m_chipsetName(chipsetName),
+		m_screenSize(screenSize) {}
 	StateToMapSwitcher& operator=(const StateToMapSwitcher&) = delete;
 	~StateToMapSwitcher() = default;
 
 	template<class EM, class ED>
 	void switchTo(ska::StateBase<EM, ED>& lastScene) const {
-		WorldStateChanger wsc(m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName);
+		WorldStateChanger wsc(m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName, m_screenSize);
 		lastScene.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateMap>(lastScene, wsc);
 	}
 
 protected:
+	const ska::Point<int> m_screenSize;
 	WorldState& m_ws;
 	const std::string m_mapName;
 	const std::string m_chipsetName;

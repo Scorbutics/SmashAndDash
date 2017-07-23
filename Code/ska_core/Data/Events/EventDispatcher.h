@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Utils/Observer.h"
-#include "Utils/Observable.h"
+#include "../../Utils/Observable.h"
 
 namespace ska {
 

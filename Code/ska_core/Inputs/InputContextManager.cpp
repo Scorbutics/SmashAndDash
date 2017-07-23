@@ -1,9 +1,12 @@
 #include "InputContextManager.h"
+#include "../Data/Events/GameEventDispatcher.h"
 
 /* Default InputContextManager settings.
    Contexts should be added depending of the current State in order to
    enable or disable inputs in specific State */
-ska::InputContextManager::InputContextManager(RawInputListener& ril) : m_ril(ril) {
+ska::InputContextManager::InputContextManager(RawInputListener& ril, GameEventDispatcher& ged) : 
+	m_eventDispatcher(ged),
+	m_ril(ril) {
 	for (auto& c : m_contexts) {
 		c.second->buildCodeMap();
 	}
@@ -29,7 +32,7 @@ void ska::InputContextManager::disableContext(EnumContextManager ecm, bool disab
 void ska::InputContextManager::refresh() {
 	m_ril.update();
 	m_actions.reset();
-	for(auto& r : m_ranges ) {
+	for(auto& r : m_ranges) {
 	    r.x = 0;
         r.y = 0;
     }
@@ -40,10 +43,11 @@ void ska::InputContextManager::refresh() {
 		c.second->queryToggles(m_toggles);
 		m_textInput = c.second->queryText();
 	}
-}
 
-ska::InputContextManager ska::InputContextManager::instantiateEmpty(InputContextManager& icm) {
-	return InputContextManager(icm.m_ril);
+	InputKeyEvent ike(*this);
+	InputMouseEvent ime(*this);
+	m_eventDispatcher.ska::Observable<ska::InputKeyEvent>::notifyObservers(ike);
+	m_eventDispatcher.ska::Observable<ska::InputMouseEvent>::notifyObservers(ime);
 }
 
 const ska::InputRangeContainer& ska::InputContextManager::getRanges() const {

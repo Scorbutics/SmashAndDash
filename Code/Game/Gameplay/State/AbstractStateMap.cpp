@@ -1,33 +1,30 @@
 #include "Physic/System/CollisionSystem.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../World/WorldState.h"
-#include "../CustomEntityManager.h"
 #include "StateToMapSwitcher.h"
 #include "StateToBattleSwitcher.h"
 #include "AbstractStateMap.h"
 #include "StateMap.h"
 
 AbstractStateMap::AbstractStateMap(StateData& data, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
+StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
 StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(false),
 m_eventDispatcher(data.m_eventDispatcher),
 m_entityManager(data.m_entityManager),
-m_worldState(ws),
-m_window(data.m_window) {
+m_worldState(ws) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
 AbstractStateMap::AbstractStateMap(StateData& data, State& oldScene, WorldState& ws, const bool sameMap) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, oldScene),
+StateBase(data.m_entityManager, data.m_eventDispatcher, oldScene),
 StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
 m_sameMap(sameMap),
 m_observersDefined(true),
 m_eventDispatcher(data.m_eventDispatcher),
 m_entityManager(data.m_entityManager),
-m_worldState(ws),
-m_window(data.m_window) {
+m_worldState(ws) {
 	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
@@ -55,10 +52,10 @@ void AbstractStateMap::afterLoad(ska::StatePtr*){
 
 bool AbstractStateMap::onTeleport(const MapEvent& me) {
 	if(me.eventType == MapEvent::BATTLE) {
-		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldState);
+		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldState, getCamera().getScreenSize());
 		stbs.switchTo(*this);
 	} else {
-		StateToMapSwitcher stms(me.mapName, me.chipsetName, m_worldState);
+		StateToMapSwitcher stms(me.mapName, me.chipsetName, m_worldState, getCamera().getScreenSize());
 		stms.switchTo(*this);
 	}
 	return true;

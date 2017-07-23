@@ -8,7 +8,7 @@
 #include "ECS/Basics/Script/ScriptSleepComponent.h"
 #include "Graphic/System/CameraSystem.h"
 
-ska::World::World(const unsigned int tailleBloc, const unsigned int, const unsigned int) : m_windDirection(0), m_nbrBlockX(0), m_nbrBlockY(0),
+ska::World::World(const unsigned int tailleBloc) : m_windDirection(0), m_nbrBlockX(0), m_nbrBlockY(0),
                                                                                            m_blockSize(tailleBloc),
 	m_autoScriptsPlayed(false), m_cameraSystem(nullptr),
                                                                                            m_lBot(*this),

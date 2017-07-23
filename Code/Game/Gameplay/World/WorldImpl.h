@@ -15,7 +15,7 @@ class WorldImpl :
 	public ska::Observer<SettingsChangeEvent> {
 
 public:
-	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc);
 	WorldImpl(const WorldImpl&) = delete;
 	~WorldImpl();
 

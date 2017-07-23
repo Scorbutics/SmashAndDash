@@ -6,18 +6,17 @@
 #include "WindowTeam.h"
 #include "WindowSettings.h"
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
-#include <Core/Window.h>
 #include "FPSLabel.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 
-GUIMap::GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
-	ska::GUI(ged, w, playerICM),
+GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
+	ska::GUI(ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)), 
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
 	m_ged(ged){
-	initButtons(w);
+	initButtons();
 
 	auto attachedToCursor = std::unique_ptr<ska::Widget>(std::make_unique<WindowMouseCursor>(this, this, this, ska::Rectangle{0, 0, 64, 96}, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
 	m_attachedToCursor = static_cast<WindowMouseCursor*>(addTopWidget(attachedToCursor));
@@ -43,7 +42,7 @@ void GUIMap::bind(Settings& sets) {
 	wsettings->bind(sets);
 }
 
-void GUIMap::initButtons(const ska::Window& w) {
+void GUIMap::initButtons() {
 	ska::Rectangle buf;
     buf.w = (TAILLEBLOCFENETRE)* 2;
     buf.h = (TAILLEBLOCFENETRE)* 2;
@@ -56,7 +55,7 @@ void GUIMap::initButtons(const ska::Window& w) {
 	resort();
 
     auto& wAction = static_cast<ska::TimeScrollableWindowIG<>&>(*m_wAction);
-    wAction.move(ska::Point<int>(w.getWidth() - 13 * TAILLEBLOCFENETRE, w.getHeight() - wAction.getBox().h / 2));
+    wAction.move(ska::Point<int>(getMaxWidth() - 13 * TAILLEBLOCFENETRE, getMaxHeight() - wAction.getBox().h / 2));
 
     auto scrollButtonLambda = [this](ska::Widget* tthis, ska::HoverEvent& e) {
         auto target = static_cast<ska::GUIScrollButtonWindowIG*>(tthis);
@@ -133,6 +132,12 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         }
     }
     return true;
+}
+
+bool GUIMap::onScreenResized(unsigned int width, unsigned int height) {
+	auto& wAction = static_cast<ska::TimeScrollableWindowIG<>&>(*m_wAction);
+	wAction.move(ska::Point<int>(width - 13 * TAILLEBLOCFENETRE, height - wAction.getBox().h / 2));
+	return true;
 }
 
 bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {

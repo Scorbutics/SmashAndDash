@@ -9,36 +9,37 @@
 
 #define SCROLL_BUTTON_SPEED 3
 
-ska::GUI::GUI(ska::GameEventDispatcher& ged, const ska::BaseWindow& w, ska::InputContextManager& playerICM) :
-    ska::Observer<GUIEvent>(std::bind(&ska::GUI::onGUIEvent, this, std::placeholders::_1)),
+ska::GUI::GUI(GameEventDispatcher& ged) :
+	ska::Observer<GUIEvent>(std::bind(&GUI::onGUIEvent, this, std::placeholders::_1)),
+	ska::Observer<GameEvent>(std::bind(&GUI::onGameEvent, this, std::placeholders::_1)),
+	ska::Observer<InputMouseEvent>(std::bind(&GUI::refreshMouse, this, std::placeholders::_1)),
+	ska::Observer<InputKeyEvent>(std::bind(&GUI::refreshKeyboard, this, std::placeholders::_1)),
     m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
-    m_window(w),
-    m_playerICM(playerICM),
     m_ged(ged),
     m_hovered(nullptr),
     m_clicked(nullptr),
     m_lastFocused(nullptr),
-    m_wMaster(this, this, this, Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "") {
+    m_wMaster(this, this, this, Rectangle{ 0, 0, TAILLEECRANMINX, TAILLEECRANMINY }, ""),
+	m_hide(false) {
 
-    m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, static_cast<int>(w.getWidth()), static_cast<int>(w.getHeight()) }, "");
+    m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, TAILLEECRANMINX, TAILLEECRANMINY }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
 
-	//m_wFocusable->setPriority(1);
-	m_hide = false;
+	m_ged.addMultipleObservers<GUIEvent, GameEvent, InputMouseEvent, InputKeyEvent>(*this, *this, *this, *this);
+}
 
-	m_ged.ska::Observable<GUIEvent>::addObserver(*this);
+bool ska::GUI::onGameEvent(GameEvent& ge) {
+	if (ge.getEventType() == GAME_WINDOW_READY ||
+		ge.getEventType() == GAME_WINDOW_RESIZED) {
+		m_wMaster.setWidth(ge.windowWidth);
+		m_wMaster.setHeight(ge.windowWidth);
+		return onScreenResized(ge.windowWidth, ge.windowHeight);
+	}
+	return false;
 }
 
 ska::GUI::~GUI() {
-    m_ged.ska::Observable<GUIEvent>::removeObserver(*this);
-}
-
-unsigned int ska::GUI::getMaxHeight() const{
-    return m_window.getHeight();
-}
-
-unsigned int ska::GUI::getMaxWidth() const{
-    return m_window.getWidth();
+	m_ged.removeMultipleObservers<GUIEvent, GameEvent, InputMouseEvent, InputKeyEvent>(*this, *this, *this, *this);
 }
 
 void ska::GUI::display() const {
@@ -55,16 +56,17 @@ void ska::GUI::display() const {
 	m_mouseCursor.display();
 }
 
-void ska::GUI::refreshKeyboard() {
-	const auto& textTyped = m_playerICM.getTextInput();
+bool ska::GUI::refreshKeyboard(InputKeyEvent& ike) {
+	const auto& playerIcm = ike.icm;
+	const auto& textTyped = playerIcm.getTextInput();
     //TODO réécrire
-	const auto& isDeleting = m_playerICM.getActions()[DeleteChar];
+	const auto& isDeleting = playerIcm.getActions()[DeleteChar];
 	if (isDeleting) {
 		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_BACKSPACE);
 		KeyObservable::notifyObservers(ke);
 	}
 
-	const auto& isValidating = m_playerICM.getActions()[DoAction];
+	const auto& isValidating = playerIcm.getActions()[DoAction];
 	if (isValidating) {
 		KeyEvent ke(KEY_DOWN, L"", SDL_SCANCODE_RETURN);
 		KeyObservable::notifyObservers(ke);
@@ -74,13 +76,15 @@ void ska::GUI::refreshKeyboard() {
 		KeyEvent ke(TEXT_TYPED, textTyped, -1);
 		KeyObservable::notifyObservers(ke);
 	}
+	return true;
 }
 
-void ska::GUI::refreshMouse() {
-    const auto& in = m_playerICM.getActions();
-	const auto& moveWindow = m_playerICM.getToggles()[MoveWindow];
-	const auto& mousePos = m_playerICM.getRanges()[MousePos];
-	const auto& lastMousePos = m_playerICM.getRanges()[LastMousePos];
+bool ska::GUI::refreshMouse(InputMouseEvent& ime) {
+	auto& playerIcm = ime.icm;
+	const auto& in = playerIcm.getActions();
+	const auto& moveWindow = playerIcm.getToggles()[MoveWindow];
+	const auto& mousePos = playerIcm.getRanges()[MousePos];
+	const auto& lastMousePos = playerIcm.getRanges()[LastMousePos];
 
     if (m_lastLastMousePos != lastMousePos || lastMousePos != mousePos) {
 		m_mouseCursor.move(mousePos);
@@ -121,7 +125,7 @@ void ska::GUI::refreshMouse() {
 			FocusEvent fe(m_clicked, MOUSE_FOCUS);
 			m_clicked->directNotify(fe);
 			if(fe.getTarget() != nullptr) {
-				m_playerICM.disableContext(CONTEXT_MAP, true);
+				playerIcm.disableContext(CONTEXT_MAP, true);
 			}
 
 			m_lastFocused = m_clicked;
@@ -133,7 +137,7 @@ void ska::GUI::refreshMouse() {
 		}
 
 		if (fbe.getTarget() != nullptr) {
-			m_playerICM.disableContext(CONTEXT_MAP, false);
+			playerIcm.disableContext(CONTEXT_MAP, false);
 		}
 	}
 
@@ -146,7 +150,7 @@ void ska::GUI::refreshMouse() {
 		ClickObservable::notifyObservers(ce);
 	}
 
-
+	return true;
 }
 
 void ska::GUI::refresh(unsigned int ellapsedTime) {
@@ -164,8 +168,8 @@ void ska::GUI::refresh(unsigned int ellapsedTime) {
 	}
     m_windowsToDelete.clear();
 
-	refreshMouse();
-	refreshKeyboard();
+	/*refreshMouse();
+	refreshKeyboard();*/
 
 	//Time-based events
 	TimeEvent te(ellapsedTime);
@@ -176,158 +180,6 @@ void ska::GUI::refresh(unsigned int ellapsedTime) {
 
 //Reset des informations de notre pokémon (à chaque refresh)
 //TODO
-/*void GUI::resetAttackPokemonWindow(Character* pokemon)
-{
-    m_attackPokemon->deleteAll();
-	ska::Rectangle buf, bufNULL;
-    buf.x = TAILLEBLOCFENETRE/4;
-    buf.y = 0;
-    bufNULL.x = 0;
-    bufNULL.y = 0;
-    vector<Skill_ptr>* v = pokemon->getSkills();
-
-
-    if(v != NULL && v->size() > 0)
-    {
-        bufNULL.w = (*v)[0]->getIcon()->getWidth();
-        bufNULL.h = (*v)[0]->getIcon()->getHeight();
-
-		for(unsigned int i = 0; i < (*v).size(); i++)
-		{
-			buf.x += (*v)[i]->getIcon()->getWidth();
-			m_attackPokemon->addImageArea((*v)[i]->getIcon(), false, buf, &bufNULL);
-		}
-	}
-
-}
-
-//Reset des informations pokémon adverse (à chaque refresh)
-void GUI::resetAttackOpponentWindow(Character* op)
-{
-    m_attackOpponent->deleteAll();
-	ska::Rectangle buf, bufNULL;
-    buf.x = TAILLEBLOCFENETRE/4;
-    buf.y = 0;
-    bufNULL.x = 0;
-    bufNULL.y = 0;
-    vector<Skill_ptr>* v = op->getSkills();
-    if(v != NULL && v->size() > 0)
-    {
-        bufNULL.w = (*v)[0]->getIcon()->getWidth();
-        bufNULL.h = (*v)[0]->getIcon()->getHeight();
-
-		for(unsigned int i = 0; i < (*v).size(); i++)
-		{
-			buf.y += (*v)[i]->getIcon()->getHeight();
-			m_attackOpponent->addImageArea((*v)[i]->getIcon(), false, buf, &bufNULL);
-
-		}
-	}
-}*/
-
-// size_t GUI::getButtonListSize() {
-//     return m_buttonList.size();
-// }
-
-/*
-void GUI::resetInfoPokemonWindow(Character* pokemon)
-{
-    int id;
-    stringstream ss;
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle buf, posHero, oRel = { 0 };
-
-    m_pokeInfoWindow->deleteAll();
-    m_pnj = pokemon;
-
-    if(m_pnj != NULL) {
-        posHero.x = (pokemon->getCenterPos().x + abs(oRel.x))/TAILLEBLOCFENETRE;
-        posHero.y = (pokemon->getCenterPos().y + abs(oRel.y))/TAILLEBLOCFENETRE;
-
-        buf.x = 6*TAILLEBLOCFENETRE+TAILLEBLOCFENETRE/2;
-        buf.y = TAILLEBLOCFENETRE*3/4;
-        m_pokeInfoWindow->addButtonClose("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button_active.png", buf);
-        buf.x = TAILLEBLOCFENETRE/2;
-        buf.y = TAILLEBLOCFENETRE/2;
-        m_pokeInfoWindow->addTextArea("Type 1 : " + pokemon->getDescriptor()->getType(1), 20, buf);
-        buf.x += 3*TAILLEBLOCFENETRE-10;
-        m_pokeInfoWindow->addTextArea("Type 2 : " + pokemon->getDescriptor()->getType(1), 20, buf);
-        buf.x -= 3*TAILLEBLOCFENETRE-10;
-        buf.y = TAILLEBLOCFENETRE/2 + 20;
-        m_pokeInfoWindow->addTextArea("Nom : " + pokemon->getDescriptor()->getName(), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 60;
-        m_pokeInfoWindow->addTextArea("Level : " + ska::StringUtils::intToStr(pokemon->getStatistics()->getLevel()), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 80;
-		m_pokeInfoWindow->addTextArea("HP : " + ska::StringUtils::intToStr(pokemon->getHp()), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 100;
-		m_pokeInfoWindow->addTextArea("Position : " + ska::StringUtils::intToStr(posHero.x) + ":" + ska::StringUtils::intToStr(posHero.y), 20, buf);
-
-        m_facesetPkmn->deleteAll();
-        id = pokemon->getID();
-		if (id >= 0) {
-			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << id << ".png";
-		} else {
-			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << -id << ".png";
-		}
-
-        buf.x = TAILLEBLOCFENETRE/2;
-        buf.y = TAILLEBLOCFENETRE/2;
-        m_facesetPkmn->addImageArea(ss.str(), true, buf, NULL);
-    }
-}
-*/
-/*
-void GUI::resetInfoPNJWindow(Character* pnj)
-{
-	WGameCore& wScreen = WGameCore::getInstance();
-	ska::Rectangle buf, posHero, oRel = { 0 };
-    stringstream ss;
-    int id;
-    m_pnjInfoWindow->deleteAll();
-    m_pnj = pnj;
-
-    if(m_pnj != NULL) {
-        posHero.x = (pnj->getCenterPos().x + abs(oRel.x))/TAILLEBLOCFENETRE;
-        posHero.y = (pnj->getCenterPos().y + abs(oRel.y))/TAILLEBLOCFENETRE;
-
-        buf.x = 4*TAILLEBLOCFENETRE+TAILLEBLOCFENETRE/2;
-        buf.y = TAILLEBLOCFENETRE/2;
-        m_pnjInfoWindow->addButtonClose("." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button.png", "." FILE_SEPARATOR "Menu" FILE_SEPARATOR "close_button_active.png", buf);
-		ska::Rectangle rectSrcBuf;
-        rectSrcBuf.x = 0;
-        rectSrcBuf.y = pnj->getSprite()->getHeight()*2 /8;
-        rectSrcBuf.w = pnj->getSprite()->getWidth()/3;
-        rectSrcBuf.h = pnj->getSprite()->getHeight()/8;
-        m_pnjInfoWindow->addImageArea(pnj->getSprite(), false, buf, &rectSrcBuf);
-        buf.x = TAILLEBLOCFENETRE/2;
-
-        m_pokeInfoWindow->addTextArea("Type 1 : " + pnj->getType(1), 20, buf);
-        buf.x += 3*TAILLEBLOCFENETRE;
-        m_pokeInfoWindow->addTextArea("Type 2 : " + pnj->getType(1), 20, buf);
-        buf.x -= 3*TAILLEBLOCFENETRE;
-        buf.y = TAILLEBLOCFENETRE/2 + 20;
-        m_pnjInfoWindow->addTextArea(pnj->getDescriptor()->getName(), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 20;
-		m_pnjInfoWindow->addTextArea("Level : " + ska::StringUtils::intToStr(pnj->getStatistics()->getLevel()), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 40;
-		m_pnjInfoWindow->addTextArea("HP : " + ska::StringUtils::intToStr(pnj->getHp()) + "/" + ska::StringUtils::intToStr(pnj->getStatistics()->getHpMax()), 20, buf);
-        buf.y = TAILLEBLOCFENETRE/2 + 60;
-		m_pnjInfoWindow->addTextArea("Position : " + ska::StringUtils::intToStr(posHero.x) + ":" + ska::StringUtils::intToStr(posHero.y), 20, buf);
-
-        m_facesetOpponent->deleteAll();
-        id = pnj->getID();
-		if (id >= 0) {
-			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << id << ".png";
-		} else {
-			ss << "." FILE_SEPARATOR "Facesets" FILE_SEPARATOR "" << -id << ".png";
-		}
-
-        buf.x = TAILLEBLOCFENETRE/2;
-        buf.y = TAILLEBLOCFENETRE/2;
-        m_facesetOpponent->addImageArea(ss.str(), false, buf, NULL);
-    }
-}*/
-
 void ska::GUI::hide(bool x) {
     m_hide = x;
 }
@@ -343,13 +195,13 @@ void ska::GUI::windowSorter(Widget* tthis, ClickEvent& e) {
 }
 
 bool ska::GUI::onGUIEvent(GUIEvent& ge) {
-    if(ge.type == ska::GUIEventType::REMOVE_WINDOW) {
+    if(ge.type == REMOVE_WINDOW) {
         m_windowsToDelete.push_back(ge.windowName);
     }
 
-	if(ge.type == ska::GUIEventType::ADD_BALLOON) {
- 		auto& bd = addWindow<BalloonDialog>(ge.windowName, ska::Rectangle{ 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, ge.text, ge.delay, 16);
-		bd.addHandler<ska::TimeEventListener>([&](Widget* tthis, TimeEvent& te) {
+	if(ge.type == ADD_BALLOON) {
+ 		auto& bd = addWindow<BalloonDialog>(ge.windowName, Rectangle{ 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, ge.text, ge.delay, 16);
+		bd.addHandler<TimeEventListener>([&](Widget* tthis, TimeEvent& te) {
 			auto& balloon = static_cast<BalloonDialog&>(*tthis);
 			if(balloon.isExpired()) {
 				balloon.show(false);
@@ -358,19 +210,19 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
 		ge.balloonHandle = &bd;
 	}
 
-	if(ge.type == ska::GUIEventType::REFRESH_BALLOON) {
+	if(ge.type == REFRESH_BALLOON) {
 		auto bd = static_cast<BalloonDialog*>(getWindow(ge.windowName));
 		if (bd != nullptr) {	
-			bd->move(ska::Point<int>(ge.balloonPosition.x, ge.balloonPosition.y - ge.balloonHandle->getBox().h));
+			bd->move(Point<int>(ge.balloonPosition.x, ge.balloonPosition.y - ge.balloonHandle->getBox().h));
 			if (!bd->isVisible()) {
 				ge.balloonHandle = nullptr;
-				GUIEvent geI(GUIEventType::REMOVE_WINDOW);
+				GUIEvent geI(REMOVE_WINDOW);
 				geI.windowName = ge.windowName;
 				onGUIEvent(geI);
 			}
 		}
 	}
-    return false;
+    return true;
 }
 
 ska::Widget* ska::GUI::frontWindow() {
@@ -393,4 +245,16 @@ void ska::GUI::pushWindowToFront(Widget* w) {
 ska::Widget* ska::GUI::addTopWidget(std::unique_ptr<Widget>& w) {
 	m_topWindowWidgets.push_back(move(w));
 	return m_topWindowWidgets.back().get();
+}
+
+bool ska::GUI::onScreenResized(unsigned int width, unsigned int height) {
+	return true;
+}
+
+unsigned int ska::GUI::getMaxHeight() const {
+	return m_wMaster.getBox().h;
+}
+
+unsigned int ska::GUI::getMaxWidth() const {
+	return m_wMaster.getBox().w;
 }

@@ -19,7 +19,7 @@ class CustomEntityManager;
 
 class BattleSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::DirectionalAnimationComponent, BattleComponent, SkillsHolderComponent, ska::GraphicComponent>, ska::PossibleComponent<SkillComponent>> {
 public:
-	BattleSystem(CustomEntityManager& em, const ska::InputContextManager& playerICM, const ska::InputContextManager& opponentICM, const ska::EntityId pokemon, const ska::EntityId opponent, const ska::IniReader& pokemonReader, const ska::IniReader& opponentReader);
+	BattleSystem(CustomEntityManager& em, const ska::EntityId pokemon, const ska::EntityId opponent, const ska::IniReader& pokemonReader, const ska::IniReader& opponentReader);
 	BattleSystem(const BattleSystem&) = delete;
 
 	BattleSystem& operator=(const BattleSystem&) = delete;
@@ -32,8 +32,6 @@ protected:
 
 private:
 	CustomEntityManager& m_customEM;
-	const ska::InputContextManager& m_playerICM;
-	const ska::InputContextManager& m_opponentICM;
 	const ska::EntityId m_pokemon;
 	const ska::EntityId m_opponent;
 	const ska::IniReader& m_pokemonReader;

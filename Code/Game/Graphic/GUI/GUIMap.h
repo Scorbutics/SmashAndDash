@@ -21,14 +21,15 @@ class GUIMap :
 	public BattleStartObserver {
 
 public:
-	GUIMap(ska::Window& w, ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
+	GUIMap(PokemonGameEventDispatcher& ged);
 	GUIMap& operator=(const GUIMap&) = delete;
 
-	void initButtons(const ska::Window& w);
+	void initButtons();
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
 	bool onBattleStart(BattleEvent& be);
 	bool onDialogEvent(DialogEvent& de);
+	virtual bool onScreenResized(unsigned int width, unsigned int height) override;
 	void bind(Settings& sets);
 
 	~GUIMap();

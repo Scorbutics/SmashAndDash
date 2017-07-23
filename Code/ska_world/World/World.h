@@ -28,7 +28,7 @@ namespace ska {
 	    public CollisionProfile,
 	    public ScriptPositionedGetter {
 	public:
-		World(const unsigned int tailleBloc, const unsigned int wWidth, const unsigned int wHeight);
+		World(const unsigned int tailleBloc);
 		World(const World&) = delete;
 		World& operator=(const World&) = delete;
 

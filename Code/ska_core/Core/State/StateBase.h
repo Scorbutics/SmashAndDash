@@ -16,16 +16,16 @@ namespace ska {
 	class StateBase : public State {
 
 	public:
-		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, StateHolder& sh) :
+		StateBase(EM& em, ED& ed, StateHolder& sh) :
 			State(sh),
-			m_data(em, ed, w, ril),
+			m_data(em, ed),
 			m_state(0) {
 
 		}
 
-		StateBase(EM& em, ED& ed, Window& w, InputContextManager& ril, State& oldState) :
+		StateBase(EM& em, ED& ed, State& oldState) :
 			State(oldState),
-			m_data(em, ed, w, ril),
+			m_data(em, ed),
 			m_state(0) {
 
 		}

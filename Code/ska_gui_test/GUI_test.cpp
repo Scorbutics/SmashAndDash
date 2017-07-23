@@ -38,7 +38,7 @@ private:
 
 class SubGUIMock : public ska::GUI {
 public:
-	SubGUIMock() : ska::GUI(GetGED(), GetWindow(), GetICM()) {
+	SubGUIMock() : ska::GUI(GetGED()) {
 	}
 
 	virtual ~SubGUIMock() = default;

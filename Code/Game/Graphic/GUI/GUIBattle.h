@@ -29,7 +29,7 @@ class GUIBattle :
 	public StatisticsChangeObserver, 
 	public BattleStartObserver  {
 public:
-	GUIBattle(ska::Window& w, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged);
+	GUIBattle(PokemonGameEventDispatcher& ged);
 	virtual ~GUIBattle();
 
 	GUIBattle& operator=(const GUIBattle&) = delete;
@@ -44,10 +44,7 @@ public:
 private:
 	void addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId);
 
-	const ska::InputContextManager& m_playerICM;
-
 	std::unordered_map<ska::EntityId, BarPtr> m_bars;
 	PokemonGameEventDispatcher& m_ged;
 	SkillsBar* m_skillsBar;
-	//DialogMenu m_moves;
 };

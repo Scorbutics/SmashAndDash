@@ -38,7 +38,7 @@ void WGameCore::init() {
 	m_worldScene = makeState<WorldState>(*this, m_settings);
 	m_worldScene->linkSubState(*m_guiMapScene.get());
 
-	WorldStateChanger wsc(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false);
+	WorldStateChanger wsc(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false, ska::Point<int>());
 	navigateToState<StateMap>(wsc).linkSubState(*m_worldScene.get());
 }
 
@@ -54,9 +54,3 @@ int WGameCore::onException(ska::GenericException& e) {
 
 	return 0;
 }
-
-
-
-
-
-

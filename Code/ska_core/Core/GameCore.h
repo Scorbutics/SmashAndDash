@@ -9,19 +9,22 @@
 #include "../Inputs/InputContextManager.h"
 #include "../Utils/TimeUtils.h"
 #include "Window.h"
-#include "GameApp.h"
+#include "../GameApp.h"
 #include "../../Game/Utils/IDs.h"
 #include "State/StateData.h"
 
 namespace ska {
     template <class EM, class ED, class D, class S>
     class GameCore : 
-		public GameApp {
+		public GameApp,
+		public Observer<StateEvent> {
     public:
 
         GameCore() :
+			Observer<StateEvent>(std::bind(&GameCore::onStateEvent, this, std::placeholders::_1)),
             m_soundManager(m_eventDispatcher),
-            m_playerICM(m_rawInputListener) {
+            m_playerICM(m_rawInputListener, m_eventDispatcher),
+			m_stateHolder(m_eventDispatcher) {
 
 			IniReader reader("gamesettings.ini");
 			auto widthBlocks = reader.get<int>("Window width_blocks");
@@ -30,12 +33,12 @@ namespace ska {
 
 			createWindow(title, widthBlocks, heightBlocks);
 
-            m_eventDispatcher.template addMultipleObservers<SoundEvent, WorldEvent>(m_soundManager, m_soundManager);
+            m_eventDispatcher.template addMultipleObservers<SoundEvent, WorldEvent, StateEvent>(m_soundManager, m_soundManager, *this);
         }
 
         virtual ~GameCore() {
-			m_eventDispatcher.template removeMultipleObservers<SoundEvent, WorldEvent>(m_soundManager, m_soundManager);
-        };
+			m_eventDispatcher.template removeMultipleObservers<SoundEvent, WorldEvent, StateEvent>(m_soundManager, m_soundManager, *this);
+        }
 
         void run() override {
             auto continuer = true;
@@ -46,7 +49,7 @@ namespace ska {
 
 		template<class SC, class ... Args>
 		std::unique_ptr<SC> makeState(Args&&... args) {
-			StateData<EM, ED> data(m_entityManager, m_eventDispatcher, *m_mainWindow, m_playerICM);
+			StateData<EM, ED> data(m_entityManager, m_eventDispatcher);
 			return std::make_unique<SC>(data, m_stateHolder, std::forward<Args>(args)...);
         }
 
@@ -75,7 +78,6 @@ namespace ska {
 			auto accumulator = ti;
 
 			try {
-				
                 for (;;) {
                     unsigned long t = ska::TimeUtils::getTicks();
 					
@@ -113,6 +115,16 @@ namespace ska {
             m_stateHolder.eventUpdate(ellapsedTime);
         }
 
+		bool onStateEvent(StateEvent& se) {
+			if(se.type == FIRST_STATE_LOADED) {
+				GameEvent ge(GAME_WINDOW_READY);
+				ge.windowWidth = m_mainWindow->getWidth();
+				ge.windowHeight = m_mainWindow->getHeight();
+				m_eventDispatcher.Observable<GameEvent>::notifyObservers(ge);
+				return true;
+			}
+			return false;
+		}
 
         EM m_entityManager;
 

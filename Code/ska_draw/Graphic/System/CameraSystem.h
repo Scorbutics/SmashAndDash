@@ -17,6 +17,8 @@ namespace ska {
 		void screenResized(const unsigned int screenW, const unsigned int screenH);
 		void worldResized(const unsigned int worldW, const unsigned int worldH);
 
+		Point<int> getScreenSize() const;
+
 		virtual const Rectangle* getDisplay() const;
 		virtual ~CameraSystem();
 

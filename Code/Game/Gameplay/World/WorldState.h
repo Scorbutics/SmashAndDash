@@ -51,8 +51,6 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
-	const unsigned int m_screenW;
-	const unsigned int m_screenH;
 	bool m_loadedOnce;
 
 	Settings& m_settings;

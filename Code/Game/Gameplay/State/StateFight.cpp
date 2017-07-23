@@ -1,10 +1,8 @@
-#include "Core/Window.h"
 #include "../World/WorldState.h"
 #include "StateFight.h"
 #include "StateGUIBattle.h"
 #include "Task/Task.h"
 #include "Task/CompoundTask.h"
-#include "../CustomEntityManager.h"
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
 #include "Transition/Map/PokeballTransition.h"
@@ -15,34 +13,43 @@
 #include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
 
-StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
-AbstractStateMap_(data, oldScene, ws, true),
-m_iaICM(ska::InputContextManager::instantiateEmpty(data.m_inputCManager)),
-m_opponentScriptId(fc.opponentScriptId),
-m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
-m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
-m_pokemonId(fc.fighterPokemon),
-m_trainerId(fc.trainer),
-m_opponentId(fc.fighterOpponent),
-m_sceneLoaded(false),
-m_loadState(0),
-m_worldEntityCollisionResponse(ws.getWorld(), data.m_eventDispatcher, m_entityManager),
-m_skillEntityCollisionResponse(*m_collisionSystem, data.m_eventDispatcher, m_entityManager),
-m_ic(nullptr),
-m_skillFactory(ws, fc.level),
-m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)) {
+StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize) :
+	AbstractStateMap_(data, oldScene, ws, true),
+	m_opponentScriptId(fc.opponentScriptId),
+	m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
+	m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
+	m_pokemonId(fc.fighterPokemon),
+	m_trainerId(fc.trainer),
+	m_opponentId(fc.fighterOpponent),
+	m_sceneLoaded(false),
+	m_loadState(0),
+	m_worldEntityCollisionResponse(ws.getWorld(), data.m_eventDispatcher, m_entityManager),
+	m_skillEntityCollisionResponse(*m_collisionSystem, data.m_eventDispatcher, m_entityManager),
+	m_ic(nullptr),
+	m_skillFactory(ws, fc.level),
+	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
+	m_fightPos(fightPos) {
 
-	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_window.getWidth(), m_window.getHeight(), fightPos);
+	m_cameraSystem = addLogic<ska::CameraFixedSystem>(screenSize.x, screenSize.y, m_fightPos);
 	addLogic<PokeballSystem>();
-	addLogic<BattleSystem>(data.m_inputCManager, m_iaICM, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
+	addLogic<BattleSystem>(fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
 	addLogic<SkillRefreshSystem>();
-	addLogic<StatisticsSystem>(data.m_window, data.m_inputCManager, ws, data.m_eventDispatcher);
+	addLogic<StatisticsSystem>(ws, data.m_eventDispatcher);
 	addLogic<ska::IARandomMovementSystem>();
 
 	addSubState<StateGUIBattle>();
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
+}
+
+bool StateFight::onGameEvent(ska::GameEvent& ge) {
+	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY) {
+		m_cameraSystem->screenResized(ge.windowWidth, ge.windowHeight);
+	} else if(ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
+		m_cameraSystem->screenResized(ge.windowWidth, ge.windowHeight);
+	}
+	return true;
 }
 
 ska::CameraSystem& StateFight::getCamera() {

@@ -34,14 +34,12 @@ private:
 	bool m_observersDefined;
 
 protected:
-
 	virtual void beforeLoad(ska::StatePtr* lastScene) override;
 	virtual void afterLoad(ska::StatePtr* lastScene) override;
 
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
 	WorldState& m_worldState;
-	ska::Window& m_window;
 
 	ska::CollisionSystem* m_collisionSystem;
 };

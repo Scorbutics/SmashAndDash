@@ -17,7 +17,7 @@ namespace ska {
 
 class FightStartSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, FightComponent, ska::GraphicComponent>, ska::PossibleComponent<>> {
 public:
-	FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldState& ws, ska::InputContextManager& icm, const ska::EntityId player);
+	FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityId player);
 	virtual ~FightStartSystem();
 
 protected:
@@ -26,10 +26,8 @@ protected:
 private:
 	CustomEntityManager& m_cem;
 	WorldState& m_worldScene;
-	ska::InputContextManager& m_icm;
 	const ska::EntityId m_player;
 	unsigned int m_t0;
-	ska::Window& m_window;
 	PokemonGameEventDispatcher& m_ged;
 };
 

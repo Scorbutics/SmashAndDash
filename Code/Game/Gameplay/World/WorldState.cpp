@@ -25,14 +25,12 @@
 #include "Core/Window.h"
 
 WorldState::WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
-m_screenW(data.m_window.getWidth()),
-m_screenH(data.m_window.getHeight()),
+StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
 m_saveManager(data.m_eventDispatcher, "save1"),
 m_cameraSystem(nullptr),
-m_world(data.m_eventDispatcher, TAILLEBLOC, data.m_window.getWidth(), data.m_window.getHeight()),
+m_world(data.m_eventDispatcher, TAILLEBLOC),
 m_worldBGM(DEFAULT_BGM),
 m_eventDispatcher(data.m_eventDispatcher),
 m_entityManager(data.m_entityManager) {
@@ -41,7 +39,7 @@ m_entityManager(data.m_entityManager) {
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
 	addLogic<ska::DirectionalAnimationSystem>();
-	addLogic<ska::InputSystem>(data.m_inputCManager);
+	addLogic<ska::InputSystem>(m_eventDispatcher);
 	addLogic<ska::MovementSystem>(ticked);
 
 	addLogic<ska::GravitySystem>();

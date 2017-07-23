@@ -1,12 +1,19 @@
 #include "InputSystem.h"
+#include "../../Data/Events/InputKeyEvent.h"
 
-ska::InputSystem::InputSystem(EntityManager& entityManager, const InputContextManager& icm) :
-    System(entityManager),
-    m_icm(icm) {
+ska::InputSystem::InputSystem(EntityManager& entityManager, GameEventDispatcher& ged) :
+	System(entityManager),
+	ska::Observer<InputKeyEvent>(std::bind(&ska::InputSystem::onKeyInputEvent, this, std::placeholders::_1)),
+	m_eventDispatcher(ged) {
+	m_eventDispatcher.ska::Observable<InputKeyEvent>::addObserver(*this);
 }
 
 void ska::InputSystem::refresh(unsigned int) {
-    const auto& processed = getEntities();
+}
+
+bool ska::InputSystem::onKeyInputEvent(InputKeyEvent& ike) {
+	const auto& icm = ike.icm;
+	const auto& processed = getEntities();
 	for (const auto& entityId : processed) {
 		auto& inputComponent = m_componentAccessor.get<InputComponent>(entityId);
 		auto& forceComponent = m_componentAccessor.get<ForceComponent>(entityId);
@@ -16,8 +23,8 @@ void ska::InputSystem::refresh(unsigned int) {
 		auto moveX = false;
 		auto moveY = false;
 		const auto factor = 0.717F;
-		const auto& itc = m_icm.getToggles();
-		const auto& iac = m_icm.getActions();
+		const auto& itc = icm.getToggles();
+		const auto& iac = icm.getActions();
 
 		if (itc[MoveUp]) {
 			movePower.y = -inputComponent.movePower;
@@ -52,8 +59,9 @@ void ska::InputSystem::refresh(unsigned int) {
 		forceComponent.x += movePower.x;
 		forceComponent.y += movePower.y;
 	}
+	return true;
 }
 
-ska::InputSystem::~InputSystem()
-{
+ska::InputSystem::~InputSystem() {
+	m_eventDispatcher.ska::Observable<InputKeyEvent>::removeObserver(*this);
 }

@@ -8,9 +8,8 @@
 #include "Utils/NumberUtils.h"
 #include "Graphic/GraphicComponent.h"
 
-BattleSystem::BattleSystem(CustomEntityManager& em, const ska::InputContextManager& playerICM, const ska::InputContextManager& opponentICM, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) :
+BattleSystem::BattleSystem(CustomEntityManager& em, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) :
 System(em), m_customEM(em),
-m_playerICM(playerICM), m_opponentICM(opponentICM),
 m_pokemon(player), m_opponent(opponent),
 m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
 
@@ -19,11 +18,10 @@ m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
 void BattleSystem::refresh(unsigned int ellapsedTime) {
 	const auto& processed = getEntities();
 	for (ska::EntityId entityId : processed) {
-		const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();
-		//BattleComponent& bc = m_entityManager.getComponent<BattleComponent>(entityId);
+		//const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();
 
 		/* TODO SkillShots */
-		if (iac[ska::InputAction::ShotSkill1]) {
+		/*if (iac[ska::InputAction::ShotSkill1]) {
 			createSkill(0, entityId);
 		} else if (iac[ska::InputAction::ShotSkill2]) {
 			createSkill(1, entityId);
@@ -31,7 +29,7 @@ void BattleSystem::refresh(unsigned int ellapsedTime) {
 			createSkill(2, entityId);
 		} else if (iac[ska::InputAction::ShotSkill4]) {
 			createSkill(3, entityId);
-		}
+		}*/
 
 	}
 }

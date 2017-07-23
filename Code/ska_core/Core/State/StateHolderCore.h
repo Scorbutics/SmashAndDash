@@ -1,5 +1,6 @@
 #pragma once
 #include "StateHolder.h"
+#include "../../Data/Events/GameEventDispatcher.h"
 
 namespace ska {
     class StateHolderCore : 
@@ -7,7 +8,7 @@ namespace ska {
 		public HasGraphic,
 		public HasLogic {
     public:
-        StateHolderCore() = default;
+	    explicit StateHolderCore(GameEventDispatcher& ged);
         ~StateHolderCore() = default;
 
 		void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override;
@@ -16,6 +17,7 @@ namespace ska {
         void update() override;
 	
 	private:
+		GameEventDispatcher& m_eventDispatcher;
 		StatePtr m_currentState;
 	    bool m_sceneLoaded;
 		std::unique_ptr<State> m_lastState;

@@ -6,16 +6,27 @@
 #include "ECS/Basics/Script/ScriptTriggerType.h"
 #include "ECS/Basics/Script/ScriptPositionedGetter.h"
 #include "Data/BlockContainer.h"
+#include "Data/Events/InputKeyEvent.h"
 
-ska::ScriptRefreshSystem::ScriptRefreshSystem(EntityManager& entityManager, ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc) :
+ska::ScriptRefreshSystem::ScriptRefreshSystem(EntityManager& entityManager, GameEventDispatcher& ged, ScriptAutoSystem& scriptAutoSystem, ScriptPositionedGetter& spg, BlockContainer& bc) :
 	ScriptRefreshSystemBase(entityManager),
-ScriptPositionSystemAccess(entityManager),
-m_scriptPositionedGetter(spg), m_blockContainer(bc), m_icm(icm), m_scriptAutoSystem(scriptAutoSystem) {
+	ScriptPositionSystemAccess(entityManager),
+	ska::Observer<InputKeyEvent>(std::bind(&ScriptRefreshSystem::onKeyEvent, this, std::placeholders::_1)),
+	m_eventDispatcher(ged),
+	m_scriptPositionedGetter(spg), 
+	m_blockContainer(bc), 
+	m_scriptAutoSystem(scriptAutoSystem),
+	m_action(false) {
+	m_eventDispatcher.ska::Observable<InputKeyEvent>::addObserver(*this);
+}
 
+
+bool ska::ScriptRefreshSystem::onKeyEvent(InputKeyEvent& ike) {
+	m_action = ike.icm.getActions()[DoAction];
+	return true;
 }
 
 void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
-	const InputActionContainer& iac = m_icm.getActions();
 	auto& components = ScriptRefreshSystemBase::m_componentAccessor;
 	auto& componentsPossible = ScriptRefreshSystemBase::m_componentPossibleAccessor;
 	auto& componentsSP = ScriptPositionSystemAccess::m_componentAccessor;
@@ -27,7 +38,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 		const PositionComponent& pc = components.get<PositionComponent>(entityId);
 		const HitboxComponent& hc = components.get<HitboxComponent>(entityId);
 		const DirectionalAnimationComponent& dac = components.get<DirectionalAnimationComponent>(entityId);
-
+		
 		const Point<int>& frontPos = PositionComponent::getFrontPosition(pc, hc, dac);
 		const Point<int>& centerPos = PositionComponent::getCenterPosition(pc, hc);
 
@@ -43,7 +54,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 				break;
 
 			case EnumScriptTriggerType::ACTION:
-				if (!iac[DoAction]) {
+				if (!m_action) {
 					break;
 				}
 
@@ -67,7 +78,7 @@ void ska::ScriptRefreshSystem::refresh(unsigned int ellapsedTime) {
 		const Point<int> oldCenterPos = Point<int>(sac.lastBlockPos);
 
 		worldScripts = m_scriptPositionedGetter.chipsetScript(oldCenterPos, centerPos, centerPos, EnumScriptTriggerType::AUTO, static_cast<const unsigned int>(-1));
-		if (iac[DoAction]) {
+		if (m_action) {
 			//clog << "Enter Pressed" << std::endl;
 			auto tmp = m_scriptPositionedGetter.chipsetScript(oldCenterPos, frontPos, frontPos, EnumScriptTriggerType::ACTION, 0);
 			worldScripts.insert(worldScripts.end(), tmp.begin(), tmp.end());
@@ -171,4 +182,5 @@ ska::EntityId ska::ScriptRefreshSystem::findNearScriptComponentEntity(const Posi
 }
 
 ska::ScriptRefreshSystem::~ScriptRefreshSystem() {
+	m_eventDispatcher.ska::Observable<InputKeyEvent>::removeObserver(*this);
 }

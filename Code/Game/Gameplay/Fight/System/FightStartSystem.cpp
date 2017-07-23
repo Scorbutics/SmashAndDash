@@ -8,13 +8,11 @@
 #include "../../CustomEntityManager.h"
 #include "../../Data/MapEvent.h"
 
-FightStartSystem::FightStartSystem(CustomEntityManager& cem, ska::Window& w, PokemonGameEventDispatcher& ged, WorldState& ws, ska::InputContextManager& icm, const ska::EntityId player) :
+FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityId player) :
 	System(cem),
 	m_cem(cem),
 	m_worldScene(ws),
-	m_icm(icm),
 	m_player(player),
-	m_window(w),
 	m_ged(ged) {
 	m_t0 = ska::TimeUtils::getTicks();
 }

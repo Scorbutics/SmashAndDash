@@ -22,10 +22,13 @@ namespace ska {
 		public MouseObservable,
 		public KeyObservable,
 		public TimeObservable,
-		public Observer<GUIEvent> {
+		public Observer<GUIEvent>,
+		public Observer<GameEvent>,
+		public Observer<InputMouseEvent>,
+		public Observer<InputKeyEvent> {
 
 	public:
-		GUI(GameEventDispatcher& ged, const BaseWindow& w, InputContextManager& playerICM);
+		GUI(GameEventDispatcher& ged);
         virtual ~GUI();
 		GUI& operator=(const GUI&) = delete;
 
@@ -36,9 +39,10 @@ namespace ska {
 
 
 	private:
+		bool onGameEvent(ska::GameEvent & ge);
 	    Widget* frontWindow();
-		void refreshMouse();
-		void refreshKeyboard();
+		bool refreshMouse(InputMouseEvent& ime);
+		bool refreshKeyboard(InputKeyEvent& ike);
 		void windowSorter(Widget* tthis, ClickEvent& e);
 
 		bool onGUIEvent(GUIEvent& ge);
@@ -46,9 +50,6 @@ namespace ska {
 		//GUI data
 		bool m_hide;
         MouseCursor m_mouseCursor;
-
-		const BaseWindow& m_window;
-		InputContextManager& m_playerICM;
         GameEventDispatcher& m_ged;
 
         //Internal states
@@ -113,6 +114,8 @@ namespace ska {
 		Widget* getWindow(const std::string& name) {
 			return m_windowAnnuary[name];
 		}
+
+		virtual bool onScreenResized(unsigned int width, unsigned int height);
 
 		unsigned int getMaxHeight() const;
 		unsigned int getMaxWidth() const;

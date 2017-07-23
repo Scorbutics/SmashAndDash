@@ -2,8 +2,8 @@
 #include "Draw/DrawableContainer.h"
 
 StateGUIBattle::StateGUIBattle(StateData& data, ska::StateHolder& sh) :
-    StateBase(data.m_entityManager, data.m_eventDispatcher, data.m_window, data.m_inputCManager, sh),
-    m_gui(data.m_window, data.m_inputCManager, data.m_eventDispatcher) {
+    StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
+    m_gui(data.m_eventDispatcher) {
 
 }
 void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {

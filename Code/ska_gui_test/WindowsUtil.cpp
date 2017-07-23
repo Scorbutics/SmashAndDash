@@ -31,7 +31,7 @@ InputContextTest* GetICT() {
 }
 
 ska::InputContextManager& GetICM() {
-	static ska::InputContextManager playerICM(GetRawInputListener());
+	static ska::InputContextManager playerICM(GetRawInputListener(), GetGED());
 	static auto initialized = false;
 	if(!initialized) {
 		initialized = true;

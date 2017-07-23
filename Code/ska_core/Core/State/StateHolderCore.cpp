@@ -1,11 +1,18 @@
 #include "StateHolderCore.h"
 #include "../../Exceptions/StateDiedException.h"
+#include "../../Utils/Observer.h"
+
+ska::StateHolderCore::StateHolderCore(GameEventDispatcher& ged) :
+	m_eventDispatcher(ged), 
+	m_sceneLoaded(false) {
+	
+}
 
 void ska::StateHolderCore::graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) {
 	m_currentState->graphicUpdate(ellapsedTime, drawables);
 }
 
-void ska::StateHolderCore::eventUpdate(unsigned ellapsedTime) {
+void ska::StateHolderCore::eventUpdate(unsigned int ellapsedTime) {
 	m_currentState->eventUpdate(ellapsedTime);
 }
 
@@ -16,8 +23,7 @@ void ska::StateHolderCore::update() {
 		if (m_currentState != nullptr) {
 			triggerChangeScene = !m_currentState->unload();
 			firstState = false;
-		}
-		else {
+		} else {
 			triggerChangeScene = true;
 			firstState = true;
 		}
@@ -30,8 +36,13 @@ void ska::StateHolderCore::update() {
 
 			/* We have to invalidate the current iterating (old) scene. */
 			if (!firstState) {
+				StateEvent se(STATE_CHANGED);
+				m_eventDispatcher.ska::Observable<ska::StateEvent>::notifyObservers(se);
 				throw ska::StateDiedException("");
-			}
+			} 
+
+			StateEvent se(FIRST_STATE_LOADED);
+			m_eventDispatcher.ska::Observable<ska::StateEvent>::notifyObservers(se);		
 		}
 	}
 

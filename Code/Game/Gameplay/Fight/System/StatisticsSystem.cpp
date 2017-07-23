@@ -1,8 +1,8 @@
 #include "StatisticsSystem.h"
 #include "../../State/StateMap.h"
 
-StatisticsSystem::StatisticsSystem(ska::EntityManager& em, ska::Window& w, ska::InputContextManager& icm, WorldState& ws, PokemonGameEventDispatcher& ged) : System(em),
-m_playerICM(icm), m_worldScene(ws), m_window(w), m_ged(ged) {
+StatisticsSystem::StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged) : System(em),
+m_worldScene(ws), m_ged(ged) {
 
 }
 

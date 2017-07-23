@@ -10,7 +10,8 @@
 #include "ECS/Basics/Physic/WorldCollisionComponent.h"
 
 namespace ska {
-    class ScriptPositionedGetter;
+	struct InputKeyEvent;
+	class ScriptPositionedGetter;
     class BlockContainer;
 
 	using ScriptPositionSystemAccess = System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, ScriptSleepComponent>, PossibleComponent<>>;
@@ -18,10 +19,11 @@ namespace ska {
 	class ScriptRefreshSystem :
 		public ScriptRefreshSystemBase,
 		/* Allows easy access to each entity that contains ScriptSleepComponent and PositionComponent */
-		public ScriptPositionSystemAccess {
+		public ScriptPositionSystemAccess,
+		public Observer<InputKeyEvent> {
 
 	public:
-		ScriptRefreshSystem(EntityManager& entityManager, ScriptAutoSystem& scriptAutoSystem, const InputContextManager& icm, ScriptPositionedGetter& spg, BlockContainer& bc);
+		ScriptRefreshSystem(EntityManager& entityManager, GameEventDispatcher& ged, ScriptAutoSystem& scriptAutoSystem, ScriptPositionedGetter& spg, BlockContainer& bc);
 		void registerNamedScriptedEntity(const std::string& nameEntity, const EntityId entity);
 		void clearNamedScriptedEntities();
 		virtual ~ScriptRefreshSystem();
@@ -29,13 +31,15 @@ namespace ska {
 	protected:
 		virtual void refresh(unsigned int ellapsedTime) override;
 	private:
+		bool onKeyEvent(InputKeyEvent & ike);
 		EntityId findNearScriptComponentEntity(const PositionComponent& entityPos, EntityId script) const;
 		void startScript(const EntityId scriptEntity, const EntityId origin);
 
+		GameEventDispatcher& m_eventDispatcher;
 		ScriptPositionedGetter& m_scriptPositionedGetter;
 		BlockContainer& m_blockContainer;
-		const InputContextManager& m_icm;
 		ScriptAutoSystem& m_scriptAutoSystem;
+		bool m_action;
 
 	};
 

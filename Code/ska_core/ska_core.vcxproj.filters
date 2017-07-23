@@ -142,6 +142,10 @@
     <ClInclude Include="ECS\ComponentSafeAccessor.h" />
     <ClInclude Include="ECS\SystemMaskGenerator.h" />
     <ClInclude Include="ECS\ComponentUnsafeAccessor.h" />
+    <ClInclude Include="Data\Events\GameEvent.h" />
+    <ClInclude Include="Data\Events\StateEvent.h" />
+    <ClInclude Include="Data\Events\InputKeyEvent.h" />
+    <ClInclude Include="Data\Events\InputMouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />

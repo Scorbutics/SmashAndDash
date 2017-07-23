@@ -33,7 +33,7 @@ namespace ska {
 class StateFight :
 	public AbstractStateMap_ {
 public:
-	StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
+	StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize);
 	StateFight(const StateFight&) = delete;
 	StateFight& operator=(const StateFight&) = delete;
 
@@ -45,7 +45,8 @@ protected:
 	virtual bool beforeUnload() override;
 
 private:
-	ska::InputContextManager m_iaICM;
+	bool onGameEvent(ska::GameEvent & ge);
+
 	PokemonDescriptor m_descriptor;
 
 	ska::CameraFixedSystem *m_cameraSystem;
@@ -67,6 +68,7 @@ private:
 
 	SkillFactory m_skillFactory;
 	StateFightLoading m_loader;
+	ska::Point<int> m_fightPos;
 
 };
 typedef std::unique_ptr<StateFight> SceneFightPtr;

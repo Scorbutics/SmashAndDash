@@ -7,14 +7,21 @@
 #include "../InputContextManager.h"
 
 namespace ska {
-	class InputSystem : public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, InputComponent, ForceComponent>, PossibleComponent<>> {
+	struct InputKeyEvent;
+
+	class InputSystem : 
+		public System<std::unordered_set<EntityId>, RequiredComponent<PositionComponent, InputComponent, ForceComponent>, PossibleComponent<>>,
+		public Observer<InputKeyEvent> {
 	public:
-		InputSystem(EntityManager& entityManager, const InputContextManager& icm);
+		InputSystem(EntityManager& entityManager, GameEventDispatcher& ged);
 		InputSystem& operator=(const InputSystem&) = delete;
 		virtual ~InputSystem();
+	
+	private:
+		bool onKeyInputEvent(InputKeyEvent & ike);
+		GameEventDispatcher& m_eventDispatcher;
+
 	protected:
 		virtual void refresh(unsigned int ellapsedTime) override;
-	private:
-		const InputContextManager& m_icm;
 	};
 }

@@ -15,6 +15,10 @@ void ska::CameraSystem::worldResized(const unsigned int worldW, const unsigned i
 	m_worldH = worldH;
 }
 
+ska::Point<int> ska::CameraSystem::getScreenSize() const {
+	return ska::Point<int>(m_cameraRect.w, m_cameraRect.h);
+}
+
 void ska::CameraSystem::screenResized(const unsigned int screenW, const unsigned int screenH) {
 	m_cameraRect.w = screenW;
 	m_cameraRect.h = screenH;
@@ -24,7 +28,7 @@ void ska::CameraSystem::focusOn(Rectangle& pos, EntityId* entityId) {
 	m_cameraRect.x = pos.x - m_cameraRect.w / 2;
 	m_cameraRect.y = pos.y - m_cameraRect.h / 2;
 
-	const auto& graphicComponentPtr = m_componentPossibleAccessor.get<GraphicComponent>(*entityId);
+	const auto& graphicComponentPtr = entityId == nullptr ? nullptr : m_componentPossibleAccessor.get<GraphicComponent>(*entityId);
 	if (entityId != nullptr && graphicComponentPtr != nullptr) {
 		auto& gc = *graphicComponentPtr;
 		if (!gc.sprite.empty()) {

@@ -6,15 +6,11 @@ namespace ska {
 	
 	template<class EM, class ED>
 	struct StateData {
-		StateData(EM& em, ED& ed, Window& w, InputContextManager& inputCManager) :
+		StateData(EM& em, ED& ed) :
 			m_entityManager(em),
-			m_eventDispatcher(ed),
-			m_window(w),
-			m_inputCManager(inputCManager) {
+			m_eventDispatcher(ed) {
 		}
 		EM& m_entityManager;
 		ED& m_eventDispatcher;
-		Window& m_window;
-		InputContextManager& m_inputCManager;
 	};
 }

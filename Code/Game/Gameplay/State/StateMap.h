@@ -21,8 +21,8 @@ namespace ska {
 }
 
 class StateMap :
-	public AbstractStateMap_
-{
+	public AbstractStateMap_,
+	public ska::Observer<ska::GameEvent> {
 public:
 	StateMap(StateData& data, ska::StateHolder& sh, WorldStateChanger& wsc);
 	StateMap(StateData& data, State& oldScene, WorldStateChanger& wsc);
@@ -31,6 +31,7 @@ public:
 	virtual ~StateMap();
 
 private:
+	bool onGameEvent(ska::GameEvent& ge);
 	void init(StateData& data, WorldState& ws);
 
 	const std::string m_fileName;

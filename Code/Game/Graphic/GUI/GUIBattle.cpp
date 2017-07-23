@@ -6,10 +6,9 @@
 #include "Draw/DrawableContainer.h"
 
 
-GUIBattle::GUIBattle(ska::Window&, const ska::InputContextManager& playerICM, PokemonGameEventDispatcher& ged) :
+GUIBattle::GUIBattle(PokemonGameEventDispatcher& ged) :
 StatisticsChangeObserver(std::bind(&GUIBattle::onStatisticsChange, this, std::placeholders::_1)),
 BattleStartObserver(std::bind(&GUIBattle::onBattleStart, this, std::placeholders::_1)),
-m_playerICM(playerICM),
 //m_moves("", ska::Rectangle {0, w.getHeight() - 4 * TAILLEBLOCFENETRE, 9*TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE}, -1, false),
 m_ged(ged),
 m_skillsBar(nullptr) {
