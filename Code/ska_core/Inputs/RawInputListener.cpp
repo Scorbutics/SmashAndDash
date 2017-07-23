@@ -15,6 +15,10 @@ const std::wstring& ska::RawInputListener::getTextInput() const {
 	return m_textInput;
 }
 
+const ska::WindowInput& ska::RawInputListener::getWindowInput() const {
+	return m_windowInput;
+}
+
 void ska::RawInputListener::update() {
     SDL_Event event;
 	m_mouseIn.setMouseLastPos(m_mouseIn.getMousePos());
@@ -51,27 +55,17 @@ void ska::RawInputListener::update() {
                 break;
 		}
 
-
-		/* TODO : WindowEvent pour notifier la GUI */
 		if(event.type == SDL_WINDOWEVENT) {
 			switch(event.window.event) {
-
 				case SDL_WINDOWEVENT_RESIZED:
-					break;
-
-				case SDL_WINDOWEVENT_EXPOSED:
-					break;
-
 				case SDL_WINDOWEVENT_SIZE_CHANGED:
+					m_windowInput.setSize(event.window.data1, event.window.data2);
 					break;
 
 				default:
 					break;
 			}
 		}
-
-
-
 	}
 
 }

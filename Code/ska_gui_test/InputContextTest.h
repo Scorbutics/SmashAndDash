@@ -10,6 +10,7 @@ public:
 	void queryActions(ska::InputActionContainer& actions) override;
 	void queryRanges(ska::InputRangeContainer& ranges) override;
 	void queryToggles(ska::InputToggleContainer& toggles) override;
+	const ska::WindowInput& queryWindowData() override;
 
 	const std::wstring& queryText() override {
 		return str;
@@ -17,6 +18,7 @@ public:
 
 	~InputContextTest() override = default;
 
+	ska::WindowInput wi;
 	ska::MouseInput mouseKeys;
 	ska::KeyInput keys;
 	std::wstring str;

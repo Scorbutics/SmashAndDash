@@ -34,6 +34,7 @@ namespace ska {
 		InputToggleContainer m_toggles;
 		std::wstring m_textInput;
 		RawInputListener& m_ril;
+		WindowInput m_windowInput;
 	};
 }
 

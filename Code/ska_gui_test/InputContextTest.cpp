@@ -28,6 +28,10 @@ void InputContextTest::queryToggles(ska::InputToggleContainer& toggles) {
 	toggles[ska::MoveWindow] = mouseKeys.toggle(0);
 }
 
+const ska::WindowInput & InputContextTest::queryWindowData() {
+	return wi;
+}
+
 void InputContextTest::buildCodeMap(std::unordered_map< int, ska::InputAction>& codeMap, std::unordered_map<int, ska::InputToggle>& toggles) {
 
 	codeMap[SDL_SCANCODE_ESCAPE] = ska::Quit;

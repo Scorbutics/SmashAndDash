@@ -146,6 +146,7 @@
     <ClInclude Include="Data\Events\StateEvent.h" />
     <ClInclude Include="Data\Events\InputKeyEvent.h" />
     <ClInclude Include="Data\Events\InputMouseEvent.h" />
+    <ClInclude Include="Inputs\WindowInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />
@@ -206,5 +207,6 @@
     <ClCompile Include="Core\State\State.cpp" />
     <ClCompile Include="Core\State\StateHolderCore.cpp" />
     <ClCompile Include="Draw\Color.cpp" />
+    <ClCompile Include="Inputs\WindowInput.cpp" />
   </ItemGroup>
 </Project>

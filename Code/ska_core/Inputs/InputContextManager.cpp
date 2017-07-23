@@ -36,18 +36,30 @@ void ska::InputContextManager::refresh() {
 	    r.x = 0;
         r.y = 0;
     }
+
+	const WindowInput* wi = nullptr;
 	m_toggles.reset();
 	for (auto& c : m_contexts) {
 		c.second->queryActions(m_actions);
 		c.second->queryRanges(m_ranges);
 		c.second->queryToggles(m_toggles);
 		m_textInput = c.second->queryText();
+		wi = &c.second->queryWindowData();
 	}
 
 	InputKeyEvent ike(*this);
 	InputMouseEvent ime(*this);
 	m_eventDispatcher.ska::Observable<ska::InputKeyEvent>::notifyObservers(ike);
 	m_eventDispatcher.ska::Observable<ska::InputMouseEvent>::notifyObservers(ime);
+
+	if(wi->getWidth() != m_windowInput.getWidth() || wi->getHeight() != m_windowInput.getHeight()) {
+		m_windowInput = *wi;
+		ska::GameEvent ge(GAME_WINDOW_RESIZED);
+		ge.windowHeight = m_windowInput.getHeight();
+		ge.windowWidth = m_windowInput.getWidth();
+		m_eventDispatcher.ska::Observable<ska::GameEvent>::notifyObservers(ge);
+	}
+
 }
 
 const ska::InputRangeContainer& ska::InputContextManager::getRanges() const {
@@ -66,6 +78,5 @@ const std::wstring& ska::InputContextManager::getTextInput() const {
 	return m_textInput;
 }
 
-ska::InputContextManager::~InputContextManager()
-{
+ska::InputContextManager::~InputContextManager() {
 }

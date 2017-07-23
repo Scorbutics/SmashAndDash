@@ -19,6 +19,7 @@ namespace ska {
 		virtual void queryActions(InputActionContainer& actions) = 0;
 		virtual void queryRanges(InputRangeContainer& ranges) = 0;
 		virtual void queryToggles(InputToggleContainer& toggles) = 0;
+		virtual const ska::WindowInput& queryWindowData() = 0;
 		virtual const std::wstring& queryText() = 0;
 
 		virtual ~InputContext() {};
