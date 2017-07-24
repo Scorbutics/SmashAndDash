@@ -15,14 +15,12 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fno-omit-frame-pointer" />
 					<Add option="-DBUILD_DLL" />
 					<Add directory="../ska_core/" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg -lgmon" />
 					<Add library="user32" />
 					<Add directory="../../" />
 				</Linker>

@@ -14,13 +14,9 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-std=c++14" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fno-omit-frame-pointer" />
 				</Compiler>
-				<Linker>
-					<Add option="-pg -lgmon" />
-				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="../../ska_particle_benchmarker" prefix_auto="1" extension_auto="1" />

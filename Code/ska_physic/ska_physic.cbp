@@ -21,7 +21,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="user32" />
-					<Add directory="../../" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -46,14 +45,9 @@
 		<Compiler>
 			<Add directory="../ska_core/" />
 		</Compiler>
-		<Unit filename="Physic/GravityParticle.cpp" />
-		<Unit filename="Physic/GravityParticle.h" />
-		<Unit filename="Physic/LinearParticle.cpp" />
-		<Unit filename="Physic/LinearParticle.h" />
-		<Unit filename="Physic/Particle.cpp" />
-		<Unit filename="Physic/Particle.h" />
-		<Unit filename="Physic/ParticleManager.cpp" />
-		<Unit filename="Physic/ParticleManager.h" />
+		<Linker>
+			<Add directory="../../" />
+		</Linker>
 		<Unit filename="Physic/PhysicDefines.h" />
 		<Unit filename="Physic/PhysicObject.cpp" />
 		<Unit filename="Physic/PhysicObject.h" />

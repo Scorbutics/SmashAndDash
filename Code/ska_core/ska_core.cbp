@@ -15,13 +15,11 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-g" />
 					<Add option="-fno-omit-frame-pointer" />
 					<Add option="-DBUILD_DLL" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg -lgmon" />
 					<Add library="user32" />
 				</Linker>
 			</Target>
@@ -67,10 +65,14 @@
 		<Unit filename="Data/Events/EventDispatcher.h" />
 		<Unit filename="Data/Events/ExtensibleGameEventDispatcher.h" />
 		<Unit filename="Data/Events/GUIEvent.h" />
+		<Unit filename="Data/Events/GameEvent.h" />
 		<Unit filename="Data/Events/GameEventDispatcher.h" />
 		<Unit filename="Data/Events/GameLibrariesInitializedEvent.h" />
+		<Unit filename="Data/Events/InputKeyEvent.h" />
+		<Unit filename="Data/Events/InputMouseEvent.h" />
 		<Unit filename="Data/Events/SoundEvent.cpp" />
 		<Unit filename="Data/Events/SoundEvent.h" />
+		<Unit filename="Data/Events/StateEvent.h" />
 		<Unit filename="Data/Events/WorldEvent.h" />
 		<Unit filename="Data/Savegame.h" />
 		<Unit filename="Draw/CameraAware.h" />
@@ -135,7 +137,9 @@
 		<Unit filename="ECS/Component.cpp" />
 		<Unit filename="ECS/Component.h" />
 		<Unit filename="ECS/ComponentHandler.h" />
+		<Unit filename="ECS/ComponentSafeAccessor.h" />
 		<Unit filename="ECS/ComponentSerializer.h" />
+		<Unit filename="ECS/ComponentUnsafeAccessor.h" />
 		<Unit filename="ECS/ECSDefines.h" />
 		<Unit filename="ECS/EntityManager.cpp" />
 		<Unit filename="ECS/EntityManager.h" />
@@ -143,6 +147,7 @@
 		<Unit filename="ECS/StaticCounterGlobal.cpp" />
 		<Unit filename="ECS/StaticCounterGlobal.h" />
 		<Unit filename="ECS/System.h" />
+		<Unit filename="ECS/SystemMaskGenerator.h" />
 		<Unit filename="Exceptions/CorruptedFileException.h" />
 		<Unit filename="Exceptions/FileException.h" />
 		<Unit filename="Exceptions/GenericException.cpp" />
@@ -187,6 +192,8 @@
 		<Unit filename="Inputs/Readers/Readinifile.h" />
 		<Unit filename="Inputs/System/InputSystem.cpp" />
 		<Unit filename="Inputs/System/InputSystem.h" />
+		<Unit filename="Inputs/WindowInput.cpp" />
+		<Unit filename="Inputs/WindowInput.h" />
 		<Unit filename="Point.cpp" />
 		<Unit filename="Point.h" />
 		<Unit filename="Rectangle.h" />
@@ -197,6 +204,7 @@
 		<Unit filename="Task/TaskQueue.h" />
 		<Unit filename="Task/WorkNode.h" />
 		<Unit filename="Ticked.h" />
+		<Unit filename="Utils/ContainsTypeTuple.h" />
 		<Unit filename="Utils/Demangle.cpp" />
 		<Unit filename="Utils/Demangle.h" />
 		<Unit filename="Utils/FileUtils.h" />
