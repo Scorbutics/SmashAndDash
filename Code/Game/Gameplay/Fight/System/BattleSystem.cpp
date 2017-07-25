@@ -9,13 +9,13 @@
 #include "Graphic/GraphicComponent.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) :
-System(em), m_customEM(em),
-m_pokemon(player), m_opponent(opponent),
-m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
+    System(em), m_customEM(em),
+    m_pokemon(player), m_opponent(opponent),
+    m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
 
 }
 
-void BattleSystem::refresh(unsigned int ellapsedTime) {
+void BattleSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (ska::EntityId entityId : processed) {
 		//const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();

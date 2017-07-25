@@ -8,10 +8,10 @@ namespace ska {
 
 	class GameEvent {
 	public:
-		explicit GameEvent(GameEventType get) : 
-			m_eventType(get),
+		explicit GameEvent(GameEventType get) :
 			windowWidth(0),
-			windowHeight(0){
+			windowHeight(0),
+			m_eventType(get) {
 		}
 
 		virtual ~GameEvent() = default;
@@ -19,9 +19,10 @@ namespace ska {
 			return m_eventType;
 		}
 
-		
+
 		unsigned int windowWidth;
 		unsigned int windowHeight;
+
 	private:
 		const GameEventType m_eventType;
 

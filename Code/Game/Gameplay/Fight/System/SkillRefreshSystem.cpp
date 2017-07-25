@@ -13,7 +13,7 @@ System(em) {
 
 }
 
-void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
+void SkillRefreshSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (ska::EntityId entityId : processed) {
 		auto& sc = m_componentAccessor.get<SkillComponent>(entityId);

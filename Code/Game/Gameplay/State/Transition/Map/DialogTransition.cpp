@@ -4,7 +4,7 @@
 #include "Task/Task.h"
 
 DialogTransition::DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message) :
-	ska::Task([&, delay](ska::Task& t) {
+	ska::Task([&, delay](ska::Task&) {
 		if (m_loadState == 0) {
 			m_loadState++;
 

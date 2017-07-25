@@ -81,7 +81,7 @@ TEST_CASE("[GUI]Affichage fenetre") {
     SubGUIMock gui;
     auto displayed = false;
 
-	gui.mockAddWindow<StaticWindowTest<ska::ClickEventListener>>("noname", ska::Rectangle{ 0 }, "nostyle")
+	gui.mockAddWindow<StaticWindowTest<ska::ClickEventListener>>("noname", ska::Rectangle{ 0, 0, 0, 0 }, "nostyle")
 	.whenDisplayed([&]() {
         displayed = true;
     });
@@ -189,7 +189,7 @@ TEST_CASE("[GUI]Evenements : Mouse ENTER, OVER, OUT") {
 	expected.push_back(ska::MouseEventType::MOUSE_OVER);
 	expected.push_back(ska::MouseEventType::MOUSE_OUT);
 
-	window.addHandler<ska::HoverEventListener>([&] (ska::Widget* tthis, ska::HoverEvent& ce) {
+	window.addHandler<ska::HoverEventListener>([&] (ska::Widget*, ska::HoverEvent& ce) {
         states.push_back(ce.getState());
     });
 
@@ -227,7 +227,7 @@ TEST_CASE("[GUI]Evenements : CLICK et RELEASE") {
 	expected.push_back(ska::MouseEventType::MOUSE_CLICK);
 	expected.push_back(ska::MouseEventType::MOUSE_RELEASE);
 
-	window.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+	window.addHandler<ska::ClickEventListener>([&](ska::Widget*, ska::ClickEvent& ce) {
 		states.push_back(ce.getState());
 	});
 
@@ -266,7 +266,7 @@ TEST_CASE("[GUI]Changement de focus des fenetres") {
 	moveMouse(21, 135);
 	//Left clic down
 	clickMouseLeft(true);
-	basicRefreshLoop(gui);	
+	basicRefreshLoop(gui);
 
 	CHECK(window.isFocused());
 	CHECK(!window2.isFocused());

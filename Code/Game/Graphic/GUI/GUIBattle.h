@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include "Utils/Observer.h"
 #include "ECS/ECSDefines.h"
-#include "Core/State/HasGraphic.h"
 
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../Gameplay/Fight/BattleEvent.h"
@@ -19,14 +18,14 @@ namespace ska {
 	class EntityManager;
 	class Window;
 	class InputContextManager;
+	class DrawableContainer;
 }
 
 using StatisticsChangeObserver = ska::Observer<StatisticsChangeEvent>;
 using BattleStartObserver = ska::Observer<BattleEvent>;
 
-class GUIBattle : 
-	public ska::HasGraphic, 
-	public StatisticsChangeObserver, 
+class GUIBattle :
+	public StatisticsChangeObserver,
 	public BattleStartObserver  {
 public:
 	GUIBattle(PokemonGameEventDispatcher& ged);
@@ -39,7 +38,7 @@ public:
 	bool onBattleStart(BattleEvent& be);
 	bool onStatisticsChange(StatisticsChangeEvent& sce);
 
-	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
+	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables);
 
 private:
 	void addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId);

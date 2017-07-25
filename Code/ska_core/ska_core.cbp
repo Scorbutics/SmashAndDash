@@ -45,18 +45,13 @@
 		<Compiler>
 			<Add option="-std=c++14" />
 		</Compiler>
-		<Unit filename="Core/BaseWindow.cpp" />
-		<Unit filename="Core/BaseWindow.h" />
 		<Unit filename="Core/GameCore.h" />
 		<Unit filename="Core/Priorized.h" />
-		<Unit filename="Core/State/HasGraphic.h" />
-		<Unit filename="Core/State/HasLogic.h" />
 		<Unit filename="Core/State/State.cpp" />
 		<Unit filename="Core/State/State.h" />
 		<Unit filename="Core/State/StateBase.h" />
+		<Unit filename="Core/State/StateHolder.cpp" />
 		<Unit filename="Core/State/StateHolder.h" />
-		<Unit filename="Core/State/StateHolderCore.cpp" />
-		<Unit filename="Core/State/StateHolderCore.h" />
 		<Unit filename="Core/State/StateType.h" />
 		<Unit filename="Core/Window.cpp" />
 		<Unit filename="Core/Window.h" />

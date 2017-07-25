@@ -63,7 +63,7 @@ void ska::ScriptAutoSystem::restoreComponent(const std::string& componentName, c
 
 /*m_scripts[keyScript] = (move(ScriptPtr(new Script(*this, triggeringType, period == NULL || *period == 0 ? SCRIPT_DEFAULT_PERIOD : *period, validPath, extendedName, context, keyScript, args)))); */
 void ska::ScriptAutoSystem::registerScript(ScriptComponent*, const EntityId scriptSleepEntity, const EntityId origin) {
-	
+
 	const auto& scriptCPtr = m_componentPossibleAccessor.get<ScriptSleepComponent>(scriptSleepEntity);
 	if (scriptCPtr == nullptr) {
 		throw IllegalArgumentException("The script entity to register has no ScriptSleepComponent");
@@ -166,7 +166,7 @@ ska::Savegame& ska::ScriptAutoSystem::getSavegame() {
 	return m_saveGame;
 }
 
-void ska::ScriptAutoSystem::refresh(unsigned int ellapsedTime) {
+void ska::ScriptAutoSystem::refresh(unsigned int) {
 	auto nextScript = getHighestPriorityScript();
 	if (nextScript == nullptr) {
 		return;

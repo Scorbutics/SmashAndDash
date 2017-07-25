@@ -33,12 +33,12 @@ class ObservableTest : public ska::MouseObservable, public ska::KeyObservable {
 
 
 TEST_CASE("[DynamicWindow] Observable : clic") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
 	DynamicWindowTest<> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
 
 	auto clicked = false;
-	dw.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+	dw.addHandler<ska::ClickEventListener>([&](ska::Widget*, ska::ClickEvent&) {
 		clicked = true;
 	});
 
@@ -60,12 +60,12 @@ TEST_CASE("[DynamicWindow] Observable : clic") {
 }
 
 TEST_CASE("[DynamicWindow] Observable : hover") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
 	DynamicWindowTest<> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
 
 	auto hovered = false;
-	dw.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& he) {
+	dw.addHandler<ska::HoverEventListener>([&](ska::Widget*, ska::HoverEvent&) {
 		hovered = true;
 	});
 
@@ -87,12 +87,12 @@ TEST_CASE("[DynamicWindow] Observable : hover") {
 }
 
 TEST_CASE("[DynamicWindow] Observable : clavier") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
 	DynamicWindowTest<ska::KeyEventListener> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
 
 	auto pressed = false;
-	dw.addHandler<ska::KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& ke) {
+	dw.addHandler<ska::KeyEventListener>([&](ska::Widget*, ska::KeyEvent&) {
 		pressed = true;
 	});
 
@@ -103,12 +103,12 @@ TEST_CASE("[DynamicWindow] Observable : clavier") {
 }
 
 TEST_CASE("[DynamicWindow] Suppression Observable : clic") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
 	auto clicked = false;
 	{
         DynamicWindowTest<> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
-        dw.addHandler<ska::ClickEventListener>([&](ska::Widget* tthis, ska::ClickEvent& ce) {
+        dw.addHandler<ska::ClickEventListener>([&](ska::Widget*, ska::ClickEvent&) {
             clicked = true;
         });
 	}
@@ -120,13 +120,13 @@ TEST_CASE("[DynamicWindow] Suppression Observable : clic") {
 }
 
 TEST_CASE("[DynamicWindow] Suppression Observable : hover") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
     auto hovered = false;
 	{
         DynamicWindowTest<> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
 
-        dw.addHandler<ska::HoverEventListener>([&](ska::Widget* tthis, ska::HoverEvent& he) {
+        dw.addHandler<ska::HoverEventListener>([&](ska::Widget*, ska::HoverEvent&) {
             hovered = true;
         });
 	}
@@ -139,13 +139,13 @@ TEST_CASE("[DynamicWindow] Suppression Observable : hover") {
 }
 
 TEST_CASE("[DynamicWindow] Suppression Observable : clavier") {
-	GetWindow();
+	//GetWindow();
 	ObservableTest obs;
     auto pressed = false;
 	{
         DynamicWindowTest<ska::KeyEventListener> dw(&obs, &obs, ska::Rectangle{ 0, 0, 10, 10 }, "nostyle");
 
-        dw.addHandler<ska::KeyEventListener>([&](ska::Widget* tthis, ska::KeyEvent& ke) {
+        dw.addHandler<ska::KeyEventListener>([&](ska::Widget*, ska::KeyEvent&) {
             pressed = true;
         });
 	}

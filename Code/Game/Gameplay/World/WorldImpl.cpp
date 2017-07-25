@@ -23,7 +23,7 @@ m_ged(ged) {
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 }
 
-void WorldImpl::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
+void WorldImpl::graphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
 
 	//Affichage des effets
 	/*ska::ParticleManager& particleManager = wScreen.getParticleManager();

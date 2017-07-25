@@ -17,6 +17,6 @@ bool StateGUIBattle::beforeUnload() {
 	return false;
 }
 
-void StateGUIBattle::onEventUpdate(unsigned int ellapsedTime) {
+void StateGUIBattle::onEventUpdate(unsigned int) {
 	//m_gui.eventUpdate(ellapsedTime);
 }

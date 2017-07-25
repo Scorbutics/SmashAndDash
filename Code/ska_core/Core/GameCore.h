@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "State/StateHolderCore.h"
+#include "State/StateHolder.h"
 #include "../Exceptions/StateDiedException.h"
 #include "../Data/Events/WorldEvent.h"
 #include "../Data/Events/SoundEvent.h"
@@ -14,8 +14,8 @@
 #include "State/StateData.h"
 
 namespace ska {
-    template <class EM, class ED, class D, class S>
-    class GameCore : 
+    template <class EM, class ED, class D, class SoundManager>
+    class GameCore :
 		public GameApp,
 		public Observer<StateEvent> {
     public:
@@ -47,15 +47,15 @@ namespace ska {
             }
         }
 
-		template<class SC, class ... Args>
-		std::unique_ptr<SC> makeState(Args&&... args) {
+		template<class StateT, class ... Args>
+		std::unique_ptr<StateT> makeState(Args&&... args) {
 			StateData<EM, ED> data(m_entityManager, m_eventDispatcher);
-			return std::make_unique<SC>(data, m_stateHolder, std::forward<Args>(args)...);
+			return std::make_unique<StateT>(data, m_stateHolder, std::forward<Args>(args)...);
         }
 
-		template<class SC, class ... Args>
-		SC& navigateToState(Args&&... args) {
-			auto sc = makeState<SC, Args...>(std::forward<Args>(args)...);
+		template<class StateT, class ... Args>
+		StateT& navigateToState(Args&&... args) {
+			auto sc = makeState<StateT, Args...>(std::forward<Args>(args)...);
 			auto result = sc.get();
 			m_stateHolder.nextState(std::move(sc));
 			return *result;
@@ -80,7 +80,7 @@ namespace ska {
 			try {
                 for (;;) {
                     unsigned long t = ska::TimeUtils::getTicks();
-					
+
 					const auto ellapsedTime = t - t0;
 					t0 = t;
 
@@ -130,18 +130,17 @@ namespace ska {
 
 	protected:
         ED m_eventDispatcher;
-	
+
 	private:
         D m_drawables;
-        S m_soundManager;
+        SoundManager m_soundManager;
 
         std::unique_ptr<Window> m_mainWindow;
 
         RawInputListener m_rawInputListener;
         InputContextManager m_playerICM;
 
-        StateHolderCore m_stateHolder;
-
+        StateHolder m_stateHolder;
 
     };
 }

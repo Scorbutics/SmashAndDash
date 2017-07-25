@@ -14,13 +14,13 @@ ska::GUI::GUI(GameEventDispatcher& ged) :
 	ska::Observer<GameEvent>(std::bind(&GUI::onGameEvent, this, std::placeholders::_1)),
 	ska::Observer<InputMouseEvent>(std::bind(&GUI::refreshMouse, this, std::placeholders::_1)),
 	ska::Observer<InputKeyEvent>(std::bind(&GUI::refreshKeyboard, this, std::placeholders::_1)),
+    m_hide(false),
     m_mouseCursor(Button::MENU_DEFAULT_THEME_PATH + "mouse_cursor"),
     m_ged(ged),
     m_hovered(nullptr),
     m_clicked(nullptr),
     m_lastFocused(nullptr),
-    m_wMaster(this, this, this, Rectangle{ 0, 0, TAILLEECRANMINX, TAILLEECRANMINY }, ""),
-	m_hide(false) {
+    m_wMaster(this, this, this, Rectangle{ 0, 0, TAILLEECRANMINX, TAILLEECRANMINY }, "") {
 
     m_wFocusable = &m_wMaster.addWidget<TimeScrollableWindowIG<KeyEventListener>>(Rectangle{ 0, 0, TAILLEECRANMINX, TAILLEECRANMINY }, "");
     DrawableFixedPriority::setPriority(std::numeric_limits<int>().max());
@@ -201,7 +201,7 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
 
 	if(ge.type == ADD_BALLOON) {
  		auto& bd = addWindow<BalloonDialog>(ge.windowName, Rectangle{ 0, TAILLEBLOCFENETRE * 2, TAILLEBLOCFENETRE * 10, TAILLEBLOCFENETRE * 2 }, ge.text, ge.delay, 16);
-		bd.addHandler<TimeEventListener>([&](Widget* tthis, TimeEvent& te) {
+		bd.addHandler<TimeEventListener>([&](Widget* tthis, TimeEvent&) {
 			auto& balloon = static_cast<BalloonDialog&>(*tthis);
 			if(balloon.isExpired()) {
 				balloon.show(false);
@@ -212,7 +212,7 @@ bool ska::GUI::onGUIEvent(GUIEvent& ge) {
 
 	if(ge.type == REFRESH_BALLOON) {
 		auto bd = static_cast<BalloonDialog*>(getWindow(ge.windowName));
-		if (bd != nullptr) {	
+		if (bd != nullptr) {
 			bd->move(Point<int>(ge.balloonPosition.x, ge.balloonPosition.y - ge.balloonHandle->getBox().h));
 			if (!bd->isVisible()) {
 				ge.balloonHandle = nullptr;
@@ -247,7 +247,7 @@ ska::Widget* ska::GUI::addTopWidget(std::unique_ptr<Widget>& w) {
 	return m_topWindowWidgets.back().get();
 }
 
-bool ska::GUI::onScreenResized(unsigned int width, unsigned int height) {
+bool ska::GUI::onScreenResized(unsigned int, unsigned int) {
 	return true;
 }
 

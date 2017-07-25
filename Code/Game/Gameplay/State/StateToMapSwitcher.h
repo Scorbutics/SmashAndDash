@@ -8,10 +8,10 @@ class StateMap;
 class StateToMapSwitcher {
 public:
 	StateToMapSwitcher(const std::string& map, const std::string& chipsetName, WorldState& ws, const ska::Point<int>& screenSize) :
+		m_screenSize(screenSize),
 		m_ws(ws),
 		m_mapName(map),
-		m_chipsetName(chipsetName),
-		m_screenSize(screenSize) {}
+		m_chipsetName(chipsetName) {}
 	StateToMapSwitcher& operator=(const StateToMapSwitcher&) = delete;
 	~StateToMapSwitcher() = default;
 

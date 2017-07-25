@@ -2540,7 +2540,7 @@
 	"../Rectangle.h"
 	"../Point.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\battlesystem.cpp
 	"BattleSystem.h"
 	"../SkillComponent.h"
 	"Inputs/Readers/IniReader.h"
@@ -2607,7 +2607,7 @@
 
 1490603467 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\inputs\enumcontextmanager.h
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\fightstartsystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\fightstartsystem.cpp
 	"FightStartSystem.h"
 	"../../../Utils/IDs.h"
 	"Utils/RectangleUtils.h"
@@ -2793,7 +2793,7 @@
 	"../PokemonGameEventDispatcher.h"
 	"../Weather.h"
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\world.h
+1500967947 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\world.h
 	<unordered_set>
 	<vector>
 	"Inputs/Readers/IniReader.h"
@@ -2805,7 +2805,6 @@
 	"ECS/Basics/Physic/CollisionProfile.h"
 	"Data/BlockContainer.h"
 	"ECS/Basics/Script/ScriptPositionedGetter.h"
-	"Core/State/HasGraphic.h"
 
 1496040621 c:\documents\perso\dev\c++\smashanddash\code\ska_world\\world\chipsetholder.h
 	<unordered_map>
@@ -2909,12 +2908,11 @@
 	<string>
 	<SDL_mixer.h>
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guibattle.h
+1500968079 c:\documents\perso\dev\c++\smashanddash\code\game\graphic\gui\guibattle.h
 	<memory>
 	<unordered_map>
 	"Utils/Observer.h"
 	"ECS/ECSDefines.h"
-	"Core/State/HasGraphic.h"
 	"../../Gameplay/PokemonGameEventDispatcher.h"
 	"../../Gameplay/Fight/BattleEvent.h"
 	"../../Gameplay/Fight/StatisticsChangeEvent.h"
@@ -2931,7 +2929,7 @@
 	"ECS/Component.h"
 	"Point.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\skillrefreshsystem.cpp
 	"SkillRefreshSystem.h"
 	"Utils/TimeUtils.h"
 	"Utils/NumberUtils.h"
@@ -2941,7 +2939,7 @@
 	"Inputs/InputContextManager.h"
 	"../../CustomEntityManager.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\statisticssystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\fight\system\statisticssystem.cpp
 	"StatisticsSystem.h"
 	"../../State/StateMap.h"
 
@@ -2977,7 +2975,7 @@
 	"Utils/StringUtils.h"
 	"../../Utils/IDs.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\system\mobspawningsystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\mobs\system\mobspawningsystem.cpp
 	"MobSpawningSystem.h"
 	"../../../Utils/ChargementImages.h"
 	"../../../Utils/IDs.h"
@@ -3093,10 +3091,9 @@
 	"AI/IARandomMovementComponent.h"
 	"ECS/Basics/Graphic/DialogComponent.h"
 
-1499065890 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\window.h
+1500965459 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\window.h
 	<SDL.h>
 	"../Draw/SDLRenderer.h"
-	"BaseWindow.h"
 
 1496040620 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\scene\sceneguibattle.h
 	"Core/Scene/SceneBase.h"
@@ -3415,7 +3412,7 @@
 	"CameraSystem.h"
 	"Rectangle.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\system\pokeballsystem.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\system\pokeballsystem.cpp
 	"PokeballSystem.h"
 	"ECS/Basics/Graphic/DeleterComponent.h"
 	"../../Utils/IDs.h"
@@ -3462,9 +3459,9 @@
 	"Draw/DrawableFixedPriority.h"
 	"Graphic/Texture.h"
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\gamecore.h
+1500968239 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\gamecore.h
 	<memory>
-	"State/StateHolderCore.h"
+	"State/StateHolder.h"
 	"../Exceptions/StateDiedException.h"
 	"../Data/Events/WorldEvent.h"
 	"../Data/Events/SoundEvent.h"
@@ -3504,7 +3501,7 @@
 	<string>
 	"MessageType.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldimpl.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldimpl.cpp
 	"../Data/Settings.h"
 	"WorldImpl.h"
 	"Draw/DrawableContainer.h"
@@ -4273,7 +4270,7 @@
 	"Core/State/State.h"
 	"../PokemonGameEventDispatcher.h"
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\statebase.h
+1500995962 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\statebase.h
 	<unordered_set>
 	"State.h"
 	"StateHolder.h"
@@ -4283,18 +4280,17 @@
 	<algorithm>
 	"StateData.h"
 
-1498718714 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\state.h
+1500967854 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\state.h
 	<memory>
-	"HasGraphic.h"
-	"HasLogic.h"
 
 1498633853 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\hasgraphic.h
 
 1498633853 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\haslogic.h
 
-1498718714 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\stateholder.h
+1500967806 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\stateholder.h
 	"State.h"
 	"../../Task/TaskQueue.h"
+	"../../Data/Events/GameEventDispatcher.h"
 
 1500878223 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldstate.h
 	"Core/State/StateBase.h"
@@ -4326,7 +4322,7 @@
 	"AbstractStateMap.h"
 	"StateMap.h"
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\statetomapswitcher.h
+1500995338 c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\statetomapswitcher.h
 	"Core/State/StateBase.h"
 	"../World/WorldState.h"
 	"../World/WorldStateChanger.h"
@@ -4375,11 +4371,11 @@
 1498633853 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\ununique.h
 	<memory>
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\stateguibattle.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\stateguibattle.cpp
 	"StateGUIBattle.h"
 	"Draw/DrawableContainer.h"
 
-1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\stateguimap.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\stateguimap.cpp
 	"StateGUIMap.h"
 	"Draw/DrawableContainer.h"
 
@@ -4401,20 +4397,20 @@
 	"../World/WorldStateChanger.h"
 	"StateMap.h"
 
-1498718714 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\transition\map\dialogtransition.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\transition\map\dialogtransition.cpp
 	"DialogTransition.h"
 	"../../../CustomEntityManager.h"
 	"ECS/Basics/Graphic/DialogComponent.h"
 	"Task/Task.h"
 
-1498718714 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\transition\map\pokeballtransition.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\transition\map\pokeballtransition.cpp
 	"PokeballTransition.h"
 	"../../../CustomEntityManager.h"
 	"ECS/Basics/Physic/PositionComponent.h"
 	"ECS/Basics/Physic/HitboxComponent.h"
 	"../../../PokeballComponent.h"
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\stateholdercore.h
+1500967132 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\core\state\stateholdercore.h
 	"StateHolder.h"
 	"../../Data/Events/GameEventDispatcher.h"
 
@@ -4477,7 +4473,7 @@
 1500878223 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\world\worldstatechanger.cpp
 	"WorldStateChanger.h"
 
-1499065890 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\statefightloading.cpp
+1500977730 source:c:\documents\perso\dev\c++\smashanddash\code\game\gameplay\state\statefightloading.cpp
 	"StateFightLoading.h"
 	"../Fight/BattleComponent.h"
 	"AI/IARandomMovementComponent.h"
@@ -4500,7 +4496,7 @@
 1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\utils\containstypetuple.h
 	<type_traits>
 
-1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\gameevent.h
+1500971291 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\gameevent.h
 
 1500878223 c:\documents\perso\dev\c++\smashanddash\code\ska_core\\data\events\stateevent.h
 

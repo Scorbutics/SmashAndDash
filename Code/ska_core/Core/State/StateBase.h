@@ -171,10 +171,10 @@ namespace ska {
 		virtual ~StateBase() = default;
 
     protected:
-		virtual void beforeLoad(std::unique_ptr<State>* lastScene) {
+		virtual void beforeLoad(std::unique_ptr<State>*) {
 		}
 
-		virtual void afterLoad(std::unique_ptr<State>* lastScene) {
+		virtual void afterLoad(std::unique_ptr<State>*) {
 		}
 
 		virtual bool beforeUnload() {
@@ -185,10 +185,10 @@ namespace ska {
 			return false;
 		}
 
-		virtual void onGraphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) {
+		virtual void onGraphicUpdate(unsigned int , DrawableContainer& ) {
 		}
 
-		virtual void onEventUpdate(unsigned int ellapsedTime) {
+		virtual void onEventUpdate(unsigned int ) {
 		}
 
 		template<class SC, class ...Args>
@@ -207,6 +207,7 @@ namespace ska {
         template<class S, class ...Args>
 		S* addPriorizedLogic(int priority, Args&& ... args) {
 			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
+			s->setPriority(priority);
 			S* result = static_cast<S*>(s.get());
 			m_logics.push_back(std::move(s));
 			std::sort(m_logics.begin(), m_logics.end(), Priorized::comparatorInf<std::unique_ptr<ISystem>>);
@@ -226,6 +227,8 @@ namespace ska {
         template<class S, class ...Args>
 		S* addPriorizedGraphic(int priority, Args&& ... args) {
 			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
+			//TODO
+			//s->Priorized::setPriority(priority);
 			S* result = static_cast<S*>(s.get());
 			m_graphics.push_back(std::move(s));
 			std::sort( m_graphics.begin(), m_graphics.end(), Priorized::comparatorInf<std::unique_ptr<IGraphicSystem>>);

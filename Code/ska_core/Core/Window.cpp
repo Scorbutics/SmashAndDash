@@ -3,8 +3,13 @@
 #include "../Draw/SDLRenderer.h"
 #include "../Logging/Logger.h"
 
+#define TAILLEBLOCFENETRE 32
+#define TAILLEECRANMINX TAILLEBLOCFENETRE*15
+#define TAILLEECRANMINY TAILLEBLOCFENETRE*13
+
 ska::Window::Window(const std::string& title, unsigned int w, unsigned int h) :
-	BaseWindow(w, h),
+	m_height(h < TAILLEECRANMINY ? TAILLEECRANMINY : h),
+	m_width(w < TAILLEECRANMINX ? TAILLEECRANMINX : w),
 	m_wName(title),
 	m_containsDefaultRenderer(false) {
 
@@ -45,6 +50,19 @@ void ska::Window::showMessageBox(Uint32 flags, const std::string& title, const s
             title.c_str(),
             message.c_str(),
             m_screen);
+}
+
+unsigned int ska::Window::getWidth() const {
+	return m_width;
+}
+
+unsigned int ska::Window::getHeight() const {
+	return m_height;
+}
+
+void ska::Window::resize(unsigned int w, unsigned int h) {
+	m_width = w;
+	m_height = h;
 }
 
 ska::Window::~Window() {

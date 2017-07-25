@@ -4,11 +4,11 @@
 #include "Ticked.h"
 
 ska::MovementSystem::MovementSystem(ska::EntityManager& entityManager, Ticked& ticked) :
-	System(entityManager), 
+	System(entityManager),
 	m_ticks(ticked.ticksWanted()) {
 }
 
-void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
+void ska::MovementSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (auto entityId : processed) {
 		auto& posComponent = m_componentAccessor.get<PositionComponent>(entityId);
@@ -38,7 +38,7 @@ void ska::MovementSystem::refresh(unsigned int ellapsedTime) {
 		forceComponent.y = 0;
 		forceComponent.z = 0;
 
-		//The acceleration, velocity and position order is important, as they are used in other systems. 
+		//The acceleration, velocity and position order is important, as they are used in other systems.
 		//So velocity and acceleration have to ALWAYS BE the NEXT one.
 
 		/* Ground reflection */

@@ -6,7 +6,7 @@ StateGUIMap::StateGUIMap(StateData& data, ska::StateHolder& sh) :
     m_gui(data.m_eventDispatcher) {
 
 }
-void StateGUIMap::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
+void StateGUIMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
 	drawables.add(m_gui);
 }
 

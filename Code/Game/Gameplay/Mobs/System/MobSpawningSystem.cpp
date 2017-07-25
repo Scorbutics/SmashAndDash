@@ -5,8 +5,8 @@
 #include "Utils/TimeUtils.h"
 #include "../MobSpawner.h"
 
-MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay) : 
-	System(entityManager), 
+MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay) :
+	System(entityManager),
 	m_mobSpawner(ms) {
 
 	m_t0 = ska::TimeUtils::getTicks();
@@ -17,7 +17,7 @@ MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawn
 	m_totalSpawnedEntities = 0;
 }
 
-void MobSpawningSystem::refresh(unsigned int ellapsedTime) {
+void MobSpawningSystem::refresh(unsigned int) {
 	if (m_totalSpawnedEntities < SPAWN_LIMIT_ALLOWED && ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
 		ska::IniReader* reader = GetRandomMobSettings(m_mobSpawner);
 		if (reader != nullptr) {

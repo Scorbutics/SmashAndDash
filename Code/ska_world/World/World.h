@@ -11,7 +11,6 @@
 #include "ECS/Basics/Physic/CollisionProfile.h"
 #include "Data/BlockContainer.h"
 #include "ECS/Basics/Script/ScriptPositionedGetter.h"
-#include "Core/State/HasGraphic.h"
 
 namespace ska {
 	class CameraSystem;
@@ -19,10 +18,10 @@ namespace ska {
 	class Block;
 	class PrefabEntityManager;
 	class ScriptSleepComponent;
+	class DrawableContainer;
 	typedef char ScriptTriggerType;
 
 	class World :
-	    public HasGraphic,
 	    public CameraAware,
 	    public BlockContainer,
 	    public CollisionProfile,
@@ -74,7 +73,7 @@ namespace ska {
 		Point<int> alignOnBlock(const Rectangle& hitbox) const;
 
 		void linkCamera(CameraSystem* cs) override;
-		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override = 0;
+		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) = 0;
 
 		virtual ~World() = default;
 

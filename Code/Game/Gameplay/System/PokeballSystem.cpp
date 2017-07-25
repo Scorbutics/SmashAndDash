@@ -16,7 +16,7 @@ System(entityManager) {
 PokeballSystem::~PokeballSystem() {
 }
 
-void PokeballSystem::refresh(unsigned int ellapsedTime) {
+void PokeballSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (ska::EntityId entityId : processed) {
 		PokeballComponent& pokec = m_componentAccessor.get<PokeballComponent>(entityId);

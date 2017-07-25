@@ -1,7 +1,5 @@
 #pragma once
 #include <memory>
-#include "HasGraphic.h"
-#include "HasLogic.h"
 
 namespace ska {
 	class StateHolder;
@@ -9,10 +7,7 @@ namespace ska {
 	class IGraphicSystem;
 	class DrawableContainer;
 
-	class State : 
-		public HasGraphic, 
-		public HasLogic {
-
+	class State {
         template <class EM, class ED>
         friend class StateBase;
 
@@ -22,8 +17,8 @@ namespace ska {
 
 		void operator=(const State&) = delete;
 
-		virtual void graphicUpdate(unsigned ellapsedTime, DrawableContainer& drawables) override = 0;
-		virtual void eventUpdate(unsigned int) override = 0;
+		virtual void graphicUpdate(unsigned ellapsedTime, DrawableContainer& drawables) = 0;
+		virtual void eventUpdate(unsigned int) = 0;
 		virtual void load(std::unique_ptr<State>* lastState) = 0;
 		virtual bool unload() = 0;
 

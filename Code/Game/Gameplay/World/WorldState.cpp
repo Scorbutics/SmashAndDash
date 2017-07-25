@@ -90,7 +90,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.graphicUpdate(ellapsedTime, drawables);
 }
 
-void WorldState::onEventUpdate(unsigned int ellapsedTime) {
+void WorldState::onEventUpdate(unsigned int) {
 	m_world.update();
 }
 

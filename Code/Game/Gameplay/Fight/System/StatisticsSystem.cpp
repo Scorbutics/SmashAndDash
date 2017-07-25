@@ -6,7 +6,7 @@ m_worldScene(ws), m_ged(ged) {
 
 }
 
-void StatisticsSystem::refresh(unsigned int ellapsedTime) {
+void StatisticsSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (const auto entityId : processed) {
 		auto& bc = m_componentAccessor.get<BattleComponent>(entityId);

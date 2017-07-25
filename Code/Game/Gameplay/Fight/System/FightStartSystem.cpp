@@ -17,7 +17,7 @@ FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDis
 	m_t0 = ska::TimeUtils::getTicks();
 }
 
-void FightStartSystem::refresh(unsigned int ellapsedTime) {
+void FightStartSystem::refresh(unsigned int) {
 	ska::PositionComponent& pcPlayer = m_componentAccessor.get<ska::PositionComponent>(m_player);
 	ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(m_player);
 	ska::Point<int> pPlayer = { pcPlayer.x, pcPlayer.y };
@@ -56,7 +56,7 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
 					m_componentAccessor.remove<ska::PositionComponent>(fc.fighterPokemon);
 					fc.fighterOpponent = entityId;
-					
+
 					MapEvent me(MapEvent::BATTLE);
 					me.fightComponent = &fc;
 					me.fightPos = pcPlayer;

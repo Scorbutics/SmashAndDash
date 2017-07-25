@@ -4,7 +4,7 @@
 #include "ECS/Basics/Physic/HitboxComponent.h"
 #include "../../../PokeballComponent.h"
 
-PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder) :
+PokeballTransition::PokeballTransition(unsigned int, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder) :
 	ska::Task(std::bind(&PokeballTransition::run, this, std::placeholders::_1)),
 	m_pokeball(pokeballHolder),
 	m_loadState(0),
@@ -14,7 +14,7 @@ PokeballTransition::PokeballTransition(unsigned int delay, CustomEntityManager& 
 
 }
 
-bool PokeballTransition::run(ska::Task& t){
+bool PokeballTransition::run(ska::Task&){
 	if (m_loadState == 0) {
 		m_loadState++;
 

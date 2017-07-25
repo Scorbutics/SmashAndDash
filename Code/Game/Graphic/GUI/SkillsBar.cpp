@@ -2,8 +2,8 @@
 #include "../../Gameplay/Fight/SkillDescriptor.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
 
-SkillsBar::SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills) : 
-ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska::Rectangle{ 2* TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+SkillsBar::SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills) :
+ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska::Rectangle{ 2* TAILLEBLOCFENETRE, 0, 0, 0 }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
 	//TODO 1 widget pour représenter chaque skill
 	if (!skills.empty()) {
 		ska::Point<int> buf;
@@ -11,7 +11,7 @@ ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska:
 		buf.y = TAILLEBLOCFENETRE / 4;
 
 		for (const auto& s : skills) {
-			auto& bSkill = addWidget<ska::ButtonSprite>(buf, "", s.id, [&](ska::Widget* tthis, ska::ClickEvent& e) {
+			auto& bSkill = addWidget<ska::ButtonSprite>(buf, "", s.id, [&](ska::Widget*, ska::ClickEvent&) {
 			});
 			buf.x += TAILLEBLOCFENETRE;
 			m_skillsHolder.push_back(&bSkill);

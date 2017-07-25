@@ -19,7 +19,7 @@ ska::LayerE::LayerE(World& world) : m_world(world) {
 }
 
 
-void ska::LayerE::refresh(unsigned int ellapsedTime) {
+void ska::LayerE::refresh(unsigned int) {
 	/* TODO Chipset relative scripts */
 }
 

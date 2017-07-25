@@ -8,10 +8,10 @@
 ska::CollisionSystem::CollisionSystem(EntityManager& entityManager, CollisionProfile& cp, GameEventDispatcher& ged) :
 	System(entityManager),
 	m_collisionProfile(cp),
-	m_ged(ged) {	
+	m_ged(ged) {
 }
 
-void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
+void ska::CollisionSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
 	for (auto entityId : processed) {
 
@@ -23,15 +23,15 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 			lastBlockColPosX = wcc.blockColPosX;
 			lastBlockColPosY = wcc.blockColPosY;
 			m_componentAccessor.remove<WorldCollisionComponent>(entityId);
-			/* Il faut rafraîchir l'ensemble des systèmes directement ici (au travers de l'EntityManager), 
-			car il est possible de créer un autre WorldCollisionComponent dans le même tour de boucle. 
+			/* Il faut rafraîchir l'ensemble des systèmes directement ici (au travers de l'EntityManager),
+			car il est possible de créer un autre WorldCollisionComponent dans le même tour de boucle.
 			Si le refresh n'est pas fait, il sera supprimé par le prochain rafraîchissement de l'EntityManager */
 			refreshEntity(entityId);
 		}
 
 		const auto entityHitboxX = createHitBox(entityId, true);
 		const auto entityHitboxY = createHitBox(entityId, false);
-		
+
 		auto entityCollided = false;
 		CollisionComponent col;
 		for (auto itEntity : processed) {
@@ -56,7 +56,7 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 			}
 
 		}
-		
+
 		//auto& movementComponent = m_componentAccessor.get<MovementComponent>(entityId);
 
 		WorldCollisionComponent wcol;
@@ -81,7 +81,7 @@ void ska::CollisionSystem::refresh(unsigned int ellapsedTime) {
 		if (collided) {
 			CollisionEvent ce(entityId, &wcol, nullptr, m_componentAccessor.get<CollidableComponent>(entityId));
 			m_ged.ska::Observable<CollisionEvent>::notifyObservers(ce);
-			
+
 
 		}
 

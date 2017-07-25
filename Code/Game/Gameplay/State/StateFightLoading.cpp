@@ -9,19 +9,19 @@
 
 StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, ska::EntityId& pokeball, ska::InputComponent** ic, ska::CameraSystem** cameraSystem) :
 	m_eventDispatcher(ged),
-	m_entityManager(em), 
-	m_pokemonId(pokemonId), 
-	m_opponentId(opponentId), 
-	m_trainerId(trainerId), 
-	m_pokeball(pokeball), 
-	m_ic(ic), 
+	m_entityManager(em),
+	m_pokemonId(pokemonId),
+	m_opponentId(opponentId),
+	m_trainerId(trainerId),
+	m_pokeball(pokeball),
+	m_ic(ic),
 	m_worldState(ws),
 	m_cameraSystem(cameraSystem) {
-	
+
 }
 
 std::unique_ptr<ska::Task> StateFightLoading::load() {
-	return std::make_unique<ska::Task>([&](ska::Task& t) {
+	return std::make_unique<ska::Task>([&](ska::Task&) {
 		/* Ajout InputComponent au Pokémon,
 		Ajout d'un IAMovementComponent au dresseur (m_player),
 		Ajout d'un composant de combat au Pokémon
