@@ -27,6 +27,6 @@ namespace ska {
 		GameEventDispatcher& m_eventDispatcher;
 		StatePtr m_currentState;
 	    bool m_sceneLoaded;
-		std::unique_ptr<State> m_lastState;
+		StatePtr m_lastState;
     };
 }

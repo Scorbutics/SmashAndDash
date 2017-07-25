@@ -6,5 +6,5 @@
 #include "../../ska_audio/Audio/SoundRenderer.h"
 
 namespace ska {
-	using BasicGameCore = GameCore<ska::PrefabEntityManager, ska::GameEventDispatcher, ska::VectorDrawableContainer, ska::SoundRenderer>;
+	using BasicGameCore = GameCore<PrefabEntityManager, GameEventDispatcher, VectorDrawableContainer, SoundRenderer>;
 }

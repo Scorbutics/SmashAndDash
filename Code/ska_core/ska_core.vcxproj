@@ -20,15 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\GameCore.h" />
-    <ClInclude Include="Core\BaseWindow.h" />
     <ClInclude Include="Core\Priorized.h" />
-    <ClInclude Include="Core\State\HasGraphic.h" />
-    <ClInclude Include="Core\State\HasLogic.h" />
     <ClInclude Include="Core\State\StateBase.h" />
+    <ClInclude Include="Core\State\StateBuilder.h" />
     <ClInclude Include="Core\State\StateData.h" />
     <ClInclude Include="Core\State\StateHolder.h" />
-    <ClInclude Include="Core\State\StateHolderCore.h" />
-    <ClInclude Include="Core\State\StateType.h" />
     <ClInclude Include="Core\State\State.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Core\BasicGameCore.h" />
@@ -161,9 +157,8 @@
     <ClInclude Include="Utils\VectorUtils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Core\BaseWindow.cpp" />
-    <ClCompile Include="Core\State\StateHolderCore.cpp" />
     <ClCompile Include="Core\State\State.cpp" />
+    <ClCompile Include="Core\State\StateHolder.cpp" />
     <ClCompile Include="Core\Window.cpp" />
     <ClCompile Include="Data\Events\SoundEvent.cpp" />
     <ClCompile Include="Draw\Color.cpp" />

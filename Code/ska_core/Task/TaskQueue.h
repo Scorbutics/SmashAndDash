@@ -16,7 +16,7 @@ namespace ska {
 		bool hasRunningTask() const;
 
 		template<typename T>
-		ska::Runnable& queueTask(std::unique_ptr<T>& t) {
+		ska::Runnable& queueTask(std::unique_ptr<T>&& t) {
             m_tasks.push(move(t));
             return *m_tasks.back();
 		}

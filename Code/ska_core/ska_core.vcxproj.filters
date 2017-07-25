@@ -115,18 +115,13 @@
     <ClInclude Include="Utils\TupleUtils.h" />
     <ClInclude Include="Data\ExtensibleGameEventDispatcher.h" />
     <ClInclude Include="GameApp.h" />
-    <ClInclude Include="Core\BaseWindow.h" />
     <ClInclude Include="Data\Events\GUIEvent.h" />
     <ClInclude Include="Data\Events\EventDispatcher.h" />
     <ClInclude Include="Data\Events\ExtensibleGameEventDispatcher.h" />
     <ClInclude Include="Data\Events\GameEventDispatcher.h" />
     <ClInclude Include="Data\Events\GameLibrariesInitializedEvent.h" />
     <ClInclude Include="Ticked.h" />
-    <ClInclude Include="Core\State\HasGraphic.h" />
-    <ClInclude Include="Core\State\HasLogic.h" />
     <ClInclude Include="Core\State\State.h" />
-    <ClInclude Include="Core\State\StateType.h" />
-    <ClInclude Include="Core\State\StateHolderCore.h" />
     <ClInclude Include="Core\State\StateHolder.h" />
     <ClInclude Include="Core\State\StateBase.h" />
     <ClInclude Include="Utils\ununique.h" />
@@ -147,6 +142,7 @@
     <ClInclude Include="Data\Events\InputKeyEvent.h" />
     <ClInclude Include="Data\Events\InputMouseEvent.h" />
     <ClInclude Include="Inputs\WindowInput.h" />
+    <ClInclude Include="Core\State\StateBuilder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Window.cpp" />
@@ -203,10 +199,9 @@
     <ClCompile Include="Utils\TimeUtils.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameApp.cpp" />
-    <ClCompile Include="Core\BaseWindow.cpp" />
     <ClCompile Include="Core\State\State.cpp" />
-    <ClCompile Include="Core\State\StateHolderCore.cpp" />
     <ClCompile Include="Draw\Color.cpp" />
     <ClCompile Include="Inputs\WindowInput.cpp" />
+    <ClCompile Include="Core\State\StateHolder.cpp" />
   </ItemGroup>
 </Project>

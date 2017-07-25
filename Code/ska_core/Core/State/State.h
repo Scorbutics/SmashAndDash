@@ -8,9 +8,8 @@ namespace ska {
 	class DrawableContainer;
 
 	class State {
-        template <class EM, class ED>
-        friend class StateBase;
-
+		template <class EM, class ED>
+		friend class StateBase;
 	public:
 		explicit State(StateHolder& holder);
         State(State& lastState);
@@ -23,9 +22,9 @@ namespace ska {
 		virtual bool unload() = 0;
 
 		virtual ~State() = default;
-
-    private:
-        StateHolder& m_holder;
+	
+	private:
+		StateHolder& m_holder;
 	};
 
 	using StatePtr = std::unique_ptr<State>;

@@ -4,9 +4,7 @@
 #include "StateHolder.h"
 #include "../../Draw/IGraphicSystem.h"
 #include "../../ECS/ISystem.h"
-#include "../../Core/Priorized.h"
-#include <algorithm>
-#include "StateData.h"
+#include "StateBuilder.h"
 
 namespace ska {
 	class Window;
@@ -14,20 +12,18 @@ namespace ska {
 
 	template <class EM, class ED>
 	class StateBase : public State {
-
+		
 	public:
 		StateBase(EM& em, ED& ed, StateHolder& sh) :
 			State(sh),
-			m_data(em, ed),
+			m_builder(sh, em, ed),
 			m_state(0) {
-
 		}
 
 		StateBase(EM& em, ED& ed, State& oldState) :
 			State(oldState),
-			m_data(em, ed),
+			m_builder(oldState.m_holder, em, ed),
 			m_state(0) {
-
 		}
 
 		virtual void graphicUpdate(unsigned int ellapsedTime, DrawableContainer& drawables) override final {
@@ -80,11 +76,8 @@ namespace ska {
 			}
 
 			m_state = 2;
-
 			afterLoad(lastState);
-
 			m_state = 3;
-
 		}
 
 		bool unload() override final {
@@ -144,33 +137,61 @@ namespace ska {
 			m_linkedSubStates.erase(&subState);
 		}
 
-		template <class T>
-		ska::Runnable& queueTask(std::unique_ptr<T>& t) {
-		    return m_holder.queueTask(t);
+		template<class State>
+		void transmitLinkedSubstates(State& state) {
+			m_linkedSubStates = state.m_linkedSubStates;
 		}
 
-		template<class SC, class ... Args>
-		SC* makeNextState(Args&&... args) {
-			auto nState = std::make_unique<SC>(m_data, *this, std::forward<Args>(args)...);
-			auto result = nState.get();
-			m_holder.nextState(std::move(nState));
-			m_holder.update();
-			return result;
+		template<class State, class ...Args>
+		State* addSubState(Args&& ... args) {
+			return m_builder.template addSubState<State, Args...>(m_subStates, std::forward<Args>(args)...);
 		}
 
-		template<class SC1, class SC, class ... Args>
-		SC* makeNextStateAndTransmitLinkedSubstates(SC1& oldScene, Args&&... args) {
-			auto nState = std::make_unique<SC>(m_data, *this, std::forward<Args>(args)...);
-			auto result = nState.get();
-			m_holder.nextState(std::move(nState));
-			result->transmitLinkedSubstates(oldScene);
-			m_holder.update();
-			return result;
+		template<class State, class ... Args>
+		State* makeNextState(Args&&... args) {
+			return m_builder.template makeNextState<State, Args...>(std::forward<Args>(args)...);
+		}
+
+		template<class SubState, class ... Args>
+		State* makeNextStateAndTransmitLinkedSubstates(Args&&... args) {
+			return m_builder.template makeNextStateAndTransmitLinkedSubstates<decltype(*this), SubState, Args...>(*this, std::forward<Args>(args)...);
+		}
+
+		template<class System, class ...Args>
+		std::unique_ptr<System> createLogic(Args&&... args) {
+			return m_builder.template createLogic<System>(std::forward<Args>(args)...);
 		}
 
 		virtual ~StateBase() = default;
 
     protected:
+		using StateData = StateData<EM, ED>;
+
+		template<class System, class ...Args>
+		System* addPriorizedLogic(int priority, Args&& ... args) {
+			return m_builder.addPriorizedLogic<System, Args...>(m_logics, priority, std::forward<Args>(args)...);
+		}
+
+		template<class System, class ...Args>
+		System* addLogic(Args&& ... args) {
+			return this->m_builder.addPriorizedLogic<System, Args...>(m_logics, static_cast<int>(m_logics.size()), std::forward<Args>(args)...);
+		}
+
+		template<class System, class ...Args>
+		System* addPriorizedGraphic(int priority, Args&& ... args) {
+			return m_builder.addPriorizedGraphic<System, Args...>(m_graphics, priority, std::forward<Args>(args)...);
+		}
+		
+		template<class System, class ...Args>
+		System* addGraphic(Args&& ... args) {
+			return this->m_builder.addPriorizedGraphic<System, Args...>(m_graphics, static_cast<int>(m_graphics.size()), std::forward<Args>(args)...);
+		}
+
+		template <class T>
+		ska::Runnable& queueTask(std::unique_ptr<T>&& t) {
+			return m_builder.queueTask(std::forward<std::unique_ptr<T>>(t));
+		}
+
 		virtual void beforeLoad(std::unique_ptr<State>*) {
 		}
 
@@ -185,68 +206,19 @@ namespace ska {
 			return false;
 		}
 
-		virtual void onGraphicUpdate(unsigned int , DrawableContainer& ) {
+		virtual void onGraphicUpdate(unsigned int, DrawableContainer& ) {
 		}
 
 		virtual void onEventUpdate(unsigned int ) {
 		}
 
-		template<class SC, class ...Args>
-		SC* addSubState(Args&& ... args){
-			auto s = std::make_unique<SC>(m_data, m_holder, std::forward<Args>(args)...);
-			SC* result = static_cast<SC*>(s.get());
-			m_subStates.push_back(std::move(s));
-			return result;
-		}
-
-		template<class S, class ...Args>
-		S* addLogic(Args&& ... args) {
-			return addPriorizedLogic<S, Args...>(static_cast<int>(m_logics.size()), std::forward<Args>(args)...);
-		}
-
-        template<class S, class ...Args>
-		S* addPriorizedLogic(int priority, Args&& ... args) {
-			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
-			s->setPriority(priority);
-			S* result = static_cast<S*>(s.get());
-			m_logics.push_back(std::move(s));
-			std::sort(m_logics.begin(), m_logics.end(), Priorized::comparatorInf<std::unique_ptr<ISystem>>);
-			return result;
-		}
-
-		template<class S, class ...Args>
-		std::unique_ptr<S> createLogic(Args&&... args){
-			return std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
-		}
-
-		template<class S, class ...Args>
-		S* addGraphic(Args&& ... args) {
-			return addPriorizedGraphic<S, Args...>(static_cast<int>(m_graphics.size()), std::forward<Args>(args)...);
-		}
-
-        template<class S, class ...Args>
-		S* addPriorizedGraphic(int priority, Args&& ... args) {
-			auto s = std::make_unique<S>(m_data.m_entityManager, std::forward<Args>(args)...);
-			//TODO
-			//s->Priorized::setPriority(priority);
-			S* result = static_cast<S*>(s.get());
-			m_graphics.push_back(std::move(s));
-			std::sort( m_graphics.begin(), m_graphics.end(), Priorized::comparatorInf<std::unique_ptr<IGraphicSystem>>);
-			return result;
-		}
-
-		using StateData = StateData<EM, ED>;
-		StateData m_data;
-
+		
     private:
         bool waitTransitions() const {
-			return !m_holder.hasRunningTask();
+			return !m_builder.hasRunningTask();
 		}
 
-		template<class SC>
-		void transmitLinkedSubstates(SC& scene) {
-			m_linkedSubStates = scene.m_linkedSubStates;
-		}
+		StateBuilder<EM, ED> m_builder;
 
 		std::vector<std::unique_ptr<ISystem>> m_logics;
 		std::vector<std::unique_ptr<IGraphicSystem>> m_graphics;
@@ -254,8 +226,7 @@ namespace ska {
 		std::vector<std::unique_ptr<State>> m_subStates;
 		std::unordered_set<State*> m_linkedSubStates;
         int m_state;
-
-
-
+		
+		
 	};
 }

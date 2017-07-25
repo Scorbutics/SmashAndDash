@@ -84,9 +84,9 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 	auto finalTask = m_loader.load();
 
 
-	queueTask(dialogTask);
-	queueTask(pokeballTask);
-	queueTask(finalTask);
+	queueTask(std::move(dialogTask));
+	queueTask(std::move(pokeballTask));
+	queueTask(std::move(finalTask));
 }
 
 bool StateFight::beforeUnload() {
@@ -115,9 +115,9 @@ bool StateFight::beforeUnload() {
 	});
 
 
-	queueTask(preTask);
-	queueTask(firstTask);
-	queueTask(finalTask);
+	queueTask(std::move(preTask));
+	queueTask(std::move(firstTask));
+	queueTask(std::move(finalTask));
 	
 	return false;
 }

@@ -4,7 +4,9 @@ namespace ska {
     //TODO refacto avec DrawableFixedPriority
     class Priorized {
     public:
-        Priorized() :
+	    virtual ~Priorized() = default;
+
+	    Priorized() :
             m_priority(0) {
         }
 

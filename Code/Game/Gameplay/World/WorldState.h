@@ -18,6 +18,7 @@ namespace ska {
 	class ShadowSystem;
 	class GraphicSystem;
 	class Ticked;
+	class StateHolder;
 }
 class CustomEntityManager;
 

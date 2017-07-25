@@ -1,6 +1,4 @@
 #pragma once
-#include "../Window.h"
-#include "../../Inputs/InputContextManager.h"
 
 namespace ska {
 	

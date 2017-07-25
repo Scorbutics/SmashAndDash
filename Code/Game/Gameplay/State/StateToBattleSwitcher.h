@@ -17,7 +17,7 @@ public:
 
 	template<class EM, class ED>
 	void switchTo(ska::StateBase<EM, ED>& lastState) const {
-		lastState.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateFight>(lastState, m_ws, m_fightPos, m_fightComponent, m_screenSize);
+		lastState.template makeNextStateAndTransmitLinkedSubstates<StateFight>(m_ws, m_fightPos, m_fightComponent, m_screenSize);
 	}
 
 protected:

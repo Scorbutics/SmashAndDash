@@ -18,7 +18,7 @@ public:
 	template<class EM, class ED>
 	void switchTo(ska::StateBase<EM, ED>& lastScene) const {
 		WorldStateChanger wsc(m_ws, m_mapName, m_chipsetName, m_ws.getFileName() == m_mapName, m_screenSize);
-		lastScene.template makeNextStateAndTransmitLinkedSubstates<ska::StateBase<EM, ED>, StateMap>(lastScene, wsc);
+		lastScene.template makeNextStateAndTransmitLinkedSubstates<StateMap>(wsc);
 	}
 
 protected:

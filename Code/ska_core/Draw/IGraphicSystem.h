@@ -7,7 +7,7 @@ namespace ska {
 	class CameraSystem;
 
 	class IGraphicSystem :
-	    public ISystem,
+	    virtual public ISystem,
 	    public CameraAware {
 	public:
 		IGraphicSystem() = default;

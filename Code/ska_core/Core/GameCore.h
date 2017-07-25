@@ -14,7 +14,7 @@
 #include "State/StateData.h"
 
 namespace ska {
-    template <class EM, class ED, class D, class SoundManager>
+    template <class EntityManager, class EventDispatcher, class DrawableContainer, class SoundManager>
     class GameCore :
 		public GameApp,
 		public Observer<StateEvent> {
@@ -49,7 +49,7 @@ namespace ska {
 
 		template<class StateT, class ... Args>
 		std::unique_ptr<StateT> makeState(Args&&... args) {
-			StateData<EM, ED> data(m_entityManager, m_eventDispatcher);
+			StateData<EntityManager, EventDispatcher> data(m_entityManager, m_eventDispatcher);
 			return std::make_unique<StateT>(data, m_stateHolder, std::forward<Args>(args)...);
         }
 
@@ -126,13 +126,13 @@ namespace ska {
 			return false;
 		}
 
-        EM m_entityManager;
+		EntityManager m_entityManager;
 
 	protected:
-        ED m_eventDispatcher;
+        EventDispatcher m_eventDispatcher;
 
 	private:
-        D m_drawables;
+        DrawableContainer m_drawables;
         SoundManager m_soundManager;
 
         std::unique_ptr<Window> m_mainWindow;
