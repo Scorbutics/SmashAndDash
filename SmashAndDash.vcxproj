@@ -67,16 +67,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
     <LibraryPath>Debug;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(IncludePath)</IncludePath>
-    <LibraryPath>x64\Debug;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
+    <LibraryPath>x64/Debug;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>Code\ska_ai;Code\ska_audio;Code\ska_core;Code\ska_draw;Code\ska_gui;Code\ska_physic;Code\ska_script;Code\ska_world;$(IncludePath)</IncludePath>
-    <LibraryPath>x64\Release;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
+    <LibraryPath>x64/Release;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
+    <LibraryPath>Release;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,7 +89,7 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <CompileAs>CompileAsCpp</CompileAs>
       <DisableSpecificWarnings>4244;4305;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <ShowIncludes>true</ShowIncludes>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
