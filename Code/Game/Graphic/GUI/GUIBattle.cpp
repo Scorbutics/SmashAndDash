@@ -1,5 +1,6 @@
 #include "GUIBattle.h"
 #include "Bar.h"
+#include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
@@ -30,7 +31,7 @@ bool GUIBattle::onStatisticsChange(StatisticsChangeEvent& sce) {
 
 
 void GUIBattle::addHPBar(ska::CameraSystem& camSys, unsigned int maxValue, unsigned int currentValue, ska::EntityManager& em, const ska::EntityId& entityId) {
-	m_bars[entityId] = std::move(std::make_unique<Bar>(camSys, ska::Button::MENU_DEFAULT_THEME_PATH + "hpbar.png", ska::Button::MENU_DEFAULT_THEME_PATH + "hpbarcontent.png", maxValue, em, entityId));
+	m_bars[entityId] = std::move(std::make_unique<Bar>(camSys, ska::GUI::MENU_DEFAULT_THEME_PATH + "hpbar.png", ska::GUI::MENU_DEFAULT_THEME_PATH + "hpbarcontent.png", maxValue, em, entityId));
 	m_bars[entityId]->setCurrentValue(currentValue);
 }
 

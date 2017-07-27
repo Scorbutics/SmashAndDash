@@ -2,10 +2,10 @@
 #include "../Gameplay/Data/Settings.h"
 #include "../Gameplay/PokemonGameEventDispatcher.h"
 
-const unsigned int PokemonSoundRenderer::SOUND_RENDERER_CHANNELS = 10;
+//const unsigned int PokemonSoundRenderer::SOUND_RENDERER_CHANNELS = 10;
 
 PokemonSoundRenderer::PokemonSoundRenderer(PokemonGameEventDispatcher& ged) :
-    SoundRenderer(SOUND_RENDERER_CHANNELS),
+    SoundRenderer(ged),
 	ska::Observer<SettingsChangeEvent>(bind(&PokemonSoundRenderer::onSettingsChange, this, std::placeholders::_1)),
 	m_ged(ged){
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);

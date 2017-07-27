@@ -23,9 +23,11 @@ ska::GameApp& ska::GameApp::get() {
 	static WGameCore wgc;
 	wgc.init();
 	return wgc;
-}	
+}
 
 void WGameCore::init() {
+    SKA_LOG_INFO("Game initialization");
+
 	/* Configure inputs types */
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);

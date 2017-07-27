@@ -13,12 +13,12 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	ska::GUI(ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
-	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)), 
+	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
 	m_ged(ged){
 	initButtons();
 
-	auto attachedToCursor = std::unique_ptr<ska::Widget>(std::make_unique<WindowMouseCursor>(this, this, this, ska::Rectangle{0, 0, 64, 96}, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"));
+	auto attachedToCursor = std::unique_ptr<ska::Widget>(std::make_unique<WindowMouseCursor>(this, this, this, ska::Rectangle{0, 0, 64, 96}, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"));
 	m_attachedToCursor = static_cast<WindowMouseCursor*>(addTopWidget(attachedToCursor));
 
 	addMasterHandler<ska::HoverEventListener>([this](ska::Widget*, ska::HoverEvent& e) {
@@ -67,7 +67,7 @@ void GUIMap::initButtons() {
 
     };
 
-    auto& firstButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    auto& firstButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu");
 	auto& bs = firstButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 102, [&](ska::Widget*, const ska::ClickEvent& e) {
         if (e.getState() == ska::MOUSE_CLICK) {
             auto widget = getWindow("team");
@@ -81,20 +81,20 @@ void GUIMap::initButtons() {
     wAction.setName("ACTIONS");
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
-    auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu");
     secondButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
 	buf.x += 5 * TAILLEBLOCFENETRE / 2;
-    auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu");
     thirdButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
 	buf.x += 5 * TAILLEBLOCFENETRE / 2;
-    auto& fourthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    auto& fourthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu");
     fourthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
 
     buf.x += 5 * TAILLEBLOCFENETRE / 2;
-    auto& fifthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::Button::MENU_DEFAULT_THEME_PATH + "menu");
+    auto& fifthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu");
     fifthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 	fifthButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 104, [&](ska::Widget*, const ska::ClickEvent& e) {
         if (e.getState() == ska::MOUSE_CLICK) {

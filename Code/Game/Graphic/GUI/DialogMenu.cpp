@@ -1,10 +1,11 @@
 #include "DialogMenu.h"
+#include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
 #include "GUI/Components/Concrete/ScrollingMultiLineLabel.h"
 #include "../../Utils/IDs.h"
 
 DialogMenu::DialogMenu(ska::Widget& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
-TimeScrollableWindowIG<ska::KeyEventListener>(parent, rect, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+TimeScrollableWindowIG<ska::KeyEventListener>(parent, rect, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"),
 m_fontSize(fontSize),
 m_timeout(timeout),
 m_name(name),

@@ -5,7 +5,7 @@
 #include "WindowMouseCursor.h"
 
 WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
-MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"),
 m_mouseCursor(mouseCursor) {
 
 	auto& title = addWidget<ska::Label>("Equipe Pokémon", 11, ska::Point<int>(130, 0));

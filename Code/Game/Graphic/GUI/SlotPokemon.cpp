@@ -2,10 +2,10 @@
 #include "Utils/SpritePath.h"
 #include "../../Gameplay/Fight/StatisticsChangeEvent.h"
 #include "../../Utils/IDs.h"
-
+#include "GUI/GUI.h"
 
 SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
-WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu"),
+WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"),
 	m_fontSize(11) {
 	m_data = nullptr;
 

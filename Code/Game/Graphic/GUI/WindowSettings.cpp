@@ -8,7 +8,7 @@
 
 
 WindowSettings::WindowSettings(Widget& parent, const ska::Point<int>& absolutePos) :
-MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 10 * TAILLEBLOCFENETRE }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * TAILLEBLOCFENETRE, 10 * TAILLEBLOCFENETRE }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu") {
 
 // 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));
 // 	input->addHandler<ska::ValueChangedEventListener<std::wstring>>([](ska::Widget* tthis, ska::ValueChangedEvent<std::wstring>& e) {
@@ -22,11 +22,11 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 
 	addWidget<ska::Label>("Météo", 11, ska::Point<int>(40, 32));
 
-	m_weatherController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 32), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
+	m_weatherController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 32), ska::GUI::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
 
 	addWidget<ska::Label>("Brouillard transparent", 11, ska::Point<int>(40, 48));
 
-	m_fogTController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 48), ska::Button::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
+	m_fogTController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 48), ska::GUI::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
 
 // 	auto radioList = std::unique_ptr<ska::RadioButtonList<std::string>>(new ska::RadioButtonList<std::string>(*this, ska::Point<int>(176, 96), ska::Button::MENU_DEFAULT_THEME_PATH + "radiobutton"));
 // 	std::vector<std::string> radioVals;
@@ -53,7 +53,7 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	addWidget(listbox);
 
 	addWidget<ska::Label>("Volume", 11, ska::Point<int>(16, 80));
-	m_volController = &addWidget<ska::LabeledHorizontalSlider>(ska::Button::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160);
+	m_volController = &addWidget<ska::LabeledHorizontalSlider>(ska::GUI::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160);
 }
 
 void WindowSettings::bind(Settings& sets) {
