@@ -1,4 +1,5 @@
 #include "DialogMenu.h"
+#include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
 #include "GUI/Components/Concrete/ScrollingMultiLineLabel.h"
 #include "../../Utils/IDs.h"

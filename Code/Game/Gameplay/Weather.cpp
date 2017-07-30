@@ -128,13 +128,19 @@ void Weather::display() const {
 				buf.x = i1 * m_weather->getWidth() + oRel.x;
                 for(auto j = 0; j < nbrMosaicY; j++) {
 					buf.y = j*m_weather->getHeight() + oRel.y;
-					if ((buf.x + m_weather->getWidth()) >= 0 && buf.x <= worldWidth && (buf.y + m_weather->getHeight()) >= 0 && buf.y <= worldHeight) {
+					if (static_cast<int>(buf.x + m_weather->getWidth()) >= 0
+                        && buf.x <= worldWidth
+                        && static_cast<int>(buf.y + m_weather->getHeight()) >= 0
+                        && buf.y <= worldHeight) {
 						m_weather->render(buf.x, buf.y);
 					}
                 }
             }
 
-		} else if ((buf.x + m_weather->getWidth()) >= 0 && buf.x <= worldWidth && (buf.y + m_weather->getHeight()) >= 0 && buf.y <= worldHeight) {
+		} else if (static_cast<int>(buf.x + m_weather->getWidth()) >= 0
+                    && buf.x <= worldWidth
+                    && static_cast<int>(buf.y + m_weather->getHeight()) >= 0
+                    && buf.y <= worldHeight) {
 			m_weather->render(buf.x, buf.y);
 		}
     }

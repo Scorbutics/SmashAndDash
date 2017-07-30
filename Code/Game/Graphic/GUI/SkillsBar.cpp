@@ -1,5 +1,6 @@
 #include "SkillsBar.h"
 #include "../../Gameplay/Fight/SkillDescriptor.h"
+#include "GUI/GUI.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
 #include "GUI/GUI.h"
 

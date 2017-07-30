@@ -1,5 +1,6 @@
 #include "GUIBattle.h"
 #include "Bar.h"
+#include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"

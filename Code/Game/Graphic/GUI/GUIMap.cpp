@@ -13,7 +13,7 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	ska::GUI(ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
-	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)), 
+	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
 	m_ged(ged){
 	initButtons();
