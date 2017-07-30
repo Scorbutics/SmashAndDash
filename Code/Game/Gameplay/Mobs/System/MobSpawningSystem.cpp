@@ -24,7 +24,7 @@ void MobSpawningSystem::refresh(unsigned int) {
 			const auto& processed = getEntities();
 			for (ska::EntityId entityId : processed) {
 				ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
-				m_totalSpawnedEntities += m_mobSpawner.spawnMob({ pc.x, pc.y, 0, 0}, m_rmin, m_rmax, m_spawnNum, reader);
+				m_totalSpawnedEntities += m_mobSpawner.spawnMob(ska::Rectangle{static_cast<int>(pc.x), static_cast<int>(pc.y), 0, 0}, m_rmin, m_rmax, m_spawnNum, reader);
 			}
 		}
 		m_t0 = ska::TimeUtils::getTicks();

@@ -19,6 +19,7 @@ public:
 private:
 	ska::CollisionSystem& m_collisionSystem;
 	PokemonGameEventDispatcher& m_ged;
+	ska::EntityManager& m_entityManager;
 
 };
 

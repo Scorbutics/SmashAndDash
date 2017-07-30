@@ -20,7 +20,7 @@ FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDis
 void FightStartSystem::refresh(unsigned int) {
 	ska::PositionComponent& pcPlayer = m_componentAccessor.get<ska::PositionComponent>(m_player);
 	ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(m_player);
-	ska::Point<int> pPlayer = { pcPlayer.x, pcPlayer.y };
+	ska::Point<float> pPlayer(pcPlayer.x, pcPlayer.y);
 
 	if (gc.sprite.empty()) {
 		return;
@@ -35,7 +35,7 @@ void FightStartSystem::refresh(unsigned int) {
 	for (ska::EntityId entityId : processed) {
 		ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
-		ska::Point<int> p = { pc.x, pc.y };
+		ska::Point<float> p(pc.x, pc.y);
 
 		if (gc.sprite.empty()) {
 			continue;

@@ -1,9 +1,10 @@
 #include "SkillsBar.h"
 #include "../../Gameplay/Fight/SkillDescriptor.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
+#include "GUI/GUI.h"
 
 SkillsBar::SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills) :
-ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska::Rectangle{ 2* TAILLEBLOCFENETRE, 0, 0, 0 }, ska::Button::MENU_DEFAULT_THEME_PATH + "menu") {
+ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska::Rectangle{ 2* TAILLEBLOCFENETRE, 0, 0, 0 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu") {
 	//TODO 1 widget pour représenter chaque skill
 	if (!skills.empty()) {
 		ska::Point<int> buf;

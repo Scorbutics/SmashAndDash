@@ -5,6 +5,7 @@
 #include "StateToBattleSwitcher.h"
 #include "AbstractStateMap.h"
 #include "StateMap.h"
+#include "Physic/System/WorldCollisionSystem.h"
 
 AbstractStateMap::AbstractStateMap(StateData& data, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
 StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
@@ -14,7 +15,8 @@ m_observersDefined(false),
 m_eventDispatcher(data.m_eventDispatcher),
 m_entityManager(data.m_entityManager),
 m_worldState(ws) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
+	m_collisionSystem = addLogic<ska::CollisionSystem>(data.m_eventDispatcher);
+	addLogic<ska::WorldCollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
 AbstractStateMap::AbstractStateMap(StateData& data, State& oldScene, WorldState& ws, const bool sameMap) :
@@ -25,7 +27,8 @@ m_observersDefined(true),
 m_eventDispatcher(data.m_eventDispatcher),
 m_entityManager(data.m_entityManager),
 m_worldState(ws) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
+	m_collisionSystem = addLogic<ska::CollisionSystem>(data.m_eventDispatcher);
+	addLogic<ska::WorldCollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
 }
 
 void AbstractStateMap::beforeLoad(ska::StatePtr*) {

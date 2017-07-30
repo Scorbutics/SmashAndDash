@@ -40,7 +40,7 @@ m_entityManager(data.m_entityManager) {
 
 	addLogic<ska::DirectionalAnimationSystem>();
 	addLogic<ska::InputSystem>(m_eventDispatcher);
-	addLogic<ska::MovementSystem>(ticked);
+	addLogic<ska::MovementSystem>();
 
 	addLogic<ska::GravitySystem>();
 	addLogic<ska::DeleterSystem>();
@@ -185,7 +185,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 				auto& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
 				const auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
-				ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
+				ska::Rectangle hitbox{ static_cast<int>(pc.x + hc.xOffset), static_cast<int>(pc.y + hc.yOffset), static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 				const auto targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
 				pc.x = targetBlock.x - hc.xOffset;
