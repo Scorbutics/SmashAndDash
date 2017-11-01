@@ -28,10 +28,10 @@ std::string CommandHideCharacter::execute(ska::ScriptComponent& script, std::vec
 		m_entityManager.removeComponent<ska::GraphicComponent>(script.getEntity());
 	} else {
 		ska::GraphicComponent gc;
-		gc.sprite.resize(1);
-		gc.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, ska::StringUtils::strToInt(id)), 6, 8, 3);
-		gc.sprite[0].setDelay(100);
-		m_entityManager.addComponent<ska::GraphicComponent>(script.getEntity(), gc);
+		gc.animatedSprites.resize(1);
+		gc.animatedSprites[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, ska::StringUtils::strToInt(id)), 6, 8, 3);
+		gc.animatedSprites[0].setDelay(100);
+		m_entityManager.addComponent<ska::GraphicComponent>(script.getEntity(), std::move(gc));
 	}
 	return "";
 }

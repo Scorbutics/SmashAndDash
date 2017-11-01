@@ -43,7 +43,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	//const ska::InputRange& mousePos = irc[ska::InputRangeType::MousePos];
 	auto& pc = m_componentAccessor.get<ska::PositionComponent>(from);
 	auto& hc = m_componentAccessor.get<ska::HitboxComponent>(from);
-	auto& dac = m_componentAccessor.get<ska::DirectionalAnimationComponent>(from);
+	auto& dac = m_componentAccessor.get<ska::AnimationComponent>(from);
 	SkillsHolderComponent& shc = m_componentAccessor.get<SkillsHolderComponent>(from);
 
 	if (index >= shc.skills.size()) {
@@ -65,7 +65,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 
 		auto& gcSkill = m_componentAccessor.get<ska::GraphicComponent>(skill);
 		auto& sc = *scPtr;
-		sc.origin = skillStartPos - ska::Point<int>(gcSkill.sprite[0].getWidth() / 2, gcSkill.sprite[0].getHeight() / 2);
+		sc.origin = skillStartPos - ska::Point<int>(gcSkill.animatedSprites[0].getWidth() / 2, gcSkill.animatedSprites[0].getHeight() / 2);
 		m_componentAccessor.add<ska::PositionComponent>(skill, sc.origin);
 
 		const auto target = from == m_pokemon ? m_opponent : m_pokemon;

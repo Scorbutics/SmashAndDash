@@ -1,7 +1,6 @@
 #include "CommandDirection.h"
 #include "Utils/StringUtils.h"
 #include "Script/ScriptComponent.h"
-#include "ECS/Basics/Graphic/DirectionalAnimationComponent.h"
 #include "ECS/EntityManager.h"
 #include "Script/System/ScriptAutoSystem.h"
 
@@ -23,7 +22,7 @@ std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<
 	const int dir = ska::StringUtils::strToInt(args[1]);
 
 	ska::EntityId internalId = script.parent->getEntityFromName(idStr);
-	ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(internalId);
-	dac.direction = dir;
+	//ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(internalId);
+	//dac.direction = dir;
 	return "";
 }

@@ -14,10 +14,8 @@
 Pokeball::Pokeball() :
 m_pokeballPos(0, 0),
 m_finalPos(0 , 0),
-m_gestionAnim(125, 4, false),
-m_gestionAnimVortex(175, 2, false) {
-	m_gestionAnim.setOffsetAndFrameSize({ 0, 0, 16, 16 });
-	m_gestionAnimVortex.setOffsetAndFrameSize({ 0, 0, 64, 64 });
+m_gestionAnim(125, 4, false, 0, 0, 16, 16),
+m_gestionAnimVortex(175, 2, false, 0, 0, 64, 64) {
     m_countOpenned = m_countOpenning = OPEN_DELAY;
 
 	m_a = m_b = m_c = 0;
@@ -265,7 +263,7 @@ void Pokeball::update() {
 
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {
-		m_gestionAnim.getRectOfCurrentFrame();
+		m_gestionAnim.updateFrame();
 
 		if (m_pokeballPos.x < m_finalPos.x) {
 			m_pokeballPos.x += m_speed;
@@ -285,7 +283,7 @@ void Pokeball::update() {
 
 	if (m_isOpenning)  {
 		//Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
-		m_gestionAnimVortex.getRectOfCurrentFrame();
+		m_gestionAnimVortex.updateFrame();
 
 		if (m_capture == PokeballLaunchReason::Capture) {
 			ska::Rectangle boxCapture = { m_pokeballPos.x, m_pokeballPos.y, 0, 0 };
@@ -334,7 +332,7 @@ void Pokeball::display() const {
 
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {
-		auto animPos = m_gestionAnim.getOffsetAndFrameSize();
+		auto animPos = m_gestionAnim.getCurrentFrame();
 		//ska::Rectangle oRel = { 0 };
 
 		m_sprite.render(m_pokeballPos.x, m_pokeballPos.y, &animPos);
@@ -343,7 +341,7 @@ void Pokeball::display() const {
 
     if(m_isOpenning)  {
 		//Si la Pokeball est en statut d'ouverture, on l'affiche ouverte ainsi que son aura violette (statut présent pour raison de fluidité de l'animation)
-	    auto animVortexPos = m_gestionAnimVortex.getOffsetAndFrameSize();
+	    auto animVortexPos = m_gestionAnimVortex.getCurrentFrame();
 	    auto buf = m_pokeballPos;
 
 		m_openPokeball.render(buf.x, buf.y);

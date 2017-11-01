@@ -41,22 +41,22 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vec
 		const int id_anim = ska::StringUtils::strToInt(args[1]);
 		ska::EntityId animation = m_entityManager.createEntity();
 
-		if (gc.sprite.empty()) {
+		if (gc.animatedSprites.empty()) {
 			return "";
 		}
 
 		ska::PositionComponent pcANim;
 		pcANim.x = pc.x;
-		pcANim.y = static_cast<int>(pc.y + hc.yOffset - gc.sprite[0].getHeight());
-		m_entityManager.addComponent<ska::PositionComponent>(animation, pcANim);
+		pcANim.y = static_cast<int>(pc.y + hc.yOffset - gc.animatedSprites[0].getHeight());
+		m_entityManager.addComponent<ska::PositionComponent>(animation, std::move(pcANim));
 		ska::GraphicComponent gcAnim;
-		gcAnim.sprite.resize(1);
-		gcAnim.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, id_anim), 4, 1, 4);
-		gcAnim.sprite[0].setDelay(300);
-		m_entityManager.addComponent<ska::GraphicComponent>(animation, gcAnim);
+		gcAnim.animatedSprites.resize(1);
+		gcAnim.animatedSprites[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_ANIMATION, id_anim), 4, 1, 4);
+		gcAnim.animatedSprites[0].setDelay(300);
+		m_entityManager.addComponent<ska::GraphicComponent>(animation, std::move(gcAnim));
 		ska::DeleterComponent dc;
 		dc.delay = 2100;
-		m_entityManager.addComponent<ska::DeleterComponent>(animation, dc);
+		m_entityManager.addComponent<ska::DeleterComponent>(animation, std::move(dc));
 		//wScreen.getSpriteAnimationManager().play(SPRITEBANK_ANIMATION, id_anim, posAnim, 2, 200);
 	}
 	return "";

@@ -3,8 +3,8 @@
 #include "Inputs/Readers/IniReader.h"
 #include "Utils/StringUtils.h"
 #include "../../Utils/IDs.h"
-
-Object::Object(int id): m_animation(525, 2, false)
+/*
+Object::Object(int id): m_animation(525, 2, false, 0, 0, )
 {
 	m_id = id;
 	const std::string& strId = ska::StringUtils::intToStr(m_id);
@@ -30,7 +30,7 @@ Object::Object(int id): m_animation(525, 2, false)
 
 void Object::display()
 {
-	ska::Rectangle animOffset = m_animation.getRectOfCurrentFrame(); //récupération de la partie courante de l'image pour créer un effet d'animation
+	ska::Rectangle animOffset = m_animation.getCurrentFrame(); //récupération de la partie courante de l'image pour créer un effet d'animation
 	m_sprite.render(m_pos.x, m_pos.y, &animOffset);
 }
 
@@ -79,14 +79,14 @@ bool Object::use()
 		pos.x -= wScreen.getORel().x;
 		pos.y -= wScreen.getORel().y;*/
 		//wScreen.getPokeball().launch(wScreen.getEntityFactory().getTrainer(), pos, PokeballLaunchReason::Capture);
-    }
+    /*}
 
 	return true;
 
 }
 
 //utilisation choisie sur le pokémon numéro i de l'équipe
-bool Object::use(int)
+/*bool Object::use(int)
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
     if(m_action[0] == '+') {
@@ -94,7 +94,7 @@ bool Object::use(int)
 	        auto pv = m_action.substr(m_action.find("+"), m_action.find("heal"));
 			/*if (wScreen.getPokemonManager().getPokemon(i)->isAlive())
 				wScreen.getPokemonManager().getPokemon(i)->setHP(wScreen.getPokemonManager().getPokemon(i)->getHp() + atoi(pv.c_str()));*/
-        }
+ /*       }
     }
     else {
     }
@@ -140,3 +140,4 @@ int Object::getID()
 Object::~Object()
 {
 }
+*/

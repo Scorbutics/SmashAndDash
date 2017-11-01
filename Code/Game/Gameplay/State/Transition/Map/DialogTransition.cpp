@@ -17,7 +17,7 @@ DialogTransition::DialogTransition(unsigned int delay, CustomEntityManager& em, 
 			ska::DialogComponent dc;
 			dc.handle = ge.balloonHandle;
 			dc.name = ge.windowName;
-			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, dc);
+			m_entityManager.addComponent<ska::DialogComponent>(m_trainerId, std::move(dc));
 
 			return true;
 		}

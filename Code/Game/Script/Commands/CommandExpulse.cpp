@@ -59,7 +59,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 	iamc.ghost = true;
 
 	iamc.directions.push_back(vector);
-	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, iamc);
+	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, std::move(iamc));
 
 
 	return "";

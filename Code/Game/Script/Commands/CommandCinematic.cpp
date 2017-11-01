@@ -3,7 +3,7 @@
 #include "Utils/StringUtils.h"
 #include "Rectangle.h"
 #include "../../Utils/IDs.h"
-#include "Graphic/SpriteAnimation.h"
+//#include "Graphic/SpriteAnimation.h"
 
 CommandCinematic::CommandCinematic(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
 }

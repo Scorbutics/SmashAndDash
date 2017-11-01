@@ -1,8 +1,8 @@
 #pragma once
-#include "ECS/Component.h"
+#include "ECS/SerializableComponent.h"
 #include "Point.h"
 
-class PokeballComponent : public ska::Component {
+class PokeballComponent : public ska::SerializableComponent {
 	friend class PokeballSystem;
 
 public:

@@ -22,12 +22,12 @@ void FightStartSystem::refresh(unsigned int) {
 	ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(m_player);
 	ska::Point<float> pPlayer(pcPlayer.x, pcPlayer.y);
 
-	if (gc.sprite.empty()) {
+	if (gc.animatedSprites.empty()) {
 		return;
 	}
 
-	pPlayer.x += gc.sprite[0].getWidth() / 2;
-	pPlayer.y += gc.sprite[0].getHeight() / 2;
+	pPlayer.x += gc.animatedSprites[0].getWidth() / 2;
+	pPlayer.y += gc.animatedSprites[0].getHeight() / 2;
 
 
 	const unsigned int currentDelay = ska::TimeUtils::getTicks() - m_t0;
@@ -37,12 +37,12 @@ void FightStartSystem::refresh(unsigned int) {
 		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
 		ska::Point<float> p(pc.x, pc.y);
 
-		if (gc.sprite.empty()) {
+		if (gc.animatedSprites.empty()) {
 			continue;
 		}
 
-		p.x += gc.sprite[0].getWidth() / 2;
-		p.y += gc.sprite[0].getHeight() / 2;
+		p.x += gc.animatedSprites[0].getWidth() / 2;
+		p.y += gc.animatedSprites[0].getHeight() / 2;
 
 		if (m_player != entityId && ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
 			if (currentDelay >= BATTLE_START_TICKS) {

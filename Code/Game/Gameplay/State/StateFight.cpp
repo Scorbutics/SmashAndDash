@@ -65,12 +65,12 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 
 	SkillsHolderComponent shc;
 	m_skillFactory.loadSkills(m_pokemon, m_pokemonId, shc);
-	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, shc);
+	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, std::move(shc));
 
 	SkillsHolderComponent shcOpponent;
 	m_skillFactory.loadSkills(m_opponent, m_opponentId, shcOpponent);
 
-	m_entityManager.addComponent<SkillsHolderComponent>(m_opponentId, shcOpponent);
+	m_entityManager.addComponent<SkillsHolderComponent>(m_opponentId, std::move(shcOpponent));
 	m_descriptor.load(m_opponent, "Description");
 
 	m_ic = &m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
@@ -108,7 +108,7 @@ bool StateFight::beforeUnload() {
 
 		m_loadState = 0;
 		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
-		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, *m_ic);
+		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, std::move(*m_ic));
 		m_ic = nullptr;
 		m_entityManager.removeEntity(m_pokemonId);
 		return false;

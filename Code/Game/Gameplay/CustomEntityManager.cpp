@@ -13,7 +13,8 @@
 #include "Utils/NumberUtils.h"
 #include "../Utils/IDs.h"
 
-CustomEntityManager::CustomEntityManager()
+CustomEntityManager::CustomEntityManager(ska::GameEventDispatcher& ged)
+	: ska::PrefabEntityManager(ged)
 {
 }
 
@@ -36,19 +37,19 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	ska::PositionComponent pcSkill;
 	ska::GraphicComponent gcSkill;
 	gcSkill.desiredPriority = SKILLS_DEFAULT_DISPLAY_PRIORITY;
-	gcSkill.sprite.resize(1);
-	gcSkill.sprite[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_SKILL, sd.id), 2, 2, 2);
+	gcSkill.animatedSprites.resize(1);
+	gcSkill.animatedSprites[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_SKILL, sd.id), 2, 2, 2);
 	addComponent<ska::MovementComponent>(skill, ska::MovementComponent());
-	addComponent<SkillComponent>(skill, sc);
-	addComponent<ska::PositionComponent>(skill, pcSkill);
+	addComponent<SkillComponent>(skill, std::move(sc));
+	addComponent<ska::PositionComponent>(skill, std::move(pcSkill));
 	ska::HitboxComponent hc;
-	hc.xOffset = gcSkill.sprite[0].getWidth() / 2 - 1;
-	hc.yOffset = gcSkill.sprite[0].getHeight() / 2 - 1;
-	hc.width = gcSkill.sprite[0].getWidth() / 2;
-	hc.height = gcSkill.sprite[0].getHeight() / 2;
+	hc.xOffset = gcSkill.animatedSprites[0].getWidth() / 2 - 1;
+	hc.yOffset = gcSkill.animatedSprites[0].getHeight() / 2 - 1;
+	hc.width = gcSkill.animatedSprites[0].getWidth() / 2;
+	hc.height = gcSkill.animatedSprites[0].getHeight() / 2;
 	addComponent<ska::ForceComponent>(skill, ska::ForceComponent());
-	addComponent<ska::HitboxComponent>(skill, hc);
-	addComponent<ska::GraphicComponent>(skill, gcSkill);
+	addComponent<ska::HitboxComponent>(skill, std::move(hc));
+	addComponent<ska::GraphicComponent>(skill, std::move(gcSkill));
 	addComponent<ska::CollidableComponent>(skill, ska::CollidableComponent());
 	return skill;
 }

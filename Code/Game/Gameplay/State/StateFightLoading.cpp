@@ -35,8 +35,8 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		iarmc.delay = 300;
 		iarmc.type = ska::RandomMovementType::CIRCLE_AROUND;
 
-		m_entityManager.addComponent<ska::IARandomMovementComponent>(m_trainerId, iarmc);
-		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, **m_ic);
+		m_entityManager.addComponent<ska::IARandomMovementComponent>(m_trainerId, std::move(iarmc));
+		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, std::move(**m_ic));
 		*m_ic = nullptr;
 
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
@@ -47,7 +47,7 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		const auto targetBlock = m_worldState.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
-		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, pc);
+		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, std::move(pc));
 
 		BattleEvent be(BATTLE_START, **m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
 		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
@@ -67,10 +67,10 @@ std::unique_ptr<ska::Task> StateFightLoading::unload() {
 		m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
 		m_entityManager.removeComponent<BattleComponent>(m_opponentId);
 
-		if (m_entityManager.hasComponent<ska::DirectionalAnimationComponent>(m_trainerId)) {
-			auto& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(m_trainerId);
-			dac.type = ska::DirectionalAnimationType::MOVEMENT;
-			dac.looked = 0;
+		if (m_entityManager.hasComponent<ska::AnimationComponent>(m_trainerId)) {
+			auto& dac = m_entityManager.getComponent<ska::AnimationComponent>(m_trainerId);
+			/*dac.type = ska::AnimationComponent::MOVEMENT;
+			dac.looked = 0;*/
 		}
 		return false;
 	});

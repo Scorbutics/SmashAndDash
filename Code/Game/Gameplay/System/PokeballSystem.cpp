@@ -43,8 +43,8 @@ void PokeballSystem::refresh(unsigned int) {
 			//sinon lorsqu'elle tombe par terre
 			pokec.isOpenning = true;
 
-			gc.sprite.clear();
-			gc.sprite.push_back(m_openPokeball);
+			gc.animatedSprites.clear();
+			gc.animatedSprites.push_back(m_openPokeball);
 
 			/* Lorsque la pokeball s'ouvre, on y ajoute un effet temporaire de "vortex" */
 			ska::EntityId vortexEntity = createEntity();
@@ -54,16 +54,16 @@ void PokeballSystem::refresh(unsigned int) {
 			vortexPc.x -= m_vortex.getWidth() / 2 - m_openPokeball.getWidth() / 2;
 			vortexPc.y -= m_vortex.getHeight() / 2 - m_openPokeball.getHeight() / 2;
 
-			m_componentAccessor.add<ska::DeleterComponent>(vortexEntity, vortexDeleter);
-			m_componentAccessor.add<ska::PositionComponent>(vortexEntity, vortexPc);
+			m_componentAccessor.add<ska::DeleterComponent>(vortexEntity, std::move(vortexDeleter));
+			m_componentAccessor.add<ska::PositionComponent>(vortexEntity, std::move(vortexPc));
 			ska::GraphicComponent vortexGc;
-			vortexGc.sprite.push_back(m_vortex);
-			m_componentAccessor.add<ska::GraphicComponent>(vortexEntity, vortexGc);
+			vortexGc.animatedSprites.push_back(m_vortex);
+			m_componentAccessor.add<ska::GraphicComponent>(vortexEntity, std::move(vortexGc));
 
 			/* On fini par ajouter un deleter sur cette Pokeball (avec un delai plus élevé que celui du vortex) */
 			ska::DeleterComponent deleter;
 			deleter.delay = vortexDeleter.delay*2;
-			m_componentAccessor.add<ska::DeleterComponent>(entityId, deleter);
+			m_componentAccessor.add<ska::DeleterComponent>(entityId, std::move(deleter));
 		}
 
 	}
@@ -115,7 +115,7 @@ void PokeballSystem::throwBall(ska::EntityId entityId) {
 
 	/* Initialisation Graphique */
 	ska::GraphicComponent gc;
-	gc.sprite.push_back(m_sprite);
+	gc.animatedSprites.push_back(m_sprite);
 	//gc.desiredPriority = GUI_DEFAULT_DISPLAY_PRIORITY;
-	m_componentAccessor.add<ska::GraphicComponent>(entityId, gc);
+	m_componentAccessor.add<ska::GraphicComponent>(entityId, std::move(gc));
 }

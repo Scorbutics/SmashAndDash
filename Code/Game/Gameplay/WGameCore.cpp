@@ -19,9 +19,9 @@ float WGameCore::ticksWanted() const {
 	return TICKS;
 }
 
-ska::GameApp& ska::GameApp::get() {
-	static WGameCore wgc;
-	wgc.init();
+std::unique_ptr<ska::GameApp> ska::GameApp::get() {
+	auto wgc = std::make_unique<WGameCore>();
+	wgc->init();
 	return wgc;
 }
 

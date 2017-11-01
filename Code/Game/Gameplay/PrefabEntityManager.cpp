@@ -6,7 +6,6 @@
 #include "ECS/Basics/Physic/GravityAffectedComponent.h"
 #include "ECS/Basics/Script/ScriptAwareComponent.h"
 #include "Graphic/GraphicComponent.h"
-#include "ECS/Basics/Graphic/DirectionalAnimationComponent.h"
 #include "ECS/Basics/Input/InputComponent.h"
 #include "ECS/Basics/Physic/ForceComponent.h"
 #include "ECS/Basics/Physic/HitboxComponent.h"
@@ -14,41 +13,42 @@
 #include "ECS/Basics/Physic/CollidableComponent.h"
 #include "Utils/SpritePath.h"
 
-ska::PrefabEntityManager::PrefabEntityManager() {
+ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
+	EntityManager(ged) {
 }
 
 ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int id, const unsigned int worldBlockSize) {
-	EntityId hero = createEntity();
+	auto hero = createEntity();
 	PositionComponent pc;
 	pc.x = startPos.x * worldBlockSize;
 	pc.y = startPos.y * worldBlockSize;
 	pc.z = 0;
-	addComponent<PositionComponent>(hero, pc);
+	addComponent<PositionComponent>(hero, std::move(pc));
 	MovementComponent mc;
 	ForceComponent fc;
 	fc.weight = 65.0;
 	GravityAffectedComponent gac;
 	gac.friction = 20;
-	addComponent<GravityAffectedComponent>(hero, gac);
-	addComponent<ForceComponent>(hero, fc);
-	addComponent<MovementComponent>(hero, mc);
+	addComponent<GravityAffectedComponent>(hero, std::move(gac));
+	addComponent<ForceComponent>(hero, std::move(fc));
+	addComponent<MovementComponent>(hero, std::move(mc));
 	GraphicComponent gc;
-	gc.sprite.resize(1);
-	gc.sprite[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
-	gc.sprite[0].setDelay(100);
+	gc.animatedSprites.resize(1);
+	gc.animatedSprites[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
+	gc.animatedSprites[0].setDelay(100);
 
 	HitboxComponent hc;
 	hc.xOffset = 20;
-	hc.yOffset = gc.sprite[0].getHeight() * 3 / 5;
-	hc.height = gc.sprite[0].getHeight() - hc.yOffset;
-	hc.width = gc.sprite[0].getWidth() - 2 * hc.xOffset;
-	addComponent<HitboxComponent>(hero, hc);
+	hc.yOffset = gc.animatedSprites[0].getHeight() * 3 / 5;
+	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset;
+	hc.width = gc.animatedSprites[0].getWidth() - 2 * hc.xOffset;
+	addComponent<HitboxComponent>(hero, std::move(hc));
 
 	addComponent<CollidableComponent>(hero, CollidableComponent());
 	addComponent<HasShadowComponent>(hero, HasShadowComponent());
-	addComponent<GraphicComponent>(hero, gc);
+	addComponent<GraphicComponent>(hero, std::move(gc));
 
-	addComponent<DirectionalAnimationComponent>(hero, DirectionalAnimationComponent());
+	//addComponent<DirectionalAnimationComponent>(hero, DirectionalAnimationComponent());
 
 	return hero;
 }
@@ -59,9 +59,9 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	InputComponent ic;
 	ic.movePower = 150;
 	ic.jumpPower = 1200;
-	addComponent<InputComponent>(hero, ic);
+	addComponent<InputComponent>(hero, std::move(ic));
 	ScriptAwareComponent sac;
-	addComponent<ScriptAwareComponent>(hero, sac);
+	addComponent<ScriptAwareComponent>(hero, std::move(sac));
 	return hero;
 }
 

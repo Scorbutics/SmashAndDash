@@ -1,7 +1,7 @@
 #include "Physic/System/MovementSystem.h"
 #include "Graphic/System/GraphicSystem.h"
 #include "Graphic/System/ShadowSystem.h"
-#include "Graphic/System/DirectionalAnimationSystem.h"
+#include "Graphic/System/AnimationSystem.h"
 #include "Graphic/System/DeleterSystem.h"
 #include "Physic/System/GravitySystem.h"
 
@@ -38,7 +38,7 @@ m_entityManager(data.m_entityManager) {
 	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(data.m_eventDispatcher, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
-	addLogic<ska::DirectionalAnimationSystem>();
+	//addLogic<ska::AnimationSystem<>>();
 	addLogic<ska::InputSystem>(m_eventDispatcher);
 	addLogic<ska::MovementSystem>();
 
@@ -169,19 +169,19 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				if (type == 1) {
 					ska::IARandomMovementComponent iamc;
 					iamc.delay = 500;
-					m_entityManager.addComponent<ska::IARandomMovementComponent>(mob, iamc);
+					m_entityManager.addComponent<ska::IARandomMovementComponent>(mob, std::move(iamc));
 				} else if (type == 0) {
 					ska::IADefinedMovementComponent iamc;
 					//TODO predefined paths interpreter (Up Down Left Right => positions)
 					//iamc.directions.push_back()
 					iamc.delay = 500;
-					m_entityManager.addComponent<ska::IADefinedMovementComponent>(mob, iamc);
+					m_entityManager.addComponent<ska::IADefinedMovementComponent>(mob, std::move(iamc));
 				}
 
 				FightComponent fc;
 				fc.level = level;
 				fc.opponentScriptId = idMob;
-				m_entityManager.addComponent<FightComponent>(mob, fc);
+				m_entityManager.addComponent<FightComponent>(mob, std::move(fc));
 
 				auto& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
 				const auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
@@ -261,7 +261,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 			pc.x = posEntityId.x * blockSize;
 			pc.y = posEntityId.y * blockSize;
 			pc.z = 0;
-			m_entityManager.addComponent<ska::PositionComponent>(script, pc);
+			m_entityManager.addComponent<ska::PositionComponent>(script, std::move(pc));
 
 		} else {
 			if (abs(id) <= ENTITEMAX) {
@@ -287,7 +287,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		ssc.context = m_world.getName();
 		ssc.triggeringType = static_cast<ska::ScriptTriggerType>(layerE.getTrigger(i));
 		ssc.period = 1000;
-		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, ssc);
+		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, std::move(ssc));
 		result[ska::StringUtils::intToStr(i + 2)] = script;
 	}
 	return result;

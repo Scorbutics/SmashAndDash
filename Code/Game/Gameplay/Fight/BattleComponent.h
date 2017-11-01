@@ -1,8 +1,8 @@
 #pragma once
-#include "ECS/Component.h"
+#include "ECS/SerializableComponent.h"
 #include "../Data/RawStatistics.h"
 
-class BattleComponent : public ska::Component, public RawStatistics<int> {
+class BattleComponent : public ska::SerializableComponent, public RawStatistics<int> {
 public:
 	BattleComponent() {
 		hp = 10;
