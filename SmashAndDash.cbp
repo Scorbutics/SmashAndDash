@@ -24,6 +24,7 @@
 					<Add library="../ska/Debug/libska_audio.a" />
 					<Add library="../ska/Debug/libska_world.a" />
 					<Add library="../ska/Debug/libska_ai.a" />
+					<Add library="../ska/external/lib/G++/Debug/libSDL2_gif.a" />
 					<Add directory="." />
 					<Add directory="../ska/Debug" />
 				</Linker>
@@ -44,6 +45,7 @@
 					<Add library="libska_audio.a" />
 					<Add library="libska_world.a" />
 					<Add library="libska_ai.a" />
+					<Add library="../ska/external/lib/G++/Release/libSDL2_gif.a" />
 					<Add directory="." />
 				</Linker>
 			</Target>

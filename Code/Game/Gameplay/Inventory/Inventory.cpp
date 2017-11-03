@@ -1,4 +1,4 @@
-#include <fstream>
+/*#include <fstream>
 #include "Inventory.h"
 #include "Utils/StringUtils.h"
 #include "../../Utils/ChargementImages.h"
@@ -256,7 +256,7 @@ void Inventory::display(ska::Rectangle)
         }
     }
 	*/
-}
+/*}
 
 ska::Texture* Inventory::getSquareSprite()
 {
@@ -292,4 +292,4 @@ void Inventory::use(int id, unsigned int amount, int indexPkmn)
 Inventory::~Inventory()
 {
     //TTF_CloseFont(m_font);
-}
+}*/
