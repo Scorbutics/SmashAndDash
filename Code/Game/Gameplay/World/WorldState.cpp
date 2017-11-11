@@ -23,9 +23,11 @@
 #include "../CustomEntityManager.h"
 #include "Draw/DrawableContainer.h"
 #include "Core/Window.h"
+#include "Graphic/System/WalkAnimationStateMachine.h"
 
 WorldState::WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
 StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
+SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), data.m_eventDispatcher),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
 m_saveManager(data.m_eventDispatcher, "save1"),
@@ -38,12 +40,26 @@ m_entityManager(data.m_entityManager) {
 	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(data.m_eventDispatcher, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
-	//addLogic<ska::AnimationSystem<>>();
 	addLogic<ska::InputSystem>(m_eventDispatcher);
 	addLogic<ska::MovementSystem>();
 
 	addLogic<ska::GravitySystem>();
 	addLogic<ska::DeleterSystem>();
+
+	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>();
+	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(m_entityManager).get();
+	
+	/*
+	animSystem->link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
+		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+		return ska::NumberUtils::absolute(mov.vz) > 0.1;
+	});
+
+	animSystem->link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](ska::EntityId& e) {
+		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+		return ska::NumberUtils::absolute(mov.vz) <= 0.1;
+	});
+	*/
 
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
@@ -96,6 +112,15 @@ void WorldState::onEventUpdate(unsigned int) {
 
 ska::World& WorldState::getWorld() {
 	return m_world;
+}
+
+bool WorldState::onGameEvent(ska::GameEvent& ge) {
+	if (ge.getEventType() == ska::GAME_WINDOW_READY) {
+		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
+		ac.setASM(*m_walkASM, m_player);
+		return true;
+	}
+	return false;
 }
 
 void WorldState::afterLoad(ska::StatePtr* lastScene) {

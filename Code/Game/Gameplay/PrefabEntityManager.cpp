@@ -48,7 +48,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	addComponent<HasShadowComponent>(hero, HasShadowComponent());
 	addComponent<GraphicComponent>(hero, std::move(gc));
 
-	//addComponent<DirectionalAnimationComponent>(hero, DirectionalAnimationComponent());
+	addComponent<AnimationComponent>(hero, AnimationComponent());
 
 	return hero;
 }

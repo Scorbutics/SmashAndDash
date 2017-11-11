@@ -44,7 +44,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	auto& pc = m_componentAccessor.get<ska::PositionComponent>(from);
 	auto& hc = m_componentAccessor.get<ska::HitboxComponent>(from);
 	auto& dac = m_componentAccessor.get<ska::AnimationComponent>(from);
-	SkillsHolderComponent& shc = m_componentAccessor.get<SkillsHolderComponent>(from);
+	auto& shc = m_componentAccessor.get<SkillsHolderComponent>(from);
 
 	if (index >= shc.skills.size()) {
 		return;

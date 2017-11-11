@@ -9,6 +9,9 @@
 #include "../../Gameplay/Pokeball.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
+#include "Graphic/System/JumpAnimationStateMachine.h"
+#include <memory>
+#include "Utils/SubObserver.h"
 
 
 namespace ska {
@@ -24,7 +27,8 @@ class CustomEntityManager;
 
 class WorldState : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher>,
 	public MobSpawner,
-	public ska::CameraAware {
+	public ska::CameraAware,
+	public ska::SubObserver<ska::GameEvent> {
 
 public:
 	WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings);
@@ -52,6 +56,8 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
+	bool onGameEvent(ska::GameEvent& ge);
+
 	bool m_loadedOnce;
 
 	Settings& m_settings;
@@ -71,5 +77,6 @@ private:
 	
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
+	ska::WalkAnimationStateMachine* m_walkASM;
 };
 
