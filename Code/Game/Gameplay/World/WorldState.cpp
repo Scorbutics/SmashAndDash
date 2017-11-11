@@ -47,7 +47,7 @@ m_entityManager(data.m_entityManager) {
 	addLogic<ska::DeleterSystem>();
 
 	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>();
-	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(m_entityManager).get();
+	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(true, m_entityManager).get();
 	
 	/*
 	animSystem->link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
