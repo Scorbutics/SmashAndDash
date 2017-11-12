@@ -12,7 +12,7 @@ public:
 	WorldEntityCollisionResponse& operator=(const WorldEntityCollisionResponse&) = delete;
 	WorldEntityCollisionResponse(std::function<bool(ska::CollisionEvent&)> onWorldCollision, ska::CollisionProfile& w, ska::GameEventDispatcher& colSys, ska::EntityManager& entityManager);
 	~WorldEntityCollisionResponse();
-	bool onWorldCollision(ska::CollisionEvent& e);
+	bool onWorldCollision(ska::CollisionEvent& e) override;
 
 };
 

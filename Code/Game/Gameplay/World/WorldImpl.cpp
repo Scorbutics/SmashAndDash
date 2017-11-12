@@ -4,6 +4,7 @@
 #include "../../Utils/IDs.h"
 #include "Utils/SpritePath.h"
 #include "Inputs/Readers/IniReader.h"
+#include "Utils/FileUtils.h"
 
 #define WEATHER_ALPHA_LVL 85
 
@@ -43,25 +44,23 @@ void WorldImpl::load(const std::string& fileName, const std::string& chipsetName
 	}
 
 	World::load(fileName, chipsetName);
-	const std::string& stringDataFile = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + getGenericName() + "" FILE_SEPARATOR "" + getGenericName() + ".ini";
-	loadWeatherFromData(stringDataFile);
-	loadFogFromData(stringDataFile);
+	ska::FileNameData fndata(fileName);
+	
+	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";
+	loadWeatherFromData(dataFile);
+	loadFogFromData(dataFile);
 }
 
 void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 
 	ska::IniReader reader(stringDataFile);
 
-	int number, xintensity, yintensity;
-	bool transparency;
-	int alpha;
-
 	const std::string& fogSpritePath = "Fog sprite";
-	const bool sprite = reader.exists(fogSpritePath);
-	xintensity = reader.get<int>("Fog xintensity");
-	yintensity = reader.get<int>("Fog yintensity");
-	number = reader.get<int>("Fog number");
-	transparency = reader.get<bool>("Fog transparency");
+	const auto sprite = reader.exists(fogSpritePath);
+	auto xintensity = reader.get<int>("Fog xintensity");
+	auto yintensity = reader.get<int>("Fog yintensity");
+	auto number = reader.get<int>("Fog number");
+	auto transparency = reader.get<bool>("Fog transparency");
 
 
 	if(!sprite) {
@@ -70,7 +69,7 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 		return;
 	}
 
-	alpha = transparency ? WEATHER_ALPHA_LVL : 255;
+	auto alpha = transparency ? WEATHER_ALPHA_LVL : 255;
 	m_fog.load(reader.get<std::string>(fogSpritePath), number, 100, xintensity, yintensity, alpha);
 	m_fog.hide(false);
 
@@ -79,15 +78,13 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 	ska::IniReader reader(stringDataFile);
 	const std::string& weatherSpritePath = "Weather sprite";
-	const bool sprite = reader.exists(weatherSpritePath);
+	const auto sprite = reader.exists(weatherSpritePath);
 
 	if(sprite) {
-		int number, xintensity, yintensity;
-		bool transparency;
-		transparency = reader.get<bool>("Weather transparency");
-		xintensity = reader.get<int>("Weather xintensity");
-		yintensity = reader.get<int>("Weather yintensity");
-		number = reader.get<int>("Weather number");
+		auto transparency = reader.get<bool>("Weather transparency");
+		auto xintensity = reader.get<int>("Weather xintensity");
+		auto yintensity = reader.get<int>("Weather yintensity");
+		auto number = reader.get<int>("Weather number");
 
 		m_weather.load(reader.get<std::string>(weatherSpritePath), number, 100, xintensity, yintensity, transparency);
 		m_weather.hide(false);

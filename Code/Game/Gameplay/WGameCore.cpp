@@ -40,7 +40,9 @@ void WGameCore::init() {
 	m_worldScene = makeState<WorldState>(*this, m_settings);
 	m_worldScene->linkSubState(*m_guiMapScene.get());
 
-	WorldStateChanger wsc(*m_worldScene, m_worldScene->getSaveGame().getStartMapName(), m_worldScene->getSaveGame().getStartChipsetName(), false, ska::Point<int>());
+	const auto& startMapName = m_worldScene->getSaveGame().getStartMapName();
+	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
+	WorldStateChanger wsc(*m_worldScene, pathStartMapName, m_worldScene->getSaveGame().getStartChipsetName(), false, ska::Point<int>());
 	navigateToState<StateMap>(wsc).linkSubState(*m_worldScene.get());
 }
 
