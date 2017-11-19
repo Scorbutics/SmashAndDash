@@ -14,6 +14,8 @@
 #include "Utils/NumberUtils.h"
 #include "Utils/RectangleUtils.h"
 #include "World/World.h"
+#include "ECS/Basics/Physic/CollidableComponent.h"
+
 CommandExpulse::CommandExpulse(const ska::World& w, ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager),
 m_world(w) {
 }
@@ -56,7 +58,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<st
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
 	iamc.delay = static_cast<unsigned int>(-1);
-	iamc.ghost = true;
+	m_entityManager.getComponent<ska::CollidableComponent>(internalEntity).ghost = true;
 
 	iamc.directions.push_back(vector);
 	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, std::move(iamc));

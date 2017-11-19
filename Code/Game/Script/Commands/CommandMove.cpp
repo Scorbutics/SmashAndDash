@@ -12,6 +12,7 @@
 #include "Utils/StringUtils.h"
 #include "Utils/PhysicUtils.h"
 #include "Utils/NumberUtils.h"
+#include "ECS/Basics/Physic/CollidableComponent.h"
 
 
 CommandMove::CommandMove(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
@@ -45,7 +46,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 
 	const auto moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
 	iamc.delay = static_cast<unsigned int>(-1);
-	iamc.ghost = ghost;
+	m_entityManager.getComponent<ska::CollidableComponent>(internalEntity).ghost = ghost;
 
 	/* if there is a script callback provided */
 	if (args.size() > 4) {
