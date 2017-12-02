@@ -58,7 +58,7 @@ bool AbstractStateMap::onTeleport(const MapEvent& me) {
 		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldState, getCamera().getScreenSize());
 		stbs.switchTo(*this);
 	} else {
-		StateToMapSwitcher stms(me.mapName, me.chipsetName, m_worldState, getCamera().getScreenSize());
+		StateToMapSwitcher stms(".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, m_worldState, getCamera().getScreenSize());
 		stms.switchTo(*this);
 	}
 	return true;

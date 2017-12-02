@@ -24,21 +24,21 @@ int CommandTeleport::argumentsNumber() {
 }
 
 std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
-	const std::string& mapName = args[0];
-	const std::string& id = args[1];
-	const int x = ska::StringUtils::strToInt(args[2]);
-	const int y = ska::StringUtils::strToInt(args[3]);
+	const auto& mapName = args[0];
+	const auto& id = args[1];
+	const auto x = ska::StringUtils::strToInt(args[2]);
+	const auto y = ska::StringUtils::strToInt(args[3]);
 
-	ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+	auto internalEntity = script.parent->getEntityFromName(id);
 	/* A script HAS a position component */
-	ska::PositionComponent& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	auto& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
 	pc.x = m_world.getBlockSize() * x;
 	pc.y = m_world.getBlockSize() * y;
 
 	/* Hero use case */
 	if (id == "0") {
-		const std::string& fichier = mapName;
-		const std::string buf = ".\\Levels" FILE_SEPARATOR ""
+		const auto& fichier = mapName;
+		const auto buf = ".\\Levels" FILE_SEPARATOR ""
 			+ fichier
 			+ "" FILE_SEPARATOR ""
 			+ fichier
@@ -46,7 +46,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 
 		ska::IniReader mapReader(buf);
 
-		const std::string chipsetName = mapReader.get<std::string>("Chipset file");
+		const auto chipsetName = mapReader.get<std::string>("Chipset file");
 
 		if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
 			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
@@ -93,7 +93,7 @@ void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
 	std::string chipsetName = mapReader.get<std::string>("Chipset file");
 
 	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
-		SKA_LOG_ERROR("Erreur : impossible de trouver le nom du chipset de la map de depart");
+		SKA_STATIC_LOG_ERROR(CommandTeleport)("Erreur : impossible de trouver le nom du chipset de la map de depart");
 	}
 
 	w.load(fichier, chipsetName);
