@@ -1,5 +1,3 @@
-#include <iostream>
-#include <fstream>
 #include <sstream>
 #include <string>
 
@@ -10,12 +8,11 @@
 
 int GetRandom(std::vector<int>& probs)
 {
-	int r = rand()%(100);
-	size_t newSize;
+	const auto r = rand()%(100);
 	std::vector<int> newProbs;
 
-	const size_t size = probs.size();
-	newSize = size;
+	const auto size = probs.size();
+	auto newSize = size;
 	for(unsigned int i = 0; i < size && 1 < newSize; i++)
 		if(r > probs[i])
 		{
@@ -33,9 +30,9 @@ int GetRandom(std::vector<int>& probs)
 }
 
 ska::IniReader* GetRandomMobSettings(MobSpawner& w) {
-	ska::IniReader* reader = NULL;
+	ska::IniReader* reader = nullptr;
 	std::vector<int> probs;
-	const size_t totMobs = w.getMobSettings().size();
+	const auto totMobs = w.getMobSettings().size();
 
 	probs.resize(totMobs);
 	for(size_t i = 0; i < totMobs; i++)
@@ -48,72 +45,75 @@ ska::IniReader* GetRandomMobSettings(MobSpawner& w) {
 	return reader;
 }
 
-void VariablesAcquisition(std::vector<int> &vect, const std::string& filename)
-{
+void VariablesAcquisition(std::unordered_map<std::string, int> &vect, const std::string& filename) {
 	ska::IniReader reader(filename);
-	int var_number = reader.get<int>("Game var_number");
+	const auto varMaxNumber = reader.get<int>("Game var_number");
 	std::stringstream ss;
 
-	if(var_number > 0)
-		for(int i = 1; i <= var_number; i++)
-		{
+	if (varMaxNumber > 0) {
+		for (auto i = 1; i <= varMaxNumber; i++) {
 			ss << "%";
 
-			for(int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
-				ss << "0";
-
-			ss << i;
-
-			vect.push_back(reader.get<int>("Variable " + ss.str()));
-			ss.str("");
-		}
-
-}
-
-void SwitchesAcquisition(std::vector<bool> &vect, const std::string& filename)
-{
-	ska::IniReader reader(filename);
-	int switch_number = reader.get<int>("Game switch_number");
-	std::stringstream ss;
-
-	if(switch_number > 0)
-		for(int i = 1; i <= switch_number; i++)
-		{
-			ss << "%";
-
+			//TODO padding de str avec des '0'
 			for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 				ss << "0";
 
 			ss << i;
 
-			vect.push_back(reader.get<int>("Switch " + ss.str()) != 0);
+			const auto& variableNumberStr = ss.str();
+			vect[variableNumberStr] = (reader.get<int>("Variable " + variableNumberStr));
 			ss.str("");
 		}
+	}
 
 }
 
-void VariablesWriting(const std::vector<int> &vect, const std::string& filename)
+void SwitchesAcquisition(std::unordered_map<std::string, bool> &vect, const std::string& filename)
 {
+	ska::IniReader reader(filename);
+	const auto switchMaxNumber = reader.get<int>("Game switch_number");
+	std::stringstream ss;
+
+	if (switchMaxNumber > 0) {
+		for (auto i = 1; i <= switchMaxNumber; i++) {
+			ss << "%";
+
+			//TODO padding de str avec des '0'
+			for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
+				ss << "0";
+
+			ss << i;
+
+			const auto& switchNumberStr = ss.str();
+			vect[switchNumberStr] = (reader.get<int>("Switch " + switchNumberStr) != 0);
+			ss.str("");
+		}
+	}
+
+}
+
+void VariablesWriting(const std::unordered_map<std::string, int> &vect, const std::string& filename) {
 	ska::IniReader reader(filename);
 	reader.set("Game var_number", vect.size());
 	std::stringstream ss;
 
-	for(unsigned int i = 1; i <= vect.size(); i++)
-	{
+	for(unsigned int i = 1; i <= vect.size(); i++) {
 		ss << "%";
 
+		//TODO padding de str avec des '0'
 		for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 			ss << "0";
 
 		ss << i;
 
-		reader.set("Variable " + ss.str(), vect[i-1]);
+		const auto& variableNumberStr = ss.str();
+		reader.set("Variable " + ss.str(), vect.at(variableNumberStr));
 		ss.str("");
 	}
 	reader.save(filename);
 }
 
-void SwitchesWriting(const std::vector<bool> &vect, const std::string& filename)
+void SwitchesWriting(const std::unordered_map<std::string, bool> &vect, const std::string& filename)
 {
 	ska::IniReader reader(filename);
 	reader.set("Game switch_number", vect.size());
@@ -123,12 +123,14 @@ void SwitchesWriting(const std::vector<bool> &vect, const std::string& filename)
 	{
 		ss << "%";
 
+		//TODO padding de str avec des '0'
 		for (int j = 4 - ska::NumberUtils::getMax10Pow(i); j >= 0; j--)
 			ss << "0";
 
 		ss << i;
 
-		reader.set("Switch " + ss.str(), vect[i-1]);
+		const auto& switchNumberStr = ss.str();
+		reader.set("Switch " + ss.str(), vect.at(switchNumberStr));
 		ss.str("");
 	}
 	reader.save(filename);

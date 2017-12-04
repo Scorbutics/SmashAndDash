@@ -18,40 +18,28 @@ void SavegameManager::newGame() {
 }
 
 
-int SavegameManager::getGameVariable(const unsigned int x) const {
-	if (x < m_game_variables.size()) {
-		return m_game_variables[x];
-	} else {
-		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro ", x);
-		return 0;
+int SavegameManager::getGameVariable(const std::string& x) const {
+	const auto search = m_game_variables.find(x);
+	if (search != m_game_variables.end()) {
+		return search->second;
 	}
+	return 0;
 }
 
-bool SavegameManager::getGameSwitch(const unsigned int x) const {
-	if (x < m_game_switches.size()) {
-		return m_game_switches[x];
-	} else {
-		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro ", x);
-		return 0;
+bool SavegameManager::getGameSwitch(const std::string& x) const {
+	const auto search = m_game_switches.find(x);
+	if (search != m_game_switches.end()) {
+		return search->second;
 	}
+	return false;
 }
 
-void SavegameManager::setGameVariable(const unsigned int x, const int value) {
-	if (x < m_game_variables.size()) {
+void SavegameManager::setGameVariable(const std::string& x, const int value) {
 		m_game_variables[x] = value;
-	} else {
-		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès à la game variable numéro ", x);
-	}
-
 }
 
-void SavegameManager::setGameSwitch(const unsigned int x, const bool value) {
-	if (x < m_game_switches.size()) {
+void SavegameManager::setGameSwitch(const std::string& x, const bool value) {
 		m_game_switches[x] = value;
-	} else {
-		SKA_LOG_ERROR("Erreur (classe SavegameManager) : Buffer Overflow lors de la tentative d'accès au game switch numéro ", x);
-	}
-
 }
 
 void SavegameManager::saveGame(const std::string& pathname) {

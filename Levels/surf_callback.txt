@@ -14,5 +14,6 @@ if #arg0# == false
 	wait 100
 endif
 restore_component InputComponent, 0
+assign 0, $global_surf_activated$
 assign_switch #arg0#, 0
 end

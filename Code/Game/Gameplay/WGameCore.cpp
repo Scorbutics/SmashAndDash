@@ -25,12 +25,20 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	return wgc;
 }
 
+void LogsConfiguration() {
+	ska::LoggerFactory::setMaxLengthClassName(35);
+	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+}
+
 void WGameCore::init() {
     SKA_LOG_INFO("Game initialization");
 
 	/* Configure inputs types */
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
+
+	LogsConfiguration();
 
 	m_guiMapScene = makeState<StateGUIMap>();
 	m_guiMapScene->bindGUI(m_settings);

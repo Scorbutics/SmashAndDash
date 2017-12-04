@@ -16,11 +16,11 @@ public:
 	void saveGame(const std::string& filename);
 
 	virtual std::string getSaveName() const override;
-	virtual int getGameVariable(const unsigned int x) const override;
-	virtual bool getGameSwitch(const unsigned int x) const override;
+	virtual int getGameVariable(const std::string& x) const override;
+	virtual bool getGameSwitch(const std::string&  x) const override;
 
-	virtual void setGameVariable(const unsigned int x, const int value) override;
-	virtual void setGameSwitch(const unsigned int x, const bool value) override;
+	virtual void setGameVariable(const std::string& x, const int value) override;
+	virtual void setGameSwitch(const std::string& x, const bool value) override;
 
 	const std::string& getStartChipsetName();
 	const std::string& getPathName();
@@ -38,8 +38,8 @@ private:
 	PokemonGameEventDispatcher& m_ged;
 
 	std::string m_pathname, m_startMapChipsetName, m_startMapName;
-	std::vector<int> m_game_variables;
-	std::vector<bool> m_game_switches;
+	std::unordered_map<std::string, int> m_game_variables;
+	std::unordered_map<std::string, bool> m_game_switches;
 
 };
 

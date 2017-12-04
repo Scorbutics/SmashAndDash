@@ -1,6 +1,1 @@
-assign %script .\Levels\trainer_rotation_script.txt, 2000, 3%, |sid1|
-script .\Levels\trainer_vision_script.txt, 2000, 3, 3, [|sid1|]
-assign %script .\Levels\trainer_rotation_script.txt, 5000, 4%, |sid2|
-script .\Levels\trainer_vision_script.txt, 5000, 4, 3, [|sid2|]
-wait 5000
-end 
+fin

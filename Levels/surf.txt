@@ -1,12 +1,6 @@
-assign #arg1#, |direction_perso|
-assign %calculate {0} + #arg0#%, |same_value|
-if [|same_value|] == 1
-	assign 0, |same_value|
-else
-	assign 1, |same_value|
-endif
-
-if [|same_value|] == 0
+if [$global_surf_activated$] != 1
+	assign 1, $global_surf_activated$
+	assign #arg1#, |direction_perso|
 	remove_component InputComponent, 0
 	if #arg0# == true
 		block_authorize 121, 0, false
@@ -26,7 +20,5 @@ if [|same_value|] == 0
 		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, #arg0#
 		animation 0, 2	
 	endif
-	
 endif
-
 end
