@@ -30,9 +30,9 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 
     const auto& id = args[0];
 	const auto dir = ska::StringUtils::strToInt(args[1]);
-	const auto speed = ska::StringUtils::strToInt(args[2]);
+	const auto distance = ska::StringUtils::strToInt(args[2]);
 	const auto ghost = ska::StringUtils::strToInt(args[3]) != 0;
-	auto internalEntity = script.parent->getEntityFromName(id);
+	const auto internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
 		throw ska::ScriptException("The targetted entity cannot move : " + id);
@@ -44,7 +44,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::
 	ska::IADefinedMovementComponent iamc;
 	iamc.origin = centerPos;
 
-	const auto moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(speed));
+	const auto moveForce = ska::PhysicUtils::getMovement(dir, static_cast<float>(distance));
 	iamc.delay = static_cast<unsigned int>(-1);
 	m_entityManager.getComponent<ska::CollidableComponent>(internalEntity).ghost = ghost;
 

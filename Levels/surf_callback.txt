@@ -1,6 +1,6 @@
 if #arg0# == false
 	remove_component ForceComponent, 0
-	expulse 0
+	expulse 0, 2
 	restore_component ForceComponent, 0
 	block_authorize 121, 0, true
 	block_authorize 27, 0, true
