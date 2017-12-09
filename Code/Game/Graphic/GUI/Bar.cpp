@@ -8,6 +8,7 @@
 #include "ECS/EntityManager.h"
 #include "Utils/Observable.h"
 #include "Graphic/System/CameraSystem.h"
+#include "Draw/Renderer.h"
 
 Bar::Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
 m_entityManager(em),
@@ -27,7 +28,7 @@ m_visible(true) {
 	DrawableFixedPriority::setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
 }
 
-void Bar::display() const {
+void Bar::render(const ska::Renderer& renderer) const {
 	if (!m_visible) {
 		return;
 	}
@@ -41,8 +42,8 @@ void Bar::display() const {
 	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);
 	const int offsetY = - pos.z;
 
-	m_barStyle.render(pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y);
-	m_barContent.render(pos.x + m_barSize.x - nonNullCamera.x, pos.y + m_barSize.y + offsetY - nonNullCamera.y, &rectSize);
+	renderer.render(m_barStyle, pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y);
+	renderer.render(m_barContent, pos.x + m_barSize.x - nonNullCamera.x, pos.y + m_barSize.y + offsetY - nonNullCamera.y, &rectSize);
 
 }
 

@@ -6,7 +6,7 @@
 class FPSLabel : public ska::WindowIG<ska::TimeEventListener> {
 public:
 	explicit FPSLabel(ska::Widget& parent);
-	virtual void display() const override;
+	virtual void render(const ska::Renderer& renderer) const override;
 	virtual ~FPSLabel() = default;
 
 private:

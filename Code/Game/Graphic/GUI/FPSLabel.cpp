@@ -9,9 +9,9 @@ FPSLabel::FPSLabel(ska::Widget& parent) : ska::WindowIG<ska::TimeEventListener>(
 	});
 }
 
-void FPSLabel::display() const {
-	WindowIG<ska::TimeEventListener>::display();
-	m_fpsCalculator.getRenderable().display();
+void FPSLabel::render(const ska::Renderer& renderer) const {
+	WindowIG<ska::TimeEventListener>::render(renderer);
+	m_fpsCalculator.getRenderable().render(renderer);
 	ACCU = 0;
 }
 

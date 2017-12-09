@@ -20,7 +20,7 @@ public:
 
 	Bar& operator=(const Bar&) = delete;
 
-    void display() const override;
+    void render(const ska::Renderer& renderer) const override;
 	bool isVisible() const override;
 
 	void setCurrentValue(unsigned int v);

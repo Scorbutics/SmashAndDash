@@ -3,9 +3,9 @@ x:y ID_SPRITE(!:no sprite) solide?(0||1) declenchement(1:presser espace||2:sous 
 6:8 -1 1 1 1 script Levels\greencity\bonjour.txt, -1
 7:10 -1 1 1 1 script Levels\greencity\bonjour.txt, -1
 28:9 ! 0 2 1 script Levels\teleport_script.txt, poke1, 0, 14, 14
-0:9 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 46, 19
-0:10 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 46, 20
-0:8 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 46, 19
+0:9 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 45, 19
+0:10 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 45, 20
+0:8 ! 0 2 1 script Levels\teleport_script.txt, foret, 0, 45, 19
 29:10 ! 0 2 1 script Levels\teleport_script.txt, temple_koa, 0, 14, 1 
 17:16 ! 0 2 1 script Levels\teleport_script.txt, maison_bleue_greencity, 0, 14, 15
 29:11 ! 0 0 1 script Levels\greencity\test.txt

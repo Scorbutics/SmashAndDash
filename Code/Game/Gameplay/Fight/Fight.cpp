@@ -1,6 +1,6 @@
 //
 // #include "Fight.h"
-// #include "../../ska/World\LayerE.h"
+// #include "../../ska/World\LayerEvent.h"
 // #include "../../Utils\ChargementImages.h"
 // #include "..\Data\Statistics.h"
 // #include "../../ska/Utils/StringUtils.h"
