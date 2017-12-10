@@ -11,8 +11,8 @@ m_playerICM(icm) {
 	m_instanceExists++;
 }
 
-void MessageDialogBox::display() const {
-	m_dialog.display();
+void MessageDialogBox::render(const ska::Renderer& renderer) const{
+	m_dialog.render(renderer);
 }
 
 int MessageDialogBox::getPriority() const {

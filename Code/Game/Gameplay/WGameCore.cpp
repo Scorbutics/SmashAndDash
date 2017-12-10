@@ -5,41 +5,18 @@
 #include "MessageType.h"
 #include "MessagePopup.h"
 #include "World/WorldStateChanger.h"
+#include "Exceptions/FileException.h"
+#include "Graphic/SDLRenderer.h"
 
-#define SKA_DEBUG
-
-WGameCore::WGameCore():
-	m_settings(m_eventDispatcher, "gamesettings.ini") {
-
-}
-
-float WGameCore::ticksWanted() const {
-	static const unsigned int FPS = 50;
-	static const float TICKS = 1000.F / FPS;
-	return TICKS;
-}
-
-std::unique_ptr<ska::GameApp> ska::GameApp::get() {
-	auto wgc = std::make_unique<WGameCore>();
-	wgc->init();
-	return wgc;
-}
-
-void LogsConfiguration() {
-	ska::LoggerFactory::setMaxLengthClassName(35);
-	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-}
-
-void WGameCore::init() {
-    SKA_LOG_INFO("Game initialization");
+WGameCore::WGameCore(RendererPtr&& renderer, WindowPtr&& window): 
+	GameCore(std::forward<RendererPtr>(renderer), std::forward<WindowPtr>(window)),
+                        m_settings(m_eventDispatcher, "gamesettings.ini"){
+	SKA_LOG_INFO("Game initialization");
 
 	/* Configure inputs types */
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
-
-	LogsConfiguration();
-
+	
 	m_guiMapScene = makeState<StateGUIMap>();
 	m_guiMapScene->bindGUI(m_settings);
 	m_settings.load();
@@ -50,9 +27,44 @@ void WGameCore::init() {
 
 	const auto& startMapName = m_worldScene->getSaveGame().getStartMapName();
 	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
-	WorldStateChanger wsc(*m_worldScene, pathStartMapName, m_worldScene->getSaveGame().getStartChipsetName(), false, ska::Point<int>());
+	WorldStateChanger wsc(*m_worldScene, pathStartMapName, m_worldScene->getSaveGame().getStartChipsetName(), false,
+	                      ska::Point<int>());
 	navigateToState<StateMap>(wsc).linkSubState(*m_worldScene.get());
 }
+
+float WGameCore::ticksWanted() const {
+	static const unsigned int FPS = 50;
+	static const float TICKS = 1000.F / FPS;
+	return TICKS;
+}
+
+std::unique_ptr<ska::GameApp> ska::GameApp::get() {
+	auto widthBlocks = 30;
+	auto heightBlocks = 20;
+
+	std::string title = "Default title";
+	try {
+		IniReader reader("gamesettings.ini");
+		widthBlocks = reader.get<int>("Window width_blocks");
+		heightBlocks = reader.get<int>("Window height_blocks");
+		title = reader.get<std::string>("Window title");
+	}
+	catch (FileException& fe) {
+		std::cerr << "Error while loading game settings : " << fe.what() << std::endl;
+	}
+
+	static constexpr auto tailleblocFenetre = 32;
+	auto window = std::make_unique<Window>("ska physics", widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
+	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED);
+	return std::make_unique<WGameCore>(std::move(renderer), std::move(window));
+}
+
+void LogsConfiguration() {
+	ska::LoggerFactory::setMaxLengthClassName(35);
+	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+}
+
 
 int WGameCore::onTerminate(ska::TerminateProcessException& tpe) {
 	SKA_LOG_MESSAGE(tpe.what());

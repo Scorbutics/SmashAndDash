@@ -1,8 +1,8 @@
-#include <iostream>
 #include <string>
 #include "Weather.h"
 #include "World/World.h"
 #include "Utils/NumberUtils.h"
+#include "Draw/Renderer.h"
 
 Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
     m_number(0),
@@ -47,7 +47,7 @@ void Weather::setNumber(int number) {
     m_number = number;
 
 	m_pos.reserve(m_number);
-    for(int i = 0; i < m_number; i++) {
+    for(auto i = 0; i < m_number; i++) {
 		m_pos.push_back({ 0, 0 });
     }
 }
@@ -57,7 +57,7 @@ void Weather::setMosaicEffect(bool x) {
 }
 
 void Weather::resetPos() {
-    for(int i = 0; i < m_number; i++) {
+    for(auto i = 0; i < m_number; i++) {
 		m_pos[i] = { 0, 0 };
     }
 
@@ -65,13 +65,13 @@ void Weather::resetPos() {
 
 void Weather::resetRandomPos() {
     for(auto i = 0; i < m_number; i++) {
-	    auto radius = static_cast<float>(ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2));
+	    const auto radius = static_cast<float>(ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2));
 		m_pos[i] = ska::Point<float>::cartesian(radius, ska::NumberUtils::random(0.0, 2*M_PI));
     }
 }
 
 void Weather::update() {
-	auto worldView = m_world.getView();
+	const auto worldView = m_world.getView();
 
 	if (!m_active || worldView == nullptr) {
 		return;
@@ -101,47 +101,40 @@ void Weather::update() {
 	}
 }
 
-void Weather::display() const {
-	auto worldView = m_world.getView();
+void Weather::render(const ska::Renderer& render) const {
+	const auto worldView = m_world.getView();
 
-	if (!m_active || worldView == nullptr) {
+	if (!m_active || worldView == nullptr || m_weather == nullptr) {
 		return;
 	}
-
-	const ska::Rectangle oRel = { -worldView->x, -worldView->y, 0, 0 };
-
-	const auto worldWidth = static_cast<float>(m_world.getPixelWidth());
-	const auto worldHeight = static_cast<float>(m_world.getPixelHeight());
+	
+	const auto cameraWidth = static_cast<float>(worldView->w);
+	const auto cameraHeight = static_cast<float>(worldView->h);
 
     for(auto i = 0; i < m_number; i++) {
-
-		ska::Rectangle buf;
-		buf.x = static_cast<int>(m_pos[i].x) + oRel.x;
-		buf.y = static_cast<int>(m_pos[i].y) + oRel.y;
-
         if(m_mosaic) {
-            int nbrMosaicX, nbrMosaicY;
-			nbrMosaicX = static_cast<int>(worldWidth / m_weather->getWidth() + 1);
-			nbrMosaicY = static_cast<int>(worldHeight / m_weather->getHeight() + 1);
+			const auto weatherWidth = m_weather->getWidth();
+			const auto weatherHeight = m_weather->getHeight();
+			if(weatherWidth == 0|| weatherHeight == 0) {
+				return;
+			}
+	        const auto nbrMosaicX = static_cast<int>(cameraWidth / weatherWidth + 2);
+	        const auto nbrMosaicY = static_cast<int>(cameraHeight / weatherHeight + 2);
+			const ska::Point<int> oRel = { static_cast<int>(- worldView->x + (worldView->x / weatherWidth) * weatherWidth), static_cast<int>(-worldView->y + (worldView->y / weatherHeight) * weatherHeight)};
 
+			ska::Point<int> buf;
             for(auto i1 = 0; i1 < nbrMosaicX; i1++) {
-				buf.x = i1 * m_weather->getWidth() + oRel.x;
+				buf.x = i1 * weatherWidth + oRel.x;
                 for(auto j = 0; j < nbrMosaicY; j++) {
-					buf.y = j*m_weather->getHeight() + oRel.y;
-					if (static_cast<int>(buf.x + m_weather->getWidth()) >= 0
-                        && buf.x <= worldWidth
-                        && static_cast<int>(buf.y + m_weather->getHeight()) >= 0
-                        && buf.y <= worldHeight) {
-						m_weather->render(buf.x, buf.y);
-					}
+					buf.y = j * weatherHeight + oRel.y;	
+					render.render(*m_weather, buf.x, buf.y);
                 }
             }
 
-		} else if (static_cast<int>(buf.x + m_weather->getWidth()) >= 0
-                    && buf.x <= worldWidth
-                    && static_cast<int>(buf.y + m_weather->getHeight()) >= 0
-                    && buf.y <= worldHeight) {
-			m_weather->render(buf.x, buf.y);
+		} else {
+			const ska::Rectangle oRel = { -(worldView->x), -(worldView->y), 0, 0 };
+			const ska::Point<int> buf { static_cast<int>(m_pos[i].x) + oRel.x, static_cast<int>(m_pos[i].y) + oRel.y };
+			render.render(*m_weather, buf.x, buf.y);
 		}
     }
 }

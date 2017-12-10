@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <string>
 #include <vector>
 #include "Graphic/Texture.h"
@@ -35,22 +34,16 @@ public:
 
 	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
 
-	 void display() const override;
+	 void render(const ska::Renderer& render) const override;
 	 bool isVisible() const override;
 	 void hide(bool active);
      void resetRandomPos();
 
 	 void update();
 
-     void setDirection(int direction);
      void setNumber(int number);
      void setMosaicEffect(bool x);
      void resetPos();
-
-     int getDirection();
-     int getIntensityX();
-     int getIntensityY();
-     int getNumber();
 
 protected:
      int m_intensityX, m_intensityY, m_number, m_distance;

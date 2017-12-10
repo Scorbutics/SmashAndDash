@@ -13,7 +13,7 @@ if [$global_surf_activated$] != 1
 		block_authorize 88, 0, false
 		block_authorize 89, 0, false
 		animation 0, 2
-		assign 30, |move_power|
+		assign 35, |move_power|
 		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, #arg0#
 	else
 		assign 10, |move_power|

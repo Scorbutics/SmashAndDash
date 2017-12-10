@@ -1,5 +1,3 @@
-#include <math.h>
-
 
 #define OPEN_DELAY 50 //durée 50 frames
 
@@ -7,8 +5,8 @@
 #include "Pokeball.h"
 #include "../Utils/ChargementImages.h"
 #include "Weather.h"
-#include "Draw/VectorDrawableContainer.h"
 #include "Utils/RectangleUtils.h"
+#include "Draw/Renderer.h"
 
 
 Pokeball::Pokeball() :
@@ -248,12 +246,9 @@ const ska::Point<int>& Pokeball::getPos() {
 }
 
 void Pokeball::update() {
-	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes.
-	Mais les vrais font ça avec des classes bien implémentées héritant d'une base commune et un pointeur sur l'état courant
-	qui refresh le bon état par polymorphisme. TODO */
-
-	//WGameCore& wScreen = WGameCore::getInstance();
-	//ska::World& w = wScreen.getWorld();
+	/* En fait tout ce truc dégueulasse en bas c'est une pseudo machine à état qui marche avec des variables membres booléennes. */
+	
+	//TODO
 
 	if (!m_show) {
 		return;
@@ -316,7 +311,7 @@ void Pokeball::update() {
 
 	} else if (m_isInactive) {
 		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
-		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
+		//m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
 
 		m_countOpenned--;
 		if (m_countOpenned <= 0) {
@@ -335,7 +330,7 @@ void Pokeball::render(const ska::Renderer& renderer) const {
 		auto animPos = m_gestionAnim.getCurrentFrame();
 		//ska::Rectangle oRel = { 0 };
 
-		m_sprite.render(m_pokeballPos.x, m_pokeballPos.y, &animPos);
+		renderer.render(m_sprite, m_pokeballPos.x, m_pokeballPos.y, &animPos);
 	}
 
 
@@ -344,16 +339,16 @@ void Pokeball::render(const ska::Renderer& renderer) const {
 	    auto animVortexPos = m_gestionAnimVortex.getCurrentFrame();
 	    auto buf = m_pokeballPos;
 
-		m_openPokeball.render(buf.x, buf.y);
+		renderer.render(m_openPokeball, buf.x, buf.y);
 
 		//sur 4 parce que l'image est composée de 2 sous-images pour l'animation
         buf.x -= m_vortex.getWidth()/4;
         buf.y -= m_vortex.getHeight()/4;
-		m_vortex.render(buf.x, buf.y, &animVortexPos);
+		renderer.render(m_vortex, buf.x, buf.y, &animVortexPos);
 
     } else if(m_isInactive) {
 		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
-		m_openPokeball.render(m_pokeballPos.x, m_pokeballPos.y);
+		renderer.render(m_openPokeball, m_pokeballPos.x, m_pokeballPos.y);
     }
 
 
