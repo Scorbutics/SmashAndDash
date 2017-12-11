@@ -4,6 +4,10 @@
 #include "Utils/Singleton_template.h"
 #include "Graphic/Texture.h"
 
+namespace ska {
+    class SDLRenderer;
+}
+
 class WindowRenderer : public ska::Singleton<WindowRenderer> {
 	friend class ska::Singleton<WindowRenderer>;
 
