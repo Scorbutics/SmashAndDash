@@ -12,11 +12,8 @@ namespace ska {
 	class CollisionSystem;
 }
 
-using StateChangeObserver = ska::SubObserver<MapEvent>;
-
 class AbstractStateMap :
-	public ska::StateBase, 
-	public StateChangeObserver {
+	public ska::StateBase {
 	
 public:
 	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::World& w);
@@ -24,12 +21,13 @@ public:
 
 	bool onTeleport(const MapEvent& me);
 
-	virtual ska::CameraSystem& getCamera() = 0;
+	virtual ska::CameraSystem* getCamera() = 0;
 	virtual ~AbstractStateMap();
 
 private:
 
 	bool m_observersDefined;
+	ska::World& m_world;
 
 protected:
 	virtual void beforeLoad(ska::StatePtr* lastScene) override;

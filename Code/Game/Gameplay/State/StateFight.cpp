@@ -31,7 +31,7 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
 	m_fightPos(fightPos) {
 
-	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_entityManager, screenSize.x, screenSize.y, m_fightPos);
+	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_entityManager, m_eventDispatcher, screenSize.x, screenSize.y, m_fightPos);
 	addLogic<PokeballSystem>(m_entityManager);
 	addLogic<BattleSystem>(m_entityManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
 	addLogic<SkillRefreshSystem>(m_entityManager);
@@ -45,16 +45,11 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 }
 
 bool StateFight::onGameEvent(ska::GameEvent& ge) {
-	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY) {
-		m_cameraSystem->screenResized(ge.windowWidth, ge.windowHeight);
-	} else if(ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
-		m_cameraSystem->screenResized(ge.windowWidth, ge.windowHeight);
-	}
 	return true;
 }
 
-ska::CameraSystem& StateFight::getCamera() {
-	return *m_cameraSystem;
+ska::CameraSystem* StateFight::getCamera() {
+	return m_cameraSystem;
 }
 
 

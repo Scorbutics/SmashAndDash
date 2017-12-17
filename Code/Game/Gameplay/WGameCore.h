@@ -11,9 +11,11 @@
 #include "World/WorldState.h"
 #include "State/StateGUIMap.h"
 #include "FpsCalculator.h"
+#include "State/StateMap.h"
 
 class WGameCore :
-	public ska::GameCore<CustomEntityManager, PokemonGameEventDispatcher, ska::VectorDrawableContainer, PokemonSoundRenderer> {
+	public ska::GameCore<CustomEntityManager, PokemonGameEventDispatcher, ska::VectorDrawableContainer, PokemonSoundRenderer>,
+	public ska::SubObserver<MapEvent> {
 
 public:
 	
@@ -27,6 +29,8 @@ public:
 	virtual ~WGameCore() = default;
 
 private:
+	bool onTeleport(MapEvent& me);
+
 	TrainerCard m_trainerCard;
 	Settings m_settings;
 
@@ -34,5 +38,6 @@ private:
 	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
 	ska::FpsCalculator m_fpsCalculator;
+	AbstractStateMap* m_currentState;
 
 };

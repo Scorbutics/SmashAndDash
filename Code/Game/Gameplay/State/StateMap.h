@@ -17,9 +17,9 @@ class StateMap :
 	public AbstractStateMap,
 	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName);
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
 	virtual void afterLoad(ska::StatePtr* lastScene) override final;
-	virtual ska::CameraSystem& getCamera() override;
+	virtual ska::CameraSystem* getCamera() override;
 	virtual ~StateMap();
 
 private:
@@ -36,6 +36,7 @@ private:
 
 	ska::WorldCollisionResponse m_worldCollisionResponse;
 	ska::EntityCollisionResponse m_entityCollisionResponse;
-	
+	ska::Point<int> m_screenSize;
+
 };
 typedef std::unique_ptr<StateMap> SceneMapPtr;

@@ -4,20 +4,18 @@
 #include "StateToMapSwitcher.h"
 #include "StateToBattleSwitcher.h"
 #include "AbstractStateMap.h"
-#include "StateMap.h"
 #include "Physic/System/WorldCollisionSystem.h"
 
 AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::World& w) :
-StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1), ged),
-m_observersDefined(false),
-m_eventDispatcher(ged),
-m_entityManager(em) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(m_entityManager, ged);
-	addLogic<ska::WorldCollisionSystem>(m_entityManager, w, ged);
-}
+	m_observersDefined(false),
+	m_eventDispatcher(ged),
+	m_entityManager(em), 
+	m_collisionSystem(nullptr),
+	m_world(w){}
 
 void AbstractStateMap::beforeLoad(ska::StatePtr*) {
-	//m_worldState.linkCamera(&getCamera());
+	m_collisionSystem = addLogic<ska::CollisionSystem>(m_entityManager, m_eventDispatcher);
+	addLogic<ska::WorldCollisionSystem>(m_entityManager, m_world, m_eventDispatcher);
 }
 
 void AbstractStateMap::afterLoad(ska::StatePtr*) {

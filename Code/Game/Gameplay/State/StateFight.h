@@ -31,7 +31,7 @@ public:
 	StateFight(const StateFight&) = delete;
 	StateFight& operator=(const StateFight&) = delete;
 
-	virtual ska::CameraSystem& getCamera() override;
+	virtual ska::CameraSystem* getCamera() override;
 	virtual ~StateFight();
 
 protected:

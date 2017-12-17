@@ -13,7 +13,8 @@
 
 WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, WindowPtr&& window): 
 	GameCore(std::forward<ska::GameConfiguration>(gc), std::forward<RendererPtr>(renderer), std::forward<WindowPtr>(window)),
-                        m_settings(m_eventDispatcher, "gamesettings.ini"){
+                        m_settings(m_eventDispatcher, "gamesettings.ini"),
+	ska::SubObserver<MapEvent>(bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
 	SKA_LOG_INFO("Game initialization");
 
 	/* Configure inputs types */
@@ -27,18 +28,33 @@ WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, Window
 	/* Let's start on the map state */
 	m_worldState = makeState<WorldState>(m_eventDispatcher,  m_settings);
 	m_worldState->linkSubState(*m_guiMapScene.get());
+	m_guiMapScene->load(nullptr);
+	m_worldState->load(nullptr);
 
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
 	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
 	/*WorldStateChanger wsc(*m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName(), false,
 	                      ska::Point<int>());*/
-	navigateToState<StateMap>(m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName()).linkSubState(*m_worldState.get());
+	m_currentState = &navigateToState<StateMap>(m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName());
+	m_currentState->linkSubState(*m_worldState.get());
+	
 }
 
 float WGameCore::ticksWanted() const {
 	static const unsigned int FPS = 50;
 	static const float TICKS = 1000.F / FPS;
 	return TICKS;
+}
+
+bool WGameCore::onTeleport(MapEvent& me) {
+	auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
+	if(me.eventType == MapEvent::BATTLE) {
+		m_currentState = &navigateToState<StateFight>(m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize);
+	} else {
+		m_currentState = &navigateToState<StateMap>(m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize);
+	}
+	m_currentState->linkSubState(*m_worldState.get());
+	return true;
 }
 
 std::unique_ptr<ska::GameApp> ska::GameApp::get() {
@@ -50,7 +66,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	auto widthBlocks = 30;
 	auto heightBlocks = 20;
 
-	std::string title = "Default title";
+	std::string title;
 	try {
 		IniReader reader("gamesettings.ini");
 		widthBlocks = reader.get<int>("Window width_blocks");
@@ -58,11 +74,12 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 		title = reader.get<std::string>("Window title");
 	}
 	catch (FileException& fe) {
+		title = "Default title";
 		std::cerr << "Error while loading game settings : " << fe.what() << std::endl;
 	}
 
 	static constexpr auto tailleblocFenetre = 32;
-	auto window = std::make_unique<Window>("ska physics", widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
+	auto window = std::make_unique<Window>(title, widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
 	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED);
 	return std::make_unique<WGameCore>(std::move(gc), std::move(renderer), std::move(window));
 }
