@@ -25,42 +25,16 @@
 #include "Core/Window.h"
 #include "Graphic/System/WalkAnimationStateMachine.h"
 
-WorldState::WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
-SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), data.m_eventDispatcher),
+WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
+SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
-m_saveManager(data.m_eventDispatcher, "save1"),
+m_saveManager(ed, "save1"),
 m_cameraSystem(nullptr),
-m_world(data.m_eventDispatcher, TAILLEBLOC),
+m_world(ed, TAILLEBLOC),
 m_worldBGM(DEFAULT_BGM),
-m_eventDispatcher(data.m_eventDispatcher),
-m_entityManager(data.m_entityManager) {
-
-	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(data.m_eventDispatcher, nullptr);
-	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
-
-	addLogic<ska::InputSystem>(m_eventDispatcher);
-	addLogic<ska::MovementSystem>();
-
-	addLogic<ska::GravitySystem>();
-	addLogic<ska::DeleterSystem>();
-
-	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>();
-	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(true, m_entityManager).get();
-	
-	/*
-	animSystem->link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
-		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return ska::NumberUtils::absolute(mov.vz) > 0.1;
-	});
-
-	animSystem->link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](ska::EntityId& e) {
-		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return ska::NumberUtils::absolute(mov.vz) <= 0.1;
-	});
-	*/
-
+m_eventDispatcher(ed),
+m_entityManager(em) {
 	m_saveManager.loadGame(m_saveManager.getPathName());
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
 }
@@ -70,7 +44,7 @@ const std::string& WorldState::getFileName() const {
 }
 
 void WorldState::linkCamera(ska::CameraSystem* cs) {
-	if (m_cameraSystem == nullptr || cs == nullptr) {
+	if (m_cameraSystem != cs) {
 		m_cameraSystem = cs;
 
 		m_graphicSystem->linkCamera(cs);
@@ -124,6 +98,30 @@ bool WorldState::onGameEvent(ska::GameEvent& ge) {
 }
 
 void WorldState::afterLoad(ska::StatePtr* lastScene) {
+	m_graphicSystem = addGraphic<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
+	m_shadowSystem = addGraphic<ska::ShadowSystem>(m_entityManager, nullptr);
+
+	addLogic<ska::InputSystem>(m_entityManager, m_eventDispatcher);
+	addLogic<ska::MovementSystem>(m_entityManager);
+
+	addLogic<ska::GravitySystem>(m_entityManager);
+	addLogic<ska::DeleterSystem>(m_entityManager);
+
+	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
+	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(true, m_entityManager).get();
+
+	/*
+	animSystem->link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
+	auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+	return ska::NumberUtils::absolute(mov.vz) > 0.1;
+	});
+
+	animSystem->link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](ska::EntityId& e) {
+	auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+	return ska::NumberUtils::absolute(mov.vz) <= 0.1;
+	});
+	*/
+
 	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE);
 	we.setBgm(m_worldBGM);
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);

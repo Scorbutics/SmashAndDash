@@ -6,13 +6,14 @@
 
 class Settings;
 
-class StateGUIBattle : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
+class StateGUIBattle : public ska::StateBase {
 public:
-    StateGUIBattle(StateData& data, ska::StateHolder& sh);
+	StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
     //void bindGUI(Settings& s);
     virtual ~StateGUIBattle() = default;
 
 protected:
+	
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual bool beforeUnload() override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;

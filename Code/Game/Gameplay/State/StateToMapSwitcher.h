@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include "Core/State/StateBase.h"
 #include "../World/WorldState.h"
@@ -28,3 +29,4 @@ protected:
 	const std::string m_chipsetName;
 };
 
+*/

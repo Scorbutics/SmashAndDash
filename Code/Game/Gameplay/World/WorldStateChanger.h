@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <string>
 #include "Point.h"
 
@@ -14,4 +14,4 @@ struct WorldStateChanger {
 	const std::string& worldChipsetName;
 	const bool sameMap;
 	
-};
+};*/

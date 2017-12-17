@@ -1,14 +1,7 @@
 #pragma once
 #include <memory>
 #include "StateFight.h"
-
-#ifdef SKA_DEBUG_GRAPHIC
-#define AbstractStateMap_ DebugAbstractSceneMap
-#include "DebugAbstractSceneMap.h"
-#else
-#define AbstractSceneMap_ AbstractSceneMap
 #include "AbstractStateMap.h"
-#endif
 
 struct WorldStateChanger;
 class WorldState;
@@ -21,26 +14,29 @@ namespace ska {
 }
 
 class StateMap :
-	public AbstractStateMap_,
-	public ska::Observer<ska::GameEvent> {
+	public AbstractStateMap,
+	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(StateData& data, ska::StateHolder& sh, WorldStateChanger& wsc);
-	StateMap(StateData& data, State& oldScene, WorldStateChanger& wsc);
-	virtual void afterLoad(ska::StatePtr* lastScene) override final;
-	virtual ska::CameraSystem& getCamera() override;
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
+	virtual void beforeLoad(ska::StatePtr* lastScene) override final;
+	virtual ska::CameraSystem* getCamera() override;
 	virtual ~StateMap();
 
 private:
+	void resetScriptEntities();
 	bool onGameEvent(ska::GameEvent& ge);
-	void init(StateData& data, WorldState& ws);
+	void init();
 
+	WorldState& m_worldState;
 	const std::string m_fileName;
 	const std::string m_chipsetName;
-	std::unique_ptr<ska::ScriptAutoSystem> m_scriptAutoSystem;
+	ska::ScriptAutoSystem* m_scriptAutoSystem;
 	ska::CameraSystem* m_cameraSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
 
 	ska::WorldCollisionResponse m_worldCollisionResponse;
 	ska::EntityCollisionResponse m_entityCollisionResponse;
+	ska::Point<int> m_screenSize;
+
 };
 typedef std::unique_ptr<StateMap> SceneMapPtr;
