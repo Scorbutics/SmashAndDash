@@ -16,10 +16,8 @@ class AbstractStateMap :
 	public ska::StateBase {
 	
 public:
-	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::World& w);
+	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws);
 	AbstractStateMap& operator=(const AbstractStateMap&) = delete;
-
-	bool onTeleport(const MapEvent& me);
 
 	virtual ska::CameraSystem* getCamera() = 0;
 	virtual ~AbstractStateMap();
@@ -27,7 +25,7 @@ public:
 private:
 
 	bool m_observersDefined;
-	ska::World& m_world;
+	WorldState& m_worldState;
 
 protected:
 	virtual void beforeLoad(ska::StatePtr* lastScene) override;

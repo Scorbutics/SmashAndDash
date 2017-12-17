@@ -64,7 +64,8 @@ private:
 	SkillFactory m_skillFactory;
 	StateFightLoading m_loader;
 	ska::Point<int> m_fightPos;
-	
+	ska::Point<int> m_screenSize;
+
 
 };
 
