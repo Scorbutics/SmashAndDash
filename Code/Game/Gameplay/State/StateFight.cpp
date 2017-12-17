@@ -13,8 +13,9 @@
 #include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
 
-StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize) :
-	AbstractStateMap_(data, oldScene, ws, true),
+StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize) :
+	AbstractStateMap(em, ged),
+	m_worldState(ws),
 	m_opponentScriptId(fc.opponentScriptId),
 	m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 	m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
@@ -23,8 +24,8 @@ StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, sk
 	m_opponentId(fc.fighterOpponent),
 	m_sceneLoaded(false),
 	m_loadState(0),
-	m_worldEntityCollisionResponse(ws.getWorld(), data.m_eventDispatcher, m_entityManager),
-	m_skillEntityCollisionResponse(*m_collisionSystem, data.m_eventDispatcher, m_entityManager),
+	m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
+	m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
 	m_ic(nullptr),
 	m_skillFactory(ws, fc.level),
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
@@ -34,10 +35,10 @@ StateFight::StateFight(StateData& data, ska::State& oldScene, WorldState& ws, sk
 	addLogic<PokeballSystem>();
 	addLogic<BattleSystem>(fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
 	addLogic<SkillRefreshSystem>();
-	addLogic<StatisticsSystem>(ws, data.m_eventDispatcher);
+	addLogic<StatisticsSystem>(ws, ged);
 	addLogic<ska::IARandomMovementSystem>();
 
-	addSubState<StateGUIBattle>();
+	addSubState<StateGUIBattle>(m_eventDispatcher);
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());

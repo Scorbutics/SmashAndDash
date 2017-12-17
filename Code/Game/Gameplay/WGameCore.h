@@ -17,7 +17,7 @@ class WGameCore :
 
 public:
 	
-	WGameCore(RendererPtr&& renderer, WindowPtr&& window);
+	WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, WindowPtr&& window);
 
 	virtual int onTerminate(ska::TerminateProcessException& te) override;
 	virtual int onException(ska::GenericException& ge) override;
@@ -30,7 +30,7 @@ private:
 	TrainerCard m_trainerCard;
 	Settings m_settings;
 
-	std::unique_ptr<WorldState> m_worldScene;
+	std::unique_ptr<WorldState> m_worldState;
 	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
 	ska::FpsCalculator m_fpsCalculator;

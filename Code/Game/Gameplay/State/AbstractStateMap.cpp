@@ -7,63 +7,46 @@
 #include "StateMap.h"
 #include "Physic/System/WorldCollisionSystem.h"
 
-AbstractStateMap::AbstractStateMap(StateData& data, ska::StateHolder& sh, WorldState& ws, const bool sameMap) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
-StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
-m_sameMap(sameMap),
+AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
+StateBase(em),
+StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1), ged),
 m_observersDefined(false),
-m_eventDispatcher(data.m_eventDispatcher),
-m_entityManager(data.m_entityManager),
-m_worldState(ws) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(data.m_eventDispatcher);
-	addLogic<ska::WorldCollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
-}
-
-AbstractStateMap::AbstractStateMap(StateData& data, State& oldScene, WorldState& ws, const bool sameMap) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, oldScene),
-StateChangeObserver(bind(&AbstractStateMap::onTeleport, this, std::placeholders::_1)),
-m_sameMap(sameMap),
-m_observersDefined(true),
-m_eventDispatcher(data.m_eventDispatcher),
-m_entityManager(data.m_entityManager),
-m_worldState(ws) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(data.m_eventDispatcher);
-	addLogic<ska::WorldCollisionSystem>(ws.getWorld(), data.m_eventDispatcher);
+m_eventDispatcher(ged),
+m_entityManager(em) {
+	//m_collisionSystem = addLogic<ska::CollisionSystem>(ged);
+	//addLogic<ska::WorldCollisionSystem>(ws.getWorld(), ged);
 }
 
 void AbstractStateMap::beforeLoad(ska::StatePtr*) {
-	m_eventDispatcher.ska::Observable<MapEvent>::addObserver(*this);
 
-	m_worldState.linkCamera(&getCamera());
+	//m_worldState.linkCamera(&getCamera());
 }
 
-void AbstractStateMap::afterLoad(ska::StatePtr*){
+void AbstractStateMap::afterLoad(ska::StatePtr*) {
 	/* If already loaded... */
-	if (m_worldState.loadedOnce()) {
-		/* Do not delete the player between 2 maps, just TP it */
+	/*if (m_worldState.loadedOnce()) {
+		// Do not delete the player between 2 maps, just TP it
 		std::unordered_set<ska::EntityId> toNotDelete;
 		toNotDelete.insert(m_worldState.getPlayer());
 
 		if (!m_sameMap) {
-			/* If the map changes, we delete all entities (except player) */
+			// If the map changes, we delete all entities (except player)
 			m_entityManager.removeEntities(toNotDelete);
 		} else {
 			m_entityManager.refreshEntities();
 		}
 	}
+	*/
 }
 
 bool AbstractStateMap::onTeleport(const MapEvent& me) {
-	if(me.eventType == MapEvent::BATTLE) {
-		StateToBattleSwitcher stbs(*me.fightComponent, me.fightPos, m_worldState, getCamera().getScreenSize());
-		stbs.switchTo(*this);
+	/*if(me.eventType == MapEvent::BATTLE) {
+		m_holder.nextState<StateFight>(me.fightComponent, me.fightPos, m_worldState, getCamera().getScreenSize());
 	} else {
-		StateToMapSwitcher stms(".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, m_worldState, getCamera().getScreenSize());
-		stms.switchTo(*this);
-	}
+		m_holder.nextState<StateMap>(".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, m_worldState, getCamera().getScreenSize());
+	}*/
 	return true;
 }
 
 AbstractStateMap::~AbstractStateMap() {
-	m_eventDispatcher.ska::Observable<MapEvent>::removeObserver(*this);
 }

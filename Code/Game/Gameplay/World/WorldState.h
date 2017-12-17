@@ -25,13 +25,13 @@ namespace ska {
 }
 class CustomEntityManager;
 
-class WorldState : public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher>,
+class WorldState : public ska::StateBase<CustomEntityManager>,
 	public MobSpawner,
 	public ska::CameraAware,
 	public ska::SubObserver<ska::GameEvent> {
 
 public:
-	WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings);
+	WorldState(CustomEntityManager& data, PokemonGameEventDispatcher& pged, Settings& settings);
 	WorldState(const WorldState&) = delete;
 	WorldState& operator=(const WorldState&) = delete;
 

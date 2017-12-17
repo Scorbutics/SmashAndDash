@@ -25,19 +25,19 @@
 #include "Core/Window.h"
 #include "Graphic/System/WalkAnimationStateMachine.h"
 
-WorldState::WorldState(StateData& data, ska::StateHolder& sh, ska::Ticked& ticked, Settings& settings) :
-StateBase(data.m_entityManager, data.m_eventDispatcher, sh),
-SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), data.m_eventDispatcher),
+WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
+StateBase(em),
+SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
-m_saveManager(data.m_eventDispatcher, "save1"),
+m_saveManager(ed, "save1"),
 m_cameraSystem(nullptr),
-m_world(data.m_eventDispatcher, TAILLEBLOC),
+m_world(ed, TAILLEBLOC),
 m_worldBGM(DEFAULT_BGM),
-m_eventDispatcher(data.m_eventDispatcher),
-m_entityManager(data.m_entityManager) {
+m_eventDispatcher(ed),
+m_entityManager(em) {
 
-	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(data.m_eventDispatcher, nullptr);
+	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(m_eventDispatcher, nullptr);
 	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
 
 	addLogic<ska::InputSystem>(m_eventDispatcher);

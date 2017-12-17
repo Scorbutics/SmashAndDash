@@ -1,3 +1,4 @@
+/*
 #include "WorldStateChanger.h"
 
 WorldStateChanger::WorldStateChanger(WorldState& ws, const std::string& fileName, const std::string& chipsetName, const bool sMap, ska::Point<int> screenSize_) :
@@ -8,3 +9,4 @@ WorldStateChanger::WorldStateChanger(WorldState& ws, const std::string& fileName
 	sameMap(sMap) {
 
 }
+*/

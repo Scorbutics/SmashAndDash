@@ -7,13 +7,14 @@
 class Settings;
 
 class StateGUIMap : 
-	public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher> {
+	public ska::StateBase<CustomEntityManager> {
 public:
-    StateGUIMap(StateData& data, ska::StateHolder& sh);
+	StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
     void bindGUI(Settings& s);
     virtual ~StateGUIMap() = default;
 
 protected:
+	
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 

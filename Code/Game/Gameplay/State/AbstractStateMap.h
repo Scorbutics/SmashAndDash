@@ -12,15 +12,14 @@ namespace ska {
 	class CollisionSystem;
 }
 
-using StateChangeObserver = ska::Observer<MapEvent>;
+using StateChangeObserver = ska::SubObserver<MapEvent>;
 
 class AbstractStateMap :
-	public ska::StateBase<CustomEntityManager, PokemonGameEventDispatcher>, 
+	public ska::StateBase<CustomEntityManager>, 
 	public StateChangeObserver {
 	
 public:
-	AbstractStateMap(StateData& data, ska::StateHolder& sh, WorldState& ws, const bool sameMap);
-	AbstractStateMap(StateData& data, State& oldScene, WorldState& ws, const bool sameMap);
+	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
 	AbstractStateMap& operator=(const AbstractStateMap&) = delete;
 
 	bool onTeleport(const MapEvent& me);
@@ -30,7 +29,6 @@ public:
 
 private:
 
-	const bool m_sameMap;
 	bool m_observersDefined;
 
 protected:
@@ -39,7 +37,6 @@ protected:
 
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
-	WorldState& m_worldState;
 
 	ska::CollisionSystem* m_collisionSystem;
 };
