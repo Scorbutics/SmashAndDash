@@ -25,7 +25,8 @@ namespace ska {
 }
 class CustomEntityManager;
 
-class WorldState : public ska::StateBase<CustomEntityManager>,
+class WorldState : 
+	public ska::StateBase,
 	public MobSpawner,
 	public ska::CameraAware,
 	public ska::SubObserver<ska::GameEvent> {

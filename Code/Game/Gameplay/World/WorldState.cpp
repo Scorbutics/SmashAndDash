@@ -26,7 +26,6 @@
 #include "Graphic/System/WalkAnimationStateMachine.h"
 
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
-StateBase(em),
 SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 m_loadedOnce(false),
 m_settings(settings), m_player(0),
@@ -37,16 +36,16 @@ m_worldBGM(DEFAULT_BGM),
 m_eventDispatcher(ed),
 m_entityManager(em) {
 
-	m_graphicSystem = addGraphic<ska::GraphicSystem, ska::GameEventDispatcher&, ska::CameraSystem*>(m_eventDispatcher, nullptr);
-	m_shadowSystem = addGraphic<ska::ShadowSystem, ska::CameraSystem*>(nullptr);
+	m_graphicSystem = addGraphic<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
+	m_shadowSystem = addGraphic<ska::ShadowSystem>(m_entityManager, nullptr);
 
-	addLogic<ska::InputSystem>(m_eventDispatcher);
-	addLogic<ska::MovementSystem>();
+	addLogic<ska::InputSystem>(m_entityManager, m_eventDispatcher);
+	addLogic<ska::MovementSystem>(m_entityManager);
 
-	addLogic<ska::GravitySystem>();
-	addLogic<ska::DeleterSystem>();
+	addLogic<ska::GravitySystem>(m_entityManager);
+	addLogic<ska::DeleterSystem>(m_entityManager);
 
-	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>();
+	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
 	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(true, m_entityManager).get();
 	
 	/*

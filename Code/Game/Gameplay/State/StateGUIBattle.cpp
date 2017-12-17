@@ -2,7 +2,6 @@
 #include "Draw/DrawableContainer.h"
 
 StateGUIBattle::StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
-    StateBase(em),
     m_gui(ged) {
 
 }

@@ -6,7 +6,7 @@
 
 class Settings;
 
-class StateGUIBattle : public ska::StateBase<CustomEntityManager> {
+class StateGUIBattle : public ska::StateBase {
 public:
 	StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
     //void bindGUI(Settings& s);

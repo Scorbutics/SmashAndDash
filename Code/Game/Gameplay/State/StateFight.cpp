@@ -14,7 +14,7 @@
 #include "../Fight/System/BattleSystem.h"
 
 StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize) :
-	AbstractStateMap(em, ged),
+	AbstractStateMap(em, ged, ws.getWorld()),
 	m_worldState(ws),
 	m_opponentScriptId(fc.opponentScriptId),
 	m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
@@ -31,14 +31,14 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
 	m_fightPos(fightPos) {
 
-	m_cameraSystem = addLogic<ska::CameraFixedSystem>(screenSize.x, screenSize.y, m_fightPos);
-	addLogic<PokeballSystem>();
-	addLogic<BattleSystem>(fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
-	addLogic<SkillRefreshSystem>();
-	addLogic<StatisticsSystem>(ws, ged);
-	addLogic<ska::IARandomMovementSystem>();
+	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_entityManager, screenSize.x, screenSize.y, m_fightPos);
+	addLogic<PokeballSystem>(m_entityManager);
+	addLogic<BattleSystem>(m_entityManager, fc.fighterPokemon, fc.fighterOpponent, m_pokemon, m_opponent);
+	addLogic<SkillRefreshSystem>(m_entityManager);
+	addLogic<StatisticsSystem>(m_entityManager, ws, ged);
+	addLogic<ska::IARandomMovementSystem>(m_entityManager);
 
-	addSubState<StateGUIBattle>(m_eventDispatcher);
+	addSubState<StateGUIBattle>(m_entityManager, m_eventDispatcher);
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());

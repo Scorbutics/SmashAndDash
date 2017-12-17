@@ -15,11 +15,11 @@ namespace ska {
 using StateChangeObserver = ska::SubObserver<MapEvent>;
 
 class AbstractStateMap :
-	public ska::StateBase<CustomEntityManager>, 
+	public ska::StateBase, 
 	public StateChangeObserver {
 	
 public:
-	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
+	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, ska::World& w);
 	AbstractStateMap& operator=(const AbstractStateMap&) = delete;
 
 	bool onTeleport(const MapEvent& me);

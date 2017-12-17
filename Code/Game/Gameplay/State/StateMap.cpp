@@ -11,7 +11,7 @@
 #define MOB_SPAWNING_DELAY 5000
 
 StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName) :
-	AbstractStateMap(em, pged),
+	AbstractStateMap(em, pged, ws.getWorld()),
 	ska::SubObserver<ska::GameEvent>(std::bind(&StateMap::onGameEvent, this, std::placeholders::_1), pged),
 	m_worldState(ws),
 	m_fileName(worldFileName),
@@ -27,7 +27,7 @@ StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, Wo
 bool StateMap::onGameEvent(ska::GameEvent& ge) {
 	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY) {
         SKA_LOG_INFO("Game window is ready");
-		m_cameraSystem = addLogic<ska::CameraFollowSystem>(ge.windowWidth, ge.windowHeight);
+		m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_entityManager, ge.windowWidth, ge.windowHeight);
 		m_worldState.linkCamera(m_cameraSystem);
 		init();
 	} else if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
@@ -43,12 +43,12 @@ ska::CameraSystem& StateMap::getCamera() {
 
 void StateMap::init() {
     SKA_LOG_INFO("State Map initialization");
-	m_scriptAutoSystem = addLogic<ScriptCommandsSystem>(m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
-	addLogic<ska::IARandomMovementSystem>();
-	addLogic<ska::IADefinedMovementSystem>(m_scriptAutoSystem);
-	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld(), m_worldState.getWorld());
-	addLogic<MobSpawningSystem>(m_worldState, MOB_SPAWNING_DELAY);
-	addLogic<FightStartSystem>(m_eventDispatcher, m_worldState, m_worldState.getPlayer());
+	m_scriptAutoSystem = addLogic<ScriptCommandsSystem>(m_entityManager, m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
+	addLogic<ska::IARandomMovementSystem>(m_entityManager);
+	addLogic<ska::IADefinedMovementSystem>(m_entityManager, m_scriptAutoSystem);
+	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld(), m_worldState.getWorld());
+	addLogic<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY);
+	addLogic<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getPlayer());
 	resetScriptEntities();
 }
 

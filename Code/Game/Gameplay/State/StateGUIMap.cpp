@@ -2,7 +2,6 @@
 #include "Draw/DrawableContainer.h"
 
 StateGUIMap::StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
-    StateBase(em),
     m_gui(ged) {
 
 }
