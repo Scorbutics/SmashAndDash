@@ -97,18 +97,27 @@ bool WorldState::onGameEvent(ska::GameEvent& ge) {
 	return false;
 }
 
-void WorldState::afterLoad(ska::StatePtr* lastScene) {
-	m_graphicSystem = addGraphic<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
-	m_shadowSystem = addGraphic<ska::ShadowSystem>(m_entityManager, nullptr);
+void WorldState::afterLoad(ska::State* lastScene) {
+	
+	auto graphicSystem = std::make_unique<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
+	m_graphicSystem = graphicSystem.get();
+	addGraphic(std::move(graphicSystem));
+	
+	auto shadownSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, nullptr);
+	m_shadowSystem = shadownSystem.get();
+	addGraphic(std::move(shadownSystem));
 
-	addLogic<ska::InputSystem>(m_entityManager, m_eventDispatcher);
-	addLogic<ska::MovementSystem>(m_entityManager);
+	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
+	addLogic(std::make_unique<ska::MovementSystem>(m_entityManager));
 
-	addLogic<ska::GravitySystem>(m_entityManager);
-	addLogic<ska::DeleterSystem>(m_entityManager);
+	addLogic(std::make_unique<ska::GravitySystem>(m_entityManager));
+	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
-	auto animSystem = addLogic<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
-	m_walkASM = animSystem->setup<ska::WalkAnimationStateMachine>(true, m_entityManager).get();
+	auto animSystemPtr = std::make_unique<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
+	auto& animSystem = *animSystemPtr.get();
+	addLogic(std::move(animSystemPtr));
+
+	m_walkASM = &animSystem.setup(true, std::make_unique<ska::WalkAnimationStateMachine>(m_entityManager));
 
 	/*
 	animSystem->link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
@@ -130,9 +139,8 @@ void WorldState::afterLoad(ska::StatePtr* lastScene) {
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 }
 
-bool WorldState::beforeUnload() {
-	linkCamera(nullptr);
-	return false;
+void WorldState::beforeUnload() {
+	linkCamera(nullptr);	
 }
 
 //TODO SRP

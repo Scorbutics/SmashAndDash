@@ -28,8 +28,8 @@ private:
 	WorldState& m_worldState;
 
 protected:
-	virtual void beforeLoad(ska::StatePtr* lastScene) override;
-	virtual void afterLoad(ska::StatePtr* lastScene) override;
+	virtual void beforeLoad(ska::State* lastScene) override;
+	virtual void afterLoad(ska::State* lastScene) override;
 
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;

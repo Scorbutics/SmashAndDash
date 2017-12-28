@@ -35,8 +35,8 @@ public:
 	virtual ~StateFight();
 
 protected:
-	virtual void beforeLoad(ska::StatePtr* lastScene) override;
-	virtual bool beforeUnload() override;
+	virtual void beforeLoad(ska::State* lastScene) override;
+	virtual void beforeUnload() override;
 
 private:
 	bool onGameEvent(ska::GameEvent& ge);

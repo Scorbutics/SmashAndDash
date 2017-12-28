@@ -15,7 +15,7 @@ public:
 protected:
 	
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
-	virtual bool beforeUnload() override;
+	virtual void beforeUnload() override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:

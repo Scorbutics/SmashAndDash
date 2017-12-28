@@ -39,17 +39,26 @@ ska::CameraSystem* StateMap::getCamera() {
 
 void StateMap::init() {
     SKA_LOG_INFO("State Map initialization");
-	m_cameraSystem = addLogic<ska::CameraFollowSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y);
-	m_scriptAutoSystem = addLogic<ScriptCommandsSystem>(m_entityManager, m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
-	addLogic<ska::IARandomMovementSystem>(m_entityManager);
-	addLogic<ska::IADefinedMovementSystem>(m_entityManager, m_scriptAutoSystem);
-	m_scriptSystem = addLogic<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld(), m_worldState.getWorld());
-	addLogic<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY);
-	addLogic<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getPlayer());
+	auto cameraSystem = std::make_unique<ska::CameraFollowSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y);
+	m_cameraSystem = cameraSystem.get();
+	addLogic(std::move(cameraSystem));
+	
+	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
+	m_scriptAutoSystem = scriptAutoSys.get();
+	addLogic(std::move(scriptAutoSys));
+
+	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
+	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_entityManager, m_scriptAutoSystem));
+	
+	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld(), m_worldState.getWorld());
+	m_scriptSystem = scriptSystem.get();
+	addLogic(std::move(scriptSystem));
+	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
+	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getPlayer()));
 	//resetScriptEntities();
 }
 
-void StateMap::beforeLoad(ska::StatePtr* lastScene) {
+void StateMap::beforeLoad(ska::State* lastScene) {
 	AbstractStateMap::beforeLoad(lastScene);
 	
 	// Do not delete the player between 2 maps, just TP it

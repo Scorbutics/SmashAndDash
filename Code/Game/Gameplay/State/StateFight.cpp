@@ -42,7 +42,7 @@ ska::CameraSystem* StateFight::getCamera() {
 }
 
 
-void StateFight::beforeLoad(ska::StatePtr* lastScene) {
+void StateFight::beforeLoad(ska::State* lastScene) {
 	AbstractStateMap::beforeLoad(lastScene);
 	
 	/* If already loaded... */
@@ -54,14 +54,16 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 		return;
 	}
 
-	m_cameraSystem = addLogic<ska::CameraFixedSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y, m_fightPos);	
-	addLogic<PokeballSystem>(m_entityManager);
-	addLogic<BattleSystem>(m_entityManager, m_pokemonId, m_opponentId, m_pokemon, m_opponent);
-	addLogic<SkillRefreshSystem>(m_entityManager);
-	addLogic<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher);
-	addLogic<ska::IARandomMovementSystem>(m_entityManager);
+	auto cameraSystem = std::make_unique<ska::CameraFixedSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y, m_fightPos);
+	m_cameraSystem = cameraSystem.get();
+	addLogic(std::move(cameraSystem));	
+	addLogic(std::make_unique<PokeballSystem>(m_entityManager));
+	addLogic(std::make_unique<BattleSystem>(m_entityManager, m_pokemonId, m_opponentId, m_pokemon, m_opponent));
+	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager));
+	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher));
+	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 
-	addSubState<StateGUIBattle>(m_entityManager, m_eventDispatcher);
+	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_eventDispatcher));
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -92,7 +94,7 @@ void StateFight::beforeLoad(ska::StatePtr* lastScene) {
 	queueTask(std::move(finalTask));
 }
 
-bool StateFight::beforeUnload() {
+void StateFight::beforeUnload() {
 	AbstractStateMap::beforeUnload();
 
 	/* Triggers end fight cinematic to the next scene */
@@ -122,7 +124,6 @@ bool StateFight::beforeUnload() {
 	queueTask(std::move(firstTask));
 	queueTask(std::move(finalTask));
 	
-	return false;
 }
 
 StateFight::~StateFight() {

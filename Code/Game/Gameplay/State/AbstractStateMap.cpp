@@ -15,12 +15,14 @@ AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDisp
 	m_worldState.linkCamera(nullptr);
 }
 
-void AbstractStateMap::beforeLoad(ska::StatePtr*) {
-	m_collisionSystem = addLogic<ska::CollisionSystem>(m_entityManager, m_eventDispatcher);
-	addLogic<ska::WorldCollisionSystem>(m_entityManager, m_worldState.getWorld(), m_eventDispatcher);
+void AbstractStateMap::beforeLoad(ska::State*) {
+	auto colSys = std::make_unique<ska::CollisionSystem>(m_entityManager, m_eventDispatcher);
+	m_collisionSystem = colSys.get();
+	addLogic(std::move(colSys));
+	addLogic(std::make_unique<ska::WorldCollisionSystem>(m_entityManager, m_worldState.getWorld(), m_eventDispatcher));
 }
 
-void AbstractStateMap::afterLoad(ska::StatePtr*) {
+void AbstractStateMap::afterLoad(ska::State*) {
 	m_worldState.linkCamera(getCamera());
 }
 

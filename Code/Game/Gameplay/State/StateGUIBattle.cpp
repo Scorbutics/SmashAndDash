@@ -10,10 +10,9 @@ void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableCon
 	m_gui.graphicUpdate(ellapsedTime, drawables);
 }
 
-bool StateGUIBattle::beforeUnload() {
+void StateGUIBattle::beforeUnload() {
     /* Resets GUI */
     m_gui.clear();
-	return false;
 }
 
 void StateGUIBattle::onEventUpdate(unsigned int) {
