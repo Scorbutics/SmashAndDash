@@ -195,7 +195,6 @@
     <ClCompile Include="Code\Game\Graphic\GUI\WindowSettings.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\WindowShop.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\WindowTeam.cpp" />
-    <ClCompile Include="Code\Game\Graphic\ShakerManager.cpp" />
     <ClCompile Include="Code\Game\Physic\System\SkillEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Game\Physic\System\WorldEntityCollisionResponse.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandAddPokemon.cpp" />
@@ -302,7 +301,6 @@
     <ClInclude Include="Code\Game\Graphic\GUI\WindowSettings.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\WindowShop.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\WindowTeam.h" />
-    <ClInclude Include="Code\Game\Graphic\ShakerManager.h" />
     <ClInclude Include="Code\Game\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Game\Physic\System\WorldEntityCollisionResponse.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandAddPokemon.h" />

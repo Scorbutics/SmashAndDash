@@ -1,6 +1,4 @@
 #include "WGameCore.h"
-#include "Inputs/KeyboardInputMapContext.h"
-#include "Inputs/KeyboardInputGUIContext.h"
 #include "State/StateMap.h"
 #include "MessageType.h"
 #include "MessagePopup.h"
@@ -10,6 +8,9 @@
 #include "CoreModule.h"
 #include "GraphicModule.h"
 #include "SoundModule.h"
+#include "World/Inputs/KeyboardInputMapContext.h"
+#include "World/Inputs/KeyboardInputGUIContext.h"
+#include "Graphic/SDLWindow.h"
 
 WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, WindowPtr&& window): 
 	GameCore(std::forward<ska::GameConfiguration>(gc), std::forward<RendererPtr>(renderer), std::forward<WindowPtr>(window)),
@@ -79,7 +80,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	}
 
 	static constexpr auto tailleblocFenetre = 32;
-	auto window = std::make_unique<Window>(title, widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
+	auto window = std::make_unique<SDLWindow>(title, widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
 	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED);
 	return std::make_unique<WGameCore>(std::move(gc), std::move(renderer), std::move(window));
 }

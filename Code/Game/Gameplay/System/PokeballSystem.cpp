@@ -18,15 +18,15 @@ PokeballSystem::~PokeballSystem() {
 
 void PokeballSystem::refresh(unsigned int) {
 	const auto& processed = getEntities();
-	for (ska::EntityId entityId : processed) {
-		PokeballComponent& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
-		ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
+	for (auto entityId : processed) {
+		auto& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
+		auto& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 
 		if (!pokec.started) {
 			throwBall(entityId);
 		}
 
-		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
+		auto& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
 
 		//Si la Pokeball est en l'air
 		if ((pc.x > pokec.finalPos.x &&  pokec.sens == 0) || (pc.x < pokec.finalPos.x &&  pokec.sens == 1)) {
@@ -47,10 +47,10 @@ void PokeballSystem::refresh(unsigned int) {
 			gc.animatedSprites.push_back(m_openPokeball);
 
 			/* Lorsque la pokeball s'ouvre, on y ajoute un effet temporaire de "vortex" */
-			ska::EntityId vortexEntity = createEntity();
+			const auto vortexEntity = createEntity();
 			ska::DeleterComponent vortexDeleter;
 			vortexDeleter.delay = 1500;
-			ska::PositionComponent vortexPc = pc;
+			auto vortexPc = pc;
 			vortexPc.x -= m_vortex.getWidth() / 2 - m_openPokeball.getWidth() / 2;
 			vortexPc.y -= m_vortex.getHeight() / 2 - m_openPokeball.getHeight() / 2;
 
@@ -70,8 +70,8 @@ void PokeballSystem::refresh(unsigned int) {
 }
 
 void PokeballSystem::throwBall(ska::EntityId entityId) {
-	PokeballComponent& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
-	ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
+	auto& pokec = m_componentAccessor.get<PokeballComponent>(entityId);
+	auto& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
 
 	ska::Point<int> leftPos;
 	ska::Point<int> rightPos;

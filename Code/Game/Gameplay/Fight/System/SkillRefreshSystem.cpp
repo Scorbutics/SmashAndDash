@@ -7,6 +7,7 @@
 #include "Inputs/Readers/IniReader.h"
 #include "Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
+#include <SDL_stdinc.h>
 
 SkillRefreshSystem::SkillRefreshSystem(ska::EntityManager& em) :
 System(em) {

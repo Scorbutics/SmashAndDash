@@ -3,6 +3,7 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/Basics/Physic/HitboxComponent.h"
 #include "../../../PokeballComponent.h"
+#include "Graphic/GraphicComponent.h"
 
 PokeballTransition::PokeballTransition(unsigned int, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder) :
 	ska::Task(std::bind(&PokeballTransition::run, this, std::placeholders::_1)),
@@ -28,6 +29,7 @@ bool PokeballTransition::run(ska::Task&){
 
 		pokeballc.finalPos = { static_cast<int>(pokemonPc.x + pokemonHp.xOffset + pokemonHp.width / 2), static_cast<int>(pokemonPc.y + pokemonHp.yOffset + pokemonHp.height / 2) };
 		m_entityManager.addComponent<PokeballComponent>(m_pokeball, std::move(pokeballc));
+		m_entityManager.addComponent<ska::GraphicComponent>(m_pokeball, ska::GraphicComponent());
 		auto pokePc = pc;
 		pokePc.x += hc.xOffset + hc.width / 2;
 		pokePc.y += hc.yOffset + hc.height / 2;
