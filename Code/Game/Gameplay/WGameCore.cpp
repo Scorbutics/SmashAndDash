@@ -50,16 +50,27 @@ float WGameCore::ticksWanted() const {
 }
 
 bool WGameCore::onTeleport(MapEvent& me) {
-	auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
+
 	if (m_currentState != nullptr) {
-		m_worldState->removeSubState(*m_currentState);
+		auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
+		auto& wn = m_worldState->scheduleRemoveSubState(*m_currentState);
+		m_currentState = nullptr;
+		if (me.eventType == MapEvent::BATTLE) {
+			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize);
+			wn.then([&](ska::StateBase& worldState) {
+				m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::move(m_nextState)));
+				m_worldState->linkCamera(m_currentState->getCamera());
+			});
+		} else {
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize);
+			wn.then([&](ska::StateBase& worldState) {
+				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
+				m_worldState->linkCamera(m_currentState->getCamera());
+			});
+		}
 	}
-	if(me.eventType == MapEvent::BATTLE) {
-		m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize)));
-	} else {
-		m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize)));
-	}
-	//m_worldState->linkSubState(*m_currentState);
+	
+	
 	return true;
 }
 

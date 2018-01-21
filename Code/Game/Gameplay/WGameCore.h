@@ -39,5 +39,6 @@ private:
 
 	ska::FpsCalculator m_fpsCalculator;
 	AbstractStateMap* m_currentState;
+	std::unique_ptr<ska::StateBase> m_nextState;
 
 };
