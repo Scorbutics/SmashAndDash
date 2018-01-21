@@ -58,6 +58,7 @@ protected:
 
 private:
 	bool onGameEvent(ska::GameEvent& ge);
+	void beforeLoad(ska::State* lastState) override;
 
 	bool m_loadedOnce;
 

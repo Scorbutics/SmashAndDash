@@ -12,7 +12,6 @@ AbstractStateMap::AbstractStateMap(CustomEntityManager& em, PokemonGameEventDisp
 	m_entityManager(em), 
 	m_collisionSystem(nullptr),
 	m_worldState(ws) {
-	m_worldState.linkCamera(nullptr);
 }
 
 void AbstractStateMap::beforeLoad(ska::State*) {
@@ -23,7 +22,7 @@ void AbstractStateMap::beforeLoad(ska::State*) {
 }
 
 void AbstractStateMap::afterLoad(ska::State*) {
-	m_worldState.linkCamera(getCamera());
+	//m_worldState.linkCamera(getCamera());
 }
 
 AbstractStateMap::~AbstractStateMap() {

@@ -43,6 +43,8 @@ void StateMap::init() {
 	m_cameraSystem = cameraSystem.get();
 	addLogic(std::move(cameraSystem));
 	
+	m_worldState.linkCamera(m_cameraSystem);
+
 	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
 	m_scriptAutoSystem = scriptAutoSys.get();
 	addLogic(std::move(scriptAutoSys));
@@ -69,7 +71,6 @@ void StateMap::beforeLoad(ska::State* lastScene) {
 	m_entityManager.removeEntities(toNotDelete);
 
 	init();
-	resetScriptEntities();
 }
 
 StateMap::~StateMap() {
@@ -83,6 +84,10 @@ void StateMap::resetScriptEntities() {
 		m_scriptSystem->registerNamedScriptedEntity(e.first, e.second);
 	}
 
-	/* Player Script ID = 0 */
+	 //Player Script ID = 0 
 	m_scriptSystem->registerNamedScriptedEntity("0", m_worldState.getPlayer());
+}
+
+void StateMap::afterLoad(ska::State * lastState){
+	resetScriptEntities();
 }

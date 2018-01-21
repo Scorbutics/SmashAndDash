@@ -18,12 +18,14 @@ class StateMap :
 	public ska::SubObserver<ska::GameEvent> {
 public:
 	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
-	virtual void beforeLoad(ska::State* lastScene) override final;
+	
 	virtual ska::CameraSystem* getCamera() override;
 	virtual ~StateMap();
 
 private:
 	void resetScriptEntities();
+	virtual void beforeLoad(ska::State* lastState) override final;
+	virtual void afterLoad(ska::State* lastState) override final;
 	bool onGameEvent(ska::GameEvent& ge);
 	void init();
 

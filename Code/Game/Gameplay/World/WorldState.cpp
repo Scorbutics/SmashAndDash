@@ -26,27 +26,27 @@
 #include "Graphic/System/WalkAnimationStateMachine.h"
 
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
-SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
-m_loadedOnce(false),
-m_settings(settings), m_player(0),
-m_saveManager(ed, "save1"),
-m_cameraSystem(nullptr),
-m_world(ed, TAILLEBLOC),
-m_worldBGM(DEFAULT_BGM),
-m_eventDispatcher(ed),
-m_entityManager(em) {
+	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
+	m_loadedOnce(false),
+	m_settings(settings), m_player(0),
+	m_saveManager(ed, "save1"),
+	m_cameraSystem(nullptr),
+	m_world(ed, TAILLEBLOC),
+	m_worldBGM(DEFAULT_BGM), m_graphicSystem(nullptr), m_shadowSystem(nullptr),
+	m_eventDispatcher(ed),
+	m_entityManager(em), m_walkASM(nullptr){
 	m_saveManager.loadGame(m_saveManager.getPathName());
-	m_worldBGM.setVolume(m_settings.getSoundVolume());
 }
 
 const std::string& WorldState::getFileName() const {
 	return m_world.getFileName();
 }
 
-void WorldState::linkCamera(ska::CameraSystem* cs) {
-	if (m_cameraSystem != cs) {
-		m_cameraSystem = cs;
+void WorldState::linkCamera(ska::CameraSystem* cs) {	
+	m_cameraSystem = cs;
 
+	if (m_graphicSystem != nullptr && 
+		m_shadowSystem != nullptr) {
 		m_graphicSystem->linkCamera(cs);
 		m_shadowSystem->linkCamera(cs);
 		m_world.linkCamera(cs);
@@ -64,7 +64,7 @@ std::vector<ska::IniReader>& WorldState::getMobSettings() {
 void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 
 	//Première couche
-	drawables.addHead(m_world.getLayerRenderable(0));
+	drawables.add(m_world.getLayerRenderable(0));
 
 	//Deuxième couche
 	drawables.addHead(m_world.getLayerRenderable(1));
@@ -97,12 +97,14 @@ bool WorldState::onGameEvent(ska::GameEvent& ge) {
 	return false;
 }
 
+void WorldState::beforeLoad(ska::State* lastState) {
+}
+
 void WorldState::afterLoad(ska::State* lastScene) {
-	
 	auto graphicSystem = std::make_unique<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
 	m_graphicSystem = graphicSystem.get();
 	addGraphic(std::move(graphicSystem));
-	
+
 	auto shadownSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, nullptr);
 	m_shadowSystem = shadownSystem.get();
 	addGraphic(std::move(shadownSystem));
@@ -137,9 +139,13 @@ void WorldState::afterLoad(ska::State* lastScene) {
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
+	
+	linkCamera(m_cameraSystem);
+
 }
 
 void WorldState::beforeUnload() {
+	m_worldBGM.setVolume(m_settings.getSoundVolume());
 	linkCamera(nullptr);	
 }
 

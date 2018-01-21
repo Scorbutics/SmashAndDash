@@ -22,22 +22,24 @@ WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, Window
 	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
 	
-	m_guiMapScene = makeState<StateGUIMap>(m_eventDispatcher);
-	m_guiMapScene->bindGUI(m_settings);
-	m_settings.load();
 
 	/* Let's start on the map state */
-	m_worldState = makeState<WorldState>(m_eventDispatcher,  m_settings);
-	m_worldState->linkSubState(*m_guiMapScene.get());
-	m_guiMapScene->load(nullptr);
-	m_worldState->load(nullptr);
-
+	m_worldState = &navigateToState<WorldState>(m_eventDispatcher,  m_settings);
+	
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
 	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
-	/*WorldStateChanger wsc(*m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName(), false,
+	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
+	
+	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
+	guiState.bindGUI(m_settings);
+
+	m_settings.load();
+	
+		/*WorldStateChanger wsc(*m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName(), false,
 	                      ska::Point<int>());*/
-	m_currentState = &navigateToState<StateMap>(m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName());
-	m_currentState->linkSubState(*m_worldState.get());
+
+	/*m_currentState = makeState<StateMap>();
+	m_worldState->linkSubState(*m_currentState);*/
 	
 }
 
@@ -49,12 +51,15 @@ float WGameCore::ticksWanted() const {
 
 bool WGameCore::onTeleport(MapEvent& me) {
 	auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
-	if(me.eventType == MapEvent::BATTLE) {
-		m_currentState = &navigateToState<StateFight>(m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize);
-	} else {
-		m_currentState = &navigateToState<StateMap>(m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize);
+	if (m_currentState != nullptr) {
+		m_worldState->removeSubState(*m_currentState);
 	}
-	m_currentState->linkSubState(*m_worldState.get());
+	if(me.eventType == MapEvent::BATTLE) {
+		m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize)));
+	} else {
+		m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize)));
+	}
+	//m_worldState->linkSubState(*m_currentState);
 	return true;
 }
 

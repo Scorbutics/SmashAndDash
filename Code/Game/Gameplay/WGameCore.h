@@ -34,7 +34,7 @@ private:
 	TrainerCard m_trainerCard;
 	Settings m_settings;
 
-	std::unique_ptr<WorldState> m_worldState;
+	WorldState* m_worldState;
 	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
 	ska::FpsCalculator m_fpsCalculator;
