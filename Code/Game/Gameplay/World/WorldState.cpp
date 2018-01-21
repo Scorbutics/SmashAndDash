@@ -64,7 +64,7 @@ std::vector<ska::IniReader>& WorldState::getMobSettings() {
 void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 
 	//Première couche
-	drawables.add(m_world.getLayerRenderable(0));
+	drawables.addHead(m_world.getLayerRenderable(0));
 
 	//Deuxième couche
 	drawables.addHead(m_world.getLayerRenderable(1));
