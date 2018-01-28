@@ -13,6 +13,14 @@
 #include "Graphic/SDLWindow.h"
 #include "Draw/VectorDrawableContainer.h"
 
+void LogsConfiguration() {
+	ska::LoggerFactory::setMaxLengthClassName(35);
+	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	ska::LoggerFactory::staticAccess<WorldImpl>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	ska::LoggerFactory::staticAccess<ska::WorldCollisionResponse>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+}
+
 WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	GameCore(std::forward<GameConfPtr>(gc)),
     m_settings(m_eventDispatcher, "gamesettings.ini"),
@@ -66,6 +74,8 @@ bool WGameCore::onTeleport(MapEvent& me) {
 }
 
 std::unique_ptr<ska::GameApp> ska::GameApp::get() {
+	LogsConfiguration();
+
 	auto gc = std::make_unique<WGameCore::GameConf>();
 	auto& core = gc->requireModule<ska::CoreModule<CustomEntityManager>>("Core", gc->getEventDispatcher());
 	/* Configure inputs types */
@@ -96,12 +106,6 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	gc->requireModule<ska::SoundModule<PokemonSoundRenderer>>("Sound", gc->getEventDispatcher());
 
 	return std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
-}
-
-void LogsConfiguration() {
-	ska::LoggerFactory::setMaxLengthClassName(35);
-	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
 }
 
 
