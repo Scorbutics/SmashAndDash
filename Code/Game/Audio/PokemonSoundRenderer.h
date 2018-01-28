@@ -11,7 +11,10 @@ class PokemonSoundRenderer :
 
 public:
 	explicit PokemonSoundRenderer(PokemonGameEventDispatcher& ged);
+	PokemonSoundRenderer(PokemonSoundRenderer&&) = default;
+	PokemonSoundRenderer(const PokemonSoundRenderer&) = delete;
 	void operator=(const PokemonSoundRenderer&) = delete;
+
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	virtual ~PokemonSoundRenderer();
 

@@ -11,20 +11,18 @@
 #include "World/Inputs/KeyboardInputMapContext.h"
 #include "World/Inputs/KeyboardInputGUIContext.h"
 #include "Graphic/SDLWindow.h"
+#include "Draw/VectorDrawableContainer.h"
 
-WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, WindowPtr&& window): 
-	GameCore(std::forward<ska::GameConfiguration>(gc), std::forward<RendererPtr>(renderer), std::forward<WindowPtr>(window)),
-                        m_settings(m_eventDispatcher, "gamesettings.ini"),
+WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
+	GameCore(std::forward<GameConfPtr>(gc)),
+    m_settings(m_eventDispatcher, "gamesettings.ini"),
+	m_entityManager(em),
 	ska::SubObserver<MapEvent>(bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
+
 	SKA_LOG_INFO("Game initialization");
 
-	/* Configure inputs types */
-	addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
-	addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
-	
-
 	/* Let's start on the map state */
-	m_worldState = &navigateToState<WorldState>(m_eventDispatcher,  m_settings);
+	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
 	
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
 	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
@@ -34,13 +32,7 @@ WGameCore::WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, Window
 	guiState.bindGUI(m_settings);
 
 	m_settings.load();
-	
-		/*WorldStateChanger wsc(*m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName(), false,
-	                      ska::Point<int>());*/
 
-	/*m_currentState = makeState<StateMap>();
-	m_worldState->linkSubState(*m_currentState);*/
-	
 }
 
 float WGameCore::ticksWanted() const {
@@ -50,7 +42,6 @@ float WGameCore::ticksWanted() const {
 }
 
 bool WGameCore::onTeleport(MapEvent& me) {
-
 	if (m_currentState != nullptr) {
 		auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
 		auto& wn = m_worldState->scheduleRemoveSubState(*m_currentState);
@@ -75,10 +66,11 @@ bool WGameCore::onTeleport(MapEvent& me) {
 }
 
 std::unique_ptr<ska::GameApp> ska::GameApp::get() {
-	ska::GameConfiguration gc;
-	gc.requireModule<ska::CoreModule>("Core");
-	gc.requireModule<ska::GraphicModule>("Graphic");
-	gc.requireModule<ska::SoundModule>("Sound");
+	auto gc = std::make_unique<WGameCore::GameConf>();
+	auto& core = gc->requireModule<ska::CoreModule<CustomEntityManager>>("Core", gc->getEventDispatcher());
+	/* Configure inputs types */
+	core.addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
+	core.addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
 
 	auto widthBlocks = 30;
 	auto heightBlocks = 20;
@@ -98,7 +90,12 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	static constexpr auto tailleblocFenetre = 32;
 	auto window = std::make_unique<SDLWindow>(title, widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
 	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED);
-	return std::make_unique<WGameCore>(std::move(gc), std::move(renderer), std::move(window));
+	auto vdc = std::make_unique<ska::VectorDrawableContainer>(*renderer);
+
+	gc->requireModule<ska::GraphicModule>("Graphic", gc->getEventDispatcher(), std::move(vdc), std::move(renderer), std::move(window));
+	gc->requireModule<ska::SoundModule<PokemonSoundRenderer>>("Sound", gc->getEventDispatcher());
+
+	return std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
 }
 
 void LogsConfiguration() {

@@ -5,21 +5,27 @@
 
 #include "Core/GameCore.h"
 #include "CustomEntityManager.h"
-#include "Draw/VectorDrawableContainer.h"
 #include "PokemonGameEventDispatcher.h"
 #include "../Audio/PokemonSoundRenderer.h"
 #include "World/WorldState.h"
 #include "State/StateGUIMap.h"
 #include "FpsCalculator.h"
 #include "State/StateMap.h"
+#include "CoreModule.h"
+#include "GraphicModule.h"
+#include "SoundModule.h"
+
+using GameBase = ska::GameCore<PokemonGameEventDispatcher, ska::CoreModule<CustomEntityManager>, ska::GraphicModule, ska::SoundModule<PokemonSoundRenderer>>;
 
 class WGameCore :
-	public ska::GameCore<CustomEntityManager, PokemonGameEventDispatcher, ska::VectorDrawableContainer, PokemonSoundRenderer>,
+	public GameBase,
 	public ska::SubObserver<MapEvent> {
 
 public:
-	
-	WGameCore(ska::GameConfiguration&& gc, RendererPtr&& renderer, WindowPtr&& window);
+	using GameConfPtr = GameConfPtr;
+	using GameConf = GameConf;
+
+	WGameCore(CustomEntityManager& em, GameConfPtr&& gc);
 
 	virtual int onTerminate(ska::TerminateProcessException& te) override;
 	virtual int onException(ska::GenericException& ge) override;
@@ -30,6 +36,8 @@ public:
 
 private:
 	bool onTeleport(MapEvent& me);
+
+	CustomEntityManager& m_entityManager;
 
 	TrainerCard m_trainerCard;
 	Settings m_settings;
