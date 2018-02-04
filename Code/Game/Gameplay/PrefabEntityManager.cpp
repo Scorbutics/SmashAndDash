@@ -58,8 +58,8 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	EntityId hero = createCharacter(startPos, 0, worldBlockSize);
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
-	ic.movePower = 150;
-	ic.jumpPower = 1200;
+	ic.movePower = 100;
+	ic.jumpPower = 800;
 	addComponent<InputComponent>(hero, std::move(ic));
 	ScriptAwareComponent sac;
 	addComponent<ScriptAwareComponent>(hero, std::move(sac));
