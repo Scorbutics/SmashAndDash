@@ -20,7 +20,7 @@ int CommandPlayerPresence::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
 {
 	std::string posFromX, posFromY, posToX, posToY;
 	ska::Rectangle collisionRect;

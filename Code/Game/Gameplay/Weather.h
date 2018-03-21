@@ -19,15 +19,15 @@
  .getIntensity();
 */
 namespace ska {
-	class World;
+	class TileWorld;
 }
 
 class Weather : public ska::DrawableFixedPriority
 {
 
 public:
-	Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
-	explicit Weather(ska::World& w);
+	Weather(ska::TileWorld& w, const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
+	explicit Weather(ska::TileWorld& w);
 	Weather(const Weather&) = delete;
 	Weather& operator=(const Weather&) = delete;
 	 ~Weather();
@@ -50,7 +50,7 @@ protected:
      std::unique_ptr<ska::Texture> m_weather;
      std::vector<ska::Point<float>> m_pos;
      bool m_active, m_mosaic;
-	 ska::World& m_world;
+	 ska::TileWorld& m_world;
 
 };
 

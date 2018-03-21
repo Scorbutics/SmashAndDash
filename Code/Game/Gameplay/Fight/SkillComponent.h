@@ -1,9 +1,7 @@
 #pragma once
-#include "ECS/SerializableComponent.h"
 #include "Utils/TimeUtils.h"
 
-
-class SkillComponent : public ska::SerializableComponent {
+class SkillComponent {
 public:
 	SkillComponent(): range(0), battler(0), amplitude(0) {
 		damage = 0;

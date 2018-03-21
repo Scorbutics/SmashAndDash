@@ -6,26 +6,25 @@
 class WorldState;
 
 namespace ska {
-	class World;
+	class TileWorld;
 }
 
 class ScriptCommandsSystem :
 	public ska::ScriptBasicCommandsSystem
 {
 public:
-	ScriptCommandsSystem(ska::EntityManager& entityManager, ska::World& w, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged);
+	ScriptCommandsSystem(ska::EntityManager& entityManager, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged);
 	virtual ~ScriptCommandsSystem();
 
 protected:
 	struct ScriptCommandHelper : public BasicScriptCommandHelper {
-		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::World& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) :
-		    BasicScriptCommandHelper(w, e), m_world(w), m_ged(ged), m_parent(parent) {}
+		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::TileWorld& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) :
+		    BasicScriptCommandHelper(w, e), m_world(w), m_ged(ged) {}
 
-		virtual void setupCommands(ska::World& w, std::unordered_map<std::string, ska::CommandPtr>& c) const override;
+		virtual void setupCommands(ska::TileWorld& w, std::unordered_map<std::string, ska::CommandPtr>& c) const override;
 	private:
-		ska::World& m_world;
+		ska::TileWorld& m_world;
 		PokemonGameEventDispatcher& m_ged;
-		ScriptCommandsSystem& m_parent;
 	};
 
 

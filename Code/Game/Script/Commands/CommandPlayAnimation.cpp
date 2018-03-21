@@ -23,7 +23,7 @@ int CommandPlayAnimation::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
 {
 
 

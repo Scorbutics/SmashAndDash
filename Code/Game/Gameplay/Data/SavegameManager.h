@@ -1,10 +1,10 @@
 #pragma once
 
-#include <vector>
 #include "../PokemonGameEventDispatcher.h"
-#include "Data/Savegame.h"
+#include "Data/MemoryScript.h"
 
-class SavegameManager : public ska::Savegame {
+class SavegameManager : 
+	public ska::MemoryScript {
 public:
 	explicit SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename);
 	explicit SavegameManager(const std::string& pathname);

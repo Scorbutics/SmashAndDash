@@ -91,8 +91,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 		widthBlocks = reader.get<int>("Window width_blocks");
 		heightBlocks = reader.get<int>("Window height_blocks");
 		title = reader.get<std::string>("Window title");
-	}
-	catch (FileException& fe) {
+	} catch (FileException& fe) {
 		title = "Default title";
 		std::cerr << "Error while loading game settings : " << fe.what() << std::endl;
 	}

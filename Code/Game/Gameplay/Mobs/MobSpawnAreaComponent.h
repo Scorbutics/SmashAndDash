@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS/SerializableComponent.h"
-class MobSpawnAreaComponent : public ska::SerializableComponent {
+
+class MobSpawnAreaComponent {
 public:
 };

@@ -137,6 +137,7 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
 bool GUIMap::onScreenResized(unsigned int width, unsigned int height) {
 	auto& wAction = static_cast<ska::TimeScrollableWindowIG<>&>(*m_wAction);
 	wAction.move(ska::Point<int>(width - 13 * TAILLEBLOCFENETRE, height - wAction.getBox().h / 2));
+
 	return true;
 }
 
@@ -180,7 +181,7 @@ bool GUIMap::onBattleStart(BattleEvent& be){
 	if(be.getEventType() == BATTLE_START) {
 		auto& em = be.getEntityManager();
 		const auto& sh = em.getComponent<SkillsHolderComponent>(be.getBattler());
-		m_skillBar = &addWindow<SkillsBar>("skillsBar", sh.skills);
+		m_skillBar = &addWindow<SkillsBar>("skillsBar", sh.skills, getMaxWidth(), getMaxHeight());
 	} else {
 		removeWindow("skillsBar");
 		m_skillBar = nullptr;

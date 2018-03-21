@@ -10,7 +10,6 @@
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Graphic/System/JumpAnimationStateMachine.h"
-#include <memory>
 #include "Utils/SubObserver.h"
 
 
@@ -42,7 +41,7 @@ public:
 	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
 	void linkCamera(ska::CameraSystem* cs) override;
 
-	ska::World& getWorld();
+	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
 	ska::EntityId getPlayer() const;
 	bool loadedOnce() const;

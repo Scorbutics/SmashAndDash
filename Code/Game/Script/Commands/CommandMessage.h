@@ -10,7 +10,7 @@ public:
 
 	virtual ~CommandMessage();
 
-	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 private:
     PokemonGameEventDispatcher& m_ged;

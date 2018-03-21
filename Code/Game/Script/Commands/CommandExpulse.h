@@ -2,21 +2,21 @@
 #include "Script/Command/AbstractFunctionCommand.h"
 
 namespace ska {
-	class World;
+	class TileWorld;
 }
 
 class CommandExpulse :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandExpulse(const ska::World& w, ska::EntityManager& entityManager);
+	CommandExpulse(const ska::TileWorld& w, ska::EntityManager& entityManager);
 
 	virtual ~CommandExpulse();
 
-	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 
 private:
-	const ska::World& m_world;
+	const ska::TileWorld& m_world;
 };
 

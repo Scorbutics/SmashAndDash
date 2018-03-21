@@ -24,38 +24,38 @@
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
 
-ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::World& w, ska::Savegame& saveGame, PokemonGameEventDispatcher& ged) :
+ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged) :
 ScriptBasicCommandsSystem(entityManager, w, ScriptCommandHelper(*this, w, entityManager, ged), saveGame) {
 }
 
-void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::World& w, std::unordered_map<std::string, ska::CommandPtr>& c) const {
+void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::TileWorld& w, std::unordered_map<std::string, ska::CommandPtr>& c) const {
 	BasicScriptCommandHelper::setupCommands(w, c);
 	using std::move;
-	c["move"] = move(ska::CommandPtr(new CommandMove(m_entityManager)));
-	c["message"] = move(ska::CommandPtr(new CommandMessage(m_ged, m_entityManager)));
-	c["choice"] = move(ska::CommandPtr(new CommandChoice(m_entityManager)));
-	c["heal"] = move(ska::CommandPtr(new CommandHeal(m_entityManager)));
-	c["stop"] = move(ska::CommandPtr(new CommandStop(m_entityManager)));
-	c["direction"] = move(ska::CommandPtr(new CommandDirection(m_entityManager)));
-	c["animation"] = move(ska::CommandPtr(new CommandPlayAnimation(m_entityManager)));
-	c["crumbling"] = move(ska::CommandPtr(new CommandPlayCrumbling(m_entityManager)));
-	c["shaking"] = move(ska::CommandPtr(new CommandPlayShaking(m_entityManager)));
-	c["camera_translation"] = move(ska::CommandPtr(new CommandTranslationCamera(m_entityManager)));
-	c["stuck_char"] = move(ska::CommandPtr(new CommandStuckCharacter(m_entityManager)));
-	c["hide_char"] = move(ska::CommandPtr(new CommandHideCharacter(m_entityManager)));
-	c["follow_char"] = move(ska::CommandPtr(new CommandFollow(m_entityManager)));
-	c["shop"] = move(ska::CommandPtr(new CommandShop(m_entityManager)));
-	c["hide_gui"] = move(ska::CommandPtr(new CommandHideGUI(m_entityManager)));
-	c["teleport"] = move(ska::CommandPtr(new CommandTeleport(m_world, m_entityManager, m_ged)));
-	c["cinematic"] = move(ska::CommandPtr(new CommandCinematic(m_entityManager)));
-	c["pokeball"] = move(ska::CommandPtr(new CommandThrowPokebal(m_entityManager)));
-	c["kill"] = move(ska::CommandPtr(new CommandKillEntity(m_entityManager)));
-	c["add_pokemon"] = move(ska::CommandPtr(new CommandAddPokemon(m_entityManager)));
-	c["throw_pokemon"] = move(ska::CommandPtr(new CommandPokemonOut(m_entityManager)));
-	c["player_presence"] = move(ska::CommandPtr(new CommandPlayerPresence(m_entityManager)));
-	c["expulse"] = move(ska::CommandPtr(new CommandExpulse(m_world, m_entityManager)));
-	c["jump"] = move(ska::CommandPtr(new CommandJump(m_entityManager)));
-	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager)));
+	c["move"] =  std::make_unique<CommandMove>(m_entityManager);
+	c["message"] =  std::make_unique<CommandMessage>(m_ged, m_entityManager);
+	c["choice"] =  std::make_unique<CommandChoice>(m_entityManager);
+	c["heal"] =  std::make_unique<CommandHeal>(m_entityManager);
+	c["stop"] =  std::make_unique<CommandStop>(m_entityManager);
+	c["direction"] =  std::make_unique<CommandDirection>(m_entityManager);
+	c["animation"] =  std::make_unique<CommandPlayAnimation>(m_entityManager);
+	c["crumbling"] =  std::make_unique<CommandPlayCrumbling>(m_entityManager);
+	c["shaking"] =  std::make_unique<CommandPlayShaking>(m_entityManager);
+	c["camera_translation"] =  std::make_unique<CommandTranslationCamera>(m_entityManager);
+	c["stuck_char"] =  std::make_unique<CommandStuckCharacter>(m_entityManager);
+	c["hide_char"] =  std::make_unique<CommandHideCharacter>(m_entityManager);
+	c["follow_char"] =  std::make_unique<CommandFollow>(m_entityManager);
+	c["shop"] =  std::make_unique<CommandShop>(m_entityManager);
+	c["hide_gui"] =  std::make_unique<CommandHideGUI>(m_entityManager);
+	c["teleport"] =  std::make_unique<CommandTeleport>(m_world, m_entityManager, m_ged);
+	c["cinematic"] =  std::make_unique<CommandCinematic>(m_entityManager);
+	c["pokeball"] =  std::make_unique<CommandThrowPokebal>(m_entityManager);
+	c["kill"] =  std::make_unique<CommandKillEntity>(m_entityManager);
+	c["add_pokemon"] =  std::make_unique<CommandAddPokemon>(m_entityManager);
+	c["throw_pokemon"] =  std::make_unique<CommandPokemonOut>(m_entityManager);
+	c["player_presence"] =  std::make_unique<CommandPlayerPresence>(m_entityManager);
+	c["expulse"] =  std::make_unique<CommandExpulse>(m_world, m_entityManager);
+	c["jump"] =  std::make_unique<CommandJump>(m_entityManager);
+	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager));
 }
 
 

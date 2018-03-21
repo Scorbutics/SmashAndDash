@@ -17,7 +17,7 @@ int CommandDirection::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandDirection::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandDirection::execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, std::vector<std::string>& args) {
 	const std::string& idStr = args[0];
 	const int dir = ska::StringUtils::strToInt(args[1]);
 

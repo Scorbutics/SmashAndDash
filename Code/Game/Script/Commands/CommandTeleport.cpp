@@ -2,14 +2,14 @@
 #include "Script/ScriptComponent.h"
 #include "Script/System/ScriptAutoSystem.h"
 #include "Exceptions/InvalidPathException.h"
-#include "World/World.h"
+#include "World/TileWorld.h"
 #include "../../Utils/IDs.h"
 #include "Utils/StringUtils.h"
 
 #include "../../Gameplay/State/StateToMapSwitcher.h"
 #include "../../Gameplay/Data/MapEvent.h"
 
-CommandTeleport::CommandTeleport(const ska::World& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
+CommandTeleport::CommandTeleport(const ska::TileWorld& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
 AbstractFunctionCommand(entityManager),
 m_world(w),
 m_ged(ged) {
@@ -23,7 +23,7 @@ int CommandTeleport::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, std::vector<std::string>& args) {
 	const auto& mapName = args[0];
 	const auto& id = args[1];
 	const auto x = ska::StringUtils::strToInt(args[2]);
@@ -61,7 +61,7 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, std::vector<s
 	return "";
 }
 
-void CommandTeleport::teleportHeroToMap(ska::World& w, std::string param) {
+void CommandTeleport::teleportHeroToMap(ska::TileWorld& w, std::string param) {
 
 	std::string fichier, fichier2, fichierD;
 	int x = 1/*, y*/;

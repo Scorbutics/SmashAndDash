@@ -2,9 +2,9 @@
 #include <string>
 
 #include "ChargementImages.h"
-#include "World/World.h"
 #include "Utils/NumberUtils.h"
 #include "../Gameplay/Mobs/MobSpawner.h"
+#include "Inputs/Readers/IniReader.h"
 
 int GetRandom(std::vector<int>& probs)
 {

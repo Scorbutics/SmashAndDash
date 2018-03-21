@@ -42,7 +42,7 @@ void Bar::render(const ska::Renderer& renderer) const {
 	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);
 	const int offsetY = - pos.z;
 
-	renderer.render(m_barStyle, pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y);
+	renderer.render(m_barStyle, pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y, nullptr);
 	renderer.render(m_barContent, pos.x + m_barSize.x - nonNullCamera.x, pos.y + m_barSize.y + offsetY - nonNullCamera.y, &rectSize);
 
 }

@@ -110,7 +110,6 @@ void StateFight::beforeUnload() {
     }
 
 	auto finalTask = std::make_unique<ska::Task>([&](ska::Task&) {
-
 		m_loadState = 0;
 		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, std::move(*m_ic));

@@ -19,7 +19,7 @@ int CommandHideCharacter::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandHideCharacter::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandHideCharacter::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
 {
 	const std::string& id = args[0];
 	//ska::EntityId internalEntity = script.parent->getEntityFromName(id);

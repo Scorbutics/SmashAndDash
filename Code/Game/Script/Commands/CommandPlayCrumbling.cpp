@@ -14,7 +14,7 @@ int CommandPlayCrumbling::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPlayCrumbling::execute(ska::ScriptComponent&, std::vector<std::string>& )
+std::string CommandPlayCrumbling::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	/*int duree = 0;

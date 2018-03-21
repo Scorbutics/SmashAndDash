@@ -15,7 +15,7 @@ int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandThrowPokebal::execute(ska::ScriptComponent&, std::vector<std::string>& )
+std::string CommandThrowPokebal::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
 {
 	/*ska::Point<int> srcId, dst;
 	int launchReason;

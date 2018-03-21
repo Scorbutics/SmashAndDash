@@ -14,7 +14,7 @@ int CommandStuckCharacter::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandStuckCharacter::execute(ska::ScriptComponent&, std::vector<std::string>& )
+std::string CommandStuckCharacter::execute(ska::ScriptComponent&, ska::MemoryScript& memoryScript, std::vector<std::string>& )
 {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	/*int id, number, moving;

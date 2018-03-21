@@ -1,5 +1,5 @@
 #pragma once
-#include "World/World.h"
+#include "World/TileWorld.h"
 #include "Utils/Observer.h"
 #include "../Data/SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
@@ -11,7 +11,7 @@ namespace ska {
 }
 
 class WorldImpl :
-	public ska::World,
+	public ska::TileWorld,
 	public ska::Observer<SettingsChangeEvent> {
 
 public:

@@ -14,7 +14,7 @@ int CommandJump::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandJump::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandJump::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) {
 
     const auto& id = args[0];
 	const auto power = ska::StringUtils::strToInt(args[1]);

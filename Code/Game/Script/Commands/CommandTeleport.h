@@ -2,12 +2,10 @@
 #include "Script/Command/AbstractFunctionCommand.h"
 
 #include "../../Gameplay/World/WorldState.h"
-//#include "Core/State/SceneSwitcher.h"
-#include "Utils/Observable.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 
 namespace ska {
-	class World;
+	class TileWorld;
 }
 
 
@@ -15,17 +13,17 @@ class CommandTeleport :
 	public ska::AbstractFunctionCommand
 {
 public:
-	CommandTeleport(const ska::World& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
+	CommandTeleport(const ska::TileWorld& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
 	virtual ~CommandTeleport();
 
-	static void teleportHeroToMap(ska::World& w, std::string param);
+	static void teleportHeroToMap(ska::TileWorld& w, std::string param);
 
-	virtual std::string execute(ska::ScriptComponent& script, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 
 private:
 	//SceneChangeObservable& m_sceneChanger;
-	const ska::World& m_world;
+	const ska::TileWorld& m_world;
 	PokemonGameEventDispatcher& m_ged;
 };
 

@@ -339,7 +339,7 @@ void Pokeball::render(const ska::Renderer& renderer) const {
 	    auto animVortexPos = m_gestionAnimVortex.getCurrentFrame();
 	    auto buf = m_pokeballPos;
 
-		renderer.render(m_openPokeball, buf.x, buf.y);
+		renderer.render(m_openPokeball, buf.x, buf.y, nullptr);
 
 		//sur 4 parce que l'image est composée de 2 sous-images pour l'animation
         buf.x -= m_vortex.getWidth()/4;
@@ -348,7 +348,7 @@ void Pokeball::render(const ska::Renderer& renderer) const {
 
     } else if(m_isInactive) {
 		//Si la Pokeball est ouverte, inactive (statut présent pour raison de fluidité de l'animation)
-		renderer.render(m_openPokeball, m_pokeballPos.x, m_pokeballPos.y);
+		renderer.render(m_openPokeball, m_pokeballPos.x, m_pokeballPos.y, nullptr);
     }
 
 

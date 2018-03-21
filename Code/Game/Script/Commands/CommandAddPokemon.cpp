@@ -14,7 +14,7 @@ int CommandAddPokemon::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandAddPokemon::execute(ska::ScriptComponent&, std::vector<std::string>& ) {
+std::string CommandAddPokemon::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>& ) {
 	/*int id;
 
 	id = ska::StringUtils::strToInt(args[0]);*/

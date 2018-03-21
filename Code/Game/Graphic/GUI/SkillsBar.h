@@ -8,7 +8,7 @@
 
 class SkillsBar : public ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener> {
 public:
-	SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills);
+	SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills, unsigned int windowWidth, unsigned int windowHeight);
 	virtual ~SkillsBar() = default;
 
 private:

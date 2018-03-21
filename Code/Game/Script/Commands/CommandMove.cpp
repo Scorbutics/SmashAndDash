@@ -22,7 +22,7 @@ int CommandMove::argumentsNumber() {
 	return -1;
 }
 
-std::string CommandMove::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) {
 
 	if (args.size() < 4) {
 		throw ska::ScriptException("This command needs at least 4 parameters");

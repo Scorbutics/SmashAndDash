@@ -1,15 +1,13 @@
 #include "../Data/Settings.h"
 #include "WorldImpl.h"
 #include "Draw/DrawableContainer.h"
-#include "../../Utils/IDs.h"
-#include "Utils/SpritePath.h"
 #include "Inputs/Readers/IniReader.h"
 #include "Utils/FileUtils.h"
 
 #define WEATHER_ALPHA_LVL 85
 
 WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc) :
-World(tailleBloc),
+TileWorld(tailleBloc, ""),
 Observer<SettingsChangeEvent>(bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1)),
 m_fog(*this),
 m_weather(*this),
@@ -39,11 +37,11 @@ void WorldImpl::graphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
 }
 
 void WorldImpl::load(const std::string& fileName, const std::string& chipsetName) {
-	if (getFileName() == fileName && chipsetName == m_chipset.getName()) {
+	/*if (getFileName() == fileName && chipsetName == m_chipset.getName()) {
 		return;
-	}
+	}*/
 
-	World::load(fileName, chipsetName);
+	TileWorld::load(fileName, chipsetName);
 	ska::FileNameData fndata(fileName);
 	
 	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";

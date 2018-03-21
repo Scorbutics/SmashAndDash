@@ -18,7 +18,7 @@ int CommandKillEntity::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandKillEntity::execute(ska::ScriptComponent& script, std::vector<std::string>& args)
+std::string CommandKillEntity::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
 {
 	const std::string& id = args[0];
 

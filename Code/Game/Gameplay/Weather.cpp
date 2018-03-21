@@ -1,10 +1,10 @@
 #include <string>
 #include "Weather.h"
-#include "World/World.h"
+#include "World/TileWorld.h"
 #include "Utils/NumberUtils.h"
 #include "Draw/Renderer.h"
 
-Weather::Weather(ska::World& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
+Weather::Weather(ska::TileWorld& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
     m_number(0),
     m_world(w) {
 	m_active = false;
@@ -12,7 +12,7 @@ Weather::Weather(ska::World& w, const std::string& wSprite, int number, int dist
 	load(wSprite, number, distance, intensityX, intensityY, alpha);
 }
 
-Weather::Weather(ska::World& w) :
+Weather::Weather(ska::TileWorld& w) :
 	m_intensityX(0),
 	m_intensityY(0),
 	m_number(0),
@@ -127,14 +127,14 @@ void Weather::render(const ska::Renderer& render) const {
 				buf.x = i1 * weatherWidth + oRel.x;
                 for(auto j = 0; j < nbrMosaicY; j++) {
 					buf.y = j * weatherHeight + oRel.y;	
-					render.render(*m_weather, buf.x, buf.y);
+					render.render(*m_weather, buf.x, buf.y, nullptr);
                 }
             }
 
 		} else {
 			const ska::Rectangle oRel = { -(worldView->x), -(worldView->y), 0, 0 };
 			const ska::Point<int> buf { static_cast<int>(m_pos[i].x) + oRel.x, static_cast<int>(m_pos[i].y) + oRel.y };
-			render.render(*m_weather, buf.x, buf.y);
+			render.render(*m_weather, buf.x, buf.y, nullptr);
 		}
     }
 }

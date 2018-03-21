@@ -1,8 +1,7 @@
 #pragma once
-#include "ECS/SerializableComponent.h"
 #include "ECS/ECSDefines.h"
 
-class FightComponent : public ska::SerializableComponent {
+class FightComponent {
 public:
 	FightComponent() {
 		level = 0;

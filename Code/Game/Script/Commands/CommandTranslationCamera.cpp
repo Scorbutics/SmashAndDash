@@ -15,7 +15,7 @@ int CommandTranslationCamera::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandTranslationCamera::execute(ska::ScriptComponent& , std::vector<std::string>&)
+std::string CommandTranslationCamera::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>&)
 {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;

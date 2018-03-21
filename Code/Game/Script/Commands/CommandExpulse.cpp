@@ -6,12 +6,11 @@
 #include "AI/IADefinedMovementComponent.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/Basics/Physic/HitboxComponent.h"
-#include "Utils/NumberUtils.h"
 #include "Utils/RectangleUtils.h"
-#include "World/World.h"
+#include "World/TileWorld.h"
 #include "ECS/Basics/Physic/CollidableComponent.h"
 
-CommandExpulse::CommandExpulse(const ska::World& w, ska::EntityManager& entityManager) : 
+CommandExpulse::CommandExpulse(const ska::TileWorld& w, ska::EntityManager& entityManager) : 
 	AbstractFunctionCommand(entityManager),
 	m_world(w) {
 }
@@ -20,7 +19,7 @@ int CommandExpulse::argumentsNumber() {
 	return -1;
 }
 
-std::string CommandExpulse::execute(ska::ScriptComponent& script, std::vector<std::string>& args) {
+std::string CommandExpulse::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) {
 	if (args.size() < 2) {
 		throw ska::ScriptException("This command needs at least 2 parameters");
 	}
