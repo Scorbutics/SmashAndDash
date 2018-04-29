@@ -19,7 +19,6 @@ class StateMap :
 public:
 	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
 	
-	virtual ska::CameraSystem* getCamera() override;
 	virtual ~StateMap();
 
 private:
@@ -36,8 +35,8 @@ private:
 	ska::CameraSystem* m_cameraSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
 
-	ska::WorldCollisionResponse m_worldCollisionResponse;
-	ska::EntityCollisionResponse m_entityCollisionResponse;
+	/*ska::WorldCollisionResponse m_worldCollisionResponse;
+	ska::EntityCollisionResponse m_entityCollisionResponse;*/
 	ska::Point<int> m_screenSize;
 
 };

@@ -8,7 +8,7 @@ class PokeballSystem : public ska::System<std::unordered_set<ska::EntityId>, ska
 public:
 	explicit PokeballSystem(ska::EntityManager& entityManager);
 	PokeballSystem& operator=(const PokeballSystem&) = delete;
-	virtual ~PokeballSystem();
+	~PokeballSystem() override = default;
 
 protected:
 	virtual void refresh(unsigned int ellapsedTime) override;

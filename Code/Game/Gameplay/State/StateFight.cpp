@@ -13,34 +13,32 @@
 #include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
 
-StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc, ska::Point<int> screenSize) :
+StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
 	AbstractStateMap(em, ged, ws),
 	m_worldState(ws),
 	m_opponentScriptId(fc.opponentScriptId),
-	m_opponent("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
-	m_pokemon("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Monsters" FILE_SEPARATOR + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
+	m_opponent("./Data/Monsters/" + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
+	m_pokemon("./Data/Monsters/" + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 	m_pokemonId(fc.fighterPokemon),
 	m_trainerId(fc.trainer),
 	m_opponentId(fc.fighterOpponent),
 	m_sceneLoaded(false),
 	m_loadState(0),
-	m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
-	m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),
+	/*m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
+	m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),*/
 	m_ic(nullptr),
 	m_skillFactory(ws, fc.level),
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
-	m_fightPos(fightPos),
-	m_screenSize(screenSize) {
+	m_fightPos(fightPos) {
 }
 
 bool StateFight::onGameEvent(ska::GameEvent& ge) {
+	if(ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY ||
+		ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
+		m_screenSize = ska::Point<int>(ge.windowWidth, ge.windowHeight);
+	}
 	return true;
 }
-
-ska::CameraSystem* StateFight::getCamera() {
-	return m_cameraSystem;
-}
-
 
 void StateFight::beforeLoad(ska::State* lastScene) {
 	AbstractStateMap::beforeLoad(lastScene);
@@ -123,7 +121,4 @@ void StateFight::beforeUnload() {
 	queueTask(std::move(firstTask));
 	queueTask(std::move(finalTask));
 	
-}
-
-StateFight::~StateFight() {
 }

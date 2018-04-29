@@ -62,7 +62,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript
 		ssc.args = extraArgs;
 		ssc.period = 2000;
 		ssc.deleteEntityWhenFinished = true;
-		ssc.triggeringType = ska::EnumScriptTriggerType::AUTO;
+		ssc.triggeringType = ska::ScriptTriggerType::AUTO;
 		ssc.name = scriptName;
 		iamc.callback = ssc;
 		iamc.callbackActive = true;

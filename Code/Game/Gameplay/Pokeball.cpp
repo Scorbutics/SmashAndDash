@@ -22,9 +22,9 @@ m_gestionAnimVortex(175, 2, false, 0, 0, 64, 64) {
     m_isOpenning = m_isInactive = m_show = false;
 
 	setSprites(
-		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball.png",
-		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-openned.png",
-		"." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-aura.png");
+		"./Sprites/Fight/pokeball.png",
+		"./Sprites/Fight/pokeball-openned.png",
+		"./Sprites/Fight/pokeball-aura.png");
 }
 
 void Pokeball::setSprites(const std::string& spriteName, const std::string& spriteOpenPokeball, const std::string& spritePokeballAura) {
@@ -39,7 +39,7 @@ void Pokeball::setSprites(const std::string& spriteName, const std::string& spri
 
 
 	if (spritePokeballAura.size() != 0) {
-		m_vortex.load(spritePokeballAura, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 128);
+		m_vortex.load(spritePokeballAura, ska::Texture::DEFAULT_T_RED, ska::Texture::DEFAULT_T_GREEN, ska::Texture::DEFAULT_T_BLUE, 128);
 	}
 
 }

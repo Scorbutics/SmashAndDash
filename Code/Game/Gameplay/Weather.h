@@ -22,15 +22,15 @@ namespace ska {
 	class TileWorld;
 }
 
-class Weather : public ska::DrawableFixedPriority
-{
+class Weather : 
+	public ska::DrawableFixedPriority {
 
 public:
 	Weather(ska::TileWorld& w, const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
 	explicit Weather(ska::TileWorld& w);
 	Weather(const Weather&) = delete;
 	Weather& operator=(const Weather&) = delete;
-	 ~Weather();
+	 ~Weather() = default;
 
 	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
 

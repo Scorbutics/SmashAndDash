@@ -25,11 +25,12 @@
 #include "../Commands/CommandJump.h"
 
 ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged) :
-ScriptBasicCommandsSystem(entityManager, w, ScriptCommandHelper(*this, w, entityManager, ged), saveGame) {
+	ScriptBasicCommandsSystem(entityManager, saveGame),
+	m_helper(*this, w, entityManager, ged){
 }
 
-void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::TileWorld& w, std::unordered_map<std::string, ska::CommandPtr>& c) const {
-	BasicScriptCommandHelper::setupCommands(w, c);
+void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const {
+	BasicScriptCommandHelper::setupCommands(c);
 	using std::move;
 	c["move"] =  std::make_unique<CommandMove>(m_entityManager);
 	c["message"] =  std::make_unique<CommandMessage>(m_ged, m_entityManager);
@@ -58,7 +59,3 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(ska::TileWorld& w,
 	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager));
 }
 
-
-ScriptCommandsSystem::~ScriptCommandsSystem()
-{
-}

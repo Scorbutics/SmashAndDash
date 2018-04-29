@@ -1,19 +1,15 @@
 #include "PokeballSystem.h"
 #include "ECS/Basics/Graphic/DeleterComponent.h"
-#include "../../Utils/IDs.h"
 
 #define POWER 5
 
 PokeballSystem::PokeballSystem(ska::EntityManager& entityManager) :
 System(entityManager) {
-	m_sprite.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball.png", 4, 1, 4);
+	m_sprite.load("./Sprites/Fight/pokeball.png", 4, 1, 4);
 	m_sprite.setDelay(200);
-	m_openPokeball.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-openned.png", 1, 1, 1);
-	m_vortex.load("." FILE_SEPARATOR "Sprites" FILE_SEPARATOR "Fight" FILE_SEPARATOR "pokeball-aura.png", 2, 1, 2, false, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, 100);
+	m_openPokeball.load("./Sprites/Fight/pokeball-openned.png", 1, 1, 1);
+	m_vortex.load("./Sprites/Fight/pokeball-aura.png", 2, 1, 2, false, ska::Texture::DEFAULT_T_RED, ska::Texture::DEFAULT_T_GREEN, ska::Texture::DEFAULT_T_BLUE, 100);
 	m_vortex.setDelay(400);
-}
-
-PokeballSystem::~PokeballSystem() {
 }
 
 void PokeballSystem::refresh(unsigned int) {

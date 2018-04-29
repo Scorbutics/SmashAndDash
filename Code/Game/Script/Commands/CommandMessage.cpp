@@ -30,7 +30,7 @@ std::string CommandMessage::execute(ska::ScriptComponent&, ska::MemoryScript& me
 		imageId = atoi(talkerId.c_str()) >= 0 ? talkerId : ("pnj" + ska::StringUtils::intToStr(abs(atoi(talkerId.c_str()))));
 	}
 
-	DialogEvent de(text, "scriptDialog", ska::Rectangle{0, std::numeric_limits<int>::max(), -1, 4*TAILLEBLOCFENETRE}, true);
+	DialogEvent de(text, "scriptDialog", ska::Rectangle{0, std::numeric_limits<int>::max(), -1, 4*48}, true);
     m_ged.ska::Observable<DialogEvent>::notifyObservers(de);
 
 	return "";

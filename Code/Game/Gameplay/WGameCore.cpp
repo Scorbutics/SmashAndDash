@@ -15,10 +15,10 @@
 
 void LogsConfiguration() {
 	ska::LoggerFactory::setMaxLengthClassName(35);
-	ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	//ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
 	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
 	ska::LoggerFactory::staticAccess<WorldImpl>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	ska::LoggerFactory::staticAccess<ska::WorldCollisionResponse>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
+	//ska::LoggerFactory::staticAccess<ska::WorldCollisionResponse>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
 }
 
 WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
@@ -33,7 +33,7 @@ WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
 	
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
-	const auto& pathStartMapName = "." FILE_SEPARATOR "Levels" FILE_SEPARATOR "" + startMapName + ".bmp";
+	const auto& pathStartMapName = "./Levels/" + startMapName + ".bmp";
 	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
 	
 	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
@@ -51,20 +51,19 @@ float WGameCore::ticksWanted() const {
 
 bool WGameCore::onTeleport(MapEvent& me) {
 	if (m_currentState != nullptr) {
-		auto screenSize = m_currentState->getCamera() == nullptr ? ska::Point<int>() : m_currentState->getCamera()->getScreenSize();
 		auto& wn = m_worldState->scheduleRemoveSubState(*m_currentState);
 		m_currentState = nullptr;
 		if (me.eventType == MapEvent::BATTLE) {
-			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent, screenSize);
+			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::move(m_nextState)));
-				m_worldState->linkCamera(m_currentState->getCamera());
+				//m_worldState->linkCamera(m_currentState->getCamera());
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName, screenSize);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
-				m_worldState->linkCamera(m_currentState->getCamera());
+				//m_worldState->linkCamera(m_currentState->getCamera());
 			});
 		}
 	}
@@ -104,7 +103,15 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	gc->requireModule<ska::GraphicModule>("Graphic", gc->getEventDispatcher(), std::move(vdc), std::move(renderer), std::move(window));
 	gc->requireModule<ska::SoundModule<PokemonSoundRenderer>>("Sound", gc->getEventDispatcher());
 
-	return std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
+	try {
+		auto game = std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
+		return game;
+	} catch (GenericException& ge) {
+		SKA_STATIC_LOG_ERROR(WGameCore)(ge.what());
+		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", ge.what(), nullptr);
+		throw ge;
+	}
+	
 }
 
 

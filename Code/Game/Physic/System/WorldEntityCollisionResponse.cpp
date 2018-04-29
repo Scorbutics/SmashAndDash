@@ -1,24 +1,17 @@
 #include "WorldEntityCollisionResponse.h"
 #include "Data/Events/CollisionEvent.h"
-#include "ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "ECS/EntityManager.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 
 WorldEntityCollisionResponse::WorldEntityCollisionResponse(ska::CollisionProfile& w, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
-WorldCollisionResponse(bind(&WorldEntityCollisionResponse::onWorldCollision, this, std::placeholders::_1), w, ged, em) {
+	SubObserver<ska::CollisionEvent>(std::bind(&WorldEntityCollisionResponse::onCollision, this, std::placeholders::_1), ged),
+	m_entityManager(em) {
 }
 
-WorldEntityCollisionResponse::WorldEntityCollisionResponse(std::function<bool(ska::CollisionEvent&)> onWorldCollision, ska::CollisionProfile& w, ska::GameEventDispatcher& ged, ska::EntityManager& em) :
-WorldCollisionResponse(onWorldCollision, w, ged, em) {
-
-}
-
-bool WorldEntityCollisionResponse::onWorldCollision(ska::CollisionEvent& e) {
+//... Collisions should have a collision group and a skill should not interact with the world
+bool WorldEntityCollisionResponse::onCollision(ska::CollisionEvent& e) {
 	if (!m_entityManager.hasComponent<SkillComponent>(e.entity)) {
-		WorldCollisionResponse::onWorldCollision(e);
+		//WorldCollisionResponse::onWorldCollision(e);
 	}
 	return true;
-}
-
-WorldEntityCollisionResponse::~WorldEntityCollisionResponse() {
 }

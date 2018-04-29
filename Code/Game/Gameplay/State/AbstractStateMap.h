@@ -1,6 +1,5 @@
 #pragma once
 #include "Core/State/StateBase.h"
-#include "Physic/System/WorldCollisionResponse.h"
 #include "../CustomEntityManager.h"
 
 class WorldState;
@@ -19,8 +18,7 @@ public:
 	AbstractStateMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws);
 	AbstractStateMap& operator=(const AbstractStateMap&) = delete;
 
-	virtual ska::CameraSystem* getCamera() = 0;
-	virtual ~AbstractStateMap();
+	~AbstractStateMap() override = default;
 
 private:
 

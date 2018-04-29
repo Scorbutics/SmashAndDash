@@ -7,7 +7,6 @@ class SavegameManager :
 	public ska::MemoryScript {
 public:
 	explicit SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename);
-	explicit SavegameManager(const std::string& pathname);
 
 	SavegameManager& operator=(const SavegameManager&) = delete;
 
@@ -15,17 +14,17 @@ public:
 	void loadGame(const std::string& filename);
 	void saveGame(const std::string& filename);
 
-	virtual std::string getSaveName() const override;
-	virtual int getGameVariable(const std::string& x) const override;
-	virtual bool getGameSwitch(const std::string&  x) const override;
+	std::string getSaveName() const override;
+	int getGameVariable(const std::string& x) const override;
+	bool getGameSwitch(const std::string&  x) const override;
 
-	virtual void setGameVariable(const std::string& x, const int value) override;
-	virtual void setGameSwitch(const std::string& x, const bool value) override;
+	void setGameVariable(const std::string& x, int value) override;
+	void setGameSwitch(const std::string& x, bool value) override;
 
 	const std::string& getStartChipsetName();
 	const std::string& getPathName();
 	const std::string& getStartMapName();
-	~SavegameManager();
+	~SavegameManager() = default;
 
 private:
 	void loadItem(int id, unsigned int amount);

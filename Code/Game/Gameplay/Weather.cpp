@@ -31,7 +31,7 @@ void Weather::load(const std::string& wSprite, int number, int distance, int int
 	m_active = true;
 
 	if (!wSprite.empty()) {
-		m_weather = std::make_unique<ska::Texture>(wSprite, DEFAULT_T_RED, DEFAULT_T_GREEN, DEFAULT_T_BLUE, alpha);
+		m_weather = std::make_unique<ska::Texture>(wSprite, ska::Texture::DEFAULT_T_RED, ska::Texture::DEFAULT_T_GREEN, ska::Texture::DEFAULT_T_BLUE, alpha);
 	}
 
 	resetRandomPos();
@@ -71,9 +71,7 @@ void Weather::resetRandomPos() {
 }
 
 void Weather::update() {
-	const auto worldView = m_world.getView();
-
-	if (!m_active || worldView == nullptr) {
+	if (!m_active) {
 		return;
 	}
 
@@ -102,7 +100,8 @@ void Weather::update() {
 }
 
 void Weather::render(const ska::Renderer& render) const {
-	const auto worldView = m_world.getView();
+	auto wv = ska::Rectangle{};
+	const auto worldView = &wv; //m_world.getView();
 
 	if (!m_active || worldView == nullptr || m_weather == nullptr) {
 		return;
@@ -141,7 +140,4 @@ void Weather::render(const ska::Renderer& render) const {
 
 void Weather::hide(bool active) {
     m_active = !active;
-}
-
-Weather::~Weather() {
 }

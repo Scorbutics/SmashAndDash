@@ -1,9 +1,9 @@
 #pragma once
 #include "World/TileWorld.h"
-#include "Utils/Observer.h"
 #include "../Data/SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../Weather.h"
+#include "Utils/SubObserver.h"
 
 namespace ska {
 	class IniReader;
@@ -12,26 +12,25 @@ namespace ska {
 
 class WorldImpl :
 	public ska::TileWorld,
-	public ska::Observer<SettingsChangeEvent> {
+	public ska::SubObserver<SettingsChangeEvent> {
 
 public:
-	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc);
-	WorldImpl(const WorldImpl&) = delete;
-	~WorldImpl();
+	WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, const ska::TileWorldLoader& loader);
+	~WorldImpl() = default;
 
 	WorldImpl& operator=(const WorldImpl&) = delete;
-	void load(const std::string& fileName, const std::string& chipsetName) override;
+	void load(const std::string& fileName, const std::string& chipsetName);
 
 	void loadWeatherFromData(const std::string& stringDataFile);
 	void loadFogFromData(const std::string& stringDataFile);
 
 	bool onSettingsChange(SettingsChangeEvent& sce);
 
-	virtual void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
+	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
+	std::vector<ska::IniReader>& getMobSettings();
 
 private:
+	std::vector<ska::IniReader> m_mobSettings;
 	Weather m_fog;
 	Weather m_weather;
-	PokemonGameEventDispatcher& m_ged;
-
 };

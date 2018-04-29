@@ -12,6 +12,7 @@
 #include "Graphic/HasShadowComponent.h"
 #include "ECS/Basics/Physic/CollidableComponent.h"
 #include "Utils/SpritePath.h"
+#include "Utils/SkaConstants.h"
 
 ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
 	EntityManager(ged) {

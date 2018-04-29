@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1864B5EC-411F-4C77-8C52-B39EAD4B2DA1}</ProjectGuid>
     <RootNamespace>SmashAndDash</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -67,8 +67,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_physic_chimunk;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
-    <LibraryPath>../ska/$(Configuration);../ska/external\lib\MSVC\$(Configuration);C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.10.25017\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>D:\Users\Brice\Source\Repos\ska\external\gsl;../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_physic_chimunk;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
+    <LibraryPath>../ska/$(Configuration);../ska/external\lib\MSVC\$(Configuration);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>../ska/ska_ai;../ska/ska_audio;../ska/ska_core;../ska/ska_draw;../ska/ska_gui;../ska/ska_physic;../ska/ska_script;../ska/ska_world;$(IncludePath)</IncludePath>
@@ -94,7 +94,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_gif.lib;SDL2_ttf.lib;SDL2_image.lib;ska_ai.lib;ska_audio.lib;ska_core.lib;ska_draw.lib;ska_gui.lib;ska_physic.lib;ska_script.lib;ska_world.lib;ska_physic_chipmunk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2_mixer.lib;SDL2_gif.lib;SDL2_ttf.lib;SDL2_image.lib;ska_ai.lib;ska_audio.lib;ska_core.lib;ska_draw.lib;ska_gui.lib;ska_physic.lib;ska_script.lib;ska_world.lib;ska_physic_chipmunk.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

@@ -26,13 +26,11 @@ namespace ska {
 class StateFight :
 	public AbstractStateMap {
 public:
-	StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos,
-	           FightComponent fc, ska::Point<int> screenSize);
+	StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
 	StateFight(const StateFight&) = delete;
 	StateFight& operator=(const StateFight&) = delete;
 
-	virtual ska::CameraSystem* getCamera() override;
-	virtual ~StateFight();
+	~StateFight() override = default;
 
 protected:
 	virtual void beforeLoad(ska::State* lastScene) override;
@@ -56,8 +54,8 @@ private:
 	bool m_sceneLoaded;
 	int m_loadState;
 
-	WorldEntityCollisionResponse m_worldEntityCollisionResponse;
-	SkillEntityCollisionResponse m_skillEntityCollisionResponse;
+	/*WorldEntityCollisionResponse m_worldEntityCollisionResponse;
+	SkillEntityCollisionResponse m_skillEntityCollisionResponse;*/
 	ska::InputComponent* m_ic;
 	ska::EntityId m_pokeball;
 

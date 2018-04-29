@@ -17,7 +17,7 @@ void StatisticsSystem::refresh(unsigned int) {
 			scheduleDeferredRemove(entityId);
 			MapEvent me(MapEvent::MAP);
 			me.mapName = m_worldScene.getFileName();
-			me.chipsetName = m_worldScene.getWorld().getChipset().getName();
+			me.chipsetName = m_worldScene.getTilesetName();
 			m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 		}
 	}

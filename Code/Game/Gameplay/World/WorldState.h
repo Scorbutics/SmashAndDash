@@ -27,7 +27,6 @@ class CustomEntityManager;
 class WorldState : 
 	public ska::StateBase,
 	public MobSpawner,
-	public ska::CameraAware,
 	public ska::SubObserver<ska::GameEvent> {
 
 public:
@@ -39,7 +38,6 @@ public:
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
-	void linkCamera(ska::CameraSystem* cs) override;
 
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
@@ -48,6 +46,7 @@ public:
 	std::vector<ska::IniReader>& getMobSettings() override;
 
 	const std::string& getFileName() const;
+	const std::string& getTilesetName() const;
 
 protected:
     virtual void afterLoad(ska::State* scene) override;
@@ -66,10 +65,6 @@ private:
 	ska::EntityId m_player;
 	SavegameManager m_saveManager;
 
-	/* Special system : camera (linked to World) */
-	ska::CameraSystem* m_cameraSystem;
-
-	WorldImpl m_world;
 	Pokeball m_pokeball;
 	ska::Music m_worldBGM;
 
@@ -79,5 +74,13 @@ private:
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
 	ska::WalkAnimationStateMachine* m_walkASM;
+
+	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
+	ska::Tileset m_tileset;
+	std::string m_worldFileName;
+	
+	WorldImpl m_world;
+
+	ska::Rectangle m_cameraPos;
 };
 

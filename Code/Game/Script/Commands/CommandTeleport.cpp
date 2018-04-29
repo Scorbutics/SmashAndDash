@@ -8,6 +8,10 @@
 
 #include "../../Gameplay/State/StateToMapSwitcher.h"
 #include "../../Gameplay/Data/MapEvent.h"
+#include "World/TileWorldLoaderAggregate.h"
+#include "World/LayerEventLoaderText.h"
+#include "World/LayerLoaderImage.h"
+#include "Utils/FileUtils.h"
 
 CommandTeleport::CommandTeleport(const ska::TileWorld& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
 AbstractFunctionCommand(entityManager),
@@ -38,9 +42,9 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemorySc
 	/* Hero use case */
 	if (id == "0") {
 		const auto& fichier = mapName;
-		const auto buf = ".\\Levels" FILE_SEPARATOR ""
+		const auto buf = "./Levels/"
 			+ fichier
-			+ "" FILE_SEPARATOR ""
+			+ "/"
 			+ fichier
 			+ ".ini";
 
@@ -61,16 +65,33 @@ std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemorySc
 	return "";
 }
 
+ska::TileWorldLoaderAggregate BuildWorldLoaderCommandTeleport(const ska::TilesetCorrespondanceMapper& mapper, const std::string& levelName) {
+	const auto levelFileName = ska::FileNameData{ levelName };
+
+	auto loaders = std::vector<std::unique_ptr<ska::LayerLoader>>{};
+	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + ".bmp"));
+	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + "M.bmp"));
+	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + "T.bmp"));
+
+	auto eventLoaders = std::vector<std::unique_ptr<ska::LayerEventLoader>>{};
+	eventLoaders.push_back(std::make_unique<ska::LayerEventLoaderText>(levelName + "/" + levelFileName.name + "E.txt"));
+
+	return ska::TileWorldLoaderAggregate(
+		levelName,
+		std::move(loaders),
+		std::move(eventLoaders));
+}
+
 void CommandTeleport::teleportHeroToMap(ska::TileWorld& w, std::string param) {
 
 	std::string fichier, fichier2, fichierD;
 	int x = 1/*, y*/;
 
 
-	fichier = ska::StringUtils::extractTo(0, param, '/');
-	fichierD = ska::StringUtils::extractTo(fichier.size() + 1, param, '/');
-	fichier2 = ska::StringUtils::extractTo(fichier.size() + fichierD.size() + 2, param, '/');
-	x = ska::StringUtils::strToInt(ska::StringUtils::extractTo(fichier.size() + fichierD.size() + fichier2.size() + 3, param, ':'));
+	fichier = ska::StringUtils::extractTo<std::string>(0, param, '/');
+	fichierD = ska::StringUtils::extractTo<std::string>(fichier.size() + 1, param, '/');
+	fichier2 = ska::StringUtils::extractTo<std::string>(fichier.size() + fichierD.size() + 2, param, '/');
+	x = ska::StringUtils::extractTo<int>(fichier.size() + fichierD.size() + fichier2.size() + 3, param, ':');
 
 	// créer un flux de sortie
 	std::ostringstream oss;
@@ -82,9 +103,9 @@ void CommandTeleport::teleportHeroToMap(ska::TileWorld& w, std::string param) {
 
 	//wScreen.transition(0);
 
-	buf = ".\\Levels" FILE_SEPARATOR ""
+	buf = "./Levels/"
 		+ fichier.substr(0, fichier.find_last_of("."))
-		+ "" FILE_SEPARATOR ""
+		+ "/"
 		+ fichier.substr(0, fichier.find_last_of("."))
 		+ ".ini";
 
@@ -95,7 +116,7 @@ void CommandTeleport::teleportHeroToMap(ska::TileWorld& w, std::string param) {
 	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
 		SKA_STATIC_LOG_ERROR(CommandTeleport)("Erreur : impossible de trouver le nom du chipset de la map de depart");
 	}
-
-	w.load(fichier, chipsetName);
+	
+	w.load(BuildWorldLoaderCommandTeleport(ska::TilesetCorrespondanceMapper{"Resources/Chipsets/corr.png"}, fichier));
 
 }

@@ -5,6 +5,7 @@
 #include "ECS/EntityManager.h"
 #include "Utils/SpritePath.h"
 #include "Script/System/ScriptAutoSystem.h"
+#include "Utils/SkaConstants.h"
 
 CommandHideCharacter::CommandHideCharacter(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
 {

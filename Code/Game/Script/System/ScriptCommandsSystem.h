@@ -14,19 +14,22 @@ class ScriptCommandsSystem :
 {
 public:
 	ScriptCommandsSystem(ska::EntityManager& entityManager, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged);
-	virtual ~ScriptCommandsSystem();
+	~ScriptCommandsSystem() override = default;
 
 protected:
 	struct ScriptCommandHelper : public BasicScriptCommandHelper {
 		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::TileWorld& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) :
-		    BasicScriptCommandHelper(w, e), m_world(w), m_ged(ged) {}
+		    BasicScriptCommandHelper(e), m_ged(ged),
+			m_world(w) {
+		}
 
-		virtual void setupCommands(ska::TileWorld& w, std::unordered_map<std::string, ska::CommandPtr>& c) const override;
+		void setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const override;
 	private:
 		ska::TileWorld& m_world;
 		PokemonGameEventDispatcher& m_ged;
 	};
 
-
+private:
+	ScriptCommandHelper m_helper;
 };
 

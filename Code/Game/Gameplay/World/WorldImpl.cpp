@@ -6,23 +6,22 @@
 
 #define WEATHER_ALPHA_LVL 85
 
-WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, unsigned int tailleBloc) :
-TileWorld(tailleBloc, ""),
-Observer<SettingsChangeEvent>(bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1)),
-m_fog(*this),
-m_weather(*this),
-m_ged(ged) {
+WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, const ska::TileWorldLoader& loader) :
+	TileWorld(ged, tileset, loader),
+	SubObserver<SettingsChangeEvent>(bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1), ged) ,
+	m_fog(*this),
+	m_weather(*this) {
 	m_fog.setMosaicEffect(true);
+
 	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohérence */
 	m_weather.setPriority(INT_MAX - 3);
 	m_fog.setPriority(INT_MAX - 4);
 	m_fog.resetPos();
 	m_fog.setMosaicEffect(true);
-
-	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 }
 
-void WorldImpl::graphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
+void WorldImpl::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
+	TileWorld::graphicUpdate(ellapsedTime, drawables);
 
 	//Affichage des effets
 	/*ska::ParticleManager& particleManager = wScreen.getParticleManager();
@@ -36,12 +35,16 @@ void WorldImpl::graphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
 	drawables.add(m_fog);
 }
 
+std::vector<ska::IniReader>& WorldImpl::getMobSettings() {
+	return m_mobSettings;
+}
+
 void WorldImpl::load(const std::string& fileName, const std::string& chipsetName) {
 	/*if (getFileName() == fileName && chipsetName == m_chipset.getName()) {
 		return;
 	}*/
 
-	TileWorld::load(fileName, chipsetName);
+	//TileWorld::load(fileName, chipsetName);
 	ska::FileNameData fndata(fileName);
 	
 	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";
@@ -59,7 +62,6 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 	auto yintensity = reader.get<int>("Fog yintensity");
 	auto number = reader.get<int>("Fog number");
 	auto transparency = reader.get<bool>("Fog transparency");
-
 
 	if(!sprite) {
 		SKA_LOG_MESSAGE("Le brouillard est inexistant sur cette map");
@@ -103,8 +105,4 @@ bool WorldImpl::onSettingsChange(SettingsChangeEvent& sce) {
 	}
 
 	return true;
-}
-
-WorldImpl::~WorldImpl() {
-	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 }

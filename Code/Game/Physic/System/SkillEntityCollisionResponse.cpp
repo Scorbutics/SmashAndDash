@@ -1,36 +1,32 @@
 #include "SkillEntityCollisionResponse.h"
 #include "ECS/Basics/Physic/CollisionComponent.h"
 #include "../../Gameplay/Data/RawStatistics.h"
-#include "ECS/Basics/Physic/WorldCollisionComponent.h"
-#include "Physic/System/CollisionSystem.h"
 #include "../../Gameplay/Fight/SkillComponent.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 #include "ECS/EntityManager.h"
 
-SkillEntityCollisionResponse::SkillEntityCollisionResponse(ska::CollisionSystem& colSys, PokemonGameEventDispatcher& ged, ska::EntityManager& em) :
-	EntityCollisionResponse(bind(&SkillEntityCollisionResponse::onEntityCollision, this, std::placeholders::_1), ged, em),
-	m_collisionSystem(colSys),
+SkillEntityCollisionResponse::SkillEntityCollisionResponse(PokemonGameEventDispatcher& ged, ska::EntityManager& em) :
+	SubObserver<ska::CollisionEvent>(std::bind(&SkillEntityCollisionResponse::onCollisionEvent, this, std::placeholders::_1), ged),
 	m_ged(ged), 
 	m_entityManager(em) {
 	m_ged.ska::Observable<ska::CollisionEvent>::addObserver(*this);
 }
 
 
-bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
+bool SkillEntityCollisionResponse::onCollisionEvent(ska::CollisionEvent& e) {
 	if (e.collisionComponent == nullptr) {
 		return false;
 	}
-	auto col = *e.collisionComponent;
+
+	const auto col = *e.collisionComponent;
 	if (!m_entityManager.hasComponent<SkillComponent>(col.origin) && !m_entityManager.hasComponent<SkillComponent>(col.target)) {
-		EntityCollisionResponse::onEntityCollision(e);
 		return true;
 	}
 
-
 	SkillComponent* sc = nullptr;
 	BattleComponent* bc = nullptr;
-	ska::EntityId skillEntity = static_cast<unsigned int>(-1);
-	ska::EntityId targettedEntity = static_cast<unsigned int>(-1);
+	auto skillEntity = static_cast<unsigned int>(-1);
+	auto targettedEntity = static_cast<unsigned int>(-1);
 
 	/* Skill collision with a battle entity => Statistics modification */
 	if (m_entityManager.hasComponent<SkillComponent>(col.origin) && m_entityManager.hasComponent<BattleComponent>(col.target)) {
@@ -61,21 +57,7 @@ bool SkillEntityCollisionResponse::onEntityCollision(ska::CollisionEvent& e) {
 		bc->hp -= sc->damage;
 		StatisticsChangeEvent sce(targettedEntity, *bc, sc->battler);
 		m_ged.ska::Observable<StatisticsChangeEvent>::notifyObservers(sce);
-		m_collisionSystem.scheduleDeferredRemove(skillEntity);
 	}
 
 	return true;
-}
-
-/*
-void SkillCollisionSystem::handleWorldCollision(ska::WorldCollisionComponent& col, ska::EntityId e) {
-
-
-	if (!m_entityManager.hasComponent<SkillComponent>(e)) {
-		CollisionSystem::handleWorldCollision(col, e);
-	}
-}*/
-
-SkillEntityCollisionResponse::~SkillEntityCollisionResponse() {
-	m_ged.ska::Observable<ska::CollisionEvent>::removeObserver(*this);
 }

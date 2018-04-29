@@ -9,6 +9,8 @@
 #include "FPSLabel.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 
+#define TAILLEBLOCFENETRE 48
+
 GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	ska::GUI(ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),

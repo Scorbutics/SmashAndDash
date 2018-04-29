@@ -1,23 +1,21 @@
 #pragma once
-#include "Physic/System/EntityCollisionResponse.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
-
-template <typename T>
-struct RawStatistics;
+#include "Utils/SubObserver.h"
 
 namespace ska {
 	class CollisionSystem;
 }
 
-class SkillEntityCollisionResponse : public ska::EntityCollisionResponse {
+class SkillEntityCollisionResponse : 
+	public ska::MovableNonCopyable,
+	public ska::SubObserver<ska::CollisionEvent> {
 public:
-	SkillEntityCollisionResponse(ska::CollisionSystem& colSys, PokemonGameEventDispatcher& ged, ska::EntityManager& entityManager);
-	SkillEntityCollisionResponse(std::function<bool(ska::CollisionEvent&)> onEntityCollision, PokemonGameEventDispatcher& ged, ska::EntityManager& entityManager);
-	SkillEntityCollisionResponse& operator=(const SkillEntityCollisionResponse&) = delete;
-	~SkillEntityCollisionResponse();
-	bool onEntityCollision(ska::CollisionEvent& e);
+	SkillEntityCollisionResponse(PokemonGameEventDispatcher& ged, ska::EntityManager& entityManager);
+	~SkillEntityCollisionResponse() = default;
+
 private:
-	ska::CollisionSystem& m_collisionSystem;
+	bool onCollisionEvent(ska::CollisionEvent& e);
+
 	PokemonGameEventDispatcher& m_ged;
 	ska::EntityManager& m_entityManager;
 

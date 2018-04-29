@@ -1,18 +1,22 @@
 #pragma once
 #include "Data/Events/GameEventDispatcher.h"
-#include "Physic/System/WorldCollisionResponse.h"
+#include "Utils/SubObserver.h"
 
 namespace ska {
-    class CollisionProfile;
+	class EntityManager;
+	class CollisionProfile;
 }
 
-class WorldEntityCollisionResponse : public ska::WorldCollisionResponse {
+class WorldEntityCollisionResponse :
+	public ska::SubObserver<ska::CollisionEvent> {
 public:
 	WorldEntityCollisionResponse(ska::CollisionProfile& w, ska::GameEventDispatcher& colSys, ska::EntityManager& entityManager);
 	WorldEntityCollisionResponse& operator=(const WorldEntityCollisionResponse&) = delete;
-	WorldEntityCollisionResponse(std::function<bool(ska::CollisionEvent&)> onWorldCollision, ska::CollisionProfile& w, ska::GameEventDispatcher& colSys, ska::EntityManager& entityManager);
-	~WorldEntityCollisionResponse();
-	bool onWorldCollision(ska::CollisionEvent& e) override;
+	~WorldEntityCollisionResponse() = default;
+
+private:
+	bool onCollision(ska::CollisionEvent& e);
+	ska::EntityManager& m_entityManager;
 
 };
 
