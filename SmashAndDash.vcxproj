@@ -176,6 +176,7 @@
     <ClCompile Include="Code\Game\Gameplay\Weather.cpp" />
     <ClCompile Include="Code\Game\Gameplay\WGameCore.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldImpl.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\World\WorldLoader.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldState.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldStateChanger.cpp" />
     <ClCompile Include="Code\Game\Graphic\GUI\Bar.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Code\Game\Gameplay\Weather.h" />
     <ClInclude Include="Code\Game\Gameplay\WGameCore.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldImpl.h" />
+    <ClInclude Include="Code\Game\Gameplay\World\WorldLoader.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldState.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldStateChanger.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\Bar.h" />

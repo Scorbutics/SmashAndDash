@@ -83,6 +83,7 @@
     <ClCompile Include="Code\Game\Gameplay\Fight\SkillFactory.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\StateFightLoading.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldStateChanger.cpp" />
+    <ClCompile Include="Code\Game\Gameplay\World\WorldLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -192,5 +193,6 @@
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillFactory.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateFightLoading.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldStateChanger.h" />
+    <ClInclude Include="Code\Game\Gameplay\World\WorldLoader.h" />
   </ItemGroup>
 </Project>

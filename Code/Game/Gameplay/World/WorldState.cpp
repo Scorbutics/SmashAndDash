@@ -18,12 +18,12 @@
 #include "Draw/DrawableContainer.h"
 #include "Graphic/System/WalkAnimationStateMachine.h"
 
-#include "Utils/FileUtils.h"
 #include "World/TileWorldLoaderAggregate.h"
 #include "World/LayerLoaderImage.h"
 #include "World/LayerEventLoaderText.h"
 #include "World/TilesetLoaderImage.h"
 #include "World/TilesetEventLoaderText.h"
+#include "WorldLoader.h"
 
 ska::TilesetLoaderImage BuildTilesetLoader(const std::string& tilesetName) {
 	return { tilesetName };
@@ -31,23 +31,6 @@ ska::TilesetLoaderImage BuildTilesetLoader(const std::string& tilesetName) {
 
 ska::TilesetEventLoaderText BuildTilesetEventLoader(const std::string& tilesetName) {
 	return { tilesetName };
-}
-
-ska::TileWorldLoaderAggregate BuildWorldLoader(const ska::TilesetCorrespondanceMapper& mapper, const std::string& levelName) {
-	const auto levelFileName = ska::FileNameData{ levelName };
-
-	auto loaders = std::vector<std::unique_ptr<ska::LayerLoader>>{};
-	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + ".bmp"));
-	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + "M.bmp"));
-	loaders.push_back(std::make_unique<ska::LayerLoaderImage>(mapper, levelName + "/" + levelFileName.name + "T.bmp"));
-
-	auto eventLoaders = std::vector<std::unique_ptr<ska::LayerEventLoader>>{};
-	eventLoaders.push_back(std::make_unique<ska::LayerEventLoaderText>(levelName + "/" + levelFileName.name + "E.txt"));
-
-	return ska::TileWorldLoaderAggregate(
-		levelName,
-		std::move(loaders),
-		std::move(eventLoaders));
 }
 
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
@@ -59,10 +42,9 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_graphicSystem(nullptr), m_shadowSystem(nullptr), m_eventDispatcher(ed),
 	m_entityManager(em),
 	m_walkASM(nullptr), m_correspondanceMapper("Resources/Chipsets/corr.png"),
-	m_tileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset")),
+	m_tileset(std::make_unique<ska::Tileset>(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
-	m_world(ed, m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)) {
-	//m_saveManager.loadGame(m_saveManager.getPathName());
+	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)) {
 }
 
 const std::string& WorldState::getFileName() const {
@@ -70,7 +52,7 @@ const std::string& WorldState::getFileName() const {
 }
 
 const std::string& WorldState::getTilesetName() const {
-	return m_tileset.getName();
+	return m_tileset->getName();
 }
 
 bool WorldState::loadedOnce() const{
@@ -101,6 +83,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 }
 
 void WorldState::onEventUpdate(unsigned int) {
+	m_tileset->update();
 	m_world.update(m_cameraSystem->getDisplay());
 }
 
@@ -136,9 +119,6 @@ void WorldState::afterLoad(ska::State* lastScene) {
 	addGraphic(std::move(shadowSystem));
 
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
-	//addLogic(std::make_unique<ska::MovementSystem>(m_entityManager));
-
-	//addLogic(std::make_unique<ska::GravitySystem>(m_entityManager));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
 	auto animSystemPtr = std::make_unique<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
@@ -149,6 +129,8 @@ void WorldState::afterLoad(ska::State* lastScene) {
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
+
+	reinit(m_worldFileName, getTilesetName());
 
 	if (m_firstState) {
 		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
@@ -251,7 +233,6 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 //TODO SRP
 std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::string& fileName, const std::string& chipsetName) {
 
-	m_world.load(fileName, chipsetName);
 	if (!m_loadedOnce) {
 		ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
 
@@ -275,16 +256,25 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		m_player = m_entityManager.createTrainer(startPos, m_world.getBlockSize());
 
 		m_loadedOnce = true;
-	} else {
-		auto& mc = m_entityManager.getComponent<ska::MovementComponent>(m_player);
-		mc.ax = 0;
-		mc.ay = 0;
-		mc.az = 0;
-		mc.vx = 0;
-		mc.vy = 0;
-		mc.vz = 0;
-		m_entityManager.refreshEntity(m_player);
+	} 
+	
+	if (getTilesetName() != chipsetName) {
+		m_tileset = std::make_unique<ska::Tileset>(m_tileset->getTileSize(), ska::TilesetLoaderImage{ chipsetName }, ska::TilesetEventLoaderText{ chipsetName });
 	}
+
+	if (getFileName() != fileName) {
+		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
+	}
+	
+	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(m_player);
+	mc.ax = 0;
+	mc.ay = 0;
+	mc.az = 0;
+	mc.vx = 0;
+	mc.vy = 0;
+	mc.vz = 0;
+	m_entityManager.refreshEntity(m_player);
+	
 
 	ska::Point<int> posEntityId;
 

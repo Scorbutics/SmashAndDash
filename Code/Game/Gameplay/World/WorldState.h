@@ -77,7 +77,7 @@ private:
 	ska::WalkAnimationStateMachine* m_walkASM;
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
-	ska::Tileset m_tileset;
+	ska::TilesetPtr m_tileset;
 	std::string m_worldFileName;
 	
 	WorldImpl m_world;

@@ -3,6 +3,7 @@
 #include "Draw/DrawableContainer.h"
 #include "Inputs/Readers/IniReader.h"
 #include "Utils/FileUtils.h"
+#include "WorldLoader.h"
 
 #define WEATHER_ALPHA_LVL 85
 
@@ -23,13 +24,6 @@ WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, con
 void WorldImpl::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	TileWorld::graphicUpdate(ellapsedTime, drawables);
 
-	//Affichage des effets
-	/*ska::ParticleManager& particleManager = wScreen.getParticleManager();
-	drawables.addHead(particleManager);
-
-	//Curseur souris sur la map
-	drawables.addHead(wScreen.getMouseCursor());*/
-
 	/* Météo */
 	drawables.add(m_weather);
 	drawables.add(m_fog);
@@ -39,12 +33,8 @@ std::vector<ska::IniReader>& WorldImpl::getMobSettings() {
 	return m_mobSettings;
 }
 
-void WorldImpl::load(const std::string& fileName, const std::string& chipsetName) {
-	/*if (getFileName() == fileName && chipsetName == m_chipset.getName()) {
-		return;
-	}*/
-
-	//TileWorld::load(fileName, chipsetName);
+void WorldImpl::load(const ska::TilesetCorrespondanceMapper& mapper, const std::string& fileName, ska::Tileset* tileset) {
+	TileWorld::load(BuildWorldLoader(mapper, fileName), tileset);
 	ska::FileNameData fndata(fileName);
 	
 	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";

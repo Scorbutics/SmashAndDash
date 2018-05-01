@@ -19,7 +19,7 @@ public:
 	~WorldImpl() = default;
 
 	WorldImpl& operator=(const WorldImpl&) = delete;
-	void load(const std::string& fileName, const std::string& chipsetName);
+	void load(const ska::TilesetCorrespondanceMapper& mapper, const std::string& fileName, ska::Tileset* tileset);
 
 	void loadWeatherFromData(const std::string& stringDataFile);
 	void loadFogFromData(const std::string& stringDataFile);
