@@ -12,7 +12,7 @@
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Graphic/System/JumpAnimationStateMachine.h"
 #include "Utils/SubObserver.h"
-
+#include "Physic/Space.h"
 
 namespace ska {
 	class IniReader;
@@ -85,5 +85,7 @@ private:
 	ska::CameraSystem* m_cameraSystem{};
 	ska::Rectangle m_screenSize{};
 	bool m_firstState{};
+
+	ska::cp::Space m_space;
 };
 

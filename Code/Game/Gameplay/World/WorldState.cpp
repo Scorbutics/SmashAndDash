@@ -25,6 +25,8 @@
 #include "World/TilesetEventLoaderText.h"
 #include "WorldLoader.h"
 
+#include "Physic/MovementSystem.h"
+
 ska::TilesetLoaderImage BuildTilesetLoader(const std::string& tilesetName) {
 	return { tilesetName };
 }
@@ -82,7 +84,8 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.graphicUpdate(ellapsedTime, drawables);
 }
 
-void WorldState::onEventUpdate(unsigned int) {
+void WorldState::onEventUpdate(const unsigned int timeStep) {
+	m_space.step(timeStep / 1000.);
 	m_tileset->update();
 	m_world.update(m_cameraSystem->getDisplay());
 }
@@ -118,6 +121,7 @@ void WorldState::afterLoad(ska::State* lastScene) {
 	m_shadowSystem = shadowSystem.get();
 	addGraphic(std::move(shadowSystem));
 
+	addLogic(std::make_unique<ska::cp::MovementSystem>(m_entityManager, m_space));
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
@@ -253,7 +257,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 			throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 		}
 
-		m_player = m_entityManager.createTrainer(startPos, m_world.getBlockSize());
+		m_player = CustomEntityManager::createTrainerNG(m_entityManager, m_space, startPos, m_world.getBlockSize());
 
 		m_loadedOnce = true;
 	} 
