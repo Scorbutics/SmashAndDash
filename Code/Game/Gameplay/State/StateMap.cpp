@@ -4,7 +4,7 @@
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../../Script/System/ScriptCommandsSystem.h"
 #include "../Fight/System/FightStartSystem.h"
-#include "Graphic/System/CameraFollowSystem.h"
+#include "Graphic/System/CameraFollowStrategy.h"
 #include "../World/WorldState.h"
 #include "StateMap.h"
 
@@ -16,8 +16,7 @@ StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, Wo
 	m_worldState(ws),
 	m_fileName(worldFileName),
 	m_chipsetName(worldChipsetName), 
-	m_scriptAutoSystem(nullptr), 
-	m_cameraSystem(nullptr), 
+	m_scriptAutoSystem(nullptr),
 	m_scriptSystem(nullptr),
 	/*m_worldCollisionResponse(ws.getWorld(), m_eventDispatcher, m_entityManager),
 	m_entityCollisionResponse(m_eventDispatcher, m_entityManager),*/
@@ -35,12 +34,7 @@ bool StateMap::onGameEvent(ska::GameEvent& ge) {
 
 void StateMap::init() {
     SKA_LOG_INFO("State Map initialization");
-	auto cameraSystem = std::make_unique<ska::CameraFollowSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y);
-	m_cameraSystem = cameraSystem.get();
-	addLogic(std::move(cameraSystem));
 	
-	//m_worldState.linkCamera(m_cameraSystem);
-
 	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
 	m_scriptAutoSystem = scriptAutoSys.get();
 	addLogic(std::move(scriptAutoSys));

@@ -32,7 +32,6 @@ private:
 	const std::string m_fileName;
 	const std::string m_chipsetName;
 	ska::ScriptAutoSystem* m_scriptAutoSystem;
-	ska::CameraSystem* m_cameraSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
 
 	/*ska::WorldCollisionResponse m_worldCollisionResponse;
@@ -40,4 +39,4 @@ private:
 	ska::Point<int> m_screenSize;
 
 };
-typedef std::unique_ptr<StateMap> SceneMapPtr;
+

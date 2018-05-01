@@ -1,3 +1,4 @@
+#include "Graphic/System/CameraFixedStrategy.h"
 #include "../World/WorldState.h"
 #include "StateFight.h"
 #include "StateGUIBattle.h"
@@ -52,7 +53,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 		return;
 	}
 
-	auto cameraSystem = std::make_unique<ska::CameraFixedSystem>(m_entityManager, m_eventDispatcher, m_screenSize.x, m_screenSize.y, m_fightPos);
+	auto cameraSystem = std::make_unique<ska::CameraSystem>(m_entityManager, m_eventDispatcher, std::make_unique<ska::CameraFixedStrategy>(m_fightPos), m_screenSize.x, m_screenSize.y);
 	m_cameraSystem = cameraSystem.get();
 	addLogic(std::move(cameraSystem));	
 	addLogic(std::make_unique<PokeballSystem>(m_entityManager));

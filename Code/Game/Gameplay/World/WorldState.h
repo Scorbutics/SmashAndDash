@@ -2,6 +2,7 @@
 #include "Core/State/StateBase.h"
 #include "Inputs/System/InputSystem.h"
 
+#include "Graphic/System/CameraSystem.h"
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
@@ -81,6 +82,8 @@ private:
 	
 	WorldImpl m_world;
 
-	ska::Rectangle m_cameraPos;
+	ska::CameraSystem* m_cameraSystem{};
+	ska::Rectangle m_screenSize{};
+	bool m_firstState{};
 };
 

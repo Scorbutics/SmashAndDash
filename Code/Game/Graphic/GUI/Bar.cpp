@@ -35,15 +35,13 @@ void Bar::render(const ska::Renderer& renderer) const {
 
 	ska::Rectangle rectSize{ 0, 0, m_barSize.w, m_barSize.h };
 
-	const ska::Rectangle* camera = m_cameraSystem.getDisplay();
-	const ska::Rectangle nonNullCamera = camera == nullptr ? ska::Rectangle{ 0, 0, 0, 0 } : *camera;
-
+	const auto& camera = m_cameraSystem.getDisplay();
 
 	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);
 	const int offsetY = - pos.z;
 
-	renderer.render(m_barStyle, pos.x - nonNullCamera.x, pos.y + offsetY - nonNullCamera.y, nullptr);
-	renderer.render(m_barContent, pos.x + m_barSize.x - nonNullCamera.x, pos.y + m_barSize.y + offsetY - nonNullCamera.y, &rectSize);
+	renderer.render(m_barStyle, pos.x - camera.x, pos.y + offsetY - camera.y, nullptr);
+	renderer.render(m_barContent, pos.x + m_barSize.x - camera.x, pos.y + m_barSize.y + offsetY - camera.y, &rectSize);
 
 }
 
@@ -59,7 +57,4 @@ bool Bar::isVisible() const {
 
 void Bar::setVisible(bool x) {
     m_visible = x;
-}
-
-Bar::~Bar() {
 }

@@ -16,7 +16,7 @@ namespace ska {
 class Bar : public ska::DrawableFixedPriority {
 public:
 	Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId);
-	~Bar();
+	~Bar() override = default;
 
 	Bar& operator=(const Bar&) = delete;
 

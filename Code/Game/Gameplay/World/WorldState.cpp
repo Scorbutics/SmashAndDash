@@ -2,6 +2,7 @@
 #include "Graphic/System/ShadowSystem.h"
 #include "Graphic/System/AnimationSystem.h"
 #include "Graphic/System/DeleterSystem.h"
+#include "Graphic/System/CameraFollowStrategy.h"
 #include "Utils/StringUtils.h"
 #include "Utils/RectangleUtils.h"
 #include "Rectangle.h"
@@ -100,7 +101,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 }
 
 void WorldState::onEventUpdate(unsigned int) {
-	m_world.update(m_cameraPos);
+	m_world.update(m_cameraSystem->getDisplay());
 }
 
 ska::TileWorld& WorldState::getWorld() {
@@ -108,25 +109,31 @@ ska::TileWorld& WorldState::getWorld() {
 }
 
 bool WorldState::onGameEvent(ska::GameEvent& ge) {
-	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY) {
-		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
-		ac.setASM(*m_walkASM, m_player);
-		return true;
+	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY ||
+		ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
+		m_screenSize = { static_cast<int>(ge.windowWidth), static_cast<int>(ge.windowHeight) };
 	}
-	return false;
+
+	return true;
 }
 
 void WorldState::beforeLoad(ska::State* lastState) {
 }
 
 void WorldState::afterLoad(ska::State* lastScene) {
-	auto graphicSystem = std::make_unique<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, nullptr);
+	m_firstState = lastScene == nullptr;
+
+	auto cameraSystem = std::make_unique<ska::CameraSystem>(m_entityManager, m_eventDispatcher, std::make_unique<ska::CameraFollowStrategy>(m_entityManager), m_screenSize.x, m_screenSize.y);
+	m_cameraSystem = cameraSystem.get();
+	addLogic(std::move(cameraSystem));
+
+	auto graphicSystem = std::make_unique<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, *m_cameraSystem);
 	m_graphicSystem = graphicSystem.get();
 	addGraphic(std::move(graphicSystem));
 
-	auto shadownSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, nullptr);
-	m_shadowSystem = shadownSystem.get();
-	addGraphic(std::move(shadownSystem));
+	auto shadowSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, *m_cameraSystem);
+	m_shadowSystem = shadowSystem.get();
+	addGraphic(std::move(shadowSystem));
 
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	//addLogic(std::make_unique<ska::MovementSystem>(m_entityManager));
@@ -140,12 +147,13 @@ void WorldState::afterLoad(ska::State* lastScene) {
 
 	m_walkASM = &animSystem.setup(true, std::make_unique<ska::WalkAnimationStateMachine>(m_entityManager));
 
-	ska::WorldEvent we(lastScene == nullptr ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE, m_worldBGM);
-	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
-
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 
+	if (m_firstState) {
+		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
+		ac.setASM(*m_walkASM, m_player);
+	}
 }
 
 void WorldState::beforeUnload() {

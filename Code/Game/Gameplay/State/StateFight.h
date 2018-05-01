@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "Graphic/System/CameraFixedSystem.h"
+#include "Graphic/System/CameraSystem.h"
 #include "Inputs/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
@@ -42,7 +42,7 @@ private:
 	WorldState& m_worldState;
 	PokemonDescriptor m_descriptor;
 
-	ska::CameraFixedSystem* m_cameraSystem;
+	ska::CameraSystem* m_cameraSystem;
 
 	const int m_opponentScriptId;
 	const ska::IniReader m_opponent;
