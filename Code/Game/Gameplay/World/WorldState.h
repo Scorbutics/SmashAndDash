@@ -13,6 +13,7 @@
 #include "Graphic/System/JumpAnimationStateMachine.h"
 #include "Utils/SubObserver.h"
 #include "Physic/Space.h"
+#include "Graphic/Polygon.h"
 
 namespace ska {
 	class IniReader;
@@ -87,5 +88,6 @@ private:
 	bool m_firstState{};
 
 	ska::cp::Space m_space;
+	std::vector<ska::Polygon<int>> m_layerContours{};
 };
 

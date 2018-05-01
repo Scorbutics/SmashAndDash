@@ -23,6 +23,7 @@
 #include "World/LayerEventLoaderText.h"
 #include "World/TilesetLoaderImage.h"
 #include "World/TilesetEventLoaderText.h"
+#include "World/TileWorldPhysics.h"
 #include "WorldLoader.h"
 
 #include "Physic/MovementSystem.h"
@@ -77,11 +78,17 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	//m_world.getLayerRenderable(2).setPriority(m_graphicSystem->getTopLayerPriority());
 	//drawables.add(m_world.getLayerRenderable(2));
 
+
 	m_pokeball.setPriority(m_graphicSystem->getTopLayerPriority() + 1);
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
 	m_world.graphicUpdate(ellapsedTime, drawables);
+
+	for (auto& l : m_layerContours) {
+		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
+		drawables.add(l);
+	}
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
@@ -135,6 +142,13 @@ void WorldState::afterLoad(ska::State* lastScene) {
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 
 	reinit(m_worldFileName, getTilesetName());
+
+	auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
+	auto we = ska::WorldEvent{ wet };
+	we.blocksWidth = m_world.getBlocksX();
+	we.blocksHeight = m_world.getBlocksY();
+	we.blockSize = m_world.getBlockSize();
+	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
 
 	if (m_firstState) {
 		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
@@ -279,6 +293,22 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	mc.vz = 0;
 	m_entityManager.refreshEntity(m_player);
 	
+	const auto agglomeratedTiles = ska::GenerateAgglomeratedTileMap(m_world);
+	const auto contourRectangleTile = ska::GenerateContourTileMap(agglomeratedTiles);
+
+	//On garde le héros, donc on commence à l'index 1
+	m_space.eraseBodies(1);
+	m_space.eraseShapes(1);
+	for (const auto& r : contourRectangleTile) {
+		m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+	}
+
+	m_layerContours.emplace_back(contourRectangleTile);
+	auto i = 0u;
+	for (auto& c : m_layerContours) {
+		c.setPriority(1000 + i);
+		i++;
+	}
 
 	ska::Point<int> posEntityId;
 
@@ -287,6 +317,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 
 	//Chargement des NPC sur la map (personnages & pokémon)
 	/*
+	TODO
 	for (auto i = 0; i < layerE.getNbrLignes(); i++) {
 		posEntityId.y = layerE.getBlocY(i);
 		posEntityId.x = layerE.getBlocX(i);
