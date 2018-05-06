@@ -20,7 +20,7 @@ public:
 	void launch(const ska::Point<int>& src, const ska::Point<int>& destPos, PokeballLaunchReason::Enum launchReason);
 	void update();
 	void render(const ska::Renderer& renderer) const override;
-	bool isVisible() const override;
+	bool isVisible() const;
     void hide(bool b);
     ~Pokeball();
 

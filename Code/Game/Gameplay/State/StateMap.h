@@ -17,7 +17,7 @@ class StateMap :
 	public AbstractStateMap,
 	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, const std::string& worldFileName, const std::string& worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
 	
 	virtual ~StateMap();
 
@@ -30,7 +30,7 @@ private:
 
 	WorldState& m_worldState;
 	const std::string m_fileName;
-	const std::string m_chipsetName;
+	std::string m_tilesetName;
 	ska::ScriptAutoSystem* m_scriptAutoSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
 

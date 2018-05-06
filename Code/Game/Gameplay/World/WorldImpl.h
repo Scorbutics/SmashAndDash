@@ -26,8 +26,11 @@ public:
 
 	bool onSettingsChange(SettingsChangeEvent& sce);
 
-	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	std::vector<ska::IniReader>& getMobSettings();
+
+	//TODO Weather has nothing to do here...
+	Weather& getFog();
+	Weather& getWeather();
 
 private:
 	std::vector<ska::IniReader> m_mobSettings;

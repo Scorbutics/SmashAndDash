@@ -38,7 +38,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, ska::MemoryScr
 	const ska::Point<int>& centerPos = ska::PositionComponent::getCenterPosition(pc, hc);
 
 	const ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
-	const auto targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
+	const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(pc.layer, hitbox, 1);
 	ska::Point<int> vector;
 	vector.x = targetBlock.x - (pc.x + hc.xOffset);
 	vector.y = targetBlock.y - (pc.y + hc.yOffset);

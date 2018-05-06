@@ -19,7 +19,7 @@ public:
     const std::string& getName() const;
 
     void render(const ska::Renderer& renderer) const override;
-	bool isVisible() const override;
+	bool isVisible() const;
 	virtual int getPriority() const override;
 
 private:

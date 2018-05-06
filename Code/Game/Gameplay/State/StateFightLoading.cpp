@@ -44,7 +44,7 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		m_pokeball = 0;
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
-		const auto targetBlock = m_worldState.getWorld().placeOnNearestPracticableBlock(hitbox, 1);
+		const auto targetBlock = m_worldState.getWorld().getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
 		pc.x = targetBlock.x - hc.xOffset;
 		pc.y = targetBlock.y - hc.yOffset;
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, std::move(pc));

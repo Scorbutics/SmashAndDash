@@ -16,7 +16,7 @@ public:
 	void operator=(const MessageDialogBox&) = delete;
 
 	void render(const ska::Renderer& renderer) const override;
-	bool isVisible() const override;
+	bool isVisible() const;
 	int getPriority() const override;
 
 	static bool instanceExists();

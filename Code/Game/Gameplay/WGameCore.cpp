@@ -33,7 +33,7 @@ WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
 	
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
-	const auto& pathStartMapName = "./Levels/" + startMapName + ".bmp";
+	const auto& pathStartMapName = "./Levels/" + startMapName;
 	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
 	
 	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));

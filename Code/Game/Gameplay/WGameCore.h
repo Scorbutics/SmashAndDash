@@ -27,10 +27,10 @@ public:
 
 	WGameCore(CustomEntityManager& em, GameConfPtr&& gc);
 
-	virtual int onTerminate(ska::TerminateProcessException& te) override;
-	virtual int onException(ska::GenericException& ge) override;
+	int onTerminate(ska::TerminateProcessException& te) override;
+	int onException(ska::GenericException& ge) override;
 
-	virtual float ticksWanted() const override;
+	float ticksWanted() const override;
 
 	virtual ~WGameCore() = default;
 

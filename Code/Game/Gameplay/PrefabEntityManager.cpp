@@ -24,6 +24,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	pc.x = startPos.x * worldBlockSize;
 	pc.y = startPos.y * worldBlockSize;
 	pc.z = 0;
+	pc.layer = 1;
 	addComponent<PositionComponent>(hero, std::move(pc));
 	MovementComponent mc;
 	ForceComponent fc;

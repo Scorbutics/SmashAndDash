@@ -21,21 +21,21 @@ WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, con
 	m_fog.setMosaicEffect(true);
 }
 
-void WorldImpl::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
-	TileWorld::graphicUpdate(ellapsedTime, drawables);
-
-	/* Météo */
-	drawables.add(m_weather);
-	drawables.add(m_fog);
-}
-
 std::vector<ska::IniReader>& WorldImpl::getMobSettings() {
 	return m_mobSettings;
 }
 
+Weather& WorldImpl::getFog() {
+	return m_fog;
+}
+
+Weather& WorldImpl::getWeather() {
+	return m_weather;
+}
+
 void WorldImpl::load(const ska::TilesetCorrespondanceMapper& mapper, const std::string& fileName, ska::Tileset* tileset) {
 	TileWorld::load(BuildWorldLoader(mapper, fileName), tileset);
-	ska::FileNameData fndata(fileName);
+	const ska::FileNameData fndata(fileName);
 	
 	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";
 	loadWeatherFromData(dataFile);
@@ -43,15 +43,14 @@ void WorldImpl::load(const ska::TilesetCorrespondanceMapper& mapper, const std::
 }
 
 void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
-
 	ska::IniReader reader(stringDataFile);
 
 	const std::string& fogSpritePath = "Fog sprite";
 	const auto sprite = reader.exists(fogSpritePath);
-	auto xintensity = reader.get<int>("Fog xintensity");
-	auto yintensity = reader.get<int>("Fog yintensity");
-	auto number = reader.get<int>("Fog number");
-	auto transparency = reader.get<bool>("Fog transparency");
+	const auto xintensity = reader.get<int>("Fog xintensity");
+	const auto yintensity = reader.get<int>("Fog yintensity");
+	const auto number = reader.get<int>("Fog number");
+	const auto transparency = reader.get<bool>("Fog transparency");
 
 	if(!sprite) {
 		SKA_LOG_MESSAGE("Le brouillard est inexistant sur cette map");
@@ -59,10 +58,9 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 		return;
 	}
 
-	auto alpha = transparency ? WEATHER_ALPHA_LVL : 255;
+	const auto alpha = transparency ? WEATHER_ALPHA_LVL : 255;
 	m_fog.load(reader.get<std::string>(fogSpritePath), number, 100, xintensity, yintensity, alpha);
 	m_fog.hide(false);
-
 }
 
 void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
@@ -71,10 +69,10 @@ void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 	const auto sprite = reader.exists(weatherSpritePath);
 
 	if(sprite) {
-		auto transparency = reader.get<bool>("Weather transparency");
-		auto xintensity = reader.get<int>("Weather xintensity");
-		auto yintensity = reader.get<int>("Weather yintensity");
-		auto number = reader.get<int>("Weather number");
+		const auto transparency = reader.get<bool>("Weather transparency");
+		const auto xintensity = reader.get<int>("Weather xintensity");
+		const auto yintensity = reader.get<int>("Weather yintensity");
+		const auto number = reader.get<int>("Weather number");
 
 		m_weather.load(reader.get<std::string>(weatherSpritePath), number, 100, xintensity, yintensity, transparency);
 		m_weather.hide(false);

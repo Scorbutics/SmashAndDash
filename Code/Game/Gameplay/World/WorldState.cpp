@@ -20,7 +20,6 @@
 
 #include "World/TileWorldLoaderAggregate.h"
 #include "World/LayerLoaderImage.h"
-#include "World/LayerEventLoaderText.h"
 #include "World/TilesetLoaderImage.h"
 #include "World/TilesetEventLoaderText.h"
 #include "World/TileWorldPhysics.h"
@@ -83,7 +82,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
-	m_world.graphicUpdate(ellapsedTime, drawables);
+	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 
 	for (auto& l : m_layerContours) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
@@ -94,7 +93,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 void WorldState::onEventUpdate(const unsigned int timeStep) {
 	m_space.step(timeStep / 1000.);
 	m_tileset->update();
-	m_world.update(m_cameraSystem->getDisplay());
+	//m_world.update(m_cameraSystem->getDisplay());
 }
 
 ska::TileWorld& WorldState::getWorld() {
@@ -199,7 +198,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				const auto bX = dest.x / blockSize;
 				const auto bY = dest.y / blockSize;
 				if (bX < m_world.getBlocksX() && bY < m_world.getBlocksY()) {
-					const auto* b = m_world.getHighestBlock(bX, bY);
+					const auto* b = m_world.getCollisionProfile().getBlock(0, bX, bY);
 					if (b != nullptr && (b->id.x + b->id.y * blockSize) == idBlocks[i]) {
 						spawnAllowed = false;
 					}
@@ -235,7 +234,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				const auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
 				ska::Rectangle hitbox{ static_cast<int>(pc.x + hc.xOffset), static_cast<int>(pc.y + hc.yOffset), static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
-				const auto targetBlock = m_world.placeOnNearestPracticableBlock(hitbox, 1);
+				const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
 				pc.x = targetBlock.x - hc.xOffset;
 				pc.y = targetBlock.y- hc.yOffset;
 
@@ -293,8 +292,8 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	mc.vz = 0;
 	m_entityManager.refreshEntity(m_player);
 	
-	const auto agglomeratedTiles = ska::GenerateAgglomeratedTileMap(m_world);
-	const auto contourRectangleTile = ska::GenerateContourTileMap(agglomeratedTiles);
+	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile());
+	const auto contourRectangleTile = GenerateContourTileMap(agglomeratedTiles);
 
 	//On garde le héros, donc on commence à l'index 1
 	m_space.eraseBodies(1);

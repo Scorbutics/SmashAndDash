@@ -35,7 +35,7 @@ public:
 	 void load(const std::string& wSprite, int number, int distance, int intensityX = 1, int intensityY = -1, int alpha = 128);
 
 	 void render(const ska::Renderer& render) const override;
-	 bool isVisible() const override;
+	 bool isVisible() const;
 	 void hide(bool active);
      void resetRandomPos();
 
