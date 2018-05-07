@@ -36,7 +36,7 @@ public:
 	WorldState(const WorldState&) = delete;
 	WorldState& operator=(const WorldState&) = delete;
 
-	virtual ~WorldState();
+	~WorldState() override = default;
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);

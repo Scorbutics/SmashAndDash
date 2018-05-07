@@ -305,7 +305,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	m_layerContours.emplace_back(contourRectangleTile);
 	auto i = 0u;
 	for (auto& c : m_layerContours) {
-		c.setPriority(1000 + i);
+		c.setPriority(90000 + i);
 		i++;
 	}
 
@@ -371,7 +371,4 @@ ska::EntityId WorldState::getPlayer() const{
 
 SavegameManager& WorldState::getSaveGame() {
 	return m_saveManager;
-}
-
-WorldState::~WorldState() {
 }

@@ -15,6 +15,7 @@ ska::TileWorldLoaderAggregate BuildWorldLoader(const ska::TilesetCorrespondanceM
 
 	return ska::TileWorldLoaderAggregate(
 		levelName,
+		2,
 		std::move(loaders),
 		std::move(eventLoaders));
 }

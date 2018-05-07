@@ -54,8 +54,8 @@ void StateMap::init() {
 	//resetScriptEntities();
 }
 
-void StateMap::beforeLoad(ska::State* lastScene) {
-	AbstractStateMap::beforeLoad(lastScene);
+void StateMap::beforeLoad(ska::State* lastState) {
+	AbstractStateMap::beforeLoad(lastState);
 	
 	// Do not delete the player between 2 maps, just TP it
 	std::unordered_set<ska::EntityId> toNotDelete;
@@ -65,9 +65,6 @@ void StateMap::beforeLoad(ska::State* lastScene) {
 	m_entityManager.removeEntities(toNotDelete);
 
 	init();
-}
-
-StateMap::~StateMap() {
 }
 
 void StateMap::resetScriptEntities() {

@@ -19,12 +19,12 @@ class StateMap :
 public:
 	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
 	
-	virtual ~StateMap();
+	~StateMap() override = default;
 
 private:
 	void resetScriptEntities();
-	virtual void beforeLoad(ska::State* lastState) override final;
-	virtual void afterLoad(ska::State* lastState) override final;
+	void beforeLoad(ska::State* lastState) override final;
+	void afterLoad(ska::State* lastState) override final;
 	bool onGameEvent(ska::GameEvent& ge);
 	void init();
 
