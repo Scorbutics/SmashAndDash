@@ -21,7 +21,7 @@ std::string CommandJump::execute(ska::ScriptComponent& script, ska::MemoryScript
 	auto internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::ForceComponent>(internalEntity)) {
-		throw ska::ScriptException("The targetted entity cannot jump : " + id);
+		throw ska::ScriptException(("The targetted entity cannot jump : " + id).c_str());
 	}
 
 	auto& fc = m_entityManager.getComponent<ska::ForceComponent>(internalEntity);

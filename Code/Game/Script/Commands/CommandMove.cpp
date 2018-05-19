@@ -35,7 +35,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript
 	const auto internalEntity = script.parent->getEntityFromName(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
-		throw ska::ScriptException("The targetted entity cannot move : " + id);
+		throw ska::ScriptException(("The targetted entity cannot move : " + id).c_str());
 	}
 
 	const auto& centerPos = ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(internalEntity),

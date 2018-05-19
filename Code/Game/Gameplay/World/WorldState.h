@@ -89,5 +89,6 @@ private:
 
 	ska::cp::Space m_space;
 	std::vector<ska::Polygon<int>> m_layerContours{};
+
 };
 
