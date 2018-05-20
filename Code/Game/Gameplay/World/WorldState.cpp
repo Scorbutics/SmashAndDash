@@ -46,7 +46,8 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_walkASM(nullptr), m_correspondanceMapper("Resources/Chipsets/corr.png"),
 	m_tileset(std::make_unique<ska::Tileset>(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
-	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)) {
+	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
+	m_collisionEventSender{ m_space, ed, m_tileset->getTileSize() } {
 }
 
 const std::string& WorldState::getFileName() const {
@@ -71,6 +72,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
+	//TODO enlever la météo de world
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 

@@ -8,6 +8,7 @@
 #include "../World/WorldState.h"
 #include "StateMap.h"
 #include "Utils/FileUtils.h"
+#include "World/System/ScriptWorldTriggerSystem.h"
 
 #define MOB_SPAWNING_DELAY 5000
 
@@ -49,6 +50,7 @@ void StateMap::init() {
 	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld());
 	m_scriptSystem = scriptSystem.get();
 	addLogic(std::move(scriptSystem));
+	addLogic(std::make_unique<ska::ScriptWorldTriggerSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld()));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getPlayer()));
 	//resetScriptEntities();

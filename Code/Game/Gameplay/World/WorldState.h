@@ -11,6 +11,7 @@
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Graphic/System/JumpAnimationStateMachine.h"
+#include "Physic/SpaceCollisionEventSender.h"
 #include "Utils/SubObserver.h"
 #include "Physic/Space.h"
 #include "Graphic/Polygon.h"
@@ -89,6 +90,6 @@ private:
 
 	ska::cp::Space m_space;
 	std::vector<ska::Polygon<int>> m_layerContours{};
-
+	ska::cp::SpaceCollisionEventSender m_collisionEventSender;
 };
 
