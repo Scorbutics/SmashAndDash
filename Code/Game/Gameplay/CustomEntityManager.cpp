@@ -14,6 +14,8 @@
 #include "../Utils/IDs.h"
 
 #include "Physic/BuildHitbox.h"
+#include "ECS/Basics/Input/InputComponent.h"
+#include "ECS/Basics/Physic/GravityAffectedComponent.h"
 
 CustomEntityManager::CustomEntityManager(ska::GameEventDispatcher& ged) : 
 	ska::PrefabEntityManager(ged) {
@@ -67,19 +69,21 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 }
 
 ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize) {
-	auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
+	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(trainer);
 	const auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
-	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, 200.f, 500.f, trainer);
+	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(trainer);
+	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, gafc.friction * 50, gafc.rotationFriction * 30, trainer);
 	em.addComponent(trainer, std::move(bc));
 	return trainer;
 }
 
 ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize) {
-	auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
+	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	const auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
-	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, 200.f, 500.f, character);
+	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
+	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, gafc.friction * 50, gafc.rotationFriction * 30, character);
 	em.addComponent(character, std::move(bc));
 	return character;
 }

@@ -16,7 +16,7 @@ PokemonSoundRenderer::~PokemonSoundRenderer() {
 }
 
 bool PokemonSoundRenderer::onSettingsChange(SettingsChangeEvent& sce) {
-	if ((sce.eventType & MUSIC_VOLUME) == MUSIC_VOLUME) {
+	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) == static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) {
 		setMusicVolume(sce.settings.getSoundVolume());
 	}
 	return true;

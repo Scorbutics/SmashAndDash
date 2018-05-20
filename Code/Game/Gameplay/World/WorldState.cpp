@@ -66,23 +66,13 @@ std::vector<ska::IniReader>& WorldState::getMobSettings() {
 }
 
 void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
-	
-	//Première couche
-	//drawables.addHead(m_world.getLayerRenderable(0));
-
-	//Deuxième couche
-	//drawables.addHead(m_world.getLayerRenderable(1));
-
-	/* We use the maximum drawing priority of characters to draw the top layer */
-	//m_world.getLayerRenderable(2).setPriority(m_graphicSystem->getTopLayerPriority());
-	//drawables.add(m_world.getLayerRenderable(2));
-
-
 	m_pokeball.setPriority(m_graphicSystem->getTopLayerPriority() + 1);
 	drawables.add(m_pokeball);
 
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
+	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
+	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 
 	for (auto& l : m_layerContours) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
@@ -93,7 +83,6 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 void WorldState::onEventUpdate(const unsigned int timeStep) {
 	m_space.step(timeStep / 1000.);
 	m_tileset->update();
-	//m_world.update(m_cameraSystem->getDisplay());
 }
 
 ska::TileWorld& WorldState::getWorld() {
@@ -131,18 +120,30 @@ void WorldState::afterLoad(ska::State* lastScene) {
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
-	auto animSystemPtr = std::make_unique<ska::AnimationSystem<ska::WalkAnimationStateMachine>>(m_entityManager);
-	auto& animSystem = *animSystemPtr.get();
+	auto animSystemPtr = std::make_unique<ska::AnimationSystem<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>>(m_entityManager);
+	auto& animSystem = *animSystemPtr;
 	addLogic(std::move(animSystemPtr));
 
 	m_walkASM = &animSystem.setup(true, std::make_unique<ska::WalkAnimationStateMachine>(m_entityManager));
+
+	animSystem.setup<ska::JumpAnimationStateMachine>(false, std::make_unique<ska::JumpAnimationStateMachine>(m_entityManager));
+
+	animSystem.link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](ska::EntityId& e) {
+		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+		return ska::NumberUtils::absolute(mov.vz) > 0.1;
+	});
+
+	animSystem.link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](ska::EntityId& e) {
+		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
+		return ska::NumberUtils::absolute(mov.vz) <= 0.1;
+	});
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 
 	reinit(m_worldFileName, getTilesetName());
 
-	auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
+	const auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
 	auto we = ska::WorldEvent{ wet };
 	we.blocksWidth = m_world.getBlocksX();
 	we.blocksHeight = m_world.getBlocksY();
@@ -299,7 +300,8 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	m_space.eraseBodies(1);
 	m_space.eraseShapes(1);
 	for (const auto& r : contourRectangleTile) {
-		m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+		auto& sh = m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+		sh.setBounciness(10.F);
 	}
 
 	m_layerContours.emplace_back(contourRectangleTile);

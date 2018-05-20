@@ -146,15 +146,15 @@ bool GUIMap::onScreenResized(unsigned int width, unsigned int height) {
 bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
 	auto wsettings = reinterpret_cast<WindowSettings*>(getWindow("settings"));
 
-	if((sce.eventType & SettingsChangeEventType::MUSIC_VOLUME) == SettingsChangeEventType::MUSIC_VOLUME) {
+	if((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) == static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) {
 		wsettings->setMusicVolume(sce.settings.getSoundVolume()/100);
 	}
 
-	if ((sce.eventType & SettingsChangeEventType::FOG) == SettingsChangeEventType::FOG) {
+	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::FOG)) == static_cast<int>(SettingsChangeEventType::FOG)) {
 		wsettings->setFog(sce.settings.getFogActive());
 	}
 
-	if ((sce.eventType & SettingsChangeEventType::WEATHER) == SettingsChangeEventType::WEATHER) {
+	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::WEATHER)) == static_cast<int>(SettingsChangeEventType::WEATHER)) {
 		wsettings->setWeather(sce.settings.getWeatherActive());
 	}
 

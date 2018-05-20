@@ -20,6 +20,7 @@
 */
 namespace ska {
 	class TileWorld;
+	class DrawableContainer;
 }
 
 class Weather : 
@@ -45,7 +46,10 @@ public:
      void setMosaicEffect(bool x);
      void resetPos();
 
-protected:
+	 void graphicUpdate(const ska::Rectangle& cameraPos, ska::DrawableContainer& drawables);
+
+private:
+	ska::Rectangle m_cameraPos;
      int m_intensityX, m_intensityY, m_number, m_distance;
      std::unique_ptr<ska::Texture> m_weather;
      std::vector<ska::Point<float>> m_pos;

@@ -3,6 +3,7 @@
 #include "World/TileWorld.h"
 #include "Utils/NumberUtils.h"
 #include "Draw/Renderer.h"
+#include "Draw/DrawableContainer.h"
 
 Weather::Weather(ska::TileWorld& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
     m_number(0),
@@ -63,6 +64,13 @@ void Weather::resetPos() {
 
 }
 
+void Weather::graphicUpdate(const ska::Rectangle & cameraPos, ska::DrawableContainer& drawables) {
+	if (isVisible()) {
+		m_cameraPos = cameraPos;
+		drawables.add(*this);
+	}
+}
+
 void Weather::resetRandomPos() {
     for(auto i = 0; i < m_number; i++) {
 	    const auto radius = static_cast<float>(ska::NumberUtils::random(m_distance, m_distance + m_weather->getWidth() * 2));
@@ -77,9 +85,7 @@ void Weather::update() {
 
 	const auto worldWidth = static_cast<float>(m_world.getPixelWidth());
 	const auto worldHeight = static_cast<float>(m_world.getPixelHeight());
-
-	//const ska::Rectangle oRel = { -worldView->x, -worldView->y };
-
+	
 	for (auto i = 0; i < m_number; i++) {
 
 		m_pos[i].x += static_cast<float>(m_intensityX / 5.);
@@ -100,15 +106,14 @@ void Weather::update() {
 }
 
 void Weather::render(const ska::Renderer& render) const {
-	auto wv = ska::Rectangle{};
-	const auto worldView = &wv; //m_world.getView();
+	const auto& worldView = m_cameraPos;
 
-	if (!m_active || worldView == nullptr || m_weather == nullptr) {
+	if (!m_active || m_weather == nullptr) {
 		return;
 	}
 	
-	const auto cameraWidth = static_cast<float>(worldView->w);
-	const auto cameraHeight = static_cast<float>(worldView->h);
+	const auto cameraWidth = static_cast<float>(worldView.w);
+	const auto cameraHeight = static_cast<float>(worldView.h);
 
     for(auto i = 0; i < m_number; i++) {
         if(m_mosaic) {
@@ -119,7 +124,7 @@ void Weather::render(const ska::Renderer& render) const {
 			}
 	        const auto nbrMosaicX = static_cast<int>(cameraWidth / weatherWidth + 2);
 	        const auto nbrMosaicY = static_cast<int>(cameraHeight / weatherHeight + 2);
-			const ska::Point<int> oRel = { static_cast<int>(- worldView->x + (worldView->x / weatherWidth) * weatherWidth), static_cast<int>(-worldView->y + (worldView->y / weatherHeight) * weatherHeight)};
+			const ska::Point<int> oRel = { static_cast<int>(- worldView.x + (worldView.x / weatherWidth) * weatherWidth), static_cast<int>(-worldView.y + (worldView.y / weatherHeight) * weatherHeight)};
 
 			ska::Point<int> buf;
             for(auto i1 = 0; i1 < nbrMosaicX; i1++) {
@@ -131,7 +136,7 @@ void Weather::render(const ska::Renderer& render) const {
             }
 
 		} else {
-			const ska::Rectangle oRel = { -(worldView->x), -(worldView->y), 0, 0 };
+			const ska::Rectangle oRel = { -(worldView.x), -(worldView.y), 0, 0 };
 			const ska::Point<int> buf { static_cast<int>(m_pos[i].x) + oRel.x, static_cast<int>(m_pos[i].y) + oRel.y };
 			render.render(*m_weather, buf.x, buf.y, nullptr);
 		}

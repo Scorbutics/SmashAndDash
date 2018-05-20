@@ -84,11 +84,11 @@ void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 }
 
 bool WorldImpl::onSettingsChange(SettingsChangeEvent& sce) {
-	if ((sce.eventType & SettingsChangeEventType::WEATHER) == SettingsChangeEventType::WEATHER) {
+	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::WEATHER)) == static_cast<int>(SettingsChangeEventType::WEATHER)) {
 		m_weather.hide(!sce.settings.getWeatherActive());
 	}
 
-	if ((sce.eventType & SettingsChangeEventType::FOG) == SettingsChangeEventType::FOG) {
+	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::FOG)) == static_cast<int>(SettingsChangeEventType::FOG)) {
 		m_fog.hide(!sce.settings.getFogActive());
 	}
 
