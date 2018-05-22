@@ -35,6 +35,22 @@ ska::TilesetEventLoaderText BuildTilesetEventLoader(const std::string& tilesetNa
 	return { tilesetName };
 }
 
+ska::TilesetPtr BuildTileset(unsigned int tileSize, const ska::TilesetLoader& loader, const ska::TilesetEventLoader& eventLoader) {
+	auto tileset = std::make_unique<ska::Tileset>(48, loader, eventLoader);
+	for (auto y = 0u; y < 4u; y++) {
+		for (auto x = 0u; x < 6u; x++) {
+			tileset->setPropertiesBitMask(x, y, ska::TilePropertiesType::TILE_PROPERTY_WATER);
+		}
+	}
+	
+	for (auto y = 4u; y < 8u; y++) {
+		for (auto x = 0u; x < 3u; x++) {
+			tileset->setPropertiesBitMask(x, y, ska::TilePropertiesType::TILE_PROPERTY_WATER);
+		}
+	}
+	return tileset;
+}
+
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
 	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 	m_loadedOnce(false),
@@ -44,7 +60,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_graphicSystem(nullptr), m_shadowSystem(nullptr), m_eventDispatcher(ed),
 	m_entityManager(em),
 	m_walkASM(nullptr), m_correspondanceMapper("Resources/Chipsets/corr.png"),
-	m_tileset(std::make_unique<ska::Tileset>(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
+	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
 	m_collisionEventSender{ m_space, ed, m_tileset->getTileSize() } {
@@ -76,7 +92,12 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 
-	for (auto& l : m_layerContours) {
+	/*for (auto& l : m_layerContours) {
+		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
+		drawables.add(l);
+	}*/
+
+	for (auto& l : m_layerContoursWater) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
 		drawables.add(l);
 	}
@@ -295,8 +316,23 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	mc.vz = 0;
 	m_entityManager.refreshEntity(m_player);
 	
-	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile());
+
+	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
+		if (b == nullptr || 
+			(b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER == ska::TilePropertiesType::TILE_PROPERTY_WATER)) {
+			return ska::TileCollision::No;
+		}
+		return b->collision;
+	});
+
+	const auto agglomeratedTilesWater = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
+		if (b == nullptr) {
+			return ska::TileCollision::No;
+		}
+		return (b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER == ska::TilePropertiesType::TILE_PROPERTY_WATER) ? ska::TileCollision::Yes : ska::TileCollision::No;
+	});
 	const auto contourRectangleTile = GenerateContourTileMap(agglomeratedTiles);
+	const auto contourRectangleTileWater = GenerateContourTileMap(agglomeratedTilesWater);
 
 	//On garde le héros, donc on commence à l'index 1
 	m_space.eraseBodies(1);
@@ -306,10 +342,23 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		sh.setBounciness(10.F);
 	}
 
+	for (const auto& r : contourRectangleTileWater) {
+		auto& sh = m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+		sh.setBounciness(10.F);
+	}
+
 	m_layerContours.emplace_back(contourRectangleTile);
+	m_layerContoursWater.emplace_back(contourRectangleTileWater);
+	
 	auto i = 0u;
 	for (auto& c : m_layerContours) {
 		c.setPriority(90000 + i);
+		i++;
+	}
+
+	for (auto& c : m_layerContoursWater) {
+		c.setPriority(90000 + i);
+		c.setColor({ 0, 0, 255, 255 });
 		i++;
 	}
 
