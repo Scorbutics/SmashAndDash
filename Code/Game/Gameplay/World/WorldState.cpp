@@ -92,15 +92,15 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 
-	/*for (auto& l : m_layerContours) {
-		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
-		drawables.add(l);
-	}*/
-
-	for (auto& l : m_layerContoursWater) {
+	for (auto& l : m_layerContours) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
 		drawables.add(l);
 	}
+
+	/*for (auto& l : m_layerContoursWater) {
+		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
+		drawables.add(l);
+	}*/
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
@@ -300,7 +300,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	} 
 	
 	if (getTilesetName() != chipsetName) {
-		m_tileset = std::make_unique<ska::Tileset>(m_tileset->getTileSize(), ska::TilesetLoaderImage{ chipsetName }, ska::TilesetEventLoaderText{ chipsetName });
+		m_tileset = BuildTileset(m_tileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
 	}
 
 	if (getFileName() != fileName) {
