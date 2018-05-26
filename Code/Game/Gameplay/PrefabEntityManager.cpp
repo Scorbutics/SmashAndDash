@@ -33,7 +33,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	fc.maxSpeed = 240.F;
 	GravityAffectedComponent gac;
 	gac.friction = 20.F;
-	gac.rotationFriction = 0;
+	gac.rotationFriction = 10;
 	addComponent<GravityAffectedComponent>(hero, std::move(gac));
 	addComponent<ForceComponent>(hero, std::move(fc));
 	addComponent<MovementComponent>(hero, std::move(mc));
