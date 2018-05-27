@@ -73,7 +73,11 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	const auto& point = em.getComponent<ska::PositionComponent>(trainer);
 	const auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
 	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(trainer);
-	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, gafc.friction * 50, gafc.rotationFriction * 30, trainer);
+	const auto& fc = em.getComponent<ska::ForceComponent>(trainer);
+	
+	auto bc = ska::cp::BuildControlledRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, trainer);
+	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
+
 	em.addComponent(trainer, std::move(bc));
 	return trainer;
 }
@@ -82,8 +86,14 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	const auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
-	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
-	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, gafc.friction * 50, gafc.rotationFriction * 30, character);
+	auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
+	auto& fc = em.getComponent<ska::ForceComponent>(character);
+	gafc.friction = 10.F;
+	fc.weight = 20.F;
+
+	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
+	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
+
 	em.addComponent(character, std::move(bc));
 	return character;
 }

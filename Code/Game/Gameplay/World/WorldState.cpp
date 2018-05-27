@@ -108,16 +108,21 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 
 	auto& hc = m_entityManager.getComponent < ska::cp::HitboxComponent>(0);
-	auto& controlBody = m_space.getBodies()[hc.controlBodyIndex];
+	auto& controlBody = m_space.getBody(hc.controlBodyIndex);
 	
 #ifndef NDEBUG
 		DisplayPlayerControlBody(controlBody, m_layerContours);
+		auto& ctrlBdyDrawable = m_layerContours[m_layerContours.size() - 1];
+		ctrlBdyDrawable.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
+		drawables.add(ctrlBdyDrawable);
 #endif
 
-	for (auto& l : m_layerContours) {
+		
+
+	/*for (auto& l : m_layerContours) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
 		drawables.add(l);
-	}
+	}*/
 
 	
 
@@ -319,11 +324,17 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		}
 
 		m_player = CustomEntityManager::createTrainerNG(m_entityManager, m_space, startPos, m_world.getBlockSize());
-		auto& pShape = m_space.getShapes()[m_entityManager.getComponent<ska::cp::HitboxComponent>(m_player).shapeIndex];
+
+		auto& pShape = m_space.getShape(m_entityManager.getComponent<ska::cp::HitboxComponent>(m_player).shapeIndex);
 		pShape.setBounciness(0.F);
+
 		m_loadedOnce = true;
-	} 
-	
+	} else {
+		auto entitiedToNotRemoveSet = std::unordered_set<ska::EntityId>{};
+		entitiedToNotRemoveSet.insert(0);
+		m_entityManager.removeEntities(entitiedToNotRemoveSet);
+	}
+
 	if (getTilesetName() != chipsetName) {
 		m_tileset = BuildTileset(m_tileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
 	}
@@ -331,7 +342,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	if (getFileName() != fileName) {
 		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
 	}
-	
+
 	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(m_player);
 	mc.ax = 0;
 	mc.ay = 0;
@@ -340,10 +351,10 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	mc.vy = 0;
 	mc.vz = 0;
 	m_entityManager.refreshEntity(m_player);
-	
+
 
 	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
-		if (b == nullptr || 
+		if (b == nullptr ||
 			(b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER == ska::TilePropertiesType::TILE_PROPERTY_WATER)) {
 			return ska::TileCollision::No;
 		}
@@ -361,27 +372,31 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 
 	//TODO à revoir
 	//On garde le héros, donc on commence à l'index 2 bodies (control + real) 1 shape
-	m_entityManager.getComponent<ska::cp::HitboxComponent>(0);
-	m_space.eraseShapes(1);
-	m_space.eraseBodies(2);
-	
+	auto& hc = m_entityManager.getComponent<ska::cp::HitboxComponent>(0);
+	if (hc.bodyIndex == hc.controlBodyIndex) {
+		m_space.eraseBodies(1);
+	}
+	else {
+		m_space.eraseBodies(2);
+	}
+
 	for (const auto& r : contourRectangleTile) {
-		const auto shIndex = m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
-		auto& sh = m_space.getShapes()[shIndex];
+		const auto shIndex = m_space.addShape(nullptr, ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+		auto& sh = m_space.getShape(shIndex);
 		sh.setBounciness(1.F);
 		sh.setFriction(1.F);
 	}
 
 	for (const auto& r : contourRectangleTileWater) {
-		const auto shIndex = m_space.addShape(ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
-		auto& sh = m_space.getShapes()[shIndex];
+		const auto shIndex = m_space.addShape(nullptr, ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
+		auto& sh = m_space.getShape(shIndex);
 		sh.setBounciness(1.F);
 		sh.setFriction(1.F);
 	}
 
 	m_layerContours.emplace_back(contourRectangleTile);
 	m_layerContoursWater.emplace_back(contourRectangleTileWater);
-	
+
 	auto i = 0u;
 	for (auto& c : m_layerContours) {
 		c.setPriority(90000 + i);
@@ -397,9 +412,9 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	ska::Point<int> posEntityId;
 
 	std::unordered_map<std::string, ska::EntityId> result;
-
-	//CustomEntityManager::createCharacterNG(m_entityManager, m_space, {4,5}, 25, m_world.getBlockSize());
-
+	
+	CustomEntityManager::createCharacterNG(m_entityManager, m_space, { 4,5 }, 25, m_world.getBlockSize());
+	
 	//Chargement des NPC sur la map (personnages & pokémon)
 	/*
 	TODO

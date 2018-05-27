@@ -32,8 +32,8 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	fc.bounciness = 10.F;
 	fc.maxSpeed = 240.F;
 	GravityAffectedComponent gac;
-	gac.friction = 20.F;
-	gac.rotationFriction = 10;
+	gac.friction = 60.F;
+	gac.rotationFriction = 10.F;
 	addComponent<GravityAffectedComponent>(hero, std::move(gac));
 	addComponent<ForceComponent>(hero, std::move(fc));
 	addComponent<MovementComponent>(hero, std::move(mc));
@@ -44,7 +44,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 
 	HitboxComponent hc;
 	hc.xOffset = 20;
-	hc.yOffset = gc.animatedSprites[0].getHeight() * 3 / 5;
+	hc.yOffset = gc.animatedSprites[0].getHeight() * 0.55;
 	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset;
 	hc.width = gc.animatedSprites[0].getWidth() - 2 * hc.xOffset;
 	addComponent<HitboxComponent>(hero, std::move(hc));
@@ -62,7 +62,7 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	EntityId hero = createCharacter(startPos, 0, worldBlockSize);
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
-	ic.movePower = 30;
+	ic.movePower = 25;
 	ic.jumpPower = 80;
 	addComponent<InputComponent>(hero, std::move(ic));
 	ScriptAwareComponent sac;
