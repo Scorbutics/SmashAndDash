@@ -16,8 +16,7 @@
 #include "../Fight/FightComponent.h"
 #include "../CustomEntityManager.h"
 #include "Draw/DrawableContainer.h"
-#include "Graphic/System/WalkAnimationStateMachine.h"
-
+#include "../../Graphic/PokemonAnimationSystem.h"
 #include "World/TileWorldLoaderAggregate.h"
 #include "World/LayerLoaderImage.h"
 #include "World/TilesetLoaderImage.h"
@@ -172,8 +171,8 @@ void WorldState::afterLoad(ska::State* lastScene) {
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
-	auto animSystemPtr = std::make_unique<ska::AnimationSystem<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>>(m_entityManager);
-	auto& animSystem = *animSystemPtr;
+	auto animSystemPtr = std::make_unique<PokemonAnimationSystem>(m_entityManager);
+	auto& animSystem = *animSystemPtr.get();
 	addLogic(std::move(animSystemPtr));
 
 	m_walkASM = &animSystem.setup(true, std::make_unique<ska::WalkAnimationStateMachine>(m_entityManager));
@@ -195,17 +194,16 @@ void WorldState::afterLoad(ska::State* lastScene) {
 
 	reinit(m_worldFileName, getTilesetName());
 
+	ska::EntityId pkmn = 1;
+	auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(pkmn);
+	ac.setASM(*m_walkASM, pkmn);
+
 	const auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
 	auto we = ska::WorldEvent{ wet };
 	we.blocksWidth = m_world.getBlocksX();
 	we.blocksHeight = m_world.getBlocksY();
 	we.blockSize = m_world.getBlockSize();
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
-
-	if (m_firstState) {
-		auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(m_player);
-		ac.setASM(*m_walkASM, m_player);
-	}
 }
 
 void WorldState::beforeUnload() {
@@ -324,7 +322,6 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		}
 
 		m_player = CustomEntityManager::createTrainerNG(m_entityManager, m_space, startPos, m_world.getBlockSize());
-
 		auto& pShape = m_space.getShape(m_entityManager.getComponent<ska::cp::HitboxComponent>(m_player).shapeIndex);
 		pShape.setBounciness(0.F);
 
@@ -351,7 +348,6 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 	mc.vy = 0;
 	mc.vz = 0;
 	m_entityManager.refreshEntity(m_player);
-
 
 	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
 		if (b == nullptr ||
@@ -413,8 +409,8 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 
 	std::unordered_map<std::string, ska::EntityId> result;
 	
-	CustomEntityManager::createCharacterNG(m_entityManager, m_space, { 4,5 }, 25, m_world.getBlockSize());
-	
+	auto pkmn = CustomEntityManager::createCharacterNG(m_entityManager, m_space, { 4,5 }, 25, m_world.getBlockSize());
+
 	//Chargement des NPC sur la map (personnages & pokémon)
 	/*
 	TODO

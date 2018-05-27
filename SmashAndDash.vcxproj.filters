@@ -194,5 +194,6 @@
     <ClInclude Include="Code\Game\Gameplay\State\StateFightLoading.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldStateChanger.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldLoader.h" />
+    <ClInclude Include="Code\Game\Graphic\PokemonAnimationSystem.h" />
   </ItemGroup>
 </Project>

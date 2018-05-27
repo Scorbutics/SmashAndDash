@@ -92,5 +92,6 @@ private:
 	std::vector<ska::Polygon<int>> m_layerContours{};
 	std::vector<ska::Polygon<int>> m_layerContoursWater{};
 	ska::cp::SpaceCollisionEventSender m_collisionEventSender;
+	
 };
 

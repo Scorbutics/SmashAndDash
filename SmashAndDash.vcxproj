@@ -307,6 +307,7 @@
     <ClInclude Include="Code\Game\Graphic\GUI\WindowSettings.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\WindowShop.h" />
     <ClInclude Include="Code\Game\Graphic\GUI\WindowTeam.h" />
+    <ClInclude Include="Code\Game\Graphic\PokemonAnimationSystem.h" />
     <ClInclude Include="Code\Game\Physic\System\SkillEntityCollisionResponse.h" />
     <ClInclude Include="Code\Game\Physic\System\WorldEntityCollisionResponse.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandAddPokemon.h" />
