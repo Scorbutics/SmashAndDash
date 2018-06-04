@@ -11,7 +11,7 @@ namespace ska {
 	class Window;
 }
 
-class StatisticsSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, BattleComponent>, ska::PossibleComponent<>> {
+class StatisticsSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, BattleComponent>, ska::PossibleComponent<>> {
 public:
 	StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged);
 	StatisticsSystem(const StatisticsSystem&) = delete;

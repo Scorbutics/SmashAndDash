@@ -7,7 +7,7 @@
 #include "../SkillComponent.h"
 #include "AI/System/IADefinedMovementSystem.h"
 
-class SkillRefreshSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, ska::MovementComponent, SkillComponent, ska::ForceComponent>, ska::PossibleComponent<>> {
+class SkillRefreshSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::MovementComponent, SkillComponent, ska::ForceComponent>, ska::PossibleComponent<>> {
 public:
 	explicit SkillRefreshSystem(ska::EntityManager& em);
 	SkillRefreshSystem& operator=(const SkillRefreshSystem&) = delete;

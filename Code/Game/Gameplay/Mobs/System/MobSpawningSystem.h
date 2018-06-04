@@ -7,7 +7,7 @@
 
 class MobSpawner;
 
-class MobSpawningSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<ska::PositionComponent, MobSpawnAreaComponent>, ska::PossibleComponent<>> {
+class MobSpawningSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, MobSpawnAreaComponent>, ska::PossibleComponent<>> {
 public:
 	MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay);
 	virtual ~MobSpawningSystem();

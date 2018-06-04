@@ -4,7 +4,7 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "Graphic/GraphicComponent.h"
 
-class PokeballSystem : public ska::System<std::unordered_set<ska::EntityId>, ska::RequiredComponent<PokeballComponent, ska::PositionComponent, ska::GraphicComponent>, ska::PossibleComponent<>>  {
+class PokeballSystem : public ska::System< ska::RequiredComponent<PokeballComponent, ska::PositionComponent, ska::GraphicComponent>, ska::PossibleComponent<>>  {
 public:
 	explicit PokeballSystem(ska::EntityManager& entityManager);
 	PokeballSystem& operator=(const PokeballSystem&) = delete;
