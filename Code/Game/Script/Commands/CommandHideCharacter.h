@@ -5,9 +5,9 @@ class CommandHideCharacter :
 {
 public:
 	CommandHideCharacter(ska::EntityManager& entityManager);
-	virtual ~CommandHideCharacter();
+	virtual ~CommandHideCharacter() = default;
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

@@ -14,7 +14,7 @@ int CommandFollow::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandFollow::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>& )
+std::string CommandFollow::execute(ska::ScriptComponent&, ska::MemoryScript&, const std::vector<std::string>& )
 {
 	/*int id, number, id_target, number_target, flag;
 

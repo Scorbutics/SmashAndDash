@@ -19,15 +19,11 @@ m_world(w),
 m_ged(ged) {
 }
 
-
-CommandTeleport::~CommandTeleport() {
-}
-
 int CommandTeleport::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, std::vector<std::string>& args) {
+std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, const std::vector<std::string>& args) {
 	const auto& mapName = args[0];
 	const auto& id = args[1];
 	const auto x = ska::StringUtils::strToInt(args[2]);

@@ -19,7 +19,7 @@ int CommandExpulse::argumentsNumber() {
 	return -1;
 }
 
-std::string CommandExpulse::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) {
+std::string CommandExpulse::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) {
 	if (args.size() < 2) {
 		throw ska::ScriptException("This command needs at least 2 parameters");
 	}

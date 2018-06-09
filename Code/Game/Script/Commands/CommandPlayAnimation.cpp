@@ -10,21 +10,15 @@
 #include "Script/System/ScriptAutoSystem.h"
 #include "Rectangle.h"
 
-CommandPlayAnimation::CommandPlayAnimation(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
-}
-
-
-CommandPlayAnimation::~CommandPlayAnimation()
-{
+CommandPlayAnimation::CommandPlayAnimation(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandPlayAnimation::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
-{
+std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) {
 
 
 	const std::string& id = args[0];

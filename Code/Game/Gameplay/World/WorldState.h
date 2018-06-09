@@ -45,6 +45,8 @@ public:
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
 	ska::EntityId getPlayer() const;
+	ska::cp::Space& getSpace();
+
 	bool loadedOnce() const;
 	std::vector<ska::IniReader>& getMobSettings() override;
 

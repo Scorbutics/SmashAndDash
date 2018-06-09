@@ -5,9 +5,9 @@ class CommandPlayAnimation :
 {
 public:
 	CommandPlayAnimation(ska::EntityManager& entityManager);
-	virtual ~CommandPlayAnimation();
+	virtual ~CommandPlayAnimation() = default;
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

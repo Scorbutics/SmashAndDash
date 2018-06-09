@@ -1,14 +1,13 @@
 #pragma once
 #include "Script/Command/AbstractFunctionCommand.h"
 
-class CommandPlayerPresence : public ska::AbstractFunctionCommand
-{
+class CommandPlayerPresence : 
+	public ska::AbstractFunctionCommand {
 public:
-	CommandPlayerPresence(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) { }
+	using AbstractFunctionCommand::AbstractFunctionCommand;
+	virtual ~CommandPlayerPresence() = default;
 
-	virtual ~CommandPlayerPresence() { }
-
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

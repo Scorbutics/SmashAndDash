@@ -8,9 +8,9 @@ class CommandMessage :
 public:
 	CommandMessage(PokemonGameEventDispatcher& pged, ska::EntityManager& entityManager);
 
-	virtual ~CommandMessage();
+	virtual ~CommandMessage() = default;
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 private:
     PokemonGameEventDispatcher& m_ged;

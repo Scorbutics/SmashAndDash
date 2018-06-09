@@ -2,20 +2,15 @@
 #include "Utils/StringUtils.h"
 #include "../../Graphic/GUI/ToolBar.h"
 
-CommandHideGUI::CommandHideGUI(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
-}
-
-
-CommandHideGUI::~CommandHideGUI()
-{
+CommandHideGUI::CommandHideGUI(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandHideGUI::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandHideGUI::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
+std::string CommandHideGUI::execute(ska::ScriptComponent&, ska::MemoryScript& memory, const std::vector<std::string>& )
 {
 	/*int b;
 	//WGameCore& wScreen = WGameCore::getInstance();

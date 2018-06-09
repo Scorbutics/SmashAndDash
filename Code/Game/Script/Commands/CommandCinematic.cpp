@@ -17,7 +17,7 @@ int CommandCinematic::argumentsNumber() {
 }
 
 /* TODO : faire une scène (héritant de la classe State) cinématique */
-std::string CommandCinematic::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& ) {
+std::string CommandCinematic::execute(ska::ScriptComponent&, ska::MemoryScript& memory, const std::vector<std::string>& ) {
 	//WGameCore& wScreen = WGameCore::getInstance();
 	/*unsigned int frameNumber, delay, id_anim, duration;
 	//bool continuer = true;

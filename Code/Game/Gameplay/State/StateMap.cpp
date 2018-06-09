@@ -45,7 +45,7 @@ void StateMap::init() {
 	addLogic(std::move(scriptAutoSys));
 
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
-	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_entityManager, m_eventDispatcher));
+	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 	
 	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld());
 	m_scriptSystem = scriptSystem.get();

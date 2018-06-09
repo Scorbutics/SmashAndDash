@@ -7,7 +7,8 @@
 #include "../../Gameplay/Data/Statistics.h"
 #include "Logging/Logger.h"
 
-SavegameManager::SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename):
+SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
+	m_entityManager(em),
 	m_ged(ged) {
 	m_pathname = filename;
 	loadGame(filename);
@@ -130,6 +131,44 @@ const std::string& SavegameManager::getStartMapName() {
 
 const std::string& SavegameManager::getPathName() {
 	return m_pathname;
+}
+
+
+void ExtractEntityComponent(const std::string& str, std::string& component, std::string& field, ska::EntityId& entityId) {
+		
+	auto remainingStr = str;
+	{
+		const auto r = str.find_first_of(' ');
+		if (r != std::string::npos) {
+			remainingStr = str.substr(0, r);
+			entityId = ska::StringUtils::strToInt(str.substr(r + 1));
+		}
+	}
+
+	{
+		const auto r = str.find_first_of('.');
+		if (r != std::string::npos) {
+			component = str.substr(0, r);
+			field = remainingStr.substr(r + 1);
+		}
+	}
+}
+
+
+std::string SavegameManager::getComponentVariable(const std::string& var) const {
+	ska::EntityId entityId;
+	std::string component;
+	std::string field;
+	ExtractEntityComponent(var, component, field, entityId);
+	return m_entityManager.serializeComponent(entityId, component, field);
+}
+
+void SavegameManager::setComponentVariable(const std::string& var, const std::string& value) {
+	ska::EntityId entityId;
+	std::string component;
+	std::string field;
+	ExtractEntityComponent(var, component, field, entityId);
+	m_entityManager.deserializeComponent(entityId, component, field, value);
 }
 
 void SavegameManager::saveTrainer() {

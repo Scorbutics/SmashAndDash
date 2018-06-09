@@ -9,7 +9,7 @@ int CommandBlockCollision::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandBlockCollision::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>&) {
+std::string CommandBlockCollision::execute(ska::ScriptComponent&, ska::MemoryScript&, const std::vector<std::string>&) {
     //const int blockId = ska::StringUtils::strToInt(args[0]);
 	//const bool col = args[1] == "true";
 

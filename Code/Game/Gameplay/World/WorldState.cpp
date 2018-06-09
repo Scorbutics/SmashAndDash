@@ -27,6 +27,8 @@
 #include "Physic/MovementSystem.h"
 #include "Core/CodeDebug/CodeDebug.h"
 
+static constexpr auto CHIPMUNK_COLLISION_TYPE_WATER = 1;
+
 ska::TilesetLoaderImage BuildTilesetLoader(const std::string& tilesetName) {
 	return { tilesetName };
 }
@@ -55,7 +57,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 	m_loadedOnce(false),
 	m_settings(settings), m_player(0),
-	m_saveManager(ed, "save1"),
+	m_saveManager(em, ed, "save1"),
 	m_worldBGM(DEFAULT_BGM),
 	m_graphicSystem(nullptr), m_shadowSystem(nullptr), m_eventDispatcher(ed),
 	m_entityManager(em),
@@ -109,7 +111,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	auto& hc = m_entityManager.getComponent < ska::cp::HitboxComponent>(0);
 	auto& controlBody = m_space.getBody(hc.controlBodyIndex);
 	
-#ifndef NDEBUG
+#if 0
 		DisplayPlayerControlBody(controlBody, m_layerContours);
 		auto& ctrlBdyDrawable = m_layerContours[m_layerContours.size() - 1];
 		ctrlBdyDrawable.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
@@ -388,6 +390,7 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 		auto& sh = m_space.getShape(shIndex);
 		sh.setBounciness(1.F);
 		sh.setFriction(1.F);
+		sh.setCollisionType(CHIPMUNK_COLLISION_TYPE_WATER);
 	}
 
 	m_layerContours.emplace_back(contourRectangleTile);
@@ -464,6 +467,10 @@ std::unordered_map<std::string, ska::EntityId> WorldState::reinit(const std::str
 
 ska::EntityId WorldState::getPlayer() const{
 	return m_player;
+}
+
+ska::cp::Space& WorldState::getSpace() {
+	return m_space;
 }
 
 SavegameManager& WorldState::getSaveGame() {

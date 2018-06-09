@@ -7,16 +7,11 @@ CommandPokemonOut::CommandPokemonOut(ska::EntityManager& entityManager) : Abstra
 {
 }
 
-
-CommandPokemonOut::~CommandPokemonOut()
-{
-}
-
 int CommandPokemonOut::argumentsNumber() {
 	return 1;
 }
 
-std::string CommandPokemonOut::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
+std::string CommandPokemonOut::execute(ska::ScriptComponent&, ska::MemoryScript& memory, const std::vector<std::string>& )
 {
 	/*int index;
 	//unsigned int duree = 2000, t0 = 0;

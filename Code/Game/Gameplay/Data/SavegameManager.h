@@ -1,12 +1,12 @@
 #pragma once
-
+#include "ECS/EntityManager.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "Data/MemoryScript.h"
 
 class SavegameManager : 
 	public ska::MemoryScript {
 public:
-	explicit SavegameManager(PokemonGameEventDispatcher& ged, const std::string& filename);
+	explicit SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename);
 
 	SavegameManager& operator=(const SavegameManager&) = delete;
 
@@ -17,7 +17,9 @@ public:
 	std::string getSaveName() const override;
 	int getGameVariable(const std::string& x) const override;
 	bool getGameSwitch(const std::string&  x) const override;
-
+	std::string getComponentVariable(const std::string& variable) const override;
+	
+	void setComponentVariable(const std::string& variable, const std::string& value) override;
 	void setGameVariable(const std::string& x, int value) override;
 	void setGameSwitch(const std::string& x, bool value) override;
 
@@ -34,6 +36,7 @@ private:
 	void savePokemonTeam();
 	void loadPokemonTeam();
 
+	ska::EntityManager& m_entityManager;
 	PokemonGameEventDispatcher& m_ged;
 
 	std::string m_pathname, m_startMapChipsetName, m_startMapName;

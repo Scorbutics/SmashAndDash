@@ -15,14 +15,15 @@
 #include "ECS/Basics/Physic/CollidableComponent.h"
 
 
-CommandMove::CommandMove(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager) {
+CommandMove::CommandMove(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandMove::argumentsNumber() {
 	return -1;
 }
 
-std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) {
+std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) {
 
 	if (args.size() < 4) {
 		throw ska::ScriptException("This command needs at least 4 parameters");
@@ -77,7 +78,4 @@ std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript
 	m_entityManager.addComponent<ska::IADefinedMovementComponent>(internalEntity, std::move(iamc));
 
 	return "";
-}
-
-CommandMove::~CommandMove() {
 }

@@ -7,7 +7,7 @@ public:
 	CommandFollow(ska::EntityManager& entityManager);
 	virtual ~CommandFollow();
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

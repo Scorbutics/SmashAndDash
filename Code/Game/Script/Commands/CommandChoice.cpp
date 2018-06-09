@@ -20,7 +20,7 @@ int CommandChoice::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandChoice::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>& args) {
+std::string CommandChoice::execute(ska::ScriptComponent&, ska::MemoryScript&, const std::vector<std::string>& args) {
 	std::string fname, texte, buf, var;
 	var = args[0];
 	fname = args[1];

@@ -1,13 +1,13 @@
 #pragma once
 #include "Script/Command/AbstractFunctionCommand.h"
+
 class CommandPlayShaking :
-	public ska::AbstractFunctionCommand
-{
+	public ska::AbstractFunctionCommand {
 public:
 	CommandPlayShaking(ska::EntityManager& entityManager);
-	virtual ~CommandPlayShaking();
+	virtual ~CommandPlayShaking() = default;
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

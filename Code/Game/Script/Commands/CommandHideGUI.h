@@ -5,9 +5,9 @@ class CommandHideGUI :
 {
 public:
 	CommandHideGUI(ska::EntityManager& entityManager);
-	virtual ~CommandHideGUI();
+	virtual ~CommandHideGUI() = default;
 
-	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args) override;
+	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 };
 

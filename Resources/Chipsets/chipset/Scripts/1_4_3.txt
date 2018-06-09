@@ -1,3 +1,0 @@
-log script chipset surf out
-script ./Levels/surf.txt, 2000, 0, #arg4#
-end

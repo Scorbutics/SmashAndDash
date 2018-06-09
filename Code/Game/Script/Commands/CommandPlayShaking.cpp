@@ -1,21 +1,15 @@
 #include "CommandPlayShaking.h"
 #include "Utils/StringUtils.h"
 
-CommandPlayShaking::CommandPlayShaking(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
-}
-
-
-CommandPlayShaking::~CommandPlayShaking()
-{
+CommandPlayShaking::CommandPlayShaking(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandPlayShaking::argumentsNumber() {
 	return 2;
 }
 
-std::string CommandPlayShaking::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
-{
+std::string CommandPlayShaking::execute(ska::ScriptComponent&, ska::MemoryScript& memory, const std::vector<std::string>& ) {
 	//TODO Use a ShakerSystem
 
 	//WGameCore& wScreen = WGameCore::getInstance();

@@ -2,21 +2,15 @@
 #include "Utils/StringUtils.h"
 #include "Rectangle.h"
 
-CommandThrowPokebal::CommandThrowPokebal(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
-}
-
-
-CommandThrowPokebal::~CommandThrowPokebal()
-{
+CommandThrowPokebal::CommandThrowPokebal(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandThrowPokebal::argumentsNumber() {
 	return 5;
 }
 
-std::string CommandThrowPokebal::execute(ska::ScriptComponent&, ska::MemoryScript& memory, std::vector<std::string>& )
-{
+std::string CommandThrowPokebal::execute(ska::ScriptComponent&, ska::MemoryScript& memory, const std::vector<std::string>& ) {
 	/*ska::Point<int> srcId, dst;
 	int launchReason;
 	//0 : Capture

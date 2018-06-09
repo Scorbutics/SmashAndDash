@@ -2,21 +2,15 @@
 #include "Rectangle.h"
 #include "Utils/StringUtils.h"
 
-CommandTranslationCamera::CommandTranslationCamera(ska::EntityManager& entityManager) : AbstractFunctionCommand(entityManager)
-{
-}
-
-
-CommandTranslationCamera::~CommandTranslationCamera()
-{
+CommandTranslationCamera::CommandTranslationCamera(ska::EntityManager& entityManager) : 
+	AbstractFunctionCommand(entityManager) {
 }
 
 int CommandTranslationCamera::argumentsNumber() {
 	return 3;
 }
 
-std::string CommandTranslationCamera::execute(ska::ScriptComponent&, ska::MemoryScript&, std::vector<std::string>&)
-{
+std::string CommandTranslationCamera::execute(ska::ScriptComponent&, ska::MemoryScript&, const std::vector<std::string>&) {
 	/*WGameCore& wScreen = WGameCore::getInstance();
 	unsigned int duree = 0, t0 = 0;
 	int speedx, speedy;

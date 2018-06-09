@@ -18,8 +18,8 @@ public:
 
 protected:
 	struct ScriptCommandHelper : public BasicScriptCommandHelper {
-		ScriptCommandHelper(ScriptCommandsSystem& parent, ska::TileWorld& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) :
-		    BasicScriptCommandHelper(e), m_ged(ged),
+		ScriptCommandHelper(ska::TileWorld& w, ska::EntityManager& e, PokemonGameEventDispatcher& ged) :
+		    BasicScriptCommandHelper(w, e), m_ged(ged),
 			m_world(w) {
 		}
 
@@ -29,7 +29,5 @@ protected:
 		PokemonGameEventDispatcher& m_ged;
 	};
 
-private:
-	ScriptCommandHelper m_helper;
 };
 

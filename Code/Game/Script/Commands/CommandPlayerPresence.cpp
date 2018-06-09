@@ -9,19 +9,11 @@
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/Basics/Physic/HitboxComponent.h"
 
-bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs);
-
-bool operator==(const ska::Rectangle& lhs, const ska::Rectangle& rhs)
-{
-	return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
 int CommandPlayerPresence::argumentsNumber() {
 	return 4;
 }
 
-std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, std::vector<std::string>& args)
-{
+std::string CommandPlayerPresence::execute(ska::ScriptComponent& script, ska::MemoryScript& memory, const std::vector<std::string>& args) {
 	std::string posFromX, posFromY, posToX, posToY;
 	ska::Rectangle collisionRect;
 
