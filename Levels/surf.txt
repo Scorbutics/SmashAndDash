@@ -1,29 +1,22 @@
-if [$global_is_surfing$] != 1	
-	log toto titi
-	assign %has_block_property 0, #arg2#, #arg3#, 1%, |had_water_tile_property|
-	assign %has_block_property 0, #arg4#, #arg5#, 1%, |has_water_tile_property|
+log toto titi
+assign %has_block_property 0, #arg4#, #arg5#, 1%, |has_water_tile_property|
+assign [|has_water_tile_property|], |surf_in|
+
+	assign #arg1#, |direction_perso|
+	remove_component InputComponent, 0
+	assign 35, |move_power|
 	
-	assign %logical [|has_water_tile_property|] != [|had_water_tile_property|] || [$global_is_surfing$]%, |trigger_surf|
-	
-	if [|trigger_surf|] == 1
-		log water tile property changed	
-		assign [|has_water_tile_property|], |surf_in|
-		assign #arg1#, |direction_perso|
-		remove_component InputComponent, 0
-		
-		assign 35, |move_power|
-		
-		if [|surf_in|] == true
-			animation 0, 2
-			assign 0, <PositionComponent.layer 0>
-			log script chipset surf in
-		else			
-			assign 1, <PositionComponent.layer 0>
-			animation 0, 2
-			log script chipset surf out
-		endif
-		
-		move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, [|surf_in|]
+	if [$global_is_surfing$] == true
+		animation 0, 2
+		assign 0, <PositionComponent.layer 0>
+		log script chipset surf in
+	else
+		assign 1, <PositionComponent.layer 0>
+		animation 0, 2
+		log script chipset surf out
 	endif
-endif
+	
+	move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, [$global_is_surfing$]
+
+
 end
