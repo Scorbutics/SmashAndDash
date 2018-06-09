@@ -66,8 +66,10 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
 	m_collisionEventSender{ m_space, ed, m_tileset->getTileSize() } {
+
 	m_space.setIterations(10);
 	m_space.setSleepTimeThreshold(0.5F);
+
 }
 
 const std::string& WorldState::getFileName() const {
@@ -136,6 +138,15 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 void WorldState::onEventUpdate(const unsigned int timeStep) {
 	m_space.step(timeStep / 1000.);
 	m_tileset->update();
+
+	if (m_cameraSystem != nullptr) {
+		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(0);
+		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(0);
+		const auto& pos = ska::Point<int>{
+			static_cast<int>(pc.x + (hc.xOffset + hc.width) / 2), 
+			static_cast<int>(pc.y + (hc.yOffset + hc.height) / 2) };
+		m_heroPos = ska::Point<int>{ pos.x, pos.y};
+	}
 }
 
 ska::TileWorld& WorldState::getWorld() {
@@ -146,6 +157,17 @@ bool WorldState::onGameEvent(ska::GameEvent& ge) {
 	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY ||
 		ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
 		m_screenSize = { static_cast<int>(ge.windowWidth), static_cast<int>(ge.windowHeight) };
+		auto dbgGuiEvent = ska::DebugGUIEvent{ ska::DebugGUIEventType::ADD_DEBUG_INFO, [&]() {
+			std::stringstream ss;
+			const auto blockSize = m_world.getBlockSize();
+			ss << (m_heroPos.x / blockSize) << "; " << (m_heroPos.y / blockSize) << " (";
+			ss << m_heroPos.x << "; " << m_heroPos.y << ")";
+			return ss.str();
+		} };
+
+		dbgGuiEvent.delay = 500;
+		dbgGuiEvent.text = "Hero Pos : ";
+		m_eventDispatcher.ska::Observable<ska::DebugGUIEvent>::notifyObservers(dbgGuiEvent);
 	}
 
 	return true;

@@ -14,7 +14,6 @@ public:
     virtual ~StateGUIMap() = default;
 
 protected:
-	
 	virtual void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 

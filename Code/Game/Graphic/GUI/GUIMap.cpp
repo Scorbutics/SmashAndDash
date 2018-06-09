@@ -17,7 +17,8 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
-	m_ged(ged){
+	m_ged(ged),
+	m_dbgWindow(*this, ged) {
 	initButtons();
 
 	auto attachedToCursor = std::unique_ptr<ska::Widget>(std::make_unique<WindowMouseCursor>(this, this, this, ska::Rectangle{0, 0, 64, 96}, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"));
@@ -37,6 +38,11 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
+}
+
+void GUIMap::refresh(unsigned int ellapsedTime) {
+	GUI::refresh(ellapsedTime);
+	m_dbgWindow.refresh(ellapsedTime);
 }
 
 void GUIMap::bind(Settings& sets) {

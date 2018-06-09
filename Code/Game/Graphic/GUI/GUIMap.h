@@ -6,6 +6,7 @@
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "GUIBattle.h"
 #include "GUI/GUI.h"
+#include "GUI/Windows/DebugWindow.h"
 
 class Settings;
 class WindowTeam;
@@ -32,6 +33,8 @@ public:
 	virtual bool onScreenResized(unsigned int width, unsigned int height) override;
 	void bind(Settings& sets);
 
+	void refresh(unsigned int ellapsedTime);
+
 	~GUIMap();
 
 private:
@@ -41,4 +44,6 @@ private:
 	ska::TimeScrollableWindowIG<>* m_wAction;
 	SkillsBar* m_skillBar;
 
+	//Debug
+	ska::DebugWindow m_dbgWindow;
 };
