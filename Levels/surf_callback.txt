@@ -1,10 +1,8 @@
-log surf callback called
-if #arg0# == false
-	wait 100
-	assign 1, $global_is_surfing$
-else
-	assign 0, $global_is_surfing$
-endif
+assign %get_entity_block x, 0%, |player_block_x|
+assign %get_entity_block y, 0%, |player_block_y|
+assign %has_block_property 0, [|player_block_x|], [|player_block_y|], 1%, $global_is_surfing$
+log global surf state : [$global_is_surfing$]
+assign 0, $global_triggering_surf$
 restore_component InputComponent, 0
 assign_switch #arg0#, 0
 end

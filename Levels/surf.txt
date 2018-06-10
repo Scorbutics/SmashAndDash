@@ -1,12 +1,13 @@
-log toto titi
-assign %has_block_property 0, #arg4#, #arg5#, 1%, |has_water_tile_property|
-assign [|has_water_tile_property|], |surf_in|
-
+if [$global_triggering_surf$] == 0
+	assign 1, $global_triggering_surf$
+	
+	assign %has_block_property 0, #arg4#, #arg5#, 1%, |has_water_tile_property|
+	assign [|has_water_tile_property|], |surf_in|
 	assign #arg1#, |direction_perso|
 	remove_component InputComponent, 0
-	assign 35, |move_power|
+	assign 40, |move_power|
 	
-	if [$global_is_surfing$] == true
+	if [$global_is_surfing$] == 0
 		animation 0, 2
 		assign 0, <PositionComponent.layer 0>
 		log script chipset surf in
@@ -17,6 +18,5 @@ assign [|has_water_tile_property|], |surf_in|
 	endif
 	
 	move 0, [|direction_perso|], [|move_power|], false, ./Levels/surf_callback.txt, [$global_is_surfing$]
-
-
+endif
 end

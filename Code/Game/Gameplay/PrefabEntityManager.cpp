@@ -45,7 +45,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	HitboxComponent hc;
 	hc.xOffset = 20;
 	hc.yOffset = gc.animatedSprites[0].getHeight() * 0.55;
-	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset;
+	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset - 1;
 	hc.width = gc.animatedSprites[0].getWidth() - 2 * hc.xOffset;
 	addComponent<HitboxComponent>(hero, std::move(hc));
 

@@ -65,7 +65,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
-	m_collisionEventSender{ m_space, ed, m_tileset->getTileSize() } {
+	m_collisionEventSender{em, m_space, ed, m_tileset->getTileSize() } {
 
 	m_space.setIterations(10);
 	m_space.setSleepTimeThreshold(0.5F);
@@ -122,17 +122,17 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 		
 
-	/*for (auto& l : m_layerContours) {
+	for (auto& l : m_layerContours) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
 		drawables.add(l);
-	}*/
+	}
 
 	
 
-	/*for (auto& l : m_layerContoursWater) {
+	for (auto& l : m_layerContoursWater) {
 		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
 		drawables.add(l);
-	}*/
+	}
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
