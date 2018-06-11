@@ -5,12 +5,13 @@
 
 namespace ska {
 	class TileWorld;
+	class EntityLocator;
 }
 
 class CommandTeleport :
 	public ska::AbstractFunctionCommand {
 public:
-	CommandTeleport(const ska::TileWorld& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
+	CommandTeleport(const ska::TileWorld& w, const ska::EntityLocator& locator, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
 	virtual ~CommandTeleport() = default;
 
 	static void teleportHeroToMap(ska::TileWorld& w, std::string param);
@@ -21,5 +22,6 @@ public:
 private:
 	const ska::TileWorld& m_world;
 	PokemonGameEventDispatcher& m_ged;
+	const ska::EntityLocator& m_locator;
 };
 

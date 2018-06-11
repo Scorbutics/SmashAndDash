@@ -6,12 +6,11 @@
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
-#include "../../Physic/System/WorldEntityCollisionResponse.h"
 #include "../../Gameplay/Fight/System/StatisticsSystem.h"
 #include "../../Graphic/GUI/GUIBattle.h"
 #include "../Fight/SkillFactory.h"
 #include "StateFightLoading.h"
-#include "AbstractStateMap.h"
+#include "Core/State/StateBase.h"
 
 class WorldState;
 class FightComponent;
@@ -24,7 +23,7 @@ namespace ska {
 }
 
 class StateFight :
-	public AbstractStateMap {
+	public ska::StateBase {
 public:
 	StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc);
 	StateFight(const StateFight&) = delete;
@@ -38,6 +37,9 @@ protected:
 
 private:
 	bool onGameEvent(ska::GameEvent& ge);
+
+	PokemonGameEventDispatcher& m_eventDispatcher;
+	CustomEntityManager& m_entityManager;
 	
 	WorldState& m_worldState;
 	PokemonDescriptor m_descriptor;
@@ -54,8 +56,6 @@ private:
 	bool m_sceneLoaded;
 	int m_loadState;
 
-	/*WorldEntityCollisionResponse m_worldEntityCollisionResponse;
-	SkillEntityCollisionResponse m_skillEntityCollisionResponse;*/
 	ska::InputComponent* m_ic;
 	ska::EntityId m_pokeball;
 
@@ -66,5 +66,3 @@ private:
 
 
 };
-
-typedef std::unique_ptr<StateFight> SceneFightPtr;

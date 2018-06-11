@@ -40,7 +40,6 @@ public:
 	~WorldState() override = default;
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
-	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
 
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
@@ -60,6 +59,7 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
+	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
 	bool onGameEvent(ska::GameEvent& ge);
 	void beforeLoad(ska::State* lastState) override;
 
@@ -96,5 +96,6 @@ private:
 	ska::cp::SpaceCollisionEventSender m_collisionEventSender;
 	
 	ska::Point<int> m_heroPos;
+	ska::Polygon<int> m_hitboxHero;
 };
 

@@ -6,58 +6,55 @@
 #include "../../Utils/IDs.h"
 #include "Utils/StringUtils.h"
 
-#include "../../Gameplay/State/StateToMapSwitcher.h"
 #include "../../Gameplay/Data/MapEvent.h"
 #include "World/TileWorldLoaderAggregate.h"
 #include "World/LayerEventLoaderText.h"
 #include "World/LayerLoaderImage.h"
 #include "Utils/FileUtils.h"
+#include "ECS/EntityLocator.h"
+#include "../ScriptConstants.h"
 
-CommandTeleport::CommandTeleport(const ska::TileWorld& w, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
-AbstractFunctionCommand(entityManager),
-m_world(w),
-m_ged(ged) {
+CommandTeleport::CommandTeleport(const ska::TileWorld& w, const ska::EntityLocator& locator, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged) :
+	AbstractFunctionCommand(entityManager),
+	m_world(w),
+	m_ged(ged),
+	m_locator(locator) {
 }
 
 int CommandTeleport::argumentsNumber() {
-	return 4;
+	return 3;
 }
 
 std::string CommandTeleport::execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, const std::vector<std::string>& args) {
 	const auto& mapName = args[0];
-	const auto& id = args[1];
-	const auto x = ska::StringUtils::strToInt(args[2]);
-	const auto y = ska::StringUtils::strToInt(args[3]);
+	const auto x = ska::StringUtils::strToInt(args[1]);
+	const auto y = ska::StringUtils::strToInt(args[2]);
 
-	auto internalEntity = script.parent->getEntityFromName(id);
 	/* A script HAS a position component */
-	auto& pc = m_entityManager.getComponent<ska::PositionComponent>(internalEntity);
+	auto& pc = m_entityManager.getComponent<ska::PositionComponent>(*m_locator.getEntityId(SCRIPT_ENTITY_TRAINER));
 	pc.x = m_world.getBlockSize() * x;
 	pc.y = m_world.getBlockSize() * y;
 
-	/* Hero use case */
-	if (id == "0") {
-		const auto& fichier = mapName;
-		const auto buf = "./Levels/"
-			+ fichier
-			+ "/"
-			+ fichier
-			+ ".ini";
+	const auto& fichier = mapName;
+	const auto buf = "./Levels/"
+		+ fichier
+		+ "/"
+		+ fichier
+		+ ".ini";
 
-		ska::IniReader mapReader(buf);
+	ska::IniReader mapReader(buf);
 
-		const auto chipsetName = mapReader.get<std::string>("Chipset file");
+	const auto chipsetName = mapReader.get<std::string>("Chipset file");
 
-		if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
-			throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
-		}
-
-		MapEvent me(MapEvent::MAP);
-		me.chipsetName = chipsetName;
-		me.mapName = mapName;
-		m_ged.ska::Observable<MapEvent>::notifyObservers(me);
+	if (chipsetName == "STRINGNOTFOUND" || chipsetName == "EMPTYDATA") {
+		throw ska::InvalidPathException("Erreur : impossible de trouver le nom du chipset de la map de depart");
 	}
 
+	MapEvent me(MapEvent::MAP);
+	me.chipsetName = chipsetName;
+	me.mapName = mapName;
+	m_ged.ska::Observable<MapEvent>::notifyObservers(me);
+	
 	return "";
 }
 

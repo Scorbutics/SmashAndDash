@@ -1,5 +1,4 @@
 #include "CommandShop.h"
-#include "../../Graphic/GUI/WindowShop.h"
 
 CommandShop::CommandShop(ska::EntityManager& entityManager) : 
 	AbstractFunctionCommand(entityManager) {

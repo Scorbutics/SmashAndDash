@@ -17,7 +17,7 @@ std::string CommandKillEntity::execute(ska::ScriptComponent& script, ska::Memory
 {
 	const std::string& id = args[0];
 
-	ska::EntityId internalEntity =  script.parent->getEntityFromName(id);
+	ska::EntityId internalEntity = ska::StringUtils::fromString<ska::EntityId>(id);
 	m_entityManager.removeEntity(internalEntity);
 	return "";
 }

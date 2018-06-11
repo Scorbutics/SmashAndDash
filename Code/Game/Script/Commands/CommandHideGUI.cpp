@@ -1,6 +1,5 @@
 #include "CommandHideGUI.h"
 #include "Utils/StringUtils.h"
-#include "../../Graphic/GUI/ToolBar.h"
 
 CommandHideGUI::CommandHideGUI(ska::EntityManager& entityManager) : 
 	AbstractFunctionCommand(entityManager) {

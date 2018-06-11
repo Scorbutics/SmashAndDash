@@ -64,19 +64,26 @@ ska::EntityId CustomEntityManager::createTrainer(const ska::Point<int> startBloc
 	return trainer;
 }
 
-ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize) {
-	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize);
+ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name) {
+	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize, name);
 }
 
 ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize) {
 	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(trainer);
-	const auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
+	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
 	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(trainer);
 	const auto& fc = em.getComponent<ska::ForceComponent>(trainer);
 	
-	auto bc = ska::cp::BuildControlledRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, trainer);
+	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, trainer);
 	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
+
+	const auto& shape = space.getShape(bc.shapeIndex);
+	const auto& entityDimensions = shape.getDimensions();
+	hitbox.xOffset = entityDimensions.x;
+	hitbox.yOffset = entityDimensions.y - entityDimensions.h;
+	hitbox.width = entityDimensions.w;
+	hitbox.height = entityDimensions.h;
 
 	em.addComponent(trainer, std::move(bc));
 	return trainer;
@@ -85,15 +92,21 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize) {
 	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
-	const auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
+	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
 	auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
 	gafc.friction = 10.F;
 	fc.weight = 20.F;
 
-	auto bc = ska::cp::BuildRectangleHitbox(space, { static_cast<int>(point.x), static_cast<int>(point.y), static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
+	auto bc = ska::cp::BuildRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
 
+	const auto& shape = space.getShape(bc.shapeIndex);
+	const auto& entityDimensions = shape.getDimensions();
+	hitbox.xOffset = entityDimensions.x;
+	hitbox.yOffset = entityDimensions.y - entityDimensions.h;
+	hitbox.width = entityDimensions.w;
+	hitbox.height = entityDimensions.h;
 	em.addComponent(character, std::move(bc));
 	return character;
 }

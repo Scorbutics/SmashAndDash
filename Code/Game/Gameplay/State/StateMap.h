@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "StateFight.h"
-#include "AbstractStateMap.h"
+#include "Core/State/StateBase.h"
 
 struct WorldStateChanger;
 class WorldState;
@@ -14,7 +14,7 @@ namespace ska {
 }
 
 class StateMap :
-	public AbstractStateMap,
+	public ska::StateBase,
 	public ska::SubObserver<ska::GameEvent> {
 public:
 	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
@@ -22,11 +22,13 @@ public:
 	~StateMap() override = default;
 
 private:
-	void resetScriptEntities();
 	void beforeLoad(ska::State* lastState) override final;
 	void afterLoad(ska::State* lastState) override final;
 	bool onGameEvent(ska::GameEvent& ge);
 	void init();
+
+	PokemonGameEventDispatcher& m_eventDispatcher;
+	CustomEntityManager& m_entityManager;
 
 	WorldState& m_worldState;
 	const std::string m_fileName;
@@ -34,8 +36,6 @@ private:
 	ska::ScriptAutoSystem* m_scriptAutoSystem;
 	ska::ScriptRefreshSystem* m_scriptSystem;
 
-	/*ska::WorldCollisionResponse m_worldCollisionResponse;
-	ska::EntityCollisionResponse m_entityCollisionResponse;*/
 	ska::Point<int> m_screenSize;
 
 };

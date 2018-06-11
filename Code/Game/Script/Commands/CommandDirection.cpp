@@ -21,7 +21,7 @@ std::string CommandDirection::execute(ska::ScriptComponent& script, ska::MemoryS
 	const std::string& idStr = args[0];
 	const int dir = ska::StringUtils::strToInt(args[1]);
 
-	ska::EntityId internalId = script.parent->getEntityFromName(idStr);
+	ska::EntityId internalId = ska::StringUtils::fromString<ska::EntityId>(idStr);
 	//ska::DirectionalAnimationComponent& dac = m_entityManager.getComponent<ska::DirectionalAnimationComponent>(internalId);
 	//dac.direction = dir;
 	return "";

@@ -9,24 +9,23 @@
 #include "StateMap.h"
 #include "Utils/FileUtils.h"
 #include "World/System/ScriptWorldTriggerSystem.h"
+#include "../CustomEntityManager.h"
 
 #define MOB_SPAWNING_DELAY 5000
 
 StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, ska::Point<int> screenSize) :
-	AbstractStateMap(em, pged, ws),
 	ska::SubObserver<ska::GameEvent>(std::bind(&StateMap::onGameEvent, this, std::placeholders::_1), pged),
+	m_eventDispatcher(pged),
+	m_entityManager(em),
 	m_worldState(ws),
 	m_fileName(std::move(worldFileName)),
 	m_tilesetName(std::move(worldChipsetName)),
 	m_scriptAutoSystem(nullptr),
 	m_scriptSystem(nullptr),
-	/*m_worldCollisionResponse(ws.getWorld(), m_eventDispatcher, m_entityManager),
-	m_entityCollisionResponse(m_eventDispatcher, m_entityManager),*/
 	m_screenSize(screenSize) {
 
 	const auto tilesetFnData = ska::FileNameData{ m_tilesetName };
 	m_tilesetName = tilesetFnData.path + "/" + tilesetFnData.name;
-
 }
 
 bool StateMap::onGameEvent(ska::GameEvent& ge) {
@@ -53,34 +52,13 @@ void StateMap::init() {
 	addLogic(std::make_unique<ska::ScriptWorldTriggerSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld()));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getPlayer()));
-	//resetScriptEntities();
 }
 
 void StateMap::beforeLoad(ska::State* lastState) {
-	AbstractStateMap::beforeLoad(lastState);
-	
-	// Do not delete the player between 2 maps, just TP it
-	std::unordered_set<ska::EntityId> toNotDelete;
-	toNotDelete.insert(m_worldState.getPlayer());
-
-	// If the map changes, we delete all entities (except player)
-	m_entityManager.removeEntities(toNotDelete);
-
 	init();
-}
-
-void StateMap::resetScriptEntities() {
-	SKA_LOG_INFO("State Map scripts reset");
-	m_scriptSystem->clearNamedScriptedEntities();
-	auto entities = m_worldState.reinit(m_fileName, m_tilesetName);
-	for (const auto& e : entities) {
-		m_scriptSystem->registerNamedScriptedEntity(e.first, e.second);
-	}
-
-	 //Player Script ID = 0 
-	m_scriptSystem->registerNamedScriptedEntity("0", m_worldState.getPlayer());
+	
 }
 
 void StateMap::afterLoad(ska::State * lastState){
-	resetScriptEntities();
+	
 }

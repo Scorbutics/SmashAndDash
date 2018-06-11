@@ -26,7 +26,7 @@ std::string CommandExpulse::execute(ska::ScriptComponent& script, ska::MemoryScr
 
     const auto& id = args[0];
 	const auto& speed = ska::StringUtils::strToFloat(args[1]);
-	const auto internalEntity = script.parent->getEntityFromName(id);
+	const auto internalEntity = ska::StringUtils::fromString<ska::EntityId>(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
 		throw ska::ScriptException(("The targetted entity cannot move : " + id).c_str());

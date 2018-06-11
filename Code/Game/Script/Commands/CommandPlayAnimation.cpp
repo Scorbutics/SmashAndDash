@@ -22,7 +22,7 @@ std::string CommandPlayAnimation::execute(ska::ScriptComponent& script, ska::Mem
 
 
 	const std::string& id = args[0];
-	const ska::EntityId internalEntity = script.parent->getEntityFromName(id);
+	const ska::EntityId internalEntity = ska::StringUtils::fromString<ska::EntityId>(id);
 
 	if (m_entityManager.hasComponent<ska::PositionComponent>(internalEntity) &&
 		m_entityManager.hasComponent<ska::HitboxComponent>(internalEntity) &&

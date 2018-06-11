@@ -25,11 +25,11 @@
 #include "../Commands/CommandJump.h"
 
 ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged) :
-	ScriptBasicCommandsSystem(w, entityManager, ScriptCommandHelper(w, entityManager, ged), saveGame) {
+	ScriptBasicCommandsSystem(w, entityManager, ged, ScriptCommandHelper(w, entityManager, ged), saveGame) {
 }
 
-void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const {
-	BasicScriptCommandHelper::setupCommands(c);
+void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c, ska::EntityLocator& locator) const {
+	BasicScriptCommandHelper::setupCommands(c, locator);
 	c["move"] =  std::make_unique<CommandMove>(m_entityManager);
 	c["message"] =  std::make_unique<CommandMessage>(m_ged, m_entityManager);
 	c["choice"] =  std::make_unique<CommandChoice>(m_entityManager);
@@ -45,7 +45,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["follow_char"] =  std::make_unique<CommandFollow>(m_entityManager);
 	c["shop"] =  std::make_unique<CommandShop>(m_entityManager);
 	c["hide_gui"] =  std::make_unique<CommandHideGUI>(m_entityManager);
-	c["teleport"] =  std::make_unique<CommandTeleport>(m_world, m_entityManager, m_ged);
+	c["teleport"] =  std::make_unique<CommandTeleport>(m_world, locator, m_entityManager, m_ged);
 	c["cinematic"] =  std::make_unique<CommandCinematic>(m_entityManager);
 	c["pokeball"] =  std::make_unique<CommandThrowPokebal>(m_entityManager);
 	c["kill"] =  std::make_unique<CommandKillEntity>(m_entityManager);

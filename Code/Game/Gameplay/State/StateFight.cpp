@@ -15,7 +15,8 @@
 #include "../Fight/System/BattleSystem.h"
 
 StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
-	AbstractStateMap(em, ged, ws),
+	m_eventDispatcher(ged),
+	m_entityManager(em),
 	m_worldState(ws),
 	m_opponentScriptId(fc.opponentScriptId),
 	m_opponent("./Data/Monsters/" + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
@@ -25,8 +26,6 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_opponentId(fc.fighterOpponent),
 	m_sceneLoaded(false),
 	m_loadState(0),
-	/*m_worldEntityCollisionResponse(ws.getWorld(), ged, m_entityManager),
-	m_skillEntityCollisionResponse(*m_collisionSystem, ged, m_entityManager),*/
 	m_ic(nullptr),
 	m_skillFactory(ws, fc.level),
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
@@ -42,12 +41,12 @@ bool StateFight::onGameEvent(ska::GameEvent& ge) {
 }
 
 void StateFight::beforeLoad(ska::State* lastScene) {
-	AbstractStateMap::beforeLoad(lastScene);
-	
 	/* If already loaded... */
+	/*
 	if (m_worldState.loadedOnce()) {
 		m_entityManager.refreshEntities();
 	}
+	*/
 
 	if (m_sceneLoaded) {
 		return;
@@ -94,7 +93,6 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 }
 
 void StateFight::beforeUnload() {
-	AbstractStateMap::beforeUnload();
 
 	/* Triggers end fight cinematic to the next scene */
 	const auto delay = 3000U;

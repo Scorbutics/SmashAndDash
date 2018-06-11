@@ -17,6 +17,10 @@
 
 using GameBase = ska::GameCore<PokemonGameEventDispatcher, ska::CoreModule<CustomEntityManager>, ska::GraphicModule, ska::SoundModule<PokemonSoundRenderer>>;
 
+namespace ska {
+	class StateBase;
+}
+
 class WGameCore :
 	public GameBase,
 	public ska::SubObserver<MapEvent> {
@@ -46,7 +50,7 @@ private:
 	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
 	ska::FpsCalculator m_fpsCalculator;
-	AbstractStateMap* m_currentState;
+	ska::StateBase* m_currentState;
 	std::unique_ptr<ska::StateBase> m_nextState;
 
 };

@@ -33,7 +33,7 @@ std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript
 	const auto dir = ska::StringUtils::strToInt(args[1]);
 	const auto distance = ska::StringUtils::strToInt(args[2]);
 	const auto ghost = ska::StringUtils::strToInt(args[3]) != 0;
-	const auto internalEntity = script.parent->getEntityFromName(id);
+	const auto internalEntity = ska::StringUtils::fromString<ska::EntityId>(id);
 
 	if (!m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
 		throw ska::ScriptException(("The targetted entity cannot move : " + id).c_str());

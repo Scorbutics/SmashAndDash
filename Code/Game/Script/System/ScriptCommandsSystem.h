@@ -23,7 +23,7 @@ protected:
 			m_world(w) {
 		}
 
-		void setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const override;
+		void setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c, ska::EntityLocator& locator) const override;
 	private:
 		ska::TileWorld& m_world;
 		PokemonGameEventDispatcher& m_ged;

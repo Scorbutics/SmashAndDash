@@ -18,8 +18,8 @@ ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
 	EntityManager(ged) {
 }
 
-ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int id, const unsigned int worldBlockSize) {
-	auto hero = createEntity();
+ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int spriteId, const unsigned int worldBlockSize, const std::string& name) {
+	auto hero = createEntity(name);
 	PositionComponent pc;
 	pc.x = startPos.x * worldBlockSize;
 	pc.y = startPos.y * worldBlockSize;
@@ -39,17 +39,18 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	addComponent<MovementComponent>(hero, std::move(mc));
 	GraphicComponent gc;
 	gc.animatedSprites.resize(1);
-	gc.animatedSprites[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, id), 6, 8, 3);
+	gc.animatedSprites[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, spriteId), 6, 8, 3);
 	gc.animatedSprites[0].setDelay(100);
 
 	HitboxComponent hc;
 	hc.xOffset = 20;
-	hc.yOffset = gc.animatedSprites[0].getHeight() * 0.55;
-	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset - 1;
+	hc.yOffset = gc.animatedSprites[0].getHeight() * 0.66;
+	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset;
 	hc.width = gc.animatedSprites[0].getWidth() - 2 * hc.xOffset;
 	addComponent<HitboxComponent>(hero, std::move(hc));
 
 	addComponent<CollidableComponent>(hero, CollidableComponent());
+	//TODO suppr et mettre un second sprite representant l'ombre a la place
 	addComponent<HasShadowComponent>(hero, HasShadowComponent());
 	addComponent<GraphicComponent>(hero, std::move(gc));
 
@@ -59,7 +60,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 }
 
 ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos, const unsigned int worldBlockSize) {
-	EntityId hero = createCharacter(startPos, 0, worldBlockSize);
+	const auto hero = createCharacter(startPos, 0, worldBlockSize, "trainer");
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
 	ic.movePower = 25;
@@ -68,7 +69,4 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	ScriptAwareComponent sac;
 	addComponent<ScriptAwareComponent>(hero, std::move(sac));
 	return hero;
-}
-
-ska::PrefabEntityManager::~PrefabEntityManager() {
 }

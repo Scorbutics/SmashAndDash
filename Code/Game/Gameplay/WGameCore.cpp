@@ -2,7 +2,6 @@
 #include "State/StateMap.h"
 #include "MessageType.h"
 #include "MessagePopup.h"
-#include "World/WorldStateChanger.h"
 #include "Exceptions/FileException.h"
 #include "Graphic/SDLRenderer.h"
 #include "CoreModule.h"
@@ -57,13 +56,11 @@ bool WGameCore::onTeleport(MapEvent& me) {
 			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::move(m_nextState)));
-				//m_worldState->linkCamera(m_currentState->getCamera());
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName + ".bmp", me.chipsetName);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName, me.chipsetName);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
-				//m_worldState->linkCamera(m_currentState->getCamera());
 			});
 		}
 	}
