@@ -68,7 +68,7 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize, name);
 }
 
-ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize) {
+ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name) {
 	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(trainer);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
@@ -89,7 +89,7 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	return trainer;
 }
 
-ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize) {
+ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name) {
 	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);

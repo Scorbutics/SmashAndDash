@@ -1,19 +1,21 @@
 #pragma once
 #include "../Fight/FightComponent.h"
 
-struct MapEvent {
-	enum MapEventType {
-		BATTLE,
-		MAP
-	};
+enum class MapEventType {
+	Switch_Battle,
+	Switch_Map
+};
 
-	explicit MapEvent(MapEventType met) : eventType(met), fightComponent(nullptr), fightPos() {
+struct MapEvent {
+
+	explicit MapEvent(MapEventType met) : 
+		eventType(met) {
 	}
 
 	const MapEventType eventType;
 	
-	FightComponent* fightComponent;
-	ska::Point<int> fightPos;
+	FightComponent* fightComponent = nullptr;
+	ska::Point<int> position;
 
 	std::string mapName;
 	std::string chipsetName;

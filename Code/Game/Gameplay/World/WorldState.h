@@ -15,6 +15,8 @@
 #include "Utils/SubObserver.h"
 #include "Physic/Space.h"
 #include "Graphic/Polygon.h"
+#include "ECS/EntityLocator.h"
+#include "../../Debug/DebugDrawer.h"
 
 namespace ska {
 	class IniReader;
@@ -41,9 +43,9 @@ public:
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 
+	const ska::EntityLocator& getEntityLocator() const;
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
-	ska::EntityId getPlayer() const;
 	ska::cp::Space& getSpace();
 
 	bool loadedOnce() const;
@@ -52,6 +54,8 @@ public:
 	const std::string& getFileName() const;
 	const std::string& getTilesetName() const;
 
+	void reinit(const std::string& fileName, const std::string& chipsetName);
+
 protected:
     virtual void afterLoad(ska::State* scene) override;
 	virtual void beforeUnload() override;
@@ -59,26 +63,26 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
-	std::unordered_map<std::string, ska::EntityId> reinit(const std::string& fileName, const std::string& chipsetName);
 	bool onGameEvent(ska::GameEvent& ge);
 	void beforeLoad(ska::State* lastState) override;
 
-	bool m_loadedOnce;
+	bool m_loadedOnce = false;
 
 	Settings& m_settings;
 
-	ska::EntityId m_player;
 	SavegameManager m_saveManager;
 
 	Pokeball m_pokeball;
 	ska::Music m_worldBGM;
 
-	ska::GraphicSystem* m_graphicSystem;
-	ska::ShadowSystem* m_shadowSystem;
+	ska::GraphicSystem* m_graphicSystem = nullptr;
+	ska::ShadowSystem* m_shadowSystem = nullptr;
 	
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
-	ska::WalkAnimationStateMachine* m_walkASM;
+	ska::WalkAnimationStateMachine* m_walkASM = nullptr;
+	
+	ska::EntityLocator m_entityLocator;
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
 	ska::TilesetPtr m_tileset;
@@ -95,7 +99,9 @@ private:
 	std::vector<ska::Polygon<int>> m_layerContoursWater{};
 	ska::cp::SpaceCollisionEventSender m_collisionEventSender;
 	
-	ska::Point<int> m_heroPos;
-	ska::Polygon<int> m_hitboxHero;
+	ska::Polygon<int> m_posHeroPolygon;
+	ska::Point<int> m_posHero;
+
+	DebugDrawer m_debugDrawer;
 };
 

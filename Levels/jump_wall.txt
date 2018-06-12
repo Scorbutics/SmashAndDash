@@ -1,9 +1,10 @@
 assign #arg0#, |jump_direction|
 assign #arg1#, |block_id|
-remove_component InputComponent, 0
-block_authorize [|block_id|], 0, true
-move 0, [|jump_direction|], 30, true
+assign %get_entity_id .%, |id_perso|
+remove_component InputComponent, [|id_perso|]
+
+move [|id_perso|], [|jump_direction|], 30, true
 wait 75
-jump 0, 500
-move 0, [|jump_direction|], 80, true, ./Levels/jump_wall_callback.txt, 0, [|block_id|]
+jump [|id_perso|], 500
+move [|id_perso|], [|jump_direction|], 80, true, ./Levels/jump_wall_callback.txt, 0, [|block_id|]
 end

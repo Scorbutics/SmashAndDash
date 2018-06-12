@@ -32,7 +32,7 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	m_team->show(false);
 
 	addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE)).show(false);
-	addWindow<FPSLabel>("displayFPS");
+	//addWindow<FPSLabel>("displayFPS");
 
 	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);

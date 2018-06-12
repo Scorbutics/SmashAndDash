@@ -70,6 +70,7 @@
     <ClCompile Include="Code\Game\Gameplay\Fight\SkillFactory.cpp" />
     <ClCompile Include="Code\Game\Gameplay\State\StateFightLoading.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldLoader.cpp" />
+    <ClCompile Include="Code\Game\Debug\DebugDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -159,11 +160,11 @@
     <ClInclude Include="Code\Game\Gameplay\State\StateGUIBattle.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateGUIMap.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateMap.h" />
-    <ClInclude Include="Code\Game\Gameplay\State\StateToMapSwitcher.h" />
     <ClInclude Include="Code\Game\Gameplay\Fight\SkillFactory.h" />
     <ClInclude Include="Code\Game\Gameplay\State\StateFightLoading.h" />
     <ClInclude Include="Code\Game\Gameplay\World\WorldLoader.h" />
     <ClInclude Include="Code\Game\Graphic\PokemonAnimationSystem.h" />
     <ClInclude Include="Code\Game\Script\ScriptConstants.h" />
+    <ClInclude Include="Code\Game\Debug\DebugDrawer.h" />
   </ItemGroup>
 </Project>

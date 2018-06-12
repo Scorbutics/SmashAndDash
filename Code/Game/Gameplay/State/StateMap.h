@@ -17,7 +17,7 @@ class StateMap :
 	public ska::StateBase,
 	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, ska::Point<int> screenSize = ska::Point<int>());
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition = std::optional<ska::Point<int>>());
 	
 	~StateMap() override = default;
 
@@ -25,7 +25,6 @@ private:
 	void beforeLoad(ska::State* lastState) override final;
 	void afterLoad(ska::State* lastState) override final;
 	bool onGameEvent(ska::GameEvent& ge);
-	void init();
 
 	PokemonGameEventDispatcher& m_eventDispatcher;
 	CustomEntityManager& m_entityManager;
@@ -33,10 +32,10 @@ private:
 	WorldState& m_worldState;
 	const std::string m_fileName;
 	std::string m_tilesetName;
-	ska::ScriptAutoSystem* m_scriptAutoSystem;
-	ska::ScriptRefreshSystem* m_scriptSystem;
+	ska::ScriptAutoSystem* m_scriptAutoSystem = nullptr;
+	ska::ScriptRefreshSystem* m_scriptSystem = nullptr;
 
-	ska::Point<int> m_screenSize;
+	std::optional<ska::Point<int>> m_trainerPosition;
 
 };
 

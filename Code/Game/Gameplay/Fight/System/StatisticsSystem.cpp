@@ -15,8 +15,11 @@ void StatisticsSystem::refresh(unsigned int) {
 		/* TODO : observer (eg hp < 0 could mean end trainer battle or end pokémon battle) */
 		if (bc.hp < 0) {
 			scheduleDeferredRemove(entityId);
-			MapEvent me(MapEvent::MAP);
+
+			const auto& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
+			MapEvent me(MapEventType::Switch_Map);
 			me.mapName = m_worldScene.getFileName();
+			me.position = pc;
 			me.chipsetName = m_worldScene.getTilesetName();
 			m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 		}

@@ -18,7 +18,7 @@ public:
 	virtual ska::EntityId createCharacter(const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "") override;
 	~CustomEntityManager() override = default;
 
-	static ska::EntityId createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize);
-	static ska::EntityId createTrainerNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize);
+	static ska::EntityId createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");
+	static ska::EntityId createTrainerNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name = "");
 };
 

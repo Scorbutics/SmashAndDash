@@ -52,13 +52,13 @@ bool WGameCore::onTeleport(MapEvent& me) {
 	if (m_currentState != nullptr) {
 		auto& wn = m_worldState->scheduleRemoveSubState(*m_currentState);
 		m_currentState = nullptr;
-		if (me.eventType == MapEvent::BATTLE) {
-			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.fightPos, *me.fightComponent);
+		if (me.eventType == MapEventType::Switch_Battle) {
+			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.position, *me.fightComponent);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::move(m_nextState)));
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, ".\\Levels\\" + me.mapName, me.chipsetName);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, "./Levels/" + me.mapName, me.chipsetName, me.position);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
 			});

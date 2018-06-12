@@ -13,11 +13,12 @@ class CustomEntityManager;
 
 namespace ska {
 	class Window;
+	class EntityLocator;
 }
 
 class FightStartSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, FightComponent, ska::GraphicComponent>, ska::PossibleComponent<>> {
 public:
-	FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityId player);
+	FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator);
 	virtual ~FightStartSystem();
 
 protected:
@@ -26,7 +27,7 @@ protected:
 private:
 	CustomEntityManager& m_cem;
 	WorldState& m_worldScene;
-	const ska::EntityId m_player;
+	const ska::EntityLocator& m_entityLocator;
 	unsigned int m_t0;
 	PokemonGameEventDispatcher& m_ged;
 };

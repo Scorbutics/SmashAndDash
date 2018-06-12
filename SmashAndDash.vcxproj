@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Code\Game\Audio\PokemonSoundRenderer.cpp" />
+    <ClCompile Include="Code\Game\Debug\DebugDrawer.cpp" />
     <ClCompile Include="Code\Game\Gameplay\CustomEntityManager.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Data\PokemonDescriptor.cpp" />
     <ClCompile Include="Code\Game\Gameplay\Data\SavegameManager.cpp" />
@@ -219,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
+    <ClInclude Include="Code\Game\Debug\DebugDrawer.h" />
     <ClInclude Include="Code\Game\Gameplay\CustomEntityManager.h" />
     <ClInclude Include="Code\Game\Gameplay\Data\EntityLoadEvent.h" />
     <ClInclude Include="Code\Game\Gameplay\Data\MapEvent.h" />
