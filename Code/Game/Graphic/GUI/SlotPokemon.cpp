@@ -5,7 +5,7 @@
 #include "GUI/GUI.h"
 
 SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
-WindowIG<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"),
+	ska::WidgetPanel<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * 32, 2 * 32 }),
 	m_fontSize(11) {
 	m_data = nullptr;
 

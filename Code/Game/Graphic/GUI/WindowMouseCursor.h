@@ -9,7 +9,7 @@
 class WindowMouseCursor :
 	public ska::TimeScrollableWindowIG<ska::ValueChangedEventListener<int>> {
 public:
-	WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName);
+	WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box);
 	WindowMouseCursor(const WindowMouseCursor&) = delete;
 	WindowMouseCursor& operator=(const WindowMouseCursor&) = delete;
 	void loadPokemon(SlotPokemonDataPtr& spd);

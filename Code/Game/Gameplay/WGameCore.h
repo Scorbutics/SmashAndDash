@@ -9,7 +9,6 @@
 #include "../Audio/PokemonSoundRenderer.h"
 #include "World/WorldState.h"
 #include "State/StateGUIMap.h"
-#include "FpsCalculator.h"
 #include "State/StateMap.h"
 #include "CoreModule.h"
 #include "GraphicModule.h"
@@ -49,7 +48,6 @@ private:
 	WorldState* m_worldState;
 	std::unique_ptr<StateGUIMap> m_guiMapScene;
 
-	ska::FpsCalculator m_fpsCalculator;
 	ska::StateBase* m_currentState;
 	std::unique_ptr<ska::StateBase> m_nextState;
 

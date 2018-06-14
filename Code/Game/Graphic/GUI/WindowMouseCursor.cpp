@@ -3,9 +3,9 @@
 #include "WindowMouseCursor.h"
 #include "Utils/SkaConstants.h"
 
-WindowMouseCursor::WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box, const std::string& styleName) :
-TimeScrollableWindowIG<ska::ValueChangedEventListener<int>>(timeObservable, guiObservable, keyObservable, box, styleName),
-m_originalBox(box) {
+WindowMouseCursor::WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box) :
+	TimeScrollableWindowIG<ska::ValueChangedEventListener<int>>(timeObservable, guiObservable, keyObservable, box),
+	m_originalBox(box) {
 	m_pokemon = &addWidget<ska::Image>("", ska::Point<int>(), false, nullptr);
 	m_item = &addWidget<ska::Image>("", ska::Point<int>(m_pokemon->getBox().w, 0), false, nullptr);
 	m_pokemon->show(false);

@@ -5,7 +5,7 @@
 #include "WindowMouseCursor.h"
 
 WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
-MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * TAILLEBLOCFENETRE, 15 * TAILLEBLOCFENETRE }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu"),
+MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * 32, 15 * 32 }),
 m_mouseCursor(mouseCursor) {
 
 	auto& title = addWidget<ska::Label>("Equipe Pokémon", 11, ska::Point<int>(130, 0));
@@ -13,12 +13,12 @@ m_mouseCursor(mouseCursor) {
 	title.setFontColor(255, 255, 255, 255);
 
 	auto count = -1;
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
-	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * TAILLEBLOCFENETRE)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
+	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));
 
 	for(auto& s : m_slots) {
 		s->show(false);
@@ -42,7 +42,7 @@ m_mouseCursor(mouseCursor) {
 void WindowTeam::organizeSlots() {
 	unsigned int count = 0;
 	for (auto s : m_visibleSlots) {
-		s->move(ska::Point<int>(14, 20 + (count++)* 2 * TAILLEBLOCFENETRE));
+		s->move(ska::Point<int>(14, 20 + (count++)* 2 * 32));
 	}
 }
 
