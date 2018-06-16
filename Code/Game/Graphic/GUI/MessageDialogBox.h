@@ -15,7 +15,7 @@ public:
 	MessageDialogBox(ska::Widget& parent, ska::InputContextManager& icm, const std::string& text, const std::string& messImg, const unsigned int screenH, const unsigned int screenW, const int timeout = -1);
 	void operator=(const MessageDialogBox&) = delete;
 
-	void render(const ska::Renderer& renderer) const override;
+	void render(ska::Renderer& renderer) const override;
 	bool isVisible() const;
 	int getPriority() const override;
 

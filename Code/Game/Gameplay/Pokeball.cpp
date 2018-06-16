@@ -323,7 +323,7 @@ void Pokeball::update() {
 	}
 }
 
-void Pokeball::render(const ska::Renderer& renderer) const {
+void Pokeball::render(ska::Renderer& renderer) const {
 
 	//Si la Pokeball est en l'air
 	if ((m_pokeballPos.x > m_finalPos.x &&  m_sens == 0) || (m_pokeballPos.x < m_finalPos.x &&  m_sens == 1)) {

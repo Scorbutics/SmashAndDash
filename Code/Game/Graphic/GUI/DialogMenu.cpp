@@ -14,7 +14,7 @@ m_scroll(scroll) {
 	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 1.F, ska::Point<int>(16, 16));
 }
 
-void DialogMenu::render(const ska::Renderer& renderer) const{
+void DialogMenu::render(ska::Renderer& renderer) const{
 	TimeScrollableWindowIG<ska::KeyEventListener>::render(renderer);
 }
 

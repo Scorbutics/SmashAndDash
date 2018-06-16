@@ -105,7 +105,7 @@ void Weather::update() {
 	}
 }
 
-void Weather::render(const ska::Renderer& render) const {
+void Weather::render(ska::Renderer& render) const {
 	const auto& worldView = m_cameraPos;
 
 	if (!m_active || m_weather == nullptr) {

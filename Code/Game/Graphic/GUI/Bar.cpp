@@ -28,7 +28,7 @@ m_visible(true) {
 	DrawableFixedPriority::setPriority(GUI_DEFAULT_DISPLAY_PRIORITY);
 }
 
-void Bar::render(const ska::Renderer& renderer) const {
+void Bar::render(ska::Renderer& renderer) const {
 	if (!m_visible) {
 		return;
 	}

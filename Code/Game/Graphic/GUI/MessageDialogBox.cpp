@@ -11,7 +11,7 @@ m_playerICM(icm) {
 	m_instanceExists++;
 }
 
-void MessageDialogBox::render(const ska::Renderer& renderer) const{
+void MessageDialogBox::render(ska::Renderer& renderer) const{
 	m_dialog.render(renderer);
 }
 

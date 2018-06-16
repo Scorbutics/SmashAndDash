@@ -94,7 +94,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 
 	static constexpr auto tailleblocFenetre = 32;
 	auto window = std::make_unique<SDLWindow>(title, widthBlocks * tailleblocFenetre, heightBlocks * tailleblocFenetre);
-	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED);
+	auto renderer = std::make_unique<SDLRenderer>(*window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 	auto vdc = std::make_unique<ska::VectorDrawableContainer>(*renderer);
 
 	gc->requireModule<ska::GraphicModule>("Graphic", gc->getEventDispatcher(), std::move(vdc), std::move(renderer), std::move(window));
