@@ -9,7 +9,7 @@
 #include "FPSLabel.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 
-#define TAILLEBLOCFENETRE 48
+#define TAILLEBLOCFENETRE 32
 
 GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	ska::GUI(ged),
@@ -32,7 +32,6 @@ GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
 	m_team->show(false);
 
 	addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE)).show(false);
-	//addWindow<FPSLabel>("displayFPS");
 
 	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
@@ -53,7 +52,7 @@ void GUIMap::bind(Settings& sets) {
 void GUIMap::initButtons() {
 	ska::Rectangle buf;
     buf.w = (TAILLEBLOCFENETRE)* 2;
-    buf.h = (TAILLEBLOCFENETRE)* 2;
+    buf.h = (TAILLEBLOCFENETRE)* 4;
     buf.x = 0;
     buf.y = 0;
 
@@ -76,7 +75,7 @@ void GUIMap::initButtons() {
     };
 
     auto& firstButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
-	auto& bs = firstButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 102, [&](ska::Widget*, const ska::ClickEvent& e) {
+	auto& bs = firstButton.addWidget<ska::ButtonSprite>(ska::Point<int>(), "", 102, [&](ska::Widget*, const ska::ClickEvent& e) {
         if (e.getState() == ska::MOUSE_CLICK) {
             auto widget = getWindow("team");
             widget->show(!widget->isVisible());
@@ -88,20 +87,21 @@ void GUIMap::initButtons() {
     firstButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
     wAction.setName("ACTIONS");
 
-    buf.x += 5 * TAILLEBLOCFENETRE / 2;
+	static constexpr auto OFFSET_BETWEEN_BUTTONS = 2.5 * TAILLEBLOCFENETRE;
+
+    buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
     secondButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
-	buf.x += 5 * TAILLEBLOCFENETRE / 2;
+	buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
     thirdButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
-	buf.x += 5 * TAILLEBLOCFENETRE / 2;
+	buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& fourthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
     fourthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 
-
-    buf.x += 5 * TAILLEBLOCFENETRE / 2;
+	buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& fifthButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
     fifthButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
 	fifthButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 104, [&](ska::Widget*, const ska::ClickEvent& e) {

@@ -3,14 +3,15 @@
 #include "SlotPokemon.h"
 #include "SlotPokemonData.h"
 #include "WindowMouseCursor.h"
+#include "Rectangle.h"
+#include "GUI/Components/Concrete/TileSurface.h"
 
 WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
 MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * 32, 15 * 32 }),
 m_mouseCursor(mouseCursor) {
 
-	auto& title = addWidget<ska::Label>("Equipe Pokémon", 11, ska::Point<int>(130, 0));
-	title.setPriority(std::numeric_limits<int>::max());
-	title.setFontColor(255, 255, 255, 255);
+	setTitle("Equipe Pokémon");
+	setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
 
 	auto count = -1;
 	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));

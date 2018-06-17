@@ -2,6 +2,7 @@
 #include "../../Gameplay/Data/Settings.h"
 
 #include "GUI/GUI.h"
+#include "GUI/Components/Concrete/TileSurface.h"
 #include "GUI/Components/Concrete/Label.h"
 #include "GUI/Components/Concrete/CheckBox.h"
 #include "GUI/Components/Concrete/LabeledHorizontalSlider.h"
@@ -16,9 +17,8 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	});
 // 	addWidget(input);
 
-	auto& title = addWidget<ska::Label>("Paramètres", 11, ska::Point<int>(95, 0));
-	title.setPriority(std::numeric_limits<int>::max());
-	title.setFontColor(255, 255, 255, 255);
+	setTitle("Paramètres");
+	setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
 
 	addWidget<ska::Label>("Météo", 11, ska::Point<int>(40, 32));
 
