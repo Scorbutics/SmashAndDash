@@ -13,12 +13,14 @@
 #include "Graphic/System/JumpAnimationStateMachine.h"
 #include "Physic/SpaceCollisionEventSender.h"
 #include "Utils/SubObserver.h"
-#include "Physic/Space.h"
 #include "Graphic/Polygon.h"
 #include "ECS/EntityLocator.h"
 #include "../../Debug/DebugDrawer.h"
 
 namespace ska {
+	namespace cp {
+		class SpaceSystem;
+	}
 	class IniReader;
 	class CameraSystem;
 	class Window;
@@ -26,6 +28,7 @@ namespace ska {
 	class GraphicSystem;
 	class Ticked;
 	class StateHolder;
+	class Space;
 }
 class CustomEntityManager;
 
@@ -94,10 +97,10 @@ private:
 	ska::Rectangle m_screenSize{};
 	bool m_firstState{};
 
-	ska::cp::Space m_space;
+	ska::cp::SpaceSystem* m_spaceSystem = nullptr;
 	std::vector<ska::Polygon<int>> m_layerContours{};
 	std::vector<ska::Polygon<int>> m_layerContoursWater{};
-	ska::cp::SpaceCollisionEventSender m_collisionEventSender;
+	std::unique_ptr<ska::cp::SpaceCollisionEventSender> m_collisionEventSender;
 	
 	ska::Polygon<int> m_posHeroPolygon;
 	ska::Point<int> m_posHero;

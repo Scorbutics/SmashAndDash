@@ -68,16 +68,25 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize, name);
 }
 
-ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name) {
-	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
-	const auto& point = em.getComponent<ska::PositionComponent>(trainer);
-	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
-	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(trainer);
-	const auto& fc = em.getComponent<ska::ForceComponent>(trainer);
-	
-	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, trainer);
+void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character) {
+	const auto& point = em.getComponent<ska::PositionComponent>(character);
+	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
+	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
+	const auto& fc = em.getComponent<ska::ForceComponent>(character);
+
+	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
 
+	em.addComponent(character, std::move(bc));
+}
+
+ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name) {
+	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
+	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
+	
+	fillCharacter(em, space, trainer);
+	
+	const auto& bc = em.getComponent<ska::cp::HitboxComponent>(trainer);
 	const auto& shape = space.getShape(bc.shapeIndex);
 	const auto& entityDimensions = shape.getDimensions();
 	hitbox.xOffset = entityDimensions.x;
@@ -85,7 +94,6 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	hitbox.width = entityDimensions.w;
 	hitbox.height = entityDimensions.h;
 
-	em.addComponent(trainer, std::move(bc));
 	return trainer;
 }
 

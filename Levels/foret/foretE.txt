@@ -1,4 +1,4 @@
 x:y ID_SPRITE(!:no sprite) solide?(0||1) declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) path(3: mouvements aléatoires||1: fixe|| {2,h,b,g,d}:prédéfini) action parametresSupplementaires
-47 19 2 Levels/teleport_script.txt, greencity, 0, 1, 9
-47 20 2 Levels/teleport_script.txt, greencity, 0, 1, 10
-47 21 2 Levels/teleport_script.txt, greencity, 0, 1, 11
+47 19 2 Levels/teleport_script.txt, greencity, 1, 9, 1
+47 20 2 Levels/teleport_script.txt, greencity, 1, 10, 1
+47 21 2 Levels/teleport_script.txt, greencity, 1, 11, 1

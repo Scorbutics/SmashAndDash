@@ -14,8 +14,6 @@ public:
 	CommandTeleport(const ska::TileWorld& w, const ska::EntityLocator& locator, ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged);
 	virtual ~CommandTeleport() = default;
 
-	static void teleportHeroToMap(ska::TileWorld& w, std::string param);
-
 	virtual std::string execute(ska::ScriptComponent& script, ska::MemoryScript& memoryScript, const std::vector<std::string>& args) override;
 	virtual int argumentsNumber();
 

@@ -24,7 +24,7 @@
 #include "World/TilesetEventLoaderText.h"
 #include "World/TileWorldPhysics.h"
 #include "WorldLoader.h"
-
+#include "Physic/SpaceSystem.h"
 #include "Physic/MovementSystem.h"
 #include "Core/CodeDebug/CodeDebug.h"
 
@@ -69,11 +69,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
-	m_collisionEventSender{em, m_space, ed, m_tileset->getTileSize() },
 	m_debugDrawer(ed, em, m_entityLocator, m_tileset->getTileSize()) {
-
-	m_space.setIterations(10);
-	m_space.setSleepTimeThreshold(0.5F);
 
 	ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
 
@@ -172,7 +168,6 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
-	m_space.step(timeStep / 1000.);
 	m_tileset->update();
 	m_debugDrawer.eventUpdate(timeStep);
 }
@@ -210,8 +205,12 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	auto shadowSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, *m_cameraSystem);
 	m_shadowSystem = shadowSystem.get();
 	addGraphic(std::move(shadowSystem));
+	
+	auto spaceSystem = std::make_unique<ska::cp::SpaceSystem>(m_entityManager);
+	m_spaceSystem = spaceSystem.get();
+	addLogic(std::move(spaceSystem));
 
-	addLogic(std::make_unique<ska::cp::MovementSystem>(m_entityManager, m_space));
+	addLogic(std::make_unique<ska::cp::MovementSystem>(m_entityManager, m_spaceSystem->getSpace()));
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
 
@@ -235,6 +234,8 @@ void WorldState::beforeLoad(ska::State* lastState) {
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
+
+	m_collisionEventSender = std::make_unique<ska::cp::SpaceCollisionEventSender>(m_entityManager, m_spaceSystem->getSpace(), m_eventDispatcher, m_tileset->getTileSize());
 }
 
 void WorldState::afterLoad(ska::State* lastState) {
@@ -341,9 +342,16 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	m_layerContoursWater.clear();
 #endif
 
-	m_space = std::move(ska::cp::Space{});
-	m_entityManager.removeEntities();
-	m_entityManager.refresh();
+	m_spaceSystem->reset();
+	
+	auto trainer = m_entityLocator.getEntityId("trainer");
+	if (trainer != nullptr) {
+		auto donotDelete = std::unordered_set<ska::EntityId>{};
+		donotDelete.emplace(*trainer);
+
+		m_entityManager.removeEntities(donotDelete);
+		m_entityManager.refresh();
+	}
 	//FIN CLEAN UP
 
 	//DEBUT WORLD
@@ -357,9 +365,15 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	//FIN WORLD
 
 	//DEBUT PLAYER
-	auto player = CustomEntityManager::createTrainerNG(m_entityManager, m_space, m_posHero, m_world.getBlockSize());
-	auto& pShape = m_space.getShape(m_entityManager.getComponent<ska::cp::HitboxComponent>(player).shapeIndex);
-	pShape.setBounciness(0.F);
+	auto player = ska::EntityId{};
+	if (trainer == nullptr) {
+		player = CustomEntityManager::createTrainerNG(m_entityManager, m_spaceSystem->getSpace(), m_posHero, m_world.getBlockSize());
+		auto& pShape = m_spaceSystem->getSpace().getShape(m_entityManager.getComponent<ska::cp::HitboxComponent>(player).shapeIndex);
+		pShape.setBounciness(0.F);
+	} else {
+		player = *trainer;
+		CustomEntityManager::fillCharacter(m_entityManager, m_spaceSystem->getSpace(), player);
+	}
 	//FIN PLAYER
 
 	auto hitboxHero = std::vector<ska::Rectangle> {};
@@ -386,15 +400,15 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	const auto contourRectangleTileWater = GenerateContourTileMap(agglomeratedTilesWater);
 
 	for (const auto& r : contourRectangleTile) {
-		const auto shIndex = m_space.addShape(nullptr, ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
-		auto& sh = m_space.getShape(shIndex);
+		const auto shIndex = m_spaceSystem->getSpace().addShape(nullptr, ska::cp::Shape::fromBox(m_spaceSystem->getSpace().getStaticBody(), r));
+		auto& sh = m_spaceSystem->getSpace().getShape(shIndex);
 		sh.setBounciness(1.F);
 		sh.setFriction(1.F);
 	}
 
 	for (const auto& r : contourRectangleTileWater) {
-		const auto shIndex = m_space.addShape(nullptr, ska::cp::Shape::fromBox(m_space.getStaticBody(), r));
-		auto& sh = m_space.getShape(shIndex);
+		const auto shIndex = m_spaceSystem->getSpace().addShape(nullptr, ska::cp::Shape::fromBox(m_spaceSystem->getSpace().getStaticBody(), r));
+		auto& sh = m_spaceSystem->getSpace().getShape(shIndex);
 		sh.setBounciness(1.F);
 		sh.setFriction(1.F);
 		sh.setCollisionType(CHIPMUNK_COLLISION_TYPE_WATER);
@@ -418,9 +432,8 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	}
 
 	//FIN Tile map
-	
 	ska::Point<int> posEntityId;
-	auto pkmn = CustomEntityManager::createCharacterNG(m_entityManager, m_space, { 4,5 }, 25, m_world.getBlockSize(), "pikachu");
+	auto pkmn = CustomEntityManager::createCharacterNG(m_entityManager, m_spaceSystem->getSpace(), { 4,5 }, 25, m_world.getBlockSize(), "pikachu");
 	auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(pkmn);
 	ac.setASM(*m_walkASM, pkmn);
 
@@ -483,7 +496,8 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 }
 
 ska::cp::Space& WorldState::getSpace() {
-	return m_space;
+	assert(m_spaceSystem != nullptr && "Bad instantiation of WorldState : state not loaded but trying to access its members");
+	return m_spaceSystem->getSpace();
 }
 
 SavegameManager& WorldState::getSaveGame() {
