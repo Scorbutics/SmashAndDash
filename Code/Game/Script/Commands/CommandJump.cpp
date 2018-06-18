@@ -25,15 +25,8 @@ std::string CommandJump::execute(ska::ScriptComponent& script, ska::MemoryScript
 		throw ska::ScriptException(("The targetted entity cannot jump : " + id).c_str());
 	}
 
-	auto& fc = m_entityManager.getComponent<ska::ForceComponent>(internalEntity);
-	fc.z = power;
-
-
-	if (m_entityManager.hasComponent<ska::MovementComponent>(internalEntity)) {
-		auto& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
-		mc.az = 0;
-		mc.vz = 0;
-	}
+	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
+	mc.vz = power;
 
 	return "";
 }

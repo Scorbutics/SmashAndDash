@@ -20,6 +20,9 @@ public:
 
 	static ska::EntityId createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");
 	static ska::EntityId createTrainerNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name = "");
-	static void fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character);
+	static void fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction = DEFAULT_FRICTION, float rotationFriction = DEFAULT_ROTATION_FRICTION);
+private:
+	static constexpr auto DEFAULT_FRICTION = 60.F;
+	static constexpr auto DEFAULT_ROTATION_FRICTION = 10.F;
 };
 

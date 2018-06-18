@@ -3,7 +3,6 @@
 #include "ECS/Basics/Physic/MovementComponent.h"
 #include "ECS/Basics/Physic/PositionComponent.h"
 #include "ECS/Basics/Graphic/CameraFocusedComponent.h"
-#include "ECS/Basics/Physic/GravityAffectedComponent.h"
 #include "ECS/Basics/Script/ScriptAwareComponent.h"
 #include "Graphic/GraphicComponent.h"
 #include "ECS/Basics/Input/InputComponent.h"
@@ -31,10 +30,6 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	fc.weight = 65.0;
 	fc.bounciness = 10.F;
 	fc.maxSpeed = 240.F;
-	GravityAffectedComponent gac;
-	gac.friction = 60.F;
-	gac.rotationFriction = 10.F;
-	addComponent<GravityAffectedComponent>(hero, std::move(gac));
 	addComponent<ForceComponent>(hero, std::move(fc));
 	addComponent<MovementComponent>(hero, std::move(mc));
 	GraphicComponent gc;

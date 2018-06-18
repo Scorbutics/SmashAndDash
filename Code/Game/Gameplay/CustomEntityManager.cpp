@@ -15,7 +15,6 @@
 
 #include "Physic/BuildHitbox.h"
 #include "ECS/Basics/Input/InputComponent.h"
-#include "ECS/Basics/Physic/GravityAffectedComponent.h"
 
 CustomEntityManager::CustomEntityManager(ska::GameEventDispatcher& ged) : 
 	ska::PrefabEntityManager(ged) {
@@ -68,14 +67,13 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize, name);
 }
 
-void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character) {
+void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction, float rotationFriction) {
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
-	const auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
 	const auto& fc = em.getComponent<ska::ForceComponent>(character);
 
 	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
-	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
+	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), friction * 50, rotationFriction * 30);
 
 	em.addComponent(character, std::move(bc));
 }
@@ -101,13 +99,10 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
-	auto& gafc = em.getComponent<ska::GravityAffectedComponent>(character);
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
-	gafc.friction = 10.F;
-	fc.weight = 20.F;
 
 	auto bc = ska::cp::BuildRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
-	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), gafc.friction * 50, gafc.rotationFriction * 30);
+	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
 
 	const auto& shape = space.getShape(bc.shapeIndex);
 	const auto& entityDimensions = shape.getDimensions();

@@ -27,7 +27,7 @@
 #include "Physic/SpaceSystem.h"
 #include "Physic/MovementSystem.h"
 #include "Core/CodeDebug/CodeDebug.h"
-
+#include "Physic/ZGravityForceSystem.h"
 
 //#define PKMN_DRAW_DBG_SHAPES
 
@@ -213,7 +213,7 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::cp::MovementSystem>(m_entityManager, m_spaceSystem->getSpace()));
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
-
+	addLogic(std::make_unique<ska::ZGravityForceSystem>(m_entityManager, 0.7F));
 	auto animSystemPtr = std::make_unique<PokemonAnimationSystem>(m_entityManager);
 	auto& animSystem = *animSystemPtr.get();
 	addLogic(std::move(animSystemPtr));
@@ -224,12 +224,12 @@ void WorldState::beforeLoad(ska::State* lastState) {
 
 	animSystem.link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](const ska::EntityId& e) {
 		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return ska::NumberUtils::absolute(mov.vz) > 0.1;
+		return mov.vz > 0.1;
 	});
 
 	animSystem.link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](const ska::EntityId& e) {
 		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return ska::NumberUtils::absolute(mov.vz) <= 0.1;
+		return mov.vz <= 0.1;
 	});
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
