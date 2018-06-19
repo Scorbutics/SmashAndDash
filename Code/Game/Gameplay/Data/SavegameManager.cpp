@@ -28,20 +28,8 @@ int SavegameManager::getGameVariable(const std::string& x) const {
 	return 0;
 }
 
-bool SavegameManager::getGameSwitch(const std::string& x) const {
-	const auto search = m_game_switches.find(x);
-	if (search != m_game_switches.end()) {
-		return search->second;
-	}
-	return false;
-}
-
 void SavegameManager::setGameVariable(const std::string& x, const int value) {
 		m_game_variables[x] = value;
-}
-
-void SavegameManager::setGameSwitch(const std::string& x, const bool value) {
-		m_game_switches[x] = value;
 }
 
 void SavegameManager::saveGame(const std::string& pathname) {
@@ -49,7 +37,6 @@ void SavegameManager::saveGame(const std::string& pathname) {
 	saveTrainer();
 	savePokemonTeam();
 
-	SwitchesWriting(m_game_switches, "./Data/Saves/" + m_pathname + "/switches.ini");
 	VariablesWriting(m_game_variables, "./Data/Saves/" + m_pathname + "/variables.ini");
 }
 
@@ -62,7 +49,6 @@ void SavegameManager::loadGame(const std::string& pathname) {
 	loadTrainer();
 	loadPokemonTeam();
 
-	SwitchesAcquisition(m_game_switches, "./Data/Saves/" + m_pathname + "/switches.ini");
 	VariablesAcquisition(m_game_variables, "./Data/Saves/" + m_pathname + "/variables.ini");
 
 	std::ofstream tmpScriptList(("./Data/Saves/" + m_pathname + "/tmpscripts.data").c_str(), std::ios::trunc);

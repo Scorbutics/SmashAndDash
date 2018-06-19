@@ -16,12 +16,10 @@ public:
 
 	std::string getSaveName() const override;
 	int getGameVariable(const std::string& x) const override;
-	bool getGameSwitch(const std::string&  x) const override;
 	std::string getComponentVariable(const std::string& variable) const override;
 	
 	void setComponentVariable(const std::string& variable, const std::string& value) override;
 	void setGameVariable(const std::string& x, int value) override;
-	void setGameSwitch(const std::string& x, bool value) override;
 
 	const std::string& getStartChipsetName();
 	const std::string& getPathName();
@@ -41,7 +39,6 @@ private:
 
 	std::string m_pathname, m_startMapChipsetName, m_startMapName;
 	std::unordered_map<std::string, int> m_game_variables;
-	std::unordered_map<std::string, bool> m_game_switches;
 
 };
 

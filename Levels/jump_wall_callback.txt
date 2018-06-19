@@ -1,2 +1,4 @@
 restore_component InputComponent, #arg0#
+assign 25, <InputComponent.movePower #arg0#>
+assign 20, <InputComponent.jumpPower #arg0#>
 end

@@ -77,12 +77,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_posHero.y = reader.get<int>("Trainer start_posy");
 	auto startMapName = reader.get<std::string>("Trainer start_map_name");
 
-	std::string buf = "./Levels/";
-	buf += startMapName;
-	buf += "/";
-	buf += startMapName;
-	buf += ".ini";
-
+	const auto buf = "./Levels/" + startMapName + "/" + startMapName + ".ini";
 	ska::IniReader mapReader(buf);
 	auto startMapChipset = mapReader.get<std::string>("Chipset file");
 	if (startMapChipset == "STRINGNOTFOUND") {
@@ -134,7 +129,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	//TODO enlever la météo de world
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
-
+	/*
 	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
 	{
 		if (trainer != nullptr) {
@@ -145,7 +140,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 			m_posHeroPolygon.setPriority(std::numeric_limits<int>::max());
 			drawables.add(m_posHeroPolygon);
 		}
-	}
+	}*/
 	
 #ifdef PKMN_DRAW_DBG_SHAPES
 #ifdef PKMN_DRAW_CONTROL_BODY
@@ -217,7 +212,7 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::cp::MovementSystem>(m_entityManager, m_spaceSystem->getSpace()));
 	addLogic(std::make_unique<ska::InputSystem>(m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::DeleterSystem>(m_entityManager));
-	addLogic(std::make_unique<ska::ZGravityForceSystem>(m_entityManager, 0.7F));
+	addLogic(std::make_unique<ska::ZGravityForceSystem>(m_entityManager, 0.90F));
 	auto animSystemPtr = std::make_unique<PokemonAnimationSystem>(m_entityManager);
 	auto& animSystem = *animSystemPtr.get();
 	addLogic(std::move(animSystemPtr));

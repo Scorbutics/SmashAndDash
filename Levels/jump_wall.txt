@@ -5,6 +5,7 @@ remove_component InputComponent, [|id_perso|]
 
 move [|id_perso|], [|jump_direction|], 30, true
 wait 400
-jump [|id_perso|], 11
-move [|id_perso|], [|jump_direction|], 80, true, ./Levels/jump_wall_callback.txt, 0, [|block_id|]
+jump [|id_perso|], 14
+move [|id_perso|], [|jump_direction|], 60, true, ./Levels/jump_wall_callback.txt, [|id_perso|], [|block_id|]
+
 end
