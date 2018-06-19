@@ -137,7 +137,10 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
 	{
-		if (trainer != nullptr) {		
+		if (trainer != nullptr) {
+			m_posHero = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
+			//m_posHero = m_debugDrawer.getPosition();
+			
 			m_posHeroPolygon.setOffset(ska::Point<int> { static_cast<int>(m_posHero.x - m_cameraSystem->getDisplay().x), static_cast<int>(m_posHero.y - m_cameraSystem->getDisplay().y)});
 			m_posHeroPolygon.setPriority(std::numeric_limits<int>::max());
 			drawables.add(m_posHeroPolygon);
@@ -146,8 +149,9 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	
 #ifdef PKMN_DRAW_DBG_SHAPES
 #ifdef PKMN_DRAW_CONTROL_BODY
+	if (m_spaceSystem == nullptr) return;
 	const auto& hc = m_entityManager.getComponent < ska::cp::HitboxComponent>(*trainer);
-	const auto& controlBody = m_space.getBody(hc.controlBodyIndex);
+	const auto& controlBody = m_spaceSystem->getSpace().getBody(hc.controlBodyIndex);
 
 	DisplayPlayerControlBody(controlBody, m_layerContours);
 	auto& ctrlBdyDrawable = m_layerContours[m_layerContours.size() - 1];
@@ -223,13 +227,13 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	animSystem.setup<ska::JumpAnimationStateMachine>(false, std::make_unique<ska::JumpAnimationStateMachine>(m_entityManager));
 
 	animSystem.link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](const ska::EntityId& e) {
-		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return mov.vz > 0.1;
+		const auto& pc = m_entityManager.getComponent<ska::PositionComponent>(e);
+		return pc.z > 1;
 	});
 
 	animSystem.link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](const ska::EntityId& e) {
-		auto& mov = m_entityManager.getComponent<ska::MovementComponent>(e);
-		return mov.vz <= 0.1;
+		const auto& pc = m_entityManager.getComponent<ska::PositionComponent>(e);
+		return pc.z <= 1;
 	});
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
@@ -378,7 +382,7 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 
 	auto hitboxHero = std::vector<ska::Rectangle> {};
 	const auto& hcHero = m_entityManager.getComponent<ska::HitboxComponent>(player);
-	hitboxHero.push_back({ 0, 0, static_cast<int>(1), static_cast<int>(1) });
+	hitboxHero.push_back({ hcHero.xOffset, hcHero.yOffset, static_cast<int>(hcHero.width), static_cast<int>(hcHero.height) });
 	m_posHeroPolygon = ska::Polygon<int>{ std::move(hitboxHero) };
 
 	//DEBUT Tile map

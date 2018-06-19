@@ -106,5 +106,6 @@ private:
 	ska::Point<int> m_posHero;
 
 	DebugDrawer m_debugDrawer;
+
 };
 

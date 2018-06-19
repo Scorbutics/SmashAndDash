@@ -68,12 +68,20 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 }
 
 void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction, float rotationFriction) {
+	const auto& hasBeenCreated = em.hasComponent<ska::cp::HitboxComponent>(character);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
+	
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
 	const auto& fc = em.getComponent<ska::ForceComponent>(character);
+	
+	if (hasBeenCreated) {
+		hitbox.yOffset += hitbox.height;
+	}
 
 	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), friction * 50, rotationFriction * 30);
+	
+	hitbox.yOffset -= hitbox.height;
 
 	em.addComponent(character, std::move(bc));
 }
@@ -84,14 +92,6 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	
 	fillCharacter(em, space, trainer);
 	
-	const auto& bc = em.getComponent<ska::cp::HitboxComponent>(trainer);
-	const auto& shape = space.getShape(bc.shapeIndex);
-	const auto& entityDimensions = shape.getDimensions();
-	hitbox.xOffset = entityDimensions.x;
-	hitbox.yOffset = entityDimensions.y - entityDimensions.h;
-	hitbox.width = entityDimensions.w;
-	hitbox.height = entityDimensions.h;
-
 	return trainer;
 }
 
@@ -104,12 +104,8 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	auto bc = ska::cp::BuildRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
 
-	const auto& shape = space.getShape(bc.shapeIndex);
-	const auto& entityDimensions = shape.getDimensions();
-	hitbox.xOffset = entityDimensions.x;
-	hitbox.yOffset = entityDimensions.y - entityDimensions.h;
-	hitbox.width = entityDimensions.w;
-	hitbox.height = entityDimensions.h;
+	hitbox.yOffset -= hitbox.height;
+
 	em.addComponent(character, std::move(bc));
 	return character;
 }
