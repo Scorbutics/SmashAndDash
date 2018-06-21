@@ -19,17 +19,21 @@ WindowMouseCursor::WindowMouseCursor(ska::TimeObservable* timeObservable, ska::M
 void WindowMouseCursor::loadPokemon(SlotPokemonDataPtr& spd) {
 	m_pokemonData = std::move(spd);
 	m_pokemonData->parent = nullptr;
-	m_pokemon->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_pokemonData->id), 6, 8, 1, 2);
+	auto charset = ska::Texture{ ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_pokemonData->id) };
+	static constexpr auto BLOCKSIZE = 72;
+	auto clip = ska::Rectangle{ 1 * BLOCKSIZE, 7 * BLOCKSIZE, BLOCKSIZE, BLOCKSIZE };
+	m_pokemon->replaceWith(std::move(charset), &clip);
 	m_pokemon->show(true);
-	setWidth(m_originalBox.w * ((m_item->isVisible() ? 1 : 0) + (m_pokemon->isVisible() ? 1 : 0)));
+	setWidth(m_originalBox.w * ((m_item->isVisible() ? 1 : 0) + 1));
 }
 
 void WindowMouseCursor::loadItem(unsigned int id) {
 	//auto result = m_lastItemId;
-	m_item->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_INVENTORY, id), 2, 1, 1, 2);
+	auto itemTexture = ska::Texture{ ska::SpritePath::getInstance().getPath(SPRITEBANK_INVENTORY, id) };
+	m_item->replaceWith(std::move(itemTexture), nullptr);
 	m_item->show(true);
 	m_lastItemId = id;
-	setWidth(m_originalBox.w * ((m_item->isVisible() ? 1 : 0) + (m_pokemon->isVisible() ? 1 : 0)));
+	setWidth(m_originalBox.w * (1 + (m_pokemon->isVisible() ? 1 : 0)));
 }
 
 SlotPokemonDataPtr WindowMouseCursor::unloadPokemon() {

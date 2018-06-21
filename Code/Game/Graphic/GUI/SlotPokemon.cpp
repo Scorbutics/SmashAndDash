@@ -9,8 +9,6 @@ SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
 	m_fontSize(11) {
 	m_data = nullptr;
 
-	//Widget& tthis = *this;
-
 	m_sprite = &addWidget<ska::ButtonSprite>(ska::Point<int>(4, 4), "", "", ska::Rectangle{ 0, 0, 0, 0 }, [&](Widget*, ska::ClickEvent&) {});
 	m_name = &addWidget<ska::Label>("Nom : ", m_fontSize, ska::Point<int>(112, 4));
 	m_level = &addWidget<ska::Label>("Niveau : ", m_fontSize, ska::Point<int>(112, 22));
@@ -52,10 +50,5 @@ void SlotPokemon::unload() {
 bool SlotPokemon::isLoaded() const {
 	return m_data != nullptr;
 }
-
-
-
-
-
 
 
