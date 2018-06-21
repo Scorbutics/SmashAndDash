@@ -79,10 +79,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 
 	const auto buf = "./Levels/" + startMapName + "/" + startMapName + ".ini";
 	ska::IniReader mapReader(buf);
-	auto startMapChipset = mapReader.get<std::string>("Chipset file");
-	if (startMapChipset == "STRINGNOTFOUND") {
-		throw ska::CorruptedFileException("Erreur : impossible de trouver le nom du chipset de la map de depart");
-	}
+	mapReader.get<std::string>("Chipset file");
 }
 
 const std::string& WorldState::getFileName() const {
@@ -238,7 +235,7 @@ void WorldState::beforeLoad(ska::State* lastState) {
 }
 
 void WorldState::afterLoad(ska::State* lastState) {
-	
+	m_saveManager.loadGame("save1");
 }
 
 void WorldState::beforeUnload() {

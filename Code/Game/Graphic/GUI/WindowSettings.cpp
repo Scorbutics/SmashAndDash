@@ -18,7 +18,8 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	addWidget(input);
 
 	setTitle("Paramètres");
-	setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
+	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
+	tileSurface.setOpacity(210);
 
 	addWidget<ska::Label>("Météo", 11, ska::Point<int>(40, 32));
 

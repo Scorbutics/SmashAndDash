@@ -25,7 +25,8 @@ SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
 			directNotify(vce);
 		}
 	});
-
+	SlotPokemon::setWidth(300);
+	SlotPokemon::setHeight(m_sprite->getBox().h);
 }
 
 bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent&) {

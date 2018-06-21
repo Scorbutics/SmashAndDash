@@ -10,8 +10,9 @@
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_entityManager(em),
 	m_ged(ged) {
+
 	m_pathname = filename;
-	loadGame(filename);
+	loadTrainer();
 }
 
 
@@ -48,7 +49,6 @@ void SavegameManager::loadGame(const std::string& pathname) {
 	m_pathname = pathname;
 	loadTrainer();
 	loadPokemonTeam();
-
 	VariablesAcquisition(m_game_variables, "./Data/Saves/" + m_pathname + "/variables.ini");
 
 	std::ofstream tmpScriptList(("./Data/Saves/" + m_pathname + "/tmpscripts.data").c_str(), std::ios::trunc);
@@ -194,10 +194,6 @@ void SavegameManager::loadTrainer() {
 
 	ska::IniReader reader("./Data/Saves/" + m_pathname + "/trainer.ini");
 
-	/*
-	TODO
-	startPosx = reader.get<int>("Trainer start_posx");
-	startPosy = reader.get<int>("Trainer start_posy");*/
 	m_startMapName = reader.get<std::string>("Trainer start_map_name");
 
 	std::string buf = "./Levels/";
@@ -208,12 +204,6 @@ void SavegameManager::loadTrainer() {
 
 	ska::IniReader mapReader(buf);
 	m_startMapChipsetName = mapReader.get<std::string>("Chipset file");
-
-	if(m_startMapChipsetName == "STRINGNOTFOUND")
-		SKA_LOG_ERROR("Erreur : impossible de trouver le nom du chipset de la map de depart");
-
-	/*hero = wScreen.getEntityFactory().getTrainer();
-	hero->teleport(startPosx*TAILLEBLOC, startPosy*TAILLEBLOC);*/
 
 	for (unsigned int i = 0; reader.exists("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
 		const auto& id = ska::StringUtils::intToStr(i);

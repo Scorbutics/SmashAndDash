@@ -56,11 +56,13 @@ bool WGameCore::onTeleport(MapEvent& me) {
 			m_nextState = std::make_unique<StateFight>(m_entityManager, m_eventDispatcher, *m_worldState, me.position, *me.fightComponent);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateFight&>(m_worldState->addSubState(std::move(m_nextState)));
+				resetAccumulator();
 			});
 		} else {
 			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, "./Levels/" + me.mapName, me.chipsetName, me.position);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
+				resetAccumulator();
 			});
 		}
 	}
@@ -101,8 +103,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	gc->requireModule<ska::SoundModule<PokemonSoundRenderer>>("Sound", gc->getEventDispatcher());
 
 	try {
-		auto game = std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
-		return game;
+		return std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
 	} catch (GenericException& ge) {
 		SKA_STATIC_LOG_ERROR(WGameCore)(ge.what());
 		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", ge.what(), nullptr);

@@ -6,7 +6,7 @@
 class SavegameManager : 
 	public ska::MemoryScript {
 public:
-	explicit SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename);
+	explicit SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename = "");
 
 	SavegameManager& operator=(const SavegameManager&) = delete;
 
