@@ -38,7 +38,7 @@ bool StateMap::onGameEvent(ska::GameEvent& ge) {
 void StateMap::beforeLoad(ska::State* lastState) {
 	SKA_LOG_INFO("State Map initialization");
 
-	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getEntityLocator(), m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher);
+	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getEntityLocator(), m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher, m_worldState.getSpace());
 	m_scriptAutoSystem = scriptAutoSys.get();
 	addLogic(std::move(scriptAutoSys));
 

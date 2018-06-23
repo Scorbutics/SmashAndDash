@@ -1,11 +1,10 @@
 x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
-14 8 1 Levels/greencity/cri_rou.txt, -1
-6 8 1 Levels/greencity/bonjour.txt, -1
-7 10 1 Levels/greencity/bonjour.txt, -1
+0 0 0 Levels/ajouter_personnage.txt, -1, 14, 8, jean-louis, Levels/greencity/cri_rou.txt
+0 0 0 Levels/ajouter_personnage.txt, -1, 6, 7, patrice, Levels/greencity/bonjour.txt
+0 0 0 Levels/ajouter_personnage.txt, -1, 7, 10, robert, Levels/greencity/bonjour.txt
 28 9 2 Levels/teleport_script.txt, poke1, 14, 14
 0 8 2 Levels/teleport_script.txt, foret, 45, 19
 0 9 2 Levels/teleport_script.txt, foret, 45, 19
 0 10 2 Levels/teleport_script.txt, foret, 45, 20
 29 10 2 Levels/teleport_script.txt, temple_koa, 14, 1
 17 16 2 Levels/teleport_script.txt, maison_bleue_greencity, 14, 15
-29 11 0 Levels/greencity/test.txt

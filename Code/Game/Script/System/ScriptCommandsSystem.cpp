@@ -23,9 +23,10 @@
 #include "../Commands/CommandTranslationCamera.h"
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
+#include "../Commands/CommandAddCharacter.h"
 
-ScriptCommandsSystem::ScriptCommandsSystem(ska::EntityManager& entityManager, const ska::EntityLocator& locator, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged) :
-	ScriptBasicCommandsSystem(w, entityManager, ged, ScriptCommandHelper(w, entityManager, locator, ged), saveGame) {
+ScriptCommandsSystem::ScriptCommandsSystem(CustomEntityManager& entityManager, const ska::EntityLocator& locator, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged, ska::cp::Space& space) :
+	ScriptBasicCommandsSystem(w, entityManager, ged, ScriptCommandHelper(w, entityManager, locator, ged, space), saveGame) {
 }
 
 void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const {
@@ -52,6 +53,7 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["add_pokemon"] =  std::make_unique<CommandAddPokemon>(m_entityManager);
 	c["throw_pokemon"] =  std::make_unique<CommandPokemonOut>(m_entityManager);
 	c["player_presence"] =  std::make_unique<CommandPlayerPresence>(m_entityManager);
+	c["ajouter_personnage"] = std::make_unique<CommandAddCharacter>(m_customEntityManager, m_space, m_world.getBlockSize());
 	c["expulse"] =  std::make_unique<CommandExpulse>(m_world, m_entityManager);
 	c["jump"] =  std::make_unique<CommandJump>(m_entityManager);
 	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager));

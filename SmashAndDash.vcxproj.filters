@@ -71,6 +71,7 @@
     <ClCompile Include="Code\Game\Gameplay\State\StateFightLoading.cpp" />
     <ClCompile Include="Code\Game\Gameplay\World\WorldLoader.cpp" />
     <ClCompile Include="Code\Game\Debug\DebugDrawer.cpp" />
+    <ClCompile Include="Code\Game\Script\Commands\CommandAddCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Game\Audio\PokemonSoundRenderer.h" />
@@ -166,5 +167,6 @@
     <ClInclude Include="Code\Game\Graphic\PokemonAnimationSystem.h" />
     <ClInclude Include="Code\Game\Script\ScriptConstants.h" />
     <ClInclude Include="Code\Game\Debug\DebugDrawer.h" />
+    <ClInclude Include="Code\Game\Script\Commands\CommandAddCharacter.h" />
   </ItemGroup>
 </Project>

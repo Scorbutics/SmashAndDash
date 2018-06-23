@@ -428,7 +428,6 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	}
 
 	//FIN Tile map
-	ska::Point<int> posEntityId;
 	auto pkmn = CustomEntityManager::createCharacterNG(m_entityManager, m_spaceSystem->getSpace(), { 4,5 }, 25, m_world.getBlockSize(), "pikachu");
 	auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(pkmn);
 	ac.setASM(*m_walkASM, pkmn);
@@ -442,53 +441,6 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 
 
 	//Chargement des NPC sur la map (personnages & pokémon)
-	/*
-	TODO SRP
-	for (auto i = 0; i < layerE.getNbrLignes(); i++) {
-		posEntityId.y = layerE.getBlocY(i);
-		posEntityId.x = layerE.getBlocX(i);
-		auto id = layerE.getID(i);
-		if (id == 0) {
-			continue;
-		}
-
-		ska::EntityId script;
-		if (id == INT_MIN) {
-			script = m_entityManager.createEntity();
-			ska::PositionComponent pc;
-			pc.x = posEntityId.x * blockSize;
-			pc.y = posEntityId.y * blockSize;
-			pc.z = 0;
-			m_entityManager.addComponent<ska::PositionComponent>(script, std::move(pc));
-
-		} else {
-			if (abs(id) <= ENTITEMAX) {
-				script = m_entityManager.createCharacter(posEntityId, id, blockSize);
-			} else {
-				throw ska::CorruptedFileException("Erreur (fonction LoadEntities) : Impossible de lire l'ID de l'entité ligne " + ska::StringUtils::intToStr(i));
-			}
-		}
-
-		ska::ScriptSleepComponent ssc;
-
-		const auto& params = layerE.getParam(i);
-		auto totalArgs = ska::StringUtils::split(params, ',');
-		if (!totalArgs.empty()) {
-			ssc.args.reserve(totalArgs.size() - 1);
-			for (unsigned int i1 = 1; i1 < totalArgs.size(); i1++) {
-				ssc.args.push_back(ska::StringUtils::trim(totalArgs[i1]));
-			}
-		} else {
-			throw ska::ScriptSyntaxError("Error while reading a script in the event layer file (l." + ska::StringUtils::intToStr(i) + ") : no arguments supplied to the script cmd");
-		}
-		ssc.name = ska::StringUtils::trim(totalArgs[0]);
-		ssc.context = m_world.getName();
-		ssc.triggeringType = static_cast<ska::ScriptTriggerType>(layerE.getTrigger(i));
-		ssc.period = 1000;
-		m_entityManager.addComponent<ska::ScriptSleepComponent>(script, std::move(ssc));
-		result[ska::StringUtils::intToStr(i + 2)] = script;
-	}
-	*/
 }
 
 ska::cp::Space& WorldState::getSpace() {

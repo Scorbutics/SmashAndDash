@@ -13,7 +13,7 @@
 #include "Utils/PhysicUtils.h"
 #include "Utils/NumberUtils.h"
 #include "ECS/Basics/Physic/CollidableComponent.h"
-
+#include "Script/ScriptUtils.h"
 
 CommandMove::CommandMove(ska::EntityManager& entityManager) : 
 	AbstractFunctionCommand(entityManager) {
@@ -50,24 +50,12 @@ std::string CommandMove::execute(ska::ScriptComponent& script, ska::MemoryScript
 	m_entityManager.getComponent<ska::CollidableComponent>(internalEntity).ghost = ghost;
 
 	/* if there is a script callback provided */
-	if (args.size() > 4) {
-		std::vector<std::string> extraArgs;
-
-		const auto& scriptName = args[4];
-		/* Rebuild an argument string to be read by the new running script */
-		for (unsigned int i = 5; i < args.size(); i++) {
-			extraArgs.push_back(args[i]);
-		}
-		ska::ScriptSleepComponent ssc;
-		ssc.context = script.context;
-		ssc.args = extraArgs;
-		ssc.period = 2000;
-		ssc.deleteEntityWhenFinished = true;
-		ssc.triggeringType = ska::ScriptTriggerType::AUTO;
-		ssc.name = scriptName;
-		iamc.callback = ssc;
+	const auto ssc = ska::ScriptUtils::instantiateScript(args, 4, script);
+	if (ssc.has_value()) {
+		iamc.callback = ssc.value();
 		iamc.callbackActive = true;
 	}
+
 	auto& mc = m_entityManager.getComponent<ska::MovementComponent>(internalEntity);
 	mc.vx = 0;
 	mc.vy = 0;
