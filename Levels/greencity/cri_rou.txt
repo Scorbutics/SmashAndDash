@@ -1,4 +1,13 @@
 assign %get_entity_id .%, id
+assign %get_entity_id trainer%, player_id
 script .\Levels\trainer_rotation_script.txt, 2000, [id]
+assign [<InputComponent.movePower [player_id]>], move_power
+assign [<InputComponent.jumpPower [player_id]>], jump_power
+remove_component InputComponent, [player_id]
+
 message [id], Rouuuu ! Ce message est écrit par script !
+
+restore_component InputComponent, [player_id]
+assign [move_power], <InputComponent.movePower [player_id]>
+assign [jump_power], <InputComponent.jumpPower [player_id]>
 end

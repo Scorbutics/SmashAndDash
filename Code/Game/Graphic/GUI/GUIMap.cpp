@@ -117,12 +117,16 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         ska::Rectangle absoluteRect;
         absoluteRect.w = (de.box.w < 0) ? getMaxWidth() - 1 : de.box.w;
         absoluteRect.h = (de.box.h < 0) ? getMaxHeight() - 1 : de.box.h;
-        absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (de.box.y > static_cast<int>(getMaxHeight()) ? getMaxHeight() : de.box.y);
-        absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (de.box.x > static_cast<int>(getMaxWidth()) ? getMaxWidth() : de.box.x);
+		const auto maxLimitY = de.box.y > static_cast<int>(getMaxHeight());
+		const auto maxLimitX = de.box.x > static_cast<int>(getMaxHeight());
+        absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (maxLimitY ? (getMaxHeight() - absoluteRect.h) : de.box.y);
+        absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (maxLimitX ? (getMaxWidth() - absoluteRect.w) : de.box.x);
 
-        auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, absoluteRect, 12);
+		auto startRect = absoluteRect;
+		startRect.y += startRect.h - 1;
+        auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, 12);
         if(de.scroll) {
-            dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y - absoluteRect.h - 1), 8)
+            dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y), 8)
             .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
                 auto& sdialogWindow = static_cast<DialogMenu&>(caller);
                 sdialogWindow.addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {

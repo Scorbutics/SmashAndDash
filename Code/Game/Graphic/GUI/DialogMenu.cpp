@@ -2,6 +2,7 @@
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
 #include "GUI/Components/Concrete/ScrollingMultiLineLabel.h"
+#include "GUI/Components/Concrete/TileSurface.h"
 #include "../../Utils/IDs.h"
 #include "GUI/GUI.h"
 
@@ -11,6 +12,8 @@ m_fontSize(fontSize),
 m_timeout(timeout),
 m_name(name),
 m_scroll(scroll) {
+	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, rect.w, rect.h }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
+	tileSurface.setOpacity(170);
 	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 1.F, ska::Point<int>(16, 16));
 }
 
