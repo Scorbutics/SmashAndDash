@@ -194,7 +194,6 @@
     <ClCompile Include="Code\Game\Script\Commands\CommandBlockCollision.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandChoice.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandCinematic.cpp" />
-    <ClCompile Include="Code\Game\Script\Commands\CommandDirection.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandExpulse.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandFollow.cpp" />
     <ClCompile Include="Code\Game\Script\Commands\CommandHeal.cpp" />
@@ -287,7 +286,6 @@
     <ClInclude Include="Code\Game\Script\Commands\CommandBlockCollision.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandChoice.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandCinematic.h" />
-    <ClInclude Include="Code\Game\Script\Commands\CommandDirection.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandExpulse.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandFollow.h" />
     <ClInclude Include="Code\Game\Script\Commands\CommandHeal.h" />

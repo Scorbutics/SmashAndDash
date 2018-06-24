@@ -1,4 +1,4 @@
-assign #arg0#, |id|
-script .\Levels\trainer_rotation_script.txt, 2000, 2
-message [|id|], Rouuuu ! Ce message est écrit par script !
+assign %get_entity_id .%, id
+script .\Levels\trainer_rotation_script.txt, 2000, [id]
+message [id], Rouuuu ! Ce message est écrit par script !
 end

@@ -3,9 +3,9 @@ assign #arg1#, block_id
 assign %get_entity_id .%, id_perso
 remove_component InputComponent, [id_perso]
 
-move [id_perso], [jump_direction], 30, true
+move [id_perso], [jump_direction], 30, 1
 wait 400
 jump [id_perso], 14
-move [id_perso], [jump_direction], 60, true, ./Levels/jump_wall_callback.txt, [id_perso], [block_id]
+move [id_perso], [jump_direction], 60, 1, ./Levels/jump_wall_callback.txt, [id_perso], [block_id]
 
 end

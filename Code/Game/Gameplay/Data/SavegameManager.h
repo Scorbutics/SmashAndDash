@@ -27,6 +27,7 @@ public:
 	~SavegameManager() = default;
 
 private:
+	void extractEntityComponent(const std::string& str, std::string& component, std::string& field, ska::EntityId& entityId) const;
 	void loadItem(int id, unsigned int amount);
 	void loadTrainer();
 	void saveTrainer();

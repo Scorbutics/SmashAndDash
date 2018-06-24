@@ -6,6 +6,6 @@ assign %has_block_property 0, [player_block_x], [player_block_y], 1%, $global_is
 log global surf state : [$global_is_surfing$]
 assign 0, $global_triggering_surf$
 restore_component InputComponent, [player_id]
-assign 25, <InputComponent.movePower #arg0#>
-assign 20, <InputComponent.jumpPower #arg0#>
+assign 25, <InputComponent.movePower [player_id]>
+assign 20, <InputComponent.jumpPower [player_id]>
 end

@@ -2,7 +2,6 @@
 #include "../Commands/CommandAddPokemon.h"
 #include "../Commands/CommandChoice.h"
 #include "../Commands/CommandCinematic.h"
-#include "../Commands/CommandDirection.h"
 #include "../Commands/CommandFollow.h"
 #include "../Commands/CommandHeal.h"
 #include "../Commands/CommandHideCharacter.h"
@@ -36,7 +35,6 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["choice"] =  std::make_unique<CommandChoice>(m_entityManager);
 	c["heal"] =  std::make_unique<CommandHeal>(m_entityManager);
 	c["stop"] =  std::make_unique<CommandStop>(m_entityManager);
-	c["direction"] =  std::make_unique<CommandDirection>(m_entityManager);
 	c["animation"] =  std::make_unique<CommandPlayAnimation>(m_entityManager);
 	c["crumbling"] =  std::make_unique<CommandPlayCrumbling>(m_entityManager);
 	c["shaking"] =  std::make_unique<CommandPlayShaking>(m_entityManager);
@@ -56,6 +54,5 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["ajouter_personnage"] = std::make_unique<CommandAddCharacter>(m_customEntityManager, m_space, m_world.getBlockSize());
 	c["expulse"] =  std::make_unique<CommandExpulse>(m_world, m_entityManager);
 	c["jump"] =  std::make_unique<CommandJump>(m_entityManager);
-	//c["block_collision"] = move(ska::CommandPtr(new CommandBlockCollision(m_entityManager));
 }
 

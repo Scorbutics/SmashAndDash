@@ -6,6 +6,8 @@
 #include "Utils/FileUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "Logging/Logger.h"
+#include "Exceptions/NumberFormatException.h"
+#include "Script/ScriptUtils.h"
 
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_entityManager(em),
@@ -120,14 +122,19 @@ const std::string& SavegameManager::getPathName() {
 }
 
 
-void ExtractEntityComponent(const std::string& str, std::string& component, std::string& field, ska::EntityId& entityId) {
+void SavegameManager::extractEntityComponent(const std::string& str, std::string& component, std::string& field, ska::EntityId& entityId) const {
 		
 	auto remainingStr = str;
 	{
 		const auto r = str.find_first_of(' ');
 		if (r != std::string::npos) {
 			remainingStr = str.substr(0, r);
-			entityId = ska::StringUtils::strToInt(str.substr(r + 1));
+			auto strNumber = str.substr(r + 1);//ska::ScriptUtils::getValueFromVarOrSwitchNumber(*this, script, str.substr(r + 1));
+			if (ska::StringUtils::isInt(strNumber, 10)) {
+				entityId = ska::StringUtils::strToInt(strNumber);
+			} else {
+				throw ska::NumberFormatException(("Bad format for an integer : " + strNumber).c_str());
+			}
 		}
 	}
 
@@ -145,7 +152,7 @@ std::string SavegameManager::getComponentVariable(const std::string& var) const 
 	ska::EntityId entityId;
 	std::string component;
 	std::string field;
-	ExtractEntityComponent(var, component, field, entityId);
+	extractEntityComponent(var, component, field, entityId);
 	return m_entityManager.serializeComponent(entityId, component, field);
 }
 
@@ -153,7 +160,7 @@ void SavegameManager::setComponentVariable(const std::string& var, const std::st
 	ska::EntityId entityId;
 	std::string component;
 	std::string field;
-	ExtractEntityComponent(var, component, field, entityId);
+	extractEntityComponent(var, component, field, entityId);
 	m_entityManager.deserializeComponent(entityId, component, field, value);
 }
 
