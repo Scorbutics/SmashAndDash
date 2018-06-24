@@ -1,4 +1,5 @@
 #pragma once
+#include "ECS/Basics/Script/ScriptSleepComponent.h"
 
 struct DialogEvent {
 	DialogEvent(const std::string& m, const std::string& n, const ska::Rectangle& b, bool s) :
@@ -12,5 +13,7 @@ struct DialogEvent {
 	const std::string message;
 	const std::string name;
 	const ska::Rectangle box;
+	ska::ScriptSleepComponent callback;
+	bool callbackActive = false;
 	const bool scroll;
 };

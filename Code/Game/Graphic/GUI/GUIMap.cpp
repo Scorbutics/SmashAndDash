@@ -8,15 +8,17 @@
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
 #include "FPSLabel.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
+#include "../../Gameplay/CustomEntityManager.h"
 
 #define TAILLEBLOCFENETRE 32
 
-GUIMap::GUIMap(PokemonGameEventDispatcher& ged) :
+GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	ska::GUI(ged),
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
+	m_entityManager(em),
 	m_ged(ged),
 	m_dbgWindow(*this, ged) {
 	initButtons();
@@ -125,6 +127,9 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
 		auto startRect = absoluteRect;
 		startRect.y += startRect.h - 1;
         auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, 12);
+		
+		m_dialogScript = de.callbackActive ? de.callback : std::optional<ska::ScriptSleepComponent>{};
+
         if(de.scroll) {
             dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y), 8)
             .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
@@ -132,11 +137,21 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
                 sdialogWindow.addHandler<ska::KeyEventListener>([this] (ska::Widget* tthis, ska::KeyEvent& ke) {
                     if(ke.getScanCode() == SDL_SCANCODE_RETURN) {
                         auto target = static_cast<DialogMenu*>(tthis);
+
                         target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() + 1), 8)
                         .then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
                               ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
                               ge.windowName = static_cast<DialogMenu&>(caller).getName();
                               m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+
+							  if (m_dialogScript.has_value()) {
+								  /* triggers callback */
+								  const auto scriptEntity = m_entityManager.createEntity();
+								  auto events = std::vector<ska::ScriptEventType>();
+								  events.push_back(ska::ScriptEventType::ScriptCreate);
+								  auto se = ska::ScriptEvent{ std::move(events), std::move(*m_dialogScript), scriptEntity, {}, {}, {}, {} };
+								  m_ged.Observable<ska::ScriptEvent>::notifyObservers(se);
+							  }
                         });
                     }
                 });

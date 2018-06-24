@@ -11,6 +11,7 @@
 class Settings;
 class WindowTeam;
 class SkillsBar;
+class CustomEntityManager;
 
 using DialogEventObserver = ska::Observer<DialogEvent>;
 
@@ -22,7 +23,7 @@ class GUIMap :
 	public BattleStartObserver {
 
 public:
-	GUIMap(PokemonGameEventDispatcher& ged);
+	GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
 	GUIMap& operator=(const GUIMap&) = delete;
 
 	void initButtons();
@@ -38,6 +39,7 @@ public:
 	~GUIMap();
 
 private:
+	CustomEntityManager& m_entityManager;
 	PokemonGameEventDispatcher& m_ged;
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;
@@ -46,4 +48,5 @@ private:
 
 	//Debug
 	ska::DebugWindow m_dbgWindow;
+	std::optional<ska::ScriptSleepComponent> m_dialogScript;
 };

@@ -4,8 +4,7 @@ if [$global_triggering_surf$] == 0
 	assign %has_block_property 0, #arg4#, #arg5#, 1%, has_water_tile_property
 	assign [has_water_tile_property], surf_in
 	assign #arg1#, direction_perso
-	assign %get_entity_id .%, id_perso
-	log id perso : [id_perso]
+	assign %get_entity_id .origin%, id_perso
 	remove_component InputComponent, [id_perso]
 	assign 40, move_power
 	
@@ -18,7 +17,6 @@ if [$global_triggering_surf$] == 0
 		animation [id_perso], 2
 		log script chipset surf out
 	endif
-	log move to direction [direction_perso]
 	move [id_perso], [direction_perso], [move_power], 0, ./Levels/surf_callback.txt, [$global_is_surfing$]
 endif
 end

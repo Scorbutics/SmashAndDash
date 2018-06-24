@@ -1,3 +1,2 @@
-assign #arg0#, |id|
-message [|id|], Bonjour !
+script ./Levels/dialog.txt, 2000, #arg0#, Bonjour !
 end

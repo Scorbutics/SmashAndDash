@@ -1,0 +1,7 @@
+restore_component InputComponent, #arg0#
+assign #arg1#, <InputComponent.movePower #arg0#>
+assign #arg2#, <InputComponent.jumpPower #arg0#>
+
+wait 500
+assign 0, $global_is_in_dialog$
+end

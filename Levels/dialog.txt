@@ -1,0 +1,11 @@
+if [$global_is_in_dialog$] != 1
+	assign 1, $global_is_in_dialog$
+	
+	assign %get_entity_id trainer%, player_id
+	assign [<InputComponent.movePower [player_id]>], move_power
+	assign [<InputComponent.jumpPower [player_id]>], jump_power
+	remove_component InputComponent, [player_id]
+
+	message #arg0#, #arg1#, ./Levels/dialog_callback.txt, [player_id], [move_power], [jump_power]
+endif
+end

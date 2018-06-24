@@ -4,7 +4,6 @@
 #include "GUI/Utils/TimeObservable.h"
 #include "GUI/Windows/TimeScrollableWindowIG.h"
 
-
 namespace ska {
 	class Widget;
 	class MouseObservable;
@@ -28,6 +27,5 @@ private:
 	int m_timeout;
     const std::string m_name;
 	bool m_scroll;
-
 };
 

@@ -1,9 +1,9 @@
-assign %get_entity_id .%, player_id
-log surf callback player id : [player_id]
+assign %get_entity_id .origin%, player_id
+
 assign %get_entity_block x, [player_id]%, player_block_x
 assign %get_entity_block y, [player_id]%, player_block_y
 assign %has_block_property 0, [player_block_x], [player_block_y], 1%, $global_is_surfing$
-log global surf state : [$global_is_surfing$]
+
 assign 0, $global_triggering_surf$
 restore_component InputComponent, [player_id]
 assign 25, <InputComponent.movePower [player_id]>
