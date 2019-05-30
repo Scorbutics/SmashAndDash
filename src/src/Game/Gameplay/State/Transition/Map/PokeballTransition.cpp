@@ -1,7 +1,8 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "PokeballTransition.h"
 #include "../../../CustomEntityManager.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "ECS/Basics/Physic/HitboxComponent.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "../../../PokeballComponent.h"
 #include "Graphic/GraphicComponent.h"
 

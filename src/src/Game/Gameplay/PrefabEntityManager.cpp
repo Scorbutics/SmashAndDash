@@ -1,17 +1,18 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "PrefabEntityManager.h"
 
-#include "ECS/Basics/Physic/MovementComponent.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "ECS/Basics/Graphic/CameraFocusedComponent.h"
-#include "ECS/Basics/Script/ScriptAwareComponent.h"
+#include "Core/ECS/Basics/Physic/MovementComponent.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Graphic/CameraFocusedComponent.h"
+#include "Core/ECS/Basics/Script/ScriptAwareComponent.h"
 #include "Graphic/GraphicComponent.h"
-#include "ECS/Basics/Input/InputComponent.h"
-#include "ECS/Basics/Physic/ForceComponent.h"
-#include "ECS/Basics/Physic/HitboxComponent.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
+#include "Core/ECS/Basics/Physic/ForceComponent.h"
+#include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Graphic/HasShadowComponent.h"
-#include "ECS/Basics/Physic/CollidableComponent.h"
-#include "Utils/SpritePath.h"
-#include "Utils/SkaConstants.h"
+#include "Core/ECS/Basics/Physic/CollidableComponent.h"
+#include "Core/Utils/SpritePath.h"
+#include "Core/Utils/SkaConstants.h"
 
 ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
 	EntityManager(ged) {

@@ -1,10 +1,9 @@
-#include "GlobalScriptVariables.h"
-
-
 #include <map>
-#include "../Gameplay/Data/Statistics.h"
-#include "Utils/StringUtils.h"
-#include "../Utils/IDs.h"
+#include "Game/__internalConfig/LoggerConfig.h"
+#include "GlobalScriptVariables.h"
+#include "Game/Gameplay/Data/Statistics.h"
+#include "Base/Values/Strings/StringUtils.h"
+#include "Game/Utils/IDs.h"
 
 GlobalScriptVariables::GlobalScriptVariables()
 {

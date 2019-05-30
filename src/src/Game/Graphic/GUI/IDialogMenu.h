@@ -1,6 +1,6 @@
 #pragma once
-#include "Rectangle.h"
-#include "Draw/Drawable.h"
+#include "Core/Rectangle.h"
+#include "Core/Draw/Drawable.h"
 
 class IDialogMenu : virtual public ska::Drawable {
 public:

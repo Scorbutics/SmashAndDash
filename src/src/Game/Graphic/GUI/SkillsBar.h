@@ -1,6 +1,6 @@
 #pragma once
 #include "GUI/Events/TimeEventListener.h"
-#include "TicksCalculator.h"
+#include "Graphic/TicksCalculator.h"
 #include "GUI/Events/KeyEventListener.h"
 #include "../../Gameplay/Fight/SkillDescriptor.h"
 #include "GUI/Windows/DynamicWindowIG.h"

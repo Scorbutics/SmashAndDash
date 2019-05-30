@@ -1,6 +1,6 @@
 #pragma once
-#include "Task/Task.h"
-#include "ECS/Basics/Input/InputComponent.h"
+#include "Base/Task/Task.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
 #include "../../../PokemonGameEventDispatcher.h"
 
 class CustomEntityManager;

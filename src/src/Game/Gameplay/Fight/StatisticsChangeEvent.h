@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS/ECSDefines.h"
+#include "Core/ECS/ECSDefines.h"
 #include "../Data/RawStatistics.h"
 
 class StatisticsChangeEvent {

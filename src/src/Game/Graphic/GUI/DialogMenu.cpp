@@ -1,3 +1,4 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "DialogMenu.h"
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"

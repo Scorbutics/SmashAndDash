@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include "Graphic/Texture.h"
-#include "Draw/DrawableFixedPriority.h"
-#include "ECS/ECSDefines.h"
+#include "Core/Draw/DrawableFixedPriority.h"
+#include "Core/ECS/ECSDefines.h"
 class SpriteBank;
 
 namespace ska {

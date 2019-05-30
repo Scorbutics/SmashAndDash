@@ -2,7 +2,7 @@
 #include <memory>
 
 #include "Graphic/System/CameraSystem.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"

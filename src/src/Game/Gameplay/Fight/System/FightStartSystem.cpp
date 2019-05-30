@@ -1,13 +1,14 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "FightStartSystem.h"
 #include "../../../Utils/IDs.h"
-#include "Utils/RectangleUtils.h"
-#include "Utils/TimeUtils.h"
-#include "Utils/NumberUtils.h"
+#include "Core/Utils/RectangleUtils.h"
+#include "Core/Utils/TimeUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "../../State/StateFight.h"
 #include "../../World/WorldState.h"
 #include "../../CustomEntityManager.h"
 #include "../../Data/MapEvent.h"
-#include "ECS/EntityLocator.h"
+#include "Core/ECS/EntityLocator.h"
 #include "../../../Script/ScriptConstants.h"
 
 FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator) :

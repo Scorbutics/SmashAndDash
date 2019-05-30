@@ -1,9 +1,9 @@
 #pragma once
 #include <unordered_set>
-#include "ECS/System.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "ECS/Basics/Physic/MovementComponent.h"
-#include "ECS/Basics/Physic/ForceComponent.h"
+#include "Core/ECS/System.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Physic/MovementComponent.h"
+#include "Core/ECS/Basics/Physic/ForceComponent.h"
 #include "../SkillComponent.h"
 #include "AI/System/IADefinedMovementSystem.h"
 

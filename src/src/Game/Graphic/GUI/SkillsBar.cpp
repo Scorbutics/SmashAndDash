@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillsBar.h"
-#include "../../Gameplay/Fight/SkillDescriptor.h"
+#include "Game/Gameplay/Fight/SkillDescriptor.h"
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
 

@@ -1,8 +1,9 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "MobSpawningSystem.h"
 #include "../../../Utils/ChargementImages.h"
 #include "../../../Utils/IDs.h"
 #include "../../World/WorldImpl.h"
-#include "Utils/TimeUtils.h"
+#include "Core/Utils/TimeUtils.h"
 #include "../MobSpawner.h"
 
 MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay) :

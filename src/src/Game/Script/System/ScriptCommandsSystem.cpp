@@ -1,4 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "ScriptCommandsSystem.h"
+/*
 #include "../Commands/CommandAddPokemon.h"
 #include "../Commands/CommandChoice.h"
 #include "../Commands/CommandCinematic.h"
@@ -23,14 +25,14 @@
 #include "../Commands/CommandExpulse.h"
 #include "../Commands/CommandJump.h"
 #include "../Commands/CommandAddCharacter.h"
-
+*/
 ScriptCommandsSystem::ScriptCommandsSystem(CustomEntityManager& entityManager, const ska::EntityLocator& locator, ska::TileWorld& w, ska::MemoryScript& saveGame, PokemonGameEventDispatcher& ged, ska::cp::Space& space) :
 	ScriptBasicCommandsSystem(w, entityManager, ged, ScriptCommandHelper(w, entityManager, locator, ged, space), saveGame) {
 }
 
 void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map<std::string, ska::CommandPtr>& c) const {
 	BasicScriptCommandHelper::setupCommands(c);
-	c["move"] =  std::make_unique<CommandMove>(m_entityManager);
+	/*c["move"] =  std::make_unique<CommandMove>(m_entityManager);
 	c["message"] =  std::make_unique<CommandMessage>(m_ged, m_entityManager);
 	c["choice"] =  std::make_unique<CommandChoice>(m_entityManager);
 	c["heal"] =  std::make_unique<CommandHeal>(m_entityManager);
@@ -53,6 +55,6 @@ void ScriptCommandsSystem::ScriptCommandHelper::setupCommands(std::unordered_map
 	c["player_presence"] =  std::make_unique<CommandPlayerPresence>(m_entityManager);
 	c["ajouter_personnage"] = std::make_unique<CommandAddCharacter>(m_customEntityManager, m_space, m_world.getBlockSize());
 	c["expulse"] =  std::make_unique<CommandExpulse>(m_world, m_entityManager);
-	c["jump"] =  std::make_unique<CommandJump>(m_entityManager);
+	c["jump"] =  std::make_unique<CommandJump>(m_entityManager);*/
 }
 

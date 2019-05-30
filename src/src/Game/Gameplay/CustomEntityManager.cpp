@@ -1,20 +1,21 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "CustomEntityManager.h"
 #include "./Fight/FightComponent.h"
 #include "./Mobs/MobSpawnAreaComponent.h"
 #include "Graphic/GraphicComponent.h"
 #include "./Fight/SkillComponent.h"
-#include "ECS/Basics/Physic/MovementComponent.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
-#include "ECS/Basics/Physic/HitboxComponent.h"
-#include "ECS/Basics/Physic/ForceComponent.h"
-#include "ECS/Basics/Physic/CollidableComponent.h"
-#include "Utils/SpritePath.h"
+#include "Core/ECS/Basics/Physic/MovementComponent.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Physic/HitboxComponent.h"
+#include "Core/ECS/Basics/Physic/ForceComponent.h"
+#include "Core/ECS/Basics/Physic/CollidableComponent.h"
+#include "Core//Utils/SpritePath.h"
 #include "./Fight/SkillsHolderComponent.h"
-#include "Utils/NumberUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "../Utils/IDs.h"
 
 #include "Physic/BuildHitbox.h"
-#include "ECS/Basics/Input/InputComponent.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
 
 CustomEntityManager::CustomEntityManager(ska::GameEventDispatcher& ged) : 
 	ska::PrefabEntityManager(ged) {
@@ -79,7 +80,7 @@ void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space&
 	}
 
 	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
-	ska::cp::AddTopDownConstraints(space, &space.getBody(bc.controlBodyIndex), space.getBody(bc.bodyIndex), friction * 50, rotationFriction * 30);
+	ska::cp::AddTopDownConstraints(space, bc, friction * 50, rotationFriction * 30);
 	
 	hitbox.yOffset -= hitbox.height;
 
@@ -102,7 +103,7 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
 
 	auto bc = ska::cp::BuildRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
-	ska::cp::AddTopDownConstraints(space, nullptr, space.getBody(bc.bodyIndex), DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
+	ska::cp::AddTopDownConstraints(space, bc, DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
 
 	hitbox.yOffset -= hitbox.height;
 

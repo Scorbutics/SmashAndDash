@@ -1,5 +1,5 @@
 #pragma once
-#include "Utils/Observer.h"
+#include "Base/Patterns/Observer.h"
 #include "../../Gameplay/Data/SettingsChangeEvent.h"
 #include "WindowMouseCursor.h"
 #include "../../Gameplay/Data/EntityLoadEvent.h"

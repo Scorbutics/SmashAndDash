@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "WindowSettings.h"
-#include "../../Gameplay/Data/Settings.h"
+#include "Game/Gameplay/Data/Settings.h"
 
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/TileSurface.h"

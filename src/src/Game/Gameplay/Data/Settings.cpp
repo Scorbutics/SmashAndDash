@@ -1,7 +1,7 @@
 #include <fstream>
 
 #include "Settings.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 #include "../Weather.h"
 
 Settings::Settings(PokemonGameEventDispatcher& ged, const std::string& file) :

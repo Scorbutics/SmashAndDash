@@ -2,11 +2,11 @@
 #include <fstream>
 #include "SavegameManager.h"
 #include "../../Utils/ChargementImages.h"
-#include "Utils/StringUtils.h"
-#include "Utils/FileUtils.h"
+#include "Base/Values/Strings/StringUtils.h"
+#include "Base/IO/Files/FileUtils.h"
 #include "../../Gameplay/Data/Statistics.h"
 #include "Logging/Logger.h"
-#include "Exceptions/NumberFormatException.h"
+#include "Core/Exceptions/NumberFormatException.h"
 #include "Script/ScriptUtils.h"
 
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):

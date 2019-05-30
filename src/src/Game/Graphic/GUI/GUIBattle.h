@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <unordered_map>
-#include "Utils/Observer.h"
-#include "ECS/ECSDefines.h"
+#include "Base/Patterns/Observer.h"
+#include "Core/ECS/ECSDefines.h"
 
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "../../Gameplay/Fight/BattleEvent.h"

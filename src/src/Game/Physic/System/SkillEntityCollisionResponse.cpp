@@ -1,9 +1,10 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillEntityCollisionResponse.h"
-#include "ECS/Basics/Physic/CollisionComponent.h"
-#include "../../Gameplay/Data/RawStatistics.h"
-#include "../../Gameplay/Fight/SkillComponent.h"
-#include "../../Gameplay/Fight/BattleComponent.h"
-#include "ECS/EntityManager.h"
+#include "Core/ECS/Basics/Physic/CollisionComponent.h"
+#include "Game/Gameplay/Data/RawStatistics.h"
+#include "Game/Gameplay/Fight/SkillComponent.h"
+#include "Game/Gameplay/Fight/BattleComponent.h"
+#include "Core/ECS/EntityManager.h"
 
 SkillEntityCollisionResponse::SkillEntityCollisionResponse(PokemonGameEventDispatcher& ged, ska::EntityManager& em) :
 	SubObserver<ska::CollisionEvent>(std::bind(&SkillEntityCollisionResponse::onCollisionEvent, this, std::placeholders::_1), ged),

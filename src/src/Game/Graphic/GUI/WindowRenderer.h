@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Rectangle.h"
-#include "Utils/Singleton_template.h"
+#include "Core/Rectangle.h"
+#include "Base/Patterns/Singleton.h"
 #include "Graphic/Texture.h"
 
 namespace ska {

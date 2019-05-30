@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS/Basics/Script/ScriptSleepComponent.h"
+#include "Core/ECS/Basics/Script/ScriptSleepComponent.h"
 
 struct DialogEvent {
 	DialogEvent(const std::string& m, const std::string& n, const ska::Rectangle& b, bool s) :

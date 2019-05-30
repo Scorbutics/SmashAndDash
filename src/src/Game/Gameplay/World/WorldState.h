@@ -1,21 +1,21 @@
 #pragma once
 #include "Core/State/StateBase.h"
-#include "Inputs/System/InputSystem.h"
+#include "Core/Inputs/System/InputSystem.h"
 
 #include "Graphic/System/CameraSystem.h"
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
-#include "Rectangle.h"
+#include "Core/Rectangle.h"
 #include "../../Gameplay/Pokeball.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Graphic/System/JumpAnimationStateMachine.h"
 #include "Physic/SpaceCollisionEventSender.h"
-#include "Utils/SubObserver.h"
+#include "Base/Patterns/SubObserver.h"
 #include "Graphic/Polygon.h"
-#include "ECS/EntityLocator.h"
-#include "../../Debug/DebugDrawer.h"
+#include "Core/ECS/EntityLocator.h"
+#include "Game/Graphic/DebugDrawer.h"
 
 namespace ska {
 	namespace cp {

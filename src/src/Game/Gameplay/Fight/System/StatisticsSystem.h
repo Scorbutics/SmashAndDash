@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_set>
-#include "ECS/System.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/System.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "../BattleComponent.h"
 #include "../../World/WorldState.h"
 #include "../../PokemonGameEventDispatcher.h"

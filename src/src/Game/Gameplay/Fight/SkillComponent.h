@@ -1,5 +1,5 @@
 #pragma once
-#include "Utils/TimeUtils.h"
+#include "Core/Utils/TimeUtils.h"
 
 class SkillComponent {
 public:

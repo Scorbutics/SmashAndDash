@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Rectangle.h"
+#include "Core/Rectangle.h"
 
 namespace ska {
 	class IniReader;

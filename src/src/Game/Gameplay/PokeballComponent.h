@@ -1,5 +1,5 @@
 #pragma once
-#include "Point.h"
+#include "Core/Point.h"
 
 class PokeballComponent {
 	friend class PokeballSystem;

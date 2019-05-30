@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillFactory.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 #include "SkillDescriptor.h"
 #include "SkillsHolderComponent.h"
 

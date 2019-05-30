@@ -1,7 +1,7 @@
 #include "Statistics.h"
 #include "../../Utils/IDs.h"
-#include "Utils/NumberUtils.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/Values/Numbers/NumberUtils.h"
+#include "Base/IO/Readers/IniReader.h"
 
 
 Statistics::Statistics(int hp, int attack, int defense, int spe_attack, int spe_defense, int speed)

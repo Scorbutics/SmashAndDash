@@ -1,7 +1,7 @@
 #pragma once
-#include "ECS/System.h"
+#include "Core/ECS/System.h"
 #include "../PokeballComponent.h"
-#include "ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Graphic/GraphicComponent.h"
 
 class PokeballSystem : public ska::System< ska::RequiredComponent<PokeballComponent, ska::PositionComponent, ska::GraphicComponent>, ska::PossibleComponent<>>  {

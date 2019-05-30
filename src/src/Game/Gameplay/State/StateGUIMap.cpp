@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "StateGUIMap.h"
-#include "Draw/DrawableContainer.h"
+#include "Core/Draw/DrawableContainer.h"
 
 StateGUIMap::StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
     m_gui(em, ged) {

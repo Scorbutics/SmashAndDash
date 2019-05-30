@@ -1,6 +1,7 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "MessageDialogBox.h"
-#include "Inputs/InputContextManager.h"
-#include "Rectangle.h"
+#include "Core/Inputs/InputContextManager.h"
+#include "Core/Rectangle.h"
 #include "../../Utils/IDs.h"
 
 int MessageDialogBox::m_instanceExists = 0;

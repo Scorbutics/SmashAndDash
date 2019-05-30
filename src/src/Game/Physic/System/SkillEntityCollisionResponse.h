@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
-#include "Utils/SubObserver.h"
+#include "Base/Patterns/SubObserver.h"
 
 namespace ska {
 	class CollisionSystem;

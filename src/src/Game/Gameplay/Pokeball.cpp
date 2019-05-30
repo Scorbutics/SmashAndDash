@@ -5,8 +5,8 @@
 #include "Pokeball.h"
 #include "../Utils/ChargementImages.h"
 #include "Weather.h"
-#include "Utils/RectangleUtils.h"
-#include "Draw/Renderer.h"
+#include "Core/Utils/RectangleUtils.h"
+#include "Core/Draw/Renderer.h"
 
 
 Pokeball::Pokeball() :

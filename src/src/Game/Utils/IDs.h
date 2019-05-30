@@ -1,4 +1,4 @@
-#include "Utils/SkaConstants.h"
+#include "Core/Utils/SkaConstants.h"
 
 #define ENTITEMAX 151 //Nombre d'entités TOTALES dans le jeu ENTIER
 

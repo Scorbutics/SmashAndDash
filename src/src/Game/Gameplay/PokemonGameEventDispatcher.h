@@ -1,5 +1,5 @@
 #pragma once
-#include "Data/Events/ExtensibleGameEventDispatcher.h"
+#include "Core/Data/Events/ExtensibleGameEventDispatcher.h"
 #include "./Fight/StatisticsChangeEvent.h"
 #include "./Fight/BattleEvent.h"
 #include "./Data/EntityLoadEvent.h"

@@ -1,7 +1,8 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "DialogTransition.h"
 #include "../../../CustomEntityManager.h"
-#include "ECS/Basics/Graphic/DialogComponent.h"
-#include "Task/Task.h"
+#include "Core/ECS/Basics/Graphic/DialogComponent.h"
+#include "Base/Task/Task.h"
 
 DialogTransition::DialogTransition(unsigned int delay, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message) :
 	ska::Task([&, delay](ska::Task&) {

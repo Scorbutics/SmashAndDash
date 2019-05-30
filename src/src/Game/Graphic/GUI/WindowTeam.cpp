@@ -1,9 +1,10 @@
 #include <algorithm>
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "WindowTeam.h"
 #include "SlotPokemon.h"
 #include "SlotPokemonData.h"
 #include "WindowMouseCursor.h"
-#include "Rectangle.h"
+#include "Core/Rectangle.h"
 #include "GUI/Components/Concrete/TileSurface.h"
 
 WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :

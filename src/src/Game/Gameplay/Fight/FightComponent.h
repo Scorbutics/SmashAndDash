@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS/ECSDefines.h"
+#include "Core/ECS/ECSDefines.h"
 
 class FightComponent {
 public:

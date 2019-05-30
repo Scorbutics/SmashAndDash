@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include "Graphic/Texture.h"
-#include "Point.h"
-#include "Draw/DrawableFixedPriority.h"
+#include "Core/Point.h"
+#include "Core/Draw/DrawableFixedPriority.h"
 
 /*Class Weather
  .refresh();                          //Gestion de déplacement du temps + affichage

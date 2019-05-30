@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "Base/Patterns/Observer.h"
 #include "Audio/SoundRenderer.h"
 #include "../Gameplay/Data/SettingsChangeEvent.h"

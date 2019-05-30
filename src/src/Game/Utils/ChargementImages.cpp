@@ -1,10 +1,11 @@
 #include <sstream>
 #include <string>
 
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "ChargementImages.h"
-#include "Utils/NumberUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "../Gameplay/Mobs/MobSpawner.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 
 int GetRandom(std::vector<int>& probs)
 {

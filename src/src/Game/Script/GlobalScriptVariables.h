@@ -1,7 +1,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "Utils/Singleton_template.h"
+#include "Base/Patterns/Singleton.h"
 
 class GlobalScriptVariables : public ska::Singleton<GlobalScriptVariables> {
 	friend class ska::Singleton<GlobalScriptVariables>;

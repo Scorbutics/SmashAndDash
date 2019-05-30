@@ -1,8 +1,9 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "WGameCore.h"
 #include "State/StateMap.h"
-#include "MessageType.h"
-#include "MessagePopup.h"
-#include "Exceptions/FileException.h"
+#include "GUI/MessageType.h"
+#include "GUI/MessagePopup.h"
+#include "Core/Exceptions/FileException.h"
 #include "Graphic/SDLRenderer.h"
 #include "CoreModule.h"
 #include "GraphicModule.h"
@@ -10,15 +11,7 @@
 #include "World/Inputs/KeyboardInputMapContext.h"
 #include "World/Inputs/KeyboardInputGUIContext.h"
 #include "Graphic/SDLWindow.h"
-#include "Draw/VectorDrawableContainer.h"
-
-void LogsConfiguration() {
-	ska::LoggerFactory::setMaxLengthClassName(35);
-	//ska::LoggerFactory::staticAccess<ska::CollisionContact>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	ska::LoggerFactory::staticAccess<ska::IADefinedMovementSystem>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	ska::LoggerFactory::staticAccess<WorldImpl>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-	//ska::LoggerFactory::staticAccess<ska::WorldCollisionResponse>().configureLogLevel(ska::EnumLogLevel::SKA_DISABLED);
-}
+#include "Core/Draw/VectorDrawableContainer.h"
 
 WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	GameCore(std::forward<GameConfPtr>(gc)),
@@ -26,7 +19,7 @@ WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	m_entityManager(em),
 	ska::SubObserver<MapEvent>(bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
 
-	SKA_LOG_INFO("Game initialization");
+	SLOG(ska::LogLevel::Info) << "Game initialization";
 
 	/* Let's start on the map state */
 	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
@@ -72,10 +65,9 @@ bool WGameCore::onTeleport(MapEvent& me) {
 }
 
 std::unique_ptr<ska::GameApp> ska::GameApp::get() {
-	LogsConfiguration();
 
 	auto gc = std::make_unique<WGameCore::GameConf>();
-	auto& core = gc->requireModule<ska::CoreModule<CustomEntityManager>>("Core", gc->getEventDispatcher());
+	auto& core = gc->requireModule<ska::CoreModule<CustomEntityManager>>("Core", CustomEntityManager{ gc->getEventDispatcher() }, gc->getEventDispatcher());
 	/* Configure inputs types */
 	core.addInputContext<ska::KeyboardInputMapContext>(ska::EnumContextManager::CONTEXT_MAP);
 	core.addInputContext<ska::KeyboardInputGUIContext>(ska::EnumContextManager::CONTEXT_GUI);
@@ -105,7 +97,7 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 	try {
 		return std::make_unique<WGameCore>(core.getEntityManager(), std::move(gc));
 	} catch (GenericException& ge) {
-		SKA_STATIC_LOG_ERROR(WGameCore)(ge.what());
+		SLOG_STATIC(ska::LogLevel::Error, WGameCore) << ge.what();
 		ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", ge.what(), nullptr);
 		throw ge;
 	}
@@ -114,13 +106,13 @@ std::unique_ptr<ska::GameApp> ska::GameApp::get() {
 
 
 int WGameCore::onTerminate(ska::TerminateProcessException& tpe) {
-	SKA_LOG_MESSAGE(tpe.what());
+	SLOG(ska::LogLevel::Info) << tpe.what();
 	return 0;
 }
 
 int WGameCore::onException(ska::GenericException& e) {
 	/* Handles Generics Game exceptions */
-	SKA_LOG_ERROR(e.what());
+	SLOG(ska::LogLevel::Error) << e.what();
 	ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), nullptr);
 
 	return 0;

@@ -1,3 +1,4 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "AI/System/IARandomMovementSystem.h"
 #include "AI/System/IADefinedMovementSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
@@ -7,7 +8,7 @@
 #include "Graphic/System/CameraFollowStrategy.h"
 #include "../World/WorldState.h"
 #include "StateMap.h"
-#include "Utils/FileUtils.h"
+#include "Base/IO/Files/FileUtils.h"
 #include "World/System/ScriptWorldTriggerSystem.h"
 #include "../CustomEntityManager.h"
 #include "../../Script/ScriptConstants.h"
@@ -29,14 +30,14 @@ StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, Wo
 
 bool StateMap::onGameEvent(ska::GameEvent& ge) {
 	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY) {
-        SKA_LOG_INFO("Game window is ready");
+		SLOG(ska::LogLevel::Info) << "Game window is ready";
 	}
 	
 	return true;
 }
 
 void StateMap::beforeLoad(ska::State* lastState) {
-	SKA_LOG_INFO("State Map initialization");
+	SLOG(ska::LogLevel::Info) << "State Map initialization";
 
 	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getEntityLocator(), m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher, m_worldState.getSpace());
 	m_scriptAutoSystem = scriptAutoSys.get();

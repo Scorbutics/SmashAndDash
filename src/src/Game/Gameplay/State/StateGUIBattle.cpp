@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "StateGUIBattle.h"
-#include "Draw/DrawableContainer.h"
+#include "Core/Draw/DrawableContainer.h"
 
 StateGUIBattle::StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
     m_gui(ged) {

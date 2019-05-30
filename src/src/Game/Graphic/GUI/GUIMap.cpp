@@ -1,5 +1,6 @@
 #include <memory>
 #include <SDL.h>
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "GUIMap.h"
 #include "../../Gameplay/Data/Settings.h"
 #include "DialogMenu.h"

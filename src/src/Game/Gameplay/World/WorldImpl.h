@@ -3,7 +3,7 @@
 #include "../Data/SettingsChangeEvent.h"
 #include "../PokemonGameEventDispatcher.h"
 #include "../Weather.h"
-#include "Utils/SubObserver.h"
+#include "Base/Patterns/SubObserver.h"
 
 namespace ska {
 	class IniReader;

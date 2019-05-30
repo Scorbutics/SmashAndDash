@@ -2,8 +2,8 @@
 #include "Weather.h"
 #include "World/TileWorld.h"
 #include "Base/Values/Numbers/NumberUtils.h"
-#include "Draw/Renderer.h"
-#include "Draw/DrawableContainer.h"
+#include "Core/Draw/Renderer.h"
+#include "Core/Draw/DrawableContainer.h"
 
 Weather::Weather(ska::TileWorld& w, const std::string& wSprite, int number, int distance, int intensityX, int intensityY, int alpha) :
     m_number(0),

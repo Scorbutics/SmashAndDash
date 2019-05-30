@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 #include "Statistics.h"
 #include "MonsterDescription.h"
 

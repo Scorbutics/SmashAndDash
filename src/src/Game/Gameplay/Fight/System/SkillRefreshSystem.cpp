@@ -1,11 +1,11 @@
-
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillRefreshSystem.h"
-#include "Utils/TimeUtils.h"
-#include "Utils/NumberUtils.h"
-#include "Utils/PhysicUtils.h"
-#include "Utils/RectangleUtils.h"
-#include "Inputs/Readers/IniReader.h"
-#include "Inputs/InputContextManager.h"
+#include "Core/Utils/TimeUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
+#include "Core/Utils/PhysicUtils.h"
+#include "Core/Utils/RectangleUtils.h"
+#include "Base/IO/Readers/IniReader.h"
+#include "Core/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
 #include <SDL_stdinc.h>
 

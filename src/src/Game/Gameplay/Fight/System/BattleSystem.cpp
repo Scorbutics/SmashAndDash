@@ -1,11 +1,11 @@
-
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "BattleSystem.h"
 #include "../SkillComponent.h"
-#include "Inputs/Readers/IniReader.h"
-#include "Inputs/InputContextManager.h"
+#include "Base/IO/Readers/IniReader.h"
+#include "Core/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
-#include "Utils/PhysicUtils.h"
-#include "Utils/NumberUtils.h"
+#include "Core/Utils/PhysicUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "Graphic/GraphicComponent.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) :

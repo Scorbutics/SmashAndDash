@@ -1,8 +1,9 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "../Data/Settings.h"
 #include "WorldImpl.h"
-#include "Draw/DrawableContainer.h"
-#include "Inputs/Readers/IniReader.h"
-#include "Utils/FileUtils.h"
+#include "Core/Draw/DrawableContainer.h"
+#include "Base/IO/Readers/IniReader.h"
+#include "Base/IO/Files/FileUtils.h"
 #include "WorldLoader.h"
 
 #define WEATHER_ALPHA_LVL 85
@@ -53,7 +54,7 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 	const auto transparency = reader.get<bool>("Fog transparency");
 
 	if(!sprite) {
-		SKA_LOG_MESSAGE("Le brouillard est inexistant sur cette map");
+		SLOG(ska::LogLevel::Info) << "Le brouillard est inexistant sur cette map";
 		m_fog.hide(true);
 		return;
 	}

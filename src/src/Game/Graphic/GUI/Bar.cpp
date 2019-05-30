@@ -1,14 +1,15 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include <iostream>
 #include <string>
 #include "Bar.h"
-#include "ECS/ECSDefines.h"
-#include "ECS/EntityManager.h"
+#include "Core/ECS/ECSDefines.h"
+#include "Core/ECS/EntityManager.h"
 #include "../../Utils/IDs.h"
 #include "../../Gameplay/Data/RawStatistics.h"
-#include "ECS/EntityManager.h"
-#include "Utils/Observable.h"
+#include "Core/ECS/EntityManager.h"
+#include "Base/Patterns/Observable.h"
 #include "Graphic/System/CameraSystem.h"
-#include "Draw/Renderer.h"
+#include "Core/Draw/Renderer.h"
 
 Bar::Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
 m_entityManager(em),

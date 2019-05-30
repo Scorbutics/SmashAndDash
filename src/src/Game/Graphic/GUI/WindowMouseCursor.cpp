@@ -1,7 +1,8 @@
 #include <limits>
-#include "Utils/SpritePath.h"
+#include "Game/__internalConfig/LoggerConfig.h"
+#include "Core/Utils/SpritePath.h"
 #include "WindowMouseCursor.h"
-#include "Utils/SkaConstants.h"
+#include "Core/Utils/SkaConstants.h"
 
 WindowMouseCursor::WindowMouseCursor(ska::TimeObservable* timeObservable, ska::MouseObservable* guiObservable, ska::KeyObservable* keyObservable, const ska::Rectangle& box) :
 	TimeScrollableWindowIG<ska::ValueChangedEventListener<int>>(timeObservable, guiObservable, keyObservable, box),

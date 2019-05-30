@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "PokeballSystem.h"
-#include "ECS/Basics/Graphic/DeleterComponent.h"
+#include "Core/ECS/Basics/Graphic/DeleterComponent.h"
 
 #define POWER 5
 

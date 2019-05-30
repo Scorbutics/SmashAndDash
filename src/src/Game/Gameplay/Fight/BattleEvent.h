@@ -1,5 +1,5 @@
 #pragma once
-#include "ECS/EntityManager.h"
+#include "Core/ECS/EntityManager.h"
 
 enum BattleEventType {
 	BATTLE_START,

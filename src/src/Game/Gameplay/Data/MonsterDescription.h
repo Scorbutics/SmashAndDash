@@ -1,5 +1,5 @@
 #pragma once
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 
 struct MonsterDescription {
 	MonsterDescription(ska::IniReader& reader, const std::string&) :

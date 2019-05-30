@@ -1,7 +1,8 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "SlotPokemon.h"
-#include "Utils/SpritePath.h"
-#include "../../Gameplay/Fight/StatisticsChangeEvent.h"
-#include "../../Utils/IDs.h"
+#include "Core/Utils/SpritePath.h"
+#include "Game/Gameplay/Fight/StatisticsChangeEvent.h"
+#include "Game/Utils/IDs.h"
 #include "GUI/GUI.h"
 
 SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :

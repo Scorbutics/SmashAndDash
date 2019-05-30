@@ -1,5 +1,6 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "StatisticsSystem.h"
-#include "../../State/StateMap.h"
+#include "Game/Gameplay/State/StateMap.h"
 
 StatisticsSystem::StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged) : System(em),
 m_worldScene(ws), m_ged(ged) {

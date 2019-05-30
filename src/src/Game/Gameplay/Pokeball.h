@@ -1,9 +1,9 @@
 #pragma once
-#include "Point.h"
+#include "Core/Point.h"
 #include "PokeballLaunchReasonEnum.h"
 #include "Graphic/Animation.h"
 #include "Graphic/Texture.h"
-#include "Draw/DrawableFixedPriority.h"
+#include "Core/Draw/DrawableFixedPriority.h"
 
 class Pokeball : 
 	public ska::DrawableFixedPriority {

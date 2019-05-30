@@ -1,5 +1,5 @@
 #include "PokemonDescriptor.h"
-#include "Inputs/Readers/IniReader.h"
+#include "Base/IO/Readers/IniReader.h"
 
 PokemonDescriptor::PokemonDescriptor()
 {

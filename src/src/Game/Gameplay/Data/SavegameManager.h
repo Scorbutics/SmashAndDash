@@ -1,7 +1,7 @@
 #pragma once
-#include "ECS/EntityManager.h"
+#include "Core/ECS/EntityManager.h"
 #include "../PokemonGameEventDispatcher.h"
-#include "Data/MemoryScript.h"
+#include "Core/Data/MemoryScript.h"
 
 class SavegameManager : 
 	public ska::MemoryScript {

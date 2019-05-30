@@ -1,10 +1,11 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include "GUIBattle.h"
 #include "Bar.h"
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/Button.h"
-#include "../../Gameplay/Fight/SkillsHolderComponent.h"
-#include "../../Gameplay/Fight/BattleComponent.h"
-#include "Draw/DrawableContainer.h"
+#include "Game/Gameplay/Fight/SkillsHolderComponent.h"
+#include "Game/Gameplay/Fight/BattleComponent.h"
+#include "Core/Draw/DrawableContainer.h"
 #include "GUI/GUI.h"
 
 
