@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/Observer.h"
+#include "Base/Patterns/Observer.h"
 #include "Audio/SoundRenderer.h"
 #include "../Gameplay/Data/SettingsChangeEvent.h"
 #include "../Gameplay/PokemonGameEventDispatcher.h"

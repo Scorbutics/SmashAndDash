@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.9)
+project(smash_and_dash)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+set(SKA_BUILD_NO_TEST TRUE)
+
+#External
+set(curdir "external/ska")
+FILE(GLOB children "${curdir}/ska_*")
+FOREACH(child ${children})
+	IF(IS_DIRECTORY ${child})
+	  MESSAGE("including engine directory -- " ${child}/src/src)
+	  include_directories(${child}/src/src)
+	ENDIF()
+ENDFOREACH()
+add_subdirectory(${curdir})
+
+#Internal (Game code)
+add_subdirectory(src)

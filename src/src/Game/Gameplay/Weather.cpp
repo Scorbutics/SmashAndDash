@@ -1,7 +1,7 @@
 #include <string>
 #include "Weather.h"
 #include "World/TileWorld.h"
-#include "Utils/NumberUtils.h"
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "Draw/Renderer.h"
 #include "Draw/DrawableContainer.h"
 
