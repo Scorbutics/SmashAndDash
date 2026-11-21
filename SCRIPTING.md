@@ -50,7 +50,7 @@ Entities are `int` handles (`Engine.origin()`, `Engine.entity(name)`, `Character
 
 ## Battles
 
-Battles are real time (C++), played like a fighting game: the bars of the two fighters are at the top of the screen (the player on the left, the wild Pokemon on the right), the skills of the player at the bottom (keys 1 to 4, a skill can be used again after its cooldown). The fight takes place in an arena (an overlay on the map, framed by the camera): leaving it for 1 second flees the wild Pokemon. A hit stops everything a moment, the Pokemon hit flashes, is stunned and pushed back; a K.O. ends in slow motion. The scripts give the rules and the behaviours:
+Battles are real time (C++), played like a fighting game: the bars of the two fighters are at the top of the screen (the player on the left, the wild Pokemon on the right), the skills of the player at the bottom (keys 1 to 4, a skill can be used again after its cooldown). The fight takes place in an arena (an overlay on the map, framed by the camera): leaving it for 1 second flees the wild Pokemon. The Pokemon walk at a constant speed and stop at once (no running in a battle). An attack has a startup (the Pokemon prepares it), then it goes, then a recovery: the Pokemon cannot move during all of it and can be hit (a hit during the startup cancels the attack). A skill key pressed while the Pokemon is busy is kept 200 ms. A hit stops everything a moment, the Pokemon hit flashes, is stunned (it blinks) and pushed back; a K.O. ends in slow motion. The scripts give the rules and the behaviours:
 
 - `Data/Battle/rules.miniska`: statistics from the base statistics and the level (`stat`, `maxHp`), level from the experience (`level`), damage of a hit (`damage`).
 - `Data/Battle/ai.miniska`: the wild Pokemon, asked every 300 ms: the skill it uses (`decide`, with the skills it can use now: ready and in range) and how it moves (`move`: hold, approach, retreat, sidestep, from the distance to its opponent and the reach of its ready skills).
@@ -59,7 +59,8 @@ Battles are real time (C++), played like a fighting game: the bars of the two fi
 - `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team able to fight, and waits for its end (back on the map): `true` when the player won (`false`: lost or fled, `Battle.lastFled()` tells which), `false` right away when no Pokemon can fight.
 - After a battle, the Pokemon of the player keeps its hit points left and wins experience (`experience` rule). A Pokemon with no hit points left does not fight until it is healed (`Party.heal`).
 - Hooks: `Engine.on("battle.won", ...)`, `Engine.on("battle.lost", ...)` and `Engine.on("battle.fled", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle: what they do after a wait happens back on the map.
-- Every Pokemon has the basic attack (`Data/Skills/autoattack.ini`) in its first slot without a projectile skill.
+- Every Pokemon has Charge (`Data/Skills/charge.ini`) in its first slot without a usable skill.
+- Skills (`Data/Skills/*.ini`, Latin-1): `style_2=Projectile` throws `[Particle] number` particles towards the opponent; `style_2=Contact` (Charge, Griffe) lunges and hits the opponent when it is in its range (`[Stats] blocks_range`) in front of it, showing the sprite of the skill where it hits (`[Particle] show_sprite=0`: none). `[Stats] cooldown`, `startup` and `recovery` (milliseconds), `[Particle] damage` (power) and `knockback`.
 
 ## Shared script modules
 

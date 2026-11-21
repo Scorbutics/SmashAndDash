@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <map>
 #include <string>
 #include "Core/Draw/DrawableFixedPriority.h"
 #include "Core/ECS/ECSDefines.h"
@@ -80,5 +81,7 @@ private:
 	ska::Texture m_ringOpponent;
 	ska::Texture m_arrow;
 	ska::Texture m_impact;
+	// The sprites of the contact skills (Sprites/Fight/<id>.png : 2 x 2 frames), loaded when used
+	mutable std::map<int, ska::Texture> m_skillSprites;
 	unsigned int m_time = 0;
 };

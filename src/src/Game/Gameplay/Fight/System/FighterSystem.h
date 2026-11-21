@@ -1,4 +1,7 @@
 #pragma once
+#include "Base/Patterns/SubObserver.h"
+#include "Core/Data/Events/InputKeyEvent.h"
+#include "Core/Inputs/InputToggle.h"
 #include "Core/ECS/System.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
@@ -9,37 +12,49 @@
 #include "Graphic/GraphicComponent.h"
 #include "../BattleComponent.h"
 #include "../BattleStage.h"
+#include "../../PokemonGameEventDispatcher.h"
 
 class WorldState;
 
-// The fighters of a battle, each logic update : the AI walks as its script decided (BattleStage intent : approach,
-// retreat, sidestep) and stays in the arena, a fighter hit is stunned and pushed back, everything stops during a hit stop.
-// The fighters face each other. Their drawing shows what happens : white flash when hit, squash before a skill, K.O.
-class FighterSystem : public ska::System<
-	ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent, ska::GraphicComponent, BattleComponent>,
-	ska::PossibleComponent<ska::InputComponent, ska::MovementComponent>> {
+// The fighters of a battle, each logic update, as in a fighting game : they walk at a constant speed and stop at once
+// (no sliding, no running) : the player with the direction keys, the AI as its script decided (BattleStage intent :
+// approach, retreat, sidestep). They cannot move during an attack (startup, lunge, recovery) nor when stunned ; a hit
+// pushes them back. They face each other. Everything stops during a hit stop. The AI stays in the arena.
+// Their drawing shows what happens : white flash and blinking when hit, preparation and lunge of an attack, K.O.
+class FighterSystem :
+	public ska::System<
+		ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent, ska::GraphicComponent, BattleComponent>,
+		ska::PossibleComponent<ska::InputComponent, ska::MovementComponent>>,
+	public ska::SubObserver<ska::InputKeyEvent> {
 public:
-	FighterSystem(ska::EntityManager& em, WorldState& ws, BattleStage& stage);
+	FighterSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, BattleStage& stage);
 	FighterSystem(const FighterSystem&) = delete;
 	FighterSystem& operator=(const FighterSystem&) = delete;
 	~FighterSystem() override = default;
 
 	static constexpr unsigned int FlashDuration = 150;
-	static constexpr unsigned int WindUpDuration = 110;
 	static constexpr unsigned int ReleaseDuration = 140;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;
 
 private:
+	bool onKeyInputEvent(ska::InputKeyEvent& event);
 	ska::Point<float> center(ska::EntityId entity);
+	ska::Point<float> keysDirection() const;
 	void control(FighterState& fighter, unsigned int ellapsedTime);
-	void stop(FighterState& fighter);
+	void setVelocity(FighterState& fighter, ska::Point<float> velocity);
+	void face(FighterState& fighter, ska::Point<float> direction);
 	void draw(FighterState& fighter);
 
 	ska::EntityManager& m_entities;
 	WorldState& m_worldState;
 	BattleStage& m_stage;
-	// The walk power of the Pokemon of the player (its InputComponent), kept while its control is disabled
+	// The direction keys held (several input contexts send their keys : any of them since the last update)
+	ska::InputToggleContainer m_toggles;
+	ska::InputToggleContainer m_receivedToggles;
+	bool m_received = false;
+	// The walk power of the Pokemon of the player (its InputComponent) : the keys move it through this system in a
+	// battle, its power is given back at the end
 	float m_playerPower = -1.F;
 };

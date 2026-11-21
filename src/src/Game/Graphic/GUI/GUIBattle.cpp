@@ -306,6 +306,25 @@ void GUIBattle::renderBanner(ska::Renderer& renderer) const {
 void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 	for (const auto& mark : m_stage.marks()) {
 		const auto position = toScreen(mark.position);
+		if (mark.kind == BattleMark::Kind::Slash) {
+			// The sprite of the skill where it hit, its 4 frames once, a little bigger
+			auto found = m_skillSprites.find(mark.value);
+			if (found == m_skillSprites.end()) {
+				found = m_skillSprites.emplace(mark.value, ska::Texture{ "./Sprites/Fight/" + std::to_string(mark.value) + ".png" }).first;
+			}
+			const auto& sheet = found->second;
+			const auto frameWidth = static_cast<int>(sheet.getWidth()) / 2;
+			const auto frameHeight = static_cast<int>(sheet.getHeight()) / 2;
+			const auto frame = static_cast<int>(std::min(3u, mark.age * 4 / 240));
+			const auto clip = ska::Rectangle{ (frame % 2) * frameWidth, (frame / 2) * frameHeight, frameWidth, frameHeight };
+			auto effect = ska::RenderEffect{};
+			effect.anchorBottom = false;
+			effect.scaleX = effect.scaleY = 2.F;
+			renderer.setEffect(&effect);
+			renderer.render(sheet, position.x - frameWidth / 2, position.y - frameHeight / 2, &clip);
+			renderer.setEffect(nullptr);
+			continue;
+		}
 		if (mark.kind == BattleMark::Kind::Impact) {
 			const auto progress = static_cast<float>(mark.age) / 220.F;
 			auto effect = ska::RenderEffect{};

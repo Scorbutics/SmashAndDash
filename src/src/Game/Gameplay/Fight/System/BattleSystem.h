@@ -23,8 +23,10 @@ class CustomEntityManager;
 class BattleRules;
 
 // Real time battle : the Pokemon of the player uses its skills with the keys 1 to 4, the wild Pokemon uses its skills
-// and moves as its AI (script, see BattleRules) decides. A skill has a short wind-up, then it goes towards the opponent.
-// It can be used again after its cooldown. The time of the battle stops during the hit stops (BattleStage).
+// and moves as its AI (script, see BattleRules) decides. An attack has a startup (the Pokemon prepares it), then a
+// projectile skill throws its particles towards the opponent, a contact skill (Charge) lunges and hits the opponent in
+// its range, in front of it ; then a recovery. The Pokemon cannot move during the attack. A skill can be used again
+// after its cooldown. The time of the battle stops during the hit stops (BattleStage).
 class BattleSystem :
 	public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::AnimationComponent, BattleComponent, SkillsHolderComponent, ska::GraphicComponent>, ska::PossibleComponent<SkillComponent>>,
 	public ska::SubObserver<ska::InputKeyEvent> {
@@ -42,6 +44,8 @@ public:
 	~BattleSystem() override = default;
 
 	static constexpr unsigned int DecisionDelay = 300;
+	// The active part of a contact skill : the Pokemon lunges forward (it hits at its start)
+	static constexpr unsigned int LungeDuration = 140;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;
@@ -51,12 +55,15 @@ private:
 	bool fighting(ska::EntityId fighter) const;
 	bool canAct(ska::EntityId fighter) const;
 	void createSkill(unsigned int index, ska::EntityId from);
+	void contact(unsigned int index, FighterState& fighter);
+	void updateAttack(FighterState& fighter, unsigned int delta);
 	void decide(FighterState& fighter);
 	ska::Point<float> center(ska::EntityId entity) const;
 	std::array<unsigned long, 4>& lastUses(ska::EntityId fighter);
 	const std::array<unsigned long, 4>& lastUses(ska::EntityId fighter) const;
 
 	CustomEntityManager& m_customEM;
+	PokemonGameEventDispatcher& m_ged;
 	BattleRules& m_rules;
 	BattleStage& m_stage;
 	const unsigned int m_blockSize;
@@ -64,6 +71,10 @@ private:
 	unsigned long m_time = 0;
 	// Each AI decides at its own time (not both at once)
 	std::array<unsigned long, 2> m_nextDecisions { DecisionDelay, DecisionDelay + DecisionDelay / 2 };
+	// A skill key pressed while the Pokemon of the player is busy (attack, stun) : used when it is free, if it comes soon
+	static constexpr unsigned int InputBuffer = 200;
+	int m_bufferedSkill = -1;
+	unsigned long m_bufferedUntil = 0;
 	std::array<unsigned long, 4> m_pokemonUses {};
 	std::array<unsigned long, 4> m_opponentUses {};
 };

@@ -59,6 +59,10 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 	}
 
 	sd.power = skillData.exists("Particle damage") ? skillData.get<int>("Particle damage") : -sd.buffEnemy.hp;
+	sd.contact = sd.style1 == "Contact" || sd.style2 == "Contact";
+	sd.showSprite = !skillData.exists("Particle show_sprite") || skillData.get<int>("Particle show_sprite") != 0;
+	sd.startup = skillData.exists("Stats startup") ? skillData.get<unsigned int>("Stats startup") : (sd.contact ? 200 : 250);
+	sd.recovery = skillData.exists("Stats recovery") ? skillData.get<unsigned int>("Stats recovery") : 250;
 	sd.special = skillData.exists("Description class") && skillData.get<std::string>("Description class") == "Speciale";
 }
 
@@ -69,7 +73,7 @@ void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId,
 		}
 	}
 
-	// Every Pokemon has the basic attack : in the first slot that cannot be used in a battle
+	// Every Pokemon has Charge (the basic attack) : in the first slot that cannot be used in a battle
 	// (no skill, or a skill without projectile : the buffs do not exist in this version of the game)
 	for (auto& skill : shc.skills) {
 		if (skill.particleNumber <= 0) {

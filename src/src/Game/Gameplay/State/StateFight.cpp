@@ -108,7 +108,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	auto battleSystem = std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_stage, blockSize);
 	auto& battle = *battleSystem;
 	addLogic(std::move(battleSystem));
-	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_worldState, m_stage));
+	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
 	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_stage));
 

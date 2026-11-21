@@ -6,6 +6,7 @@
 namespace {
 	constexpr unsigned int DamageMarkLife = 900;
 	constexpr unsigned int ImpactMarkLife = 220;
+	constexpr unsigned int SlashMarkLife = 240;
 }
 
 void BattleStage::update(unsigned int ellapsedTime) {
@@ -17,7 +18,7 @@ void BattleStage::update(unsigned int ellapsedTime) {
 		mark.age += ellapsedTime;
 	}
 	m_marks.erase(std::remove_if(m_marks.begin(), m_marks.end(), [](const BattleMark& mark) {
-		return mark.age >= (mark.kind == BattleMark::Kind::Damage ? DamageMarkLife : ImpactMarkLife);
+		return mark.age >= (mark.kind == BattleMark::Kind::Damage ? DamageMarkLife : (mark.kind == BattleMark::Kind::Slash ? SlashMarkLife : ImpactMarkLife));
 	}), m_marks.end());
 
 	if (m_freeze > 0) {

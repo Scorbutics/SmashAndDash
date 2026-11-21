@@ -9,11 +9,14 @@
 #include "Graphic/GraphicComponent.h"
 #include "../BattleRules.h"
 #include "FighterSystem.h"
+#include "Base/Values/Numbers/NumberUtils.h"
+#include "../BattleHit.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, unsigned int blockSize) :
 	System(em),
 	SubObserver<ska::InputKeyEvent>(std::bind(&BattleSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
 	m_customEM(em),
+	m_ged(ged),
 	m_rules(rules),
 	m_stage(stage),
 	m_blockSize(blockSize == 0 ? 1 : blockSize) {
@@ -33,7 +36,7 @@ bool BattleSystem::canAct(ska::EntityId fighter) const {
 		return false;
 	}
 	const auto& state = fighter == m_stage.player.entity ? m_stage.player : m_stage.opponent;
-	return state.stun == 0 && state.windUp == 0;
+	return !BattleStage::busy(state);
 }
 
 std::array<unsigned long, 4>& BattleSystem::lastUses(ska::EntityId fighter) {
@@ -72,9 +75,17 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	// 0 means "never used"
 	lastUses(from)[index] = m_time == 0 ? 1 : m_time;
 	auto& fighter = m_stage.fighter(from);
-	fighter.windUp = FighterSystem::WindUpDuration;
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
+	// The startup : it stands still, facing its opponent (it is committed to that direction)
+	fighter.windUp = std::max(1u, skill.startup);
+	fighter.windUpDuration = fighter.windUp;
+	fighter.recoveryDuration = skill.recovery;
 	fighter.pendingSkill = static_cast<int>(index);
+	fighter.contactAttack = skill.contact;
 	const auto position = center(from);
+	const auto toOpponent = center(fighter.opponent) - position;
+	const auto length = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
+	fighter.attackDirection = length < 0.001F ? ska::Point<float>{ 1.F, 0.F } : ska::Point<float>{ toOpponent.x / length, toOpponent.y / length };
 	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " uses its skill " << index
 		<< " (" << m_componentAccessor.get<SkillsHolderComponent>(from).skills[index].name << ") from " << position.x << ", " << position.y;
 	return true;
@@ -87,8 +98,9 @@ bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	const auto& actions = event.icm.getActions();
 	const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
 	for (auto index = 0u; index < 4; index++) {
-		if (actions[skillActions[index]]) {
-			useSkill(index, m_stage.player.entity);
+		if (actions[skillActions[index]] && !useSkill(index, m_stage.player.entity) && m_stage.phase() == BattlePhase::Fight) {
+			m_bufferedSkill = static_cast<int>(index);
+			m_bufferedUntil = m_time + InputBuffer;
 		}
 	}
 	return true;
@@ -128,18 +140,12 @@ void BattleSystem::refresh(unsigned int) {
 	const auto delta = m_stage.delta();
 	m_time += delta;
 
-	// End of the wind-ups : the skills go
 	for (auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		if (fighter->windUp == 0) {
-			continue;
-		}
-		fighter->windUp = fighter->windUp > delta ? fighter->windUp - delta : 0;
-		if (fighter->windUp == 0 && fighter->pendingSkill >= 0) {
-			if (m_stage.phase() == BattlePhase::Fight && fighting(fighter->entity) && fighting(fighter->opponent)) {
-				createSkill(static_cast<unsigned int>(fighter->pendingSkill), fighter->entity);
-				fighter->release = FighterSystem::ReleaseDuration;
-			}
-			fighter->pendingSkill = -1;
+		updateAttack(*fighter, delta);
+	}
+	if (m_bufferedSkill >= 0) {
+		if (m_time > m_bufferedUntil || useSkill(static_cast<unsigned int>(m_bufferedSkill), m_stage.player.entity)) {
+			m_bufferedSkill = -1;
 		}
 	}
 
@@ -148,7 +154,8 @@ void BattleSystem::refresh(unsigned int) {
 		for (auto* fighter : { &m_stage.opponent, &m_stage.player }) {
 			auto& next = m_nextDecisions[index++];
 			if (fighter->controlledByAI && m_time >= next) {
-				next = m_time + DecisionDelay;
+				// A little irregular : the two AI do not act at the same time
+				next = m_time + DecisionDelay + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
 				decide(*fighter);
 			}
 		}
@@ -189,5 +196,80 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 		m_componentAccessor.add<ska::PositionComponent>(skill, sc.origin);
 		sc.target = ska::Point<int>{ static_cast<int>(aim.x), static_cast<int>(aim.y) } - half;
 		sc.battler = from;
+	}
+}
+
+void BattleSystem::updateAttack(FighterState& fighter, unsigned int delta) {
+	if (delta == 0) {
+		return;
+	}
+	// Recovery, then free
+	if (fighter.recovery > 0) {
+		fighter.recovery = fighter.recovery > delta ? fighter.recovery - delta : 0;
+		return;
+	}
+	// Lunge of a contact skill, then its recovery
+	if (fighter.lunge > 0) {
+		fighter.lunge = fighter.lunge > delta ? fighter.lunge - delta : 0;
+		if (fighter.lunge == 0) {
+			fighter.recovery = fighter.recoveryDuration;
+		}
+		return;
+	}
+	if (fighter.windUp == 0) {
+		return;
+	}
+	// The startup ends : the skill goes
+	fighter.windUp = fighter.windUp > delta ? fighter.windUp - delta : 0;
+	if (fighter.windUp > 0 || fighter.pendingSkill < 0) {
+		return;
+	}
+	const auto index = static_cast<unsigned int>(fighter.pendingSkill);
+	fighter.pendingSkill = -1;
+	if (m_stage.phase() != BattlePhase::Fight || !fighting(fighter.entity) || !fighting(fighter.opponent)) {
+		return;
+	}
+	if (fighter.contactAttack) {
+		fighter.lunge = LungeDuration;
+		contact(index, fighter);
+	} else {
+		createSkill(index, fighter.entity);
+		fighter.release = FighterSystem::ReleaseDuration;
+		fighter.recovery = fighter.recoveryDuration;
+	}
+}
+
+void BattleSystem::contact(unsigned int index, FighterState& fighter) {
+	// It hits its opponent when it is in its range, in front of it (the direction chosen at the startup)
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(fighter.entity).skills[index];
+	const auto origin = center(fighter.entity);
+	const auto toOpponent = center(fighter.opponent) - origin;
+	const auto distance = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
+	const auto facing = distance < 0.001F ? 1.F : (toOpponent.x * fighter.attackDirection.x + toOpponent.y * fighter.attackDirection.y) / distance;
+	// In front : less than 70 degrees from its direction (always when they touch each other)
+	const auto touches = distance <= static_cast<float>(skill.range) && (facing >= 0.34F || distance < 40.F);
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " lunges (" << skill.name << "), "
+		<< static_cast<int>(distance) << " px from its opponent : " << (touches ? "it hits" : "missed");
+	if (!touches) {
+		return;
+	}
+	auto hit = BattleHit{};
+	hit.attacker = fighter.entity;
+	hit.target = fighter.opponent;
+	hit.power = skill.power;
+	hit.special = skill.special;
+	hit.knockback = skill.knockback;
+	hit.direction = fighter.attackDirection;
+	const auto& targetHitbox = m_componentAccessor.get<ska::HitboxComponent>(fighter.opponent);
+	const auto reach = static_cast<float>(std::max(targetHitbox.width, targetHitbox.height)) / 2.F;
+	const auto targetCenter = center(fighter.opponent);
+	hit.impact = ska::Point<float>{ targetCenter.x - fighter.attackDirection.x * reach, targetCenter.y - fighter.attackDirection.y * reach };
+	ApplyBattleHit(m_customEM, m_ged, m_rules, m_stage, hit);
+	if (skill.showSprite) {
+		auto slash = BattleMark{};
+		slash.kind = BattleMark::Kind::Slash;
+		slash.position = hit.impact;
+		slash.value = skill.id;
+		m_stage.mark(slash);
 	}
 }

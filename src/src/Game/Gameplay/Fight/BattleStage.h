@@ -37,13 +37,22 @@ struct FighterState {
 	bool controlledByAI = false;
 
 	FighterIntent intent = FighterIntent::Hold;
-	// Milliseconds left : stunned after a hit (no control), white flash, wind-up before a skill, stretch after it
+	// Milliseconds left : stunned after a hit (no control), white flash
 	unsigned int stun = 0;
 	unsigned int flash = 0;
+	// An attack : the startup (the Pokemon prepares it), the lunge of a contact skill (it hits), the recovery. The
+	// Pokemon cannot move during all of it, it can be hit (a hit during the startup cancels the attack)
 	unsigned int windUp = 0;
+	unsigned int windUpDuration = 0;
+	unsigned int lunge = 0;
+	unsigned int recovery = 0;
+	unsigned int recoveryDuration = 0;
+	// Stretch when a projectile goes
 	unsigned int release = 0;
-	// The skill used at the end of the wind-up (-1 : none)
+	// The skill used at the end of the startup (-1 : none), towards its opponent when it started
 	int pendingSkill = -1;
+	bool contactAttack = false;
+	ska::Point<float> attackDirection;
 	// Pushed back after a hit (pixels per second), applied when the hit stop ends, then slowed down
 	ska::Point<float> knockback;
 	// Hit points shown by the bar : they follow the real ones with a delay (the lost part stays visible a moment)
@@ -57,7 +66,8 @@ struct FighterState {
 
 // A feedback drawn over the battle (in the world) : damage numbers, impacts
 struct BattleMark {
-	enum class Kind { Damage, Impact };
+	// Slash : the sprite of a contact skill where it hits ("value" : the id of the sprite)
+	enum class Kind { Damage, Impact, Slash };
 	Kind kind = Kind::Impact;
 	ska::Point<float> position;
 	int value = 0;
@@ -98,6 +108,8 @@ public:
 
 	FighterState& fighter(ska::EntityId entity) { return entity == player.entity ? player : opponent; }
 	bool isFighter(ska::EntityId entity) const { return entity == player.entity || entity == opponent.entity; }
+	// It is busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
+	static bool busy(const FighterState& fighter) { return fighter.stun > 0 || fighter.windUp > 0 || fighter.lunge > 0 || fighter.recovery > 0; }
 
 	FighterState player;
 	FighterState opponent;

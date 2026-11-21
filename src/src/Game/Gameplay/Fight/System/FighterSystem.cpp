@@ -2,6 +2,7 @@
 #include "FighterSystem.h"
 #include <algorithm>
 #include <cmath>
+#include "Core/Inputs/InputContextManager.h"
 #include "Core/Utils/RectangleUtils.h"
 #include "Physic/Space.h"
 #include "Physic/Body.h"
@@ -18,34 +19,60 @@ namespace {
 		return value > amount ? value - amount : 0;
 	}
 
-	// Speed of an AI fighter (force : 10 pixels per second each), a little faster when it is fast
-	float AISpeed(const BattleComponent& bc) {
-		return std::min(30.F, 18.F + static_cast<float>(bc.speed) / 4.F);
+	// Walk speed of a fighter (pixels per second), a little faster when it is fast
+	float WalkSpeed(const BattleComponent& bc) {
+		return std::min(260.F, 170.F + static_cast<float>(bc.speed) * 3.F);
+	}
+
+	float Ease(float progress) {
+		return 1.F - (1.F - progress) * (1.F - progress);
 	}
 }
 
-FighterSystem::FighterSystem(ska::EntityManager& em, WorldState& ws, BattleStage& stage) :
+FighterSystem::FighterSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, BattleStage& stage) :
 	System(em),
+	SubObserver<ska::InputKeyEvent>(std::bind(&FighterSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
 	m_entities(em),
 	m_worldState(ws),
 	m_stage(stage) {
+}
+
+bool FighterSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
+	m_receivedToggles |= event.icm.getToggles();
+	m_received = true;
+	return true;
 }
 
 ska::Point<float> FighterSystem::center(ska::EntityId entity) {
 	return ska::PositionComponent::getCenterPosition(m_componentAccessor.get<ska::PositionComponent>(entity), m_componentAccessor.get<ska::HitboxComponent>(entity));
 }
 
-void FighterSystem::stop(FighterState& fighter) {
-	// The physics bodies stop right away (a hit stop freezes the fighters)
+ska::Point<float> FighterSystem::keysDirection() const {
+	auto direction = ska::Point<float>{};
+	if (m_toggles[ska::MoveUp]) direction.y -= 1.F;
+	if (m_toggles[ska::MoveDown]) direction.y += 1.F;
+	if (m_toggles[ska::MoveLeft]) direction.x -= 1.F;
+	if (m_toggles[ska::MoveRight]) direction.x += 1.F;
+	return Normalized(direction);
+}
+
+void FighterSystem::setVelocity(FighterState& fighter, ska::Point<float> velocity) {
+	// The physics bodies take the velocity at once (no acceleration, no sliding) : the control body too (its force)
 	auto& force = m_componentAccessor.get<ska::ForceComponent>(fighter.entity);
-	force.x = 0.F;
-	force.y = 0.F;
+	force.x = velocity.x / 10.F;
+	force.y = velocity.y / 10.F;
 	if (m_entities.hasComponent<ska::cp::HitboxComponent>(fighter.entity)) {
 		const auto& body = m_entities.getComponent<ska::cp::HitboxComponent>(fighter.entity);
 		auto& space = m_worldState.getSpace();
-		space.getBody(body.bodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
-		space.getBody(body.controlBodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+		const auto vector = ska::cp::Vect{ velocity.x, velocity.y };
+		space.getBody(body.bodyIndex).setVelocity(vector);
+		space.getBody(body.controlBodyIndex).setVelocity(vector);
 	}
+}
+
+void FighterSystem::face(FighterState& fighter, ska::Point<float> direction) {
+	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(fighter.entity);
+	animation.state = ska::RectangleUtils::getDirectionFromPos(ska::Point<int>{}, ska::Point<int>{ static_cast<int>(direction.x * 100.F), static_cast<int>(direction.y * 100.F) });
 }
 
 void FighterSystem::control(FighterState& fighter, unsigned int ellapsedTime) {
@@ -55,42 +82,45 @@ void FighterSystem::control(FighterState& fighter, unsigned int ellapsedTime) {
 	fighter.flash = Decrease(fighter.flash, ellapsedTime);
 
 	const auto fighting = m_stage.phase() == BattlePhase::Fight;
-	const auto canMove = fighting && !m_stage.frozen() && fighter.stun == 0 && fighter.windUp == 0;
+	const auto canMove = fighting && !m_stage.frozen() && !BattleStage::busy(fighter);
 
-	// The keys move the Pokemon of the player only when it can move
+	// The keys move the Pokemon of the player through this system (the InputSystem does not move it)
 	auto* input = m_componentPossibleAccessor.get<ska::InputComponent>(fighter.entity);
 	if (fighter.player && input != nullptr) {
 		if (m_playerPower < 0.F) {
 			m_playerPower = input->movePower;
 		}
-		input->movePower = canMove && !fighter.controlledByAI ? m_playerPower : 0.F;
+		input->movePower = 0.F;
 	}
 
 	if (m_stage.frozen()) {
-		stop(fighter);
+		setVelocity(fighter, {});
 		return;
 	}
 
-	auto& force = m_componentAccessor.get<ska::ForceComponent>(fighter.entity);
 	const auto position = center(fighter.entity);
+	const auto toOpponent = Normalized(center(fighter.opponent) - position);
 	const auto& arena = m_stage.arena;
 	const auto inside = position.x >= arena.x && position.x <= arena.x + arena.w && position.y >= arena.y && position.y <= arena.y + arena.h;
 
-	// Leaving the arena : the player flees a wild Pokemon, else it is brought back
+	// Leaving the arena : the player flees a wild Pokemon
 	if (fighter.player && !fighter.controlledByAI && m_stage.canFlee) {
 		fighter.outside = inside || !fighting ? 0 : fighter.outside + ellapsedTime;
 	}
 
 	auto move = ska::Point<float>{};
-	if (canMove && fighter.controlledByAI) {
-		const auto toOpponent = Normalized(center(fighter.opponent) - position);
-		switch (fighter.intent) {
-		case FighterIntent::Approach: move = toOpponent; break;
-		case FighterIntent::Retreat: move = ska::Point<float>{ -toOpponent.x, -toOpponent.y }; break;
-		// Around the opponent, slowly closer
-		case FighterIntent::SidestepLeft: move = ska::Point<float>{ -toOpponent.y + toOpponent.x * 0.2F, toOpponent.x + toOpponent.y * 0.2F }; break;
-		case FighterIntent::SidestepRight: move = ska::Point<float>{ toOpponent.y + toOpponent.x * 0.2F, -toOpponent.x + toOpponent.y * 0.2F }; break;
-		default: break;
+	if (canMove) {
+		if (!fighter.controlledByAI) {
+			move = keysDirection();
+		} else {
+			switch (fighter.intent) {
+			case FighterIntent::Approach: move = toOpponent; break;
+			case FighterIntent::Retreat: move = ska::Point<float>{ -toOpponent.x, -toOpponent.y }; break;
+			// Around the opponent, slowly closer
+			case FighterIntent::SidestepLeft: move = Normalized(ska::Point<float>{ -toOpponent.y + toOpponent.x * 0.2F, toOpponent.x + toOpponent.y * 0.2F }); break;
+			case FighterIntent::SidestepRight: move = Normalized(ska::Point<float>{ toOpponent.y + toOpponent.x * 0.2F, -toOpponent.x + toOpponent.y * 0.2F }); break;
+			default: break;
+			}
 		}
 	}
 
@@ -102,43 +132,35 @@ void FighterSystem::control(FighterState& fighter, unsigned int ellapsedTime) {
 		if (position.x > arena.x + arena.w - margin) inward.x = -1.F;
 		if (position.y < arena.y + margin) inward.y = 1.F;
 		if (position.y > arena.y + arena.h - margin) inward.y = -1.F;
-		if (inward.x != 0.F || inward.y != 0.F) {
-			if (fighter.controlledByAI) {
-				move = Normalized(ska::Point<float>{ move.x + inward.x * 1.5F, move.y + inward.y * 1.5F });
-			} else if (!inside) {
-				force.x += inward.x * m_playerPower;
-				force.y += inward.y * m_playerPower;
-			}
+		if ((inward.x != 0.F || inward.y != 0.F) && (canMove || !inside)) {
+			move = Normalized(ska::Point<float>{ move.x + inward.x * 1.5F, move.y + inward.y * 1.5F });
 		}
 	}
 
-	if (move.x != 0.F || move.y != 0.F) {
-		const auto speed = AISpeed(m_componentAccessor.get<BattleComponent>(fighter.entity));
-		const auto direction = Normalized(move);
-		// The battle time can be slower (slow motion)
-		const auto scale = ellapsedTime == 0 ? 0.F : static_cast<float>(delta) / static_cast<float>(ellapsedTime);
-		force.x += direction.x * speed * scale;
-		force.y += direction.y * speed * scale;
-	}
+	// The battle time can be slower (slow motion)
+	const auto scale = ellapsedTime == 0 ? 0.F : static_cast<float>(delta) / static_cast<float>(ellapsedTime);
+	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(fighter.entity)) * scale;
+	auto velocity = ska::Point<float>{ move.x * speed, move.y * speed };
 
 	// Pushed back after a hit : the push slows down quickly
 	if (std::abs(fighter.knockback.x) > 1.F || std::abs(fighter.knockback.y) > 1.F) {
-		force.x += fighter.knockback.x / 10.F;
-		force.y += fighter.knockback.y / 10.F;
-		const auto decay = std::pow(0.82F, static_cast<float>(delta) / 20.F);
+		velocity.x += fighter.knockback.x * scale;
+		velocity.y += fighter.knockback.y * scale;
+		const auto decay = std::pow(0.8F, static_cast<float>(delta) / 20.F);
 		fighter.knockback.x *= decay;
 		fighter.knockback.y *= decay;
 	} else {
 		fighter.knockback = {};
 	}
+	setVelocity(fighter, velocity);
 
-	// It faces its opponent when it does not walk (and when it uses a skill)
-	const auto* movement = m_componentPossibleAccessor.get<ska::MovementComponent>(fighter.entity);
-	const auto walking = movement != nullptr && (std::abs(movement->vx) > 0.5F || std::abs(movement->vy) > 0.5F);
-	if ((!walking || fighter.windUp > 0) && fighting) {
-		const auto toOpponent = center(fighter.opponent) - position;
-		auto& animation = m_componentAccessor.get<ska::AnimationComponent>(fighter.entity);
-		animation.state = ska::RectangleUtils::getDirectionFromPos(ska::Point<int>{}, ska::Point<int>{ static_cast<int>(toOpponent.x), static_cast<int>(toOpponent.y) });
+	// It faces its opponent : always during an attack (the direction it committed to), else when it does not walk
+	if (fighting) {
+		if (fighter.windUp > 0 || fighter.lunge > 0 || fighter.recovery > 0) {
+			face(fighter, fighter.attackDirection);
+		} else if (move.x == 0.F && move.y == 0.F) {
+			face(fighter, toOpponent);
+		}
 	}
 }
 
@@ -157,7 +179,6 @@ void FighterSystem::draw(FighterState& fighter) {
 		effect.alpha = static_cast<unsigned char>(255.F * (1.F - progress));
 		effect.scaleX = 1.F + 0.25F * progress;
 		effect.scaleY = 1.F - 0.7F * progress;
-		effect.red = 255;
 		effect.green = static_cast<unsigned char>(255.F * (1.F - 0.5F * progress));
 		effect.blue = static_cast<unsigned char>(255.F * (1.F - 0.5F * progress));
 		return;
@@ -165,19 +186,36 @@ void FighterSystem::draw(FighterState& fighter) {
 
 	if (fighter.flash > 0) {
 		effect.flash = static_cast<unsigned char>(255 * fighter.flash / FlashDuration);
-	} else if (fighter.stun > 0 && (fighter.stun / 70) % 2 == 0) {
-		// Stunned : it blinks red
-		effect.green = 150;
-		effect.blue = 150;
+	} else if (fighter.stun > 0 && (fighter.stun / 60) % 2 == 0) {
+		// Stunned : it blinks
+		effect.alpha = 70;
 	}
 
-	if (fighter.windUp > 0) {
-		// Squashed before the skill (the wind-up)
-		const auto progress = 1.F - static_cast<float>(fighter.windUp) / static_cast<float>(WindUpDuration);
-		effect.scaleX = 1.F + 0.2F * progress;
-		effect.scaleY = 1.F - 0.16F * progress;
+	const auto& direction = fighter.attackDirection;
+	if (fighter.windUp > 0 && fighter.windUpDuration > 0) {
+		// The startup : it crouches and steps back a little (a contact skill takes its run-up)
+		const auto progress = Ease(1.F - static_cast<float>(fighter.windUp) / static_cast<float>(fighter.windUpDuration));
+		effect.scaleX = 1.F + 0.18F * progress;
+		effect.scaleY = 1.F - 0.15F * progress;
+		const auto back = (fighter.contactAttack ? 10.F : 4.F) * progress;
+		effect.offsetX = static_cast<int>(-direction.x * back);
+		effect.offsetY = static_cast<int>(-direction.y * back);
+	} else if (fighter.lunge > 0) {
+		// The headbutt : it lunges forward, stretched
+		const auto progress = 1.F - static_cast<float>(fighter.lunge) / 140.F;
+		const auto forward = 30.F * std::sin(std::min(1.F, progress * 1.6F) * 1.5708F);
+		effect.offsetX = static_cast<int>(direction.x * forward);
+		effect.offsetY = static_cast<int>(direction.y * forward);
+		effect.scaleX = 1.F - 0.1F * std::abs(direction.y) + 0.12F * std::abs(direction.x);
+		effect.scaleY = 1.F + 0.14F * std::abs(direction.y) - 0.06F * std::abs(direction.x);
+	} else if (fighter.recovery > 0 && fighter.recoveryDuration > 0 && fighter.contactAttack) {
+		// The recovery : it comes back where it stands
+		const auto progress = static_cast<float>(fighter.recovery) / static_cast<float>(fighter.recoveryDuration);
+		const auto forward = 30.F * Ease(progress);
+		effect.offsetX = static_cast<int>(direction.x * forward);
+		effect.offsetY = static_cast<int>(direction.y * forward);
 	} else if (fighter.release > 0) {
-		// Stretched when the skill goes
+		// A projectile goes : stretched
 		const auto progress = static_cast<float>(fighter.release) / static_cast<float>(ReleaseDuration);
 		effect.scaleX = 1.F - 0.12F * progress;
 		effect.scaleY = 1.F + 0.16F * progress;
@@ -185,6 +223,12 @@ void FighterSystem::draw(FighterState& fighter) {
 }
 
 void FighterSystem::refresh(unsigned int ellapsedTime) {
+	if (m_received) {
+		m_toggles = m_receivedToggles;
+		m_receivedToggles.reset();
+		m_received = false;
+	}
+
 	const auto& processed = getEntities();
 	// The battle is over : the keys move the Pokemon again (its input goes back to the trainer)
 	if (m_stage.phase() == BattlePhase::Over && m_playerPower >= 0.F) {
@@ -197,7 +241,7 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 		if (processed.find(fighter->entity) == processed.end() || processed.find(fighter->opponent) == processed.end()) {
 			continue;
 		}
-		if (m_stage.phase() != BattlePhase::Intro) {
+		if (m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
 			control(*fighter, ellapsedTime);
 		}
 		draw(*fighter);
