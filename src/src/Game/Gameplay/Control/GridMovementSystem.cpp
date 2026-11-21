@@ -64,11 +64,16 @@ std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId ent
 	// On a block, the physics shape of the character is at the center of the block (it does not touch the walls on the
 	// edges of the block, ex : the water, that starts surfing when touched)
 	auto& space = m_worldState.getSpace();
-	const auto shape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
-	const auto inset = ska::Point<float>{ std::round((blockSize - static_cast<float>(shape.r - shape.l)) / 2.F), std::round((blockSize - static_cast<float>(shape.t - shape.b)) / 2.F) };
+	// The shape box comes from the position (the physics shape follows it one physics step late while walking) :
+	// the shape is built at the center of the block whose corner is the position (CustomEntityManager)
+	const auto physicsShape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+	const auto shapeSize = ska::Point<float>{ static_cast<float>(std::round(physicsShape.r - physicsShape.l)), static_cast<float>(std::round(physicsShape.t - physicsShape.b)) };
+	const auto shapeLeft = static_cast<float>(position.x) + std::floor((blockSize - shapeSize.x) / 2.F);
+	const auto shapeBottom = static_cast<float>(position.y) + std::floor((blockSize - shapeSize.y) / 2.F);
+	const auto shape = cpBBNew(shapeLeft, shapeBottom, shapeLeft + shapeSize.x, shapeBottom + shapeSize.y);
 	// From the block it is on, to the next one
-	const auto block = ska::Point<float>{ std::round((position.x - inset.x) / blockSize), std::round((position.y - inset.y) / blockSize) };
-	const auto target = ska::Point<float>{ (block.x + vector.x) * blockSize + inset.x, (block.y + vector.y) * blockSize + inset.y };
+	const auto block = ska::Point<float>{ std::round(static_cast<float>(position.x) / blockSize), std::round(static_cast<float>(position.y) / blockSize) };
+	const auto target = ska::Point<float>{ (block.x + vector.x) * blockSize, (block.y + vector.y) * blockSize };
 	const auto shift = ska::Point<float>{ target.x - static_cast<float>(position.x), target.y - static_cast<float>(position.y) };
 	const auto margin = 4.;
 	const auto targetBox = cpBBNew(shape.l + shift.x + margin, shape.b + shift.y + margin, shape.r + shift.x - margin, shape.t + shift.y - margin);
@@ -127,19 +132,22 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 	}
 	for (const auto entity : getEntities()) {
 		auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
-		auto& input = m_componentAccessor.get<ska::InputComponent>(entity);
+		auto* input = m_componentPossibleAccessor.get<ska::InputComponent>(entity);
+		const auto keys = grid.mode == GridMovementComponent::Mode::Keys;
 
 		// The power of the normal walk is kept, the free movement of the keys is disabled
 		auto* mode = m_componentPossibleAccessor.get<MovementModeComponent>(entity);
-		if (mode == nullptr) {
-			auto saved = MovementModeComponent{};
-			saved.walkPower = input.movePower;
-			saved.jumpPower = input.jumpPower;
-			m_entities.addComponent<MovementModeComponent>(entity, std::move(saved));
-		} else if (input.movePower > 0.F && mode->walkPower == 0.F) {
-			mode->walkPower = input.movePower;
+		if (keys && input != nullptr) {
+			if (mode == nullptr) {
+				auto saved = MovementModeComponent{};
+				saved.walkPower = input->movePower;
+				saved.jumpPower = input->jumpPower;
+				m_entities.addComponent<MovementModeComponent>(entity, std::move(saved));
+			} else if (input->movePower > 0.F && mode->walkPower == 0.F) {
+				mode->walkPower = input->movePower;
+			}
+			input->movePower = 0.F;
 		}
-		input.movePower = 0.F;
 
 		// Moved by a script
 		if (m_componentPossibleAccessor.get<ska::IADefinedMovementComponent>(entity) != nullptr) {
@@ -178,7 +186,12 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			place(entity, grid.to, { vector.x * speed, vector.y * speed });
 		}
 
-		startStep(entity, grid, locked, running, ellapsedTime, finished);
+		if (!keys) {
+			startAutomaticStep(entity, grid, ellapsedTime, finished);
+		} else if (input != nullptr) {
+			// Without InputComponent (disabled, ex : during a cutscene), the player does not move
+			startStep(entity, grid, locked, running, ellapsedTime, finished);
+		}
 		if (finished && !grid.stepping) {
 			place(entity, grid.to, {});
 		}
@@ -212,17 +225,20 @@ void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& 
 	animation.state = direction;
 
 	m_bumped = false;
+	if (!step(entity, grid, direction, running ? RunStep : WalkStep) && m_bumped) {
+		// Against a wall : the character pushes it (the physics touches it : ex the water, to surf)
+		const auto vector = DirectionVector(direction);
+		auto& force = m_componentAccessor.get<ska::ForceComponent>(entity);
+		const auto speed = static_cast<float>(m_worldState.getWorld().getBlockSize()) * 1000.F / static_cast<float>(WalkStep);
+		force.x = vector.x * speed / 10.F;
+		force.y = vector.y * speed / 10.F;
+	}
+}
+
+bool GridMovementSystem::step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration) {
 	const auto target = nextBlock(entity, direction);
 	if (!target.has_value()) {
-		// Against a wall : the character pushes it (the physics touches it : ex the water, to surf)
-		if (m_bumped) {
-			const auto vector = DirectionVector(direction);
-			auto& force = m_componentAccessor.get<ska::ForceComponent>(entity);
-			const auto speed = static_cast<float>(m_worldState.getWorld().getBlockSize()) * 1000.F / static_cast<float>(WalkStep);
-			force.x = vector.x * speed / 10.F;
-			force.y = vector.y * speed / 10.F;
-		}
-		return;
+		return false;
 	}
 	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
 	grid.stepping = true;
@@ -230,5 +246,43 @@ void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& 
 	grid.from = { static_cast<float>(position.x), static_cast<float>(position.y) };
 	grid.to = *target;
 	grid.elapsed = 0;
-	grid.duration = running ? RunStep : WalkStep;
+	grid.duration = duration;
+	return true;
+}
+
+void GridMovementSystem::startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking) {
+	// A wandering character waits between its steps, a path is walked without stopping (it waits at the end of a loop)
+	if (grid.wait > ellapsedTime) {
+		grid.wait -= ellapsedTime;
+		return;
+	}
+	grid.wait = 0;
+	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
+	if (grid.mode == GridMovementComponent::Mode::Path) {
+		if (grid.path.empty()) {
+			return;
+		}
+		const auto direction = grid.path[grid.pathIndex % grid.path.size()];
+		grid.facing = direction;
+		animation.state = direction;
+		if (step(entity, grid, direction, WalkStep)) {
+			grid.pathIndex = (grid.pathIndex + 1) % grid.path.size();
+			if (grid.pathIndex == 0) {
+				grid.wait = 1000;
+			}
+		} else {
+			// The way is not free : it waits and tries again
+			grid.wait = 500;
+		}
+		return;
+	}
+
+	// Wander : turns to a random direction, sometimes walks
+	const auto direction = static_cast<int>(std::uniform_int_distribution<int>{ 0, 3 }(m_random));
+	grid.facing = direction;
+	animation.state = direction;
+	if (std::uniform_int_distribution<int>{ 0, 2 }(m_random) > 0) {
+		step(entity, grid, direction, WalkStep);
+	}
+	grid.wait = static_cast<unsigned int>(std::uniform_int_distribution<int>{ 1000, 3000 }(m_random));
 }

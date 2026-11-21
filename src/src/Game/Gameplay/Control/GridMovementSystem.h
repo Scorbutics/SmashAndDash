@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 #include "Core/ECS/System.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
@@ -26,7 +27,7 @@ protected:
 	void refresh(unsigned int) override {}
 };
 
-// Movement of the player on the map, block by block (as the classic Pokemon games) :
+// Movement of the characters on the map, block by block (as the classic Pokemon games). The player (mode Keys) :
 // - 4 directions : holding a key walks one block after another (a step : WalkStep ms, RunStep ms when running : the run key,
 //   or the "run" movement mode), a short press towards another direction only turns the character
 // - a step starts only when the next block is practicable and free (no character on it, nor going to it) : nothing is pushed
@@ -34,9 +35,11 @@ protected:
 // The free movement of the keys (InputSystem) is disabled for these characters (their move power is 0 on the map : the
 // power of their normal walk is kept by MovementModeComponent, ex : for the battles). Characters moved by a script
 // (IADefinedMovementComponent) or without InputComponent (ex : disabled during a cutscene) do not take steps.
+// The other characters wander (random steps after random waits) or walk a path, with the same rules (they wait when the
+// next block is not free).
 class GridMovementSystem :
-	public ska::System<ska::RequiredComponent<GridMovementComponent, ska::InputComponent, ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent>,
-		ska::PossibleComponent<ska::IADefinedMovementComponent, MovementModeComponent>>,
+	public ska::System<ska::RequiredComponent<GridMovementComponent, ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent>,
+		ska::PossibleComponent<ska::IADefinedMovementComponent, MovementModeComponent, ska::InputComponent>>,
 	public ska::SubObserver<ska::InputKeyEvent> {
 public:
 	static constexpr unsigned int WalkStep = 250;
@@ -59,6 +62,9 @@ private:
 	void place(ska::EntityId entity, ska::Point<float> position, ska::Point<float> velocity);
 	// Turns or starts a step towards the direction held
 	void startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking);
+	// The next step of a character not controlled by the player (wander, path)
+	void startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking);
+	bool step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration);
 
 	ska::EntityManager& m_entities;
 	WorldState& m_worldState;
@@ -68,4 +74,5 @@ private:
 	// The last step was refused by a wall (not a character)
 	mutable bool m_bumped = false;
 	BlockOccupants m_occupants;
+	std::mt19937 m_random { std::random_device{}() };
 };

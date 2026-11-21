@@ -9,6 +9,8 @@
 #include "Core/ECS/EntityManager.h"
 #include "Base/Patterns/Observable.h"
 #include "Graphic/System/CameraSystem.h"
+#include "Graphic/GraphicComponent.h"
+#include <cmath>
 #include "Core/Draw/Renderer.h"
 
 Bar::Bar(ska::CameraSystem& cam, const std::string& barStyleName, const std::string& barContentName, int maxValue, ska::EntityManager& em, const ska::EntityId& entityId) :
@@ -38,7 +40,14 @@ void Bar::render(ska::Renderer& renderer) const {
 
 	const auto& camera = m_cameraSystem.getDisplay();
 
-	const ska::PositionComponent& pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);
+	auto pos = m_entityManager.getComponent<ska::PositionComponent>(m_entityId);
+	// Drawn over the sprite : between the logic positions, as the sprite (ska::FrameClock)
+	if (m_entityManager.hasComponent<ska::GraphicComponent>(m_entityId)) {
+		const auto drawn = m_entityManager.getComponent<ska::GraphicComponent>(m_entityId).drawnPosition(pos);
+		pos.x = static_cast<long>(std::lround(drawn.x));
+		pos.y = static_cast<long>(std::lround(drawn.y));
+		pos.z = static_cast<long>(std::lround(drawn.z));
+	}
 	const int offsetY = - pos.z;
 
 	renderer.render(m_barStyle, pos.x - camera.x, pos.y + offsetY - camera.y, nullptr);

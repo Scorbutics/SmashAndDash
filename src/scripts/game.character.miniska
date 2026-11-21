@@ -28,11 +28,11 @@ place = function(entity: int, x: int, y: int) do end
 # Removes an entity from the map
 remove = function(entity: int) do end
 
-# The character walks around randomly
+# The character walks around randomly, block by block : it waits 1 to 3 seconds, turns, and often takes a step
 wander = function(entity: int) do end
 
 # The character walks along a path, again and again : one block for each letter ("b" : down, "d" : right, "h" : up,
-# "g" : left. Ex : "bdhg")
+# "g" : left. Ex : "bdhg"). It waits 1 second at the end of the path, and while the next block is not free
 patrol = function(entity: int, path: string) do end
 
 # Movement mode of a character controlled by the player : "walk" (normal), "run" (faster), "locked" (it does not move nor

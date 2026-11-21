@@ -20,10 +20,10 @@
 #include "Core/Utils/SkaConstants.h"
 #include "Graphic/GraphicComponent.h"
 #include "AI/IADefinedMovementComponent.h"
-#include "AI/IARandomMovementComponent.h"
 #include "AI/IAFollowComponent.h"
 #include "Core/ECS/Basics/Input/InputComponent.h"
 #include "../Gameplay/Control/MovementModeComponent.h"
+#include "../Gameplay/Control/GridMovementComponent.h"
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../Gameplay/Data/EntityLoadEvent.h"
@@ -280,13 +280,15 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 
 	m_builder.bindField("wander", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(handles, entityManager, params[0]);
-		auto randomMovement = ska::IARandomMovementComponent{};
-		randomMovement.delay = 500;
-		entityManager.addComponent<ska::IARandomMovementComponent>(entity, std::move(randomMovement));
+		// Block by block : random steps after random waits (Gameplay/Control/GridMovementSystem)
+		auto grid = GridMovementComponent{};
+		grid.mode = GridMovementComponent::Mode::Wander;
+		grid.wait = 1000;
+		entityManager.addComponent<GridMovementComponent>(entity, std::move(grid));
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("patrol", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("patrol", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(handles, entityManager, params[0]);
 		// Path letters : "b" down, "d" right, "h" up, "g" left
 		auto directions = std::vector<int>{};
@@ -300,16 +302,11 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		if (directions.empty()) {
 			return ska::NodeValue{};
 		}
-		auto definedMovement = ska::IADefinedMovementComponent{};
-		definedMovement.origin = CenterPosition(entityManager, entity);
-		definedMovement.loop = true;
-		definedMovement.delay = 1000;
-		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
-		for (const auto direction : directions) {
-			const auto force = ska::PhysicUtils::getMovement(direction, blockSize);
-			definedMovement.directions.push_back(ska::Point<int>::cartesian(static_cast<int>(force.power), force.angle));
-		}
-		entityManager.addComponent<ska::IADefinedMovementComponent>(entity, std::move(definedMovement));
+		// Block by block, in a loop : it waits when the way is not free (Gameplay/Control/GridMovementSystem)
+		auto grid = GridMovementComponent{};
+		grid.mode = GridMovementComponent::Mode::Path;
+		grid.path = std::move(directions);
+		entityManager.addComponent<GridMovementComponent>(entity, std::move(grid));
 		return ska::NodeValue{};
 	});
 

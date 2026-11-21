@@ -70,6 +70,15 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 	return PrefabEntityManager::createCharacter(startBlockPos, id, worldBlockSize, name);
 }
 
+namespace {
+	// The physics shape of a character : at the center of a block when its position is on the corner of the block (as
+	// placed by the maps and the teleports) : on the blocks, it does not touch the walls on their edges
+	ska::Rectangle PhysicsBox(const ska::HitboxComponent& hitbox) {
+		constexpr auto blockSize = 48;
+		return { (blockSize - static_cast<int>(hitbox.width)) / 2, (blockSize - static_cast<int>(hitbox.height)) / 2, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) };
+	}
+}
+
 void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction, float rotationFriction) {
 	const auto& hasBeenCreated = em.hasComponent<ska::cp::HitboxComponent>(character);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
@@ -81,7 +90,7 @@ void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space&
 		hitbox.yOffset += hitbox.height;
 	}
 
-	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
+	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, PhysicsBox(hitbox), fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, bc, friction * 50, rotationFriction * 30);
 	
 	hitbox.yOffset -= hitbox.height;
@@ -125,7 +134,7 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
 
-	auto bc = ska::cp::BuildRectangleHitbox(space, point, { hitbox.xOffset, hitbox.yOffset, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) }, fc.weight, character);
+	auto bc = ska::cp::BuildRectangleHitbox(space, point, PhysicsBox(hitbox), fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, bc, DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
 
 	hitbox.yOffset -= hitbox.height;
