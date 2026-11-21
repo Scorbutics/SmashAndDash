@@ -14,5 +14,10 @@ include_directories(src)
 add_library(smash_and_dash SHARED ${SOURCES})
 set_target_properties(smash_and_dash PROPERTIES OUTPUT_NAME Game)
 add_dependencies(smash_and_dash ska_main)
-set(TARGET_LIBS skalog skabase ska_ai ska_audio ska_core ska_draw ska_gui ska_particle ska_physic_chipmunk ska_script ska_world)
+set(TARGET_LIBS skalog skabase ska_ai ska_audio ska_core ska_draw ska_gui ska_particle ska_physic_chipmunk ska_script ska_scripting ska_world)
 target_link_libraries(smash_and_dash ${TARGET_LIBS})
+
+# The game bindings script templates are deployed with the skalang standard library ones (in "std", next to the executables)
+add_custom_command(TARGET smash_and_dash POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/scripts ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/std
+	COMMENT "Deploying the game script templates")

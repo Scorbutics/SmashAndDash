@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "Core/ECS/Basics/Script/ScriptSleepComponent.h"
 
 struct DialogEvent {
@@ -15,5 +16,7 @@ struct DialogEvent {
 	const ska::Rectangle box;
 	ska::ScriptSleepComponent callback;
 	bool callbackActive = false;
+	// Called once the dialog is closed by the player (ex : resumes the script that shows the message)
+	std::function<void()> onClose;
 	const bool scroll;
 };

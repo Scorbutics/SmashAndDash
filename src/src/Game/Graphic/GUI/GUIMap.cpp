@@ -127,6 +127,7 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, 12);
 		
 		m_dialogScript = de.callbackActive ? de.callback : std::optional<ska::ScriptSleepComponent>{};
+		m_dialogClosed = de.onClose;
 
         if(de.scroll) {
             dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y), 8)
@@ -141,6 +142,12 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
                               ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
                               ge.windowName = static_cast<DialogMenu&>(caller).getName();
                               m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+
+							  if (m_dialogClosed) {
+								  auto dialogClosed = std::move(m_dialogClosed);
+								  m_dialogClosed = {};
+								  dialogClosed();
+							  }
 
 							  if (m_dialogScript.has_value()) {
 								  /* triggers callback */

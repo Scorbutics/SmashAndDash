@@ -52,4 +52,5 @@ private:
 	//Debug
 	ska::DebugWindow m_dbgWindow;
 	std::optional<ska::ScriptSleepComponent> m_dialogScript;
+	std::function<void()> m_dialogClosed;
 };
