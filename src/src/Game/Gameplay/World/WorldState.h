@@ -17,6 +17,7 @@
 #include "Base/Patterns/SubObserver.h"
 #include "Graphic/Polygon.h"
 #include "Core/ECS/EntityLocator.h"
+#include "Scripting/EntityHandles.h"
 
 namespace ska {
 	namespace scripting {
@@ -57,6 +58,8 @@ public:
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 
 	const ska::EntityLocator& getEntityLocator() const;
+	// The entities given to the scripts (handles)
+	const ska::scripting::EntityHandles& getEntityHandles() const { return m_entityHandles; }
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
 	ska::cp::Space& getSpace();
@@ -98,6 +101,7 @@ private:
 	ska::WalkAnimationStateMachine* m_walkASM = nullptr;
 	
 	ska::EntityLocator m_entityLocator;
+	ska::scripting::EntityHandles m_entityHandles;
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
 	ska::TilesetPtr m_tileset;

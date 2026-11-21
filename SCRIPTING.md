@@ -30,6 +30,15 @@ The script templates in `src/scripts` declare these functions, with comments. Th
 
 Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `heal`, `shake`, `crumbling`, `follow`, `hideInterface`, `pokemonOut` and `shop`.
 
+## Entities
+
+Entities are `int` handles (`Engine.origin()`, `Engine.entity(name)`, `Character.addCharacter`...). A handle of a removed entity (ex: after a map change) is not valid anymore: using it stops the script with an error, even when the engine reuses the entity for another character. `Engine.exists(entity)` tests a handle. `-1` means "no entity".
+
+## Engine events and engine calls
+
+- Hooks: `Engine.on("event", function(entity: int) do ... end)` calls the function each time the game emits the event (it runs as a script: it can wait). `Engine.removeHook(id)` removes it. The game declares its events (`ScriptVM::declareEvent`): an unknown event is an error.
+- The game can ask a script for a value (ex: a formula): `ScriptVM::call<long>(file, function, arguments)`. Such a function cannot wait.
+
 ## Shared script modules
 
 - `Levels/dialog.miniska`: `Dialog.say(text)`. The player cannot move during the message, and only one dialog runs at a time.

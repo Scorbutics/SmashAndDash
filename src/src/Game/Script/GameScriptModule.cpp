@@ -5,6 +5,7 @@
 #include <fstream>
 #include <optional>
 #include "Scripting/ScriptVM.h"
+#include "Scripting/EntityHandles.h"
 #include "Base/IO/Readers/IniReader.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
@@ -33,12 +34,13 @@
 #include "../Gameplay/World/WorldState.h"
 
 namespace {
-	ska::EntityId Entity(ska::EntityManager& entityManager, const ska::NodeValue& value) {
-		const auto entity = value.nodeval<long>();
-		if (entity < 0 || !entityManager.hasComponent<ska::PositionComponent>(static_cast<ska::EntityId>(entity))) {
-			throw std::runtime_error("invalid entity : " + std::to_string(entity));
+	// Entity of a script entity handle (an error when the entity was removed)
+	ska::EntityId Entity(const ska::scripting::EntityHandles& handles, ska::EntityManager& entityManager, const ska::NodeValue& value) {
+		const auto entity = handles.entity(value.nodeval<long>());
+		if (!entityManager.hasComponent<ska::PositionComponent>(entity)) {
+			throw std::runtime_error("the entity " + std::to_string(value.nodeval<long>()) + " has no position");
 		}
-		return static_cast<ska::EntityId>(entity);
+		return entity;
 	}
 
 	int Int(const ska::NodeValue& value) {
@@ -135,9 +137,10 @@ DialogScriptModule::DialogScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	GameScriptModule(vm, "character") {
 	(void) ged;
+	const auto& handles = worldState.getEntityHandles();
 
-	m_builder.bindField("move", [&vm, &entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("move", [&vm, &entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		const auto direction = Int(params[1]);
 		const auto distance = static_cast<float>(Int(params[2]));
 		const auto ghost = params[3].nodeval<bool>();
@@ -174,13 +177,13 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("jump", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("jump", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		Require<ska::MovementComponent>(entityManager, entity, "jump").vz = static_cast<float>(Int(params[1]));
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("addCharacter", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("addCharacter", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
 		auto& space = worldState.getSpace();
 		const auto& world = worldState.getWorld();
 		const auto character = CustomEntityManager::createCharacterNG(entityManager, space, ska::Point<int>{ Int(params[1]), Int(params[2]) },
@@ -199,11 +202,11 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 			}
 			entityManager.addComponent<ska::ScriptSleepComponent>(character, std::move(sleeping));
 		}
-		return ska::NodeValue{ static_cast<long>(character) };
+		return ska::NodeValue{ handles.handle(character) };
 	});
 
-	m_builder.bindField("playAnimation", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("playAnimation", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		if (!entityManager.hasComponent<ska::HitboxComponent>(entity) || !entityManager.hasComponent<ska::GraphicComponent>(entity)) {
 			return ska::NodeValue{};
 		}
@@ -230,48 +233,48 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("direction", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("direction", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(Require<ska::AnimationComponent>(entityManager, entity, "have a direction").state) };
 	});
 
-	m_builder.bindField("setDirection", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("setDirection", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		Require<ska::AnimationComponent>(entityManager, entity, "have a direction").state = params[1].nodeval<long>();
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("setLayer", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("setLayer", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		entityManager.getComponent<ska::PositionComponent>(entity).layer = static_cast<std::size_t>(std::max(0, Int(params[1])));
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("place", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("place", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
 		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ Int(params[1]) * blockSize, Int(params[2]) * blockSize });
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("remove", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("remove", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		// Removing the entity does not remove its physics body : the body is moved away from the map
 		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ -100000.F, -100000.F });
 		entityManager.removeEntity(entity);
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("wander", [&entityManager](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("wander", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		auto randomMovement = ska::IARandomMovementComponent{};
 		randomMovement.delay = 500;
 		entityManager.addComponent<ska::IARandomMovementComponent>(entity, std::move(randomMovement));
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("patrol", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(entityManager, params[0]);
+	m_builder.bindField("patrol", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
 		// Path letters : "b" down, "d" right, "h" up, "g" left
 		auto directions = std::vector<int>{};
 		for (const auto letter : String(params[1])) {
@@ -304,6 +307,7 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 
 MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	GameScriptModule(vm, "map") {
+	const auto& handles = worldState.getEntityHandles();
 
 	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
 		const auto& world = worldState.getWorld();
@@ -319,15 +323,15 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("blockX", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("blockX", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
 		const auto& world = worldState.getWorld();
-		const auto entity = Entity(entityManager, params[0]);
+		const auto entity = Entity(handles, entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).x / world.getBlockSize()) };
 	});
 
-	m_builder.bindField("blockY", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("blockY", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
 		const auto& world = worldState.getWorld();
-		const auto entity = Entity(entityManager, params[0]);
+		const auto entity = Entity(handles, entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).y / world.getBlockSize()) };
 	});
 

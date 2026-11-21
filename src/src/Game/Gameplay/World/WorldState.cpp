@@ -70,6 +70,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_eventDispatcher(ed),
 	m_entityManager(em),
 	m_entityLocator(ed),
+	m_entityHandles(ed),
 	m_correspondanceMapper("Resources/Chipsets/corr.png"),
 	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
@@ -77,7 +78,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_debugDrawer(ed, em, m_entityLocator, m_tileset->getTileSize()) {
 
 	m_scripts = std::make_unique<ska::scripting::ScriptVM>();
-	m_engineScriptModule = std::make_unique<ska::scripting::EngineModule>(*m_scripts, m_entityManager, m_entityLocator, &m_saveManager);
+	m_engineScriptModule = std::make_unique<ska::scripting::EngineModule>(*m_scripts, m_entityManager, m_entityLocator, m_entityHandles, &m_saveManager);
 	// Scripts can hide a character (Engine.disableComponent(character, "GraphicComponent"))
 	m_engineScriptModule->registerComponent<ska::GraphicComponent>("GraphicComponent");
 	m_gameScriptModules = std::make_unique<GameScriptModules>(*m_scripts, m_entityManager, m_eventDispatcher, *this);
