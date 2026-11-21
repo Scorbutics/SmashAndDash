@@ -2,6 +2,7 @@
 #include "AI/System/IARandomMovementSystem.h"
 #include "AI/System/IADefinedMovementSystem.h"
 #include "AI/System/IAFollowSystem.h"
+#include "../Control/GridMovementSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../Fight/System/FightStartSystem.h"
@@ -42,6 +43,8 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::IAFollowSystem>(m_entityManager));
+	// The player moves block by block on the map
+	addLogic(std::make_unique<GridMovementSystem>(m_entityManager, m_eventDispatcher, m_worldState));
 	m_itemShortcuts = std::make_unique<ItemShortcuts>(m_eventDispatcher, m_worldState);
 	m_inputHooks = std::make_unique<InputHooks>(m_eventDispatcher, m_worldState);
 
@@ -59,6 +62,15 @@ void StateMap::beforeLoad(ska::State* lastState) {
 
 void StateMap::afterLoad(ska::State * lastState){
 	m_worldState.reinit(m_fileName, m_tilesetName);
+	// The player moves block by block on the map (GridMovementSystem)
+	if (auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER); trainer != nullptr) {
+		// A new map : no step in progress (ex : a step interrupted by a cutscene that teleported the player)
+		auto grid = GridMovementComponent{};
+		if (m_entityManager.hasComponent<GridMovementComponent>(*trainer)) {
+			grid.facing = m_entityManager.getComponent<GridMovementComponent>(*trainer).facing;
+		}
+		m_entityManager.addComponent<GridMovementComponent>(*trainer, std::move(grid));
+	}
 	// The interface of the map shows the bag
 	m_worldState.getBag().notify();
 	if (m_trainerPosition.has_value()) {

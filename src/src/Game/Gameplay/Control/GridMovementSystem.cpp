@@ -1,0 +1,234 @@
+#include "Game/__internalConfig/LoggerConfig.h"
+#include "GridMovementSystem.h"
+#include <cmath>
+#include <algorithm>
+#include "Core/Inputs/InputContextManager.h"
+#include "Core/ECS/Basics/Physic/CollidableComponent.h"
+#include "World/TileWorld.h"
+#include "World/CollisionProfile.h"
+#include <chipmunk/chipmunk.h>
+#include "Physic/Space.h"
+#include "Physic/Body.h"
+#include "Physic/Vect.h"
+#include "../World/WorldState.h"
+#include "../CustomEntityManager.h"
+
+namespace {
+	// 0 : down, 1 : right, 2 : up, 3 : left
+	ska::Point<float> DirectionVector(int direction) {
+		switch (direction) {
+		case 0: return { 0.F, 1.F };
+		case 1: return { 1.F, 0.F };
+		case 2: return { 0.F, -1.F };
+		default: return { -1.F, 0.F };
+		}
+	}
+}
+
+GridMovementSystem::GridMovementSystem(ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	System(entityManager),
+	SubObserver<ska::InputKeyEvent>(std::bind(&GridMovementSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
+	m_entities(entityManager),
+	m_worldState(worldState),
+	m_occupants(entityManager) {
+}
+
+bool GridMovementSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
+	// Several input contexts send their keys (map, interface) : the keys held are the ones of any of them since the last frame
+	m_receivedToggles |= event.icm.getToggles();
+	m_received = true;
+	return true;
+}
+
+int GridMovementSystem::heldDirection(int facing) const {
+	const ska::InputToggle keys[] = { ska::MoveDown, ska::MoveRight, ska::MoveUp, ska::MoveLeft };
+	if (facing >= 0 && facing < 4 && m_toggles[keys[facing]]) {
+		return facing;
+	}
+	for (auto direction = 0; direction < 4; direction++) {
+		if (m_toggles[keys[direction]]) {
+			return direction;
+		}
+	}
+	return -1;
+}
+
+std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId entity, int direction) const {
+	const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+	const auto& position = m_entities.getComponent<ska::PositionComponent>(entity);
+	const auto vector = DirectionVector(direction);
+	if (!m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		return ska::Point<float>{ std::round(position.x / blockSize) * blockSize + vector.x * blockSize, std::round(position.y / blockSize) * blockSize + vector.y * blockSize };
+	}
+
+	// On a block, the physics shape of the character is at the center of the block (it does not touch the walls on the
+	// edges of the block, ex : the water, that starts surfing when touched)
+	auto& space = m_worldState.getSpace();
+	const auto shape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+	const auto inset = ska::Point<float>{ std::round((blockSize - static_cast<float>(shape.r - shape.l)) / 2.F), std::round((blockSize - static_cast<float>(shape.t - shape.b)) / 2.F) };
+	// From the block it is on, to the next one
+	const auto block = ska::Point<float>{ std::round((position.x - inset.x) / blockSize), std::round((position.y - inset.y) / blockSize) };
+	const auto target = ska::Point<float>{ (block.x + vector.x) * blockSize + inset.x, (block.y + vector.y) * blockSize + inset.y };
+	const auto shift = ska::Point<float>{ target.x - static_cast<float>(position.x), target.y - static_cast<float>(position.y) };
+	const auto margin = 4.;
+	const auto targetBox = cpBBNew(shape.l + shift.x + margin, shape.b + shift.y + margin, shape.r + shift.x - margin, shape.t + shift.y - margin);
+
+	// The walls of the map (the same as the physics) : on the way from the block to the next one (some walls are thin lines
+	// on the edges of the blocks), the sides excepted (the walls along the way)
+	const auto sweptBox = cpBBNew(std::min(shape.l, shape.l + shift.x) + margin, std::min(shape.b, shape.b + shift.y) + margin,
+		std::max(shape.r, shape.r + shift.x) - margin, std::max(shape.t, shape.t + shift.y) - margin);
+	if (space.staticShapeIn(sweptBox)) {
+		m_bumped = true;
+		return {};
+	}
+
+	// No other character there, nor going there
+	for (const auto other : m_occupants.getEntities()) {
+		if (other == entity) {
+			continue;
+		}
+		const auto otherShape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(other).shapeIndex);
+		if (cpBBIntersects(targetBox, otherShape)) {
+			return {};
+		}
+		if (m_entities.hasComponent<GridMovementComponent>(other)) {
+			const auto& otherGrid = m_entities.getComponent<GridMovementComponent>(other);
+			const auto& otherPosition = m_entities.getComponent<ska::PositionComponent>(other);
+			if (otherGrid.stepping) {
+				const auto otherShift = ska::Point<float>{ otherGrid.to.x - static_cast<float>(otherPosition.x), otherGrid.to.y - static_cast<float>(otherPosition.y) };
+				if (cpBBIntersects(targetBox, cpBBNew(otherShape.l + otherShift.x, otherShape.b + otherShift.y, otherShape.r + otherShift.x, otherShape.t + otherShift.y))) {
+					return {};
+				}
+			}
+		}
+	}
+	return target;
+}
+
+void GridMovementSystem::place(ska::EntityId entity, ska::Point<float> position, ska::Point<float> velocity) {
+	CustomEntityManager::place(m_entities, m_worldState.getSpace(), entity, position);
+	// The physics body moves at the speed of the step (the walk animation follows the movement)
+	auto& force = m_entities.getComponent<ska::ForceComponent>(entity);
+	force.x = velocity.x / 10.F;
+	force.y = velocity.y / 10.F;
+	if (velocity.x == 0.F && velocity.y == 0.F && m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& body = m_entities.getComponent<ska::cp::HitboxComponent>(entity);
+		auto& space = m_worldState.getSpace();
+		space.getBody(body.bodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+		space.getBody(body.controlBodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+	}
+}
+
+void GridMovementSystem::refresh(unsigned int ellapsedTime) {
+	if (m_received) {
+		m_toggles = m_receivedToggles;
+		m_receivedToggles.reset();
+		m_received = false;
+	}
+	for (const auto entity : getEntities()) {
+		auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
+		auto& input = m_componentAccessor.get<ska::InputComponent>(entity);
+
+		// The power of the normal walk is kept, the free movement of the keys is disabled
+		auto* mode = m_componentPossibleAccessor.get<MovementModeComponent>(entity);
+		if (mode == nullptr) {
+			auto saved = MovementModeComponent{};
+			saved.walkPower = input.movePower;
+			saved.jumpPower = input.jumpPower;
+			m_entities.addComponent<MovementModeComponent>(entity, std::move(saved));
+		} else if (input.movePower > 0.F && mode->walkPower == 0.F) {
+			mode->walkPower = input.movePower;
+		}
+		input.movePower = 0.F;
+
+		// Moved by a script
+		if (m_componentPossibleAccessor.get<ska::IADefinedMovementComponent>(entity) != nullptr) {
+			grid.stepping = false;
+			continue;
+		}
+
+		const auto locked = mode != nullptr && mode->mode == "locked";
+		const auto running = (mode != nullptr && mode->mode == "run") || m_toggles[ska::Run];
+		const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+
+		auto finished = false;
+		// Moved away from its step by something else (ex : a script placing it while the keys were disabled) : no step
+		if (grid.stepping) {
+			const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+			const auto distanceFrom = std::abs(static_cast<float>(position.x) - grid.from.x) + std::abs(static_cast<float>(position.y) - grid.from.y);
+			const auto distanceTo = std::abs(static_cast<float>(position.x) - grid.to.x) + std::abs(static_cast<float>(position.y) - grid.to.y);
+			if (distanceFrom > blockSize * 1.5F && distanceTo > blockSize * 1.5F) {
+				grid.stepping = false;
+			}
+		}
+
+		if (grid.stepping) {
+			grid.elapsed += ellapsedTime;
+			const auto progress = std::min(1.F, static_cast<float>(grid.elapsed) / static_cast<float>(grid.duration));
+			const auto speed = blockSize * 1000.F / static_cast<float>(grid.duration);
+			const auto vector = DirectionVector(grid.stepDirection);
+			if (progress < 1.F) {
+				const auto position = ska::Point<float>{ grid.from.x + (grid.to.x - grid.from.x) * progress, grid.from.y + (grid.to.y - grid.from.y) * progress };
+				place(entity, position, { vector.x * speed, vector.y * speed });
+				continue;
+			}
+			// On the block : the next step starts right away when the key is still held (no stop between the blocks)
+			grid.stepping = false;
+			finished = true;
+			place(entity, grid.to, { vector.x * speed, vector.y * speed });
+		}
+
+		startStep(entity, grid, locked, running, ellapsedTime, finished);
+		if (finished && !grid.stepping) {
+			place(entity, grid.to, {});
+		}
+	}
+}
+
+void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking) {
+	const auto direction = locked ? -1 : heldDirection(grid.facing);
+	if (direction < 0) {
+		grid.turning = false;
+		grid.heldTime = 0;
+		return;
+	}
+
+	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
+	if (direction != grid.facing) {
+		grid.facing = direction;
+		animation.state = direction;
+		grid.heldTime = 0;
+		// From a stop, a short press only turns ; while walking, it turns and walks
+		if (!walking) {
+			grid.turning = true;
+			return;
+		}
+	}
+	grid.heldTime += ellapsedTime;
+	if (grid.turning && grid.heldTime < TurnDelay) {
+		return;
+	}
+	grid.turning = false;
+	animation.state = direction;
+
+	m_bumped = false;
+	const auto target = nextBlock(entity, direction);
+	if (!target.has_value()) {
+		// Against a wall : the character pushes it (the physics touches it : ex the water, to surf)
+		if (m_bumped) {
+			const auto vector = DirectionVector(direction);
+			auto& force = m_componentAccessor.get<ska::ForceComponent>(entity);
+			const auto speed = static_cast<float>(m_worldState.getWorld().getBlockSize()) * 1000.F / static_cast<float>(WalkStep);
+			force.x = vector.x * speed / 10.F;
+			force.y = vector.y * speed / 10.F;
+		}
+		return;
+	}
+	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+	grid.stepping = true;
+	grid.stepDirection = direction;
+	grid.from = { static_cast<float>(position.x), static_cast<float>(position.y) };
+	grid.to = *target;
+	grid.elapsed = 0;
+	grid.duration = running ? RunStep : WalkStep;
+}

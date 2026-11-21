@@ -26,7 +26,8 @@ enter = function(player: int, direction: int) do
 		Engine.log("surf in")
 	end
 	Character.playAnimation(player, 2)
-	Character.move(player, direction, 40, false)
+	# One block : the player stays on the blocks (it moves block by block on the map)
+	Character.move(player, direction, 48, false)
 	surfing = Map.blockHasProperty(0, Map.blockX(player), Map.blockY(player), Water)
 	Engine.enableComponent(player, "InputComponent")
 	moving = false
