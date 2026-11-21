@@ -1,4 +1,0 @@
-assign %get_entity_id .target%, id
-script ./Levels/trainer_rotation_script.txt, 2000, [id]
-script ./Levels/dialog.txt, 2000, [id], Rouuuu ! Ce message est écrit par script !
-end

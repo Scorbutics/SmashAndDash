@@ -1,3 +1,0 @@
-message -1 Bienvenue au magasin Pokémon !
-shop
-message -1 Merci, au revoir !

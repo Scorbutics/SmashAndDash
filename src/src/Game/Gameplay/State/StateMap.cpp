@@ -3,7 +3,6 @@
 #include "AI/System/IADefinedMovementSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
-#include "../../Script/System/ScriptCommandsSystem.h"
 #include "../Fight/System/FightStartSystem.h"
 #include "Graphic/System/CameraFollowStrategy.h"
 #include "../World/WorldState.h"
@@ -39,19 +38,15 @@ bool StateMap::onGameEvent(ska::GameEvent& ge) {
 void StateMap::beforeLoad(ska::State* lastState) {
 	SLOG(ska::LogLevel::Info) << "State Map initialization";
 
-	auto scriptAutoSys = std::make_unique<ScriptCommandsSystem>(m_entityManager, m_worldState.getEntityLocator(), m_worldState.getWorld(), m_worldState.getSaveGame(), m_eventDispatcher, m_worldState.getSpace());
-	m_scriptAutoSystem = scriptAutoSys.get();
-	addLogic(std::move(scriptAutoSys));
-
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 
 	// The map loading scripts (ex : the characters of the map) start before the positioned ones (ex : a script on the block
 	// where the player arrives)
 	addLogic(std::make_unique<ska::ScriptWorldTriggerSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld()));
-	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld());
+	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld());
 	m_scriptSystem = scriptSystem.get();
-	// skalang scripts : started by the same triggers as the legacy ones
+	// The scripts are skalang scripts
 	m_scriptSystem->addScriptRunner(".miniska", m_worldState.getScriptRunner());
 	addLogic(std::move(scriptSystem));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));

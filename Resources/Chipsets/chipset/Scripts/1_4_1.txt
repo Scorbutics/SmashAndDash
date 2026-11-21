@@ -1,2 +1,0 @@
-script ./Levels/surf.txt, 2000, 1
-end

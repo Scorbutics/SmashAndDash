@@ -1,7 +1,0 @@
-assign [<AnimationComponent.state #arg0#>], direction_perso
-assign %calculate [direction_perso] + 1%, direction_perso
-if [direction_perso] >= 4
-	assign 0, direction_perso
-endif
-assign [direction_perso], <AnimationComponent.state #arg0#>
-wait 500

@@ -8,7 +8,6 @@ class WorldState;
 
 namespace ska {
 	class Window;
-	class ScriptAutoSystem;
 	class ScriptRefreshSystem;
 	class CameraSystem;
 }
@@ -32,7 +31,6 @@ private:
 	WorldState& m_worldState;
 	const std::string m_fileName;
 	std::string m_tilesetName;
-	ska::ScriptAutoSystem* m_scriptAutoSystem = nullptr;
 	ska::ScriptRefreshSystem* m_scriptSystem = nullptr;
 
 	std::optional<ska::Point<int>> m_trainerPosition;
