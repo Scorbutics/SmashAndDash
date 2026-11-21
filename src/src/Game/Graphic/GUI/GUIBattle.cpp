@@ -13,6 +13,7 @@
 #include "Graphic/GraphicComponent.h"
 #include "Graphic/System/CameraSystem.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
+#include "../../Gameplay/Fight/FighterComponent.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Utils/IDs.h"
@@ -97,12 +98,12 @@ void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
 }
 
 void GUIBattle::loadNames() {
-	if (m_namesLoaded || !m_entities.hasComponent<BattleComponent>(m_stage.player.entity) || !m_entities.hasComponent<BattleComponent>(m_stage.opponent.entity)) {
+	if (m_namesLoaded || !m_entities.hasComponent<BattleComponent>(m_stage.player) || !m_entities.hasComponent<BattleComponent>(m_stage.opponent)) {
 		return;
 	}
 	auto index = 0u;
-	for (const auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		const auto& bc = m_entities.getComponent<BattleComponent>(fighter->entity);
+	for (const auto entity : { m_stage.player, m_stage.opponent }) {
+		const auto& bc = m_entities.getComponent<BattleComponent>(entity);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(bc.monster) + ".ini" };
 		m_names[index++] = Upper(data.exists("Description name") ? data.get<std::string>("Description name") : "?");
 	}
@@ -118,6 +119,10 @@ void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer&
 	loadNames();
 	drawables.add(m_groundLayer);
 	drawables.add(m_overlayLayer);
+}
+
+const FighterComponent* GUIBattle::fighter(ska::EntityId entity) const {
+	return m_entities.hasComponent<FighterComponent>(entity) ? &m_entities.getComponent<FighterComponent>(entity) : nullptr;
 }
 
 bool GUIBattle::visible(ska::EntityId fighter) const {
@@ -180,7 +185,8 @@ void GUIBattle::renderArena(ska::Renderer& renderer) const {
 	const auto h = arena.h;
 
 	// Leaving it (fleeing) : the edges turn red
-	const auto leaving = m_stage.player.outside > 0;
+	const auto* player = fighter(m_stage.player);
+	const auto leaving = player != nullptr && player->outside > 0;
 	const auto pulse = static_cast<int>(60.F + 60.F * std::sin(static_cast<float>(m_time) / 120.F));
 	const auto edge = leaving ? ska::Color{ 255, 80, 60, static_cast<uint8_t>(140 + pulse) } : ska::Color{ 255, 255, 255, 150 };
 	const auto floor = leaving ? ska::Color{ 255, 60, 40, 26 } : ska::Color{ 255, 255, 255, 20 };
@@ -216,23 +222,26 @@ void GUIBattle::renderGround(ska::Renderer& renderer) const {
 	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
 
 	// A ring under each fighter : blue for the player, red for the opponent
-	for (const auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		if (!visible(fighter->entity) || (fighter->entity == m_stage.loser && m_stage.phase() != BattlePhase::Fight)) {
+	for (const auto entity : { m_stage.player, m_stage.opponent }) {
+		const auto* state = fighter(entity);
+		if (state == nullptr || !visible(entity) || (entity == m_stage.loser && m_stage.phase() != BattlePhase::Fight)) {
 			continue;
 		}
-		const auto drawn = sprite(fighter->entity);
-		const auto& ring = fighter->player ? m_ringPlayer : m_ringOpponent;
+		const auto drawn = sprite(entity);
+		const auto& ring = state->player ? m_ringPlayer : m_ringOpponent;
 		const auto ringX = drawn.position.x + drawn.width / 2 - static_cast<int>(ring.getWidth()) / 2;
 		const auto ringY = drawn.position.y + drawn.height - static_cast<int>(ring.getHeight()) / 2 - 6;
 		renderer.render(ring, ringX, ringY, nullptr);
 	}
 }
 
-void GUIBattle::renderPanel(ska::Renderer& renderer, const FighterState& fighter, bool left) const {
-	if (!m_entities.hasComponent<BattleComponent>(fighter.entity)) {
+void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left) const {
+	const auto* state = fighter(entity);
+	if (state == nullptr || !m_entities.hasComponent<BattleComponent>(entity)) {
 		return;
 	}
-	const auto& bc = m_entities.getComponent<BattleComponent>(fighter.entity);
+	const auto& fighter = *state;
+	const auto& bc = m_entities.getComponent<BattleComponent>(entity);
 	const auto screen = m_camera.getScreenSize();
 	const auto margin = 14;
 	const auto width = std::min(440, screen.x / 2 - 70);
@@ -292,10 +301,11 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, const FighterState& fighter
 }
 
 void GUIBattle::renderSkills(ska::Renderer& renderer) const {
-	if (!m_entities.hasComponent<SkillsHolderComponent>(m_stage.player.entity) || m_stage.player.controlledByAI) {
+	const auto* player = fighter(m_stage.player);
+	if (player == nullptr || !m_entities.hasComponent<SkillsHolderComponent>(m_stage.player) || player->controlledByAI) {
 		return;
 	}
-	const auto& skills = m_entities.getComponent<SkillsHolderComponent>(m_stage.player.entity).skills;
+	const auto& skills = m_entities.getComponent<SkillsHolderComponent>(m_stage.player).skills;
 	const auto screen = m_camera.getScreenSize();
 	const auto slotWidth = 170;
 	const auto slotHeight = 40;
@@ -311,7 +321,7 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 		if (skill.particleNumber <= 0) {
 			continue;
 		}
-		const auto cooldown = m_battle.cooldown(index, m_stage.player.entity);
+		const auto cooldown = m_battle.cooldown(index, m_stage.player);
 		const auto ready = cooldown <= 0.F;
 		FillRect(renderer, ska::Color{ 10, 12, 24, 200 }, x, y, slotWidth, slotHeight);
 		FillRect(renderer, ready ? PlayerColor : ska::Color{ 70, 80, 100, 255 }, x, y, 30, slotHeight);
@@ -387,8 +397,8 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	updateScreenShader(renderer);
 	// The arrow over the Pokemon of the player
-	if (visible(m_stage.player.entity) && m_stage.phase() == BattlePhase::Fight) {
-		const auto drawn = sprite(m_stage.player.entity);
+	if (visible(m_stage.player) && m_stage.phase() == BattlePhase::Fight) {
+		const auto drawn = sprite(m_stage.player);
 		const auto bob = static_cast<int>(3.F * std::sin(static_cast<float>(m_time) / 140.F));
 		renderer.render(m_arrow, drawn.position.x + drawn.width / 2 - static_cast<int>(m_arrow.getWidth()) / 2, drawn.position.y - 16 + bob, nullptr);
 	}

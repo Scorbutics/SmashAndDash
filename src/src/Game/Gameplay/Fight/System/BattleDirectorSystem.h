@@ -4,13 +4,14 @@
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "../BattleComponent.h"
 #include "../BattleStage.h"
+#include "../FighterComponent.h"
 #include "../../World/WorldState.h"
 #include "../../PokemonGameEventDispatcher.h"
 
 // Course of a battle (BattleStage) : the fight starts when both fighters are there ("COMBAT !"), in an arena around them,
 // framed by the camera. It ends when a fighter is K.O. (slow motion, "K.O. !") or when the player leaves the arena
 // (it flees a wild Pokemon). Then the result is saved and the player goes back to the map.
-class BattleDirectorSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, BattleComponent>, ska::PossibleComponent<>> {
+class BattleDirectorSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, BattleComponent, FighterComponent>, ska::PossibleComponent<>> {
 public:
 	// "teamIndex" : index of the Pokemon of the player in the team (-1 : not from the team)
 	BattleDirectorSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, BattleStage& stage, int teamIndex);

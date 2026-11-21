@@ -10,6 +10,7 @@
 #include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 #include "../BattleComponent.h"
 #include "../BattleStage.h"
+#include "../FighterComponent.h"
 #include "../SkillsHolderComponent.h"
 #include "../SkillComponent.h"
 #include "Graphic/GraphicComponent.h"
@@ -28,7 +29,7 @@ class BattleRules;
 // its range, in front of it ; then a recovery. The Pokemon cannot move during the attack. A skill can be used again
 // after its cooldown. The time of the battle stops during the hit stops (BattleStage).
 class BattleSystem :
-	public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::AnimationComponent, BattleComponent, SkillsHolderComponent, ska::GraphicComponent>, ska::PossibleComponent<SkillComponent>>,
+	public ska::System< ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::AnimationComponent, BattleComponent, FighterComponent, SkillsHolderComponent, ska::GraphicComponent>, ska::PossibleComponent<SkillComponent>>,
 	public ska::SubObserver<ska::InputKeyEvent> {
 public:
 	BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, unsigned int blockSize);
@@ -55,26 +56,22 @@ private:
 	bool fighting(ska::EntityId fighter) const;
 	bool canAct(ska::EntityId fighter) const;
 	void createSkill(unsigned int index, ska::EntityId from);
-	void contact(unsigned int index, FighterState& fighter);
-	void updateAttack(FighterState& fighter, unsigned int delta);
-	void decide(FighterState& fighter);
+	void contact(unsigned int index, ska::EntityId entity, FighterComponent& fighter);
+	void updateAttack(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);
+	// The fighter played with the keys (0 : none, ex : the AI plays both)
+	ska::EntityId playedByKeys() const;
+	void decide(ska::EntityId entity, FighterComponent& fighter);
 	ska::Point<float> center(ska::EntityId entity) const;
-	std::array<unsigned long, 4>& lastUses(ska::EntityId fighter);
-	const std::array<unsigned long, 4>& lastUses(ska::EntityId fighter) const;
 
 	CustomEntityManager& m_customEM;
 	PokemonGameEventDispatcher& m_ged;
 	BattleRules& m_rules;
 	BattleStage& m_stage;
 	const unsigned int m_blockSize;
-	// Time of the battle (milliseconds), time of the last use of each skill (0 : never used)
+	// Time of the battle (milliseconds)
 	unsigned long m_time = 0;
-	// Each AI decides at its own time (not both at once)
-	std::array<unsigned long, 2> m_nextDecisions { DecisionDelay, DecisionDelay + DecisionDelay / 2 };
 	// A skill key pressed while the Pokemon of the player is busy (attack, stun) : used when it is free, if it comes soon
 	static constexpr unsigned int InputBuffer = 200;
 	int m_bufferedSkill = -1;
 	unsigned long m_bufferedUntil = 0;
-	std::array<unsigned long, 4> m_pokemonUses {};
-	std::array<unsigned long, 4> m_opponentUses {};
 };

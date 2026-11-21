@@ -4,6 +4,7 @@
 #include <cmath>
 #include "../BattleRules.h"
 #include "../BattleHit.h"
+#include "../FighterComponent.h"
 
 SkillHitSystem::SkillHitSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage) :
 	System(em),
@@ -57,11 +58,11 @@ void SkillHitSystem::refresh(unsigned int) {
 	}
 	for (const auto skillEntity : getEntities()) {
 		auto& skill = m_componentAccessor.get<SkillComponent>(skillEntity);
-		if (skill.spent || !m_stage.isFighter(skill.battler)) {
+		if (skill.spent || !m_entities.hasComponent<FighterComponent>(skill.battler)) {
 			continue;
 		}
 		// A skill only hits the opponent of the Pokemon that used it
-		const auto target = m_stage.fighter(skill.battler).opponent;
+		const auto target = m_entities.getComponent<FighterComponent>(skill.battler).opponent;
 		if (touches(skillEntity, target)) {
 			hit(skillEntity, skill, target);
 			// One hit at a time : the hit stop starts

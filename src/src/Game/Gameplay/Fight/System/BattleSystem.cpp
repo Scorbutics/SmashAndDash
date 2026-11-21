@@ -11,6 +11,7 @@
 #include "FighterSystem.h"
 #include "Base/Values/Numbers/NumberUtils.h"
 #include "../BattleHit.h"
+#include "../FighterComponent.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, unsigned int blockSize) :
 	System(em),
@@ -28,23 +29,14 @@ ska::Point<float> BattleSystem::center(ska::EntityId entity) const {
 
 bool BattleSystem::fighting(ska::EntityId fighter) const {
 	const auto& processed = getEntities();
-	return m_stage.isFighter(fighter) && processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0;
+	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0;
 }
 
 bool BattleSystem::canAct(ska::EntityId fighter) const {
 	if (m_stage.phase() != BattlePhase::Fight || m_stage.frozen() || !fighting(fighter)) {
 		return false;
 	}
-	const auto& state = fighter == m_stage.player.entity ? m_stage.player : m_stage.opponent;
-	return !BattleStage::busy(state);
-}
-
-std::array<unsigned long, 4>& BattleSystem::lastUses(ska::EntityId fighter) {
-	return fighter == m_stage.player.entity ? m_pokemonUses : m_opponentUses;
-}
-
-const std::array<unsigned long, 4>& BattleSystem::lastUses(ska::EntityId fighter) const {
-	return fighter == m_stage.player.entity ? m_pokemonUses : m_opponentUses;
+	return !m_componentAccessor.get<FighterComponent>(fighter).busy();
 }
 
 bool BattleSystem::skillReady(unsigned int index, ska::EntityId from) const {
@@ -52,7 +44,7 @@ bool BattleSystem::skillReady(unsigned int index, ska::EntityId from) const {
 		return false;
 	}
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
-	const auto lastUse = lastUses(from)[index];
+	const auto lastUse = m_componentAccessor.get<FighterComponent>(from).lastUses[index];
 	return skill.particleNumber > 0 && (lastUse == 0 || m_time - lastUse >= skill.cooldown);
 }
 
@@ -61,7 +53,7 @@ float BattleSystem::cooldown(unsigned int index, ska::EntityId from) const {
 		return 0.F;
 	}
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
-	const auto lastUse = lastUses(from)[index];
+	const auto lastUse = m_componentAccessor.get<FighterComponent>(from).lastUses[index];
 	if (lastUse == 0 || skill.cooldown == 0 || m_time - lastUse >= skill.cooldown) {
 		return 0.F;
 	}
@@ -72,9 +64,9 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	if (!canAct(from) || !skillReady(index, from)) {
 		return false;
 	}
+	auto& fighter = m_componentAccessor.get<FighterComponent>(from);
 	// 0 means "never used"
-	lastUses(from)[index] = m_time == 0 ? 1 : m_time;
-	auto& fighter = m_stage.fighter(from);
+	fighter.lastUses[index] = m_time == 0 ? 1 : m_time;
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
 	// The startup : it stands still, facing its opponent (it is committed to that direction)
 	fighter.windUp = std::max(1u, skill.startup);
@@ -91,14 +83,25 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	return true;
 }
 
+ska::EntityId BattleSystem::playedByKeys() const {
+	for (const auto entity : getEntities()) {
+		const auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+		if (fighter.player && !fighter.controlledByAI) {
+			return entity;
+		}
+	}
+	return 0;
+}
+
 bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
-	if (m_stage.player.controlledByAI) {
+	const auto player = playedByKeys();
+	if (player == 0) {
 		return true;
 	}
 	const auto& actions = event.icm.getActions();
 	const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
 	for (auto index = 0u; index < 4; index++) {
-		if (actions[skillActions[index]] && !useSkill(index, m_stage.player.entity) && m_stage.phase() == BattlePhase::Fight) {
+		if (actions[skillActions[index]] && !useSkill(index, player) && m_stage.phase() == BattlePhase::Fight) {
 			m_bufferedSkill = static_cast<int>(index);
 			m_bufferedUntil = m_time + InputBuffer;
 		}
@@ -106,21 +109,21 @@ bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	return true;
 }
 
-void BattleSystem::decide(FighterState& fighter) {
-	if (!canAct(fighter.entity) || !fighting(fighter.opponent)) {
+void BattleSystem::decide(ska::EntityId entity, FighterComponent& fighter) {
+	if (!canAct(entity) || !fighting(fighter.opponent)) {
 		return;
 	}
-	const auto& bc = m_componentAccessor.get<BattleComponent>(fighter.entity);
-	const auto toOpponent = center(fighter.opponent) - center(fighter.entity);
+	const auto& bc = m_componentAccessor.get<BattleComponent>(entity);
+	const auto toOpponent = center(fighter.opponent) - center(entity);
 	const auto pixels = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
 	const auto distance = static_cast<int>(pixels / m_blockSize);
 
 	// The skills it can use now : ready, and reaching its opponent. "reach" : the longest of the ready skills
-	const auto& skills = m_componentAccessor.get<SkillsHolderComponent>(fighter.entity).skills;
+	const auto& skills = m_componentAccessor.get<SkillsHolderComponent>(entity).skills;
 	auto ready = std::vector<bool>{};
 	auto reach = 0;
 	for (auto index = 0u; index < 4; index++) {
-		const auto skillReadyNow = skillReady(index, fighter.entity);
+		const auto skillReadyNow = skillReady(index, entity);
 		if (skillReadyNow) {
 			reach = std::max(reach, skills[index].range);
 		}
@@ -129,10 +132,10 @@ void BattleSystem::decide(FighterState& fighter) {
 	const auto decision = m_rules.decide(bc.monster, distance, bc.hp, bc.maxHp, ready);
 	const auto intent = m_rules.move(bc.monster, static_cast<int>(pixels), reach, bc.hp, bc.maxHp);
 	fighter.intent = static_cast<FighterIntent>(intent);
-	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "player" : "wild") << " at " << static_cast<int>(center(fighter.entity).x) << ", "
-		<< static_cast<int>(center(fighter.entity).y) << " distance " << static_cast<int>(pixels) << " px, decision " << decision << ", movement " << intent;
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "player" : "wild") << " at " << static_cast<int>(center(entity).x) << ", "
+		<< static_cast<int>(center(entity).y) << " distance " << static_cast<int>(pixels) << " px, decision " << decision << ", movement " << intent;
 	if (decision >= 0) {
-		useSkill(static_cast<unsigned int>(decision), fighter.entity);
+		useSkill(static_cast<unsigned int>(decision), entity);
 	}
 }
 
@@ -140,23 +143,23 @@ void BattleSystem::refresh(unsigned int) {
 	const auto delta = m_stage.delta();
 	m_time += delta;
 
-	for (auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		updateAttack(*fighter, delta);
+	for (const auto entity : getEntities()) {
+		updateAttack(entity, m_componentAccessor.get<FighterComponent>(entity), delta);
 	}
 	if (m_bufferedSkill >= 0) {
-		if (m_time > m_bufferedUntil || useSkill(static_cast<unsigned int>(m_bufferedSkill), m_stage.player.entity)) {
+		const auto player = playedByKeys();
+		if (player == 0 || m_time > m_bufferedUntil || useSkill(static_cast<unsigned int>(m_bufferedSkill), player)) {
 			m_bufferedSkill = -1;
 		}
 	}
 
 	if (m_stage.phase() == BattlePhase::Fight) {
-		auto index = 0u;
-		for (auto* fighter : { &m_stage.opponent, &m_stage.player }) {
-			auto& next = m_nextDecisions[index++];
-			if (fighter->controlledByAI && m_time >= next) {
-				// A little irregular : the two AI do not act at the same time
-				next = m_time + DecisionDelay + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
-				decide(*fighter);
+		for (const auto entity : getEntities()) {
+			auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+			if (fighter.controlledByAI && m_time >= fighter.nextDecision) {
+				// A little irregular : the AI do not act at the same time
+				fighter.nextDecision = m_time + DecisionDelay + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
+				decide(entity, fighter);
 			}
 		}
 	}
@@ -167,7 +170,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	if (index >= shc.skills.size()) {
 		return;
 	}
-	const auto target = m_stage.fighter(from).opponent;
+	const auto target = m_componentAccessor.get<FighterComponent>(from).opponent;
 
 	// From the side of the fighter facing its target, towards the target (where it is now)
 	const auto origin = center(from);
@@ -199,7 +202,7 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	}
 }
 
-void BattleSystem::updateAttack(FighterState& fighter, unsigned int delta) {
+void BattleSystem::updateAttack(ska::EntityId entity, FighterComponent& fighter, unsigned int delta) {
 	if (delta == 0) {
 		return;
 	}
@@ -226,23 +229,23 @@ void BattleSystem::updateAttack(FighterState& fighter, unsigned int delta) {
 	}
 	const auto index = static_cast<unsigned int>(fighter.pendingSkill);
 	fighter.pendingSkill = -1;
-	if (m_stage.phase() != BattlePhase::Fight || !fighting(fighter.entity) || !fighting(fighter.opponent)) {
+	if (m_stage.phase() != BattlePhase::Fight || !fighting(entity) || !fighting(fighter.opponent)) {
 		return;
 	}
 	if (fighter.contactAttack) {
 		fighter.lunge = LungeDuration;
-		contact(index, fighter);
+		contact(index, entity, fighter);
 	} else {
-		createSkill(index, fighter.entity);
+		createSkill(index, entity);
 		fighter.release = FighterSystem::ReleaseDuration;
 		fighter.recovery = fighter.recoveryDuration;
 	}
 }
 
-void BattleSystem::contact(unsigned int index, FighterState& fighter) {
+void BattleSystem::contact(unsigned int index, ska::EntityId entity, FighterComponent& fighter) {
 	// It hits its opponent when it is in its range, in front of it (the direction chosen at the startup)
-	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(fighter.entity).skills[index];
-	const auto origin = center(fighter.entity);
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[index];
+	const auto origin = center(entity);
 	const auto toOpponent = center(fighter.opponent) - origin;
 	const auto distance = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
 	const auto facing = distance < 0.001F ? 1.F : (toOpponent.x * fighter.attackDirection.x + toOpponent.y * fighter.attackDirection.y) / distance;
@@ -254,7 +257,7 @@ void BattleSystem::contact(unsigned int index, FighterState& fighter) {
 		return;
 	}
 	auto hit = BattleHit{};
-	hit.attacker = fighter.entity;
+	hit.attacker = entity;
 	hit.target = fighter.opponent;
 	hit.power = skill.power;
 	hit.special = skill.special;

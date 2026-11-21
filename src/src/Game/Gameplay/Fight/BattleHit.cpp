@@ -7,11 +7,12 @@
 #include "BattleComponent.h"
 #include "BattleRules.h"
 #include "BattleStage.h"
+#include "FighterComponent.h"
 #include "StatisticsChangeEvent.h"
 #include "System/FighterSystem.h"
 
 int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, const BattleHit& hit) {
-	if (!entities.hasComponent<BattleComponent>(hit.target)) {
+	if (!entities.hasComponent<BattleComponent>(hit.target) || !entities.hasComponent<FighterComponent>(hit.target)) {
 		return 0;
 	}
 	auto& defender = entities.getComponent<BattleComponent>(hit.target);
@@ -20,7 +21,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	const auto defense = hit.special ? defender.speDefense : defender.defense;
 	const auto damage = rules.damage(hit.power, attack, defense, attacker == nullptr ? 1 : attacker->level);
 	defender.hp -= damage;
-	auto& fighter = stage.fighter(hit.target);
+	auto& fighter = entities.getComponent<FighterComponent>(hit.target);
 	SLOG_STATIC(ska::LogLevel::Debug, BattleHit) << "Battle : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " is hit, "
 		<< damage << " damage, " << defender.hp << " / " << defender.maxHp << " hit points left";
 

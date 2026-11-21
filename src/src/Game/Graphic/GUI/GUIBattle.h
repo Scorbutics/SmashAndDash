@@ -10,6 +10,7 @@
 #include "../../Gameplay/Fight/BattleStage.h"
 
 class BattleSystem;
+class FighterComponent;
 
 namespace ska {
 	class CameraSystem;
@@ -64,7 +65,9 @@ private:
 	void loadNames();
 
 	void renderArena(ska::Renderer& renderer) const;
-	void renderPanel(ska::Renderer& renderer, const FighterState& fighter, bool left) const;
+	void renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left) const;
+	// The state of a fighter, nullptr when it does not fight (anymore)
+	const FighterComponent* fighter(ska::EntityId entity) const;
 	void renderSkills(ska::Renderer& renderer) const;
 	void renderBanner(ska::Renderer& renderer) const;
 	void renderMarks(ska::Renderer& renderer) const;

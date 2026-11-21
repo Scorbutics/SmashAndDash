@@ -32,8 +32,8 @@ ska::Point<float> BattleDirectorSystem::center(ska::EntityId fighter) {
 void BattleDirectorSystem::start() {
 	// The arena : around the two fighters, in the map
 	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
-	const auto a = center(m_stage.player.entity);
-	const auto b = center(m_stage.opponent.entity);
+	const auto a = center(m_stage.player);
+	const auto b = center(m_stage.opponent);
 	const auto width = ArenaWidth * blockSize;
 	const auto height = ArenaHeight * blockSize;
 	const auto worldWidth = static_cast<int>(m_worldState.getWorld().getPixelWidth());
@@ -48,8 +48,8 @@ void BattleDirectorSystem::start() {
 	auto& camera = m_worldState.getCamera();
 	camera.changeStrategy(std::make_unique<ska::CameraFixedStrategy>(ska::Point<int>{ x + width / 2, y + height / 2 - blockSize / 2 }));
 
-	for (auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		fighter->shownHp = static_cast<float>(m_componentAccessor.get<BattleComponent>(fighter->entity).hp);
+	for (const auto entity : getEntities()) {
+		m_componentAccessor.get<FighterComponent>(entity).shownHp = static_cast<float>(m_componentAccessor.get<BattleComponent>(entity).hp);
 	}
 	m_stage.changePhase(BattlePhase::Fight);
 	m_stage.announce("COMBAT !");
@@ -57,11 +57,9 @@ void BattleDirectorSystem::start() {
 }
 
 void BattleDirectorSystem::updateBars(unsigned int ellapsedTime) {
-	for (auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-		if (!present(fighter->entity)) {
-			continue;
-		}
-		const auto& bc = m_componentAccessor.get<BattleComponent>(fighter->entity);
+	for (const auto entity : getEntities()) {
+		auto* fighter = &m_componentAccessor.get<FighterComponent>(entity);
+		const auto& bc = m_componentAccessor.get<BattleComponent>(entity);
 		const auto hp = static_cast<float>(std::max(0, bc.hp));
 		fighter->barShake = fighter->barShake > ellapsedTime ? fighter->barShake - ellapsedTime : 0;
 		if (fighter->shownHp <= hp) {
@@ -85,15 +83,16 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 
 	switch (m_stage.phase()) {
 	case BattlePhase::Intro:
-		if (present(m_stage.player.entity) && present(m_stage.opponent.entity)) {
+		if (present(m_stage.player) && present(m_stage.opponent)) {
 			start();
 		}
 		break;
 
 	case BattlePhase::Fight:
-		for (auto* fighter : { &m_stage.player, &m_stage.opponent }) {
-			if (present(fighter->entity) && m_componentAccessor.get<BattleComponent>(fighter->entity).hp <= 0) {
-				m_stage.loser = fighter->entity;
+		for (const auto entity : getEntities()) {
+			const auto* fighter = &m_componentAccessor.get<FighterComponent>(entity);
+			if (m_componentAccessor.get<BattleComponent>(entity).hp <= 0) {
+				m_stage.loser = entity;
 				m_stage.changePhase(BattlePhase::KnockOut);
 				m_stage.hitStop(250);
 				m_stage.slowMotion(0.25F, 1400);
@@ -103,7 +102,7 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 				break;
 			}
 		}
-		if (m_stage.phase() == BattlePhase::Fight && m_stage.canFlee && m_stage.player.outside >= BattleStage::FleeDelay) {
+		if (m_stage.phase() == BattlePhase::Fight && m_stage.canFlee && present(m_stage.player) && m_componentAccessor.get<FighterComponent>(m_stage.player).outside >= BattleStage::FleeDelay) {
 			m_stage.changePhase(BattlePhase::Fled);
 			m_stage.announce("FUITE !");
 			SLOG(ska::LogLevel::Info) << "Battle : the player flees";
@@ -129,11 +128,11 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 
 void BattleDirectorSystem::end() {
 	const auto fled = m_stage.phase() == BattlePhase::Fled;
-	const auto won = !fled && m_stage.loser == m_stage.opponent.entity;
+	const auto won = !fled && m_stage.loser == m_stage.opponent;
 	m_stage.changePhase(BattlePhase::Over);
 	SLOG(ska::LogLevel::Info) << "Battle " << (fled ? "fled" : (won ? "won" : "lost"));
 	if (won) {
-		scheduleDeferredRemove(m_stage.opponent.entity);
+		scheduleDeferredRemove(m_stage.opponent);
 	}
 
 	// Result : hit points left of the Pokemon of the player, experience won (battle rules)
@@ -141,10 +140,10 @@ void BattleDirectorSystem::end() {
 	result.won = won;
 	result.fled = fled;
 	result.teamIndex = m_teamIndex;
-	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player.entity);
+	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player);
 	result.hpLeft = std::max(0, pokemon.hp);
 	if (won) {
-		const auto& opponent = m_componentAccessor.get<BattleComponent>(m_stage.opponent.entity);
+		const auto& opponent = m_componentAccessor.get<BattleComponent>(m_stage.opponent);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(opponent.monster) + ".ini" };
 		const auto dropped = data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0;
 		result.experience = m_worldState.getBattleRules().experience(dropped, opponent.level);
@@ -160,7 +159,7 @@ void BattleDirectorSystem::end() {
 	const auto mapReader = ska::IniReader{ "./Levels/" + me.mapName + "/" + me.mapName + ".ini" };
 	me.chipsetName = mapReader.get<std::string>("Chipset file");
 	const auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
-	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player.entity);
+	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);
 	me.position = pc;
 	m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 }

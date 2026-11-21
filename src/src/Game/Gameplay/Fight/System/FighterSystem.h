@@ -12,6 +12,7 @@
 #include "Graphic/GraphicComponent.h"
 #include "../BattleComponent.h"
 #include "../BattleStage.h"
+#include "../FighterComponent.h"
 #include "../../PokemonGameEventDispatcher.h"
 
 class WorldState;
@@ -23,7 +24,7 @@ class WorldState;
 // Their drawing shows what happens : white flash and blinking when hit, preparation and lunge of an attack, K.O.
 class FighterSystem :
 	public ska::System<
-		ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent, ska::GraphicComponent, BattleComponent>,
+		ska::RequiredComponent<ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent, ska::GraphicComponent, BattleComponent, FighterComponent>,
 		ska::PossibleComponent<ska::InputComponent, ska::MovementComponent>>,
 	public ska::SubObserver<ska::InputKeyEvent> {
 public:
@@ -42,10 +43,10 @@ private:
 	bool onKeyInputEvent(ska::InputKeyEvent& event);
 	ska::Point<float> center(ska::EntityId entity);
 	ska::Point<float> keysDirection() const;
-	void control(FighterState& fighter, unsigned int ellapsedTime);
-	void setVelocity(FighterState& fighter, ska::Point<float> velocity);
-	void face(FighterState& fighter, ska::Point<float> direction);
-	void draw(FighterState& fighter);
+	void control(ska::EntityId entity, FighterComponent& fighter, unsigned int ellapsedTime);
+	void setVelocity(ska::EntityId entity, ska::Point<float> velocity);
+	void face(ska::EntityId entity, ska::Point<float> direction);
+	void draw(ska::EntityId entity, FighterComponent& fighter);
 
 	ska::EntityManager& m_entities;
 	WorldState& m_worldState;

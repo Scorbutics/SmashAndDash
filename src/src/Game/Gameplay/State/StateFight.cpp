@@ -18,6 +18,7 @@
 #include "../Fight/System/SkillHitSystem.h"
 #include "../Fight/System/BattleDirectorSystem.h"
 #include "../Fight/System/FighterSystem.h"
+#include "../Fight/FighterComponent.h"
 #include <cstdlib>
 
 namespace {
@@ -93,13 +94,19 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
 
 	// The fighters : the Pokemon of the player (keys, or the AI with SAD_BATTLE_AUTOPLAY), the wild Pokemon (AI)
-	m_stage.player.entity = m_pokemonId;
-	m_stage.player.opponent = m_opponentId;
-	m_stage.player.player = true;
-	m_stage.player.controlledByAI = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
-	m_stage.opponent.entity = m_opponentId;
-	m_stage.opponent.opponent = m_pokemonId;
-	m_stage.opponent.controlledByAI = true;
+	m_stage.player = m_pokemonId;
+	m_stage.opponent = m_opponentId;
+	auto pokemonState = FighterComponent{};
+	pokemonState.opponent = m_opponentId;
+	pokemonState.player = true;
+	pokemonState.controlledByAI = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
+	m_entityManager.addComponent<FighterComponent>(m_pokemonId, std::move(pokemonState));
+	auto opponentState = FighterComponent{};
+	opponentState.opponent = m_pokemonId;
+	opponentState.controlledByAI = true;
+	// The AI of the two fighters do not decide at the same time
+	opponentState.nextDecision = 150;
+	m_entityManager.addComponent<FighterComponent>(m_opponentId, std::move(opponentState));
 	// A wild Pokemon : the player can flee
 	m_stage.canFlee = true;
 

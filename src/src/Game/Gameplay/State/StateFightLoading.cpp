@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "StateFightLoading.h"
+#include "../Fight/FighterComponent.h"
 #include "../Fight/BattleComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
@@ -73,6 +74,8 @@ std::unique_ptr<ska::Task> StateFightLoading::unload() {
 
 		m_entityManager.removeComponent<BattleComponent>(m_pokemonId);
 		m_entityManager.removeComponent<BattleComponent>(m_opponentId);
+		m_entityManager.removeComponent<FighterComponent>(m_pokemonId);
+		m_entityManager.removeComponent<FighterComponent>(m_opponentId);
 
 		if (m_entityManager.hasComponent<ska::AnimationComponent>(m_trainerId)) {
 			auto& dac = m_entityManager.getComponent<ska::AnimationComponent>(m_trainerId);

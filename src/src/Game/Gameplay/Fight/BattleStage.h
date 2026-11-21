@@ -20,50 +20,6 @@ enum class BattlePhase {
 	Over
 };
 
-// What a fighter does now, decided by the battle AI (script) or by the player (keys)
-enum class FighterIntent {
-	Hold = 0,
-	Approach = 1,
-	Retreat = 2,
-	SidestepLeft = 3,
-	SidestepRight = 4
-};
-
-struct FighterState {
-	ska::EntityId entity = 0;
-	ska::EntityId opponent = 0;
-	// Played by the player (keys), else by the battle AI
-	bool player = false;
-	bool controlledByAI = false;
-
-	FighterIntent intent = FighterIntent::Hold;
-	// Milliseconds left : stunned after a hit (no control), white flash
-	unsigned int stun = 0;
-	unsigned int flash = 0;
-	// An attack : the startup (the Pokemon prepares it), the lunge of a contact skill (it hits), the recovery. The
-	// Pokemon cannot move during all of it, it can be hit (a hit during the startup cancels the attack)
-	unsigned int windUp = 0;
-	unsigned int windUpDuration = 0;
-	unsigned int lunge = 0;
-	unsigned int recovery = 0;
-	unsigned int recoveryDuration = 0;
-	// Stretch when a projectile goes
-	unsigned int release = 0;
-	// The skill used at the end of the startup (-1 : none), towards its opponent when it started
-	int pendingSkill = -1;
-	bool contactAttack = false;
-	ska::Point<float> attackDirection;
-	// Pushed back after a hit (pixels per second), applied when the hit stop ends, then slowed down
-	ska::Point<float> knockback;
-	// Hit points shown by the bar : they follow the real ones with a delay (the lost part stays visible a moment)
-	float shownHp = 0.F;
-	unsigned int hpDelay = 0;
-	// The bar shakes after a hit
-	unsigned int barShake = 0;
-	// Time spent outside of the arena (leaving it for 1 s : the player flees)
-	unsigned int outside = 0;
-};
-
 // A feedback drawn over the battle (in the world) : damage numbers, impacts
 struct BattleMark {
 	// Slash : the sprite of a contact skill where it hits ("value" : the id of the sprite)
@@ -76,7 +32,7 @@ struct BattleMark {
 };
 
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
-// arena, fighters, feedbacks. The systems change it, the interface draws it.
+// arena, feedbacks, which fighter is the one of the player. The state of each fighter is its FighterComponent.
 class BattleStage {
 public:
 	static constexpr unsigned int FleeDelay = 1000;
@@ -106,13 +62,9 @@ public:
 	void setCamera(ska::CameraSystem* camera) { m_camera = camera; }
 	ska::CameraSystem* camera() const { return m_camera; }
 
-	FighterState& fighter(ska::EntityId entity) { return entity == player.entity ? player : opponent; }
-	bool isFighter(ska::EntityId entity) const { return entity == player.entity || entity == opponent.entity; }
-	// It is busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
-	static bool busy(const FighterState& fighter) { return fighter.stun > 0 || fighter.windUp > 0 || fighter.lunge > 0 || fighter.recovery > 0; }
-
-	FighterState player;
-	FighterState opponent;
+	// The Pokemon of the player and the one it fights (the bars of the interface, the result of the battle)
+	ska::EntityId player = 0;
+	ska::EntityId opponent = 0;
 	// The area of the battle (world pixels) : the AI stays in it, the player flees a wild Pokemon by leaving it
 	ska::Rectangle arena{};
 	bool canFlee = true;
