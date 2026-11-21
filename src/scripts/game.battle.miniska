@@ -9,6 +9,11 @@
 # After the battle, the hit points left and the experience won are saved in the team.
 start = function(monster: int, level: int) : bool do return false end
 
+# Starts a battle against a group of wild Pokemon : "monsters" (Data/Monsters/<monster>.ini) and their "levels" (one each).
+# They all fight the Pokemon of the player ; the battle is won when they are all K.O. "canFlee" : false for a story
+# battle (the arena cannot be left). The script waits as with start.
+startWith = function(monsters: int[], levels: int[], canFlee: bool) : bool do return false end
+
 # Number of battles since the game started, result of the last one
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end

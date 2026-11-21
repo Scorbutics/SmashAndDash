@@ -6,6 +6,7 @@
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "GUI/GUI.h"
 #include "GUI/Windows/DebugWindow.h"
+#include "../../Gameplay/Fight/BattleEvent.h"
 
 class WindowSettings;
 
@@ -22,6 +23,7 @@ class GUIMap :
 	public ska::Observer<SettingsChangeEvent>,
 	public ska::Observer<EntityLoadEvent>,
 	public DialogEventObserver,
+	public ska::Observer<BattleEvent>,
 	public ska::Observer<InterfaceEvent>,
 	public ska::Observer<InventoryEvent> {
 
@@ -35,6 +37,8 @@ public:
 	bool onInterfaceEvent(InterfaceEvent& ie);
 	bool onInventoryEvent(InventoryEvent& ie);
 	bool onDialogEvent(DialogEvent& de);
+	// The debug window is hidden during a battle (the bars of the battle are at the top of the screen)
+	bool onBattleEvent(BattleEvent& be);
 	virtual bool onScreenResized(unsigned int width, unsigned int height) override;
 	void bind(Settings& sets);
 

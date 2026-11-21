@@ -73,6 +73,13 @@ private:
 	ska::Point<int> m_screenSize;
 	// State of the battle, shared by its systems and its interface
 	BattleStage m_stage;
+	// The other wild Pokemon of the battle (a group) : created for the battle, removed after it
+	const std::vector<std::pair<int, unsigned int>> m_companionsData;
+	std::vector<ska::EntityId> m_companions;
+	const bool m_canFlee;
+	void createCompanions(BattleRules& rules);
+	// The trainer does not block the fighters during the battle (its physics shape becomes a sensor)
+	void trainerBlocks(bool blocks);
 
 
 };

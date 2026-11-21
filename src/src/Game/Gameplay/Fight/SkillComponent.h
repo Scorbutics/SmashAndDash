@@ -38,6 +38,9 @@ public:
 	bool special = false;
 	// A skill hits once
 	bool spent = false;
+	// Its sprite (Sprites/Fight/<id>.png), for its trail
+	int spriteId = 0;
+	unsigned int trailCount = 0;
 };
 
 SKA_DECLARE_COMPONENT(SkillComponent);

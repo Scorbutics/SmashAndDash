@@ -62,10 +62,14 @@ private:
 	// The drawn sprite of a fighter on the screen
 	Sprite sprite(ska::EntityId fighter) const;
 	ska::Point<int> toScreen(ska::Point<float> world) const;
-	void loadNames();
 
 	void renderArena(ska::Renderer& renderer) const;
-	void renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left) const;
+	// The panel of a fighter : on the left for the side of the player, on the right for the other one, "slot" : its rank
+	// on its side (the panels are stacked)
+	void renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left, int slot) const;
+	const std::string& name(ska::EntityId entity) const;
+	// The sprite of a skill (Sprites/Fight/<id>.png : 2 x 2 frames), loaded at its first use
+	const ska::Texture& skillSprite(int id) const;
 	// The state of a fighter, nullptr when it does not fight (anymore)
 	const FighterComponent* fighter(ska::EntityId entity) const;
 	void renderSkills(ska::Renderer& renderer) const;
@@ -80,8 +84,8 @@ private:
 	ska::CameraSystem& m_camera;
 	Layer m_groundLayer;
 	Layer m_overlayLayer;
-	std::array<std::string, 2> m_names;
-	bool m_namesLoaded = false;
+	// The names of the fighters (loaded at their first drawing)
+	mutable std::map<ska::EntityId, std::string> m_names;
 	ska::Texture m_ringPlayer;
 	ska::Texture m_ringOpponent;
 	ska::Texture m_arrow;

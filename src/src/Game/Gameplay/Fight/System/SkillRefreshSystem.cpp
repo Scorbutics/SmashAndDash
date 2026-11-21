@@ -52,6 +52,18 @@ void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
 		pc.x += static_cast<long>(mc.vx * factor);
 		pc.y += static_cast<long>(mc.vy * factor);
 
+		// Its trail : where it passes, every other update
+		if (!sc.spent && (++sc.trailCount % 2) == 0 && m_componentPossibleAccessor.get<ska::GraphicComponent>(entityId) != nullptr) {
+			const auto& sprite = m_componentPossibleAccessor.get<ska::GraphicComponent>(entityId)->animatedSprites;
+			if (!sprite.empty()) {
+				auto trail = BattleMark{};
+				trail.kind = BattleMark::Kind::Trail;
+				trail.position = ska::Point<float>{ static_cast<float>(pc.x) + static_cast<float>(sprite[0].getWidth()) / 2.F, static_cast<float>(pc.y) + static_cast<float>(sprite[0].getHeight()) / 2.F };
+				trail.value = sc.spriteId;
+				m_stage.mark(trail);
+			}
+		}
+
 		/* Max range reached : delete the skill */
 		if (static_cast<unsigned int>(ska::RectangleUtils::distanceSquared<int>(sc.origin, pc)) > sc.range*sc.range) {
 			if (!sc.spent) {

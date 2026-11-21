@@ -488,11 +488,15 @@ InterfaceScriptModule::InterfaceScriptModule(ska::scripting::ScriptVM& vm, Custo
 BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	GameScriptModule(vm, "battle") {
 
-	m_builder.bindField("start", [&vm, &entityManager, &ged, &worldState](std::vector<ska::NodeValue> params) {
-		const auto monster = Int(params[0]);
-		const auto level = Int(params[1]);
-		if (!std::ifstream{ "./Data/Monsters/" + std::to_string(monster) + ".ini" }.good()) {
-			throw std::runtime_error("no data for the pokemon " + std::to_string(monster) + " (Data/Monsters)");
+	// A battle against wild Pokemon (the first one, and the others of its group), the script waits for its end
+	auto startBattle = [&vm, &entityManager, &ged, &worldState](const std::vector<std::pair<int, unsigned int>>& monsters, bool canFlee) {
+		if (monsters.empty()) {
+			throw std::runtime_error("a battle needs at least one wild pokemon");
+		}
+		for (const auto& [monster, level] : monsters) {
+			if (!std::ifstream{ "./Data/Monsters/" + std::to_string(monster) + ".ini" }.good()) {
+				throw std::runtime_error("no data for the pokemon " + std::to_string(monster) + " (Data/Monsters)");
+			}
 		}
 		const auto* trainer = worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 		if (trainer == nullptr || !entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
@@ -502,10 +506,13 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		// The wild Pokemon appears near the player (3 blocks on its right : the Pokemon of the player appears between them)
 		const auto blockSize = static_cast<int>(worldState.getWorld().getBlockSize());
 		const auto& position = entityManager.getComponent<ska::PositionComponent>(*trainer);
+		const auto monster = monsters.front().first;
 		const auto opponent = CustomEntityManager::createMovingCharacterNG(entityManager, worldState.getSpace(), ska::Point<int>( static_cast<int>(position.x) / blockSize + 3, static_cast<int>(position.y) / blockSize ), monster, blockSize);
 		auto fight = FightComponent{};
-		fight.level = static_cast<unsigned int>(level < 1 ? 1 : level);
+		fight.level = monsters.front().second < 1 ? 1 : monsters.front().second;
 		fight.opponentScriptId = monster;
+		fight.companions.assign(monsters.begin() + 1, monsters.end());
+		fight.canFlee = canFlee;
 		entityManager.addComponent<FightComponent>(opponent, std::move(fight));
 
 		// The script goes on once the battle is over (the battle counter changed), with its result
@@ -518,6 +525,25 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		vm.suspendUntil([&worldState, battles]() { return worldState.battles() != battles; },
 			[&worldState]() { return ska::NodeValue{ worldState.lastBattleWon() }; });
 		return ska::NodeValue{};
+	};
+
+	m_builder.bindField("start", [startBattle](std::vector<ska::NodeValue> params) {
+		const auto level = Int(params[1]);
+		return startBattle({ { Int(params[0]), static_cast<unsigned int>(level < 1 ? 1 : level) } }, true);
+	});
+
+	m_builder.bindField("startWith", [startBattle](std::vector<ska::NodeValue> params) {
+		const auto& monsters = params[0].nodeval<ska::NodeValueArray>();
+		const auto& levels = params[1].nodeval<ska::NodeValueArray>();
+		if (monsters == nullptr || levels == nullptr || monsters->size() != levels->size()) {
+			throw std::runtime_error("Battle.startWith : one level for each pokemon");
+		}
+		auto group = std::vector<std::pair<int, unsigned int>>{};
+		for (std::size_t index = 0; index < monsters->size(); index++) {
+			const auto level = (*levels)[index].nodeval<long>();
+			group.emplace_back(static_cast<int>((*monsters)[index].nodeval<long>()), static_cast<unsigned int>(level < 1 ? 1 : level));
+		}
+		return startBattle(group, params[2].nodeval<bool>());
 	});
 
 	m_builder.bindField("battles", [&worldState](std::vector<ska::NodeValue>) {

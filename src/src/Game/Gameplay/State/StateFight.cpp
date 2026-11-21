@@ -19,6 +19,12 @@
 #include "../Fight/System/BattleDirectorSystem.h"
 #include "../Fight/System/FighterSystem.h"
 #include "../Fight/FighterComponent.h"
+#include "../Fight/BattleComponent.h"
+#include "../Fight/SkillsHolderComponent.h"
+#include "../CustomEntityManager.h"
+#include "Physic/Space.h"
+#include "Physic/Shape.h"
+#include <chipmunk/chipmunk.h>
 #include <cstdlib>
 
 namespace {
@@ -63,7 +69,9 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_ic(nullptr),
 	m_skillFactory(ws, fc.level),
 	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
-	m_fightPos(fightPos) {
+	m_fightPos(fightPos),
+	m_companionsData(fc.companions),
+	m_canFlee(fc.canFlee) {
 }
 
 bool StateFight::onGameEvent(ska::GameEvent& ge) {
@@ -95,20 +103,23 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 
 	// The fighters : the Pokemon of the player (keys, or the AI with SAD_BATTLE_AUTOPLAY), the wild Pokemon (AI)
 	m_stage.player = m_pokemonId;
-	m_stage.opponent = m_opponentId;
+	m_stage.fighters = { m_pokemonId, m_opponentId };
 	auto pokemonState = FighterComponent{};
+	pokemonState.team = 0;
 	pokemonState.opponent = m_opponentId;
 	pokemonState.player = true;
 	pokemonState.controlledByAI = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
 	m_entityManager.addComponent<FighterComponent>(m_pokemonId, std::move(pokemonState));
 	auto opponentState = FighterComponent{};
+	opponentState.team = 1;
 	opponentState.opponent = m_pokemonId;
 	opponentState.controlledByAI = true;
-	// The AI of the two fighters do not decide at the same time
+	// The AI of the fighters do not decide at the same time
 	opponentState.nextDecision = 150;
 	m_entityManager.addComponent<FighterComponent>(m_opponentId, std::move(opponentState));
-	// A wild Pokemon : the player can flee
-	m_stage.canFlee = true;
+	createCompanions(rules);
+	m_stage.canFlee = m_canFlee;
+	trainerBlocks(false);
 
 	// The director first : it updates the time of the battle (hit stops) used by the others
 	addLogic(std::make_unique<BattleDirectorSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_stage, m_pokemonTeamIndex));
@@ -189,6 +200,13 @@ void StateFight::beforeUnload() {
 		SLOG(ska::LogLevel::Info) << "Battle over : the player controls the trainer again";
 		m_ic = nullptr;
 		m_entityManager.removeEntity(m_pokemonId);
+		// The other wild Pokemon of the group existed for the battle only
+		for (const auto companion : m_companions) {
+			CustomEntityManager::place(m_entityManager, m_worldState.getSpace(), companion, ska::Point<float>{ -100000.F, -100000.F });
+			m_entityManager.removeEntity(companion);
+		}
+		m_companions.clear();
+		trainerBlocks(true);
 		return false;
 	});
 
@@ -197,4 +215,43 @@ void StateFight::beforeUnload() {
 	queueTask(std::move(firstTask));
 	queueTask(std::move(finalTask));
 	
+}
+
+void StateFight::createCompanions(BattleRules& rules) {
+	// Next to the first wild Pokemon, one block below, above, two blocks below...
+	if (m_companionsData.empty() || !m_entityManager.hasComponent<ska::PositionComponent>(m_opponentId)) {
+		return;
+	}
+	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
+	const auto& origin = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);
+	auto index = 0;
+	for (const auto& [monster, level] : m_companionsData) {
+		const auto offset = (index / 2 + 1) * (index % 2 == 0 ? 1 : -1);
+		index++;
+		const auto block = ska::Point<int>{ static_cast<int>(origin.x) / blockSize + 1, static_cast<int>(origin.y) / blockSize + offset };
+		const auto companion = CustomEntityManager::createMovingCharacterNG(m_entityManager, m_worldState.getSpace(), block, monster, blockSize);
+		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(monster) + ".ini" };
+		const auto companionLevel = static_cast<int>(level < 1 ? 1 : level);
+		m_entityManager.addComponent<BattleComponent>(companion, Fighter(rules, data, monster, companionLevel));
+		auto skills = SkillsHolderComponent{};
+		SkillFactory{ m_worldState, static_cast<unsigned int>(companionLevel) }.loadSkills(data, companion, skills);
+		m_entityManager.addComponent<SkillsHolderComponent>(companion, std::move(skills));
+		auto state = FighterComponent{};
+		state.team = 1;
+		state.opponent = m_pokemonId;
+		state.controlledByAI = true;
+		state.nextDecision = static_cast<unsigned long>(150 + 90 * index);
+		m_entityManager.addComponent<FighterComponent>(companion, std::move(state));
+		m_companions.push_back(companion);
+		m_stage.fighters.push_back(companion);
+	}
+	SLOG(ska::LogLevel::Info) << "Battle : " << m_companions.size() << " other wild pokemon in the group";
+}
+
+void StateFight::trainerBlocks(bool blocks) {
+	if (!m_entityManager.hasComponent<ska::cp::HitboxComponent>(m_trainerId)) {
+		return;
+	}
+	const auto& hitbox = m_entityManager.getComponent<ska::cp::HitboxComponent>(m_trainerId);
+	cpShapeSetSensor(&m_worldState.getSpace().getShape(hitbox.shapeIndex).shape(), blocks ? cpFalse : cpTrue);
 }

@@ -169,8 +169,8 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 	effect = ska::RenderEffect{};
 
 	// K.O. : a flash, then it sinks and disappears
-	if (entity == m_stage.loser && (m_stage.phase() == BattlePhase::KnockOut || m_stage.phase() == BattlePhase::Over)) {
-		const auto time = m_stage.phaseTime();
+	if (fighter.knockedOut) {
+		const auto time = fighter.knockedOutTime;
 		if (time < 300) {
 			effect.flash = static_cast<unsigned char>((time / 60) % 2 == 0 ? 255 : 120);
 			return;
@@ -242,7 +242,13 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 		if (processed.find(fighter.opponent) == processed.end()) {
 			continue;
 		}
-		if (m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
+		if (fighter.knockedOut) {
+			// It does not fight anymore : it stops where it is, and sinks (draw)
+			fighter.knockedOutTime += ellapsedTime;
+			if (m_stage.phase() != BattlePhase::Over) {
+				setVelocity(entity, {});
+			}
+		} else if (m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
 			control(entity, fighter, ellapsedTime);
 		}
 		draw(entity, fighter);

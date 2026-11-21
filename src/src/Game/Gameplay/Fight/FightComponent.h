@@ -2,6 +2,8 @@
 #include "Core/ECS/Component.h"
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
+#include <utility>
+#include <vector>
 
 class FightComponent {
 public:
@@ -29,6 +31,10 @@ public:
 	ska::EntityId trainer;
 	ska::EntityId fighterOpponent;
 	ska::EntityId fighterPokemon;
+	// Other wild Pokemon fighting with this one (monster, level) : they appear next to it for the battle only
+	std::vector<std::pair<int, unsigned int>> companions;
+	// The player can flee (leave the arena) : not in a story battle
+	bool canFlee = true;
 };
 
 SKA_DECLARE_COMPONENT(FightComponent);

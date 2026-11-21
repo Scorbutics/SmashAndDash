@@ -60,6 +60,8 @@ private:
 	void updateAttack(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);
 	// The fighter played with the keys (0 : none, ex : the AI plays both)
 	ska::EntityId playedByKeys() const;
+	// Each fighter fights the nearest one of the other side still standing
+	void retarget();
 	void decide(ska::EntityId entity, FighterComponent& fighter);
 	ska::Point<float> center(ska::EntityId entity) const;
 

@@ -97,17 +97,14 @@ void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
 	renderer.setScreenShader(&m_screenShader);
 }
 
-void GUIBattle::loadNames() {
-	if (m_namesLoaded || !m_entities.hasComponent<BattleComponent>(m_stage.player) || !m_entities.hasComponent<BattleComponent>(m_stage.opponent)) {
-		return;
-	}
-	auto index = 0u;
-	for (const auto entity : { m_stage.player, m_stage.opponent }) {
+const std::string& GUIBattle::name(ska::EntityId entity) const {
+	auto found = m_names.find(entity);
+	if (found == m_names.end()) {
 		const auto& bc = m_entities.getComponent<BattleComponent>(entity);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(bc.monster) + ".ini" };
-		m_names[index++] = Upper(data.exists("Description name") ? data.get<std::string>("Description name") : "?");
+		found = m_names.emplace(entity, Upper(data.exists("Description name") ? data.get<std::string>("Description name") : "?")).first;
 	}
-	m_namesLoaded = true;
+	return found->second;
 }
 
 void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
@@ -116,7 +113,6 @@ void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer&
 	if (m_stage.phase() == BattlePhase::Intro || m_stage.phase() == BattlePhase::Over) {
 		return;
 	}
-	loadNames();
 	drawables.add(m_groundLayer);
 	drawables.add(m_overlayLayer);
 }
@@ -222,9 +218,9 @@ void GUIBattle::renderGround(ska::Renderer& renderer) const {
 	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
 
 	// A ring under each fighter : blue for the player, red for the opponent
-	for (const auto entity : { m_stage.player, m_stage.opponent }) {
+	for (const auto entity : m_stage.fighters) {
 		const auto* state = fighter(entity);
-		if (state == nullptr || !visible(entity) || (entity == m_stage.loser && m_stage.phase() != BattlePhase::Fight)) {
+		if (state == nullptr || !visible(entity) || state->knockedOut) {
 			continue;
 		}
 		const auto drawn = sprite(entity);
@@ -235,7 +231,7 @@ void GUIBattle::renderGround(ska::Renderer& renderer) const {
 	}
 }
 
-void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left) const {
+void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left, int slot) const {
 	const auto* state = fighter(entity);
 	if (state == nullptr || !m_entities.hasComponent<BattleComponent>(entity)) {
 		return;
@@ -249,7 +245,7 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 	// The bar shakes after a hit
 	const auto shake = fighter.barShake > 0 ? static_cast<int>((fighter.barShake / 25) % 2 == 0 ? 1 : -1) * static_cast<int>(1 + fighter.barShake / 80) : 0;
 	const auto x = (left ? margin : screen.x - margin - width) + shake;
-	const auto y = margin;
+	const auto y = margin + slot * (height + 8);
 	const auto color = fighter.player ? PlayerColor : OpponentColor;
 
 	FillRect(renderer, ska::Color{ 10, 12, 24, 190 }, x, y, width, height);
@@ -257,12 +253,12 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 
 	// Who it is : the tag and the name
 	const auto tag = fighter.player ? std::string{ "VOUS" } : std::string{ "SAUVAGE" };
-	const auto name = m_names[fighter.player ? 0 : 1] + "  Nv." + std::to_string(bc.level);
+	const auto label = name(entity) + "  Nv." + std::to_string(bc.level) + (fighter.knockedOut ? "  K.O." : "");
 	const auto tagWidth = fighter.player ? 58 : 88;
 	const auto tagX = left ? x + 14 : x + width - 14 - tagWidth;
 	FillRect(renderer, color, tagX, y + 8, tagWidth, 20);
 	text(renderer, tag, 14, ska::Color{ 255, 255, 255, 255 }, tagX + tagWidth / 2, y + 9, 0);
-	text(renderer, name, 18, ska::Color{ 255, 255, 255, 255 }, left ? tagX + tagWidth + 10 : tagX - 10, y + 6, left ? -1 : 1);
+	text(renderer, label, 18, ska::Color{ 255, 255, 255, 255 }, left ? tagX + tagWidth + 10 : tagX - 10, y + 6, left ? -1 : 1);
 
 	// The hit points : the bar empties towards the middle of the screen, the lost part stays a moment
 	const auto barX = x + 14;
@@ -351,16 +347,36 @@ void GUIBattle::renderBanner(ska::Renderer& renderer) const {
 	text(renderer, banner, 64, color, screen.x / 2, screen.y / 2 - 80, 0, scale, alpha);
 }
 
+const ska::Texture& GUIBattle::skillSprite(int id) const {
+	auto found = m_skillSprites.find(id);
+	if (found == m_skillSprites.end()) {
+		found = m_skillSprites.emplace(id, ska::Texture{ "./Sprites/Fight/" + std::to_string(id) + ".png" }).first;
+	}
+	return found->second;
+}
+
 void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 	for (const auto& mark : m_stage.marks()) {
 		const auto position = toScreen(mark.position);
+		if (mark.kind == BattleMark::Kind::Trail) {
+			// A faded, smaller copy of the projectile (its first frame)
+			const auto& sheet = skillSprite(mark.value);
+			const auto frameWidth = static_cast<int>(sheet.getWidth()) / 2;
+			const auto frameHeight = static_cast<int>(sheet.getHeight()) / 2;
+			const auto clip = ska::Rectangle{ 0, 0, frameWidth, frameHeight };
+			const auto progress = static_cast<float>(mark.age) / 180.F;
+			auto effect = ska::RenderEffect{};
+			effect.anchorBottom = false;
+			effect.scaleX = effect.scaleY = 0.9F - 0.5F * progress;
+			effect.alpha = static_cast<unsigned char>(150.F * std::max(0.F, 1.F - progress));
+			renderer.setEffect(&effect);
+			renderer.render(sheet, position.x - frameWidth / 2, position.y - frameHeight / 2, &clip);
+			renderer.setEffect(nullptr);
+			continue;
+		}
 		if (mark.kind == BattleMark::Kind::Slash) {
 			// The sprite of the skill where it hit, its 4 frames once, a little bigger
-			auto found = m_skillSprites.find(mark.value);
-			if (found == m_skillSprites.end()) {
-				found = m_skillSprites.emplace(mark.value, ska::Texture{ "./Sprites/Fight/" + std::to_string(mark.value) + ".png" }).first;
-			}
-			const auto& sheet = found->second;
+			const auto& sheet = skillSprite(mark.value);
 			const auto frameWidth = static_cast<int>(sheet.getWidth()) / 2;
 			const auto frameHeight = static_cast<int>(sheet.getHeight()) / 2;
 			const auto frame = static_cast<int>(std::min(3u, mark.age * 4 / 240));
@@ -405,8 +421,15 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	renderMarks(renderer);
 
 	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
-	renderPanel(renderer, m_stage.player, true);
-	renderPanel(renderer, m_stage.opponent, false);
+	// The side of the player on the left, the wild Pokemon on the right
+	std::array<int, 2> slots{ 0, 0 };
+	for (const auto entity : m_stage.fighters) {
+		const auto* state = fighter(entity);
+		if (state == nullptr || state->team < 0 || state->team > 1) {
+			continue;
+		}
+		renderPanel(renderer, entity, state->team == 0, slots[static_cast<std::size_t>(state->team)]++);
+	}
 	renderSkills(renderer);
 	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
 	const auto screen = m_camera.getScreenSize();

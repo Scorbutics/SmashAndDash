@@ -464,7 +464,8 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	ac.setASM(*m_walkASM, pkmn);
 
 	const auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
-	auto we = ska::WorldEvent{ wet };
+	// With the music of the world : the sound module plays it
+	auto we = ska::WorldEvent{ wet, m_worldBGM };
 	we.blocksWidth = m_world.getBlocksX();
 	we.blocksHeight = m_world.getBlocksY();
 	we.blockSize = m_world.getBlockSize();

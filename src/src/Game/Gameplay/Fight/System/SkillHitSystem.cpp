@@ -61,14 +61,22 @@ void SkillHitSystem::refresh(unsigned int) {
 		if (skill.spent || !m_entities.hasComponent<FighterComponent>(skill.battler)) {
 			continue;
 		}
-		// A skill only hits the opponent of the Pokemon that used it
-		const auto target = m_entities.getComponent<FighterComponent>(skill.battler).opponent;
-		if (touches(skillEntity, target)) {
-			hit(skillEntity, skill, target);
-			// One hit at a time : the hit stop starts
-			if (m_stage.frozen()) {
-				return;
+		// A skill hits the fighters of the other side of the Pokemon that used it (still standing)
+		const auto team = m_entities.getComponent<FighterComponent>(skill.battler).team;
+		for (const auto target : m_stage.fighters) {
+			if (!m_entities.hasComponent<FighterComponent>(target) || !m_entities.hasComponent<BattleComponent>(target)) {
+				continue;
 			}
+			const auto& fighter = m_entities.getComponent<FighterComponent>(target);
+			if (fighter.team == team || fighter.knockedOut || m_entities.getComponent<BattleComponent>(target).hp <= 0 || !touches(skillEntity, target)) {
+				continue;
+			}
+			hit(skillEntity, skill, target);
+			break;
+		}
+		// One hit at a time : the hit stop starts
+		if (m_stage.frozen()) {
+			return;
 		}
 	}
 }

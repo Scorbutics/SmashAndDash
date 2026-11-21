@@ -17,10 +17,15 @@ enum class FighterIntent {
 // now (an attack, a stun...). Added when the battle starts, removed when it ends (StateFight).
 class FighterComponent {
 public:
+	// Its side : 0 the player, 1 the wild Pokemon. It fights the nearest fighter of the other side still standing
+	int team = 0;
 	ska::EntityId opponent = 0;
 	// Played by the player (keys), else by the battle AI
 	bool player = false;
 	bool controlledByAI = false;
+	// K.O. : it does not fight anymore (it sinks and disappears), since "knockedOutTime" milliseconds
+	bool knockedOut = false;
+	unsigned int knockedOutTime = 0;
 
 	FighterIntent intent = FighterIntent::Hold;
 	// Battle time of its next AI decision
@@ -56,7 +61,7 @@ public:
 	unsigned int outside = 0;
 
 	// Busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
-	bool busy() const { return stun > 0 || windUp > 0 || lunge > 0 || recovery > 0; }
+	bool busy() const { return knockedOut || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0; }
 };
 
 SKA_DECLARE_COMPONENT(FighterComponent);

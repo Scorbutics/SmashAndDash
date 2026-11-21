@@ -22,8 +22,9 @@ enum class BattlePhase {
 
 // A feedback drawn over the battle (in the world) : damage numbers, impacts
 struct BattleMark {
-	// Slash : the sprite of a contact skill where it hits ("value" : the id of the sprite)
-	enum class Kind { Damage, Impact, Slash };
+	// Slash : the sprite of a contact skill where it hits ; Trail : where a projectile passed ("value" : the id of the
+	// sprite of the skill)
+	enum class Kind { Damage, Impact, Slash, Trail };
 	Kind kind = Kind::Impact;
 	ska::Point<float> position;
 	int value = 0;
@@ -62,13 +63,14 @@ public:
 	void setCamera(ska::CameraSystem* camera) { m_camera = camera; }
 	ska::CameraSystem* camera() const { return m_camera; }
 
-	// The Pokemon of the player and the one it fights (the bars of the interface, the result of the battle)
+	// The Pokemon of the player (the keys, its skills in the interface, the result of the battle), all the fighters
 	ska::EntityId player = 0;
-	ska::EntityId opponent = 0;
+	std::vector<ska::EntityId> fighters;
 	// The area of the battle (world pixels) : the AI stays in it, the player flees a wild Pokemon by leaving it
 	ska::Rectangle arena{};
 	bool canFlee = true;
-	ska::EntityId loser = 0;
+	// The side that won (-1 : none yet)
+	int winnerTeam = -1;
 
 private:
 	unsigned int m_delta = 0;

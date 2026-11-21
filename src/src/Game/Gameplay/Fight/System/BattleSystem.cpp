@@ -29,7 +29,7 @@ ska::Point<float> BattleSystem::center(ska::EntityId entity) const {
 
 bool BattleSystem::fighting(ska::EntityId fighter) const {
 	const auto& processed = getEntities();
-	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0;
+	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0 && !m_componentAccessor.get<FighterComponent>(fighter).knockedOut;
 }
 
 bool BattleSystem::canAct(ska::EntityId fighter) const {
@@ -139,9 +139,33 @@ void BattleSystem::decide(ska::EntityId entity, FighterComponent& fighter) {
 	}
 }
 
+void BattleSystem::retarget() {
+	// Each fighter fights the nearest fighter of the other side still standing (it keeps its opponent when there is none)
+	for (const auto entity : getEntities()) {
+		auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+		if (!fighting(entity)) {
+			continue;
+		}
+		const auto position = center(entity);
+		auto best = -1.F;
+		for (const auto other : getEntities()) {
+			if (!fighting(other) || m_componentAccessor.get<FighterComponent>(other).team == fighter.team) {
+				continue;
+			}
+			const auto toOther = center(other) - position;
+			const auto distance = toOther.x * toOther.x + toOther.y * toOther.y;
+			if (best < 0.F || distance < best) {
+				best = distance;
+				fighter.opponent = other;
+			}
+		}
+	}
+}
+
 void BattleSystem::refresh(unsigned int) {
 	const auto delta = m_stage.delta();
 	m_time += delta;
+	retarget();
 
 	for (const auto entity : getEntities()) {
 		updateAttack(entity, m_componentAccessor.get<FighterComponent>(entity), delta);
@@ -249,23 +273,37 @@ void BattleSystem::contact(unsigned int index, ska::EntityId entity, FighterComp
 	const auto toOpponent = center(fighter.opponent) - origin;
 	const auto distance = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
 	const auto facing = distance < 0.001F ? 1.F : (toOpponent.x * fighter.attackDirection.x + toOpponent.y * fighter.attackDirection.y) / distance;
-	// In front : less than 70 degrees from its direction (always when they touch each other)
-	const auto touches = distance <= static_cast<float>(skill.range) && (facing >= 0.34F || distance < 40.F);
+	// In front : less than 70 degrees from its direction (always when they touch each other). The nearest of the
+	// fighters of the other side it touches
+	auto target = ska::EntityId{ 0 };
+	auto nearest = -1.F;
+	for (const auto other : getEntities()) {
+		if (!fighting(other) || m_componentAccessor.get<FighterComponent>(other).team == fighter.team) {
+			continue;
+		}
+		const auto toOther = center(other) - origin;
+		const auto otherDistance = std::sqrt(toOther.x * toOther.x + toOther.y * toOther.y);
+		const auto otherFacing = otherDistance < 0.001F ? 1.F : (toOther.x * fighter.attackDirection.x + toOther.y * fighter.attackDirection.y) / otherDistance;
+		if (otherDistance <= static_cast<float>(skill.range) && (otherFacing >= 0.34F || otherDistance < 40.F) && (nearest < 0.F || otherDistance < nearest)) {
+			nearest = otherDistance;
+			target = other;
+		}
+	}
 	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " lunges (" << skill.name << "), "
-		<< static_cast<int>(distance) << " px from its opponent : " << (touches ? "it hits" : "missed");
-	if (!touches) {
+		<< static_cast<int>(distance) << " px from its opponent : " << (target != 0 ? "it hits" : "missed");
+	if (target == 0) {
 		return;
 	}
 	auto hit = BattleHit{};
 	hit.attacker = entity;
-	hit.target = fighter.opponent;
+	hit.target = target;
 	hit.power = skill.power;
 	hit.special = skill.special;
 	hit.knockback = skill.knockback;
 	hit.direction = fighter.attackDirection;
-	const auto& targetHitbox = m_componentAccessor.get<ska::HitboxComponent>(fighter.opponent);
+	const auto& targetHitbox = m_componentAccessor.get<ska::HitboxComponent>(target);
 	const auto reach = static_cast<float>(std::max(targetHitbox.width, targetHitbox.height)) / 2.F;
-	const auto targetCenter = center(fighter.opponent);
+	const auto targetCenter = center(target);
 	hit.impact = ska::Point<float>{ targetCenter.x - fighter.attackDirection.x * reach, targetCenter.y - fighter.attackDirection.y * reach };
 	ApplyBattleHit(m_customEM, m_ged, m_rules, m_stage, hit);
 	if (skill.showSprite) {

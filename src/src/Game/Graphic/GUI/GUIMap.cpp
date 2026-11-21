@@ -20,6 +20,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	ska::Observer<InterfaceEvent>(std::bind(&GUIMap::onInterfaceEvent, this, std::placeholders::_1)),
+	ska::Observer<BattleEvent>(std::bind(&GUIMap::onBattleEvent, this, std::placeholders::_1)),
 	ska::Observer<InventoryEvent>(std::bind(&GUIMap::onInventoryEvent, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged),
@@ -44,6 +45,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
+	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<InterfaceEvent>::addObserver(*this);
 	m_ged.ska::Observable<InventoryEvent>::addObserver(*this);
 }
@@ -248,9 +250,15 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 	return true;
 }
 
+bool GUIMap::onBattleEvent(BattleEvent& be) {
+	m_dbgWindow.show(be.getEventType() != BATTLE_START);
+	return true;
+}
+
 GUIMap::~GUIMap() {
 	m_ged.ska::Observable<DialogEvent>::removeObserver(*this);
 	m_ged.ska::Observable<InterfaceEvent>::removeObserver(*this);
+	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);
 	m_ged.ska::Observable<InventoryEvent>::removeObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);

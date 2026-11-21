@@ -1,6 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "BattleDirectorSystem.h"
 #include <algorithm>
+#include <array>
 #include "Base/IO/Readers/IniReader.h"
 #include "Core/ECS/EntityLocator.h"
 #include "Graphic/System/CameraSystem.h"
@@ -30,10 +31,15 @@ ska::Point<float> BattleDirectorSystem::center(ska::EntityId fighter) {
 }
 
 void BattleDirectorSystem::start() {
-	// The arena : around the two fighters, in the map
+	// The arena : around the fighters, in the map
 	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
-	const auto a = center(m_stage.player);
-	const auto b = center(m_stage.opponent);
+	auto a = center(m_stage.player);
+	auto b = a;
+	for (const auto entity : m_stage.fighters) {
+		const auto position = center(entity);
+		a = ska::Point<float>{ std::min(a.x, position.x), std::min(a.y, position.y) };
+		b = ska::Point<float>{ std::max(b.x, position.x), std::max(b.y, position.y) };
+	}
 	const auto width = ArenaWidth * blockSize;
 	const auto height = ArenaHeight * blockSize;
 	const auto worldWidth = static_cast<int>(m_worldState.getWorld().getPixelWidth());
@@ -83,23 +89,36 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 
 	switch (m_stage.phase()) {
 	case BattlePhase::Intro:
-		if (present(m_stage.player) && present(m_stage.opponent)) {
+		if (std::all_of(m_stage.fighters.begin(), m_stage.fighters.end(), [this](ska::EntityId entity) { return present(entity); })) {
 			start();
 		}
 		break;
 
 	case BattlePhase::Fight:
-		for (const auto entity : getEntities()) {
-			const auto* fighter = &m_componentAccessor.get<FighterComponent>(entity);
-			if (m_componentAccessor.get<BattleComponent>(entity).hp <= 0) {
-				m_stage.loser = entity;
+		{
+			// A fighter without hit points is K.O. : it leaves the fight. A side without fighter standing lost
+			std::array<int, 2> standing{ 0, 0 };
+			for (const auto entity : getEntities()) {
+				auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+				if (!fighter.knockedOut && m_componentAccessor.get<BattleComponent>(entity).hp <= 0) {
+					fighter.knockedOut = true;
+					fighter.knockedOutTime = 0;
+					m_stage.hitStop(180);
+					m_stage.shake(260, 7);
+					SLOG(ska::LogLevel::Info) << "Battle : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " is K.O.";
+				}
+				if (!fighter.knockedOut && fighter.team >= 0 && fighter.team < 2) {
+					standing[static_cast<std::size_t>(fighter.team)]++;
+				}
+			}
+			if (standing[0] == 0 || standing[1] == 0) {
+				m_stage.winnerTeam = standing[0] == 0 ? 1 : 0;
 				m_stage.changePhase(BattlePhase::KnockOut);
 				m_stage.hitStop(250);
 				m_stage.slowMotion(0.25F, 1400);
 				m_stage.shake(400, 10);
 				m_stage.announce("K.O. !");
-				SLOG(ska::LogLevel::Info) << "Battle : " << (fighter->player ? "the pokemon of the player" : "the wild pokemon") << " is K.O.";
-				break;
+				SLOG(ska::LogLevel::Info) << "Battle : the side " << m_stage.winnerTeam << " won";
 			}
 		}
 		if (m_stage.phase() == BattlePhase::Fight && m_stage.canFlee && present(m_stage.player) && m_componentAccessor.get<FighterComponent>(m_stage.player).outside >= BattleStage::FleeDelay) {
@@ -128,25 +147,29 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 
 void BattleDirectorSystem::end() {
 	const auto fled = m_stage.phase() == BattlePhase::Fled;
-	const auto won = !fled && m_stage.loser == m_stage.opponent;
+	const auto won = !fled && m_stage.winnerTeam == 0;
 	m_stage.changePhase(BattlePhase::Over);
 	SLOG(ska::LogLevel::Info) << "Battle " << (fled ? "fled" : (won ? "won" : "lost"));
-	if (won) {
-		scheduleDeferredRemove(m_stage.opponent);
-	}
 
-	// Result : hit points left of the Pokemon of the player, experience won (battle rules)
+	// Result : hit points left of the Pokemon of the player, experience won for each wild Pokemon K.O. (battle rules)
 	auto result = BattleResult{};
 	result.won = won;
 	result.fled = fled;
 	result.teamIndex = m_teamIndex;
 	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player);
 	result.hpLeft = std::max(0, pokemon.hp);
-	if (won) {
-		const auto& opponent = m_componentAccessor.get<BattleComponent>(m_stage.opponent);
+	for (const auto entity : m_stage.fighters) {
+		if (!present(entity) || m_componentAccessor.get<FighterComponent>(entity).team != 1 || !m_componentAccessor.get<FighterComponent>(entity).knockedOut) {
+			continue;
+		}
+		const auto& opponent = m_componentAccessor.get<BattleComponent>(entity);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(opponent.monster) + ".ini" };
 		const auto dropped = data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0;
-		result.experience = m_worldState.getBattleRules().experience(dropped, opponent.level);
+		result.experience += m_worldState.getBattleRules().experience(dropped, opponent.level);
+	}
+	// The wild Pokemon of the map is defeated (the others of its group only exist during the battle : StateFight)
+	if (won && m_stage.fighters.size() > 1) {
+		scheduleDeferredRemove(m_stage.fighters[1]);
 	}
 	m_worldState.battleEnded(result);
 
