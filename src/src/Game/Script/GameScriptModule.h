@@ -8,12 +8,9 @@
 #include "../Gameplay/PokemonGameEventDispatcher.h"
 
 class CustomEntityManager;
+class WorldState;
 
 namespace ska {
-	class TileWorld;
-	namespace cp {
-		class Space;
-	}
 	namespace scripting {
 		class ScriptVM;
 	}
@@ -22,7 +19,8 @@ namespace ska {
 // Game functions for the scripts : Game = import "bind:game" (see the "game" script template)
 class GameScriptModule : public ska::lang::Module<ska::bytecode::Interpreter> {
 public:
-	GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, const ska::TileWorld& world, ska::cp::Space& space);
+	// "worldState" : current map (world, physics space), when the functions are called
+	GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
 	~GameScriptModule() override = default;
 
 private:

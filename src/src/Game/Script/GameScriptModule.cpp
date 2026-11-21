@@ -22,6 +22,7 @@
 #include "../Gameplay/CustomEntityManager.h"
 #include "../Gameplay/Data/MapEvent.h"
 #include "../Gameplay/Data/DialogEvent.h"
+#include "../Gameplay/World/WorldState.h"
 
 namespace {
 	ska::EntityId Entity(ska::EntityManager& entityManager, const ska::NodeValue& value) {
@@ -54,7 +55,7 @@ namespace {
 	}
 }
 
-GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, const ska::TileWorld& world, ska::cp::Space& space) :
+GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	ska::lang::Module<ska::bytecode::Interpreter> { vm.modules(), "game", "std:game" },
 	m_builder(ska::BridgeBuilder<ska::bytecode::Interpreter> { m_bridge }) {
 
@@ -108,7 +109,8 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("teleport", [&ged, &world](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
 		const auto mapReader = ska::IniReader{ "./Levels/" + mapName + "/" + mapName + ".ini" };
 		auto mapEvent = MapEvent{ MapEventType::Switch_Map };
@@ -121,7 +123,9 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("addCharacter", [&entityManager, &space, &world](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("addCharacter", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		auto& space = worldState.getSpace();
+		const auto& world = worldState.getWorld();
 		const auto character = CustomEntityManager::createCharacterNG(entityManager, space, ska::Point<int>{ Int(params[1]), Int(params[2]) },
 			Int(params[0]), static_cast<unsigned int>(world.getBlockSize()), String(params[3]));
 		const auto& script = String(params[4]);
@@ -186,17 +190,20 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("blockX", [&entityManager, &world](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("blockX", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
 		const auto entity = Entity(entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).x / world.getBlockSize()) };
 	});
 
-	m_builder.bindField("blockY", [&entityManager, &world](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("blockY", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
 		const auto entity = Entity(entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).y / world.getBlockSize()) };
 	});
 
-	m_builder.bindField("blockHasProperty", [&world](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("blockHasProperty", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
 		const auto layer = Int(params[0]);
 		const auto x = Int(params[1]);
 		const auto y = Int(params[2]);

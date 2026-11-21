@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include "Core/ECS/Basics/Script/ScriptRunner.h"
 #include "Core/State/StateBase.h"
 #include "Core/Inputs/System/InputSystem.h"
 
@@ -15,6 +17,14 @@
 #include "Base/Patterns/SubObserver.h"
 #include "Graphic/Polygon.h"
 #include "Core/ECS/EntityLocator.h"
+
+namespace ska {
+	namespace scripting {
+		class ScriptVM;
+		class EngineModule;
+	}
+}
+class GameScriptModule;
 #include "Game/Graphic/DebugDrawer.h"
 
 namespace ska {
@@ -42,7 +52,7 @@ public:
 	WorldState(const WorldState&) = delete;
 	WorldState& operator=(const WorldState&) = delete;
 
-	~WorldState() override = default;
+	~WorldState() override;
 
 	int spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) override;
 
@@ -50,6 +60,8 @@ public:
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
 	ska::cp::Space& getSpace();
+	// Runs the skalang scripts started by the script triggers
+	ska::ScriptRunner& getScriptRunner();
 
 	bool loadedOnce() const;
 	std::vector<ska::IniReader>& getMobSettings() override;
@@ -106,6 +118,11 @@ private:
 	ska::Point<int> m_posHero;
 
 	DebugDrawer m_debugDrawer;
+
+	// skalang scripts (".miniska") : script VM and the functions given to the scripts
+	std::unique_ptr<ska::scripting::ScriptVM> m_scripts;
+	std::unique_ptr<ska::scripting::EngineModule> m_engineScriptModule;
+	std::unique_ptr<GameScriptModule> m_gameScriptModule;
 
 };
 
