@@ -1,0 +1,35 @@
+# Battle rules : the battle asks these functions for values, during the battle (they cannot wait).
+# When a function fails, the battle logs the error and uses a default value.
+
+Math = import "bind:std.native.math"
+
+# Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
+stat = function(base: int, level: int) : int do
+	return 2 * base * level / 100 + 5
+end
+
+# Hit points of a Pokemon at a level, from its base hit points
+maxHp = function(baseHp: int, level: int) : int do
+	return 2 * baseHp * level / 100 + level + 10
+end
+
+# Level of a Pokemon from its experience ("needed" : the experience needed for each level, [Experience] level_1_exp_needed)
+level = function(experience: int, needed: int) : int do
+	if needed <= 0
+		return 1
+	end
+	return Math.clamp(1 + experience / needed, 1, 100)
+end
+
+# Damage of a skill ("power" : [Particle] damage of the skill) hitting a Pokemon : "attack" of the attacker, "defense"
+# of the target (the special statistics for a special skill), "level" of the attacker. At least 2 damage when it has power
+damage = function(power: int, attack: int, defense: int, level: int) : int do
+	# A skill without power (ex : a status skill) does no damage
+	if power <= 0
+		return 0
+	end
+	if defense < 1
+		defense = 1
+	end
+	return (2 * level / 5 + 2) * power * attack / defense / 50 + 2
+end

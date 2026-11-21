@@ -56,6 +56,12 @@ public:
 	InterfaceScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
 };
 
+// Battles : Battle = import "bind:game.battle"
+class BattleScriptModule : public GameScriptModule {
+public:
+	BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
+};
+
 // All the game functions given to the scripts.
 // "worldState" : current map (world, physics space), when the functions are called
 struct GameScriptModules {
@@ -66,4 +72,5 @@ struct GameScriptModules {
 	MapScriptModule map;
 	PartyScriptModule party;
 	InterfaceScriptModule interface;
+	BattleScriptModule battle;
 };

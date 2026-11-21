@@ -6,13 +6,14 @@
 #include "../../../PokeballComponent.h"
 #include "Graphic/GraphicComponent.h"
 
-PokeballTransition::PokeballTransition(unsigned int, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder) :
+PokeballTransition::PokeballTransition(unsigned int, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder, std::optional<ska::Point<int>> destination) :
 	ska::Task(std::bind(&PokeballTransition::run, this, std::placeholders::_1)),
 	m_pokeball(pokeballHolder),
 	m_loadState(0),
 	m_trainerId(sourceEntity),
 	m_pokemonId(destinationEntity),
-	m_entityManager(em) {
+	m_entityManager(em),
+	m_destination(std::move(destination)) {
 
 }
 
@@ -28,7 +29,8 @@ bool PokeballTransition::run(ska::Task&){
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_trainerId);
 		PokeballComponent pokeballc;
 
-		pokeballc.finalPos = { static_cast<int>(pokemonPc.x + pokemonHp.xOffset + pokemonHp.width / 2), static_cast<int>(pokemonPc.y + pokemonHp.yOffset + pokemonHp.height / 2) };
+		const auto pokemonPosition = m_destination.value_or(ska::Point<int>(static_cast<int>(pokemonPc.x), static_cast<int>(pokemonPc.y)));
+		pokeballc.finalPos = { static_cast<int>(pokemonPosition.x + pokemonHp.xOffset + pokemonHp.width / 2), static_cast<int>(pokemonPosition.y + pokemonHp.yOffset + pokemonHp.height / 2) };
 		m_entityManager.addComponent<PokeballComponent>(m_pokeball, std::move(pokeballc));
 		m_entityManager.addComponent<ska::GraphicComponent>(m_pokeball, ska::GraphicComponent());
 		auto pokePc = pc;

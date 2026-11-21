@@ -11,6 +11,7 @@
 #include "../Fight/SkillFactory.h"
 #include "StateFightLoading.h"
 #include "Core/State/StateBase.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
 
 class WorldState;
 class FightComponent;
@@ -47,6 +48,10 @@ private:
 	ska::CameraSystem* m_cameraSystem;
 
 	const int m_opponentScriptId;
+	const int m_pokemonScriptId;
+	const int m_opponentLevel;
+	const int m_pokemonExperience;
+	const ska::Point<int> m_pokemonPosition;
 	const ska::IniReader m_opponent;
 	const ska::IniReader m_pokemon;
 	const ska::EntityId m_pokemonId;
@@ -57,6 +62,7 @@ private:
 	int m_loadState;
 
 	ska::InputComponent* m_ic;
+	ska::InputComponent m_input;
 	ska::EntityId m_pokeball;
 
 	SkillFactory m_skillFactory;

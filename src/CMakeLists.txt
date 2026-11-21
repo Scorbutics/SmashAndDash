@@ -30,7 +30,10 @@ set(GAME_SCRIPT_MODULES
 	${GAME_ROOT_DIR}/Levels/dialog.miniska
 	${GAME_ROOT_DIR}/Levels/story.miniska
 	${GAME_ROOT_DIR}/Levels/surf.miniska
-	${GAME_ROOT_DIR}/Levels/jump_wall.miniska)
+	${GAME_ROOT_DIR}/Levels/jump_wall.miniska
+	# Called by the battles (BattleRules)
+	${GAME_ROOT_DIR}/Data/Battle/rules.miniska
+	${GAME_ROOT_DIR}/Data/Battle/ai.miniska)
 file(GLOB_RECURSE GAME_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/Levels/*.miniska ${GAME_ROOT_DIR}/Resources/*.miniska)
 list(REMOVE_ITEM GAME_SCRIPTS ${GAME_SCRIPT_MODULES})
 skalang_check_scripts(smash_and_dash_scripts_check

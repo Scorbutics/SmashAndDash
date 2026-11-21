@@ -25,6 +25,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake, crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface, shop |
+| Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon |
 
 The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
 
@@ -38,6 +39,17 @@ Entities are `int` handles (`Engine.origin()`, `Engine.entity(name)`, `Character
 
 - Hooks: `Engine.on("event", function(entity: int) do ... end)` calls the function each time the game emits the event (it runs as a script: it can wait). `Engine.removeHook(id)` removes it. The game declares its events (`ScriptVM::declareEvent`): an unknown event is an error.
 - The game can ask a script for a value (ex: a formula): `ScriptVM::call<long>(file, function, arguments)`. Such a function cannot wait.
+
+## Battles
+
+Battles are real time (C++): the Pokemon of the player uses its skills with the keys 1 to 4, a skill can be used again after its cooldown. The scripts give the rules and the behaviours:
+
+- `Data/Battle/rules.miniska`: statistics from the base statistics and the level (`stat`, `maxHp`), level from the experience (`level`), damage of a hit (`damage`).
+- `Data/Battle/ai.miniska`: the skill used by a wild Pokemon (`decide`, asked every 500 ms with the skills it can use now: ready and in range).
+- These functions are called by the battle and cannot wait. When one fails, the error is logged and a default value is used.
+- `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team, and waits for its end (back on the map): `true` when the player won.
+- Hooks: `Engine.on("battle.won", ...)` and `Engine.on("battle.lost", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle: what they do after a wait happens back on the map.
+- Every Pokemon has the basic attack (`Data/Skills/autoattack.ini`) in its first slot without a projectile skill.
 
 ## Shared script modules
 

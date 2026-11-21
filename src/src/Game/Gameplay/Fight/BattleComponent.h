@@ -9,6 +9,10 @@ public:
 	}
 
 	RawStatistics<int> variations;
+	int maxHp = 10;
+	int level = 1;
+	// Data/Monsters/<monster>.ini
+	int monster = 0;
 };
 
 SKA_DECLARE_COMPONENT(BattleComponent);

@@ -25,7 +25,7 @@ bool GUIBattle::onStatisticsChange(StatisticsChangeEvent& sce) {
 	const ska::EntityId& target = sce.getEntity();
 	RawStatistics<int>& targetStats = sce.getStats();
 	if (m_bars.find(target) != m_bars.end()) {
-		m_bars[target]->setCurrentValue(targetStats.hp);
+		m_bars[target]->setCurrentValue(targetStats.hp < 0 ? 0 : targetStats.hp);
 	}
 	return true;
 }
@@ -47,9 +47,8 @@ bool GUIBattle::onBattleStart(BattleEvent& be) {
 		const auto& pokemonBc = em.getComponent<BattleComponent>(pokemon);
 		const auto& opponentBc = em.getComponent<BattleComponent>(opponent);
 
-		//TODO max hp venant des stats du fichier ini
-		addHPBar(camSys, pokemonBc.hp, pokemonBc.hp, em, pokemon);
-		addHPBar(camSys, opponentBc.hp, opponentBc.hp, em, opponent);
+		addHPBar(camSys, static_cast<unsigned int>(pokemonBc.maxHp), static_cast<unsigned int>(pokemonBc.hp), em, pokemon);
+		addHPBar(camSys, static_cast<unsigned int>(opponentBc.maxHp), static_cast<unsigned int>(opponentBc.hp), em, opponent);
 	} else {
 		removeHPBar(be.getBattler());
 		removeHPBar(be.getOpponent());

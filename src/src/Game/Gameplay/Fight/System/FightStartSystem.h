@@ -16,6 +16,12 @@ namespace ska {
 	class EntityLocator;
 }
 
+class SavegameManager;
+
+// Starts a battle between the Pokemon of the player (the first of its team) and a wild Pokemon ("opponent", with a FightComponent)
+void StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent);
+
+// Starts a battle sometimes, when a wild Pokemon is close to the player
 class FightStartSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, FightComponent, ska::GraphicComponent>, ska::PossibleComponent<>> {
 public:
 	FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator);

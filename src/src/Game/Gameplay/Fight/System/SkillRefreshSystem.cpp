@@ -8,6 +8,8 @@
 #include "Core/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
 #include <SDL_stdinc.h>
+#include <algorithm>
+#include <cmath>
 
 SkillRefreshSystem::SkillRefreshSystem(ska::EntityManager& em) :
 System(em) {
@@ -35,6 +37,13 @@ void SkillRefreshSystem::refresh(unsigned int) {
 		const auto& directionalPoint = ska::Point<float>::rotate(emptyFloatPoint, pp.angle, velocityPoint);
 		mc.vx = directionalPoint.x;
 		mc.vy = directionalPoint.y;
+		// A skill has no physics body : it moves by itself (pixels per frame), through the obstacles.
+		// It crosses its range in 6 frames at least : a fast skill (ex : a melee attack) can touch its target.
+		const auto maxStep = std::max(4.F, static_cast<float>(sc.range) / 6.F);
+		const auto step = std::sqrt(mc.vx * mc.vx + mc.vy * mc.vy);
+		const auto factor = step > maxStep ? maxStep / step : 1.F;
+		pc.x += static_cast<long>(mc.vx * factor);
+		pc.y += static_cast<long>(mc.vy * factor);
 
 		/* Max range reached : delete the skill */
 		if (static_cast<unsigned int>(ska::RectangleUtils::distanceSquared<int>(sc.origin, pc)) > sc.range*sc.range) {

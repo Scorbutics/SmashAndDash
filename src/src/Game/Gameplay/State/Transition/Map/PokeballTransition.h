@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+#include "Core/Point.h"
 #include "Base/Task/Task.h"
 #include "Core/ECS/Basics/Input/InputComponent.h"
 #include "../../../PokemonGameEventDispatcher.h"
@@ -11,7 +13,8 @@ namespace ska {
 
 class PokeballTransition : public ska::Task {
 public:
-    PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder);
+    // The pokeball is thrown from "sourceEntity" to "destinationEntity", or to "destination" when given (pixels)
+    PokeballTransition(unsigned int delay, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder, std::optional<ska::Point<int>> destination = {});
     virtual ~PokeballTransition() = default;
 
 private:
@@ -23,4 +26,5 @@ private:
 	const ska::EntityId& m_trainerId;
 	const ska::EntityId& m_pokemonId;
     CustomEntityManager& m_entityManager;
+    std::optional<ska::Point<int>> m_destination;
 };

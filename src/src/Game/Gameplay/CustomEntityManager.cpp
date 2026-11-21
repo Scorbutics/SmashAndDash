@@ -28,6 +28,8 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	const auto& sd = shc.skills[index];
 	sc.speed = sd.speed;
 	sc.damage = -sd.buffEnemy.hp;
+	sc.power = sd.power;
+	sc.special = sd.special;
 	sc.knockback = sd.knockback;
 	sc.range = sd.range;
 	const auto maxNoise = sd.noise;
@@ -87,6 +89,12 @@ void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space&
 	em.addComponent(character, std::move(bc));
 }
 
+ska::EntityId CustomEntityManager::createMovingCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name) {
+	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize, name);
+	fillCharacter(em, space, character);
+	return character;
+}
+
 ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name) {
 	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
@@ -94,6 +102,21 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	fillCharacter(em, space, trainer);
 	
 	return trainer;
+}
+
+void CustomEntityManager::place(ska::EntityManager& em, ska::cp::Space& space, ska::EntityId entity, ska::Point<float> position) {
+	if (em.hasComponent<ska::PositionComponent>(entity)) {
+		auto& pc = em.getComponent<ska::PositionComponent>(entity);
+		pc.x = static_cast<long>(position.x);
+		pc.y = static_cast<long>(position.y);
+	}
+	if (em.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& hitbox = em.getComponent<ska::cp::HitboxComponent>(entity);
+		space.getBody(hitbox.bodyIndex).setPosition(ska::cp::Vect{ position.x, position.y });
+		if (hitbox.controlBodyIndex != hitbox.bodyIndex) {
+			space.getBody(hitbox.controlBodyIndex).setPosition(ska::cp::Vect{ position.x, position.y });
+		}
+	}
 }
 
 ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name) {

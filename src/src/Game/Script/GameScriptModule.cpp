@@ -32,6 +32,9 @@
 #include "../Gameplay/Data/MapEvent.h"
 #include "../Gameplay/Data/DialogEvent.h"
 #include "../Gameplay/World/WorldState.h"
+#include "../Gameplay/Fight/FightComponent.h"
+#include "ScriptConstants.h"
+#include "../Gameplay/Fight/System/FightStartSystem.h"
 
 namespace {
 	// Entity of a script entity handle (an error when the entity was removed)
@@ -410,10 +413,53 @@ InterfaceScriptModule::InterfaceScriptModule(ska::scripting::ScriptVM& vm, Custo
 	m_builder.generate();
 }
 
+BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "battle") {
+
+	m_builder.bindField("start", [&vm, &entityManager, &ged, &worldState](std::vector<ska::NodeValue> params) {
+		const auto monster = Int(params[0]);
+		const auto level = Int(params[1]);
+		if (!std::ifstream{ "./Data/Monsters/" + std::to_string(monster) + ".ini" }.good()) {
+			throw std::runtime_error("no data for the pokemon " + std::to_string(monster) + " (Data/Monsters)");
+		}
+		const auto* trainer = worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
+		if (trainer == nullptr || !entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+			throw std::runtime_error("a battle needs the player on the map");
+		}
+
+		// The wild Pokemon appears near the player (3 blocks on its right : the Pokemon of the player appears between them)
+		const auto blockSize = static_cast<int>(worldState.getWorld().getBlockSize());
+		const auto& position = entityManager.getComponent<ska::PositionComponent>(*trainer);
+		const auto opponent = CustomEntityManager::createMovingCharacterNG(entityManager, worldState.getSpace(), ska::Point<int>( static_cast<int>(position.x) / blockSize + 3, static_cast<int>(position.y) / blockSize ), monster, blockSize);
+		auto fight = FightComponent{};
+		fight.level = static_cast<unsigned int>(level < 1 ? 1 : level);
+		fight.opponentScriptId = monster;
+		entityManager.addComponent<FightComponent>(opponent, std::move(fight));
+
+		// The script goes on once the battle is over (the battle counter changed), with its result
+		const auto battles = worldState.battles();
+		StartBattle(entityManager, ged, worldState, *trainer, opponent);
+		vm.suspendUntil([&worldState, battles]() { return worldState.battles() != battles; },
+			[&worldState]() { return ska::NodeValue{ worldState.lastBattleWon() }; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("battles", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ static_cast<long>(worldState.battles()) };
+	});
+
+	m_builder.bindField("lastWon", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ worldState.lastBattleWon() };
+	});
+
+	m_builder.generate();
+}
+
 GameScriptModules::GameScriptModules(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	dialog(vm, entityManager, ged, worldState),
 	character(vm, entityManager, ged, worldState),
 	map(vm, entityManager, ged, worldState),
 	party(vm, entityManager, ged, worldState),
-	interface(vm, entityManager, ged, worldState) {
+	interface(vm, entityManager, ged, worldState),
+	battle(vm, entityManager, ged, worldState) {
 }

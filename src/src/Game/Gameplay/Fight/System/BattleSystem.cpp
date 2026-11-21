@@ -7,30 +7,96 @@
 #include "Core/Utils/PhysicUtils.h"
 #include "Base/Values/Numbers/NumberUtils.h"
 #include "Graphic/GraphicComponent.h"
+#include "../BattleRules.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
+#include "Core/ECS/Basics/Physic/ForceComponent.h"
+#include <cmath>
 
-BattleSystem::BattleSystem(CustomEntityManager& em, const ska::EntityId player, const ska::EntityId opponent, const ska::IniReader& playerReader, const ska::IniReader& opponentReader) :
-    System(em), m_customEM(em),
-    m_pokemon(player), m_opponent(opponent),
-    m_pokemonReader(playerReader), m_opponentReader(opponentReader) {
-
+BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, const ska::EntityId pokemon, const ska::EntityId opponent, unsigned int blockSize) :
+	System(em),
+	SubObserver<ska::InputKeyEvent>(std::bind(&BattleSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
+	m_customEM(em),
+	m_rules(rules),
+	m_pokemon(pokemon),
+	m_opponent(opponent),
+	m_blockSize(blockSize == 0 ? 1 : blockSize) {
 }
 
-void BattleSystem::refresh(unsigned int) {
+bool BattleSystem::fighting(ska::EntityId fighter) const {
 	const auto& processed = getEntities();
-	for (ska::EntityId entityId : processed) {
-		//const ska::InputActionContainer& iac = entityId == m_pokemon ? m_playerICM.getActions() : m_opponentICM.getActions();
+	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0;
+}
 
-		/* TODO SkillShots */
-		/*if (iac[ska::InputAction::ShotSkill1]) {
-			createSkill(0, entityId);
-		} else if (iac[ska::InputAction::ShotSkill2]) {
-			createSkill(1, entityId);
-		} else if (iac[ska::InputAction::ShotSkill3]) {
-			createSkill(2, entityId);
-		} else if (iac[ska::InputAction::ShotSkill4]) {
-			createSkill(3, entityId);
-		}*/
+std::array<unsigned long, 4>& BattleSystem::lastUses(ska::EntityId fighter) {
+	return fighter == m_pokemon ? m_pokemonUses : m_opponentUses;
+}
 
+const std::array<unsigned long, 4>& BattleSystem::lastUses(ska::EntityId fighter) const {
+	return fighter == m_pokemon ? m_pokemonUses : m_opponentUses;
+}
+
+bool BattleSystem::skillReady(unsigned int index, ska::EntityId from) const {
+	if ((from != m_pokemon && from != m_opponent) || !fighting(from) || index >= 4) {
+		return false;
+	}
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
+	const auto lastUse = lastUses(from)[index];
+	return skill.particleNumber > 0 && (lastUse == 0 || m_time - lastUse >= skill.cooldown);
+}
+
+bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
+	if (!skillReady(index, from)) {
+		return false;
+	}
+	// 0 means "never used"
+	lastUses(from)[index] = m_time == 0 ? 1 : m_time;
+	const auto& position = m_componentAccessor.get<ska::PositionComponent>(from);
+	SLOG(ska::LogLevel::Debug) << "Battle : " << (from == m_pokemon ? "the pokemon of the player" : "the wild pokemon") << " uses its skill " << index
+		<< " (" << m_componentAccessor.get<SkillsHolderComponent>(from).skills[index].name << ") from " << position.x << ", " << position.y;
+	createSkill(index, from);
+	return true;
+}
+
+bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
+	const auto& actions = event.icm.getActions();
+	const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
+	for (auto index = 0u; index < 4; index++) {
+		if (actions[skillActions[index]]) {
+			useSkill(index, m_pokemon);
+		}
+	}
+	return true;
+}
+
+void BattleSystem::decide() {
+	if (!fighting(m_opponent) || !fighting(m_pokemon)) {
+		return;
+	}
+	const auto& opponentBc = m_componentAccessor.get<BattleComponent>(m_opponent);
+	const auto& opponentPosition = m_componentAccessor.get<ska::PositionComponent>(m_opponent);
+	const auto& pokemonPosition = m_componentAccessor.get<ska::PositionComponent>(m_pokemon);
+	const auto dx = static_cast<double>(opponentPosition.x - pokemonPosition.x);
+	const auto dy = static_cast<double>(opponentPosition.y - pokemonPosition.y);
+	const auto pixels = std::sqrt(dx * dx + dy * dy);
+	const auto distance = static_cast<int>(pixels / m_blockSize);
+
+	// The skills it can use now : ready, and reaching the Pokemon of the player
+	const auto& skills = m_componentAccessor.get<SkillsHolderComponent>(m_opponent).skills;
+	auto ready = std::vector<bool>{};
+	for (auto index = 0u; index < 4; index++) {
+		ready.push_back(skillReady(index, m_opponent) && pixels <= static_cast<double>(skills[index].range));
+	}
+	const auto decision = m_rules.decide(opponentBc.monster, distance, opponentBc.hp, opponentBc.maxHp, ready);
+	if (decision >= 0) {
+		useSkill(static_cast<unsigned int>(decision), m_opponent);
+	}
+}
+
+void BattleSystem::refresh(unsigned int ellapsedTime) {
+	m_time += ellapsedTime;
+	if (m_time >= m_nextDecision) {
+		m_nextDecision = m_time + DecisionDelay;
+		decide();
 	}
 }
 
@@ -56,7 +122,8 @@ void BattleSystem::createSkill(const unsigned int index, ska::EntityId from) {
 	auto n = shc.skills[index].particleNumber;
 
 	for (auto i = 0; i < n; i++) {
-		auto skill = m_customEM.createSkill(shc, i);
+		// Each particle is the skill used (not the skill at the index of the particle)
+		auto skill = m_customEM.createSkill(shc, index);
 
 		const auto& scPtr = m_componentPossibleAccessor.get<SkillComponent>(skill);
 		if(scPtr == nullptr) {

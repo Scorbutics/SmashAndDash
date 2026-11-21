@@ -26,6 +26,7 @@ namespace ska {
 	}
 }
 struct GameScriptModules;
+class BattleRules;
 #include "Game/Graphic/DebugDrawer.h"
 
 namespace ska {
@@ -65,11 +66,22 @@ public:
 	ska::cp::Space& getSpace();
 	// Runs the skalang scripts started by the script triggers
 	ska::ScriptRunner& getScriptRunner();
+	ska::scripting::ScriptVM& getScripts();
+	// Battle rules and AI (scripts)
+	BattleRules& getBattleRules();
+
+	// End of a battle : its result is given to the scripts waiting for it (Battle.start), and to the hooks
+	// ("battle.won", "battle.lost", with the player)
+	void battleEnded(bool won);
+	unsigned int battles() const { return m_battles; }
+	bool lastBattleWon() const { return m_lastBattleWon; }
 
 	bool loadedOnce() const;
 	std::vector<ska::IniReader>& getMobSettings() override;
 
 	const std::string& getFileName() const;
+	// Name of the current map (its directory in Levels, ex : "greencity")
+	std::string getMapName() const;
 	const std::string& getTilesetName() const;
 
 	void reinit(const std::string& fileName, const std::string& chipsetName);
@@ -127,6 +139,9 @@ private:
 	std::unique_ptr<ska::scripting::ScriptVM> m_scripts;
 	std::unique_ptr<ska::scripting::EngineModule> m_engineScriptModule;
 	std::unique_ptr<GameScriptModules> m_gameScriptModules;
+	std::unique_ptr<BattleRules> m_battleRules;
+	unsigned int m_battles = 0;
+	bool m_lastBattleWon = false;
 
 };
 

@@ -14,12 +14,39 @@
 #include "../Fight/System/SkillRefreshSystem.h"
 #include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
+#include "../Fight/BattleRules.h"
+#include "../Fight/System/SkillHitSystem.h"
+
+namespace {
+	BattleComponent Fighter(BattleRules& rules, const ska::IniReader& data, int monster, int level) {
+		const auto base = [&data](const std::string& statistic) {
+			const auto key = "BaseStats " + statistic;
+			return data.exists(key) ? data.get<int>(key) : 10;
+		};
+		auto fighter = BattleComponent{};
+		fighter.monster = monster;
+		fighter.level = level;
+		fighter.maxHp = rules.maxHp(base("hp"), level);
+		fighter.hp = fighter.maxHp;
+		fighter.attack = rules.stat(base("attack"), level);
+		fighter.defense = rules.stat(base("defense"), level);
+		fighter.speAttack = rules.stat(base("spe_attack"), level);
+		fighter.speDefense = rules.stat(base("spe_defense"), level);
+		fighter.speed = rules.stat(base("speed"), level);
+		SLOG_STATIC(ska::LogLevel::Info, StateFight) << "Battle : pokemon " << monster << " level " << level << ", " << fighter.maxHp << " hit points";
+		return fighter;
+	}
+}
 
 StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::Point<int> fightPos, FightComponent fc) :
 	m_eventDispatcher(ged),
 	m_entityManager(em),
 	m_worldState(ws),
 	m_opponentScriptId(fc.opponentScriptId),
+	m_pokemonScriptId(fc.pokemonScriptId),
+	m_opponentLevel(fc.level < 1 ? 1 : static_cast<int>(fc.level)),
+	m_pokemonExperience(fc.pokemonExperience),
+	m_pokemonPosition(fc.pokemonPosition),
 	m_opponent("./Data/Monsters/" + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 	m_pokemon("./Data/Monsters/" + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
 	m_pokemonId(fc.fighterPokemon),
@@ -57,9 +84,17 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	m_cameraSystem = cameraSystem.get();
 	addLogic(std::move(cameraSystem));	
 	addLogic(std::make_unique<PokeballSystem>(m_entityManager));
-	addLogic(std::make_unique<BattleSystem>(m_entityManager, m_pokemonId, m_opponentId, m_pokemon, m_opponent));
+	auto& rules = m_worldState.getBattleRules();
+	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
+	addLogic(std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId, blockSize));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager));
-	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher));
+	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_pokemonId, m_opponentId));
+	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId));
+
+	// Statistics of the fighters : from their data and their level, with the battle rules (scripts)
+	const auto experienceNeeded = m_pokemon.exists("Experience level_1_exp_needed") ? m_pokemon.get<int>("Experience level_1_exp_needed") : 0;
+	const auto pokemonLevel = rules.level(m_pokemonExperience, experienceNeeded);
+	m_loader.setFighters(Fighter(rules, m_pokemon, m_pokemonScriptId, pokemonLevel), Fighter(rules, m_opponent, m_opponentScriptId, m_opponentLevel));
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 
 	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_eventDispatcher));
@@ -68,7 +103,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	//m_iaICM.addContext(ska::InputContextPtr());
 
 	SkillsHolderComponent shc;
-	m_skillFactory.loadSkills(m_pokemon, m_pokemonId, shc);
+	SkillFactory{ m_worldState, static_cast<unsigned int>(pokemonLevel) }.loadSkills(m_pokemon, m_pokemonId, shc);
 	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, std::move(shc));
 
 	SkillsHolderComponent shcOpponent;
@@ -77,13 +112,16 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	m_entityManager.addComponent<SkillsHolderComponent>(m_opponentId, std::move(shcOpponent));
 	m_descriptor.load(m_opponent, "Description");
 
-	m_ic = &m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
+	// A copy : the storage of a removed component is reset
+	m_input = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
+	m_ic = &m_input;
 	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 
 
 	auto delay = 3000;
 	auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, "Un " + m_descriptor.getName() + " sauvage apparaît !");
-	auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
+	// The Pokemon of the player has no position yet : the pokeball is thrown where it appears
+	auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball, m_pokemonPosition);
 
 	auto finalTask = m_loader.load();
 
@@ -103,14 +141,15 @@ void StateFight::beforeUnload() {
     std::unique_ptr<ska::CompoundTask> firstTask;
     {
         auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
-        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, "Le " + m_descriptor.getName() + " a été battu.");
+        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, m_worldState.lastBattleWon() ?
+			"Le " + m_descriptor.getName() + " a été battu." : "Votre Pokémon est K.O.");
         firstTask = std::make_unique<ska::CompoundTask>(std::move(pokeballTask), std::move(dialogTask));
     }
 
 	auto finalTask = std::make_unique<ska::Task>([&](ska::Task&) {
 		m_loadState = 0;
-		m_entityManager.removeComponent<ska::IARandomMovementComponent>(m_trainerId);
-		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, std::move(*m_ic));
+		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ska::InputComponent{ *m_ic });
+		SLOG(ska::LogLevel::Info) << "Battle over : the player controls the trainer again";
 		m_ic = nullptr;
 		m_entityManager.removeEntity(m_pokemonId);
 		return false;

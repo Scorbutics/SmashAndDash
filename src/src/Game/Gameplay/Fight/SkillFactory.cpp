@@ -57,12 +57,25 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 		sd.alterAlly = skillData.get<int>("StatusAlter ally");
 		sd.alterEnemy = skillData.get<int>("StatusAlter enemy");
 	}
+
+	sd.power = skillData.exists("Particle damage") ? skillData.get<int>("Particle damage") : -sd.buffEnemy.hp;
+	sd.special = skillData.exists("Description class") && skillData.get<std::string>("Description class") == "Speciale";
 }
 
 void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const {
 	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))) && i < shc.skills.size(); i++) {
 		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i)) + "_level") <= m_level) {
 			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))));
+		}
+	}
+
+	// Every Pokemon has the basic attack : in the first slot that cannot be used in a battle
+	// (no skill, or a skill without projectile : the buffs do not exist in this version of the game)
+	for (auto& skill : shc.skills) {
+		if (skill.particleNumber <= 0) {
+			skill = SkillDescriptor{};
+			createSkill(skill, BasicAttack);
+			break;
 		}
 	}
 }

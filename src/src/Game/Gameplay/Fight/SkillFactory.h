@@ -12,6 +12,8 @@ class SkillsHolderComponent;
 
 class SkillFactory {
 public:
+	static constexpr auto BasicAttack = "./Data/Skills/autoattack.ini";
+
 	SkillFactory(WorldState& ws, unsigned int level);
 	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;
 	~SkillFactory() = default;

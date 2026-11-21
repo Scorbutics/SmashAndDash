@@ -25,6 +25,7 @@
 #include "World/TilesetEventLoaderText.h"
 #include "Scripting/ScriptVM.h"
 #include "Scripting/EngineModule.h"
+#include "../Fight/BattleRules.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../Script/GameScriptModule.h"
 #include "World/TileWorldPhysics.h"
@@ -82,6 +83,9 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	// Scripts can hide a character (Engine.disableComponent(character, "GraphicComponent"))
 	m_engineScriptModule->registerComponent<ska::GraphicComponent>("GraphicComponent");
 	m_gameScriptModules = std::make_unique<GameScriptModules>(*m_scripts, m_entityManager, m_eventDispatcher, *this);
+	m_battleRules = std::make_unique<BattleRules>(*m_scripts);
+	m_scripts->declareEvent("battle.won");
+	m_scripts->declareEvent("battle.lost");
 
 	ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
 
@@ -96,6 +100,15 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 
 const std::string& WorldState::getFileName() const {
 	return m_worldFileName;
+}
+
+std::string WorldState::getMapName() const {
+	auto name = m_worldFileName;
+	while (!name.empty() && (name.back() == '/' || name.back() == '\\')) {
+		name.pop_back();
+	}
+	const auto separator = name.find_last_of("/\\");
+	return separator == std::string::npos ? name : name.substr(separator + 1);
 }
 
 const std::string& WorldState::getTilesetName() const {
@@ -303,7 +316,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 			if (spawnAllowed) {
 				auto level = rand() % (dataSpawn->get<int>("Data level_min") + dataSpawn->get<int>("Data level_max") + 1) + dataSpawn->get<int>("Data level_min");
-				auto mob = m_entityManager.createCharacter(ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
+				auto mob = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
 				/* 0 = Predifined */
 				/* 1 = Random */
 				/* 2 = Fixe */
@@ -330,8 +343,7 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				ska::Rectangle hitbox{ static_cast<int>(pc.x + hc.xOffset), static_cast<int>(pc.y + hc.yOffset), static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 				const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
-				pc.x = targetBlock.x - hc.xOffset;
-				pc.y = targetBlock.y- hc.yOffset;
+				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(targetBlock.x - hc.xOffset), static_cast<float>(targetBlock.y - hc.yOffset)));
 
 				successfulSpawns++;
 			}
@@ -462,6 +474,21 @@ ska::cp::Space& WorldState::getSpace() {
 
 ska::ScriptRunner& WorldState::getScriptRunner() {
 	return *m_scripts;
+}
+
+ska::scripting::ScriptVM& WorldState::getScripts() {
+	return *m_scripts;
+}
+
+BattleRules& WorldState::getBattleRules() {
+	return *m_battleRules;
+}
+
+void WorldState::battleEnded(bool won) {
+	m_battles++;
+	m_lastBattleWon = won;
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	m_engineScriptModule->emit(won ? "battle.won" : "battle.lost", trainer == nullptr ? std::optional<ska::EntityId>{} : std::optional<ska::EntityId>{ *trainer });
 }
 
 WorldState::~WorldState() = default;

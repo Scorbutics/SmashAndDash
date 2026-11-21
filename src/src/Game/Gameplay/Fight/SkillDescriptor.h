@@ -10,18 +10,22 @@ public:
 	std::string name;
 	std::string type;
 	std::string context;
-	int id;
+	int id = 0;
 
 	RawStatistics<int> buffAlly;
 	RawStatistics<int> buffEnemy;
-	int alterAlly;
-	int alterEnemy;
+	int alterAlly = 0;
+	int alterEnemy = 0;
 
-	float speed;
-	int particleNumber;
-	unsigned int cooldown;
-	int range;
-	int knockback;
-	int noise;
-	float amplitude;
+	float speed = 0;
+	int particleNumber = 0;
+	unsigned int cooldown = 0;
+	int range = 0;
+	int knockback = 0;
+	int noise = 0;
+	float amplitude = 0;
+	// Power of the skill ([Particle] damage), for the damage rule
+	int power = 0;
+	// Special skill ([Description] class=Speciale) : the special statistics are used
+	bool special = false;
 };

@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "FightStartSystem.h"
+#include <cmath>
 #include "../../../Utils/IDs.h"
 #include "Core/Utils/RectangleUtils.h"
 #include "Core/Utils/TimeUtils.h"
@@ -9,7 +10,41 @@
 #include "../../CustomEntityManager.h"
 #include "../../Data/MapEvent.h"
 #include "Core/ECS/EntityLocator.h"
+#include "Base/IO/Readers/IniReader.h"
+#include "../../Data/SavegameManager.h"
 #include "../../../Script/ScriptConstants.h"
+
+void StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent) {
+	auto& fc = cem.getComponent<FightComponent>(opponent);
+	// The Pokemon of the player : the first of its team (Pikachu when the team is empty)
+	fc.pokemonScriptId = 25;
+	fc.pokemonExperience = 0;
+	const auto team = ska::IniReader{ "./Data/Saves/" + ws.getSaveGame().getPathName() + "/Team/0.ini" };
+	if (team.isLoaded() && team.exists("Data id")) {
+		fc.pokemonScriptId = team.get<int>("Data id");
+		fc.pokemonExperience = team.exists("Data experience") ? team.get<int>("Data experience") : 0;
+	}
+	fc.trainer = trainer;
+	const auto& pc = cem.getComponent<ska::PositionComponent>(opponent);
+	const auto& pcPlayer = cem.getComponent<ska::PositionComponent>(trainer);
+	const int blockSize = ws.getWorld().getBlockSize();
+	// It appears next to the player, towards the wild Pokemon (it has no position until the pokeball opens, but its physics
+	// body is already there)
+	const auto dx = pc.x - pcPlayer.x;
+	const auto dy = pc.y - pcPlayer.y;
+	const auto horizontal = std::abs(dx) >= std::abs(dy);
+	fc.pokemonPosition = ska::Point<int>(static_cast<int>(pcPlayer.x) + (horizontal ? (dx >= 0 ? blockSize : -blockSize) : 0),
+		static_cast<int>(pcPlayer.y) + (horizontal ? 0 : (dy >= 0 ? blockSize : -blockSize)));
+	fc.fighterPokemon = CustomEntityManager::createMovingCharacterNG(cem, ws.getSpace(), ska::Point<int>(fc.pokemonPosition.x / blockSize, fc.pokemonPosition.y / blockSize), fc.pokemonScriptId, blockSize);
+	cem.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
+	fc.fighterOpponent = opponent;
+	SLOG_STATIC(ska::LogLevel::Info, FightStartSystem) << "Battle : pokemon " << fc.pokemonScriptId << " against pokemon " << fc.opponentScriptId << " level " << fc.level;
+
+	MapEvent me(MapEventType::Switch_Battle);
+	me.fightComponent = &fc;
+	me.position = pcPlayer;
+	ged.ska::Observable<MapEvent>::notifyObservers(me);
+}
 
 FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator) :
 	System(cem),
@@ -54,20 +89,7 @@ void FightStartSystem::refresh(unsigned int) {
 		if (*trainer != entityId && ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
 			if (currentDelay >= BATTLE_START_TICKS) {
 				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
-					/* Start a fight */
-					auto& fc = m_componentAccessor.get<FightComponent>(entityId);
-					/* TODO first available pokemon of the team */
-					fc.pokemonScriptId = 25;
-					fc.trainer = *trainer;
-					const int blockSize = m_worldScene.getWorld().getBlockSize();
-					fc.fighterPokemon = m_cem.createCharacter(ska::Point<int>(pc.x / blockSize, pc.y / blockSize), fc.pokemonScriptId, blockSize);
-					m_componentAccessor.remove<ska::PositionComponent>(fc.fighterPokemon);
-					fc.fighterOpponent = entityId;
-
-					MapEvent me(MapEventType::Switch_Battle);
-					me.fightComponent = &fc;
-					me.position = pcPlayer;
-					m_ged.ska::Observable<MapEvent>::notifyObservers(me);
+					StartBattle(m_cem, m_ged, m_worldScene, *trainer, entityId);
 				}
 				m_t0 = ska::TimeUtils::getTicks();
 				break;

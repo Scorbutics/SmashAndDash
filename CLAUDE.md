@@ -16,10 +16,10 @@ The build compiles every script (`smash_and_dash_scripts_check`): a script error
 Read [SCRIPTING.md](SCRIPTING.md) (where scripts start, the functions given to them) and `external/ska/external/skalang/doc/LANGUAGE.md` (the language) before writing a script. The syntax differs from Ruby, JavaScript and Python. Keep skalang's rules: strong static typing, no implicit conversion, no null value.
 
 - Map events: `Levels/<map>/<map>E.txt`. Map scripts: `Levels/<map>/*.miniska`. Shared helpers: `Levels/story.miniska`, `Levels/dialog.miniska`. Tile scripts: `Resources/Chipsets/<chipset>/Scripts/`.
-- The functions the game gives to the scripts are C++ modules in `src/src/Game/Script` (`game.dialog`, `game.character`, `game.map`, `game.party`, `game.interface`), each declared by a template in `src/scripts/game.<name>.miniska`. Change the template with the C++ binding.
+- The functions the game gives to the scripts are C++ modules in `src/src/Game/Script` (`game.dialog`, `game.character`, `game.map`, `game.party`, `game.interface`, `game.battle`), each declared by a template in `src/scripts/game.<name>.miniska`. Change the template with the C++ binding.
 - A script only imported by other scripts (no `run` function) is listed in `GAME_SCRIPT_MODULES` (`src/CMakeLists.txt`).
 - Script files with accents are Latin-1 (the text rendering). `¤` is a line break in a message.
 
 ## Boundaries
 
-C++ (ECS systems) owns the per frame work, including the real time battle simulation. Scripts own the content and the sequencing: they call verbs and wait for their completion. A missing feature for scripts is a new verb in a game module (C++ and template), not polling from the script.
+C++ (ECS systems) owns the per frame work, including the real time battle simulation (`Gameplay/Fight`): skills, movements, hits, end of the battle. The battle rules (statistics, damage) and the AI of the wild Pokemon are scripts (`Data/Battle`, called through `BattleRules`), the battle flow is scripted with `Battle.start` and the `battle.won` / `battle.lost` hooks. Scripts own the content and the sequencing: they call verbs and wait for their completion. A missing feature for scripts is a new verb in a game module (C++ and template), not polling from the script.

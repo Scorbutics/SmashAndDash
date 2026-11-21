@@ -33,6 +33,11 @@ public:
 
 	float speed;
 	float amplitude;
+
+	int power = 0;
+	bool special = false;
+	// A skill hits once
+	bool spent = false;
 };
 
 SKA_DECLARE_COMPONENT(SkillComponent);

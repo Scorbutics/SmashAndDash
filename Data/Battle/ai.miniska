@@ -1,0 +1,30 @@
+# Behaviour of the wild Pokemon during a battle : the battle asks for a decision regularly (every 500 ms).
+
+Engine = import "bind:ska.engine"
+
+# Skill used by the wild Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.
+# "distance" : distance to the Pokemon of the player, in blocks. "ready" : the skills it can use now (known, not cooling down)
+decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[]) : int do
+	if distance > 6
+		return -1
+	end
+	# Hesitates sometimes, more when it is hurt
+	hesitation = 3
+	if hp * 3 < maxHp
+		hesitation = 2
+	end
+	if Engine.random(hesitation) == 0
+		return -1
+	end
+	# One of the skills it can use, at random
+	usable = []: int
+	ready | (skillReady, index) do
+		if skillReady
+			usable = usable + index
+		end
+	end
+	if usable.size() == 0
+		return -1
+	end
+	return usable[Engine.random(usable.size())]
+end

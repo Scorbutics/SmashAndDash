@@ -21,7 +21,11 @@ public:
 	virtual ska::EntityId createCharacter(const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "") override;	
 	~CustomEntityManager() override = default;
 
+	// Moves an entity (pixels) with its physics body, when it has one
+	static void place(ska::EntityManager& em, ska::cp::Space& space, ska::EntityId entity, ska::Point<float> position);
 	static ska::EntityId createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");
+	// A character moved by forces (inputs, AI movements) : its physics body has a control body, as the trainer
+	static ska::EntityId createMovingCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");
 	static ska::EntityId createTrainerNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name = "");
 	static void fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction = DEFAULT_FRICTION, float rotationFriction = DEFAULT_ROTATION_FRICTION);
 private:
