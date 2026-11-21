@@ -1,0 +1,21 @@
+# Dialogs with the player : Dialog = import "wd:Levels/dialog"
+Engine = import "bind:ska.engine"
+Game = import "bind:game"
+
+# A dialog is shown (shared by all the scripts)
+inDialog = false
+
+# Shows a message to the player, who cannot move until the message is closed
+say = function(text: string) do
+	if inDialog
+		return
+	end
+	inDialog = true
+	player = Engine.entity("trainer")
+	Engine.disableComponent(player, "InputComponent")
+	Game.message(text)
+	Engine.enableComponent(player, "InputComponent")
+	# The key closing the message does not open it again right away
+	Engine.wait(500)
+	inDialog = false
+end

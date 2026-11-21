@@ -1,0 +1,11 @@
+# Tile touched : arguments are the previous block (x, y), the touched block (x, y) and the direction
+Engine = import "bind:ska.engine"
+JumpWall = import "wd:Levels/jump_wall"
+
+run = function(args: string[]) do
+	# Ledge jumped over from the right (going left) only
+	direction = (args[4]: int)
+	if direction == 3
+		JumpWall.jump(Engine.origin(), direction)
+	end
+end

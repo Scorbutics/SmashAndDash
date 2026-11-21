@@ -1,0 +1,7 @@
+# Goes to another map
+# Arguments : map name, block x, block y
+Game = import "bind:game"
+
+run = function(args: string[]) do
+	Game.teleport(args[0], (args[1]: int), (args[2]: int))
+end

@@ -1,0 +1,32 @@
+# Surfing : Surf = import "wd:Levels/surf"
+Engine = import "bind:ska.engine"
+Game = import "bind:game"
+
+# Block property of the water
+Water = 1
+
+# The player is on the water
+surfing = false
+# The player is going on / leaving the water
+moving = false
+
+# Moves the player onto the water, or back to the ground, in a direction
+enter = function(player: int, direction: int) do
+	if moving
+		return
+	end
+	moving = true
+	Engine.disableComponent(player, "InputComponent")
+	if surfing
+		Game.setLayer(player, 1)
+		Engine.log("surf out")
+	else
+		Game.setLayer(player, 0)
+		Engine.log("surf in")
+	end
+	Game.playAnimation(player, 2)
+	Game.move(player, direction, 40, false)
+	surfing = Game.blockHasProperty(0, Game.blockX(player), Game.blockY(player), Water)
+	Engine.enableComponent(player, "InputComponent")
+	moving = false
+end
