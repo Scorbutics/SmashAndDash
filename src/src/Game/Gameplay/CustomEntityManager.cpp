@@ -97,7 +97,7 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 }
 
 ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name) {
-	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize);
+	const auto character = em.createCharacter(startBlockPos, id, worldBlockSize, name);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
