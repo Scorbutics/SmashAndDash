@@ -1,0 +1,16 @@
+# Battle rules (Data/Battle/rules.miniska)
+Test = import "bind:std.native.test"
+Rules = import "wd:Data/Battle/rules"
+
+run = function(args: string[]) do
+	Test.equal((Rules.stat(55, 5): string), "10", "a statistic at a level")
+	Test.equal((Rules.maxHp(35, 5): string), "18", "hit points at a level")
+	Test.equal((Rules.level(41, 13): string), "4", "level from the experience")
+	Test.equal((Rules.level(0, 0): string), "1", "no experience needed : level 1")
+	Test.equal((Rules.level(99999, 1): string), "100", "level 100 at most")
+	Test.equal((Rules.damage(0, 50, 5, 10): string), "0", "a skill without power does no damage")
+	Test.equal((Rules.damage(4, 8, 7, 4): string), "2", "at least 2 damage with power")
+	Test.check(Rules.damage(15, 30, 5, 20) > Rules.damage(15, 30, 20, 20), "more defense, less damage")
+	Test.check(Rules.damage(15, 30, 0, 20) > 0, "no defense : no division by zero")
+	Test.equal((Rules.experience(10, 3): string), "30", "experience won")
+end

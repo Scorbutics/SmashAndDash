@@ -41,3 +41,11 @@ skalang_check_scripts(smash_and_dash_scripts_check
 	MODULES ${GAME_SCRIPT_MODULES}
 	BIND_DIRECTORIES ${SKA_SCRIPT_TEMPLATES_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/scripts
 	WORKING_DIRECTORY ${GAME_ROOT_DIR})
+
+# Headless script tests (ctest, no window) : the scripts run with the templates of the engine and game functions (their
+# default bodies), and the fakes of tests/fakes (ex : an engine keeping the game variables)
+file(GLOB GAME_SCRIPT_TESTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/tests/*_test.miniska)
+skalang_test_scripts(game_script
+	TESTS ${GAME_SCRIPT_TESTS}
+	BIND_DIRECTORIES ${SKA_SCRIPT_TEMPLATES_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/scripts ${GAME_ROOT_DIR}/tests/fakes
+	WORKING_DIRECTORY ${GAME_ROOT_DIR})

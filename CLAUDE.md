@@ -11,6 +11,8 @@ LD_LIBRARY_PATH=build/lib build/bin/ska_main   # from the repository root (the g
 
 The build compiles every script (`smash_and_dash_scripts_check`): a script error fails the build, with its file and line.
 
+Script tests, headless (no window): `cd build && ctest`. They are `tests/*_test.miniska` (assertions: `Test = import "bind:std.native.test"`), run with the templates of the engine and game functions (default bodies) and the fakes of `tests/fakes` (ex: the engine keeps the game variables, `setNextRandom` chooses the random values). Add a test with a script change when the script has logic (rules, AI, helpers).
+
 ## Scripts
 
 Read [SCRIPTING.md](SCRIPTING.md) (where scripts start, the functions given to them) and `external/ska/external/skalang/doc/LANGUAGE.md` (the language) before writing a script. The syntax differs from Ruby, JavaScript and Python. Keep skalang's rules: strong static typing, no implicit conversion, no null value.

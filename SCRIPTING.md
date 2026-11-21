@@ -69,6 +69,10 @@ Battles are real time (C++): the Pokemon of the player uses its skills with the 
   - Story steps, saved with the game: `Story.done(step)` / `Story.setDone(step)`.
 - `Levels/surf.miniska`, `Levels/jump_wall.miniska`: water and ledges.
 
+## Tests
+
+`tests/*_test.miniska` are run by `ctest` (in the build directory), without the game: the engine and game functions are their templates (default bodies), or the fakes of `tests/fakes`. A test declares `run`, and checks with `Test = import "bind:std.native.test"` (`check`, `equal`, `fail`).
+
 ## Text
 
 Messages are encoded in Latin-1 (the game text rendering), so script files containing accents are saved in Latin-1. In a message, `¤` (byte 0xA4) is a line break.

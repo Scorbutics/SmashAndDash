@@ -1,0 +1,54 @@
+# Fake of the engine for the headless script tests (it replaces the template of "bind:ska.engine") :
+# the game variables are kept, "random" gives a chosen value, the entities are given names.
+
+values = [:]: int
+entities = [:]: int
+nextRandom = 0
+
+wait = function(milliseconds: int) do end
+log = function(message: string) do end
+
+random = function(max: int) : int do
+	if max <= 0
+		return 0
+	end
+	return nextRandom % max
+end
+
+origin = function() : int do return -1 end
+
+entity = function(name: string) : int do
+	if entities.has(name)
+		return entities[name]
+	end
+	return -1
+end
+
+exists = function(entity: int) : bool do return entity >= 0 end
+disableComponent = function(entity: int, component: string) do end
+enableComponent = function(entity: int, component: string) do end
+
+variable = function(name: string) : int do
+	if values.has(name)
+		return values[name]
+	end
+	return 0
+end
+
+setVariable = function(name: string, value: int) do
+	values[name] = value
+end
+
+script = function(file: string, arguments: string[]) do end
+EntityHook = function(entity: int) do end
+on = function(event: string, handler: EntityHook) : int do return 0 end
+removeHook = function(hook: int) do end
+
+# Test controls (only in the fake)
+setNextRandom = function(value: int) do
+	nextRandom = value
+end
+
+setEntity = function(name: string, entity: int) do
+	entities[name] = entity
+end

@@ -41,4 +41,6 @@ ENDFOREACH()
 add_subdirectory(${curdir})
 
 #Internal (Game code)
+# Headless script tests (ctest) : see src/CMakeLists.txt
+enable_testing()
 add_subdirectory(src)
