@@ -49,16 +49,17 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 
 	const std::string& fogSpritePath = "Fog sprite";
 	const auto sprite = reader.exists(fogSpritePath);
-	const auto xintensity = reader.get<int>("Fog xintensity");
-	const auto yintensity = reader.get<int>("Fog yintensity");
-	const auto number = reader.get<int>("Fog number");
-	const auto transparency = reader.get<bool>("Fog transparency");
-
+	// (A map without fog has no fog settings)
 	if(!sprite) {
 		SLOG(ska::LogLevel::Info) << "Le brouillard est inexistant sur cette map";
 		m_fog.hide(true);
 		return;
 	}
+
+	const auto xintensity = reader.get<int>("Fog xintensity");
+	const auto yintensity = reader.get<int>("Fog yintensity");
+	const auto number = reader.get<int>("Fog number");
+	const auto transparency = reader.get<bool>("Fog transparency");
 
 	const auto alpha = transparency ? WEATHER_ALPHA_LVL : 255;
 	m_fog.load(reader.get<std::string>(fogSpritePath), number, 100, xintensity, yintensity, alpha);
@@ -68,7 +69,8 @@ void WorldImpl::loadFogFromData(const std::string& stringDataFile) {
 void WorldImpl::loadWeatherFromData(const std::string& stringDataFile) {
 	ska::IniReader reader(stringDataFile);
 	const std::string& weatherSpritePath = "Weather sprite";
-	const auto sprite = reader.exists(weatherSpritePath);
+	// (An empty sprite : no weather)
+	const auto sprite = reader.exists(weatherSpritePath) && !reader.get<std::string>(weatherSpritePath).empty();
 
 	if(sprite) {
 		const auto transparency = reader.get<bool>("Weather transparency");
