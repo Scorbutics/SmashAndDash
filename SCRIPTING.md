@@ -21,15 +21,22 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | --- | --- | --- |
 | Engine (ska) | `Engine = import "bind:ska.engine"` | wait, log, random, origin (the entity that triggered the script), entity (by name), disableComponent / enableComponent, variable / setVariable (saved game variables), script |
 | Dialogs | `GameDialog = import "bind:game.dialog"` | message, choice (yes / no), cinematic |
-| Characters | `Character = import "bind:game.character"` | move, jump, direction / setDirection, setLayer, playAnimation, place, remove, wander, patrol, addCharacter, follow |
+| Characters | `Character = import "bind:game.character"` | move, jump, direction / setDirection, setLayer, playAnimation, place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake, crumbling |
-| Team | `Party = import "bind:game.party"` | addPokemon, heal, pokemonOut |
+| Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface, shop |
 | Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon |
+| Saving | `Save = import "bind:game.save"` | save |
 
 The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
 
-Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `heal`, `shake`, `crumbling`, `follow`, `hideInterface`, `pokemonOut` and `shop`.
+Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `shake`, `crumbling`, `hideInterface`, `pokemonOut` and `shop`.
+
+## Saving
+
+- `Save.save()` saves the map and the position of the player, and the game variables (`Engine.setVariable`). The nurse of the Pokemon center saves the game after healing.
+- The team is saved as it changes (`Data/Saves/<save>/Team/<index>.ini`): a new Pokemon, the hit points and the experience after a battle, the healing.
+- The game variables are in `Data/Saves/<save>/variables.ini`, `[Variable]` section, `name=value`.
 
 ## Entities
 
@@ -47,7 +54,8 @@ Battles are real time (C++): the Pokemon of the player uses its skills with the 
 - `Data/Battle/rules.miniska`: statistics from the base statistics and the level (`stat`, `maxHp`), level from the experience (`level`), damage of a hit (`damage`).
 - `Data/Battle/ai.miniska`: the skill used by a wild Pokemon (`decide`, asked every 500 ms with the skills it can use now: ready and in range).
 - These functions are called by the battle and cannot wait. When one fails, the error is logged and a default value is used.
-- `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team, and waits for its end (back on the map): `true` when the player won.
+- `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team able to fight, and waits for its end (back on the map): `true` when the player won, `false` right away when no Pokemon can fight.
+- After a battle, the Pokemon of the player keeps its hit points left and wins experience (`experience` rule). A Pokemon with no hit points left does not fight until it is healed (`Party.heal`).
 - Hooks: `Engine.on("battle.won", ...)` and `Engine.on("battle.lost", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle: what they do after a wait happens back on the map.
 - Every Pokemon has the basic attack (`Data/Skills/autoattack.ini`) in its first slot without a projectile skill.
 

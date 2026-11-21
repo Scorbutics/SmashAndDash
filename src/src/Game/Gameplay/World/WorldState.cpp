@@ -26,6 +26,7 @@
 #include "Scripting/ScriptVM.h"
 #include "Scripting/EngineModule.h"
 #include "../Fight/BattleRules.h"
+#include "../Data/Team.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../Script/GameScriptModule.h"
 #include "World/TileWorldPhysics.h"
@@ -484,9 +485,21 @@ BattleRules& WorldState::getBattleRules() {
 	return *m_battleRules;
 }
 
-void WorldState::battleEnded(bool won) {
+void WorldState::battleEnded(const BattleResult& result) {
+	const auto won = result.won;
 	m_battles++;
 	m_lastBattleWon = won;
+	// The team keeps the hit points left and the experience won
+	if (result.teamIndex >= 0) {
+		auto team = Team{ m_saveManager.getPathName() };
+		auto pokemon = team.member(result.teamIndex);
+		if (pokemon.has_value()) {
+			pokemon->hp = result.hpLeft;
+			pokemon->experience += result.experience;
+			team.setMember(result.teamIndex, *pokemon);
+			SLOG(ska::LogLevel::Info) << "Battle : the pokemon " << pokemon->id << " of the team has " << pokemon->hp << " hit points, " << pokemon->experience << " experience (+" << result.experience << ")";
+		}
+	}
 	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
 	m_engineScriptModule->emit(won ? "battle.won" : "battle.lost", trainer == nullptr ? std::optional<ska::EntityId>{} : std::optional<ska::EntityId>{ *trainer });
 }

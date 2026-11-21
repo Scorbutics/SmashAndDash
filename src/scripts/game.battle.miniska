@@ -3,7 +3,9 @@
 # Hooks : Engine.on("battle.won", ...) and Engine.on("battle.lost", ...) are called at the end of each battle (with the player).
 
 # Starts a battle against a wild Pokemon (Data/Monsters/<monster>.ini) of a level, with the first Pokemon of the team.
-# The script waits until the end of the battle, back on the map : true when the player won
+# The script waits until the end of the battle, back on the map : true when the player won.
+# false right away (no battle) when no Pokemon of the team can fight.
+# After the battle, the hit points left and the experience won are saved in the team.
 start = function(monster: int, level: int) : bool do return false end
 
 # Number of battles since the game started, result of the last one

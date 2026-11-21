@@ -1,6 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "AI/System/IARandomMovementSystem.h"
 #include "AI/System/IADefinedMovementSystem.h"
+#include "AI/System/IAFollowSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../Fight/System/FightStartSystem.h"
@@ -40,6 +41,7 @@ void StateMap::beforeLoad(ska::State* lastState) {
 
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
+	addLogic(std::make_unique<ska::IAFollowSystem>(m_entityManager));
 
 	// The map loading scripts (ex : the characters of the map) start before the positioned ones (ex : a script on the block
 	// where the player arrives)

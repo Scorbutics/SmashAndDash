@@ -14,7 +14,8 @@ namespace ska {
 class StatisticsSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, BattleComponent>, ska::PossibleComponent<>> {
 public:
 	// The battle ends when a Pokemon has no hit points left : won when it is the opponent
-	StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, ska::EntityId pokemon, ska::EntityId opponent);
+	// "teamIndex" : index of the Pokemon of the player in the team (-1 : not from the team)
+	StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, ska::EntityId pokemon, ska::EntityId opponent, int teamIndex);
 	StatisticsSystem(const StatisticsSystem&) = delete;
 	StatisticsSystem operator=(const StatisticsSystem&) = delete;
 	virtual ~StatisticsSystem();
@@ -28,5 +29,6 @@ private:
 	PokemonGameEventDispatcher& m_ged;
 	ska::EntityId m_pokemon;
 	ska::EntityId m_opponent;
+	int m_teamIndex;
 	bool m_ended = false;
 };

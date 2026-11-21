@@ -12,18 +12,23 @@
 #include "Core/ECS/EntityLocator.h"
 #include "Base/IO/Readers/IniReader.h"
 #include "../../Data/SavegameManager.h"
+#include "../../Data/Team.h"
 #include "../../../Script/ScriptConstants.h"
 
-void StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent) {
+bool StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent) {
 	auto& fc = cem.getComponent<FightComponent>(opponent);
-	// The Pokemon of the player : the first of its team (Pikachu when the team is empty)
-	fc.pokemonScriptId = 25;
-	fc.pokemonExperience = 0;
-	const auto team = ska::IniReader{ "./Data/Saves/" + ws.getSaveGame().getPathName() + "/Team/0.ini" };
-	if (team.isLoaded() && team.exists("Data id")) {
-		fc.pokemonScriptId = team.get<int>("Data id");
-		fc.pokemonExperience = team.exists("Data experience") ? team.get<int>("Data experience") : 0;
+	// The Pokemon of the player : the first of its team able to fight
+	const auto team = Team{ ws.getSaveGame().getPathName() };
+	const auto teamIndex = team.firstAble();
+	if (!teamIndex.has_value()) {
+		SLOG_STATIC(ska::LogLevel::Info, FightStartSystem) << "Battle : no pokemon of the team can fight";
+		return false;
 	}
+	const auto pokemon = *team.member(*teamIndex);
+	fc.pokemonScriptId = pokemon.id;
+	fc.pokemonExperience = pokemon.experience;
+	fc.pokemonHp = pokemon.hp;
+	fc.pokemonTeamIndex = *teamIndex;
 	fc.trainer = trainer;
 	const auto& pc = cem.getComponent<ska::PositionComponent>(opponent);
 	const auto& pcPlayer = cem.getComponent<ska::PositionComponent>(trainer);
@@ -44,6 +49,7 @@ void StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, Worl
 	me.fightComponent = &fc;
 	me.position = pcPlayer;
 	ged.ska::Observable<MapEvent>::notifyObservers(me);
+	return true;
 }
 
 FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator) :

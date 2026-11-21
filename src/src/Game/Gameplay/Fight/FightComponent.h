@@ -21,6 +21,9 @@ public:
 	int opponentScriptId;
 	int pokemonScriptId;
 	int pokemonExperience;
+	// Its index in the team, its hit points
+	int pokemonTeamIndex = -1;
+	int pokemonHp = 0;
 	// Where the Pokemon of the player appears (pixels) : the pokeball is thrown there
 	ska::Point<int> pokemonPosition;
 	ska::EntityId trainer;

@@ -12,7 +12,8 @@ public:
 
 	void newGame();
 	void loadGame(const std::string& filename);
-	void saveGame(const std::string& filename);
+	// Saves the game : the trainer (map, block position), the game variables. The team is saved as it changes (Team).
+	void saveGame(const std::string& mapName, int blockX, int blockY);
 
 	std::string getSaveName() const override;
 	int getGameVariable(const std::string& x) const override;
@@ -27,10 +28,10 @@ public:
 private:
 	void loadItem(int id, unsigned int amount);
 	void loadTrainer();
-	void saveTrainer();
-	void saveItems();
-	void savePokemonTeam();
+	void saveTrainer(const std::string& mapName, int blockX, int blockY);
 	void loadPokemonTeam();
+	void loadVariables();
+	void saveVariables() const;
 
 	ska::EntityManager& m_entityManager;
 	PokemonGameEventDispatcher& m_ged;

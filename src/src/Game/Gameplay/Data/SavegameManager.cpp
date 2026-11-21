@@ -1,6 +1,8 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <vector>
 #include "SavegameManager.h"
 #include "../../Utils/ChargementImages.h"
 #include "Base/Values/Strings/StringUtils.h"
@@ -35,12 +37,9 @@ void SavegameManager::setGameVariable(const std::string& x, const int value) {
 		m_game_variables[x] = value;
 }
 
-void SavegameManager::saveGame(const std::string& pathname) {
-	m_pathname = pathname;
-	saveTrainer();
-	savePokemonTeam();
-
-	VariablesWriting(m_game_variables, "./Data/Saves/" + m_pathname + "/variables.ini");
+void SavegameManager::saveGame(const std::string& mapName, int blockX, int blockY) {
+	saveTrainer(mapName, blockX, blockY);
+	saveVariables();
 }
 
 std::string SavegameManager::getSaveName() const {
@@ -51,35 +50,48 @@ void SavegameManager::loadGame(const std::string& pathname) {
 	m_pathname = pathname;
 	loadTrainer();
 	loadPokemonTeam();
-	VariablesAcquisition(m_game_variables, "./Data/Saves/" + m_pathname + "/variables.ini");
+	loadVariables();
 
 	std::ofstream tmpScriptList(("./Data/Saves/" + m_pathname + "/tmpscripts.data").c_str(), std::ios::trunc);
 }
 
-void SavegameManager::savePokemonTeam() {
-	ska::IniReader reader;
-
-	for (unsigned int i = 0; i < 6; i++) {
-		const std::string& id = ska::StringUtils::intToStr(i);
-		ska::FileUtils::removeFile(("./Data/Saves/" + m_pathname + "/Team/" + id + ".ini").c_str());
-	}
-
-
-	/*for(unsigned int i = 0; i < wScreen.getPokemonManager().getPokemonTeamSize(); i++)
-	{
-		const std::string& id = ska::StringUtils::intToStr(i);
-		ofstream of("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
-		of.close();
-		reader.load("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
-		if(reader.isLoaded())
-		{
-			Character* pkmn = wScreen.getPokemonManager().getPokemon(i);
-			reader.set("Data id", pkmn->getID());
-			reader.set("Data experience", pkmn->getStatistics()->getExperience());
-			reader.set("Stats hp", pkmn->getHp());
-			reader.save("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "Team" + FILE_SEPARATOR + id + ".ini");
+// variables.ini : the [Variable] section, "name=value" (the numbered variables of the old scripts are named "%00001"...)
+void SavegameManager::loadVariables() {
+	m_game_variables.clear();
+	auto file = std::ifstream{ "./Data/Saves/" + m_pathname + "/variables.ini" };
+	auto line = std::string{};
+	auto inVariables = false;
+	while (std::getline(file, line)) {
+		if (!line.empty() && line.back() == '\r') {
+			line.pop_back();
 		}
-	}*/
+		if (!line.empty() && line.front() == '[') {
+			inVariables = line == "[Variable]";
+			continue;
+		}
+		const auto separator = line.find('=');
+		if (!inVariables || separator == std::string::npos || separator == 0) {
+			continue;
+		}
+		try {
+			m_game_variables[line.substr(0, separator)] = std::stoi(line.substr(separator + 1));
+		} catch (std::exception&) {
+			SLOG(ska::LogLevel::Warn) << "Savegame : invalid variable line \"" << line << "\"";
+		}
+	}
+}
+
+void SavegameManager::saveVariables() const {
+	auto names = std::vector<std::string>{};
+	for (const auto& variable : m_game_variables) {
+		names.push_back(variable.first);
+	}
+	std::sort(names.begin(), names.end());
+	auto file = std::ofstream{ "./Data/Saves/" + m_pathname + "/variables.ini", std::ios::trunc };
+	file << "[Game]\nvar_number=" << names.size() << "\n[Variable]\n";
+	for (const auto& name : names) {
+		file << name << "=" << m_game_variables.at(name) << "\n";
+	}
 }
 
 void SavegameManager::loadPokemonTeam() {
@@ -122,37 +134,17 @@ const std::string& SavegameManager::getPathName() {
 }
 
 
-void SavegameManager::saveTrainer() {
-	//Character* hero;
-	std::ofstream of("./Data/Saves/" + m_pathname + "/trainer.ini");
-
-	if(of.fail()) {
-		ska::FileUtils::createDirectory("./Data/Saves/" + m_pathname);
-		ska::FileUtils::createDirectory("./Data/Saves/" + m_pathname + "/Team");
-
-		of.open("./Data/Saves/" + m_pathname + "/trainer.ini");
-	}
-
-	/*ska::IniReader reader("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");
-
-	hero = wScreen.getEntityFactory().getTrainer();
-	reader.set("Trainer start_posx", hero->getHitboxCenterPos().x/TAILLEBLOC);
-	reader.set("Trainer start_posy", hero->getHitboxCenterPos().y/TAILLEBLOC);
-	reader.set("Trainer start_map_name", wScreen.getWorld().getName());
-	reader.save("." FILE_SEPARATOR "Data" FILE_SEPARATOR "Saves" FILE_SEPARATOR + m_pathname + FILE_SEPARATOR "trainer.ini");*/
-
-	saveItems();
-}
-
-void SavegameManager::saveItems() {
-	ska::IniReader reader("./Data/Saves/" + m_pathname + "/trainer.ini");
-	/*for(unsigned int i = 0; i < wScreen.getInventory().getSize(); i++)
-	{
-		const std::string& id = ska::StringUtils::intToStr(i);
-		reader.set("Items " + id + "_id", wScreen.getInventory().getObjectFromIndex(i)->getID());
-		reader.set("Items " + id + "_amount", wScreen.getInventory().getAmountFromIndex(i));
-	}*/
-	reader.save("./Data/Saves/" + m_pathname + "/trainer.ini");
+void SavegameManager::saveTrainer(const std::string& mapName, int blockX, int blockY) {
+	const auto path = "./Data/Saves/" + m_pathname;
+	ska::FileUtils::createDirectory(path);
+	ska::FileUtils::createDirectory(path + "/Team");
+	// The other keys (ex : the items) are kept
+	auto reader = ska::IniReader{ path + "/trainer.ini" };
+	reader.set("Trainer start_map_name", mapName);
+	reader.set("Trainer start_posx", blockX);
+	reader.set("Trainer start_posy", blockY);
+	reader.save(path + "/trainer.ini");
+	m_startMapName = mapName;
 }
 
 void SavegameManager::loadTrainer() {

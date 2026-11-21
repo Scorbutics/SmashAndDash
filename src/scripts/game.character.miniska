@@ -35,5 +35,6 @@ wander = function(entity: int) do end
 # "g" : left. Ex : "bdhg")
 patrol = function(entity: int, path: string) do end
 
-# Not available in this version of the game (logged, nothing is done)
+# The entity walks after "target" (one block behind it) until it is called with the target -1, or until the target is removed.
+# It does not wait : the script goes on.
 follow = function(entity: int, target: int) do end

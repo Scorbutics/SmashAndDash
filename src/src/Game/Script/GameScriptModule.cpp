@@ -21,6 +21,7 @@
 #include "Graphic/GraphicComponent.h"
 #include "AI/IADefinedMovementComponent.h"
 #include "AI/IARandomMovementComponent.h"
+#include "AI/IAFollowComponent.h"
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../Gameplay/Data/EntityLoadEvent.h"
@@ -33,6 +34,8 @@
 #include "../Gameplay/Data/DialogEvent.h"
 #include "../Gameplay/World/WorldState.h"
 #include "../Gameplay/Fight/FightComponent.h"
+#include "../Gameplay/Fight/BattleRules.h"
+#include "../Gameplay/Data/Team.h"
 #include "ScriptConstants.h"
 #include "../Gameplay/Fight/System/FightStartSystem.h"
 
@@ -189,7 +192,7 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 	m_builder.bindField("addCharacter", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
 		auto& space = worldState.getSpace();
 		const auto& world = worldState.getWorld();
-		const auto character = CustomEntityManager::createCharacterNG(entityManager, space, ska::Point<int>{ Int(params[1]), Int(params[2]) },
+		const auto character = CustomEntityManager::createMovingCharacterNG(entityManager, space, ska::Point<int>{ Int(params[1]), Int(params[2]) },
 			Int(params[0]), static_cast<unsigned int>(world.getBlockSize()), String(params[3]));
 		const auto& script = String(params[4]);
 		if (!script.empty()) {
@@ -303,7 +306,19 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("follow", [](std::vector<ska::NodeValue>) { NotAvailable("follow"); return ska::NodeValue{}; });
+	m_builder.bindField("follow", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		if (params[1].nodeval<long>() < 0) {
+			if (entityManager.hasComponent<ska::IAFollowComponent>(entity)) {
+				entityManager.removeComponent<ska::IAFollowComponent>(entity);
+			}
+			return ska::NodeValue{};
+		}
+		const auto target = Entity(handles, entityManager, params[1]);
+		// One block behind its target
+		entityManager.addComponent<ska::IAFollowComponent>(entity, ska::IAFollowComponent{ target, 48.F });
+		return ska::NodeValue{};
+	});
 
 	m_builder.generate();
 }
@@ -370,28 +385,59 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 			return ska::NodeValue{ false };
 		}
 		auto details = ska::IniReader{ dataFile };
-		const auto hp = details.get<unsigned int>("BaseStats hp");
+		// Level 1 (no experience) : its hit points at this level (battle rules)
+		const auto hp = static_cast<unsigned int>(worldState.getBattleRules().maxHp(details.get<int>("BaseStats hp"), 1));
 
 		// Saved in the team of the savegame, then shown in the team
-		const auto teamPath = "./Data/Saves/" + worldState.getSaveGame().getPathName() + "/Team/";
-		auto index = 0;
-		while (std::ifstream{ teamPath + std::to_string(index) + ".ini" }.good()) {
-			index++;
-		}
-		if (index >= 6) {
+		auto team = Team{ worldState.getSaveGame().getPathName() };
+		auto member = TeamMember{};
+		member.id = id;
+		member.hp = static_cast<int>(hp);
+		if (!team.add(member).has_value()) {
 			SLOG_STATIC(ska::LogLevel::Warn, GameScriptModule) << "Script : the team is full, the pokemon " << id << " is not added";
 			return ska::NodeValue{ false };
-		}
-		{
-			auto teamFile = std::ofstream{ teamPath + std::to_string(index) + ".ini" };
-			teamFile << "[Data]\nid=" << id << "\nexperience=0\n[Stats]\nhp=" << hp << "\n";
 		}
 		auto loadEvent = EntityLoadEvent{ details, static_cast<unsigned int>(id), hp };
 		ged.ska::Observable<EntityLoadEvent>::notifyObservers(loadEvent);
 		return ska::NodeValue{ true };
 	});
 
-	m_builder.bindField("heal", [](std::vector<ska::NodeValue>) { NotAvailable("heal"); return ska::NodeValue{}; });
+	m_builder.bindField("size", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ static_cast<long>(Team{ worldState.getSaveGame().getPathName() }.size()) };
+	});
+
+	m_builder.bindField("hp", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
+		return ska::NodeValue{ static_cast<long>(pokemon.has_value() ? pokemon->hp : 0) };
+	});
+
+	m_builder.bindField("level", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
+		if (!pokemon.has_value()) {
+			return ska::NodeValue{ 0L };
+		}
+		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+		const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+		return ska::NodeValue{ static_cast<long>(worldState.getBattleRules().level(pokemon->experience, needed)) };
+	});
+
+	m_builder.bindField("heal", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		auto team = Team{ worldState.getSaveGame().getPathName() };
+		auto pokemon = team.member(index);
+		if (!pokemon.has_value()) {
+			return ska::NodeValue{};
+		}
+		// Up to its hit points at its level (battle rules)
+		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+		auto& rules = worldState.getBattleRules();
+		const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+		const auto baseHp = data.exists("BaseStats hp") ? data.get<int>("BaseStats hp") : 10;
+		const auto maxHp = rules.maxHp(baseHp, rules.level(pokemon->experience, needed));
+		pokemon->hp = std::min(maxHp, std::max(0, pokemon->hp) + std::max(0, Int(params[1])));
+		team.setMember(index, *pokemon);
+		return ska::NodeValue{};
+	});
 
 	m_builder.bindField("pokemonOut", [](std::vector<ska::NodeValue>) { NotAvailable("pokemonOut"); return ska::NodeValue{}; });
 
@@ -438,7 +484,11 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 
 		// The script goes on once the battle is over (the battle counter changed), with its result
 		const auto battles = worldState.battles();
-		StartBattle(entityManager, ged, worldState, *trainer, opponent);
+		if (!StartBattle(entityManager, ged, worldState, *trainer, opponent)) {
+			// No Pokemon of the team can fight : no battle, lost
+			entityManager.removeEntity(opponent);
+			return ska::NodeValue{ false };
+		}
 		vm.suspendUntil([&worldState, battles]() { return worldState.battles() != battles; },
 			[&worldState]() { return ska::NodeValue{ worldState.lastBattleWon() }; });
 		return ska::NodeValue{};
@@ -455,11 +505,34 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 	m_builder.generate();
 }
 
+SaveScriptModule::SaveScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "save") {
+	(void) ged;
+
+	m_builder.bindField("save", [&entityManager, &worldState](std::vector<ska::NodeValue>) {
+		const auto* trainer = worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
+		if (trainer == nullptr || !entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+			return ska::NodeValue{ false };
+		}
+		// The block of the player, as it is placed when the game is loaded (its position)
+		const auto blockSize = static_cast<int>(worldState.getWorld().getBlockSize());
+		const auto& position = entityManager.getComponent<ska::PositionComponent>(*trainer);
+		const auto blockX = static_cast<int>(position.x + blockSize / 2) / blockSize;
+		const auto blockY = static_cast<int>(position.y + blockSize / 2) / blockSize;
+		worldState.getSaveGame().saveGame(worldState.getMapName(), blockX, blockY);
+		SLOG_STATIC(ska::LogLevel::Info, GameScriptModule) << "Game saved (" << worldState.getMapName() << ", " << blockX << ", " << blockY << ")";
+		return ska::NodeValue{ true };
+	});
+
+	m_builder.generate();
+}
+
 GameScriptModules::GameScriptModules(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	dialog(vm, entityManager, ged, worldState),
 	character(vm, entityManager, ged, worldState),
 	map(vm, entityManager, ged, worldState),
 	party(vm, entityManager, ged, worldState),
 	interface(vm, entityManager, ged, worldState),
-	battle(vm, entityManager, ged, worldState) {
+	battle(vm, entityManager, ged, worldState),
+	save(vm, entityManager, ged, worldState) {
 }

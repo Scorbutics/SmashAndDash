@@ -2,16 +2,18 @@
 #include "StatisticsSystem.h"
 #include "Game/Gameplay/State/StateMap.h"
 #include "Base/IO/Readers/IniReader.h"
+#include "../BattleRules.h"
 #include "Core/ECS/EntityLocator.h"
 #include "Game/Script/ScriptConstants.h"
 
-StatisticsSystem::StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, ska::EntityId pokemon, ska::EntityId opponent) :
+StatisticsSystem::StatisticsSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, ska::EntityId pokemon, ska::EntityId opponent, int teamIndex) :
 	System(em),
 	m_entities(em),
 	m_worldScene(ws),
 	m_ged(ged),
 	m_pokemon(pokemon),
-	m_opponent(opponent) {
+	m_opponent(opponent),
+	m_teamIndex(teamIndex) {
 }
 
 void StatisticsSystem::refresh(unsigned int) {
@@ -32,7 +34,19 @@ void StatisticsSystem::refresh(unsigned int) {
 		if (won) {
 			scheduleDeferredRemove(entityId);
 		}
-		m_worldScene.battleEnded(won);
+		// Result : hit points left of the Pokemon of the player, experience won (battle rules)
+		auto result = BattleResult{};
+		result.won = won;
+		result.teamIndex = m_teamIndex;
+		const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_pokemon);
+		result.hpLeft = pokemon.hp < 0 ? 0 : pokemon.hp;
+		if (won) {
+			const auto& opponent = m_componentAccessor.get<BattleComponent>(m_opponent);
+			const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(opponent.monster) + ".ini" };
+			const auto dropped = data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0;
+			result.experience = m_worldScene.getBattleRules().experience(dropped, opponent.level);
+		}
+		m_worldScene.battleEnded(result);
 
 		// Back to the map, where the player is
 		MapEvent me(MapEventType::Switch_Map);

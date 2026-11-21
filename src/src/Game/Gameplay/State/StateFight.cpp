@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include <algorithm>
 #include "Graphic/System/CameraFixedStrategy.h"
 #include "../World/WorldState.h"
 #include "StateFight.h"
@@ -46,6 +47,8 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_pokemonScriptId(fc.pokemonScriptId),
 	m_opponentLevel(fc.level < 1 ? 1 : static_cast<int>(fc.level)),
 	m_pokemonExperience(fc.pokemonExperience),
+	m_pokemonHp(fc.pokemonHp),
+	m_pokemonTeamIndex(fc.pokemonTeamIndex),
 	m_pokemonPosition(fc.pokemonPosition),
 	m_opponent("./Data/Monsters/" + ska::StringUtils::intToStr(fc.opponentScriptId) + ".ini"),
 	m_pokemon("./Data/Monsters/" + ska::StringUtils::intToStr(fc.pokemonScriptId) + ".ini"),
@@ -88,13 +91,18 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
 	addLogic(std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId, blockSize));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager));
-	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_pokemonId, m_opponentId));
+	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_pokemonId, m_opponentId, m_pokemonTeamIndex));
 	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId));
 
 	// Statistics of the fighters : from their data and their level, with the battle rules (scripts)
 	const auto experienceNeeded = m_pokemon.exists("Experience level_1_exp_needed") ? m_pokemon.get<int>("Experience level_1_exp_needed") : 0;
 	const auto pokemonLevel = rules.level(m_pokemonExperience, experienceNeeded);
-	m_loader.setFighters(Fighter(rules, m_pokemon, m_pokemonScriptId, pokemonLevel), Fighter(rules, m_opponent, m_opponentScriptId, m_opponentLevel));
+	auto pokemonFighter = Fighter(rules, m_pokemon, m_pokemonScriptId, pokemonLevel);
+	// The Pokemon of the team fights with its hit points left
+	if (m_pokemonTeamIndex >= 0) {
+		pokemonFighter.hp = std::max(1, std::min(m_pokemonHp, pokemonFighter.maxHp));
+	}
+	m_loader.setFighters(std::move(pokemonFighter), Fighter(rules, m_opponent, m_opponentScriptId, m_opponentLevel));
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 
 	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_eventDispatcher));

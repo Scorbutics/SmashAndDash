@@ -62,6 +62,12 @@ public:
 	BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
 };
 
+// Saving the game : Save = import "bind:game.save"
+class SaveScriptModule : public GameScriptModule {
+public:
+	SaveScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
+};
+
 // All the game functions given to the scripts.
 // "worldState" : current map (world, physics space), when the functions are called
 struct GameScriptModules {
@@ -73,4 +79,5 @@ struct GameScriptModules {
 	PartyScriptModule party;
 	InterfaceScriptModule interface;
 	BattleScriptModule battle;
+	SaveScriptModule save;
 };

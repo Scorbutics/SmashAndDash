@@ -51,6 +51,8 @@ private:
 	const int m_pokemonScriptId;
 	const int m_opponentLevel;
 	const int m_pokemonExperience;
+	const int m_pokemonHp;
+	const int m_pokemonTeamIndex;
 	const ska::Point<int> m_pokemonPosition;
 	const ska::IniReader m_opponent;
 	const ska::IniReader m_pokemon;

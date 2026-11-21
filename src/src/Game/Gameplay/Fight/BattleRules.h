@@ -21,6 +21,8 @@ public:
 	int maxHp(int baseHp, int level);
 	// Level of a Pokemon from its experience ("experienceNeeded" : [Experience] level_1_exp_needed)
 	int level(int experience, int experienceNeeded);
+	// Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon, "level" : its level)
+	int experience(int dropped, int level);
 	// Damage of a skill hitting a Pokemon
 	int damage(int power, int attack, int defense, int level);
 	// Skill used by a wild Pokemon (its index), -1 for none. "ready" : the skills it can use now

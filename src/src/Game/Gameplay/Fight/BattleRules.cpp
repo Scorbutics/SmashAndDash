@@ -35,6 +35,11 @@ int BattleRules::level(int experience, int experienceNeeded) {
 		1 + (experienceNeeded > 0 ? experience / experienceNeeded : 0))));
 }
 
+int BattleRules::experience(int dropped, int level) {
+	return std::max(0, static_cast<int>(call(m_rulesFile, "experience", { ska::NodeValue{ static_cast<long>(dropped) }, ska::NodeValue{ static_cast<long>(level) } },
+		dropped * level)));
+}
+
 int BattleRules::damage(int power, int attack, int defense, int level) {
 	return std::max(0, static_cast<int>(call(m_rulesFile, "damage", { ska::NodeValue{ static_cast<long>(power) }, ska::NodeValue{ static_cast<long>(attack) },
 		ska::NodeValue{ static_cast<long>(defense) }, ska::NodeValue{ static_cast<long>(level) } }, power)));

@@ -27,6 +27,16 @@ namespace ska {
 }
 struct GameScriptModules;
 class BattleRules;
+
+// End of a battle
+struct BattleResult {
+	bool won = false;
+	// The Pokemon of the player : its index in the team (-1 : not from the team), its hit points left
+	int teamIndex = -1;
+	int hpLeft = 0;
+	// Experience won
+	int experience = 0;
+};
 #include "Game/Graphic/DebugDrawer.h"
 
 namespace ska {
@@ -72,7 +82,7 @@ public:
 
 	// End of a battle : its result is given to the scripts waiting for it (Battle.start), and to the hooks
 	// ("battle.won", "battle.lost", with the player)
-	void battleEnded(bool won);
+	void battleEnded(const BattleResult& result);
 	unsigned int battles() const { return m_battles; }
 	bool lastBattleWon() const { return m_lastBattleWon; }
 

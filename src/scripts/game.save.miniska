@@ -1,0 +1,5 @@
+# Saving the game : Save = import "bind:game.save"
+
+# Saves the game : the map and the position of the player, the game variables (Engine.setVariable).
+# The team is saved as it changes. Returns false when the game could not be saved (no player on the map).
+save = function() : bool do return false end

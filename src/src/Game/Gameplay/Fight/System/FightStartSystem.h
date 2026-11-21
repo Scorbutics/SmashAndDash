@@ -18,8 +18,9 @@ namespace ska {
 
 class SavegameManager;
 
-// Starts a battle between the Pokemon of the player (the first of its team) and a wild Pokemon ("opponent", with a FightComponent)
-void StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent);
+// Starts a battle between the Pokemon of the player (the first of its team able to fight) and a wild Pokemon ("opponent", with
+// a FightComponent). Returns false when no Pokemon of the team can fight (no battle).
+bool StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent);
 
 // Starts a battle sometimes, when a wild Pokemon is close to the player
 class FightStartSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, FightComponent, ska::GraphicComponent>, ska::PossibleComponent<>> {

@@ -21,6 +21,11 @@ level = function(experience: int, needed: int) : int do
 	return Math.clamp(1 + experience / needed, 1, 100)
 end
 
+# Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon) of a level
+experience = function(dropped: int, level: int) : int do
+	return dropped * level
+end
+
 # Damage of a skill ("power" : [Particle] damage of the skill) hitting a Pokemon : "attack" of the attacker, "defense"
 # of the target (the special statistics for a special skill), "level" of the attacker. At least 2 damage when it has power
 damage = function(power: int, attack: int, defense: int, level: int) : int do
