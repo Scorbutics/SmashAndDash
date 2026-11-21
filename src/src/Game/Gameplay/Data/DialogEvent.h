@@ -16,7 +16,10 @@ struct DialogEvent {
 	const ska::Rectangle box;
 	ska::ScriptSleepComponent callback;
 	bool callbackActive = false;
-	// Called once the dialog is closed by the player (ex : resumes the script that shows the message)
-	std::function<void()> onClose;
+	// Called once the dialog is closed by the player (ex : resumes the script that shows the message),
+	// with the answer of the player to a question (validated : true)
+	std::function<void(bool)> onClose;
+	// Yes / no question : the player validates (Return) or refuses (Backspace)
+	bool question = false;
 	const bool scroll;
 };

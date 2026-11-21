@@ -1,6 +1,9 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GameScriptModule.h"
 #include <limits>
+#include <algorithm>
+#include <fstream>
+#include <optional>
 #include "Scripting/ScriptVM.h"
 #include "Base/IO/Readers/IniReader.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
@@ -16,6 +19,11 @@
 #include "Core/Utils/SkaConstants.h"
 #include "Graphic/GraphicComponent.h"
 #include "AI/IADefinedMovementComponent.h"
+#include "AI/IARandomMovementComponent.h"
+#include "Physic/Body.h"
+#include "Physic/Vect.h"
+#include "../Gameplay/Data/EntityLoadEvent.h"
+#include "../Gameplay/Data/SavegameManager.h"
 #include "World/TileWorld.h"
 #include "World/CollisionProfile.h"
 #include "Physic/Space.h"
@@ -53,6 +61,40 @@ namespace {
 		return ska::PositionComponent::getCenterPosition(entityManager.getComponent<ska::PositionComponent>(entity),
 			Require<ska::HitboxComponent>(entityManager, entity, "be located (no hitbox)"));
 	}
+
+	// The old scripts separate the lines of a message with a "\xa4"
+	std::string MessageText(std::string text) {
+		std::replace(text.begin(), text.end(), '\xa4', '\n');
+		return text;
+	}
+
+	void ShowDialog(PokemonGameEventDispatcher& ged, const std::string& text, bool question, std::function<void(bool)> onClose) {
+		// Each dialog has its own window (the previous one can still be scrolling out)
+		static auto dialogNumber = 0u;
+		auto dialog = DialogEvent{ MessageText(text), "scriptDialog" + std::to_string(dialogNumber++), ska::Rectangle{ 0, std::numeric_limits<int>::max(), -1, 4 * 48 }, true };
+		dialog.question = question;
+		dialog.onClose = std::move(onClose);
+		ged.ska::Observable<DialogEvent>::notifyObservers(dialog);
+	}
+
+	// Sets the position of an entity (in pixels) : the position of its physics body, when it has one
+	void Place(ska::EntityManager& entityManager, ska::cp::Space& space, ska::EntityId entity, ska::Point<float> position) {
+		auto& pc = entityManager.getComponent<ska::PositionComponent>(entity);
+		pc.x = static_cast<long>(position.x);
+		pc.y = static_cast<long>(position.y);
+		if (entityManager.hasComponent<ska::cp::HitboxComponent>(entity)) {
+			const auto& hitbox = entityManager.getComponent<ska::cp::HitboxComponent>(entity);
+			space.getBody(hitbox.bodyIndex).setPosition(ska::cp::Vect{ position.x, position.y });
+			if (hitbox.controlBodyIndex != hitbox.bodyIndex) {
+				space.getBody(hitbox.controlBodyIndex).setPosition(ska::cp::Vect{ position.x, position.y });
+			}
+		}
+	}
+
+	// Game features of the old scripts that do not exist in this version of the game : the scripts still call them
+	void NotAvailable(const char* feature) {
+		SLOG_STATIC(ska::LogLevel::Warn, GameScriptModule) << "Script : \"" << feature << "\" is not available in this version of the game";
+	}
 }
 
 GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
@@ -76,14 +118,17 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 
 		auto definedMovement = ska::IADefinedMovementComponent{};
 		definedMovement.origin = CenterPosition(entityManager, entity);
-		definedMovement.delay = std::numeric_limits<unsigned int>::max();
+		// An entity blocked by another one (not a world collision) gives up after a while : 500 ms per block, at least 1 s
+		definedMovement.delay = 1000 + static_cast<unsigned int>(distance / 48.F * 500.F);
 		const auto force = ska::PhysicUtils::getMovement(direction, distance);
 		definedMovement.directions.push_back(ska::Point<int>::cartesian(static_cast<int>(force.power), force.angle));
+		auto done = std::make_shared<bool>(false);
+		definedMovement.finished = [done]() { *done = true; };
 		entityManager.addComponent<ska::IADefinedMovementComponent>(entity, std::move(definedMovement));
 
-		// The script goes on once the movement is done (the movement component is removed)
-		vm.suspendUntil([&entityManager, entity, wasGhost]() {
-			if (entityManager.hasComponent<ska::IADefinedMovementComponent>(entity)) {
+		// The script goes on once the movement is done (or when the movement was removed otherwise : entity removed...)
+		vm.suspendUntil([&entityManager, entity, wasGhost, done]() {
+			if (!*done && entityManager.hasComponent<ska::IADefinedMovementComponent>(entity)) {
 				return false;
 			}
 			if (entityManager.hasComponent<ska::CollidableComponent>(entity)) {
@@ -101,10 +146,23 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 	});
 
 	m_builder.bindField("message", [&vm, &ged](std::vector<ska::NodeValue> params) {
-		auto dialog = DialogEvent{ String(params[0]), "scriptDialog", ska::Rectangle{ 0, std::numeric_limits<int>::max(), -1, 4 * 48 }, true };
 		auto closed = std::make_shared<bool>(false);
-		dialog.onClose = [closed]() { *closed = true; };
-		ged.ska::Observable<DialogEvent>::notifyObservers(dialog);
+		ShowDialog(ged, String(params[0]), false, [closed](bool) { *closed = true; });
+		vm.suspendUntil([closed]() { return *closed; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("choice", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		auto answer = std::make_shared<std::optional<bool>>();
+		ShowDialog(ged, String(params[0]) + "\n\n(Entr\xe9""e : oui, Retour arri\xe8""re : non)", true, [answer](bool validated) { *answer = validated; });
+		vm.suspendUntil([answer]() { return answer->has_value(); }, [answer]() { return ska::NodeValue{ answer->value_or(false) }; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("cinematic", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		// The animation of the cinematic is not played (no cinematic in this version of the game) : only its text is shown
+		auto closed = std::make_shared<bool>(false);
+		ShowDialog(ged, String(params[1]), false, [closed](bool) { *closed = true; });
 		vm.suspendUntil([closed]() { return *closed; });
 		return ska::NodeValue{};
 	});
@@ -214,6 +272,93 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		const auto* block = world.getCollisionProfile().getBlock(static_cast<std::size_t>(layer), static_cast<std::size_t>(x), static_cast<std::size_t>(y));
 		return ska::NodeValue{ block != nullptr && (block->properties.bitMask & property) == property };
 	});
+
+	m_builder.bindField("place", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(entityManager, params[0]);
+		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
+		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ Int(params[1]) * blockSize, Int(params[2]) * blockSize });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("remove", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(entityManager, params[0]);
+		// Removing the entity does not remove its physics body : the body is moved away from the map
+		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ -100000.F, -100000.F });
+		entityManager.removeEntity(entity);
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("wander", [&entityManager](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(entityManager, params[0]);
+		auto randomMovement = ska::IARandomMovementComponent{};
+		randomMovement.delay = 500;
+		entityManager.addComponent<ska::IARandomMovementComponent>(entity, std::move(randomMovement));
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("patrol", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(entityManager, params[0]);
+		// Path letters : "b" down, "d" right, "h" up, "g" left
+		auto directions = std::vector<int>{};
+		for (const auto letter : String(params[1])) {
+			const auto direction = std::string{ "bdhg" }.find(letter);
+			if (direction == std::string::npos) {
+				throw std::runtime_error(std::string{ "unknown path direction \"" } + letter + "\" (b, d, h, g)");
+			}
+			directions.push_back(static_cast<int>(direction));
+		}
+		if (directions.empty()) {
+			return ska::NodeValue{};
+		}
+		auto definedMovement = ska::IADefinedMovementComponent{};
+		definedMovement.origin = CenterPosition(entityManager, entity);
+		definedMovement.loop = true;
+		definedMovement.delay = 1000;
+		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
+		for (const auto direction : directions) {
+			const auto force = ska::PhysicUtils::getMovement(direction, blockSize);
+			definedMovement.directions.push_back(ska::Point<int>::cartesian(static_cast<int>(force.power), force.angle));
+		}
+		entityManager.addComponent<ska::IADefinedMovementComponent>(entity, std::move(definedMovement));
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("addPokemon", [&ged, &worldState](std::vector<ska::NodeValue> params) {
+		const auto id = Int(params[0]);
+		const auto dataFile = "./Data/Monsters/" + std::to_string(id) + ".ini";
+		if (!std::ifstream{ dataFile }.good()) {
+			SLOG_STATIC(ska::LogLevel::Warn, GameScriptModule) << "Script : no data for the pokemon " << id << " (" << dataFile << ")";
+			return ska::NodeValue{ false };
+		}
+		auto details = ska::IniReader{ dataFile };
+		const auto hp = details.get<unsigned int>("BaseStats hp");
+
+		// Saved in the team of the savegame, then shown in the team
+		const auto teamPath = "./Data/Saves/" + worldState.getSaveGame().getPathName() + "/Team/";
+		auto index = 0;
+		while (std::ifstream{ teamPath + std::to_string(index) + ".ini" }.good()) {
+			index++;
+		}
+		if (index >= 6) {
+			SLOG_STATIC(ska::LogLevel::Warn, GameScriptModule) << "Script : the team is full, the pokemon " << id << " is not added";
+			return ska::NodeValue{ false };
+		}
+		{
+			auto teamFile = std::ofstream{ teamPath + std::to_string(index) + ".ini" };
+			teamFile << "[Data]\nid=" << id << "\nexperience=0\n[Stats]\nhp=" << hp << "\n";
+		}
+		auto loadEvent = EntityLoadEvent{ details, static_cast<unsigned int>(id), hp };
+		ged.ska::Observable<EntityLoadEvent>::notifyObservers(loadEvent);
+		return ska::NodeValue{ true };
+	});
+
+	m_builder.bindField("heal", [](std::vector<ska::NodeValue>) { NotAvailable("heal"); return ska::NodeValue{}; });
+	m_builder.bindField("shake", [](std::vector<ska::NodeValue>) { NotAvailable("shake"); return ska::NodeValue{}; });
+	m_builder.bindField("crumbling", [](std::vector<ska::NodeValue>) { NotAvailable("crumbling"); return ska::NodeValue{}; });
+	m_builder.bindField("follow", [](std::vector<ska::NodeValue>) { NotAvailable("follow"); return ska::NodeValue{}; });
+	m_builder.bindField("hideInterface", [](std::vector<ska::NodeValue>) { NotAvailable("hideInterface"); return ska::NodeValue{}; });
+	m_builder.bindField("pokemonOut", [](std::vector<ska::NodeValue>) { NotAvailable("pokemonOut"); return ska::NodeValue{}; });
+	m_builder.bindField("shop", [](std::vector<ska::NodeValue>) { NotAvailable("shop"); return ska::NodeValue{}; });
 
 	m_builder.generate();
 }

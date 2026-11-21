@@ -8,6 +8,10 @@ jump = function(entity: int, power: int) do end
 
 # Shows a message : the script waits until the player closes it
 message = function(text: string) do end
+# Asks a yes / no question : the script waits for the answer of the player
+choice = function(question: string) : bool do return false end
+# Cinematic : an animation with a text (only the text is shown in this version)
+cinematic = function(animation: int, text: string) do end
 
 # Goes to a map, at a block position
 teleport = function(map: string, x: int, y: int) do end
@@ -29,3 +33,25 @@ blockX = function(entity: int) : int do return 0 end
 blockY = function(entity: int) : int do return 0 end
 # The block of a layer at a block position has a property (bit mask)
 blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
+
+# Puts an entity at a block position of the current map
+place = function(entity: int, x: int, y: int) do end
+# Removes an entity from the map
+remove = function(entity: int) do end
+# The character walks around randomly
+wander = function(entity: int) do end
+# The character walks along a path, again and again : one block for each letter ("b" : down, "d" : right, "h" : up,
+# "g" : left. Ex : "bdhg")
+patrol = function(entity: int, path: string) do end
+
+# Adds a pokemon to the team of the player : false if it could not (no data for this pokemon, full team)
+addPokemon = function(id: int) : bool do return false end
+
+# Not available in this version of the game (the old scripts call them : nothing is done)
+heal = function(index: int, value: int) do end
+shake = function(duration: int, intensity: int) do end
+crumbling = function(duration: int) do end
+follow = function(entity: int, target: int) do end
+hideInterface = function(hidden: bool) do end
+pokemonOut = function(index: int) do end
+shop = function() do end

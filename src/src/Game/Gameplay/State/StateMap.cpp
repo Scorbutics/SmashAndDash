@@ -46,12 +46,14 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 
+	// The map loading scripts (ex : the characters of the map) start before the positioned ones (ex : a script on the block
+	// where the player arrives)
+	addLogic(std::make_unique<ska::ScriptWorldTriggerSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld()));
 	auto scriptSystem = std::make_unique<ska::ScriptRefreshSystem>(m_entityManager, m_eventDispatcher, *m_scriptAutoSystem, m_worldState.getWorld());
 	m_scriptSystem = scriptSystem.get();
 	// skalang scripts : started by the same triggers as the legacy ones
 	m_scriptSystem->addScriptRunner(".miniska", m_worldState.getScriptRunner());
 	addLogic(std::move(scriptSystem));
-	addLogic(std::make_unique<ska::ScriptWorldTriggerSystem>(m_entityManager, m_eventDispatcher, m_worldState.getWorld()));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getEntityLocator()));
 }
