@@ -89,6 +89,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_battleRules = std::make_unique<BattleRules>(*m_scripts);
 	m_scripts->declareEvent("battle.won");
 	m_scripts->declareEvent("battle.lost");
+	m_scripts->declareEvent("battle.fled");
 	m_scripts->declareEvent(InputHooks::Action);
 	m_scripts->declareEvent(InputHooks::Jump);
 
@@ -504,6 +505,7 @@ void WorldState::battleEnded(const BattleResult& result) {
 	const auto won = result.won;
 	m_battles++;
 	m_lastBattleWon = won;
+	m_lastBattleFled = result.fled;
 	// The team keeps the hit points left and the experience won
 	if (result.teamIndex >= 0) {
 		auto team = Team{ m_saveManager.getPathName() };
@@ -516,7 +518,7 @@ void WorldState::battleEnded(const BattleResult& result) {
 		}
 	}
 	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
-	m_engineScriptModule->emit(won ? "battle.won" : "battle.lost", trainer == nullptr ? std::optional<ska::EntityId>{} : std::optional<ska::EntityId>{ *trainer });
+	m_engineScriptModule->emit(won ? "battle.won" : (result.fled ? "battle.fled" : "battle.lost"), trainer == nullptr ? std::optional<ska::EntityId>{} : std::optional<ska::EntityId>{ *trainer });
 }
 
 WorldState::~WorldState() = default;

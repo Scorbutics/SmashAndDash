@@ -528,6 +528,10 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		return ska::NodeValue{ worldState.lastBattleWon() };
 	});
 
+	m_builder.bindField("lastFled", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ worldState.lastBattleFled() };
+	});
+
 	m_builder.generate();
 }
 

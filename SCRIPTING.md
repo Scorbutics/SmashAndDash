@@ -25,7 +25,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake (camera), crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |
-| Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon |
+| Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon, lastFled |
 | Saving | `Save = import "bind:game.save"` | save |
 | Bag | `Bag = import "bind:game.inventory"` | count, items, add, remove, money, earn, pay, name, price, use |
 
@@ -50,14 +50,15 @@ Entities are `int` handles (`Engine.origin()`, `Engine.entity(name)`, `Character
 
 ## Battles
 
-Battles are real time (C++): the Pokemon of the player uses its skills with the keys 1 to 4, a skill can be used again after its cooldown. The scripts give the rules and the behaviours:
+Battles are real time (C++), played like a fighting game: the bars of the two fighters are at the top of the screen (the player on the left, the wild Pokemon on the right), the skills of the player at the bottom (keys 1 to 4, a skill can be used again after its cooldown). The fight takes place in an arena (an overlay on the map, framed by the camera): leaving it for 1 second flees the wild Pokemon. A hit stops everything a moment, the Pokemon hit flashes, is stunned and pushed back; a K.O. ends in slow motion. The scripts give the rules and the behaviours:
 
 - `Data/Battle/rules.miniska`: statistics from the base statistics and the level (`stat`, `maxHp`), level from the experience (`level`), damage of a hit (`damage`).
-- `Data/Battle/ai.miniska`: the skill used by a wild Pokemon (`decide`, asked every 500 ms with the skills it can use now: ready and in range).
+- `Data/Battle/ai.miniska`: the wild Pokemon, asked every 300 ms: the skill it uses (`decide`, with the skills it can use now: ready and in range) and how it moves (`move`: hold, approach, retreat, sidestep, from the distance to its opponent and the reach of its ready skills).
+- `SAD_BATTLE_AUTOPLAY=1` (environment): the AI also plays the Pokemon of the player, to watch a battle between two AI (the debug log traces it).
 - These functions are called by the battle and cannot wait. When one fails, the error is logged and a default value is used.
-- `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team able to fight, and waits for its end (back on the map): `true` when the player won, `false` right away when no Pokemon can fight.
+- `Battle = import "bind:game.battle"`: `Battle.start(monster, level)` starts a battle against a wild Pokemon next to the player, with the first Pokemon of the team able to fight, and waits for its end (back on the map): `true` when the player won (`false`: lost or fled, `Battle.lastFled()` tells which), `false` right away when no Pokemon can fight.
 - After a battle, the Pokemon of the player keeps its hit points left and wins experience (`experience` rule). A Pokemon with no hit points left does not fight until it is healed (`Party.heal`).
-- Hooks: `Engine.on("battle.won", ...)` and `Engine.on("battle.lost", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle: what they do after a wait happens back on the map.
+- Hooks: `Engine.on("battle.won", ...)`, `Engine.on("battle.lost", ...)` and `Engine.on("battle.fled", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle: what they do after a wait happens back on the map.
 - Every Pokemon has the basic attack (`Data/Skills/autoattack.ini`) in its first slot without a projectile skill.
 
 ## Shared script modules

@@ -6,7 +6,7 @@
 #include "../Data/PokemonDescriptor.h"
 #include "../System/PokeballSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
-#include "../../Gameplay/Fight/System/StatisticsSystem.h"
+#include "../Fight/BattleStage.h"
 #include "../../Graphic/GUI/GUIBattle.h"
 #include "../Fight/SkillFactory.h"
 #include "StateFightLoading.h"
@@ -71,6 +71,8 @@ private:
 	StateFightLoading m_loader;
 	ska::Point<int> m_fightPos;
 	ska::Point<int> m_screenSize;
+	// State of the battle, shared by its systems and its interface
+	BattleStage m_stage;
 
 
 };

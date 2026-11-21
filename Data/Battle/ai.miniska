@@ -1,17 +1,25 @@
-# Behaviour of the wild Pokemon during a battle : the battle asks for a decision regularly (every 500 ms).
+# Behaviour of a Pokemon played by the AI during a battle (the wild Pokemon) : the battle asks for a decision regularly
+# (every 300 ms) : the skill it uses (decide) and how it moves (move).
 
 Engine = import "bind:ska.engine"
 
-# Skill used by the wild Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.
-# "distance" : distance to the Pokemon of the player, in blocks. "ready" : the skills it can use now (known, not cooling down)
+# Movements (move)
+Hold = 0
+Approach = 1
+Retreat = 2
+SidestepLeft = 3
+SidestepRight = 4
+
+# The side it turns around its opponent : it changes sometimes
+side = SidestepLeft
+
+# Skill used by the Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.
+# "distance" : distance to its opponent, in blocks. "ready" : the skills it can use now (known, not cooling down, reaching)
 decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[]) : int do
-	if distance > 6
-		return -1
-	end
 	# Hesitates sometimes, more when it is hurt
-	hesitation = 3
+	hesitation = 4
 	if hp * 3 < maxHp
-		hesitation = 2
+		hesitation = 3
 	end
 	if Engine.random(hesitation) == 0
 		return -1
@@ -27,4 +35,42 @@ decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[
 		return -1
 	end
 	return usable[Engine.random(usable.size())]
+end
+
+# Around its opponent, sometimes still
+aside = function() : int do
+	if Engine.random(4) == 0
+		if side == SidestepLeft
+			side = SidestepRight
+		else
+			side = SidestepLeft
+		end
+	end
+	if Engine.random(4) == 0
+		return Hold
+	end
+	return side
+end
+
+# Movement of the Pokemon : "distance" to its opponent and "reach" of its longest ready skill (0 : none ready), in pixels
+move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int) : int do
+	if reach > 0
+		# A skill is ready : it comes in reach, then moves around while it attacks
+		if distance > reach - 16
+			return Approach
+		end
+		return aside()
+	end
+	# Nothing ready : it keeps its distance, further when it is hurt
+	safe = 140
+	if hp * 3 < maxHp
+		safe = 220
+	end
+	if distance < safe
+		return Retreat
+	end
+	if distance > safe + 140
+		return Approach
+	end
+	return aside()
 end

@@ -1,9 +1,10 @@
 # Battles : Battle = import "bind:game.battle"
 # The rules of the battles (statistics, damage) and the behaviour of the wild Pokemon are scripts : Data/Battle.
-# Hooks : Engine.on("battle.won", ...) and Engine.on("battle.lost", ...) are called at the end of each battle (with the player).
+# Hooks : Engine.on("battle.won", ...), Engine.on("battle.lost", ...) and Engine.on("battle.fled", ...) are called at the end
+# of each battle (with the player). The player flees a battle by leaving the arena for 1 second.
 
 # Starts a battle against a wild Pokemon (Data/Monsters/<monster>.ini) of a level, with the first Pokemon of the team.
-# The script waits until the end of the battle, back on the map : true when the player won.
+# The script waits until the end of the battle, back on the map : true when the player won (false : lost or fled).
 # false right away (no battle) when no Pokemon of the team can fight.
 # After the battle, the hit points left and the experience won are saved in the team.
 start = function(monster: int, level: int) : bool do return false end
@@ -11,3 +12,4 @@ start = function(monster: int, level: int) : bool do return false end
 # Number of battles since the game started, result of the last one
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end
+lastFled = function() : bool do return false end

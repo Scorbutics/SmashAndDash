@@ -27,6 +27,9 @@ public:
 	int damage(int power, int attack, int defense, int level);
 	// Skill used by a wild Pokemon (its index), -1 for none. "ready" : the skills it can use now
 	int decide(int monster, int distanceBlocks, int hp, int maxHp, const std::vector<bool>& ready);
+	// Movement of a Pokemon played by the AI : 0 holds, 1 approaches, 2 retreats, 3 and 4 sidestep (left, right).
+	// "distance" to its opponent and "reach" of its longest ready skill (0 : none ready), in pixels
+	int move(int monster, int distance, int reach, int hp, int maxHp);
 
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 

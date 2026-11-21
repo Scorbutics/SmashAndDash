@@ -32,6 +32,8 @@ class BattleRules;
 // End of a battle
 struct BattleResult {
 	bool won = false;
+	// The player left the arena (neither won nor lost)
+	bool fled = false;
 	// The Pokemon of the player : its index in the team (-1 : not from the team), its hit points left
 	int teamIndex = -1;
 	int hpLeft = 0;
@@ -92,6 +94,7 @@ public:
 	void emitPlayerHook(const std::string& event);
 	unsigned int battles() const { return m_battles; }
 	bool lastBattleWon() const { return m_lastBattleWon; }
+	bool lastBattleFled() const { return m_lastBattleFled; }
 
 	bool loadedOnce() const;
 	std::vector<ska::IniReader>& getMobSettings() override;
@@ -160,6 +163,7 @@ private:
 	std::unique_ptr<BattleRules> m_battleRules;
 	unsigned int m_battles = 0;
 	bool m_lastBattleWon = false;
+	bool m_lastBattleFled = false;
 
 };
 

@@ -4,7 +4,6 @@
 #include "WindowMouseCursor.h"
 #include "../../Gameplay/Data/EntityLoadEvent.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
-#include "GUIBattle.h"
 #include "GUI/GUI.h"
 #include "GUI/Windows/DebugWindow.h"
 
@@ -13,17 +12,16 @@ class WindowSettings;
 class Settings;
 class WindowTeam;
 class WindowBag;
-class SkillsBar;
 class CustomEntityManager;
 
 using DialogEventObserver = ska::Observer<DialogEvent>;
+
 
 class GUIMap :
 	public ska::GUI,
 	public ska::Observer<SettingsChangeEvent>,
 	public ska::Observer<EntityLoadEvent>,
 	public DialogEventObserver,
-	public BattleStartObserver,
 	public ska::Observer<InterfaceEvent>,
 	public ska::Observer<InventoryEvent> {
 
@@ -34,7 +32,6 @@ public:
 	void initButtons();
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
-	bool onBattleStart(BattleEvent& be);
 	bool onInterfaceEvent(InterfaceEvent& ie);
 	bool onInventoryEvent(InventoryEvent& ie);
 	bool onDialogEvent(DialogEvent& de);
@@ -53,7 +50,6 @@ private:
 	WindowBag* m_bag = nullptr;
 	WindowSettings* m_settings = nullptr;
 	ska::TimeScrollableWindowIG<>* m_wAction;
-	SkillsBar* m_skillBar;
 
 	//Debug
 	ska::DebugWindow m_dbgWindow;

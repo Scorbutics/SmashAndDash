@@ -4,7 +4,7 @@ Rules = import "wd:Data/Battle/rules"
 
 run = function(args: string[]) do
 	Test.equal((Rules.stat(55, 5): string), "10", "a statistic at a level")
-	Test.equal((Rules.maxHp(35, 5): string), "18", "hit points at a level")
+	Test.equal((Rules.maxHp(35, 5): string), "36", "hit points at a level (twice the usual value : real time battles)")
 	Test.equal((Rules.level(41, 13): string), "4", "level from the experience")
 	Test.equal((Rules.level(0, 0): string), "1", "no experience needed : level 1")
 	Test.equal((Rules.level(99999, 1): string), "100", "level 100 at most")

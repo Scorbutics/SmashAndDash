@@ -8,9 +8,10 @@ stat = function(base: int, level: int) : int do
 	return 2 * base * level / 100 + 5
 end
 
-# Hit points of a Pokemon at a level, from its base hit points
+# Hit points of a Pokemon at a level, from its base hit points. Twice the usual value : a real time battle lasts
+# about 20 seconds (a dozen hits for each fighter)
 maxHp = function(baseHp: int, level: int) : int do
-	return 2 * baseHp * level / 100 + level + 10
+	return 2 * (2 * baseHp * level / 100 + level + 10)
 end
 
 # Level of a Pokemon from its experience ("needed" : the experience needed for each level, [Experience] level_1_exp_needed)

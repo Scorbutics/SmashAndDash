@@ -19,7 +19,6 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	ska::Observer<SettingsChangeEvent>(std::bind(&GUIMap::onSettingsChange, this, std::placeholders::_1)),
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
-	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
 	ska::Observer<InterfaceEvent>(std::bind(&GUIMap::onInterfaceEvent, this, std::placeholders::_1)),
 	ska::Observer<InventoryEvent>(std::bind(&GUIMap::onInventoryEvent, this, std::placeholders::_1)),
 	m_entityManager(em),
@@ -42,7 +41,6 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	m_settings = &addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_settings->show(false);
 
-	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
@@ -250,24 +248,11 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 	return true;
 }
 
-bool GUIMap::onBattleStart(BattleEvent& be){
-	if(be.getEventType() == BATTLE_START) {
-		auto& em = be.getEntityManager();
-		const auto& sh = em.getComponent<SkillsHolderComponent>(be.getBattler());
-		m_skillBar = &addWindow<SkillsBar>("skillsBar", sh.skills, getMaxWidth(), getMaxHeight());
-	} else {
-		removeWindow("skillsBar");
-		m_skillBar = nullptr;
-	}
-	return true;
-}
-
 GUIMap::~GUIMap() {
 	m_ged.ska::Observable<DialogEvent>::removeObserver(*this);
 	m_ged.ska::Observable<InterfaceEvent>::removeObserver(*this);
 	m_ged.ska::Observable<InventoryEvent>::removeObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);
-	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);
 }
 

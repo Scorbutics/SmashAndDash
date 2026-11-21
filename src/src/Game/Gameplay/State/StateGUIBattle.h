@@ -8,7 +8,7 @@ class Settings;
 
 class StateGUIBattle : public ska::StateBase {
 public:
-	StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
+	StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera);
     //void bindGUI(Settings& s);
     virtual ~StateGUIBattle() = default;
 
@@ -19,6 +19,5 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
-	/* TODO GUI Battle specific part with Bars and also skills displayed */
 	GUIBattle m_gui;
 };

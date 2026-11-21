@@ -11,13 +11,14 @@
 #include "Transition/Map/PokeballTransition.h"
 #include "Transition/Map/DialogTransition.h"
 
-#include "AI/IARandomMovementComponent.h"
 #include "../Fight/System/SkillRefreshSystem.h"
-#include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
 #include "../Fight/BattleRules.h"
 #include "../Control/MovementModeComponent.h"
 #include "../Fight/System/SkillHitSystem.h"
+#include "../Fight/System/BattleDirectorSystem.h"
+#include "../Fight/System/FighterSystem.h"
+#include <cstdlib>
 
 namespace {
 	BattleComponent Fighter(BattleRules& rules, const ska::IniReader& data, int monster, int level) {
@@ -90,10 +91,26 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	addLogic(std::make_unique<PokeballSystem>(m_entityManager));
 	auto& rules = m_worldState.getBattleRules();
 	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
-	addLogic(std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId, blockSize));
-	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager));
-	addLogic(std::make_unique<StatisticsSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_pokemonId, m_opponentId, m_pokemonTeamIndex));
-	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_pokemonId, m_opponentId));
+
+	// The fighters : the Pokemon of the player (keys, or the AI with SAD_BATTLE_AUTOPLAY), the wild Pokemon (AI)
+	m_stage.player.entity = m_pokemonId;
+	m_stage.player.opponent = m_opponentId;
+	m_stage.player.player = true;
+	m_stage.player.controlledByAI = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
+	m_stage.opponent.entity = m_opponentId;
+	m_stage.opponent.opponent = m_pokemonId;
+	m_stage.opponent.controlledByAI = true;
+	// A wild Pokemon : the player can flee
+	m_stage.canFlee = true;
+
+	// The director first : it updates the time of the battle (hit stops) used by the others
+	addLogic(std::make_unique<BattleDirectorSystem>(m_entityManager, m_worldState, m_eventDispatcher, m_stage, m_pokemonTeamIndex));
+	auto battleSystem = std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_stage, blockSize);
+	auto& battle = *battleSystem;
+	addLogic(std::move(battleSystem));
+	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_worldState, m_stage));
+	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
+	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_stage));
 
 	// Statistics of the fighters : from their data and their level, with the battle rules (scripts)
 	const auto experienceNeeded = m_pokemon.exists("Experience level_1_exp_needed") ? m_pokemon.get<int>("Experience level_1_exp_needed") : 0;
@@ -104,9 +121,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 		pokemonFighter.hp = std::max(1, std::min(m_pokemonHp, pokemonFighter.maxHp));
 	}
 	m_loader.setFighters(std::move(pokemonFighter), Fighter(rules, m_opponent, m_opponentScriptId, m_opponentLevel));
-	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
-
-	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_eventDispatcher));
+	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_stage, battle, m_worldState.getCamera()));
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());
@@ -157,7 +172,7 @@ void StateFight::beforeUnload() {
     {
         auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
         auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, m_worldState.lastBattleWon() ?
-			"Le " + m_descriptor.getName() + " a été battu." : "Votre Pokémon est K.O.");
+			"Le " + m_descriptor.getName() + " a été battu." : (m_worldState.lastBattleFled() ? "Vous prenez la fuite !" : "Votre Pokémon est K.O."));
         firstTask = std::make_unique<ska::CompoundTask>(std::move(pokeballTask), std::move(dialogTask));
     }
 

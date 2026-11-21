@@ -2,8 +2,8 @@
 #include "StateGUIBattle.h"
 #include "Core/Draw/DrawableContainer.h"
 
-StateGUIBattle::StateGUIBattle(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
-    m_gui(ged) {
+StateGUIBattle::StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera) :
+	m_gui(em, stage, battle, camera) {
 
 }
 void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
@@ -12,8 +12,6 @@ void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableCon
 }
 
 void StateGUIBattle::beforeUnload() {
-    /* Resets GUI */
-    m_gui.clear();
 }
 
 void StateGUIBattle::onEventUpdate(unsigned int) {

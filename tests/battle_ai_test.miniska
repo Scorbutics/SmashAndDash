@@ -1,14 +1,26 @@
-# Behaviour of the wild Pokemon (Data/Battle/ai.miniska)
+# Behaviour of the Pokemon played by the AI (Data/Battle/ai.miniska)
 Test = import "bind:std.native.test"
 Engine = import "bind:ska.engine"
 AI = import "wd:Data/Battle/ai"
 
 run = function(args: string[]) do
+	# Skills
 	Engine.setNextRandom(1)
-	Test.equal((AI.decide(16, 7, 10, 10, [true]): string), "-1", "too far : no skill")
 	Test.equal((AI.decide(16, 2, 10, 10, [false, false]): string), "-1", "no skill ready")
 	Test.equal((AI.decide(16, 2, 10, 10, [true, false, true]): string), "2", "one of the ready skills, chosen at random")
 	Test.equal((AI.decide(16, 2, 10, 10, [false, true]): string), "1", "the only ready skill")
 	Engine.setNextRandom(0)
 	Test.equal((AI.decide(16, 2, 10, 10, [true]): string), "-1", "it hesitates sometimes")
+
+	# Movements
+	Engine.setNextRandom(1)
+	Test.equal((AI.move(16, 300, 288, 10, 10): string), (AI.Approach: string), "a skill ready but too far : it comes closer")
+	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.SidestepLeft: string), "in reach : it moves around its opponent")
+	Test.equal((AI.move(16, 60, 0, 10, 10): string), (AI.Retreat: string), "nothing ready, too close : it retreats")
+	Test.equal((AI.move(16, 180, 0, 2, 10): string), (AI.Retreat: string), "hurt : it keeps further")
+	Test.equal((AI.move(16, 500, 0, 10, 10): string), (AI.Approach: string), "nothing ready but far : it stays in the fight")
+	Engine.setNextRandom(0)
+	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.Hold: string), "it stops sometimes (and changes its side)")
+	Engine.setNextRandom(1)
+	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.SidestepRight: string), "it turns on the other side")
 end

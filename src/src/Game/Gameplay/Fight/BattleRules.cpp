@@ -56,3 +56,10 @@ int BattleRules::decide(int monster, int distanceBlocks, int hp, int maxHp, cons
 		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) }, ska::NodeValue{ ska::NodeValueArray{ std::move(readyValues) } } }, fallback);
 	return decision >= 0 && decision < static_cast<long>(ready.size()) && ready[static_cast<std::size_t>(decision)] ? static_cast<int>(decision) : -1;
 }
+
+int BattleRules::move(int monster, int distance, int reach, int hp, int maxHp) {
+	const auto fallback = reach > 0 && distance > reach ? 1L : 0L;
+	const auto movement = call(m_aiFile, "move", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(distance) },
+		ska::NodeValue{ static_cast<long>(reach) }, ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) } }, fallback);
+	return movement >= 0 && movement <= 4 ? static_cast<int>(movement) : 0;
+}

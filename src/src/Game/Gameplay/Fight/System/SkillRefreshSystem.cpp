@@ -11,12 +11,18 @@
 #include <algorithm>
 #include <cmath>
 
-SkillRefreshSystem::SkillRefreshSystem(ska::EntityManager& em) :
-System(em) {
+SkillRefreshSystem::SkillRefreshSystem(ska::EntityManager& em, BattleStage& stage) :
+	System(em),
+	m_stage(stage) {
 
 }
 
-void SkillRefreshSystem::refresh(unsigned int) {
+void SkillRefreshSystem::refresh(unsigned int ellapsedTime) {
+	// A step per logic update (20 ms) : shorter in slow motion, none during a hit stop
+	const auto timeFactor = ellapsedTime == 0 ? 0.F : static_cast<float>(m_stage.delta()) / static_cast<float>(ellapsedTime);
+	if (timeFactor <= 0.F) {
+		return;
+	}
 	const auto& processed = getEntities();
 	for (ska::EntityId entityId : processed) {
 		auto& sc = m_componentAccessor.get<SkillComponent>(entityId);
@@ -26,7 +32,8 @@ void SkillRefreshSystem::refresh(unsigned int) {
 		const unsigned int t = sc.currentTime;
 
 		/* Example : sinusoidal move with noise */
-		mc.vx = sc.speed + 1;
+		// At least 300 pixels per second : a slow skill is avoided too easily and stays on the screen
+		mc.vx = std::max(sc.speed + 1, 6.F);
 		mc.vy = sc.amplitude * static_cast<float>(ska::NumberUtils::sinus((t-sc.firstTime + sc.noise) * M_PI / 180));
 		mc.vz = 0;
 		/* End of example */
@@ -41,7 +48,7 @@ void SkillRefreshSystem::refresh(unsigned int) {
 		// It crosses its range in 6 frames at least : a fast skill (ex : a melee attack) can touch its target.
 		const auto maxStep = std::max(4.F, static_cast<float>(sc.range) / 6.F);
 		const auto step = std::sqrt(mc.vx * mc.vx + mc.vy * mc.vy);
-		const auto factor = step > maxStep ? maxStep / step : 1.F;
+		const auto factor = (step > maxStep ? maxStep / step : 1.F) * timeFactor;
 		pc.x += static_cast<long>(mc.vx * factor);
 		pc.y += static_cast<long>(mc.vy * factor);
 
