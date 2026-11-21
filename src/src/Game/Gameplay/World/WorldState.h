@@ -77,6 +77,8 @@ public:
 	// Runs the skalang scripts started by the script triggers
 	ska::ScriptRunner& getScriptRunner();
 	ska::scripting::ScriptVM& getScripts();
+	// Camera of the map
+	ska::CameraSystem& getCamera() { return *m_cameraSystem; }
 	// Battle rules and AI (scripts)
 	BattleRules& getBattleRules();
 

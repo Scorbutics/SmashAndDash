@@ -366,7 +366,10 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		return ska::NodeValue{ block != nullptr && (block->properties.bitMask & property) == property };
 	});
 
-	m_builder.bindField("shake", [](std::vector<ska::NodeValue>) { NotAvailable("shake"); return ska::NodeValue{}; });
+	m_builder.bindField("shake", [&worldState](std::vector<ska::NodeValue> params) {
+		worldState.getCamera().shake(static_cast<unsigned int>(std::max(0, Int(params[0]))), Int(params[1]));
+		return ska::NodeValue{};
+	});
 
 	m_builder.bindField("crumbling", [](std::vector<ska::NodeValue>) { NotAvailable("crumbling"); return ska::NodeValue{}; });
 
@@ -450,7 +453,12 @@ InterfaceScriptModule::InterfaceScriptModule(ska::scripting::ScriptVM& vm, Custo
 	(void) ged;
 	(void) worldState;
 
-	m_builder.bindField("hideInterface", [](std::vector<ska::NodeValue>) { NotAvailable("hideInterface"); return ska::NodeValue{}; });
+	m_builder.bindField("hideInterface", [&ged](std::vector<ska::NodeValue> params) {
+		auto event = InterfaceEvent{};
+		event.hidden = params[0].nodeval<bool>();
+		ged.ska::Observable<InterfaceEvent>::notifyObservers(event);
+		return ska::NodeValue{};
+	});
 
 	m_builder.bindField("shop", [](std::vector<ska::NodeValue>) { NotAvailable("shop"); return ska::NodeValue{}; });
 

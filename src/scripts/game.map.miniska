@@ -12,7 +12,7 @@ blockY = function(entity: int) : int do return 0 end
 # The block of a layer at a block position has a property (bit mask)
 blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
 
-# Not available in this version of the game (logged, nothing is done)
+# Shakes the camera during "duration" milliseconds, up to "intensity" pixels (less and less). The script does not wait.
 shake = function(duration: int, intensity: int) do end
 
 # Not available in this version of the game (logged, nothing is done)

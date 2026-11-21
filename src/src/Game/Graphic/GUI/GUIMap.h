@@ -22,7 +22,8 @@ class GUIMap :
 	public ska::Observer<SettingsChangeEvent>,
 	public ska::Observer<EntityLoadEvent>,
 	public DialogEventObserver,
-	public BattleStartObserver {
+	public BattleStartObserver,
+	public ska::Observer<InterfaceEvent> {
 
 public:
 	GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
@@ -32,6 +33,7 @@ public:
 	bool onSettingsChange(SettingsChangeEvent& sce);
 	bool onEntityLoad(EntityLoadEvent& ele);
 	bool onBattleStart(BattleEvent& be);
+	bool onInterfaceEvent(InterfaceEvent& ie);
 	bool onDialogEvent(DialogEvent& de);
 	virtual bool onScreenResized(unsigned int width, unsigned int height) override;
 	void bind(Settings& sets);

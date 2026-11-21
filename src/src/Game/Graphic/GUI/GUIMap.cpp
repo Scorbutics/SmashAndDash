@@ -19,6 +19,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	ska::Observer<EntityLoadEvent>(std::bind(&GUIMap::onEntityLoad, this, std::placeholders::_1)),
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
+	ska::Observer<InterfaceEvent>(std::bind(&GUIMap::onInterfaceEvent, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged),
 	m_dbgWindow(*this, ged) {
@@ -41,6 +42,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
+	m_ged.ska::Observable<InterfaceEvent>::addObserver(*this);
 }
 
 void GUIMap::refresh(unsigned int ellapsedTime) {
@@ -110,6 +112,18 @@ void GUIMap::initButtons() {
             widget->show(!widget->isVisible());
         }
     });
+}
+
+bool GUIMap::onInterfaceEvent(InterfaceEvent& ie) {
+	// The buttons come back with the interface, the windows opened by the buttons stay closed
+	m_wAction->show(!ie.hidden);
+	if (ie.hidden) {
+		m_team->show(false);
+		if (auto* settings = getWindow("settings"); settings != nullptr) {
+			settings->show(false);
+		}
+	}
+	return true;
 }
 
 bool GUIMap::onDialogEvent(DialogEvent& de) {
@@ -231,6 +245,7 @@ bool GUIMap::onBattleStart(BattleEvent& be){
 
 GUIMap::~GUIMap() {
 	m_ged.ska::Observable<DialogEvent>::removeObserver(*this);
+	m_ged.ska::Observable<InterfaceEvent>::removeObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);
 	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);

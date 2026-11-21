@@ -22,15 +22,15 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Engine (ska) | `Engine = import "bind:ska.engine"` | wait, log, random, origin (the entity that triggered the script), entity (by name), disableComponent / enableComponent, variable / setVariable (saved game variables), script |
 | Dialogs | `GameDialog = import "bind:game.dialog"` | message, choice (yes / no), cinematic |
 | Characters | `Character = import "bind:game.character"` | move, jump, direction / setDirection, setLayer, playAnimation, place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
-| Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake, crumbling |
+| Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake (camera), crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
-| Interface | `Interface = import "bind:game.interface"` | hideInterface, shop |
+| Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |
 | Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon |
 | Saving | `Save = import "bind:game.save"` | save |
 
 The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
 
-Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `shake`, `crumbling`, `hideInterface`, `pokemonOut` and `shop`.
+Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `crumbling`, `pokemonOut` and `shop` (no inventory in this version).
 
 ## Saving
 

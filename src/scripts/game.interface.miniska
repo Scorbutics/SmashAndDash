@@ -1,6 +1,6 @@
 # Game interface : Interface = import "bind:game.interface"
 
-# Not available in this version of the game (logged, nothing is done)
+# Hides (true) or shows (false) the interface of the map (buttons, team, settings), ex : during a cutscene. The messages stay visible.
 hideInterface = function(hidden: bool) do end
 
 # Not available in this version of the game (logged, nothing is done)
