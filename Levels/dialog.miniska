@@ -1,6 +1,6 @@
 # Dialogs with the player : Dialog = import "wd:Levels/dialog"
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+GameDialog = import "bind:game.dialog"
 
 # A dialog is shown (shared by all the scripts)
 inDialog = false
@@ -13,7 +13,7 @@ say = function(text: string) do
 	inDialog = true
 	player = Engine.entity("trainer")
 	Engine.disableComponent(player, "InputComponent")
-	Game.message(text)
+	GameDialog.message(text)
 	Engine.enableComponent(player, "InputComponent")
 	# The key closing the message does not open it again right away
 	Engine.wait(500)

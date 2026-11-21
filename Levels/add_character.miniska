@@ -3,7 +3,7 @@
 # ("" : none), then the arguments of this script.
 # Movement : "fixed", "wander" (walks around randomly), or a path of directions walked again and again
 # ("b" : down, "d" : right, "h" : up, "g" : left. Ex : "bdhg")
-Game = import "bind:game"
+Character = import "bind:game.character"
 
 run = function(args: string[]) do
 	script = ""
@@ -16,14 +16,14 @@ run = function(args: string[]) do
 	 i = i + 1) do
 		scriptArguments = scriptArguments + args[i]
 	end
-	character = Game.addCharacter((args[0]: int), (args[1]: int), (args[2]: int), args[3], script, scriptArguments)
+	character = Character.addCharacter((args[0]: int), (args[1]: int), (args[2]: int), args[3], script, scriptArguments)
 
 	movement = args[4]
 	if movement == "wander"
-		Game.wander(character)
+		Character.wander(character)
 	else
 		if movement != "fixed"
-			Game.patrol(character, movement)
+			Character.patrol(character, movement)
 		end
 	end
 end

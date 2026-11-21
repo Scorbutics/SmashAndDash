@@ -97,9 +97,44 @@ namespace {
 	}
 }
 
-GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
-	ska::lang::Module<ska::bytecode::Interpreter> { vm.modules(), "game", "std:game" },
+GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, const std::string& name) :
+	ska::lang::Module<ska::bytecode::Interpreter> { vm.modules(), "game." + name, "std:game." + name },
 	m_builder(ska::BridgeBuilder<ska::bytecode::Interpreter> { m_bridge }) {
+}
+
+DialogScriptModule::DialogScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "dialog") {
+	(void) entityManager;
+	(void) worldState;
+
+	m_builder.bindField("message", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		auto closed = std::make_shared<bool>(false);
+		ShowDialog(ged, String(params[0]), false, [closed](bool) { *closed = true; });
+		vm.suspendUntil([closed]() { return *closed; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("choice", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		auto answer = std::make_shared<std::optional<bool>>();
+		ShowDialog(ged, String(params[0]) + "\n\n(Entr\xe9""e : oui, Retour arri\xe8""re : non)", true, [answer](bool validated) { *answer = validated; });
+		vm.suspendUntil([answer]() { return answer->has_value(); }, [answer]() { return ska::NodeValue{ answer->value_or(false) }; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("cinematic", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		// The animation of the cinematic is not played (no cinematic in this version of the game) : only its text is shown
+		auto closed = std::make_shared<bool>(false);
+		ShowDialog(ged, String(params[1]), false, [closed](bool) { *closed = true; });
+		vm.suspendUntil([closed]() { return *closed; });
+		return ska::NodeValue{};
+	});
+
+	m_builder.generate();
+}
+
+CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "character") {
+	(void) ged;
 
 	m_builder.bindField("move", [&vm, &entityManager](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(entityManager, params[0]);
@@ -142,42 +177,6 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 	m_builder.bindField("jump", [&entityManager](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(entityManager, params[0]);
 		Require<ska::MovementComponent>(entityManager, entity, "jump").vz = static_cast<float>(Int(params[1]));
-		return ska::NodeValue{};
-	});
-
-	m_builder.bindField("message", [&vm, &ged](std::vector<ska::NodeValue> params) {
-		auto closed = std::make_shared<bool>(false);
-		ShowDialog(ged, String(params[0]), false, [closed](bool) { *closed = true; });
-		vm.suspendUntil([closed]() { return *closed; });
-		return ska::NodeValue{};
-	});
-
-	m_builder.bindField("choice", [&vm, &ged](std::vector<ska::NodeValue> params) {
-		auto answer = std::make_shared<std::optional<bool>>();
-		ShowDialog(ged, String(params[0]) + "\n\n(Entr\xe9""e : oui, Retour arri\xe8""re : non)", true, [answer](bool validated) { *answer = validated; });
-		vm.suspendUntil([answer]() { return answer->has_value(); }, [answer]() { return ska::NodeValue{ answer->value_or(false) }; });
-		return ska::NodeValue{};
-	});
-
-	m_builder.bindField("cinematic", [&vm, &ged](std::vector<ska::NodeValue> params) {
-		// The animation of the cinematic is not played (no cinematic in this version of the game) : only its text is shown
-		auto closed = std::make_shared<bool>(false);
-		ShowDialog(ged, String(params[1]), false, [closed](bool) { *closed = true; });
-		vm.suspendUntil([closed]() { return *closed; });
-		return ska::NodeValue{};
-	});
-
-	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
-		const auto& world = worldState.getWorld();
-		const auto& mapName = String(params[0]);
-		const auto mapReader = ska::IniReader{ "./Levels/" + mapName + "/" + mapName + ".ini" };
-		auto mapEvent = MapEvent{ MapEventType::Switch_Map };
-		mapEvent.chipsetName = mapReader.get<std::string>("Chipset file");
-		mapEvent.mapName = mapName;
-		const auto blockSize = static_cast<int>(world.getBlockSize());
-		mapEvent.position.x = blockSize * Int(params[1]);
-		mapEvent.position.y = blockSize * Int(params[2]);
-		ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
 		return ska::NodeValue{};
 	});
 
@@ -248,31 +247,6 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("blockX", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
-		const auto& world = worldState.getWorld();
-		const auto entity = Entity(entityManager, params[0]);
-		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).x / world.getBlockSize()) };
-	});
-
-	m_builder.bindField("blockY", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
-		const auto& world = worldState.getWorld();
-		const auto entity = Entity(entityManager, params[0]);
-		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).y / world.getBlockSize()) };
-	});
-
-	m_builder.bindField("blockHasProperty", [&worldState](std::vector<ska::NodeValue> params) {
-		const auto& world = worldState.getWorld();
-		const auto layer = Int(params[0]);
-		const auto x = Int(params[1]);
-		const auto y = Int(params[2]);
-		const auto property = static_cast<unsigned int>(Int(params[3]));
-		if (layer < 0 || x < 0 || y < 0) {
-			return ska::NodeValue{ false };
-		}
-		const auto* block = world.getCollisionProfile().getBlock(static_cast<std::size_t>(layer), static_cast<std::size_t>(x), static_cast<std::size_t>(y));
-		return ska::NodeValue{ block != nullptr && (block->properties.bitMask & property) == property };
-	});
-
 	m_builder.bindField("place", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(entityManager, params[0]);
 		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
@@ -323,6 +297,64 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		return ska::NodeValue{};
 	});
 
+	m_builder.bindField("follow", [](std::vector<ska::NodeValue>) { NotAvailable("follow"); return ska::NodeValue{}; });
+
+	m_builder.generate();
+}
+
+MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "map") {
+
+	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
+		const auto& mapName = String(params[0]);
+		const auto mapReader = ska::IniReader{ "./Levels/" + mapName + "/" + mapName + ".ini" };
+		auto mapEvent = MapEvent{ MapEventType::Switch_Map };
+		mapEvent.chipsetName = mapReader.get<std::string>("Chipset file");
+		mapEvent.mapName = mapName;
+		const auto blockSize = static_cast<int>(world.getBlockSize());
+		mapEvent.position.x = blockSize * Int(params[1]);
+		mapEvent.position.y = blockSize * Int(params[2]);
+		ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("blockX", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
+		const auto entity = Entity(entityManager, params[0]);
+		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).x / world.getBlockSize()) };
+	});
+
+	m_builder.bindField("blockY", [&entityManager, &worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
+		const auto entity = Entity(entityManager, params[0]);
+		return ska::NodeValue{ static_cast<long>(CenterPosition(entityManager, entity).y / world.getBlockSize()) };
+	});
+
+	m_builder.bindField("blockHasProperty", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
+		const auto layer = Int(params[0]);
+		const auto x = Int(params[1]);
+		const auto y = Int(params[2]);
+		const auto property = static_cast<unsigned int>(Int(params[3]));
+		if (layer < 0 || x < 0 || y < 0) {
+			return ska::NodeValue{ false };
+		}
+		const auto* block = world.getCollisionProfile().getBlock(static_cast<std::size_t>(layer), static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+		return ska::NodeValue{ block != nullptr && (block->properties.bitMask & property) == property };
+	});
+
+	m_builder.bindField("shake", [](std::vector<ska::NodeValue>) { NotAvailable("shake"); return ska::NodeValue{}; });
+
+	m_builder.bindField("crumbling", [](std::vector<ska::NodeValue>) { NotAvailable("crumbling"); return ska::NodeValue{}; });
+
+	m_builder.generate();
+}
+
+PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "party") {
+	(void) entityManager;
+
 	m_builder.bindField("addPokemon", [&ged, &worldState](std::vector<ska::NodeValue> params) {
 		const auto id = Int(params[0]);
 		const auto dataFile = "./Data/Monsters/" + std::to_string(id) + ".ini";
@@ -353,12 +385,31 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 	});
 
 	m_builder.bindField("heal", [](std::vector<ska::NodeValue>) { NotAvailable("heal"); return ska::NodeValue{}; });
-	m_builder.bindField("shake", [](std::vector<ska::NodeValue>) { NotAvailable("shake"); return ska::NodeValue{}; });
-	m_builder.bindField("crumbling", [](std::vector<ska::NodeValue>) { NotAvailable("crumbling"); return ska::NodeValue{}; });
-	m_builder.bindField("follow", [](std::vector<ska::NodeValue>) { NotAvailable("follow"); return ska::NodeValue{}; });
-	m_builder.bindField("hideInterface", [](std::vector<ska::NodeValue>) { NotAvailable("hideInterface"); return ska::NodeValue{}; });
+
 	m_builder.bindField("pokemonOut", [](std::vector<ska::NodeValue>) { NotAvailable("pokemonOut"); return ska::NodeValue{}; });
-	m_builder.bindField("shop", [](std::vector<ska::NodeValue>) { NotAvailable("shop"); return ska::NodeValue{}; });
 
 	m_builder.generate();
+}
+
+InterfaceScriptModule::InterfaceScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "interface") {
+	(void) entityManager;
+	(void) ged;
+	(void) worldState;
+
+	m_builder.bindField("hideInterface", [](std::vector<ska::NodeValue>) { NotAvailable("hideInterface"); return ska::NodeValue{}; });
+
+	m_builder.bindField("shop", [](std::vector<ska::NodeValue>) { NotAvailable("shop"); return ska::NodeValue{}; });
+
+	
+
+	m_builder.generate();
+}
+
+GameScriptModules::GameScriptModules(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	dialog(vm, entityManager, ged, worldState),
+	character(vm, entityManager, ged, worldState),
+	map(vm, entityManager, ged, worldState),
+	party(vm, entityManager, ged, worldState),
+	interface(vm, entityManager, ged, worldState) {
 }

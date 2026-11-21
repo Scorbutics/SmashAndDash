@@ -1,8 +1,9 @@
 # Pokemon shop seller
-Game = import "bind:game"
+GameDialog = import "bind:game.dialog"
+Interface = import "bind:game.interface"
 
 run = function(args: string[]) do
-	Game.message("Bienvenue au magasin Pokémon !")
-	Game.shop()
-	Game.message("Merci, au revoir !")
+	GameDialog.message("Bienvenue au magasin Pokémon !")
+	Interface.shop()
+	GameDialog.message("Merci, au revoir !")
 end

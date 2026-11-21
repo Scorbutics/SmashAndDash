@@ -1,17 +1,18 @@
 # Lab exit (not before choosing a relic)
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+GameDialog = import "bind:game.dialog"
+Map = import "bind:game.map"
 Story = import "wd:Levels/story"
 
 run = function(args: string[]) do
 	if Story.done(1) == false
-		Game.teleport("cramoisile", 19, 10)
+		Map.teleport("cramoisile", 19, 10)
 	else
 		if Story.done(2)
 			Story.walk(Story.player(), 2, 1)
-			Game.message("Ne pars pas ! J'ai quelque chose à te montrer.")
+			GameDialog.message("Ne pars pas ! J'ai quelque chose à te montrer.")
 		else
-			Game.teleport("cramoisile", 19, 10)
+			Map.teleport("cramoisile", 19, 10)
 		end
 	end
 end

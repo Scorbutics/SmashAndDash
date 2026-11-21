@@ -24,7 +24,7 @@ namespace ska {
 		class EngineModule;
 	}
 }
-class GameScriptModule;
+struct GameScriptModules;
 #include "Game/Graphic/DebugDrawer.h"
 
 namespace ska {
@@ -122,7 +122,7 @@ private:
 	// skalang scripts (".miniska") : script VM and the functions given to the scripts
 	std::unique_ptr<ska::scripting::ScriptVM> m_scripts;
 	std::unique_ptr<ska::scripting::EngineModule> m_engineScriptModule;
-	std::unique_ptr<GameScriptModule> m_gameScriptModule;
+	std::unique_ptr<GameScriptModules> m_gameScriptModules;
 
 };
 

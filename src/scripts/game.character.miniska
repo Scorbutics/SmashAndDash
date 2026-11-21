@@ -1,20 +1,11 @@
-# Game functions available to the scripts : Game = import "bind:game"
+# Characters (entities) : movements, look, position : Character = import "bind:game.character"
 # Directions : 0 down, 1 right, 2 up, 3 left (4 to 7 : diagonals)
 
 # Moves an entity in a direction over a distance (pixels), through the obstacles when "ghost" is true.
 # The script waits until the movement is done.
 move = function(entity: int, direction: int, distance: int, ghost: bool) do end
+
 jump = function(entity: int, power: int) do end
-
-# Shows a message : the script waits until the player closes it
-message = function(text: string) do end
-# Asks a yes / no question : the script waits for the answer of the player
-choice = function(question: string) : bool do return false end
-# Cinematic : an animation with a text (only the text is shown in this version)
-cinematic = function(animation: int, text: string) do end
-
-# Goes to a map, at a block position
-teleport = function(map: string, x: int, y: int) do end
 
 # Adds a character (sprite, block position, name) : "script" runs with its arguments when the player talks to it
 # ("" : no script). Returns the character entity.
@@ -22,36 +13,27 @@ addCharacter = function(sprite: int, x: int, y: int, name: string, script: strin
 
 # Plays an animation (sprite of the animations bank) over an entity
 playAnimation = function(entity: int, animation: int) do end
+
 # Direction an entity looks to
 direction = function(entity: int) : int do return 0 end
+
 setDirection = function(entity: int, direction: int) do end
+
 # Layer an entity is on (0 : ground, 1 : over the water...)
 setLayer = function(entity: int, layer: int) do end
 
-# Block an entity is on
-blockX = function(entity: int) : int do return 0 end
-blockY = function(entity: int) : int do return 0 end
-# The block of a layer at a block position has a property (bit mask)
-blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
-
 # Puts an entity at a block position of the current map
 place = function(entity: int, x: int, y: int) do end
+
 # Removes an entity from the map
 remove = function(entity: int) do end
+
 # The character walks around randomly
 wander = function(entity: int) do end
+
 # The character walks along a path, again and again : one block for each letter ("b" : down, "d" : right, "h" : up,
 # "g" : left. Ex : "bdhg")
 patrol = function(entity: int, path: string) do end
 
-# Adds a pokemon to the team of the player : false if it could not (no data for this pokemon, full team)
-addPokemon = function(id: int) : bool do return false end
-
-# Not available in this version of the game (the old scripts call them : nothing is done)
-heal = function(index: int, value: int) do end
-shake = function(duration: int, intensity: int) do end
-crumbling = function(duration: int) do end
+# Not available in this version of the game (logged, nothing is done)
 follow = function(entity: int, target: int) do end
-hideInterface = function(hidden: bool) do end
-pokemonOut = function(index: int) do end
-shop = function() do end

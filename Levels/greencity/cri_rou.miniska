@@ -1,14 +1,14 @@
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+Character = import "bind:game.character"
 Dialog = import "wd:Levels/dialog"
 
 run = function(args: string[]) do
 	# The character turns around
 	character = Engine.origin()
-	direction = Game.direction(character) + 1
+	direction = Character.direction(character) + 1
 	if direction >= 4
 		direction = 0
 	end
-	Game.setDirection(character, direction)
+	Character.setDirection(character, direction)
 	Dialog.say("Rouuuu ! Ce message est écrit par script !")
 end

@@ -1,12 +1,12 @@
 # Jumping over a ledge : JumpWall = import "wd:Levels/jump_wall"
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+Character = import "bind:game.character"
 
 # The player jumps over the ledge in a direction
 jump = function(player: int, direction: int) do
 	Engine.disableComponent(player, "InputComponent")
-	Game.move(player, direction, 30, true)
-	Game.jump(player, 14)
-	Game.move(player, direction, 60, true)
+	Character.move(player, direction, 30, true)
+	Character.jump(player, 14)
+	Character.move(player, direction, 60, true)
 	Engine.enableComponent(player, "InputComponent")
 end

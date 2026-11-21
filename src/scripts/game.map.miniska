@@ -1,0 +1,19 @@
+# Maps : teleportation, blocks, map effects : Map = import "bind:game.map"
+# Directions : 0 down, 1 right, 2 up, 3 left (4 to 7 : diagonals)
+
+# Goes to a map, at a block position
+teleport = function(map: string, x: int, y: int) do end
+
+# Block an entity is on
+blockX = function(entity: int) : int do return 0 end
+
+blockY = function(entity: int) : int do return 0 end
+
+# The block of a layer at a block position has a property (bit mask)
+blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
+
+# Not available in this version of the game (logged, nothing is done)
+shake = function(duration: int, intensity: int) do end
+
+# Not available in this version of the game (logged, nothing is done)
+crumbling = function(duration: int) do end

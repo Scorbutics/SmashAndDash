@@ -1,17 +1,19 @@
 # Relic : Amonita
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+GameDialog = import "bind:game.dialog"
+Character = import "bind:game.character"
+Party = import "bind:game.party"
 Story = import "wd:Levels/story"
 
 run = function(args: string[]) do
 	if Story.done(2)
-		Game.message("Vous dicernez une sorte de créature fossile à coquille en forme de spirale.¤Celui-ci a l'air plutôt résistant !")
-		chosen = Game.choice("Voulez-vous prendre cette créature ?")
+		GameDialog.message("Vous dicernez une sorte de créature fossile à coquille en forme de spirale.¤Celui-ci a l'air plutôt résistant !")
+		chosen = GameDialog.choice("Voulez-vous prendre cette créature ?")
 		if chosen
 			Engine.setVariable("starterChoice", 0)
-			Game.message("Vous obtenez un Amonita ! Enfin, c'est ce qui est marqué sur la relique !")
-			Game.addPokemon(138)
-			Game.remove(Story.npc(11, 0))
+			GameDialog.message("Vous obtenez un Amonita ! Enfin, c'est ce qui est marqué sur la relique !")
+			Party.addPokemon(138)
+			Character.remove(Story.npc(11, 0))
 			Engine.script("Levels/cramoisile_labo/dr_takes_pkmn.miniska", []: string)
 		end
 	end

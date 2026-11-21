@@ -80,7 +80,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_engineScriptModule = std::make_unique<ska::scripting::EngineModule>(*m_scripts, m_entityManager, m_entityLocator, &m_saveManager);
 	// Scripts can hide a character (Engine.disableComponent(character, "GraphicComponent"))
 	m_engineScriptModule->registerComponent<ska::GraphicComponent>("GraphicComponent");
-	m_gameScriptModule = std::make_unique<GameScriptModule>(*m_scripts, m_entityManager, m_eventDispatcher, *this);
+	m_gameScriptModules = std::make_unique<GameScriptModules>(*m_scripts, m_entityManager, m_eventDispatcher, *this);
 
 	ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
 

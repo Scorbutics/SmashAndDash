@@ -1,6 +1,7 @@
 # Surfing : Surf = import "wd:Levels/surf"
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+Character = import "bind:game.character"
+Map = import "bind:game.map"
 
 # Block property of the water
 Water = 1
@@ -18,15 +19,15 @@ enter = function(player: int, direction: int) do
 	moving = true
 	Engine.disableComponent(player, "InputComponent")
 	if surfing
-		Game.setLayer(player, 1)
+		Character.setLayer(player, 1)
 		Engine.log("surf out")
 	else
-		Game.setLayer(player, 0)
+		Character.setLayer(player, 0)
 		Engine.log("surf in")
 	end
-	Game.playAnimation(player, 2)
-	Game.move(player, direction, 40, false)
-	surfing = Game.blockHasProperty(0, Game.blockX(player), Game.blockY(player), Water)
+	Character.playAnimation(player, 2)
+	Character.move(player, direction, 40, false)
+	surfing = Map.blockHasProperty(0, Map.blockX(player), Map.blockY(player), Water)
 	Engine.enableComponent(player, "InputComponent")
 	moving = false
 end

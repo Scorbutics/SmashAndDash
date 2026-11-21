@@ -1,0 +1,10 @@
+# Pokemon team of the player : Party = import "bind:game.party"
+
+# Adds a pokemon to the team of the player : false if it could not (no data for this pokemon, full team)
+addPokemon = function(id: int) : bool do return false end
+
+# Not available in this version of the game (logged, nothing is done)
+heal = function(index: int, value: int) do end
+
+# Not available in this version of the game (logged, nothing is done)
+pokemonOut = function(index: int) do end

@@ -1,0 +1,7 @@
+# Game interface : Interface = import "bind:game.interface"
+
+# Not available in this version of the game (logged, nothing is done)
+hideInterface = function(hidden: bool) do end
+
+# Not available in this version of the game (logged, nothing is done)
+shop = function() do end

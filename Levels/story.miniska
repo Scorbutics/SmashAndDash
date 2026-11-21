@@ -1,6 +1,6 @@
 # Story helpers : Story = import "wd:Levels/story"
 Engine = import "bind:ska.engine"
-Game = import "bind:game"
+Character = import "bind:game.character"
 
 Block = 48
 
@@ -17,7 +17,7 @@ end
 
 # Walks a number of blocks in a direction (0 : down, 1 : right, 2 : up, 3 : left)
 walk = function(entity: int, direction: int, blocks: int) do
-	Game.move(entity, direction, blocks * Block, false)
+	Character.move(entity, direction, blocks * Block, false)
 end
 
 # Story steps done (saved with the game)

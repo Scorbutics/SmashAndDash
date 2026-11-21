@@ -1,5 +1,5 @@
-Game = import "bind:game"
+Map = import "bind:game.map"
 
 run = function(args: string[]) do
-	Game.teleport("cramoisile_labo", 11, 16)
+	Map.teleport("cramoisile_labo", 11, 16)
 end
