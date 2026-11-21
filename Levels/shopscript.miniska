@@ -1,9 +1,10 @@
 # Pokemon shop seller
 GameDialog = import "bind:game.dialog"
-Interface = import "bind:game.interface"
+Shop = import "wd:Levels/shop"
 
 run = function(args: string[]) do
 	GameDialog.message("Bienvenue au magasin Pokémon !")
-	Interface.shop()
+	# Potion, Super Potion, Pokeball
+	Shop.sell(Shop.catalogue([0, 1, 2]))
 	GameDialog.message("Merci, au revoir !")
 end

@@ -3,6 +3,8 @@
 #include <fstream>
 #include "Base/IO/Readers/IniReader.h"
 #include "Base/IO/Files/FileUtils.h"
+#include "../Fight/BattleRules.h"
+#include <algorithm>
 
 Team::Team(std::string saveName) :
 	m_directory("./Data/Saves/" + std::move(saveName) + "/Team/") {
@@ -61,4 +63,24 @@ std::optional<int> Team::firstAble() const {
 		}
 	}
 	return {};
+}
+
+int HealTeamMember(const std::string& saveName, int index, int amount, BattleRules& rules) {
+	auto team = Team{ saveName };
+	auto pokemon = team.member(index);
+	if (!pokemon.has_value() || amount <= 0) {
+		return 0;
+	}
+	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+	const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+	const auto baseHp = data.exists("BaseStats hp") ? data.get<int>("BaseStats hp") : 10;
+	const auto maxHp = rules.maxHp(baseHp, rules.level(pokemon->experience, needed));
+	const auto before = std::max(0, pokemon->hp);
+	// Not hurt (hit points saved above the maximum by an old version are kept)
+	if (before >= maxHp) {
+		return 0;
+	}
+	pokemon->hp = std::min(maxHp, before + amount);
+	team.setMember(index, *pokemon);
+	return std::max(0, pokemon->hp - before);
 }

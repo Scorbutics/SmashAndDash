@@ -1,0 +1,26 @@
+# Shop (Levels/shop.miniska)
+Test = import "bind:std.native.test"
+GameDialog = import "bind:game.dialog"
+Bag = import "bind:game.inventory"
+Shop = import "wd:Levels/shop"
+
+run = function(args: string[]) do
+	catalogue = Shop.catalogue([0, 1, 2])
+	Test.equal((catalogue.size(): string), "3", "three items")
+	Test.equal((catalogue["1"]: string), "700", "the shop price of the item data")
+
+	# Potion : yes, Super Potion : yes (not enough money), Pokeball : no
+	Bag.earn(900)
+	GameDialog.answer(true)
+	GameDialog.answer(true)
+	GameDialog.answer(false)
+	bought = Shop.sell(catalogue)
+	Test.equal((bought: string), "1", "one item bought")
+	Test.equal((Bag.count(0): string), "1", "a potion in the bag")
+	Test.equal((Bag.count(1): string), "0", "no super potion : not enough money")
+	Test.equal((Bag.count(2): string), "0", "no pokeball : refused")
+	Test.equal((Bag.money(): string), "600", "the potion paid")
+	messages = GameDialog.messages()
+	Test.equal(messages[0], "Acheter Potion pour 300 ? (argent : 900)", "the question shows the price and the money")
+	Test.equal(messages[3], "Tu n'as pas assez d'argent.", "not enough money for the super potion")
+end

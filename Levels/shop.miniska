@@ -1,0 +1,33 @@
+# Shop : Shop = import "wd:Levels/shop"
+GameDialog = import "bind:game.dialog"
+Bag = import "bind:game.inventory"
+
+# Offers the items of a catalogue (item -> price, the item number as key), one by one : the player buys one of each with
+# yes / no, while there is money. Returns the number of items bought.
+sell = function(catalogue: int[:]) : int do
+	bought = 0
+	catalogue.keys() | (key) do
+		item = (key: int)
+		price = catalogue[key]
+		question = "Acheter " + Bag.name(item) + " pour " + (price: string) + " ? (argent : " + (Bag.money(): string) + ")"
+		if GameDialog.choice(question)
+			if Bag.pay(price)
+				Bag.add(item, 1)
+				bought = bought + 1
+				GameDialog.message(Bag.name(item) + " ajouté au sac.")
+			else
+				GameDialog.message("Tu n'as pas assez d'argent.")
+			end
+		end
+	end
+	return bought
+end
+
+# The catalogue of the items at their shop price ([Shop] price of the item data)
+catalogue = function(items: int[]) : int[:] do
+	result = [:]: int
+	items | (item) do
+		result[(item: string)] = Bag.price(item)
+	end
+	return result
+end

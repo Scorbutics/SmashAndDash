@@ -31,6 +31,7 @@ set(GAME_SCRIPT_MODULES
 	${GAME_ROOT_DIR}/Levels/story.miniska
 	${GAME_ROOT_DIR}/Levels/surf.miniska
 	${GAME_ROOT_DIR}/Levels/jump_wall.miniska
+	${GAME_ROOT_DIR}/Levels/shop.miniska
 	# Called by the battles (BattleRules)
 	${GAME_ROOT_DIR}/Data/Battle/rules.miniska
 	${GAME_ROOT_DIR}/Data/Battle/ai.miniska)

@@ -1,0 +1,23 @@
+# The bag of the player (items, money) : Bag = import "bind:game.inventory"
+# The items are Data/Items/<item>.ini. The bag is saved as it changes.
+
+# Amount of an item in the bag
+count = function(item: int) : int do return 0 end
+# The items in the bag (at least one of each)
+items = function() : int[] do return []: int end
+add = function(item: int, amount: int) do end
+# Removes some of an item : false (nothing removed) when there is not enough of it
+remove = function(item: int, amount: int) : bool do return false end
+
+money = function() : int do return 0 end
+earn = function(amount: int) do end
+# Pays : false (nothing paid) when there is not enough money
+pay = function(amount: int) : bool do return false end
+
+# Name and shop price of an item ("" and 0 when there is no such item)
+name = function(item: int) : string do return "" end
+price = function(item: int) : int do return 0 end
+
+# Uses an item of the bag on a Pokemon of the team (index) : a healing item gives hit points.
+# false (the item is kept) when it has no effect (no such item in the bag, not a healing item, the Pokemon is not hurt)
+use = function(item: int, pokemon: int) : bool do return false end

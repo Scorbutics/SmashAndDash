@@ -7,7 +7,8 @@
 #include "./Data/DialogEvent.h"
 #include "Data/MapEvent.h"
 #include "Data/InterfaceEvent.h"
+#include "Data/InventoryEvent.h"
 
 
-using PokemonGameEventDispatcher = ska::ExtensibleGameEventDispatcher<BattleEvent, StatisticsChangeEvent, SettingsChangeEvent, EntityLoadEvent, MapEvent, DialogEvent, InterfaceEvent>;
+using PokemonGameEventDispatcher = ska::ExtensibleGameEventDispatcher<BattleEvent, StatisticsChangeEvent, SettingsChangeEvent, EntityLoadEvent, MapEvent, DialogEvent, InterfaceEvent, InventoryEvent>;
 

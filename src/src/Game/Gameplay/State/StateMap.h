@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include "../Data/ItemUse.h"
+#include <memory>
 #include "StateFight.h"
 #include "Core/State/StateBase.h"
 
@@ -32,6 +34,8 @@ private:
 	const std::string m_fileName;
 	std::string m_tilesetName;
 	ska::ScriptRefreshSystem* m_scriptSystem = nullptr;
+	// Keys using the items of the bag
+	std::unique_ptr<ItemShortcuts> m_itemShortcuts;
 
 	std::optional<ska::Point<int>> m_trainerPosition;
 

@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GUIMap.h"
+#include "WindowBag.h"
 #include "../../Gameplay/Data/Settings.h"
 #include "DialogMenu.h"
 #include "WindowTeam.h"
@@ -20,6 +21,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	DialogEventObserver(std::bind(&GUIMap::onDialogEvent, this, std::placeholders::_1)),
 	BattleStartObserver(std::bind(&GUIMap::onBattleStart, this, std::placeholders::_1)),
 	ska::Observer<InterfaceEvent>(std::bind(&GUIMap::onInterfaceEvent, this, std::placeholders::_1)),
+	ska::Observer<InventoryEvent>(std::bind(&GUIMap::onInventoryEvent, this, std::placeholders::_1)),
 	m_entityManager(em),
 	m_ged(ged),
 	m_dbgWindow(*this, ged) {
@@ -34,6 +36,8 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 
 	m_team = &addFocusableWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
+	m_bag = &addFocusableWindow<WindowBag>("bag", ska::Point<int>(10 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	m_bag->show(false);
 
 	m_settings = &addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_settings->show(false);
@@ -43,6 +47,7 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	m_ged.ska::Observable<EntityLoadEvent>::addObserver(*this);
 	m_ged.ska::Observable<DialogEvent>::addObserver(*this);
 	m_ged.ska::Observable<InterfaceEvent>::addObserver(*this);
+	m_ged.ska::Observable<InventoryEvent>::addObserver(*this);
 }
 
 void GUIMap::refresh(unsigned int ellapsedTime) {
@@ -94,6 +99,12 @@ void GUIMap::initButtons() {
     buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& secondButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
     secondButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
+	// The bag
+	secondButton.addWidget<ska::ButtonSprite>(ska::Point<int>(1, 1), "", 100, [&](ska::Widget*, const ska::ClickEvent& e) {
+        if (e.getState() == ska::MOUSE_CLICK) {
+            m_bag->show(!m_bag->isVisible());
+        }
+    });
 
 	buf.x += OFFSET_BETWEEN_BUTTONS;
     auto& thirdButton = wAction.addWidget<ska::GUIScrollButtonWindowIG>(buf);
@@ -114,11 +125,19 @@ void GUIMap::initButtons() {
     });
 }
 
+bool GUIMap::onInventoryEvent(InventoryEvent& ie) {
+	if (m_bag != nullptr) {
+		m_bag->refresh(ie);
+	}
+	return true;
+}
+
 bool GUIMap::onInterfaceEvent(InterfaceEvent& ie) {
 	// The buttons come back with the interface, the windows opened by the buttons stay closed
 	m_wAction->show(!ie.hidden);
 	if (ie.hidden) {
 		m_team->show(false);
+		m_bag->show(false);
 		if (auto* settings = getWindow("settings"); settings != nullptr) {
 			settings->show(false);
 		}
@@ -246,6 +265,7 @@ bool GUIMap::onBattleStart(BattleEvent& be){
 GUIMap::~GUIMap() {
 	m_ged.ska::Observable<DialogEvent>::removeObserver(*this);
 	m_ged.ska::Observable<InterfaceEvent>::removeObserver(*this);
+	m_ged.ska::Observable<InventoryEvent>::removeObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::removeObserver(*this);
 	m_ged.ska::Observable<EntityLoadEvent>::removeObserver(*this);
 	m_ged.ska::Observable<BattleEvent>::removeObserver(*this);

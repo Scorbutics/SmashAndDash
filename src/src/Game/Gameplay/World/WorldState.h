@@ -18,6 +18,7 @@
 #include "Graphic/Polygon.h"
 #include "Core/ECS/EntityLocator.h"
 #include "Scripting/EntityHandles.h"
+#include "../Data/Bag.h"
 
 namespace ska {
 	namespace scripting {
@@ -73,6 +74,8 @@ public:
 	const ska::scripting::EntityHandles& getEntityHandles() const { return m_entityHandles; }
 	ska::TileWorld& getWorld();
 	SavegameManager& getSaveGame();
+	// Items and money of the player
+	Bag& getBag() { return m_bag; }
 	ska::cp::Space& getSpace();
 	// Runs the skalang scripts started by the script triggers
 	ska::ScriptRunner& getScriptRunner();
@@ -113,6 +116,7 @@ private:
 	Settings& m_settings;
 
 	SavegameManager m_saveManager;
+	Bag m_bag;
 
 	Pokeball m_pokeball;
 	ska::Music m_worldBGM;

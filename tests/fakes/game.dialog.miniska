@@ -1,0 +1,33 @@
+# Fake of the dialogs for the headless script tests : the answers to the questions are given by the test, the messages
+# and questions are recorded.
+
+answers = []: bool
+nextAnswer = 0
+shown = []: string
+
+message = function(text: string) do
+	shown = shown + text
+end
+
+choice = function(question: string) : bool do
+	shown = shown + question
+	answer = false
+	if nextAnswer < answers.size()
+		answer = answers[nextAnswer]
+	end
+	nextAnswer = nextAnswer + 1
+	return answer
+end
+
+cinematic = function(animation: int, text: string) do
+	shown = shown + text
+end
+
+# Test controls (only in the fake)
+answer = function(value: bool) do
+	answers = answers + value
+end
+
+messages = function() : string[] do
+	return shown
+end

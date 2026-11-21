@@ -68,6 +68,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 	m_settings(settings), 
 	m_saveManager(em, ed, "save1"),
+	m_bag(ed),
 	m_worldBGM(DEFAULT_BGM), 
 	m_eventDispatcher(ed),
 	m_entityManager(em),
@@ -262,6 +263,7 @@ void WorldState::beforeLoad(ska::State* lastState) {
 
 void WorldState::afterLoad(ska::State* lastState) {
 	m_saveManager.loadGame("save1");
+	m_bag.load(m_saveManager.getPathName());
 }
 
 void WorldState::beforeUnload() {

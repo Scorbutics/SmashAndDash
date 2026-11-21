@@ -27,10 +27,11 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |
 | Battles | `Battle = import "bind:game.battle"` | start, battles, lastWon |
 | Saving | `Save = import "bind:game.save"` | save |
+| Bag | `Bag = import "bind:game.inventory"` | count, items, add, remove, money, earn, pay, name, price, use |
 
 The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
 
-Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `crumbling`, `pokemonOut` and `shop` (no inventory in this version).
+Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `crumbling`, `pokemonOut` and `Interface.shop` (the shops are scripts: `Levels/shop.miniska`).
 
 ## Saving
 
@@ -68,6 +69,13 @@ Battles are real time (C++): the Pokemon of the player uses its skills with the 
   - `Story.walk(entity, direction, blocks)`
   - Story steps, saved with the game: `Story.done(step)` / `Story.setDone(step)`.
 - `Levels/surf.miniska`, `Levels/jump_wall.miniska`: water and ledges.
+
+## Bag and shops
+
+- The bag (items, money) is saved as it changes, in the trainer file of the save (`[Items]`, `[Trainer] money`). The items are `Data/Items/<item>.ini` (name, `[Shop] price`, `[Buffs] hp` of a healing item), in Latin-1.
+- `Bag.use(item, pokemon)` uses a healing item on a Pokemon of the team (false when it has no effect: the item is kept).
+- On the map, the bag button shows the bag, and the keys Z, X, C, V, B, N use the items at these places in the bag on the first Pokemon they heal.
+- `Levels/shop.miniska`: `Shop.sell(Shop.catalogue([0, 1, 2]))` offers the items one by one (yes / no), the catalogue is a map (item -> price).
 
 ## Tests
 

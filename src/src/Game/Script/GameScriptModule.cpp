@@ -36,6 +36,8 @@
 #include "../Gameplay/Fight/FightComponent.h"
 #include "../Gameplay/Fight/BattleRules.h"
 #include "../Gameplay/Data/Team.h"
+#include "../Gameplay/Data/Bag.h"
+#include "../Gameplay/Data/ItemUse.h"
 #include "ScriptConstants.h"
 #include "../Gameplay/Fight/System/FightStartSystem.h"
 
@@ -425,20 +427,7 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 	});
 
 	m_builder.bindField("heal", [&worldState](std::vector<ska::NodeValue> params) {
-		const auto index = Int(params[0]);
-		auto team = Team{ worldState.getSaveGame().getPathName() };
-		auto pokemon = team.member(index);
-		if (!pokemon.has_value()) {
-			return ska::NodeValue{};
-		}
-		// Up to its hit points at its level (battle rules)
-		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
-		auto& rules = worldState.getBattleRules();
-		const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
-		const auto baseHp = data.exists("BaseStats hp") ? data.get<int>("BaseStats hp") : 10;
-		const auto maxHp = rules.maxHp(baseHp, rules.level(pokemon->experience, needed));
-		pokemon->hp = std::min(maxHp, std::max(0, pokemon->hp) + std::max(0, Int(params[1])));
-		team.setMember(index, *pokemon);
+		HealTeamMember(worldState.getSaveGame().getPathName(), Int(params[0]), Int(params[1]), worldState.getBattleRules());
 		return ska::NodeValue{};
 	});
 
@@ -535,6 +524,54 @@ SaveScriptModule::SaveScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 	m_builder.generate();
 }
 
+InventoryScriptModule::InventoryScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
+	GameScriptModule(vm, "inventory") {
+	(void) entityManager;
+	(void) ged;
+	auto& bag = worldState.getBag();
+
+	m_builder.bindField("count", [&bag](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ static_cast<long>(bag.count(Int(params[0]))) };
+	});
+	m_builder.bindField("items", [&bag](std::vector<ska::NodeValue>) {
+		auto items = std::make_shared<ska::NodeValueArrayRaw>();
+		for (const auto item : bag.items()) {
+			items->push_back(ska::NodeValue{ static_cast<long>(item) });
+		}
+		return ska::NodeValue{ ska::NodeValueArray{ std::move(items) } };
+	});
+	m_builder.bindField("add", [&bag](std::vector<ska::NodeValue> params) {
+		bag.add(Int(params[0]), Int(params[1]));
+		return ska::NodeValue{};
+	});
+	m_builder.bindField("remove", [&bag](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ bag.remove(Int(params[0]), Int(params[1])) };
+	});
+	m_builder.bindField("money", [&bag](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ static_cast<long>(bag.money()) };
+	});
+	m_builder.bindField("earn", [&bag](std::vector<ska::NodeValue> params) {
+		bag.earn(Int(params[0]));
+		return ska::NodeValue{};
+	});
+	m_builder.bindField("pay", [&bag](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ bag.pay(Int(params[0])) };
+	});
+	m_builder.bindField("name", [](std::vector<ska::NodeValue> params) {
+		const auto item = Bag::data(Int(params[0]));
+		return ska::NodeValue{ std::make_shared<std::string>(item.has_value() ? item->name : "") };
+	});
+	m_builder.bindField("price", [](std::vector<ska::NodeValue> params) {
+		const auto item = Bag::data(Int(params[0]));
+		return ska::NodeValue{ static_cast<long>(item.has_value() ? item->price : 0) };
+	});
+	m_builder.bindField("use", [&bag, &worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ UseItem(worldState, bag, Int(params[0]), Int(params[1])) };
+	});
+
+	m_builder.generate();
+}
+
 GameScriptModules::GameScriptModules(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	dialog(vm, entityManager, ged, worldState),
 	character(vm, entityManager, ged, worldState),
@@ -542,5 +579,6 @@ GameScriptModules::GameScriptModules(ska::scripting::ScriptVM& vm, CustomEntityM
 	party(vm, entityManager, ged, worldState),
 	interface(vm, entityManager, ged, worldState),
 	battle(vm, entityManager, ged, worldState),
-	save(vm, entityManager, ged, worldState) {
+	save(vm, entityManager, ged, worldState),
+	inventory(vm, entityManager, ged, worldState) {
 }

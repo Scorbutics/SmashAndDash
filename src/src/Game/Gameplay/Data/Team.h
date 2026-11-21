@@ -10,6 +10,11 @@ struct TeamMember {
 	int hp = 0;
 };
 
+class BattleRules;
+
+// Gives hit points to a Pokemon of the team, up to its hit points at its level (battle rules) : the hit points given
+int HealTeamMember(const std::string& saveName, int index, int amount, BattleRules& rules);
+
 // The team of the player : the files of the save are the reference (up to 6 Pokemon)
 class Team {
 public:

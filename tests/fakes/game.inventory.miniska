@@ -1,0 +1,71 @@
+# Fake of the bag for the headless script tests : items and money in maps, item names and prices of the shop.
+
+amounts = [:]: int
+names = [:]: string
+prices = [:]: int
+names["0"] = "Potion"
+prices["0"] = 300
+names["1"] = "Super Potion"
+prices["1"] = 700
+names["2"] = "Pokeball"
+prices["2"] = 200
+wallet = 0
+
+count = function(item: int) : int do
+	if amounts.has((item: string))
+		return amounts[(item: string)]
+	end
+	return 0
+end
+
+items = function() : int[] do
+	result = []: int
+	amounts.keys() | (key) do
+		if amounts[key] > 0
+			result = result + (key: int)
+		end
+	end
+	return result
+end
+
+add = function(item: int, amount: int) do
+	amounts[(item: string)] = count(item) + amount
+end
+
+remove = function(item: int, amount: int) : bool do
+	if count(item) < amount
+		return false
+	end
+	amounts[(item: string)] = count(item) - amount
+	return true
+end
+
+money = function() : int do return wallet end
+earn = function(amount: int) do
+	wallet = wallet + amount
+end
+pay = function(amount: int) : bool do
+	if amount > wallet
+		return false
+	end
+	wallet = wallet - amount
+	return true
+end
+
+name = function(item: int) : string do
+	if names.has((item: string))
+		return names[(item: string)]
+	end
+	return ""
+end
+
+price = function(item: int) : int do
+	if prices.has((item: string))
+		return prices[(item: string)]
+	end
+	return 0
+end
+
+use = function(item: int, pokemon: int) : bool do
+	return remove(item, 1)
+end

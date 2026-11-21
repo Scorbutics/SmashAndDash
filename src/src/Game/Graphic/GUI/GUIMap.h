@@ -12,6 +12,7 @@ class WindowSettings;
 
 class Settings;
 class WindowTeam;
+class WindowBag;
 class SkillsBar;
 class CustomEntityManager;
 
@@ -23,7 +24,8 @@ class GUIMap :
 	public ska::Observer<EntityLoadEvent>,
 	public DialogEventObserver,
 	public BattleStartObserver,
-	public ska::Observer<InterfaceEvent> {
+	public ska::Observer<InterfaceEvent>,
+	public ska::Observer<InventoryEvent> {
 
 public:
 	GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
@@ -34,6 +36,7 @@ public:
 	bool onEntityLoad(EntityLoadEvent& ele);
 	bool onBattleStart(BattleEvent& be);
 	bool onInterfaceEvent(InterfaceEvent& ie);
+	bool onInventoryEvent(InventoryEvent& ie);
 	bool onDialogEvent(DialogEvent& de);
 	virtual bool onScreenResized(unsigned int width, unsigned int height) override;
 	void bind(Settings& sets);
@@ -47,6 +50,7 @@ private:
 	PokemonGameEventDispatcher& m_ged;
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;
+	WindowBag* m_bag = nullptr;
 	WindowSettings* m_settings = nullptr;
 	ska::TimeScrollableWindowIG<>* m_wAction;
 	SkillsBar* m_skillBar;
