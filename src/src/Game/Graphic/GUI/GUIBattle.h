@@ -6,6 +6,7 @@
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 #include "Graphic/Texture.h"
+#include "Graphic/Shader.h"
 #include "../../Gameplay/Fight/BattleStage.h"
 
 class BattleSystem;
@@ -26,7 +27,7 @@ public:
 	GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera);
 	GUIBattle(const GUIBattle&) = delete;
 	GUIBattle& operator=(const GUIBattle&) = delete;
-	~GUIBattle() = default;
+	~GUIBattle();
 
 	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables);
 
@@ -67,6 +68,7 @@ private:
 	void renderSkills(ska::Renderer& renderer) const;
 	void renderBanner(ska::Renderer& renderer) const;
 	void renderMarks(ska::Renderer& renderer) const;
+	void updateScreenShader(ska::Renderer& renderer) const;
 	void text(ska::Renderer& renderer, const std::string& value, unsigned int size, ska::Color color, int x, int y, int align, float scale = 1.F, unsigned char alpha = 255) const;
 
 	ska::EntityManager& m_entities;
@@ -83,5 +85,8 @@ private:
 	ska::Texture m_impact;
 	// The sprites of the contact skills (Sprites/Fight/<id>.png : 2 x 2 frames), loaded when used
 	mutable std::map<int, ska::Texture> m_skillSprites;
+	// Post-processing of the battle (Shaders/battle) : the colors split on the hits, gray and vignette on a K.O.
+	mutable ska::Shader m_screenShader;
+	mutable ska::Renderer* m_renderer = nullptr;
 	unsigned int m_time = 0;
 };

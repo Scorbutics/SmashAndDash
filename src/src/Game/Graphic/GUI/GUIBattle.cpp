@@ -52,10 +52,48 @@ GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSys
 	m_ringPlayer("./Sprites/Fight/ring-player.png"),
 	m_ringOpponent("./Sprites/Fight/ring-opponent.png"),
 	m_arrow("./Sprites/Fight/arrow-player.png"),
-	m_impact("./Sprites/Fight/impact.png") {
+	m_impact("./Sprites/Fight/impact.png"),
+	m_screenShader("./Shaders/battle", true) {
 	m_groundLayer.setPriority(GroundPriority);
 	// Under the dialogs (GUI)
 	m_overlayLayer.setPriority(GUI_DEFAULT_DISPLAY_PRIORITY - 1);
+}
+
+GUIBattle::~GUIBattle() {
+	// The screen is not post-processed anymore (the shader is destroyed with the interface)
+	if (m_renderer != nullptr) {
+		m_renderer->setScreenShader(nullptr);
+	}
+}
+
+void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
+	m_renderer = &renderer;
+	// The strongest recent impact splits the colors, a K.O. turns the screen gray
+	auto split = 0.F;
+	for (const auto& mark : m_stage.marks()) {
+		if (mark.kind == BattleMark::Kind::Impact && mark.value > 0) {
+			const auto fading = std::max(0.F, 1.F - static_cast<float>(mark.age) / 220.F);
+			split = std::max(split, fading * (3.F + static_cast<float>(mark.value) * 1.2F));
+		}
+	}
+	auto gray = 0.F;
+	auto vignette = 0.F;
+	if (m_stage.phase() == BattlePhase::KnockOut) {
+		const auto progress = std::min(1.F, static_cast<float>(m_stage.phaseTime()) / 500.F);
+		gray = 0.85F * progress;
+		vignette = 0.8F * progress;
+	}
+	if (split <= 0.F && gray <= 0.F) {
+		renderer.setScreenShader(nullptr);
+		return;
+	}
+	const auto screen = m_camera.getScreenSize();
+	struct {
+		float effects[4];
+		float screen[4];
+	} uniforms{ { gray, vignette, split, 0.F }, { static_cast<float>(screen.x), static_cast<float>(screen.y), 0.F, 0.F } };
+	m_screenShader.setUniforms(uniforms);
+	renderer.setScreenShader(&m_screenShader);
 }
 
 void GUIBattle::loadNames() {
@@ -347,6 +385,7 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 }
 
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
+	updateScreenShader(renderer);
 	// The arrow over the Pokemon of the player
 	if (visible(m_stage.player.entity) && m_stage.phase() == BattlePhase::Fight) {
 		const auto drawn = sprite(m_stage.player.entity);

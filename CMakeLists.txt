@@ -44,3 +44,7 @@ add_subdirectory(${curdir})
 # Headless script tests (ctest) : see src/CMakeLists.txt
 enable_testing()
 add_subdirectory(src)
+
+# Shaders (src/shaders/*.frag), compiled for the renderer in Shaders/ : loaded as "./Shaders/<name>"
+file(GLOB SAD_SHADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.frag)
+ska_compile_shaders(smash_and_dash_shaders OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Shaders SOURCES ${SAD_SHADERS})

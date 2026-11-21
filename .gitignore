@@ -1,4 +1,4 @@
-﻿/Debug/
+/Debug/
 /Release/
 /.vs/
 *.exe
@@ -45,3 +45,5 @@ CMakeCache.txt
 *.cmake
 **/.vs
 /external/chipmunk/src/Debug
+# Compiled shaders (src/shaders)
+/Shaders/

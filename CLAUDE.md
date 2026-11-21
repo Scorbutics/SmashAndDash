@@ -15,6 +15,8 @@ Battle simulation: `SAD_BATTLE_AUTOPLAY=1` makes the battle AI play the Pokemon 
 
 Script tests, headless (no window): `cd build && ctest`. They are `tests/*_test.miniska` (assertions: `Test = import "bind:std.native.test"`), run with the templates of the engine and game functions (default bodies) and the fakes of `tests/fakes` (ex: the engine keeps the game variables, `setNextRandom` chooses the random values). Add a test with a script change when the script has logic (rules, AI, helpers).
 
+Shaders: GLSL fragment shaders in `src/shaders/*.frag`, compiled during the build to `Shaders/<name>.frag.spv` (ska `ska_compile_shaders`, needs `glslangValidator`), loaded with `ska::Shader{ "./Shaders/<name>" }` (ska README "Shaders"). They need the SDL3 `gpu` renderer: without it the game draws without them. Ex: `battle.frag`, the post-processing of the battles (`GUIBattle`).
+
 ## Scripts
 
 Read [SCRIPTING.md](SCRIPTING.md) (where scripts start, the functions given to them) and `external/ska/external/skalang/doc/LANGUAGE.md` (the language) before writing a script. The syntax differs from Ruby, JavaScript and Python. Keep skalang's rules: strong static typing, no implicit conversion, no null value.
