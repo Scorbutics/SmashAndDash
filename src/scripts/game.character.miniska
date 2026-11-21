@@ -35,6 +35,11 @@ wander = function(entity: int) do end
 # "g" : left. Ex : "bdhg")
 patrol = function(entity: int, path: string) do end
 
+# Movement mode of a character controlled by the player : "walk" (normal), "run" (faster), "locked" (it does not move nor
+# jump with the keys, ex : during a cutscene). An error for a character not controlled by the player, or an unknown mode.
+setMovement = function(entity: int, mode: string) do end
+movement = function(entity: int) : string do return "" end
+
 # The entity walks after "target" (one block behind it) until it is called with the target -1, or until the target is removed.
 # It does not wait : the script goes on.
 follow = function(entity: int, target: int) do end

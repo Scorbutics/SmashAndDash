@@ -27,6 +27,7 @@
 #include "Scripting/EngineModule.h"
 #include "../Fight/BattleRules.h"
 #include "../Data/Team.h"
+#include "../Control/InputHooks.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../Script/GameScriptModule.h"
 #include "World/TileWorldPhysics.h"
@@ -88,6 +89,8 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_battleRules = std::make_unique<BattleRules>(*m_scripts);
 	m_scripts->declareEvent("battle.won");
 	m_scripts->declareEvent("battle.lost");
+	m_scripts->declareEvent(InputHooks::Action);
+	m_scripts->declareEvent(InputHooks::Jump);
 
 	ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
 
@@ -485,6 +488,16 @@ ska::scripting::ScriptVM& WorldState::getScripts() {
 
 BattleRules& WorldState::getBattleRules() {
 	return *m_battleRules;
+}
+
+void WorldState::emitPlayerHook(const std::string& event) {
+	if (m_scripts->hooks(event) == 0) {
+		return;
+	}
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer != nullptr) {
+		m_engineScriptModule->emit(event, *trainer);
+	}
 }
 
 void WorldState::battleEnded(const BattleResult& result) {

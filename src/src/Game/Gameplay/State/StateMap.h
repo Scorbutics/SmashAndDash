@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "../Data/ItemUse.h"
+#include "../Control/InputHooks.h"
 #include <memory>
 #include "StateFight.h"
 #include "Core/State/StateBase.h"
@@ -36,6 +37,8 @@ private:
 	ska::ScriptRefreshSystem* m_scriptSystem = nullptr;
 	// Keys using the items of the bag
 	std::unique_ptr<ItemShortcuts> m_itemShortcuts;
+	// Engine events of the keys for the scripts
+	std::unique_ptr<InputHooks> m_inputHooks;
 
 	std::optional<ska::Point<int>> m_trainerPosition;
 

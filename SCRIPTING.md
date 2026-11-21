@@ -21,7 +21,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | --- | --- | --- |
 | Engine (ska) | `Engine = import "bind:ska.engine"` | wait, log, random, origin (the entity that triggered the script), entity (by name), disableComponent / enableComponent, variable / setVariable (saved game variables), script |
 | Dialogs | `GameDialog = import "bind:game.dialog"` | message, choice (yes / no), cinematic |
-| Characters | `Character = import "bind:game.character"` | move, jump, direction / setDirection, setLayer, playAnimation, place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
+| Characters | `Character = import "bind:game.character"` | setMovement / movement (`walk`, `run`, `locked` for the player), move, jump, direction / setDirection, setLayer, playAnimation, place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, shake (camera), crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |
@@ -69,6 +69,11 @@ Battles are real time (C++): the Pokemon of the player uses its skills with the 
   - `Story.walk(entity, direction, blocks)`
   - Story steps, saved with the game: `Story.done(step)` / `Story.setDone(step)`.
 - `Levels/surf.miniska`, `Levels/jump_wall.miniska`: water and ledges.
+
+## Keys and movement
+
+- The movement of the characters (keys, physics) is done by the game, at each frame. The scripts choose how the player moves: `Character.setMovement(player, "locked")` during a cutscene (no movement, no jump), `"run"` (faster), `"walk"` (back to normal).
+- Hooks of the keys on the map, with the player: `Engine.on("input.action", function(player: int) do ... end)` (action key), `"input.jump"` (jump key). They run as scripts (they can wait). The action key also starts the scripts of the characters and blocks in front of the player, and closes the messages.
 
 ## Bag and shops
 

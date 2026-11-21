@@ -22,6 +22,8 @@
 #include "AI/IADefinedMovementComponent.h"
 #include "AI/IARandomMovementComponent.h"
 #include "AI/IAFollowComponent.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
+#include "../Gameplay/Control/MovementModeComponent.h"
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../Gameplay/Data/EntityLoadEvent.h"
@@ -71,6 +73,9 @@ namespace {
 		return ska::PositionComponent::getCenterPosition(entityManager.getComponent<ska::PositionComponent>(entity),
 			Require<ska::HitboxComponent>(entityManager, entity, "be located (no hitbox)"));
 	}
+
+	// Speed of the "run" movement mode, compared to the walk
+	constexpr auto RunFactor = 1.8F;
 
 	// The old scripts separate the lines of a message with a "\xa4"
 	std::string MessageText(std::string text) {
@@ -306,6 +311,33 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		}
 		entityManager.addComponent<ska::IADefinedMovementComponent>(entity, std::move(definedMovement));
 		return ska::NodeValue{};
+	});
+
+	// Movement modes of a character controlled by the player : the powers of its normal walk are kept
+	m_builder.bindField("setMovement", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		const auto& mode = String(params[1]);
+		if (mode != "walk" && mode != "run" && mode != "locked") {
+			throw std::runtime_error("unknown movement mode \"" + mode + "\" (modes : walk, run, locked)");
+		}
+		auto& input = Require<ska::InputComponent>(entityManager, entity, "change its movement (not controlled by the player)");
+		if (!entityManager.hasComponent<MovementModeComponent>(entity)) {
+			auto saved = MovementModeComponent{};
+			saved.walkPower = input.movePower;
+			saved.jumpPower = input.jumpPower;
+			entityManager.addComponent<MovementModeComponent>(entity, std::move(saved));
+		}
+		auto& movementMode = entityManager.getComponent<MovementModeComponent>(entity);
+		movementMode.mode = mode;
+		input.movePower = mode == "locked" ? 0.F : (mode == "run" ? movementMode.walkPower * RunFactor : movementMode.walkPower);
+		input.jumpPower = mode == "locked" ? 0.F : movementMode.jumpPower;
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("movement", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		const auto mode = entityManager.hasComponent<MovementModeComponent>(entity) ? entityManager.getComponent<MovementModeComponent>(entity).mode : std::string{ "walk" };
+		return ska::NodeValue{ std::make_shared<std::string>(mode) };
 	});
 
 	m_builder.bindField("follow", [&entityManager, &handles](std::vector<ska::NodeValue> params) {

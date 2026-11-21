@@ -8,6 +8,7 @@
 #include "Gameplay/Fight/SkillComponent.h"
 #include "Gameplay/Fight/FightComponent.h"
 #include "Gameplay/Fight/BattleComponent.h"
+#include "Gameplay/Control/MovementModeComponent.h"
 #include "Gameplay/PokeballComponent.h"
 #include "Gameplay/Mobs/MobSpawnAreaComponent.h"
 #include "Graphic/GUI/SlotPokemon.h"
@@ -16,6 +17,7 @@ SKA_DEFINE_COMPONENT(SkillsHolderComponent);
 SKA_DEFINE_COMPONENT(SkillComponent);
 SKA_DEFINE_COMPONENT(FightComponent);
 SKA_DEFINE_COMPONENT(BattleComponent);
+SKA_DEFINE_COMPONENT(MovementModeComponent);
 SKA_DEFINE_COMPONENT(PokeballComponent);
 SKA_DEFINE_COMPONENT(MobSpawnAreaComponent);
 

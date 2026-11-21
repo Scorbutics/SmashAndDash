@@ -16,6 +16,7 @@
 #include "AI/System/IARandomMovementSystem.h"
 #include "../Fight/System/BattleSystem.h"
 #include "../Fight/BattleRules.h"
+#include "../Control/MovementModeComponent.h"
 #include "../Fight/System/SkillHitSystem.h"
 
 namespace {
@@ -122,6 +123,12 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 
 	// A copy : the storage of a removed component is reset
 	m_input = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
+	// The Pokemon moves with the normal walk of the trainer (not its movement mode : ex "locked" during a cutscene)
+	if (m_entityManager.hasComponent<MovementModeComponent>(m_trainerId)) {
+		const auto& movementMode = m_entityManager.getComponent<MovementModeComponent>(m_trainerId);
+		m_input.movePower = movementMode.walkPower;
+		m_input.jumpPower = movementMode.jumpPower;
+	}
 	m_ic = &m_input;
 	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 

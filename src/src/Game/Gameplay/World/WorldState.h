@@ -88,6 +88,8 @@ public:
 	// End of a battle : its result is given to the scripts waiting for it (Battle.start), and to the hooks
 	// ("battle.won", "battle.lost", with the player)
 	void battleEnded(const BattleResult& result);
+	// Starts the hooks of an engine event about the player (nothing when there is no player)
+	void emitPlayerHook(const std::string& event);
 	unsigned int battles() const { return m_battles; }
 	bool lastBattleWon() const { return m_lastBattleWon; }
 
