@@ -1,3 +1,4 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include <iostream>
 #include <fstream>
 #include "SavegameManager.h"
@@ -8,6 +9,11 @@
 #include "Logging/Logger.h"
 #include "Core/Exceptions/NumberFormatException.h"
 #include "Script/ScriptUtils.h"
+#include <sstream>
+#include "Core/ECS/EntityManager.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
+#include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_entityManager(em),
@@ -148,12 +154,56 @@ void SavegameManager::extractEntityComponent(const std::string& str, std::string
 }
 
 
+// Component fields readable and writable from the legacy scripts ("<Component.field [entity]>").
+// ska no longer provides a generic component serialization : the fields used by the game scripts are listed here.
+// Reads the field when "value" is null, otherwise writes it. Returns the (read) value, or an empty string
+// if the entity does not have the component or the field is unknown.
+namespace {
+	template <class T>
+	std::string FormatField(const T& field) {
+		auto ss = std::ostringstream{};
+		ss << field;
+		return ss.str();
+	}
+
+	template <class Component, class Field>
+	std::string AccessField(ska::EntityManager& entityManager, const ska::EntityId& entityId, Field Component::* field, const std::string* value) {
+		if (!entityManager.hasComponent<Component>(entityId)) {
+			return "";
+		}
+		auto& component = entityManager.getComponent<Component>(entityId);
+		if (value != nullptr) {
+			auto ss = std::istringstream{ *value };
+			auto parsed = Field{};
+			ss >> parsed;
+			component.*field = parsed;
+		}
+		return FormatField(component.*field);
+	}
+
+	std::string AccessComponentField(ska::EntityManager& entityManager, const ska::EntityId& entityId, const std::string& component, const std::string& field, const std::string* value) {
+		if (component == "InputComponent") {
+			if (field == "movePower") { return AccessField(entityManager, entityId, &ska::InputComponent::movePower, value); }
+			if (field == "jumpPower") { return AccessField(entityManager, entityId, &ska::InputComponent::jumpPower, value); }
+		} else if (component == "PositionComponent") {
+			if (field == "x") { return AccessField(entityManager, entityId, &ska::PositionComponent::x, value); }
+			if (field == "y") { return AccessField(entityManager, entityId, &ska::PositionComponent::y, value); }
+			if (field == "z") { return AccessField(entityManager, entityId, &ska::PositionComponent::z, value); }
+			if (field == "layer") { return AccessField(entityManager, entityId, &ska::PositionComponent::layer, value); }
+		} else if (component == "AnimationComponent") {
+			if (field == "state") { return AccessField(entityManager, entityId, &ska::AnimationComponent::state, value); }
+		}
+		SLOG_STATIC(ska::LogLevel::Warn, SavegameManager) << "Unknown component field \"" << component << "." << field << "\"";
+		return "";
+	}
+}
+
 std::string SavegameManager::getComponentVariable(const std::string& var) const {
 	ska::EntityId entityId;
 	std::string component;
 	std::string field;
 	extractEntityComponent(var, component, field, entityId);
-	return m_entityManager.serializeComponent(entityId, component, field);
+	return AccessComponentField(m_entityManager, entityId, component, field, nullptr);
 }
 
 void SavegameManager::setComponentVariable(const std::string& var, const std::string& value) {
@@ -161,7 +211,7 @@ void SavegameManager::setComponentVariable(const std::string& var, const std::st
 	std::string component;
 	std::string field;
 	extractEntityComponent(var, component, field, entityId);
-	m_entityManager.deserializeComponent(entityId, component, field, value);
+	AccessComponentField(m_entityManager, entityId, component, field, &value);
 }
 
 void SavegameManager::saveTrainer() {

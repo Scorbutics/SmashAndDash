@@ -9,7 +9,7 @@
 #include "GUI/Components/Concrete/LabeledHorizontalSlider.h"
 
 
-WindowSettings::WindowSettings(Widget& parent, const ska::Point<int>& absolutePos) :
+WindowSettings::WindowSettings(ska::WidgetPanel& parent, const ska::Point<int>& absolutePos) :
 MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * 32, 10 * 32 }) {
 
 // 	auto input = std::unique_ptr<ska::Input>(new ska::Input(*this, " ", 12, ska::Point<int>(16, 32)));

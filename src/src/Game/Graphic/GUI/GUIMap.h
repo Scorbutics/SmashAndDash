@@ -8,6 +8,8 @@
 #include "GUI/GUI.h"
 #include "GUI/Windows/DebugWindow.h"
 
+class WindowSettings;
+
 class Settings;
 class WindowTeam;
 class SkillsBar;
@@ -43,6 +45,7 @@ private:
 	PokemonGameEventDispatcher& m_ged;
 	WindowMouseCursor* m_attachedToCursor;
 	WindowTeam* m_team;
+	WindowSettings* m_settings = nullptr;
 	ska::TimeScrollableWindowIG<>* m_wAction;
 	SkillsBar* m_skillBar;
 

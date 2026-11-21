@@ -7,7 +7,7 @@
 class WindowMouseCursor;
 class WindowTeam : public ska::MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>> {
 public:
-	WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& boxAbsolutePos);
+	WindowTeam(ska::WidgetPanel& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& boxAbsolutePos);
 	SlotPokemon* insertPokemon(SlotPokemon* before, SlotPokemonDataPtr spd);
 	void organizeSlots();
 	~WindowTeam() = default;

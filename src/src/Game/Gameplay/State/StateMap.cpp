@@ -59,7 +59,9 @@ void StateMap::afterLoad(ska::State * lastState){
 	if (m_trainerPosition.has_value()) {
 		auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 		if (trainer != nullptr) {
-			m_entityManager.getComponent<ska::PositionComponent>(*trainer) = m_trainerPosition.value();
+			auto& position = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
+			position.x = static_cast<float>(m_trainerPosition->x);
+			position.y = static_cast<float>(m_trainerPosition->y);
 		}
 	}
 }

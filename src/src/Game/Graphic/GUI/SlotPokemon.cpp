@@ -5,8 +5,8 @@
 #include "Game/Utils/IDs.h"
 #include "GUI/GUI.h"
 
-SlotPokemon::SlotPokemon(Widget& parent, ska::Point<int> relativePos) :
-	ska::WidgetPanel<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * 32, 2 * 32 }),
+SlotPokemon::SlotPokemon(ska::WidgetPanel& parent, ska::Point<int> relativePos) :
+	ska::WidgetPanelInteractive<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener>(parent, ska::Rectangle{ relativePos.x, relativePos.y, 10 * 32, 2 * 32 }),
 	m_fontSize(11) {
 	m_data = nullptr;
 

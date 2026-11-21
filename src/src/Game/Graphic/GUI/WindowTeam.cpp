@@ -7,7 +7,7 @@
 #include "Core/Rectangle.h"
 #include "GUI/Components/Concrete/TileSurface.h"
 
-WindowTeam::WindowTeam(Widget& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
+WindowTeam::WindowTeam(ska::WidgetPanel& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
 MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * 32, 15 * 32 }),
 m_mouseCursor(mouseCursor) {
 

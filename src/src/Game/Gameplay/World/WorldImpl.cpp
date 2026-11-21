@@ -1,3 +1,4 @@
+#include <climits>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "../Data/Settings.h"
 #include "WorldImpl.h"

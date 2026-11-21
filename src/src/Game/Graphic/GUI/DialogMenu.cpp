@@ -7,7 +7,7 @@
 #include "../../Utils/IDs.h"
 #include "GUI/GUI.h"
 
-DialogMenu::DialogMenu(ska::Widget& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
+DialogMenu::DialogMenu(ska::WidgetPanel& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll, const int timeout) :
 TimeScrollableWindowIG<ska::KeyEventListener>(parent, rect),
 m_fontSize(fontSize),
 m_timeout(timeout),

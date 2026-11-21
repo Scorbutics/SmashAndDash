@@ -4,13 +4,16 @@
 #include "SlotPokemonData.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
 #include "GUI/Components/Concrete/Label.h"
-#include "GUI/Components/WidgetPanel.h"
+#include "GUI/Components/WidgetPanelInteractive.h"
+#include "GUI/Events/ValueChangedEvent.h"
+#include "GUI/Events/HoverEventListener.h"
+#include "GUI/Events/ClickEventListener.h"
 
 class StatisticsChangeEvent;
 
-class SlotPokemon : public ska::WidgetPanel<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener> {
+class SlotPokemon : public ska::WidgetPanelInteractive<ska::ValueChangedEventListener<SlotPokemonDataPtr*>, ska::HoverEventListener, ska::ClickEventListener> {
 public:
-	SlotPokemon(Widget& parent, ska::Point<int> relativePos);
+	SlotPokemon(ska::WidgetPanel& parent, ska::Point<int> relativePos);
 	bool onStatisticsChangeEvent(StatisticsChangeEvent& sce);
 	void load(SlotPokemonDataPtr& spd);
 	void unload();

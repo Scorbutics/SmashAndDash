@@ -19,7 +19,7 @@ ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
 }
 
 ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPos, const int spriteId, const unsigned int worldBlockSize, const std::string& name) {
-	auto hero = createEntity(name);
+	auto hero = createEntity();
 	PositionComponent pc;
 	pc.x = startPos.x * worldBlockSize;
 	pc.y = startPos.y * worldBlockSize;

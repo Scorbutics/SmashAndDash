@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/ECS/Component.h"
 #include "Core/Point.h"
 
 class PokeballComponent {
@@ -35,3 +36,5 @@ private:
 	int sens;
 
 };
+
+SKA_DECLARE_COMPONENT(PokeballComponent);

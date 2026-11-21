@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/ECS/Component.h"
 #include "../Data/RawStatistics.h"
 
 class BattleComponent : public RawStatistics<int> {
@@ -9,3 +10,5 @@ public:
 
 	RawStatistics<int> variations;
 };
+
+SKA_DECLARE_COMPONENT(BattleComponent);

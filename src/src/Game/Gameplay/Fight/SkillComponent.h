@@ -1,5 +1,8 @@
 #pragma once
+#include "Core/ECS/Component.h"
 #include "Core/Utils/TimeUtils.h"
+#include "Core/ECS/ECSDefines.h"
+#include "Core/Point.h"
 
 class SkillComponent {
 public:
@@ -31,3 +34,5 @@ public:
 	float speed;
 	float amplitude;
 };
+
+SKA_DECLARE_COMPONENT(SkillComponent);

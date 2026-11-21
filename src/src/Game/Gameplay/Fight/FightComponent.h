@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/ECS/Component.h"
 #include "Core/ECS/ECSDefines.h"
 
 class FightComponent {
@@ -19,3 +20,5 @@ public:
 	ska::EntityId fighterOpponent;
 	ska::EntityId fighterPokemon;
 };
+
+SKA_DECLARE_COMPONENT(FightComponent);

@@ -1,3 +1,4 @@
+#include "Game/__internalConfig/LoggerConfig.h"
 #include <fstream>
 
 #include "Settings.h"

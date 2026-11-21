@@ -9,10 +9,10 @@ namespace ska {
 	class MouseObservable;
 }
 
-class DialogMenu : public IDialogMenu,
+class DialogMenu :
     public ska::TimeScrollableWindowIG<ska::KeyEventListener> {
 public:
-	DialogMenu(ska::Widget& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
+	DialogMenu(ska::WidgetPanel& parent, const std::string& text, const std::string& name, const ska::Rectangle rect, const unsigned int fontSize, const bool scroll = true, const int timeout = -1);
 	~DialogMenu() = default;
 
     const std::string& getName() const;

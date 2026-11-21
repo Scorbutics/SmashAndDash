@@ -34,7 +34,8 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 	m_team = &addFocusableWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
 
-	addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE)).show(false);
+	m_settings = &addFocusableWindow<WindowSettings>("settings", ska::Point<int>(12 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
+	m_settings->show(false);
 
 	m_ged.ska::Observable<BattleEvent>::addObserver(*this);
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
@@ -48,7 +49,7 @@ void GUIMap::refresh(unsigned int ellapsedTime) {
 }
 
 void GUIMap::bind(Settings& sets) {
-	auto wsettings = reinterpret_cast<WindowSettings*>(getWindow("settings"));
+	auto wsettings = m_settings;
 	wsettings->bind(sets);
 }
 
@@ -62,7 +63,6 @@ void GUIMap::initButtons() {
 	//TODO widget dans classe à part
 	m_wAction = &addWindow<ska::TimeScrollableWindowIG<>>("actions", ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE });
 	m_wAction->setPriority(0);
-	resort();
 
     auto& wAction = static_cast<ska::TimeScrollableWindowIG<>&>(*m_wAction);
     wAction.move(ska::Point<int>(getMaxWidth() - 13 * TAILLEBLOCFENETRE, getMaxHeight() - wAction.getBox().h / 2));
@@ -84,11 +84,8 @@ void GUIMap::initButtons() {
             widget->show(!widget->isVisible());
         }
     });
-    bs.setName("POKEBALL BUTTON");
-    firstButton.setName("POKEBALL MENU");
 
     firstButton.addHandler<ska::HoverEventListener>(scrollButtonLambda);
-    wAction.setName("ACTIONS");
 
 	static constexpr auto OFFSET_BETWEEN_BUTTONS = 2.5 * TAILLEBLOCFENETRE;
 
@@ -170,7 +167,7 @@ bool GUIMap::onScreenResized(unsigned int width, unsigned int height) {
 }
 
 bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
-	auto wsettings = reinterpret_cast<WindowSettings*>(getWindow("settings"));
+	auto wsettings = m_settings;
 
 	if((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) == static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) {
 		wsettings->setMusicVolume(sce.settings.getSoundVolume()/100);

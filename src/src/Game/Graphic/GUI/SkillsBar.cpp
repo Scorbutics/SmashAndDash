@@ -4,7 +4,7 @@
 #include "GUI/GUI.h"
 #include "GUI/Components/Concrete/ButtonSprite.h"
 
-SkillsBar::SkillsBar(ska::Widget& parent, const std::array<SkillDescriptor, 4>& skills, unsigned int windowWidth, unsigned int windowHeight) :
+SkillsBar::SkillsBar(ska::WidgetPanel& parent, const std::array<SkillDescriptor, 4>& skills, unsigned int windowWidth, unsigned int windowHeight) :
 ska::DynamicWindowIG<ska::TimeEventListener, ska::KeyEventListener>(parent, ska::Rectangle{ 64, static_cast<int>(windowHeight - 20 * 32), 0, 0 }) {
 	//TODO 1 widget pour représenter chaque skill
 	if (!skills.empty()) {
