@@ -7,7 +7,7 @@
 #include "Base/IO/Readers/IniReader.h"
 #include "Core/Inputs/InputContextManager.h"
 #include "../../CustomEntityManager.h"
-#include <SDL_stdinc.h>
+#include <SDL3/SDL_stdinc.h>
 #include <algorithm>
 #include <cmath>
 

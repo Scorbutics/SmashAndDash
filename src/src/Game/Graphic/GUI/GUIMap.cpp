@@ -1,5 +1,5 @@
 #include <memory>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GUIMap.h"
 #include "WindowBag.h"

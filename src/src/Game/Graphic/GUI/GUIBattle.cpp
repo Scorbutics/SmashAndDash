@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include "Base/IO/Readers/IniReader.h"
 #include "Core/Draw/DrawableContainer.h"
 #include "Core/Draw/Renderer.h"
