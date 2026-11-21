@@ -21,3 +21,20 @@ target_link_libraries(smash_and_dash ${TARGET_LIBS})
 add_custom_command(TARGET smash_and_dash POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/scripts ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/std
 	COMMENT "Deploying the game script templates")
+
+# Static check of the scripts (skalang_check_scripts) : the build fails when a script does not compile
+# (syntax, types, calls of the engine and game functions, declared by their templates)
+set(GAME_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
+# Scripts only imported by the other scripts (no "run" function)
+set(GAME_SCRIPT_MODULES
+	${GAME_ROOT_DIR}/Levels/dialog.miniska
+	${GAME_ROOT_DIR}/Levels/story.miniska
+	${GAME_ROOT_DIR}/Levels/surf.miniska
+	${GAME_ROOT_DIR}/Levels/jump_wall.miniska)
+file(GLOB_RECURSE GAME_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/Levels/*.miniska ${GAME_ROOT_DIR}/Resources/*.miniska)
+list(REMOVE_ITEM GAME_SCRIPTS ${GAME_SCRIPT_MODULES})
+skalang_check_scripts(smash_and_dash_scripts_check
+	SCRIPTS ${GAME_SCRIPTS}
+	MODULES ${GAME_SCRIPT_MODULES}
+	BIND_DIRECTORIES ${SKA_SCRIPT_TEMPLATES_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+	WORKING_DIRECTORY ${GAME_ROOT_DIR})

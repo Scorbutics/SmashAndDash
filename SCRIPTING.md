@@ -13,6 +13,8 @@ The game is scripted with [skalang](https://github.com/Scorbutics/skalang) (`.mi
 
 A script declares `run = function(args: string[]) do ... end`. A script started by a trigger does not start again while it is still running.
 
+The scripts are checked during the build (`smash_and_dash_scripts_check` in `src/CMakeLists.txt`): they are compiled without running them, with the templates of the engine and game functions. A syntax error, a type error or a wrong call fails the build, with the file and the line. A script only imported by other scripts (no `run` function) is listed in `GAME_SCRIPT_MODULES`.
+
 ## Functions given to the scripts
 
 | Module | Import | Functions |
