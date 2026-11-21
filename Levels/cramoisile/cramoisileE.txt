@@ -1,9 +1,9 @@
-
-7:8 -1 1 0 3 none Bonjour !
-5:19 -2 0 0 1 none Bonjour !
-7:19 -7 1 0 1 none Bonjour !
-9:18 -6 1 0 1 none Bonjour !
-8:18 ! 0 1 3 script .\Levels\cramoisile\teleport_labo.txt
-8:19 -5 1 0 1 none Bonjour !
-12:19 -4 1 0 1 none Bonjour !
-11:20 ! 0 1 3 script .\Levels\cramoisile\start_script.txt
+x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
+0 0 0 Levels/add_character.miniska, -1, 7, 8, npc-1_0, wander, Levels/say.miniska, Bonjour !
+0 0 0 Levels/add_character.miniska, -2, 5, 19, npc-2_0, fixed, Levels/say.miniska, Bonjour !
+0 0 0 Levels/add_character.miniska, -7, 7, 19, npc-7_0, fixed, Levels/say.miniska, Bonjour !
+0 0 0 Levels/add_character.miniska, -6, 9, 18, npc-6_0, fixed, Levels/say.miniska, Bonjour !
+8 18 2 Levels/cramoisile/teleport_labo.miniska
+0 0 0 Levels/add_character.miniska, -5, 8, 19, npc-5_0, fixed, Levels/say.miniska, Bonjour !
+0 0 0 Levels/add_character.miniska, -4, 12, 19, npc-4_0, fixed, Levels/say.miniska, Bonjour !
+11 20 2 Levels/cramoisile/start_script.miniska

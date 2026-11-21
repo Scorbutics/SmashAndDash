@@ -1,0 +1,7 @@
+# A character says something to the player
+# Arguments : the message
+Dialog = import "wd:Levels/dialog"
+
+run = function(args: string[]) do
+	Dialog.say(args[0])
+end

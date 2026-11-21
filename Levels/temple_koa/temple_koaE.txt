@@ -1,4 +1,4 @@
-x:y ID_SPRITE(!:no sprite) solide?(0||1) declenchement(0:presser espace||1:sous le hero||2:automatique au chargement de la map) path(0: mouvements aléatoires||1: fixe|| {h,b,g,d}:prédéfini) action parametresSupplementaires
-13:5 -2 1 1 1 none Bonjour!
-15:5 -3 1 1 1 none Bonjour!
-14:1 ! 1 1 1 script .\Levels\temple_koa\start_script.txt
+x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
+0 0 0 Levels/add_character.miniska, -2, 13, 5, npc-2_0, fixed, Levels/say.miniska, Bonjour!
+0 0 0 Levels/add_character.miniska, -3, 15, 5, npc-3_0, fixed, Levels/say.miniska, Bonjour!
+14 1 2 Levels/temple_koa/start_script.miniska

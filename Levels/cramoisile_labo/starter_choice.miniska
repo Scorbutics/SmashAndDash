@@ -1,0 +1,36 @@
+# Dr. Loufok : the relics come alive
+Engine = import "bind:ska.engine"
+Game = import "bind:game"
+Story = import "wd:Levels/story"
+
+run = function(args: string[]) do
+	if Story.done(1)
+		Game.setDirection(Story.npc(2, 0), 3)
+		Game.message("Regarde donc ça ! Une relique laissée intacte malgré les aléas du temps !¤Elle est encore toute rouge et elle brille...")
+		Game.playAnimation(Story.npc(11, 0), 2)
+		Game.playAnimation(Story.npc(11, 1), 2)
+		Engine.wait(500)
+		Game.setDirection(Story.npc(2, 0), 0)
+		Game.message("euuh... bah y'avait pas de paillette à la base !?!")
+		Game.shake(2000, 20)
+		Engine.wait(2000)
+		Game.message("OUAAAAAHHHH OOOOHAHAHAHA !!!! La relique est vivante !!!")
+		Game.playAnimation(Story.npc(11, 0), 2)
+		Game.playAnimation(Story.npc(11, 1), 2)
+		Engine.wait(500)
+		Story.walk(Story.npc(2, 0), 2, 1)
+		Story.walk(Story.npc(2, 0), 1, 1)
+		Story.walk(Story.npc(2, 0), 0, 1)
+		Story.walk(Story.npc(2, 0), 3, 1)
+		Game.setDirection(Story.npc(2, 0), 0)
+		Game.message("C'est un miracle ! ou une catastrophe ! mais peu importe, ¤il faut qu'on agisse, il faut que l'on prenne les choses en main !")
+		Game.message("C'est l'occasion d'être des héros, et d'avoir des sous, ¤et les femmes à nos pieds ! (surtout la maîtresse... HIN HIN HIN, ahem...)")
+		Game.setDirection(Story.npc(2, 0), 3)
+		Game.message("Il faut... que tu choisisses une de ces relique et je prendrai l'autre !¤Je t'explique : elles se sont mises en mouvement pour la bonne")
+		Game.message("et simple raison que le Professeur Coss a libéré la créature originelle.¤Il faut qu'on lui apporte à tout prix ces balles, et aucun média ni aucune")
+		Game.message("doit être au courant de tout ça, ou tout le monde va nous tomber dessus...¤Choisi donc une des deux, vite ! On part juste après !")
+		Story.setDone(2)
+	else
+		Game.message("Bonjour ! Quoi de nouveau ? Tu as rencontré de nouveaux Pokémon ?")
+	end
+end

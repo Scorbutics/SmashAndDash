@@ -1,0 +1,8 @@
+# Stairs to the ground floor
+Game = import "bind:game"
+Story = import "wd:Levels/story"
+
+run = function(args: string[]) do
+	Game.teleport("maison_hero_rdc", 13, 6)
+	Game.setDirection(Story.player(), 0)
+end

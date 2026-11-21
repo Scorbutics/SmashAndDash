@@ -1,0 +1,5 @@
+Game = import "bind:game"
+
+run = function(args: string[]) do
+	Game.teleport("cramoisile_labo", 11, 16)
+end

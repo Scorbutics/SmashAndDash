@@ -1,17 +1,29 @@
 # Adds a character to the map
-# Arguments : sprite, block x, block y, name, script run when the player talks to the character, then its arguments
+# Arguments : sprite, block x, block y, name, movement, script run when the player talks to the character
+# ("" : none), then the arguments of this script.
+# Movement : "fixed", "wander" (walks around randomly), or a path of directions walked again and again
+# ("b" : down, "d" : right, "h" : up, "g" : left. Ex : "bdhg")
 Game = import "bind:game"
 
 run = function(args: string[]) do
 	script = ""
-	if args.size() > 4
-		script = args[4]
+	if args.size() > 5
+		script = args[5]
 	end
 	scriptArguments = []: string
-	for(i = 5
+	for(i = 6
 	 i < args.size()
 	 i = i + 1) do
 		scriptArguments = scriptArguments + args[i]
 	end
-	Game.addCharacter((args[0]: int), (args[1]: int), (args[2]: int), args[3], script, scriptArguments)
+	character = Game.addCharacter((args[0]: int), (args[1]: int), (args[2]: int), args[3], script, scriptArguments)
+
+	movement = args[4]
+	if movement == "wander"
+		Game.wander(character)
+	else
+		if movement != "fixed"
+			Game.patrol(character, movement)
+		end
+	end
 end

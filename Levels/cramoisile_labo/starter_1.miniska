@@ -1,0 +1,19 @@
+# Relic : Kabuto
+Engine = import "bind:ska.engine"
+Game = import "bind:game"
+Story = import "wd:Levels/story"
+
+run = function(args: string[]) do
+	if Story.done(2)
+		Game.message("Vous dicernez une sorte de créature fossile à coquille ovale.¤Celui-ci a l'air plutôt aggressif !")
+		chosen = Game.choice("Voulez-vous prendre cette créature ?")
+		if chosen
+			Engine.setVariable("starterChoice", 1)
+			Game.message("Vous obtenez un Kabuto ! Enfin, c'est ce qui est marqué sur la relique !")
+			Game.addPokemon(140)
+			Game.remove(Story.npc(11, 1))
+			Engine.script("Levels/cramoisile_labo/dr_takes_pkmn.miniska", []: string)
+		end
+	end
+	Engine.wait(100)
+end

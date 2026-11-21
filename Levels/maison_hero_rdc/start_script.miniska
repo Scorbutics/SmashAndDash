@@ -1,0 +1,8 @@
+# Exit of the house
+Game = import "bind:game"
+Story = import "wd:Levels/story"
+
+run = function(args: string[]) do
+	Game.teleport("greencity", 17, 17)
+	Game.setDirection(Story.player(), 0)
+end

@@ -1,0 +1,13 @@
+# Pokemon center nurse
+Game = import "bind:game"
+
+run = function(args: string[]) do
+	Game.message("Bienvenue au centre Pokémon !")
+	Game.message("Je vais soigner tes Pokémon.")
+	for(i = 0
+	 i < 6
+	 i = i + 1) do
+		Game.heal(i, 999)
+	end
+	Game.message("Tes Pokémon sont soignés. Merci de ton attente !")
+end
