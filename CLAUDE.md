@@ -11,6 +11,8 @@ LD_LIBRARY_PATH=build/lib build/bin/ska_main   # from the repository root (the g
 
 The build compiles every script (`smash_and_dash_scripts_check`): a script error fails the build, with its file and line.
 
+Battle simulation: `SAD_BATTLE_AUTOPLAY=1` makes the battle AI play the Pokemon of the player too (both walk around randomly); the debug log traces the battle (`Battle t=...`: decisions, skills used, hits, misses).
+
 Script tests, headless (no window): `cd build && ctest`. They are `tests/*_test.miniska` (assertions: `Test = import "bind:std.native.test"`), run with the templates of the engine and game functions (default bodies) and the fakes of `tests/fakes` (ex: the engine keeps the game variables, `setNextRandom` chooses the random values). Add a test with a script change when the script has logic (rules, AI, helpers).
 
 ## Scripts

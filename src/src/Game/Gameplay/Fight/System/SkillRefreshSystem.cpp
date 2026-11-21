@@ -47,6 +47,9 @@ void SkillRefreshSystem::refresh(unsigned int) {
 
 		/* Max range reached : delete the skill */
 		if (static_cast<unsigned int>(ska::RectangleUtils::distanceSquared<int>(sc.origin, pc)) > sc.range*sc.range) {
+			if (!sc.spent) {
+				SLOG(ska::LogLevel::Debug) << "Battle : a skill missed at " << pc.x << ", " << pc.y;
+			}
 			scheduleDeferredRemove(entityId);
 		}
 

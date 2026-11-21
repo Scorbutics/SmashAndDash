@@ -48,6 +48,7 @@ private:
 	bool fighting(ska::EntityId fighter) const;
 	void createSkill(const unsigned int index, ska::EntityId from);
 	void decide();
+	void decide(ska::EntityId fighter, ska::EntityId target);
 	std::array<unsigned long, 4>& lastUses(ska::EntityId fighter);
 	const std::array<unsigned long, 4>& lastUses(ska::EntityId fighter) const;
 
@@ -61,4 +62,6 @@ private:
 	unsigned long m_nextDecision = DecisionDelay;
 	std::array<unsigned long, 4> m_pokemonUses {};
 	std::array<unsigned long, 4> m_opponentUses {};
+	// Development : the AI also plays the Pokemon of the player (environment variable SAD_BATTLE_AUTOPLAY)
+	const bool m_autoplay;
 };

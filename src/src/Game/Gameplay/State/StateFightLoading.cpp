@@ -3,6 +3,8 @@
 #include "../Fight/BattleComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
+#include "AI/IARandomMovementComponent.h"
+#include <cstdlib>
 #include "../Fight/BattleEvent.h"
 #include "../World/WorldState.h"
 #include "../CustomEntityManager.h"
@@ -41,6 +43,15 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		// The trainer stays where it is : walking around its Pokemon, it would push the fighters (physics bodies)
 		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, ska::InputComponent{ **m_ic });
 		*m_ic = nullptr;
+		// Development : the AI also plays the Pokemon of the player (BattleSystem), it walks around as the wild Pokemon
+		if (std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr) {
+			auto randomMovement = ska::IARandomMovementComponent{};
+			randomMovement.delay = 500;
+			m_entityManager.addComponent<ska::IARandomMovementComponent>(m_pokemonId, ska::IARandomMovementComponent{ randomMovement });
+			if (!m_entityManager.hasComponent<ska::IARandomMovementComponent>(m_opponentId)) {
+				m_entityManager.addComponent<ska::IARandomMovementComponent>(m_opponentId, std::move(randomMovement));
+			}
+		}
 
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
 		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_pokeball);

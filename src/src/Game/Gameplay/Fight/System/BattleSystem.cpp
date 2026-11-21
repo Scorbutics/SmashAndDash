@@ -11,6 +11,7 @@
 #include "Core/ECS/Basics/Input/InputComponent.h"
 #include "Core/ECS/Basics/Physic/ForceComponent.h"
 #include <cmath>
+#include <cstdlib>
 
 BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, const ska::EntityId pokemon, const ska::EntityId opponent, unsigned int blockSize) :
 	System(em),
@@ -19,7 +20,8 @@ BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& 
 	m_rules(rules),
 	m_pokemon(pokemon),
 	m_opponent(opponent),
-	m_blockSize(blockSize == 0 ? 1 : blockSize) {
+	m_blockSize(blockSize == 0 ? 1 : blockSize),
+	m_autoplay(std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr) {
 }
 
 bool BattleSystem::fighting(ska::EntityId fighter) const {
@@ -51,7 +53,7 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	// 0 means "never used"
 	lastUses(from)[index] = m_time == 0 ? 1 : m_time;
 	const auto& position = m_componentAccessor.get<ska::PositionComponent>(from);
-	SLOG(ska::LogLevel::Debug) << "Battle : " << (from == m_pokemon ? "the pokemon of the player" : "the wild pokemon") << " uses its skill " << index
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (from == m_pokemon ? "the pokemon of the player" : "the wild pokemon") << " uses its skill " << index
 		<< " (" << m_componentAccessor.get<SkillsHolderComponent>(from).skills[index].name << ") from " << position.x << ", " << position.y;
 	createSkill(index, from);
 	return true;
@@ -69,26 +71,35 @@ bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 }
 
 void BattleSystem::decide() {
-	if (!fighting(m_opponent) || !fighting(m_pokemon)) {
+	decide(m_opponent, m_pokemon);
+	if (m_autoplay) {
+		decide(m_pokemon, m_opponent);
+	}
+}
+
+void BattleSystem::decide(ska::EntityId fighter, ska::EntityId target) {
+	if (!fighting(fighter) || !fighting(target)) {
 		return;
 	}
-	const auto& opponentBc = m_componentAccessor.get<BattleComponent>(m_opponent);
-	const auto& opponentPosition = m_componentAccessor.get<ska::PositionComponent>(m_opponent);
-	const auto& pokemonPosition = m_componentAccessor.get<ska::PositionComponent>(m_pokemon);
-	const auto dx = static_cast<double>(opponentPosition.x - pokemonPosition.x);
-	const auto dy = static_cast<double>(opponentPosition.y - pokemonPosition.y);
+	const auto& fighterBc = m_componentAccessor.get<BattleComponent>(fighter);
+	const auto& fighterPosition = m_componentAccessor.get<ska::PositionComponent>(fighter);
+	const auto& targetPosition = m_componentAccessor.get<ska::PositionComponent>(target);
+	const auto dx = static_cast<double>(fighterPosition.x - targetPosition.x);
+	const auto dy = static_cast<double>(fighterPosition.y - targetPosition.y);
 	const auto pixels = std::sqrt(dx * dx + dy * dy);
 	const auto distance = static_cast<int>(pixels / m_blockSize);
 
-	// The skills it can use now : ready, and reaching the Pokemon of the player
-	const auto& skills = m_componentAccessor.get<SkillsHolderComponent>(m_opponent).skills;
+	// The skills it can use now : ready, and reaching its target
+	const auto& skills = m_componentAccessor.get<SkillsHolderComponent>(fighter).skills;
 	auto ready = std::vector<bool>{};
 	for (auto index = 0u; index < 4; index++) {
-		ready.push_back(skillReady(index, m_opponent) && pixels <= static_cast<double>(skills[index].range));
+		ready.push_back(skillReady(index, fighter) && pixels <= static_cast<double>(skills[index].range));
 	}
-	const auto decision = m_rules.decide(opponentBc.monster, distance, opponentBc.hp, opponentBc.maxHp, ready);
+	const auto decision = m_rules.decide(fighterBc.monster, distance, fighterBc.hp, fighterBc.maxHp, ready);
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter == m_pokemon ? "player" : "wild") << " at " << fighterPosition.x << ", " << fighterPosition.y
+		<< " distance " << static_cast<int>(pixels) << " px, decision " << decision;
 	if (decision >= 0) {
-		useSkill(static_cast<unsigned int>(decision), m_opponent);
+		useSkill(static_cast<unsigned int>(decision), fighter);
 	}
 }
 
