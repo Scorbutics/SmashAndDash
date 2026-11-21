@@ -12,7 +12,7 @@ end
 # Character of a map with the sprite "pnj<number>" (sprite -<number>) : added with the name "npc-<number>_<index>"
 # (index : among the characters of the map with this sprite, see the map event files)
 npc = function(number: int, index: int) : int do
-	return Engine.entity("npc-" + number + "_" + index)
+	return Engine.entity("npc-" + (number: string) + "_" + (index: string))
 end
 
 # Walks a number of blocks in a direction (0 : down, 1 : right, 2 : up, 3 : left)
@@ -22,9 +22,9 @@ end
 
 # Story steps done (saved with the game)
 done = function(step: int) : bool do
-	return Engine.variable("story" + step) == 1
+	return Engine.variable("story" + (step: string)) == 1
 end
 
 setDone = function(step: int) do
-	Engine.setVariable("story" + step, 1)
+	Engine.setVariable("story" + (step: string), 1)
 end
