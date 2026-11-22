@@ -84,6 +84,9 @@ public:
 	ska::scripting::ScriptVM& getScripts();
 	// Camera of the map
 	ska::CameraSystem& getCamera() { return *m_cameraSystem; }
+	// Zoom of the camera on the map : close to the player, as the classic games (about 17 x 10 blocks). 4 / 3 : a pixel of
+	// the 16 px tiles (enlarged 3 times in the 48 px chipsets) is 4 pixels of the screen, all of the same size
+	static constexpr float MapZoom = 4.F / 3.F;
 	// The fade of the map changes
 	ScreenFade& getFade() { return m_fade; }
 	// Battle rules and AI (scripts)

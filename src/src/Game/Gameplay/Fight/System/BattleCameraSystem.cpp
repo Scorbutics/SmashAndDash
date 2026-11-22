@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "BattleCameraSystem.h"
+#include "../../World/WorldState.h"
 #include <algorithm>
 #include <cmath>
 #include "Graphic/System/CameraSystem.h"
@@ -111,7 +112,7 @@ void BattleCameraSystem::refresh(unsigned int ellapsedTime) {
 		break;
 	}
 	case BattlePhase::Fled:
-		zoom = 1.F;
+		zoom = WorldState::MapZoom;
 		speed = 2.F;
 		break;
 	default:

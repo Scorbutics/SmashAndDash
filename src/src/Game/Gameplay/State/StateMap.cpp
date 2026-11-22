@@ -66,6 +66,7 @@ void StateMap::beforeLoad(ska::State* lastState) {
 
 void StateMap::afterLoad(ska::State * lastState){
 	m_worldState.reinit(m_fileName, m_tilesetName);
+	m_worldState.getCamera().setZoom(WorldState::MapZoom);
 	// The player moves block by block on the map (GridMovementSystem)
 	if (auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER); trainer != nullptr) {
 		// A new map : no step in progress (ex : a step interrupted by a cutscene that teleported the player)

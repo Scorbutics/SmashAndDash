@@ -183,7 +183,7 @@ void BattleDirectorSystem::end() {
 	auto back = [this, event = me]() {
 		// The camera follows the player again
 		m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
-		m_worldState.getCamera().setZoom(1.F);
+		m_worldState.getCamera().setZoom(WorldState::MapZoom);
 		auto mapEvent = event;
 		m_ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
 	};
