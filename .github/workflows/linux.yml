@@ -1,0 +1,35 @@
+# Build and tests on Linux : the engine (external/ska, with skalang) and the game, the static check of its scripts
+# (part of the build) and its script tests (ctest). SDL3 is loaded at run time (SDL3_mixer, not packaged, is built by
+# the engine CMake project)
+name: Linux
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    steps:
+      - name: Dependencies
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git cmake make g++ \
+            libsdl3-dev libsdl3-image-dev libsdl3-ttf-dev glslang-tools
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          cmake --build build -j"$(nproc)"
+
+      - name: Script tests
+        working-directory: build
+        run: ctest --output-on-failure --timeout 300
