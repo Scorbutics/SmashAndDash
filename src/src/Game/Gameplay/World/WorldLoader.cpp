@@ -1,6 +1,7 @@
 #include "WorldLoader.h"
 #include "Base/IO/Files/FileUtils.h"
 #include "World/LayerEventLoaderText.h"
+#include "../../Utils/IDs.h"
 
 ska::TileWorldLoaderAggregate BuildWorldLoader(const ska::TilesetCorrespondanceMapper& mapper, const std::string& levelName) {
 	const auto levelFileName = ska::FileNameData{ levelName };
@@ -17,5 +18,6 @@ ska::TileWorldLoaderAggregate BuildWorldLoader(const ska::TilesetCorrespondanceM
 		levelName,
 		2,
 		std::move(loaders),
-		std::move(eventLoaders));
+		std::move(eventLoaders),
+		TopLayerPriority);
 }

@@ -7,6 +7,7 @@
 #include "Base/IO/Readers/IniReader.h"
 #include "Base/IO/Files/FileUtils.h"
 #include "WorldLoader.h"
+#include "../../Utils/IDs.h"
 
 #define WEATHER_ALPHA_LVL 85
 
@@ -18,8 +19,8 @@ WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, con
 	m_fog.setMosaicEffect(true);
 
 	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohérence */
-	m_weather.setPriority(INT_MAX - 3);
-	m_fog.setPriority(INT_MAX - 4);
+	m_weather.setPriority(WeatherPriority);
+	m_fog.setPriority(FogPriority);
 	m_fog.resetPos();
 	m_fog.setMosaicEffect(true);
 }
