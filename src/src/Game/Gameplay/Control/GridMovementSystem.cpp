@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include "Core/Inputs/InputContextManager.h"
+#include "Core/Utils/TimeUtils.h"
 #include "Core/ECS/Basics/Physic/CollidableComponent.h"
 #include "Core/ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "Core/Data/Events/CollisionEvent.h"
@@ -152,11 +153,19 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			input->movePower = 0.F;
 		}
 
-		// Moved by a script
+		// Moved by a script : animated by its physics velocity
+		auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
 		if (m_componentPossibleAccessor.get<ska::IADefinedMovementComponent>(entity) != nullptr) {
 			grid.stepping = false;
+			animation.drivenUntil = 0;
 			continue;
 		}
+		// Animated by its steps : a foot forward each half step, in the direction of the step (the physics velocity is
+		// not exact : a walk to the right could be drawn as a diagonal)
+		animation.drivenUntil = ska::TimeUtils::getTicks() + 200;
+		animation.walking = grid.stepping;
+		animation.walkDelay = std::max(60u, grid.duration / 2);
+		animation.state = grid.stepping ? grid.stepDirection : grid.facing;
 
 		const auto locked = mode != nullptr && mode->mode == "locked";
 		const auto running = (mode != nullptr && mode->mode == "run") || m_toggles[ska::Run];

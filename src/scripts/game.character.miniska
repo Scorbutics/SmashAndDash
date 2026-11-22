@@ -14,6 +14,10 @@ addCharacter = function(sprite: int, x: int, y: int, name: string, script: strin
 # Plays an animation (sprite of the animations bank) over an entity
 playAnimation = function(entity: int, animation: int) do end
 
+# Changes the sprite of a character (a sheet of Sprites/Charsets, as the characters : 6 x 8 frames, 3 animated).
+# animatedWhenStill : the animation goes on when it does not move (ex : bobbing on the water)
+setSprite = function(entity: int, sprite: int, animatedWhenStill: bool) do end
+
 # Direction an entity looks to
 direction = function(entity: int) : int do return 0 end
 

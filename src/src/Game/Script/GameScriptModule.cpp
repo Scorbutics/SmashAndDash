@@ -246,6 +246,19 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
+	m_builder.bindField("setSprite", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		auto& graphic = Require<ska::GraphicComponent>(entityManager, entity, "change its sprite");
+		if (graphic.animatedSprites.empty()) {
+			graphic.animatedSprites.resize(1);
+		}
+		// A sheet of the same layout as the characters (6 x 8 frames, 3 animated)
+		graphic.animatedSprites[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, Int(params[1])), 6, 8, 3);
+		graphic.animatedSprites[0].setDelay(100);
+		Require<ska::AnimationComponent>(entityManager, entity, "be animated").animatedWhenStill = params[2].nodeval<bool>();
+		return ska::NodeValue{};
+	});
+
 	m_builder.bindField("direction", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(handles, entityManager, params[0]);
 		return ska::NodeValue{ static_cast<long>(Require<ska::AnimationComponent>(entityManager, entity, "have a direction").state) };
