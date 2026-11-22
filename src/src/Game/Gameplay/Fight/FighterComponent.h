@@ -90,6 +90,9 @@ public:
 	unsigned int barShake = 0;
 	// Time spent outside of the arena (leaving it for 1 s : the player flees)
 	unsigned int outside = 0;
+	// Its last position out of the walls (a fast push can cross the outline of a wall : it goes back there)
+	ska::Point<float> lastFree;
+	bool hasLastFree = false;
 
 	// Busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
 	bool busy() const { return knockedOut || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || status == FighterStatus::Sleep; }

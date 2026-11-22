@@ -8,6 +8,7 @@
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../../World/WorldState.h"
+#include "../../CustomEntityManager.h"
 
 namespace {
 	ska::Point<float> Normalized(ska::Point<float> vector) {
@@ -107,15 +108,33 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 		return;
 	}
 
-	const auto position = center(entity);
+	auto position = center(entity);
+
+	// Never inside a wall : only the outline of a wall stops the bodies, a fast push (a hit, a dash) can cross it
+	const auto& world = m_worldState.getWorld();
+	const auto blockSize = static_cast<float>(world.getBlockSize());
+	const auto& positionComponent = m_componentAccessor.get<ska::PositionComponent>(entity);
+	const auto inWall = position.x >= 0.F && position.y >= 0.F && world.getCollisionProfile().collide(1, static_cast<std::size_t>(position.x / blockSize), static_cast<std::size_t>(position.y / blockSize));
+	if (inWall) {
+		if (fighter.hasLastFree) {
+			CustomEntityManager::place(m_entities, m_worldState.getSpace(), entity, fighter.lastFree);
+			fighter.knockback = {};
+			fighter.dash = 0;
+			position = center(entity);
+		}
+	} else {
+		fighter.lastFree = ska::Point<float>{ static_cast<float>(positionComponent.x), static_cast<float>(positionComponent.y) };
+		fighter.hasLastFree = true;
+	}
+
 	const auto toOpponent = Normalized(center(fighter.opponent) - position);
 	const auto& arena = m_stage.arena;
 	const auto inside = position.x >= arena.x && position.x <= arena.x + arena.w && position.y >= arena.y && position.y <= arena.y + arena.h;
 
 	// Leaving the arena : the player flees a wild Pokemon. Walking out (a key held), not pushed out by a hit
+	const auto keys = fighter.player && !fighter.controlledByAI ? keysDirection() : ska::Point<float>{};
+	const auto walking = canMove && (keys.x != 0.F || keys.y != 0.F);
 	if (fighter.player && !fighter.controlledByAI && m_stage.canFlee) {
-		const auto keys = keysDirection();
-		const auto walking = canMove && (keys.x != 0.F || keys.y != 0.F);
 		fighter.outside = inside || !fighting ? 0 : (walking ? fighter.outside + ellapsedTime : fighter.outside);
 	}
 
@@ -135,8 +154,9 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 		}
 	}
 
-	// The AI (and a player that cannot flee) stays in the arena : near an edge, it goes back inside
-	if (fighting && (fighter.controlledByAI || !m_stage.canFlee)) {
+	// The AI (and a player that cannot flee) stays in the arena : near an edge, it goes back inside. A player pushed out
+	// of it (by a hit) that does not walk goes back inside too
+	if (fighting && (fighter.controlledByAI || !m_stage.canFlee || (!inside && !walking))) {
 		const auto margin = 36.F;
 		auto inward = ska::Point<float>{};
 		if (position.x < arena.x + margin) inward.x = 1.F;
