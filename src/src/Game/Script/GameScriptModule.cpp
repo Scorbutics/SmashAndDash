@@ -24,6 +24,7 @@
 #include "Core/ECS/Basics/Input/InputComponent.h"
 #include "../Gameplay/Control/MovementModeComponent.h"
 #include "../Gameplay/Control/GridMovementComponent.h"
+#include "../Gameplay/Control/GridMovementSystem.h"
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../Gameplay/Data/EntityLoadEvent.h"
@@ -186,6 +187,31 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 				entityManager.getComponent<ska::CollidableComponent>(entity).ghost = wasGhost;
 			}
 			return true;
+		});
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("step", [&vm, &entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		const auto direction = Int(params[1]);
+		const auto blocks = Int(params[2]);
+		if (direction < 0 || direction > 3) {
+			throw std::runtime_error("Character.step : the direction " + std::to_string(direction) + " is not 0 (down), 1 (right), 2 (up) or 3 (left)");
+		}
+		if (blocks < 0) {
+			throw std::runtime_error("Character.step : a negative number of blocks (" + std::to_string(blocks) + ")");
+		}
+		auto& grid = Require<GridMovementComponent>(entityManager, entity, "step (it does not move block by block)");
+		grid.forcedSteps = blocks;
+		grid.forcedDirection = direction;
+		grid.forcedDuration = GridMovementSystem::WalkStep;
+		// The script goes on once the last step is done (GridMovementSystem)
+		vm.suspendUntil([&entityManager, entity]() {
+			if (!entityManager.hasComponent<GridMovementComponent>(entity)) {
+				return true;
+			}
+			const auto& grid = entityManager.getComponent<GridMovementComponent>(entity);
+			return grid.forcedSteps == 0 && !grid.stepping;
 		});
 		return ska::NodeValue{};
 	});
@@ -381,6 +407,7 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		const auto blockSize = static_cast<int>(world.getBlockSize());
 		mapEvent.position.x = blockSize * Int(params[1]);
 		mapEvent.position.y = blockSize * Int(params[2]);
+		mapEvent.walkIn = true;
 		ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
 		return ska::NodeValue{};
 	});

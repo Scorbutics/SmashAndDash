@@ -21,7 +21,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | --- | --- | --- |
 | Engine (ska) | `Engine = import "bind:ska.engine"` | wait, log, random, origin (the entity that triggered the script), entity (by name), disableComponent / enableComponent, variable / setVariable (saved game variables), script |
 | Dialogs | `GameDialog = import "bind:game.dialog"` | message, choice (yes / no), cinematic |
-| Characters | `Character = import "bind:game.character"` | setMovement / movement (`walk`, `run`, `locked` for the player), move, jump, direction / setDirection, setLayer, playAnimation, setSprite (another sheet, ex : surfing), place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
+| Characters | `Character = import "bind:game.character"` | setMovement / movement (`walk`, `run`, `locked` for the player), move, step (whole blocks, through the obstacles), jump, direction / setDirection, setLayer, playAnimation, setSprite (another sheet, ex : surfing), place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, blockFree (no wall, no character), shake (camera), crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |
@@ -29,7 +29,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Saving | `Save = import "bind:game.save"` | save |
 | Bag | `Bag = import "bind:game.inventory"` | count, items, add, remove, money, earn, pay, name, price, use |
 
-The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
+The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `step`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
 
 Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `crumbling`, `pokemonOut` and `Interface.shop` (the shops are scripts: `Levels/shop.miniska`).
 
@@ -83,7 +83,8 @@ The wild Pokemon of a map are `Levels/<map>/Monsters/0.ini`, `1.ini`... (`[Data]
 ## Keys and movement
 
 - On the map, the player moves block by block (`GridMovementSystem`): holding a direction walks one block after another (0.25 s per block, 0.13 s running: Shift, or the `"run"` movement mode), a short press only turns. A step starts only when the next block is free: walls and characters block it (nothing is pushed). Walking against a wall touches it: the "touched" tile scripts run (ex: the water starts surfing). The characters given `wander` or a path move block by block too, with the same rules (they wait while the next block is not free). In battles, the movement stays free (real time).
-- The movement itself is done by the game, at each frame. The scripts choose how the player moves: `Character.setMovement(player, "locked")` during a cutscene (no movement, no jump), `"run"` (faster), `"walk"` (back to normal). `Character.move` moves a character by pixels (the cutscenes): move the player by whole blocks (48 pixels) so it stays on the blocks.
+- The movement itself is done by the game, at each frame. The scripts choose how the player moves: `Character.setMovement(player, "locked")` during a cutscene (no movement, no jump), `"run"` (faster), `"walk"` (back to normal). `Character.move` moves a character by pixels (the cutscenes): move the player by whole blocks (48 pixels) so it stays on the blocks. `Character.step(player, direction, blocks)` walks a character block by block, through the obstacles (ex: the jump over a ledge, surfing): it always stays on the blocks.
+- Coming through a door or a map edge (`Map.teleport`), the player appears one block behind the position (on the door) and walks to it while the screen lightens, as in the classic games: the block behind must be free, else the player appears on the position.
 - Hooks of the keys on the map, with the player: `Engine.on("input.action", function(player: int) do ... end)` (action key), `"input.jump"` (jump key). They run as scripts (they can wait). The action key also starts the scripts of the characters and blocks in front of the player, and closes the messages.
 
 ## Bag and shops

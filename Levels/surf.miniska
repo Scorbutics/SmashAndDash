@@ -58,8 +58,8 @@ enter = function(player: int, direction: int) do
 		Engine.log("surf in")
 	end
 	Character.playAnimation(player, 2)
-	# One block : the player stays on the blocks (it moves block by block on the map)
-	Character.move(player, direction, 48, false)
+	# One block, on the blocks of the map
+	Character.step(player, direction, 1)
 	surfing = Map.blockHasProperty(0, Map.blockX(player), Map.blockY(player), Water)
 	if surfing
 		# On its water Pokemon, bobbing on the water

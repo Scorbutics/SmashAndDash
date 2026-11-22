@@ -19,6 +19,8 @@ struct MapEvent {
 
 	std::string mapName;
 	std::string chipsetName;
+	// The player comes through a door or a map edge : it appears one block behind the position, and walks to it
+	bool walkIn = false;
 
 	~MapEvent() = default;
 

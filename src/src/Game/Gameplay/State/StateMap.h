@@ -19,9 +19,14 @@ class StateMap :
 	public ska::StateBase,
 	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition = std::optional<ska::Point<int>>());
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition = std::optional<ska::Point<int>>(), bool walkIn = false);
 	
 	~StateMap() override = default;
+
+private:
+	void walkIn(ska::EntityId trainer);
+
+public:
 
 private:
 	void beforeLoad(ska::State* lastState) override final;
@@ -41,6 +46,8 @@ private:
 	std::unique_ptr<InputHooks> m_inputHooks;
 
 	std::optional<ska::Point<int>> m_trainerPosition;
+	// The player comes through a door : it walks from the block behind its position (MapEvent::walkIn)
+	bool m_walkIn = false;
 
 };
 

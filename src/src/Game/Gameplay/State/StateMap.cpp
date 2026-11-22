@@ -13,17 +13,21 @@
 #include "World/System/ScriptWorldTriggerSystem.h"
 #include "../CustomEntityManager.h"
 #include "../../Script/ScriptConstants.h"
+#include "Core/ECS/Basics/Script/ScriptAwareComponent.h"
+#include "Physic/Space.h"
+#include <chipmunk/chipmunk.h>
 
 #define MOB_SPAWNING_DELAY 5000
 
-StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition) :
+StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition, bool walkIn) :
 	ska::SubObserver<ska::GameEvent>(std::bind(&StateMap::onGameEvent, this, std::placeholders::_1), pged),
 	m_eventDispatcher(pged),
 	m_entityManager(em),
 	m_worldState(ws),
 	m_fileName(std::move(worldFileName)),
 	m_tilesetName(std::move(worldChipsetName)),
-	m_trainerPosition(trainerPosition) {
+	m_trainerPosition(trainerPosition),
+	m_walkIn(walkIn) {
 
 	const auto tilesetFnData = ska::FileNameData{ m_tilesetName };
 	m_tilesetName = tilesetFnData.path + "/" + tilesetFnData.name;
@@ -79,6 +83,41 @@ void StateMap::afterLoad(ska::State * lastState){
 			auto& position = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
 			position.x = static_cast<float>(m_trainerPosition->x);
 			position.y = static_cast<float>(m_trainerPosition->y);
+			if (m_walkIn) {
+				walkIn(*trainer);
+			}
 		}
+	}
+}
+
+void StateMap::walkIn(ska::EntityId trainer) {
+	// As the classic games : the player appears on the door (the block behind its position, from the direction it faces)
+	// and walks out of it while the screen lightens
+	auto& grid = m_entityManager.getComponent<GridMovementComponent>(trainer);
+	auto& position = m_entityManager.getComponent<ska::PositionComponent>(trainer);
+	const auto& world = m_worldState.getWorld();
+	const auto blockSize = static_cast<int>(world.getBlockSize());
+	const int behindX[] = { 0, -1, 0, 1 };
+	const int behindY[] = { -1, 0, 1, 0 };
+	const auto direction = grid.facing >= 0 && grid.facing < 4 ? grid.facing : 0;
+	const auto x = m_trainerPosition->x / blockSize + behindX[direction];
+	const auto y = m_trainerPosition->y / blockSize + behindY[direction];
+	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= world.getBlocksX() || static_cast<std::size_t>(y) >= world.getBlocksY()) {
+		return;
+	}
+	// A wall behind (ex : a map edge from another direction) : it appears on its position
+	const auto margin = 4.;
+	const auto box = cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin);
+	if (m_worldState.getSpace().staticShapeIn(box)) {
+		return;
+	}
+	position.x = static_cast<float>(x * blockSize);
+	position.y = static_cast<float>(y * blockSize);
+	grid.forcedSteps = 1;
+	grid.forcedDirection = direction;
+	grid.forcedDuration = GridMovementSystem::WalkStep;
+	// The door is already entered : its scripts (the teleport back) do not run
+	if (m_entityManager.hasComponent<ska::ScriptAwareComponent>(trainer)) {
+		m_entityManager.getComponent<ska::ScriptAwareComponent>(trainer).enteredBlock = ska::Point<int>{ x, y };
 	}
 }

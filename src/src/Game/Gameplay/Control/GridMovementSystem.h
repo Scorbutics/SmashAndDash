@@ -37,6 +37,8 @@ protected:
 // (IADefinedMovementComponent) or without InputComponent (ex : disabled during a cutscene) do not take steps.
 // The other characters wander (random steps after random waits) or walk a path, with the same rules (they wait when the
 // next block is not free).
+// Forced steps (GridMovementComponent::forcedSteps : a script, the player leaving a door) go through the obstacles, the
+// keys are ignored meanwhile ; they wait for the screen to show the map (ScreenFade).
 class GridMovementSystem :
 	public ska::System<ska::RequiredComponent<GridMovementComponent, ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent>,
 		ska::PossibleComponent<ska::IADefinedMovementComponent, MovementModeComponent, ska::InputComponent>>,
@@ -67,6 +69,8 @@ private:
 	// The wall in a direction is touched (as the physics does : the touch scripts of its block)
 	void touch(ska::EntityId entity, int direction);
 	bool step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration);
+	// The next forced step (GridMovementComponent::forcedSteps), through the obstacles
+	void forcedStep(ska::EntityId entity, GridMovementComponent& grid);
 
 	ska::EntityManager& m_entities;
 	PokemonGameEventDispatcher& m_ged;

@@ -5,9 +5,8 @@ Character = import "bind:game.character"
 # The player jumps over the ledge in a direction
 jump = function(player: int, direction: int) do
 	Engine.disableComponent(player, "InputComponent")
-	# Two blocks (the ledge and the block after it) : the player stays on the blocks
-	Character.move(player, direction, 24, true)
+	# Two blocks (the ledge and the block after it), in the air : the player stays on the blocks
 	Character.jump(player, 14)
-	Character.move(player, direction, 72, true)
+	Character.step(player, direction, 2)
 	Engine.enableComponent(player, "InputComponent")
 end

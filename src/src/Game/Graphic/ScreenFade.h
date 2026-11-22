@@ -15,6 +15,8 @@ public:
 	void update(unsigned int ellapsedTime);
 	// The screen is darkening, black or lightening : the player waits
 	bool running() const { return m_phase != Phase::None; }
+	// The screen shows the map (no transition, or lightening)
+	bool showing() const { return m_phase == Phase::None || m_phase == Phase::In; }
 	void setScreenSize(ska::Point<int> size) { m_screenSize = size; }
 
 	void render(ska::Renderer& renderer) const override;

@@ -5,6 +5,10 @@
 # The script waits until the movement is done.
 move = function(entity: int, direction: int, distance: int, ghost: bool) do end
 
+# Walks a character a number of blocks in a direction (0 to 3), through the obstacles (the script chose the way : ex the
+# jump over a ledge). It stays on the blocks of the map. The script waits until the last step is done.
+step = function(entity: int, direction: int, blocks: int) do end
+
 jump = function(entity: int, power: int) do end
 
 # Adds a character (sprite, block position, name) : "script" runs with its arguments when the player talks to it

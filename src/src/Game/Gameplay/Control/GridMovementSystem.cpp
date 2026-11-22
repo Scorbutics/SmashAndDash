@@ -207,6 +207,23 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			}
 		}
 
+		// Forced steps (a script, leaving a door) : one after another without stopping, once the screen shows the map
+		if (grid.forcedSteps > 0 || grid.forcedGhost) {
+			if (!grid.stepping && grid.forcedSteps > 0 && m_worldState.getFade().showing()) {
+				forcedStep(entity, grid);
+			} else if (!grid.stepping && grid.forcedSteps == 0) {
+				// The last one is done : back to its physics
+				if (m_entities.hasComponent<ska::CollidableComponent>(entity)) {
+					m_entities.getComponent<ska::CollidableComponent>(entity).ghost = grid.savedGhost;
+				}
+				grid.forcedGhost = false;
+			}
+			if (finished && !grid.stepping) {
+				place(entity, grid.to, {});
+			}
+			continue;
+		}
+
 		if (!keys) {
 			startAutomaticStep(entity, grid, ellapsedTime, finished);
 		} else if (input != nullptr && !m_worldState.getFade().running()) {
@@ -273,6 +290,27 @@ void GridMovementSystem::touch(ska::EntityId entity, int direction) {
 	const auto collidable = ska::CollidableComponent{};
 	auto event = ska::CollisionEvent{ entity, &wcc, nullptr, collidable };
 	m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(event);
+}
+
+void GridMovementSystem::forcedStep(ska::EntityId entity, GridMovementComponent& grid) {
+	if (!grid.forcedGhost && m_entities.hasComponent<ska::CollidableComponent>(entity)) {
+		auto& collidable = m_entities.getComponent<ska::CollidableComponent>(entity);
+		grid.savedGhost = collidable.ghost;
+		collidable.ghost = true;
+		grid.forcedGhost = true;
+	}
+	const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+	const auto vector = DirectionVector(grid.forcedDirection);
+	grid.forcedSteps--;
+	grid.stepping = true;
+	grid.facing = grid.forcedDirection;
+	grid.stepDirection = grid.forcedDirection;
+	grid.from = { static_cast<float>(position.x), static_cast<float>(position.y) };
+	grid.to = { (std::round(grid.from.x / blockSize) + vector.x) * blockSize, (std::round(grid.from.y / blockSize) + vector.y) * blockSize };
+	grid.elapsed = 0;
+	grid.duration = grid.forcedDuration;
+	m_componentAccessor.get<ska::AnimationComponent>(entity).state = grid.forcedDirection;
 }
 
 bool GridMovementSystem::step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration) {

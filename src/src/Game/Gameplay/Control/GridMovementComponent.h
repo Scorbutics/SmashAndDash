@@ -28,6 +28,14 @@ struct GridMovementComponent {
 	unsigned int heldTime = 0;
 	// Direction of the wall it walks against (-1 : none) : the wall is touched once (its scripts, ex : the water to surf)
 	int bumpDirection = -1;
+
+	// Steps asked by a script or by the game (ex : the jump over a ledge, leaving a door) : block by block, through the
+	// obstacles, without the keys. The character is a ghost during these steps (no physics contact, no touched wall).
+	int forcedSteps = 0;
+	int forcedDirection = 0;
+	unsigned int forcedDuration = 0;
+	bool forcedGhost = false;
+	bool savedGhost = false;
 };
 
 SKA_DECLARE_COMPONENT(GridMovementComponent);

@@ -65,7 +65,7 @@ void WGameCore::switchState(const MapEvent& me) {
 				resetAccumulator();
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, "./Levels/" + me.mapName, me.chipsetName, me.position);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, "./Levels/" + me.mapName, me.chipsetName, me.position, me.walkIn);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
 				resetAccumulator();
