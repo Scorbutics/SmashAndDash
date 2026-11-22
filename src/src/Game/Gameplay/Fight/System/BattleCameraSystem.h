@@ -14,7 +14,7 @@ namespace ska {
 // The camera of a battle follows a point (BattleCameraSystem)
 class BattleCameraStrategy : public ska::CameraStrategy {
 public:
-	std::pair<ska::Rectangle, ska::EntityId*> focus(const std::unordered_set<ska::EntityId>&) override {
+	std::pair<ska::Rectangle, const ska::EntityId*> focus(const std::unordered_set<ska::EntityId>&) override {
 		return std::make_pair(ska::Rectangle{ static_cast<int>(point.x), static_cast<int>(point.y), 0, 0 }, nullptr);
 	}
 	ska::Point<float> point;
