@@ -11,9 +11,36 @@ surfing = false
 # The player is going on / leaving the water
 moving = false
 
+# The block next to the player in a direction (0 down, 1 right, 2 up, 3 left), on one axis
+nextX = function(player: int, direction: int) : int do
+	if direction == 1
+		return Map.blockX(player) + 1
+	end
+	if direction == 3
+		return Map.blockX(player) - 1
+	end
+	return Map.blockX(player)
+end
+
+nextY = function(player: int, direction: int) : int do
+	if direction == 0
+		return Map.blockY(player) + 1
+	end
+	if direction == 2
+		return Map.blockY(player) - 1
+	end
+	return Map.blockY(player)
+end
+
 # Moves the player onto the water, or back to the ground, in a direction
 enter = function(player: int, direction: int) do
-	if moving
+	if moving || direction < 0 || direction > 3
+		return
+	end
+	# The block in front : free (no wall, no character), and the ground when leaving the water
+	x = nextX(player, direction)
+	y = nextY(player, direction)
+	if !Map.blockFree(x, y) || (surfing && Map.blockHasProperty(0, x, y, Water))
 		return
 	end
 	moving = true

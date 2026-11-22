@@ -397,6 +397,20 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		return ska::NodeValue{ block != nullptr && (block->properties.bitMask & property) == property };
 	});
 
+	m_builder.bindField("blockFree", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto& world = worldState.getWorld();
+		const auto x = Int(params[0]);
+		const auto y = Int(params[1]);
+		if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= world.getBlocksX() || static_cast<std::size_t>(y) >= world.getBlocksY()) {
+			return ska::NodeValue{ false };
+		}
+		// The physics : the walls (filled), the characters ; the outline of the water on the edges of the block is not inside
+		const auto blockSize = static_cast<double>(world.getBlockSize());
+		const auto margin = 4.;
+		const auto box = cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin);
+		return ska::NodeValue{ !worldState.getSpace().shapeIn(box) };
+	});
+
 	m_builder.bindField("shake", [&worldState](std::vector<ska::NodeValue> params) {
 		worldState.getCamera().shake(static_cast<unsigned int>(std::max(0, Int(params[0]))), Int(params[1]));
 		return ska::NodeValue{};

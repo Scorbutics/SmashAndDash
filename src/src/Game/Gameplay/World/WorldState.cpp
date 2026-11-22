@@ -410,21 +410,21 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	m_posHeroPolygon = ska::Polygon<int>{ std::move(hitboxHero) };
 
 	//DEBUT Tile map
-	const auto agglomeratedTiles = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
-		if (b == nullptr ||
-			(b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER == ska::TilePropertiesType::TILE_PROPERTY_WATER)) {
+	// The walls are filled (nothing can stand inside a wall, ex : after leaving the water) ; the water is only its outline :
+	// the player surfs inside it, and touching the outline starts or stops surfing (Levels/surf.miniska)
+	const auto isWater = [](const ska::Tile* b) {
+		return b != nullptr && (b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) == ska::TilePropertiesType::TILE_PROPERTY_WATER;
+	};
+	const auto contourRectangleTile = GenerateFilledTileMap(1, m_world.getCollisionProfile(), [&isWater](const ska::Tile* b) {
+		if (b == nullptr || isWater(b)) {
 			return ska::TileCollision::No;
 		}
 		return b->collision;
 	});
 
-	const auto agglomeratedTilesWater = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [](const ska::Tile* b) {
-		if (b == nullptr) {
-			return ska::TileCollision::No;
-		}
-		return (b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER == ska::TilePropertiesType::TILE_PROPERTY_WATER) ? ska::TileCollision::Yes : ska::TileCollision::No;
+	const auto agglomeratedTilesWater = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [&isWater](const ska::Tile* b) {
+		return isWater(b) ? ska::TileCollision::Yes : ska::TileCollision::No;
 	});
-	const auto contourRectangleTile = GenerateContourTileMap(agglomeratedTiles);
 	const auto contourRectangleTileWater = GenerateContourTileMap(agglomeratedTilesWater);
 
 	for (const auto& r : contourRectangleTile) {
