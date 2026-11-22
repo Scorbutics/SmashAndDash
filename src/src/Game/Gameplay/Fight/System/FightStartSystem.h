@@ -25,6 +25,8 @@ bool StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, Worl
 // Starts a battle sometimes, when a wild Pokemon is close to the player
 class FightStartSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, FightComponent, ska::GraphicComponent>, ska::PossibleComponent<>> {
 public:
+	// One encounter in "GroupChance" is a group of two wild Pokemon
+	static constexpr int GroupChance = 5;
 	FightStartSystem(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, const ska::EntityLocator& entityLocator);
 	virtual ~FightStartSystem();
 

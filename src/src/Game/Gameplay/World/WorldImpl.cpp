@@ -1,3 +1,4 @@
+#include <fstream>
 #include <climits>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "../Data/Settings.h"
@@ -42,6 +43,16 @@ void WorldImpl::load(const ska::TilesetCorrespondanceMapper& mapper, const std::
 	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";
 	loadWeatherFromData(dataFile);
 	loadFogFromData(dataFile);
+
+	// The wild Pokemon of the map : Levels/<map>/Monsters/0.ini, 1.ini... (MobSpawningSystem)
+	m_mobSettings.clear();
+	for (auto index = 0;; index++) {
+		const auto file = fndata.path + "/" + fndata.name + "/Monsters/" + std::to_string(index) + ".ini";
+		if (!std::ifstream{ file }) {
+			break;
+		}
+		m_mobSettings.emplace_back(file);
+	}
 }
 
 void WorldImpl::loadFogFromData(const std::string& stringDataFile) {

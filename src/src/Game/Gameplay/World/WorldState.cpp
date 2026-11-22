@@ -11,6 +11,7 @@
 #include "AI/IARandomMovementComponent.h"
 #include "AI/IADefinedMovementComponent.h"
 #include "WorldState.h"
+#include "../Control/GridMovementComponent.h"
 #include "../Data/Settings.h"
 #include "../../Utils/IDs.h"
 #include "Core/Exceptions/CorruptedFileException.h"
@@ -310,36 +311,36 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 
 		std::vector<ska::Point<int>> blockColPos;
 		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
-			auto spawnAllowed = true;
-			for (unsigned int j = 0; j < idBlocks.size(); j++) {
-				const auto bX = dest.x / blockSize;
-				const auto bY = dest.y / blockSize;
-				if (bX < m_world.getBlocksX() && bY < m_world.getBlocksY()) {
-					const auto* b = m_world.getCollisionProfile().getBlock(0, bX, bY);
-					if (b != nullptr && (b->id.x + b->id.y * blockSize) == idBlocks[i]) {
+			// Not in a wall, nor on the blocks excluded by the data (on_blockid_<i>)
+			const auto bX = dest.x / blockSize;
+			const auto bY = dest.y / blockSize;
+			auto spawnAllowed = bX < m_world.getBlocksX() && bY < m_world.getBlocksY() && !m_world.getCollisionProfile().collide(1, bX, bY);
+			if (spawnAllowed) {
+				const auto* block = m_world.getCollisionProfile().getBlock(0, bX, bY);
+				for (const auto idBlock : idBlocks) {
+					if (block != nullptr && static_cast<unsigned int>(block->id.x + block->id.y * blockSize) == idBlock) {
 						spawnAllowed = false;
 					}
 				}
 			}
 
-
 			if (spawnAllowed) {
-				auto level = rand() % (dataSpawn->get<int>("Data level_min") + dataSpawn->get<int>("Data level_max") + 1) + dataSpawn->get<int>("Data level_min");
+				// Between the minimum and the maximum level of the area
+				const auto levelMin = dataSpawn->get<int>("Data level_min");
+				const auto levelMax = std::max(levelMin, dataSpawn->get<int>("Data level_max"));
+				auto level = rand() % (levelMax - levelMin + 1) + levelMin;
 				auto mob = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
 				/* 0 = Predifined */
 				/* 1 = Random */
 				/* 2 = Fixe */
 				auto type = dataSpawn->get<int>("Data path_type");
+				// Random : it wanders block by block, as the characters (GridMovementSystem). Predefined paths are not
+				// written in the data : it stays
 				if (type == 1) {
-					ska::IARandomMovementComponent iamc;
-					iamc.delay = 500;
-					m_entityManager.addComponent<ska::IARandomMovementComponent>(mob, std::move(iamc));
-				} else if (type == 0) {
-					ska::IADefinedMovementComponent iamc;
-					//TODO predefined paths interpreter (Up Down Left Right => positions)
-					//iamc.directions.push_back()
-					iamc.delay = 500;
-					m_entityManager.addComponent<ska::IADefinedMovementComponent>(mob, std::move(iamc));
+					auto grid = GridMovementComponent{};
+					grid.mode = GridMovementComponent::Mode::Wander;
+					grid.wait = static_cast<unsigned int>(500 + rand() % 1500);
+					m_entityManager.addComponent<GridMovementComponent>(mob, std::move(grid));
 				}
 
 				FightComponent fc;

@@ -112,9 +112,11 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 	const auto& arena = m_stage.arena;
 	const auto inside = position.x >= arena.x && position.x <= arena.x + arena.w && position.y >= arena.y && position.y <= arena.y + arena.h;
 
-	// Leaving the arena : the player flees a wild Pokemon
+	// Leaving the arena : the player flees a wild Pokemon. Walking out (a key held), not pushed out by a hit
 	if (fighter.player && !fighter.controlledByAI && m_stage.canFlee) {
-		fighter.outside = inside || !fighting ? 0 : fighter.outside + ellapsedTime;
+		const auto keys = keysDirection();
+		const auto walking = canMove && (keys.x != 0.F || keys.y != 0.F);
+		fighter.outside = inside || !fighting ? 0 : (walking ? fighter.outside + ellapsedTime : fighter.outside);
 	}
 
 	auto move = ska::Point<float>{};
