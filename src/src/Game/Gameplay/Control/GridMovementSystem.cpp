@@ -4,6 +4,8 @@
 #include <algorithm>
 #include "Core/Inputs/InputContextManager.h"
 #include "Core/ECS/Basics/Physic/CollidableComponent.h"
+#include "Core/ECS/Basics/Physic/WorldCollisionComponent.h"
+#include "Core/Data/Events/CollisionEvent.h"
 #include "World/TileWorld.h"
 #include "World/CollisionProfile.h"
 #include <chipmunk/chipmunk.h>
@@ -29,6 +31,7 @@ GridMovementSystem::GridMovementSystem(ska::EntityManager& entityManager, Pokemo
 	System(entityManager),
 	SubObserver<ska::InputKeyEvent>(std::bind(&GridMovementSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
 	m_entities(entityManager),
+	m_ged(ged),
 	m_worldState(worldState),
 	m_occupants(entityManager) {
 }
@@ -186,10 +189,20 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			place(entity, grid.to, { vector.x * speed, vector.y * speed });
 		}
 
+		// Not on a block (moved by a script, by the physics, placed after a battle) : back on the nearest block
+		if (!grid.stepping && !finished) {
+			const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+			const auto onBlock = ska::Point<float>{ std::round(static_cast<float>(position.x) / blockSize) * blockSize, std::round(static_cast<float>(position.y) / blockSize) * blockSize };
+			if (onBlock.x != static_cast<float>(position.x) || onBlock.y != static_cast<float>(position.y)) {
+				place(entity, onBlock, {});
+			}
+		}
+
 		if (!keys) {
 			startAutomaticStep(entity, grid, ellapsedTime, finished);
-		} else if (input != nullptr) {
-			// Without InputComponent (disabled, ex : during a cutscene), the player does not move
+		} else if (input != nullptr && !m_worldState.getFade().running()) {
+			// Without InputComponent (disabled, ex : during a cutscene), the player does not move ; nor during the fade of a
+			// map change
 			startStep(entity, grid, locked, running, ellapsedTime, finished);
 		}
 		if (finished && !grid.stepping) {
@@ -203,6 +216,7 @@ void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& 
 	if (direction < 0) {
 		grid.turning = false;
 		grid.heldTime = 0;
+		grid.bumpDirection = -1;
 		return;
 	}
 
@@ -225,14 +239,31 @@ void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& 
 	animation.state = direction;
 
 	m_bumped = false;
-	if (!step(entity, grid, direction, running ? RunStep : WalkStep) && m_bumped) {
-		// Against a wall : the character pushes it (the physics touches it : ex the water, to surf)
-		const auto vector = DirectionVector(direction);
-		auto& force = m_componentAccessor.get<ska::ForceComponent>(entity);
-		const auto speed = static_cast<float>(m_worldState.getWorld().getBlockSize()) * 1000.F / static_cast<float>(WalkStep);
-		force.x = vector.x * speed / 10.F;
-		force.y = vector.y * speed / 10.F;
+	if (step(entity, grid, direction, running ? RunStep : WalkStep)) {
+		grid.bumpDirection = -1;
+	} else if (m_bumped && grid.bumpDirection != direction) {
+		// Against a wall : it is touched once (its scripts, ex : the water, to surf), the character stays on its block
+		grid.bumpDirection = direction;
+		touch(entity, direction);
 	}
+}
+
+void GridMovementSystem::touch(ska::EntityId entity, int direction) {
+	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
+	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+	const auto vector = DirectionVector(direction);
+	const auto block = ska::Point<int>{ static_cast<int>(std::round(static_cast<float>(position.x) / static_cast<float>(blockSize))), static_cast<int>(std::round(static_cast<float>(position.y) / static_cast<float>(blockSize))) };
+	const auto wall = ska::Point<int>{ block.x + static_cast<int>(vector.x), block.y + static_cast<int>(vector.y) };
+	auto wcc = ska::WorldCollisionComponent{};
+	// The wall, and the block of the character (as the physics contacts : ex the water touched from inside, to leave it)
+	wcc.blockContacts.push_back(wall * blockSize);
+	wcc.blockContacts.push_back(block * blockSize);
+	// From the wall to the block of the character
+	wcc.lastBlockDirection = ska::Point<int>{ -static_cast<int>(vector.x), -static_cast<int>(vector.y) };
+	wcc.normal = ska::Point<float>{ -vector.x, -vector.y };
+	const auto collidable = ska::CollidableComponent{};
+	auto event = ska::CollisionEvent{ entity, &wcc, nullptr, collidable };
+	m_ged.ska::Observable<ska::CollisionEvent>::notifyObservers(event);
 }
 
 bool GridMovementSystem::step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration) {

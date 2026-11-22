@@ -1,4 +1,5 @@
 #pragma once
+#include "../../Graphic/ScreenFade.h"
 #include <memory>
 #include "Core/ECS/Basics/Script/ScriptRunner.h"
 #include "Core/State/StateBase.h"
@@ -83,6 +84,8 @@ public:
 	ska::scripting::ScriptVM& getScripts();
 	// Camera of the map
 	ska::CameraSystem& getCamera() { return *m_cameraSystem; }
+	// The fade of the map changes
+	ScreenFade& getFade() { return m_fade; }
 	// Battle rules and AI (scripts)
 	BattleRules& getBattleRules();
 
@@ -136,6 +139,7 @@ private:
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
 	ska::TilesetPtr m_tileset;
+	ScreenFade m_fade;
 	std::string m_worldFileName;
 	
 	WorldImpl m_world;

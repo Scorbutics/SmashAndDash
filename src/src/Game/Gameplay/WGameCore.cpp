@@ -42,6 +42,19 @@ float WGameCore::ticksWanted() const {
 }
 
 bool WGameCore::onTeleport(MapEvent& me) {
+	// A battle starts on the map (no transition) ; another map : the screen fades to black, the map changes, the screen
+	// comes back (the change is already in a transition : now)
+	if (me.eventType == MapEventType::Switch_Battle || m_worldState->getFade().running()) {
+		switchState(me);
+		return true;
+	}
+	m_worldState->getFade().start([this, event = me]() {
+		switchState(event);
+	});
+	return true;
+}
+
+void WGameCore::switchState(const MapEvent& me) {
 	if (m_currentState != nullptr) {
 		auto& wn = m_worldState->scheduleRemoveSubState(*m_currentState);
 		m_currentState = nullptr;
@@ -59,9 +72,6 @@ bool WGameCore::onTeleport(MapEvent& me) {
 			});
 		}
 	}
-	
-	
-	return true;
 }
 
 std::unique_ptr<ska::GameApp> ska::GameApp::get() {

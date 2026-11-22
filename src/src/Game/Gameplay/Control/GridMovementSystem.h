@@ -64,9 +64,12 @@ private:
 	void startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking);
 	// The next step of a character not controlled by the player (wander, path)
 	void startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking);
+	// The wall in a direction is touched (as the physics does : the touch scripts of its block)
+	void touch(ska::EntityId entity, int direction);
 	bool step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration);
 
 	ska::EntityManager& m_entities;
+	PokemonGameEventDispatcher& m_ged;
 	WorldState& m_worldState;
 	ska::InputToggleContainer m_toggles;
 	ska::InputToggleContainer m_receivedToggles;

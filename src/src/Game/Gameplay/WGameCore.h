@@ -39,6 +39,7 @@ public:
 
 private:
 	bool onTeleport(MapEvent& me);
+	void switchState(const MapEvent& me);
 
 	CustomEntityManager& m_entityManager;
 

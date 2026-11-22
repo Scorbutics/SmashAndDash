@@ -26,6 +26,8 @@ struct GridMovementComponent {
 	// The key was pressed to turn : it walks once held long enough
 	bool turning = false;
 	unsigned int heldTime = 0;
+	// Direction of the wall it walks against (-1 : none) : the wall is touched once (its scripts, ex : the water to surf)
+	int bumpDirection = -1;
 };
 
 SKA_DECLARE_COMPONENT(GridMovementComponent);

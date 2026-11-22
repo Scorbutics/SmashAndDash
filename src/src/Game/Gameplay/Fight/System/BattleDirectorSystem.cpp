@@ -172,11 +172,7 @@ void BattleDirectorSystem::end() {
 	}
 	m_worldState.battleEnded(result);
 
-	// The camera follows the player again
-	m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
-	m_worldState.getCamera().setZoom(1.F);
-
-	// Back to the map, where the player is
+	// Back to the map, where the player is, when the screen is black (the map changes : WGameCore)
 	MapEvent me(MapEventType::Switch_Map);
 	me.mapName = m_worldState.getMapName();
 	const auto mapReader = ska::IniReader{ "./Levels/" + me.mapName + "/" + me.mapName + ".ini" };
@@ -184,5 +180,14 @@ void BattleDirectorSystem::end() {
 	const auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);
 	me.position = pc;
-	m_ged.ska::Observable<MapEvent>::notifyObservers(me);
+	auto back = [this, event = me]() {
+		// The camera follows the player again
+		m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
+		m_worldState.getCamera().setZoom(1.F);
+		auto mapEvent = event;
+		m_ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
+	};
+	if (!m_worldState.getFade().start(back)) {
+		back();
+	}
 }

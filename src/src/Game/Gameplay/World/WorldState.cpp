@@ -151,6 +151,8 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	m_debugDrawer.graphicUpdate(ellapsedTime);
 	// The world is drawn with the zoom of the camera (ex : the battles), the interface (GUI) is not
 	drawables.setWorldZoom(m_cameraSystem->getZoom(), WorldInterfacePriority);
+	m_fade.setScreenSize(m_screenSize);
+	drawables.add(m_fade);
 
 
 	/* Hello, world */
@@ -197,6 +199,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
 	m_tileset->update();
+	m_fade.update(timeStep);
 	m_debugDrawer.eventUpdate(timeStep);
 }
 
@@ -351,7 +354,10 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				ska::Rectangle hitbox{ static_cast<int>(pc.x + hc.xOffset), static_cast<int>(pc.y + hc.yOffset), static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 				const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
-				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(targetBlock.x - hc.xOffset), static_cast<float>(targetBlock.y - hc.yOffset)));
+				// Exactly on the block (the position of a character is the corner of its block : drawn and sorted with the
+				// rows of the map from there)
+				const auto spawnBlock = ska::Point<int>{ targetBlock.x / static_cast<int>(blockSize), targetBlock.y / static_cast<int>(blockSize) };
+				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(spawnBlock.x * static_cast<int>(blockSize)), static_cast<float>(spawnBlock.y * static_cast<int>(blockSize))));
 
 				successfulSpawns++;
 			}
@@ -389,6 +395,8 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 
 	if (getFileName() != fileName) {
 		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
+		// The map the player is on (the return from a battle, the saves)
+		m_worldFileName = fileName;
 	}
 	//FIN WORLD
 
