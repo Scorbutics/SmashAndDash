@@ -47,3 +47,6 @@ CMakeCache.txt
 /external/chipmunk/src/Debug
 # Compiled shaders (src/shaders)
 /Shaders/
+
+# The web build (tools/web/build.sh)
+/build-web/

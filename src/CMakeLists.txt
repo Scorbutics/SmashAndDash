@@ -10,8 +10,13 @@ string(REGEX REPLACE "[^;]*CMakeFiles/[^;]+;?" "" SOURCES "${SOURCES}")
 
 include_directories(src)
 
-# The game is a library ("libGame") loaded and run by the ska launcher executable (ska_main)
-add_library(smash_and_dash SHARED ${SOURCES})
+# The game is a library ("libGame") loaded and run by the ska launcher executable (ska_main). On the web, it is linked
+# with the engine in the page (ska_web_executable)
+if(EMSCRIPTEN)
+	add_library(smash_and_dash STATIC ${SOURCES})
+else()
+	add_library(smash_and_dash SHARED ${SOURCES})
+endif()
 set_target_properties(smash_and_dash PROPERTIES OUTPUT_NAME Game)
 add_dependencies(smash_and_dash ska_main)
 set(TARGET_LIBS skalog skabase ska_ai ska_audio ska_core ska_draw ska_gui ska_particle ska_physic_chipmunk ska_script ska_scripting ska_world)
@@ -21,6 +26,21 @@ target_link_libraries(smash_and_dash ${TARGET_LIBS})
 add_custom_command(TARGET smash_and_dash POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/scripts ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/std
 	COMMENT "Deploying the game script templates")
+
+if(EMSCRIPTEN)
+	# The page of the game : the game directories, the scripts of the standard library and of the bindings ("std", next
+	# to the executable : /bin/std)
+	ska_web_executable(smash_and_dash_web
+		GAME smash_and_dash
+		ASSETS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..
+		ASSETS Data Levels Sprites Sounds Music Fonts Menu Resources gamesettings.ini
+		SHELL ${CMAKE_CURRENT_SOURCE_DIR}/web/shell.html
+		LINK_OPTIONS "--preload-file=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/std@/bin/std")
+	set_target_properties(smash_and_dash_web PROPERTIES OUTPUT_NAME index)
+	add_dependencies(smash_and_dash_web skalang_std_scripts)
+	# The scripts are checked and tested by the desktop build
+	return()
+endif()
 
 # Static check of the scripts (skalang_check_scripts) : the build fails when a script does not compile
 # (syntax, types, calls of the engine and game functions, declared by their templates)

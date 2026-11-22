@@ -17,7 +17,7 @@ WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	GameCore(std::forward<GameConfPtr>(gc)),
     m_settings(m_eventDispatcher, "gamesettings.ini"),
 	m_entityManager(em),
-	ska::SubObserver<MapEvent>(bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
+	ska::SubObserver<MapEvent>(std::bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
 
 	SLOG(ska::LogLevel::Info) << "Game initialization";
 

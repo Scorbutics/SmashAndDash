@@ -6,7 +6,7 @@
 
 PokemonSoundRenderer::PokemonSoundRenderer(PokemonGameEventDispatcher& ged) :
     SoundRenderer(ged),
-	ska::Observer<SettingsChangeEvent>(bind(&PokemonSoundRenderer::onSettingsChange, this, std::placeholders::_1)),
+	ska::Observer<SettingsChangeEvent>(std::bind(&PokemonSoundRenderer::onSettingsChange, this, std::placeholders::_1)),
 	m_ged(ged){
 	m_ged.ska::Observable<SettingsChangeEvent>::addObserver(*this);
 }

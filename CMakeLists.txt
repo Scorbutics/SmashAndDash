@@ -10,6 +10,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(SKA_BUILD_NO_TEST TRUE)
 
+# The web build (Emscripten) : tools/web/build.sh
+include(external/ska/cmake/SkaWeb.cmake)
+
 #External
 set(curdir "external/ska")
 FILE(GLOB children "${curdir}/ska_*")

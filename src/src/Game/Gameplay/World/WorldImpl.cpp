@@ -12,7 +12,7 @@
 
 WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, const ska::TileWorldLoader& loader) :
 	TileWorld(ged, tileset, loader),
-	SubObserver<SettingsChangeEvent>(bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1), ged) ,
+	SubObserver<SettingsChangeEvent>(std::bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1), ged) ,
 	m_fog(*this),
 	m_weather(*this) {
 	m_fog.setMosaicEffect(true);
