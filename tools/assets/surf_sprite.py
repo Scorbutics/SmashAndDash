@@ -18,10 +18,10 @@ SHELL_DARK = (140, 140, 162, 255)
 FOAM = (236, 246, 255, 255)
 EYE = (20, 20, 40, 255)
 # The waist of the hero in its frame : the part above is shown, moved down by SEAT to sit on the mount
-WAIST = 47
-SEAT = 8
+WAIST = 52
+SEAT = -1
 # The center of the mount (in 2 px pixels)
-CX, CY = 18, 27
+CX, CY = 18, 25
 
 
 def ellipse(draw, cx, cy, rx, ry, fill, outline=None):

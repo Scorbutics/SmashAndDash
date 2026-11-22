@@ -165,8 +165,9 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	if (m_entityManager.hasComponent<MovementModeComponent>(m_trainerId)) {
 		const auto& movementMode = m_entityManager.getComponent<MovementModeComponent>(m_trainerId);
 		m_input.movePower = movementMode.walkPower;
-		m_input.jumpPower = movementMode.jumpPower;
 	}
+	// The jump key dodges in a battle (FighterSystem) : the Pokemon does not jump
+	m_input.jumpPower = 0.F;
 	m_ic = &m_input;
 	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 

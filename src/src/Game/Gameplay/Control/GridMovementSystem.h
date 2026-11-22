@@ -48,6 +48,11 @@ public:
 	static constexpr unsigned int RunStep = 130;
 	// A press shorter than this, towards a new direction, only turns the character
 	static constexpr unsigned int TurnDelay = 90;
+	// The hop of the jump key on the map : height (pixels), duration (ms)
+	static constexpr float HopHeight = 16.F;
+	static constexpr unsigned int HopDuration = 280;
+	// The jump over a ledge : height (pixels) of its arc, over all its steps
+	static constexpr float LedgeHopHeight = 24.F;
 
 	GridMovementSystem(ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
 	~GridMovementSystem() override = default;
@@ -78,6 +83,8 @@ private:
 	ska::InputToggleContainer m_toggles;
 	ska::InputToggleContainer m_receivedToggles;
 	bool m_received = false;
+	// The jump key was pressed since the last frame
+	bool m_jumpPressed = false;
 	// The last step was refused by a wall (not a character)
 	mutable bool m_bumped = false;
 	BlockOccupants m_occupants;

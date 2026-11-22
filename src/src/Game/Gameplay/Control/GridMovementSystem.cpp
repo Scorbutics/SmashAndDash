@@ -5,6 +5,7 @@
 #include "Core/Inputs/InputContextManager.h"
 #include "Core/Utils/TimeUtils.h"
 #include "Core/ECS/Basics/Physic/CollidableComponent.h"
+#include "Core/ECS/Basics/Physic/MovementComponent.h"
 #include "Core/ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "Core/Data/Events/CollisionEvent.h"
 #include "World/TileWorld.h"
@@ -41,6 +42,9 @@ bool GridMovementSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	// Several input contexts send their keys (map, interface) : the keys held are the ones of any of them since the last frame
 	m_receivedToggles |= event.icm.getToggles();
 	m_received = true;
+	if (event.icm.getActions()[ska::Jump]) {
+		m_jumpPressed = true;
+	}
 	return true;
 }
 
@@ -134,6 +138,8 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 		m_receivedToggles.reset();
 		m_received = false;
 	}
+	const auto jumpPressed = m_jumpPressed;
+	m_jumpPressed = false;
 	for (const auto entity : getEntities()) {
 		auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
 		auto* input = m_componentPossibleAccessor.get<ska::InputComponent>(entity);
@@ -147,10 +153,17 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 				saved.walkPower = input->movePower;
 				saved.jumpPower = input->jumpPower;
 				m_entities.addComponent<MovementModeComponent>(entity, std::move(saved));
-			} else if (input->movePower > 0.F && mode->walkPower == 0.F) {
-				mode->walkPower = input->movePower;
+			} else {
+				if (input->movePower > 0.F && mode->walkPower == 0.F) {
+					mode->walkPower = input->movePower;
+				}
+				if (input->jumpPower > 0.F && mode->jumpPower == 0.F) {
+					mode->jumpPower = input->jumpPower;
+				}
 			}
 			input->movePower = 0.F;
+			// The jump key hops (below), not the physics jump
+			input->jumpPower = 0.F;
 		}
 
 		// Moved by a script : animated by its physics velocity
@@ -166,6 +179,23 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 		animation.walking = grid.stepping;
 		animation.walkDelay = std::max(60u, grid.duration / 2);
 		animation.state = grid.stepping ? grid.stepDirection : grid.facing;
+
+		// The hop : the height follows its arc, then the character is back on the ground
+		if (grid.hopDuration > 0) {
+			grid.hopElapsed += ellapsedTime;
+			const auto progress = std::min(1.F, static_cast<float>(grid.hopElapsed) / static_cast<float>(grid.hopDuration));
+			auto& position = m_entities.getComponent<ska::PositionComponent>(entity);
+			position.z = static_cast<long>(std::lround(4.F * grid.hopHeight * progress * (1.F - progress)));
+			if (m_entities.hasComponent<ska::MovementComponent>(entity)) {
+				m_entities.getComponent<ska::MovementComponent>(entity).vz = 0.F;
+			}
+			if (progress >= 1.F) {
+				position.z = 0;
+				grid.hopDuration = 0;
+				grid.hopElapsed = 0;
+				grid.hopHeight = 0.F;
+			}
+		}
 
 		const auto locked = mode != nullptr && mode->mode == "locked";
 		const auto running = (mode != nullptr && mode->mode == "run") || m_toggles[ska::Run];
@@ -228,7 +258,12 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			startAutomaticStep(entity, grid, ellapsedTime, finished);
 		} else if (input != nullptr && !m_worldState.getFade().running()) {
 			// Without InputComponent (disabled, ex : during a cutscene), the player does not move ; nor during the fade of a
-			// map change
+			// map change. The jump key : a hop where it stands (not while walking)
+			if (jumpPressed && !locked && mode != nullptr && mode->jumpPower > 0.F && !grid.stepping && !finished && grid.hopDuration == 0) {
+				grid.hopDuration = HopDuration;
+				grid.hopElapsed = 0;
+				grid.hopHeight = HopHeight;
+			}
 			startStep(entity, grid, locked, running, ellapsedTime, finished);
 		}
 		if (finished && !grid.stepping) {

@@ -36,6 +36,12 @@ struct GridMovementComponent {
 	unsigned int forcedDuration = 0;
 	bool forcedGhost = false;
 	bool savedGhost = false;
+
+	// A hop (the jump key, the jump over a ledge) : the height of the character follows an arc, from the ground to
+	// "hopHeight" (pixels) and back, over "hopDuration" ms. Not the physics : the same height whatever the frame rate.
+	unsigned int hopDuration = 0;
+	unsigned int hopElapsed = 0;
+	float hopHeight = 0.F;
 };
 
 SKA_DECLARE_COMPONENT(GridMovementComponent);

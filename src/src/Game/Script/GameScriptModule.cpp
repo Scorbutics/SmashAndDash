@@ -216,6 +216,35 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
+	m_builder.bindField("jumpOver", [&vm, &entityManager, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		const auto direction = Int(params[1]);
+		const auto blocks = Int(params[2]);
+		if (direction < 0 || direction > 3) {
+			throw std::runtime_error("Character.jumpOver : the direction " + std::to_string(direction) + " is not 0 (down), 1 (right), 2 (up) or 3 (left)");
+		}
+		if (blocks < 0) {
+			throw std::runtime_error("Character.jumpOver : a negative number of blocks (" + std::to_string(blocks) + ")");
+		}
+		auto& grid = Require<GridMovementComponent>(entityManager, entity, "jumpOver (it does not move block by block)");
+		grid.forcedSteps = blocks;
+		grid.forcedDirection = direction;
+		grid.forcedDuration = GridMovementSystem::WalkStep;
+		// In the air during all the steps
+		grid.hopDuration = static_cast<unsigned int>(blocks) * GridMovementSystem::WalkStep;
+		grid.hopElapsed = 0;
+		grid.hopHeight = blocks == 0 ? 0.F : GridMovementSystem::LedgeHopHeight;
+		// The script goes on once the last step is done (GridMovementSystem)
+		vm.suspendUntil([&entityManager, entity]() {
+			if (!entityManager.hasComponent<GridMovementComponent>(entity)) {
+				return true;
+			}
+			const auto& grid = entityManager.getComponent<GridMovementComponent>(entity);
+			return grid.forcedSteps == 0 && !grid.stepping;
+		});
+		return ska::NodeValue{};
+	});
+
 	m_builder.bindField("jump", [&entityManager, &handles](std::vector<ska::NodeValue> params) {
 		const auto entity = Entity(handles, entityManager, params[0]);
 		Require<ska::MovementComponent>(entityManager, entity, "jump").vz = static_cast<float>(Int(params[1]));

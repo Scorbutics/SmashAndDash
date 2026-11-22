@@ -15,7 +15,8 @@ m_name(name),
 m_scroll(scroll) {
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, rect.w, rect.h }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
 	tileSurface.setOpacity(170);
-	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 5.F, ska::Point<int>(16, 16));
+	// Letter by letter
+	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 45.F, ska::Point<int>(16, 16));
 }
 
 void DialogMenu::render(ska::Renderer& renderer) const{

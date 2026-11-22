@@ -64,7 +64,8 @@ ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos,
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
 	ic.movePower = 25;
-	ic.jumpPower = 80;
+	// A small hop on the map (the gravity and the friction of the height : SpaceSystem, ZGravityForceSystem)
+	ic.jumpPower = 8;
 	addComponent<InputComponent>(hero, std::move(ic));
 	ScriptAwareComponent sac;
 	addComponent<ScriptAwareComponent>(hero, std::move(sac));
