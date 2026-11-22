@@ -57,6 +57,10 @@
 #define POKEMON_TEAM_MAX_SIZE 6
 
 #define GUI_DEFAULT_DISPLAY_PRIORITY 32000
+// The drawings from this priority are the interface : not zoomed with the world (the camera of the battles)
+constexpr int WorldInterfacePriority = GUI_DEFAULT_DISPLAY_PRIORITY - 10;
+// Drawings over the world, zoomed with it (ex : the damage of the battles)
+constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
 #define SKILLS_DEFAULT_DISPLAY_PRIORITY GUI_DEFAULT_DISPLAY_PRIORITY - 1
 
 #define DEFAULT_BGM "./Music/Greencity.mp3"

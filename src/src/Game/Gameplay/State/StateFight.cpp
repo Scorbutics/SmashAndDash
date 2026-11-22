@@ -18,6 +18,7 @@
 #include "../Fight/System/SkillHitSystem.h"
 #include "../Fight/System/BattleDirectorSystem.h"
 #include "../Fight/System/FighterSystem.h"
+#include "../Fight/System/BattleCameraSystem.h"
 #include "../Fight/FighterComponent.h"
 #include "../Fight/BattleComponent.h"
 #include "../Fight/SkillsHolderComponent.h"
@@ -130,6 +131,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	auto& battle = *battleSystem;
 	addLogic(std::move(battleSystem));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
+	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
 	addLogic(std::make_unique<SkillHitSystem>(m_entityManager, m_eventDispatcher, rules, m_stage));
 

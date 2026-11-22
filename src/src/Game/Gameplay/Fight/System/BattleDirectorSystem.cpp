@@ -50,9 +50,7 @@ void BattleDirectorSystem::start() {
 	y = std::max(0, std::min(y, worldHeight - height));
 	m_stage.arena = ska::Rectangle{ x, y, width, height };
 
-	// The camera frames the arena (a little lower : the bars are at the top of the screen)
-	auto& camera = m_worldState.getCamera();
-	camera.changeStrategy(std::make_unique<ska::CameraFixedStrategy>(ska::Point<int>{ x + width / 2, y + height / 2 - blockSize / 2 }));
+	// The camera of the battle : BattleCameraSystem
 
 	for (const auto entity : getEntities()) {
 		m_componentAccessor.get<FighterComponent>(entity).shownHp = static_cast<float>(m_componentAccessor.get<BattleComponent>(entity).hp);
@@ -176,6 +174,7 @@ void BattleDirectorSystem::end() {
 
 	// The camera follows the player again
 	m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
+	m_worldState.getCamera().setZoom(1.F);
 
 	// Back to the map, where the player is
 	MapEvent me(MapEventType::Switch_Map);

@@ -33,23 +33,26 @@ public:
 	void graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables);
 
 	void renderGround(ska::Renderer& renderer) const;
+	// Over the world, zoomed with it : the damage, the impacts, the arrow over the Pokemon of the player
+	void renderWorldOverlay(ska::Renderer& renderer) const;
 	void renderOverlay(ska::Renderer& renderer) const;
 
 private:
 	// A drawing at a fixed priority, done by the interface
 	class Layer : public ska::DrawableFixedPriority {
 	public:
-		Layer(const GUIBattle& gui, bool ground) : m_gui(gui), m_ground(ground) {}
+		enum class Kind { Ground, WorldOverlay, Interface };
+		Layer(const GUIBattle& gui, Kind kind) : m_gui(gui), m_kind(kind) {}
 		void render(ska::Renderer& renderer) const override {
-			if (m_ground) {
-				m_gui.renderGround(renderer);
-			} else {
-				m_gui.renderOverlay(renderer);
+			switch (m_kind) {
+			case Kind::Ground: m_gui.renderGround(renderer); break;
+			case Kind::WorldOverlay: m_gui.renderWorldOverlay(renderer); break;
+			default: m_gui.renderOverlay(renderer); break;
 			}
 		}
 	private:
 		const GUIBattle& m_gui;
-		bool m_ground;
+		Kind m_kind;
 	};
 
 	struct Sprite {
@@ -83,6 +86,7 @@ private:
 	const BattleSystem& m_battle;
 	ska::CameraSystem& m_camera;
 	Layer m_groundLayer;
+	Layer m_worldOverlayLayer;
 	Layer m_overlayLayer;
 	// The names of the fighters (loaded at their first drawing)
 	mutable std::map<ska::EntityId, std::string> m_names;

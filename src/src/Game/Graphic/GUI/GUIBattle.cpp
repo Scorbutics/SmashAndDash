@@ -50,14 +50,16 @@ GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSys
 	m_stage(stage),
 	m_battle(battle),
 	m_camera(camera),
-	m_groundLayer(*this, true),
-	m_overlayLayer(*this, false),
+	m_groundLayer(*this, Layer::Kind::Ground),
+	m_worldOverlayLayer(*this, Layer::Kind::WorldOverlay),
+	m_overlayLayer(*this, Layer::Kind::Interface),
 	m_ringPlayer("./Sprites/Fight/ring-player.png"),
 	m_ringOpponent("./Sprites/Fight/ring-opponent.png"),
 	m_arrow("./Sprites/Fight/arrow-player.png"),
 	m_impact("./Sprites/Fight/impact.png"),
 	m_screenShader("./Shaders/battle", true) {
 	m_groundLayer.setPriority(GroundPriority);
+	m_worldOverlayLayer.setPriority(WorldOverlayPriority);
 	// Under the dialogs (GUI)
 	m_overlayLayer.setPriority(GUI_DEFAULT_DISPLAY_PRIORITY - 1);
 }
@@ -116,6 +118,7 @@ void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer&
 		return;
 	}
 	drawables.add(m_groundLayer);
+	drawables.add(m_worldOverlayLayer);
 	drawables.add(m_overlayLayer);
 }
 
@@ -464,8 +467,7 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 	}
 }
 
-void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
-	updateScreenShader(renderer);
+void GUIBattle::renderWorldOverlay(ska::Renderer& renderer) const {
 	// The arrow over the Pokemon of the player
 	if (visible(m_stage.player) && m_stage.phase() == BattlePhase::Fight) {
 		const auto drawn = sprite(m_stage.player);
@@ -483,6 +485,10 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 		text(renderer, "!", 30, ska::Color{ 255, static_cast<uint8_t>(220 - 160 * progress), 60, 255 }, drawn.position.x + drawn.width / 2, drawn.position.y - 34, 0, 0.8F + 0.5F * progress);
 	}
 	renderMarks(renderer);
+}
+
+void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
+	updateScreenShader(renderer);
 
 	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
 	// The side of the player on the left, the wild Pokemon on the right

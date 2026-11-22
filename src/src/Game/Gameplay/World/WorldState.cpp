@@ -148,6 +148,8 @@ void DisplayPlayerControlBody(const ska::cp::Body& controlBody, std::vector<ska:
 
 void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	m_debugDrawer.graphicUpdate(ellapsedTime);
+	// The world is drawn with the zoom of the camera (ex : the battles), the interface (GUI) is not
+	drawables.setWorldZoom(m_cameraSystem->getZoom(), WorldInterfacePriority);
 
 	m_pokeball.setPriority(m_graphicSystem->getTopLayerPriority() + 1);
 	drawables.add(m_pokeball);
