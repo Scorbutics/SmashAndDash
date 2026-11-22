@@ -9,7 +9,6 @@
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
 #include "Core/Rectangle.h"
-#include "../../Gameplay/Pokeball.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Graphic/System/JumpAnimationStateMachine.h"
@@ -123,7 +122,6 @@ private:
 	SavegameManager m_saveManager;
 	Bag m_bag;
 
-	Pokeball m_pokeball;
 	ska::Music m_worldBGM;
 
 	ska::GraphicSystem* m_graphicSystem = nullptr;

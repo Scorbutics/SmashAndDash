@@ -71,7 +71,7 @@ StateFight::StateFight(CustomEntityManager& em, PokemonGameEventDispatcher& ged,
 	m_loadState(0),
 	m_ic(nullptr),
 	m_skillFactory(ws, fc.level),
-	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic, reinterpret_cast<ska::CameraSystem**>(&m_cameraSystem)),
+	m_loader(m_entityManager, m_eventDispatcher, m_worldState, m_pokemonId, m_opponentId, m_trainerId, m_pokeball, &m_ic),
 	m_fightPos(fightPos),
 	m_companionsData(fc.companions),
 	m_canFlee(fc.canFlee) {

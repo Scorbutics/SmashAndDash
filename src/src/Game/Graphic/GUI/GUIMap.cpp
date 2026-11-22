@@ -251,7 +251,7 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 }
 
 bool GUIMap::onBattleEvent(BattleEvent& be) {
-	m_dbgWindow.show(be.getEventType() != BATTLE_START);
+	m_dbgWindow.show(be.type != BATTLE_START);
 	return true;
 }
 

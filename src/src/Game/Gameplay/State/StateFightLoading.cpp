@@ -11,7 +11,7 @@
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 
-StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, ska::EntityId& pokeball, ska::InputComponent** ic, ska::CameraSystem** cameraSystem) :
+StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, ska::EntityId& pokeball, ska::InputComponent** ic) :
 	m_eventDispatcher(ged),
 	m_entityManager(em),
 	m_pokemonId(pokemonId),
@@ -19,8 +19,7 @@ StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDi
 	m_trainerId(trainerId),
 	m_pokeball(pokeball),
 	m_ic(ic),
-	m_worldState(ws),
-	m_cameraSystem(cameraSystem) {
+	m_worldState(ws) {
 
 }
 
@@ -55,7 +54,7 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		CustomEntityManager::place(m_entityManager, m_worldState.getSpace(), m_pokemonId, ska::Point<float>(static_cast<float>(pc.x), static_cast<float>(pc.y)));
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, std::move(pc));
 
-		BattleEvent be(BATTLE_START, **m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
+		auto be = BattleEvent{ BATTLE_START };
 		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		return false;
@@ -69,7 +68,7 @@ std::unique_ptr<ska::Task> StateFightLoading::unload() {
 		*m_ic = &m_input;
 		m_entityManager.removeComponent<ska::InputComponent>(m_pokemonId);
 
-		BattleEvent be(BATTLE_END, **m_cameraSystem, m_pokemonId, m_opponentId, m_entityManager);
+		auto be = BattleEvent{ BATTLE_END };
 		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);
 
 		m_entityManager.removeComponent<BattleComponent>(m_pokemonId);

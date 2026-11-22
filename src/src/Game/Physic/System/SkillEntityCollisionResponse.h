@@ -1,6 +1,8 @@
 #pragma once
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
 #include "Base/Patterns/SubObserver.h"
+#include "Base/Values/MovableNonCopyable.h"
+#include "Core/ECS/EntityManager.h"
 
 namespace ska {
 	class CollisionSystem;

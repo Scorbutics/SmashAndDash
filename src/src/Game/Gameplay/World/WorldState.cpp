@@ -152,8 +152,6 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	// The world is drawn with the zoom of the camera (ex : the battles), the interface (GUI) is not
 	drawables.setWorldZoom(m_cameraSystem->getZoom(), WorldInterfacePriority);
 
-	m_pokeball.setPriority(m_graphicSystem->getTopLayerPriority() + 1);
-	drawables.add(m_pokeball);
 
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
@@ -462,10 +460,6 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	}
 
 	//FIN Tile map
-	auto pkmn = CustomEntityManager::createCharacterNG(m_entityManager, m_spaceSystem->getSpace(), { 4,5 }, 25, m_world.getBlockSize(), "pikachu");
-	auto& ac = m_entityManager.getComponent<ska::AnimationComponent>(pkmn);
-	ac.setASM(*m_walkASM, pkmn);
-
 	const auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
 	// With the music of the world : the sound module plays it
 	auto we = ska::WorldEvent{ wet, m_worldBGM };
