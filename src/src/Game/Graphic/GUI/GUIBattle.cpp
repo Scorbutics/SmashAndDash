@@ -14,6 +14,8 @@
 #include "Graphic/System/CameraSystem.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../Gameplay/Fight/FighterComponent.h"
+#include "../../Gameplay/Fight/BattleEffects.h"
+#include "../../Gameplay/Fight/System/FighterSystem.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Utils/IDs.h"
@@ -241,7 +243,7 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 	const auto screen = m_camera.getScreenSize();
 	const auto margin = 14;
 	const auto width = std::min(440, screen.x / 2 - 70);
-	const auto height = 66;
+	const auto height = 80;
 	// The bar shakes after a hit
 	const auto shake = fighter.barShake > 0 ? static_cast<int>((fighter.barShake / 25) % 2 == 0 ? 1 : -1) * static_cast<int>(1 + fighter.barShake / 80) : 0;
 	const auto x = (left ? margin : screen.x - margin - width) + shake;
@@ -287,6 +289,22 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 		text(renderer, std::to_string(std::max(0, bc.hp)) + " / " + std::to_string(bc.maxHp), 14, ska::Color{ 255, 255, 255, 255 }, barX + barWidth - 6, barY + 1, 1);
 	}
 
+	// Its status and the changes of its statistics
+	auto tags = StatusShortName(fighter.status);
+	const char* stats[] = { "ATQ", "DEF", "VIT" };
+	for (std::size_t stat = 0; stat < fighter.stages.size(); stat++) {
+		const auto stage = fighter.stages[stat];
+		if (stage != 0) {
+			tags += (tags.empty() ? "" : "  ") + std::string{ stats[stat] } + (stage > 0 ? std::string(static_cast<std::size_t>(stage), '+') : std::string(static_cast<std::size_t>(-stage), '-'));
+		}
+	}
+	if (fighter.guard > 0) {
+		tags += (tags.empty() ? "" : "  ") + std::string{ "ABRI" };
+	}
+	if (!tags.empty()) {
+		text(renderer, tags, 13, ska::Color{ 255, 230, 140, 255 }, left ? barX : barX + barWidth, barY + barHeight + 4, left ? -1 : 1);
+	}
+
 	// Fleeing : the time left outside of the arena
 	if (fighter.player && fighter.outside > 0 && m_stage.phase() == BattlePhase::Fight) {
 		const auto progress = std::min(1.F, static_cast<float>(fighter.outside) / static_cast<float>(BattleStage::FleeDelay));
@@ -310,7 +328,7 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 	for (const auto& skill : skills) {
 		count += skill.particleNumber > 0 ? 1 : 0;
 	}
-	auto x = screen.x / 2 - (count * slotWidth + (count - 1) * gap) / 2;
+	auto x = screen.x / 2 - (count * slotWidth + count * gap + 120) / 2;
 	const auto y = screen.y - slotHeight - 14;
 	for (auto index = 0u; index < skills.size(); index++) {
 		const auto& skill = skills[index];
@@ -326,7 +344,14 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 		// The cooldown : a shadow over the slot, shorter and shorter
 		FillRect(renderer, ska::Color{ 0, 0, 0, 150 }, x + 30, y, static_cast<int>(static_cast<float>(slotWidth - 30) * cooldown), slotHeight);
 		x += slotWidth + gap;
-	}
+	}	// The dodge (space key)
+	const auto dodgeCooldown = static_cast<float>(player->dashCooldown) / static_cast<float>(FighterSystem::DashCooldown);
+	FillRect(renderer, ska::Color{ 10, 12, 24, 200 }, x, y, 120, slotHeight);
+	FillRect(renderer, dodgeCooldown <= 0.F ? ska::Color{ 120, 220, 160, 255 } : ska::Color{ 70, 80, 100, 255 }, x, y, 44, slotHeight);
+	text(renderer, "ESP", 15, ska::Color{ 255, 255, 255, 255 }, x + 22, y + 11, 0);
+	text(renderer, "ESQUIVE", 15, ska::Color{ 255, 255, 255, 255 }, x + 52, y + 11, -1);
+	FillRect(renderer, ska::Color{ 0, 0, 0, 150 }, x + 44, y, static_cast<int>(76.F * dodgeCooldown), slotHeight);
+
 }
 
 void GUIBattle::renderBanner(ska::Renderer& renderer) const {
@@ -400,6 +425,35 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 			renderer.setEffect(nullptr);
 			continue;
 		}
+		if (mark.kind == BattleMark::Kind::Text) {
+			// A word (effectiveness, status, statistics) : it rises and fades
+			const auto progress = std::min(1.F, static_cast<float>(mark.age) / 1100.F);
+			const auto alpha = mark.age > 800 ? static_cast<unsigned char>(255 * (1100 - std::min(1100u, mark.age)) / 300) : static_cast<unsigned char>(255);
+			const auto color = mark.value == 1 ? ska::Color{ 130, 230, 255, 255 } : (mark.value == 2 ? ska::Color{ 255, 140, 210, 255 } : ska::Color{ 255, 255, 255, 255 });
+			const auto scale = mark.age < 100 ? 1.4F - 0.4F * static_cast<float>(mark.age) / 100.F : 1.F;
+			text(renderer, mark.text, 16, color, position.x, position.y - static_cast<int>(24.F * progress), 0, scale, alpha);
+			continue;
+		}
+		if (mark.kind == BattleMark::Kind::Wave) {
+			// An area skill : a ring growing to its range
+			const auto progress = std::min(1.F, static_cast<float>(mark.age) / 350.F);
+			const auto radius = static_cast<float>(mark.value) * (0.25F + 0.75F * progress);
+			const auto alpha = static_cast<uint8_t>(220.F * (1.F - progress));
+			const auto color = mark.onPlayer ? ska::Color{ 120, 190, 255, alpha } : ska::Color{ 255, 140, 110, alpha };
+			renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
+			constexpr auto segments = 48;
+			for (auto ring = 0; ring < 3; ring++) {
+				const auto r = radius - static_cast<float>(ring);
+				for (auto i = 0; i < segments; i++) {
+					const auto a = 6.2832F * static_cast<float>(i) / segments;
+					const auto b = 6.2832F * static_cast<float>(i + 1) / segments;
+					renderer.drawColorLine(color, ska::Point<int>{ position.x + static_cast<int>(std::cos(a) * r), position.y + static_cast<int>(std::sin(a) * r * 0.6F) },
+						ska::Point<int>{ position.x + static_cast<int>(std::cos(b) * r), position.y + static_cast<int>(std::sin(b) * r * 0.6F) });
+				}
+			}
+			renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
+			continue;
+		}
 		// Damage : it pops, rises and fades
 		const auto progress = static_cast<float>(mark.age) / 900.F;
 		const auto rise = static_cast<int>(46.F * (1.F - (1.F - progress) * (1.F - progress)));
@@ -417,6 +471,16 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 		const auto drawn = sprite(m_stage.player);
 		const auto bob = static_cast<int>(3.F * std::sin(static_cast<float>(m_time) / 140.F));
 		renderer.render(m_arrow, drawn.position.x + drawn.width / 2 - static_cast<int>(m_arrow.getWidth()) / 2, drawn.position.y - 16 + bob, nullptr);
+	}
+	// An enemy prepares an attack : "!" over it
+	for (const auto entity : m_stage.fighters) {
+		const auto* state = fighter(entity);
+		if (state == nullptr || state->team == 0 || state->knockedOut || state->windUp == 0 || !visible(entity) || m_stage.phase() != BattlePhase::Fight) {
+			continue;
+		}
+		const auto drawn = sprite(entity);
+		const auto progress = state->windUpDuration == 0 ? 1.F : 1.F - static_cast<float>(state->windUp) / static_cast<float>(state->windUpDuration);
+		text(renderer, "!", 30, ska::Color{ 255, static_cast<uint8_t>(220 - 160 * progress), 60, 255 }, drawn.position.x + drawn.width / 2, drawn.position.y - 34, 0, 0.8F + 0.5F * progress);
 	}
 	renderMarks(renderer);
 

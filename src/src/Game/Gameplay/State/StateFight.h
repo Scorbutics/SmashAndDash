@@ -7,6 +7,7 @@
 #include "../System/PokeballSystem.h"
 #include "../../Physic/System/SkillEntityCollisionResponse.h"
 #include "../Fight/BattleStage.h"
+#include "../Fight/BattleSounds.h"
 #include "../../Graphic/GUI/GUIBattle.h"
 #include "../Fight/SkillFactory.h"
 #include "StateFightLoading.h"
@@ -73,6 +74,7 @@ private:
 	ska::Point<int> m_screenSize;
 	// State of the battle, shared by its systems and its interface
 	BattleStage m_stage;
+	BattleSounds m_sounds;
 	// The other wild Pokemon of the battle (a group) : created for the battle, removed after it
 	const std::vector<std::pair<int, unsigned int>> m_companionsData;
 	std::vector<ska::EntityId> m_companions;

@@ -40,6 +40,10 @@ FighterSystem::FighterSystem(ska::EntityManager& em, PokemonGameEventDispatcher&
 bool FighterSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	m_receivedToggles |= event.icm.getToggles();
 	m_received = true;
+	// The dodge (the jump key)
+	if (event.icm.getActions()[ska::Jump]) {
+		m_dodgeKey = true;
+	}
 	return true;
 }
 
@@ -80,6 +84,11 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 	fighter.stun = Decrease(fighter.stun, delta);
 	fighter.release = Decrease(fighter.release, delta);
 	fighter.flash = Decrease(fighter.flash, ellapsedTime);
+	fighter.guard = Decrease(fighter.guard, delta);
+	fighter.dash = Decrease(fighter.dash, delta);
+	fighter.invulnerable = Decrease(fighter.invulnerable, delta);
+	fighter.dashCooldown = Decrease(fighter.dashCooldown, delta);
+	updateEffects(entity, fighter, delta);
 
 	const auto fighting = m_stage.phase() == BattlePhase::Fight;
 	const auto canMove = fighting && !m_stage.frozen() && !fighter.busy();
@@ -137,10 +146,34 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 		}
 	}
 
-	// The battle time can be slower (slow motion)
+	// The battle time can be slower (slow motion) ; the speed changes with its statistics, a paralysis slows it down
 	const auto scale = ellapsedTime == 0 ? 0.F : static_cast<float>(delta) / static_cast<float>(ellapsedTime);
-	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(entity)) * scale;
+	const auto slowed = fighter.status == FighterStatus::Paralysis ? 0.6F : 1.F;
+	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(entity)) * StageMultiplier(fighter.stages[StatSpeed]) * slowed * scale;
 	auto velocity = ska::Point<float>{ move.x * speed, move.y * speed };
+
+	// The dodge : a short dash (the keys, or away from the opponent ; the AI goes aside), it cannot be hit at its start
+	const auto wantsDodge = fighter.controlledByAI ? fighter.dodgeRequested : (fighter.player && m_dodgeKey);
+	if (fighter.player && !fighter.controlledByAI) {
+		m_dodgeKey = false;
+	}
+	fighter.dodgeRequested = false;
+	if (wantsDodge && canMove && fighter.dashCooldown == 0) {
+		auto direction = fighter.controlledByAI ? ska::Point<float>{} : keysDirection();
+		if (direction.x == 0.F && direction.y == 0.F) {
+			const auto side = (entity % 2 == 0) ? 1.F : -1.F;
+			direction = fighter.controlledByAI ? Normalized(ska::Point<float>{ -toOpponent.y * side - toOpponent.x * 0.3F, toOpponent.x * side - toOpponent.y * 0.3F }) : ska::Point<float>{ -toOpponent.x, -toOpponent.y };
+		}
+		fighter.dashDirection = direction;
+		fighter.dash = DashDuration;
+		fighter.invulnerable = DashInvulnerability;
+		fighter.dashCooldown = DashCooldown;
+		m_stage.sound(BattleSound::Dash);
+		SLOG(ska::LogLevel::Debug) << "Battle : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " dodges";
+	}
+	if (fighter.dash > 0) {
+		velocity = ska::Point<float>{ fighter.dashDirection.x * DashSpeed * scale, fighter.dashDirection.y * DashSpeed * scale };
+	}
 
 	// Pushed back after a hit : the push slows down quickly
 	if (std::abs(fighter.knockback.x) > 1.F || std::abs(fighter.knockback.y) > 1.F) {
@@ -184,11 +217,32 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 		return;
 	}
 
+	// Its status colors it
+	switch (fighter.status) {
+	case FighterStatus::Poison: effect.red = 205; effect.green = 140; effect.blue = 255; break;
+	case FighterStatus::Burn: effect.red = 255; effect.green = 165; effect.blue = 120; break;
+	case FighterStatus::Paralysis: if ((m_time / 120) % 3 == 0) { effect.blue = 90; } break;
+	case FighterStatus::Sleep: effect.red = 150; effect.green = 150; effect.blue = 210; break;
+	case FighterStatus::Leech: effect.red = 170; effect.green = 255; effect.blue = 150; break;
+	default: break;
+	}
+	if (fighter.guard > 0) {
+		// Protected : a blue glow
+		effect.red = 160;
+		effect.green = 210;
+		effect.flash = static_cast<unsigned char>(90 + 60 * ((m_time / 90) % 2));
+	}
 	if (fighter.flash > 0) {
 		effect.flash = static_cast<unsigned char>(255 * fighter.flash / FlashDuration);
 	} else if (fighter.stun > 0 && (fighter.stun / 60) % 2 == 0) {
 		// Stunned : it blinks
 		effect.alpha = 70;
+	}
+	if (fighter.dash > 0) {
+		// Dashing : light, stretched
+		effect.alpha = 150;
+		effect.scaleX = 1.F + 0.15F * std::abs(fighter.dashDirection.x);
+		effect.scaleY = 1.F + 0.15F * std::abs(fighter.dashDirection.y);
 	}
 
 	const auto& direction = fighter.attackDirection;
@@ -222,7 +276,51 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 	}
 }
 
+void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighter, unsigned int delta) {
+	// The changes of its statistics end
+	for (std::size_t stat = 0; stat < fighter.stages.size(); stat++) {
+		if (fighter.stageTime[stat] > 0) {
+			fighter.stageTime[stat] = Decrease(fighter.stageTime[stat], delta);
+			if (fighter.stageTime[stat] == 0) {
+				fighter.stages[stat] = 0;
+			}
+		}
+	}
+	if (fighter.status == FighterStatus::None) {
+		return;
+	}
+	// Its status hurts it every second (poison, burn, leech : the one who gave it is healed)
+	const auto hurts = fighter.status == FighterStatus::Poison || fighter.status == FighterStatus::Burn || fighter.status == FighterStatus::Leech;
+	if (hurts && delta > 0) {
+		fighter.statusTick = Decrease(fighter.statusTick, delta);
+		if (fighter.statusTick == 0) {
+			fighter.statusTick = 1000;
+			auto& bc = m_componentAccessor.get<BattleComponent>(entity);
+			const auto damage = std::max(1, bc.maxHp / 16);
+			bc.hp -= damage;
+			auto mark = BattleMark{};
+			mark.kind = BattleMark::Kind::Damage;
+			mark.position = center(entity);
+			mark.value = damage;
+			mark.onPlayer = fighter.player;
+			m_stage.mark(mark);
+			fighter.hpDelay = 300;
+			if (fighter.status == FighterStatus::Leech && m_entities.hasComponent<BattleComponent>(fighter.statusSource)) {
+				auto& source = m_entities.getComponent<BattleComponent>(fighter.statusSource);
+				if (source.hp > 0) {
+					source.hp = std::min(source.maxHp, source.hp + damage);
+				}
+			}
+		}
+	}
+	fighter.statusTime = Decrease(fighter.statusTime, delta);
+	if (fighter.statusTime == 0) {
+		fighter.status = FighterStatus::None;
+	}
+}
+
 void FighterSystem::refresh(unsigned int ellapsedTime) {
+	m_time += ellapsedTime;
 	if (m_received) {
 		m_toggles = m_receivedToggles;
 		m_receivedToggles.reset();

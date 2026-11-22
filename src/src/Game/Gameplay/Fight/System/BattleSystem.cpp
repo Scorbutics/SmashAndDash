@@ -11,6 +11,7 @@
 #include "FighterSystem.h"
 #include "Base/Values/Numbers/NumberUtils.h"
 #include "../BattleHit.h"
+#include "../BattleEffects.h"
 #include "../FighterComponent.h"
 
 BattleSystem::BattleSystem(CustomEntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, unsigned int blockSize) :
@@ -67,6 +68,12 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	auto& fighter = m_componentAccessor.get<FighterComponent>(from);
 	// 0 means "never used"
 	fighter.lastUses[index] = m_time == 0 ? 1 : m_time;
+	// Paralyzed : it fails a skill sometimes (the cooldown is lost)
+	if (fighter.status == FighterStatus::Paralysis && ska::NumberUtils::random(0, 3) == 0) {
+		fighter.stun = std::max(fighter.stun, 500u);
+		MarkText(m_customEM, m_stage, from, "PARALYS\xC9", 2);
+		return true;
+	}
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
 	// The startup : it stands still, facing its opponent (it is committed to that direction)
 	fighter.windUp = std::max(1u, skill.startup);
@@ -74,6 +81,7 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	fighter.recoveryDuration = skill.recovery;
 	fighter.pendingSkill = static_cast<int>(index);
 	fighter.contactAttack = skill.contact;
+	m_stage.sound(BattleSound::Cast);
 	const auto position = center(from);
 	const auto toOpponent = center(fighter.opponent) - position;
 	const auto length = std::sqrt(toOpponent.x * toOpponent.x + toOpponent.y * toOpponent.y);
@@ -124,10 +132,10 @@ void BattleSystem::decide(ska::EntityId entity, FighterComponent& fighter) {
 	auto reach = 0;
 	for (auto index = 0u; index < 4; index++) {
 		const auto skillReadyNow = skillReady(index, entity);
-		if (skillReadyNow) {
+		if (skillReadyNow && skills[index].kind != SkillKind::Self) {
 			reach = std::max(reach, skills[index].range);
 		}
-		ready.push_back(skillReadyNow && pixels <= static_cast<double>(skills[index].range));
+		ready.push_back(skillReadyNow && (skills[index].kind == SkillKind::Self || pixels <= static_cast<double>(skills[index].range)));
 	}
 	const auto decision = m_rules.decide(bc.monster, distance, bc.hp, bc.maxHp, ready);
 	const auto intent = m_rules.move(bc.monster, static_cast<int>(pixels), reach, bc.hp, bc.maxHp);
@@ -180,6 +188,9 @@ void BattleSystem::refresh(unsigned int) {
 	if (m_stage.phase() == BattlePhase::Fight) {
 		for (const auto entity : getEntities()) {
 			auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+			if (fighter.controlledByAI && fighting(entity)) {
+				considerDodging(entity, fighter);
+			}
 			if (fighter.controlledByAI && m_time >= fighter.nextDecision) {
 				// A little irregular : the AI do not act at the same time
 				fighter.nextDecision = m_time + DecisionDelay + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
@@ -256,7 +267,12 @@ void BattleSystem::updateAttack(ska::EntityId entity, FighterComponent& fighter,
 	if (m_stage.phase() != BattlePhase::Fight || !fighting(entity) || !fighting(fighter.opponent)) {
 		return;
 	}
-	if (fighter.contactAttack) {
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[index];
+	if (skill.kind == SkillKind::Area || skill.kind == SkillKind::Self) {
+		area(index, entity, fighter);
+		fighter.release = FighterSystem::ReleaseDuration;
+		fighter.recovery = fighter.recoveryDuration;
+	} else if (fighter.contactAttack) {
 		fighter.lunge = LungeDuration;
 		contact(index, entity, fighter);
 	} else {
@@ -297,9 +313,7 @@ void BattleSystem::contact(unsigned int index, ska::EntityId entity, FighterComp
 	auto hit = BattleHit{};
 	hit.attacker = entity;
 	hit.target = target;
-	hit.power = skill.power;
-	hit.special = skill.special;
-	hit.knockback = skill.knockback;
+	hit.skill = &skill;
 	hit.direction = fighter.attackDirection;
 	const auto& targetHitbox = m_componentAccessor.get<ska::HitboxComponent>(target);
 	const auto reach = static_cast<float>(std::max(targetHitbox.width, targetHitbox.height)) / 2.F;
@@ -312,5 +326,91 @@ void BattleSystem::contact(unsigned int index, ska::EntityId entity, FighterComp
 		slash.position = hit.impact;
 		slash.value = skill.id;
 		m_stage.mark(slash);
+	}
+}
+
+void BattleSystem::area(unsigned int index, ska::EntityId entity, FighterComponent& fighter) {
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[index];
+	const auto origin = center(entity);
+	auto wave = BattleMark{};
+	wave.kind = BattleMark::Kind::Wave;
+	wave.position = origin;
+	wave.onPlayer = fighter.team == 0;
+	if (skill.kind == SkillKind::Self) {
+		// On itself only
+		wave.value = 40;
+		m_stage.mark(wave);
+		ApplySkillEffects(m_customEM, m_stage, skill, entity, 0);
+		SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " uses " << skill.name << " on itself";
+		return;
+	}
+	// Every fighter of the other side in its range, around it
+	wave.value = skill.range;
+	m_stage.mark(wave);
+	auto touched = 0;
+	for (const auto other : getEntities()) {
+		if (!fighting(other) || m_componentAccessor.get<FighterComponent>(other).team == fighter.team) {
+			continue;
+		}
+		const auto toOther = center(other) - origin;
+		const auto distance = std::sqrt(toOther.x * toOther.x + toOther.y * toOther.y);
+		if (distance > static_cast<float>(skill.range)) {
+			continue;
+		}
+		touched++;
+		if (skill.power > 0 || skill.fixedDamage > 0) {
+			auto hit = BattleHit{};
+			hit.attacker = entity;
+			hit.target = other;
+			hit.skill = &skill;
+			hit.direction = distance < 0.001F ? ska::Point<float>{ 1.F, 0.F } : ska::Point<float>{ toOther.x / distance, toOther.y / distance };
+			hit.impact = center(other);
+			ApplyBattleHit(m_customEM, m_ged, m_rules, m_stage, hit);
+		} else {
+			auto& target = m_componentAccessor.get<FighterComponent>(other);
+			if (target.invulnerable > 0) {
+				MarkText(m_customEM, m_stage, other, "ESQUIVE", 1);
+			} else if (target.guard > 0) {
+				MarkText(m_customEM, m_stage, other, "BLOQU\xC9", 1);
+			} else {
+				ApplySkillEffects(m_customEM, m_stage, skill, entity, other);
+			}
+		}
+	}
+	// The effects on itself, whatever it touched
+	if (skill.selfStages != std::array<int, 3>{} && (skill.power > 0 || skill.targetStages != std::array<int, 3>{} || !skill.status.empty())) {
+		auto selfOnly = skill;
+		selfOnly.targetStages = {};
+		selfOnly.status.clear();
+		ApplySkillEffects(m_customEM, m_stage, selfOnly, entity, 0);
+	}
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " uses " << skill.name << " around it : " << touched << " touched";
+}
+
+void BattleSystem::considerDodging(ska::EntityId entity, FighterComponent& fighter) {
+	// An attack of a fighter of the other side is coming (its startup, near enough) : the AI may dodge it, once
+	for (const auto other : getEntities()) {
+		if (!fighting(other)) {
+			continue;
+		}
+		const auto& enemy = m_componentAccessor.get<FighterComponent>(other);
+		if (enemy.team == fighter.team || enemy.windUp == 0 || enemy.pendingSkill < 0 || enemy.opponent != entity || fighter.dodgeChecked == other) {
+			continue;
+		}
+		const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(other).skills[static_cast<std::size_t>(enemy.pendingSkill)];
+		const auto toEnemy = center(other) - center(entity);
+		const auto distance = std::sqrt(toEnemy.x * toEnemy.x + toEnemy.y * toEnemy.y);
+		if (skill.kind == SkillKind::Self || distance > static_cast<float>(skill.range) + 60.F) {
+			continue;
+		}
+		fighter.dodgeChecked = other;
+		const auto& bc = m_componentAccessor.get<BattleComponent>(entity);
+		if (m_rules.dodge(bc.monster, static_cast<int>(enemy.windUp), bc.hp, bc.maxHp)) {
+			fighter.dodgeRequested = true;
+		}
+	}
+	// The attack is over : the next one of this enemy will be considered
+	if (fighter.dodgeChecked != 0 && (!fighting(fighter.dodgeChecked) || m_componentAccessor.get<FighterComponent>(fighter.dodgeChecked).windUp == 0)) {
+		fighter.dodgeChecked = 0;
 	}
 }

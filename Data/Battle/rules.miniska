@@ -27,15 +27,85 @@ experience = function(dropped: int, level: int) : int do
 	return dropped * level
 end
 
+# Types : how much a skill of a type hurts a Pokemon of a type (percents), when it is not 100
+chart = [:]: int
+relation = function(attack: string, defenders: string[], percent: int) do
+	defenders | (defender) do
+		chart[attack + ">" + defender] = percent
+	end
+end
+relation("Normal", ["Roche", "Acier"], 50)
+relation("Normal", ["Spectre"], 0)
+relation("Feu", ["Plante", "Glace", "Insecte", "Acier"], 200)
+relation("Feu", ["Feu", "Eau", "Roche", "Dragon"], 50)
+relation("Eau", ["Feu", "Sol", "Roche"], 200)
+relation("Eau", ["Eau", "Plante", "Dragon"], 50)
+relation("Plante", ["Eau", "Sol", "Roche"], 200)
+relation("Plante", ["Feu", "Plante", "Poison", "Vol", "Insecte", "Dragon", "Acier"], 50)
+relation("Electrique", ["Eau", "Vol"], 200)
+relation("Electrique", ["Electrique", "Plante", "Dragon"], 50)
+relation("Electrique", ["Sol"], 0)
+relation("Glace", ["Plante", "Sol", "Vol", "Dragon"], 200)
+relation("Glace", ["Feu", "Eau", "Glace", "Acier"], 50)
+relation("Combat", ["Normal", "Glace", "Roche", "Tenebres", "Acier"], 200)
+relation("Combat", ["Poison", "Vol", "Psy", "Insecte", "Fee"], 50)
+relation("Combat", ["Spectre"], 0)
+relation("Poison", ["Plante", "Fee"], 200)
+relation("Poison", ["Poison", "Sol", "Roche", "Spectre"], 50)
+relation("Poison", ["Acier"], 0)
+relation("Sol", ["Feu", "Electrique", "Poison", "Roche", "Acier"], 200)
+relation("Sol", ["Plante", "Insecte"], 50)
+relation("Sol", ["Vol"], 0)
+relation("Vol", ["Plante", "Combat", "Insecte"], 200)
+relation("Vol", ["Electrique", "Roche", "Acier"], 50)
+relation("Psy", ["Combat", "Poison"], 200)
+relation("Psy", ["Psy", "Acier"], 50)
+relation("Psy", ["Tenebres"], 0)
+relation("Insecte", ["Plante", "Psy", "Tenebres"], 200)
+relation("Insecte", ["Feu", "Combat", "Poison", "Vol", "Spectre", "Acier", "Fee"], 50)
+relation("Roche", ["Feu", "Glace", "Vol", "Insecte"], 200)
+relation("Roche", ["Combat", "Sol", "Acier"], 50)
+relation("Spectre", ["Psy", "Spectre"], 200)
+relation("Spectre", ["Tenebres"], 50)
+relation("Spectre", ["Normal"], 0)
+relation("Dragon", ["Dragon"], 200)
+relation("Dragon", ["Acier"], 50)
+relation("Dragon", ["Fee"], 0)
+relation("Tenebres", ["Psy", "Spectre"], 200)
+relation("Tenebres", ["Combat", "Tenebres", "Fee"], 50)
+relation("Acier", ["Glace", "Roche", "Fee"], 200)
+relation("Acier", ["Feu", "Eau", "Electrique", "Acier"], 50)
+relation("Fee", ["Combat", "Dragon", "Tenebres"], 200)
+relation("Fee", ["Feu", "Poison", "Acier"], 50)
+
+# Effectiveness of a skill of the type "skillType" on a Pokemon of the types "type1" and "type2" ("Aucun" : no second
+# type), in percents : 0 (no effect), 25, 50, 100, 200, 400
+effectiveness = function(skillType: string, type1: string, type2: string) : int do
+	percent = 100
+	[type1, type2] | (defender) do
+		key = skillType + ">" + defender
+		if chart.has(key)
+			percent = percent * chart[key] / 100
+		end
+	end
+	return percent
+end
+
 # Damage of a skill ("power" : [Particle] damage of the skill) hitting a Pokemon : "attack" of the attacker, "defense"
-# of the target (the special statistics for a special skill), "level" of the attacker. At least 2 damage when it has power
-damage = function(power: int, attack: int, defense: int, level: int) : int do
+# of the target (the special statistics for a special skill, their changes in the battle included), "level" of the
+# attacker, "effectiveness" of the type of the skill (percents), "stab" : the skill has a type of the attacker (+50%).
+# At least 1 damage when the skill has power and an effect
+damage = function(power: int, attack: int, defense: int, level: int, effectiveness: int, stab: bool) : int do
 	# A skill without power (ex : a status skill) does no damage
-	if power <= 0
+	if power <= 0 || effectiveness <= 0
 		return 0
 	end
 	if defense < 1
 		defense = 1
 	end
-	return (2 * level / 5 + 2) * power * attack / defense / 50 + 2
+	base = (2 * level / 5 + 2) * power * attack / defense / 12
+	if stab
+		base = base * 3 / 2
+	end
+	return Math.max(1, base * effectiveness / 100)
 end

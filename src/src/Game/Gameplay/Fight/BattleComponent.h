@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "Core/ECS/Component.h"
 #include "../Data/RawStatistics.h"
 
@@ -13,6 +14,9 @@ public:
 	int level = 1;
 	// Data/Monsters/<monster>.ini
 	int monster = 0;
+	// Its types ([Description] type1, type2 : "Aucun" when it has one type)
+	std::string type1 = "Normal";
+	std::string type2 = "Aucun";
 };
 
 SKA_DECLARE_COMPONENT(BattleComponent);

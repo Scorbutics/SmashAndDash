@@ -5,6 +5,7 @@
 #include "../BattleRules.h"
 #include "../BattleHit.h"
 #include "../FighterComponent.h"
+#include "../SkillsHolderComponent.h"
 
 SkillHitSystem::SkillHitSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage) :
 	System(em),
@@ -31,9 +32,10 @@ bool SkillHitSystem::touches(ska::EntityId skill, ska::EntityId target) {
 }
 
 void SkillHitSystem::hit(ska::EntityId skillEntity, SkillComponent& skill, ska::EntityId target) {
-	// The skill disappears after its hit (its range becomes 0 : removed by SkillRefreshSystem)
-	skill.spent = true;
-	skill.range = 0;
+	if (!m_entities.hasComponent<SkillsHolderComponent>(skill.battler)) {
+		return;
+	}
+	const auto& skills = m_entities.getComponent<SkillsHolderComponent>(skill.battler).skills;
 
 	// Where it touched, in which direction it pushes
 	const auto& skillPosition = m_componentAccessor.get<ska::PositionComponent>(skillEntity);
@@ -41,15 +43,20 @@ void SkillHitSystem::hit(ska::EntityId skillEntity, SkillComponent& skill, ska::
 	auto hit = BattleHit{};
 	hit.attacker = skill.battler;
 	hit.target = target;
-	hit.power = skill.power;
-	hit.special = skill.special;
-	hit.knockback = skill.knockback;
+	hit.skill = &skills[std::min<std::size_t>(skill.skillIndex, skills.size() - 1)];
 	hit.impact = ska::Point<float>{ static_cast<float>(skillPosition.x + skillHitbox.xOffset + static_cast<int>(skillHitbox.width) / 2),
 		static_cast<float>(skillPosition.y + skillHitbox.yOffset + static_cast<int>(skillHitbox.height) / 2) };
 	const auto direction = ska::Point<float>{ static_cast<float>(skill.target.x - skill.origin.x), static_cast<float>(skill.target.y - skill.origin.y) };
 	const auto length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 	hit.direction = length < 0.001F ? ska::Point<float>{} : ska::Point<float>{ direction.x / length, direction.y / length };
-	ApplyBattleHit(m_entities, m_ged, m_rules, m_stage, hit);
+	if (ApplyBattleHit(m_entities, m_ged, m_rules, m_stage, hit) < 0) {
+		// Dodged : it goes on (through this fighter)
+		skill.dodgedBy = target;
+		return;
+	}
+	// The skill disappears after its hit (its range becomes 0 : removed by SkillRefreshSystem)
+	skill.spent = true;
+	skill.range = 0;
 }
 
 void SkillHitSystem::refresh(unsigned int) {
@@ -68,11 +75,13 @@ void SkillHitSystem::refresh(unsigned int) {
 				continue;
 			}
 			const auto& fighter = m_entities.getComponent<FighterComponent>(target);
-			if (fighter.team == team || fighter.knockedOut || m_entities.getComponent<BattleComponent>(target).hp <= 0 || !touches(skillEntity, target)) {
+			if (fighter.team == team || target == skill.dodgedBy || fighter.knockedOut || m_entities.getComponent<BattleComponent>(target).hp <= 0 || !touches(skillEntity, target)) {
 				continue;
 			}
 			hit(skillEntity, skill, target);
-			break;
+			if (skill.spent) {
+				break;
+			}
 		}
 		// One hit at a time : the hit stop starts
 		if (m_stage.frozen()) {

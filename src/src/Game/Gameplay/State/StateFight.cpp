@@ -43,6 +43,8 @@ namespace {
 		fighter.speAttack = rules.stat(base("spe_attack"), level);
 		fighter.speDefense = rules.stat(base("spe_defense"), level);
 		fighter.speed = rules.stat(base("speed"), level);
+		fighter.type1 = data.exists("Description type1") ? data.get<std::string>("Description type1") : "Normal";
+		fighter.type2 = data.exists("Description type2") ? data.get<std::string>("Description type2") : "Aucun";
 		SLOG_STATIC(ska::LogLevel::Info, StateFight) << "Battle : pokemon " << monster << " level " << level << ", " << fighter.maxHp << " hit points";
 		return fighter;
 	}
@@ -119,6 +121,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	m_entityManager.addComponent<FighterComponent>(m_opponentId, std::move(opponentState));
 	createCompanions(rules);
 	m_stage.canFlee = m_canFlee;
+	m_stage.setSoundPlayer([this](BattleSound sound) { m_sounds.play(sound); });
 	trainerBlocks(false);
 
 	// The director first : it updates the time of the battle (hit stops) used by the others

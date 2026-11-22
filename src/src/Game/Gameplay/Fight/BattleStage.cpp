@@ -8,6 +8,8 @@ namespace {
 	constexpr unsigned int ImpactMarkLife = 220;
 	constexpr unsigned int SlashMarkLife = 240;
 	constexpr unsigned int TrailMarkLife = 180;
+	constexpr unsigned int TextMarkLife = 1100;
+	constexpr unsigned int WaveMarkLife = 350;
 }
 
 void BattleStage::update(unsigned int ellapsedTime) {
@@ -19,7 +21,15 @@ void BattleStage::update(unsigned int ellapsedTime) {
 		mark.age += ellapsedTime;
 	}
 	m_marks.erase(std::remove_if(m_marks.begin(), m_marks.end(), [](const BattleMark& mark) {
-		const auto life = mark.kind == BattleMark::Kind::Damage ? DamageMarkLife : (mark.kind == BattleMark::Kind::Slash ? SlashMarkLife : (mark.kind == BattleMark::Kind::Trail ? TrailMarkLife : ImpactMarkLife));
+		auto life = ImpactMarkLife;
+		switch (mark.kind) {
+		case BattleMark::Kind::Damage: life = DamageMarkLife; break;
+		case BattleMark::Kind::Slash: life = SlashMarkLife; break;
+		case BattleMark::Kind::Trail: life = TrailMarkLife; break;
+		case BattleMark::Kind::Text: life = TextMarkLife; break;
+		case BattleMark::Kind::Wave: life = WaveMarkLife; break;
+		default: break;
+		}
 		return mark.age >= life;
 	}), m_marks.end());
 

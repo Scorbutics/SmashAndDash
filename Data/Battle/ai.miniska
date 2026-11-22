@@ -74,3 +74,16 @@ move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int) : 
 	end
 	return aside()
 end
+
+# Dodges an attack coming ("startupLeft" : milliseconds before it goes) : sometimes, more often when it is hurt.
+# Too late (less than 80 ms) : it cannot
+dodge = function(monster: int, startupLeft: int, hp: int, maxHp: int) : bool do
+	if startupLeft < 80
+		return false
+	end
+	chance = 3
+	if hp * 3 < maxHp
+		chance = 2
+	end
+	return Engine.random(chance) == 0
+end

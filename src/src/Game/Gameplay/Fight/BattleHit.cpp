@@ -8,22 +8,63 @@
 #include "BattleRules.h"
 #include "BattleStage.h"
 #include "FighterComponent.h"
+#include "BattleEffects.h"
+#include "SkillDescriptor.h"
 #include "StatisticsChangeEvent.h"
 #include "System/FighterSystem.h"
 
 int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, const BattleHit& hit) {
-	if (!entities.hasComponent<BattleComponent>(hit.target) || !entities.hasComponent<FighterComponent>(hit.target)) {
+	if (hit.skill == nullptr || !entities.hasComponent<BattleComponent>(hit.target) || !entities.hasComponent<FighterComponent>(hit.target)) {
 		return 0;
 	}
+	const auto& skill = *hit.skill;
+	auto& fighter = entities.getComponent<FighterComponent>(hit.target);
+	// Dodging (the start of its dash) : nothing touches it
+	if (fighter.invulnerable > 0) {
+		MarkText(entities, stage, hit.target, "ESQUIVE", 1);
+		return -1;
+	}
+	// Protected : the hit does nothing
+	if (fighter.guard > 0) {
+		MarkText(entities, stage, hit.target, "BLOQU\xC9", 1);
+		stage.hitStop(40);
+		stage.sound(BattleSound::Guard);
+		return 0;
+	}
+
 	auto& defender = entities.getComponent<BattleComponent>(hit.target);
 	const auto* attacker = entities.hasComponent<BattleComponent>(hit.attacker) ? &entities.getComponent<BattleComponent>(hit.attacker) : nullptr;
-	const auto attack = attacker == nullptr ? 1 : (hit.special ? attacker->speAttack : attacker->attack);
-	const auto defense = hit.special ? defender.speDefense : defender.defense;
-	const auto damage = rules.damage(hit.power, attack, defense, attacker == nullptr ? 1 : attacker->level);
+	const auto* attackerFighter = entities.hasComponent<FighterComponent>(hit.attacker) ? &entities.getComponent<FighterComponent>(hit.attacker) : nullptr;
+	// The statistics with their changes in the battle ; a burn halves the physical attack
+	auto attack = attacker == nullptr ? 1.F : static_cast<float>(skill.special ? attacker->speAttack : attacker->attack);
+	if (attackerFighter != nullptr) {
+		attack *= StageMultiplier(attackerFighter->stages[StatAttack]);
+		if (attackerFighter->status == FighterStatus::Burn && !skill.special) {
+			attack *= 0.5F;
+		}
+	}
+	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * StageMultiplier(fighter.stages[StatDefense]);
+	const auto effectiveness = rules.effectiveness(skill.type, defender.type1, defender.type2);
+	const auto stab = attacker != nullptr && (skill.type == attacker->type1 || skill.type == attacker->type2);
+	const auto damage = skill.fixedDamage > 0 ? (effectiveness > 0 ? skill.fixedDamage : 0) :
+		rules.damage(skill.power, std::max(1, static_cast<int>(attack)), std::max(1, static_cast<int>(defense)), attacker == nullptr ? 1 : attacker->level, effectiveness, stab);
 	defender.hp -= damage;
-	auto& fighter = entities.getComponent<FighterComponent>(hit.target);
 	SLOG_STATIC(ska::LogLevel::Debug, BattleHit) << "Battle : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " is hit, "
-		<< damage << " damage, " << defender.hp << " / " << defender.maxHp << " hit points left";
+		<< damage << " damage, " << defender.hp << " / " << defender.maxHp << " hit points left (effectiveness " << effectiveness << "%)";
+	if (skill.power > 0 || skill.fixedDamage > 0) {
+		if (effectiveness == 0) {
+			MarkText(entities, stage, hit.target, "AUCUN EFFET", 0);
+		} else if (effectiveness > 100) {
+			MarkText(entities, stage, hit.target, "SUPER EFFICACE !", 2);
+		} else if (effectiveness < 100) {
+			MarkText(entities, stage, hit.target, "PEU EFFICACE...", 1);
+		}
+	}
+	// A hit wakes it up
+	if (damage > 0 && fighter.status == FighterStatus::Sleep) {
+		fighter.status = FighterStatus::None;
+		fighter.statusTime = 0;
+	}
 
 	// A hit during the startup of an attack cancels it (its cooldown is lost)
 	const auto strong = std::min(damage, 12);
@@ -32,9 +73,10 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	fighter.windUp = 0;
 	fighter.pendingSkill = -1;
 	if (damage > 0) {
+		stage.sound(strong >= 6 || effectiveness > 100 ? BattleSound::StrongHit : BattleSound::Hit);
 		fighter.stun = static_cast<unsigned int>(260 + strong * 15);
 		fighter.barShake = 320;
-		const auto push = 160.F + static_cast<float>(hit.knockback) * 9.F + static_cast<float>(strong) * 12.F;
+		const auto push = 160.F + static_cast<float>(skill.knockback) * 9.F + static_cast<float>(strong) * 12.F;
 		fighter.knockback = ska::Point<float>{ hit.direction.x * push, hit.direction.y * push };
 		stage.hitStop(static_cast<unsigned int>(60 + strong * 6));
 		stage.shake(180 + static_cast<unsigned int>(strong) * 10, std::max(2, std::min(9, 2 + strong / 2)));
@@ -60,6 +102,11 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	damageMark.value = damage;
 	damageMark.onPlayer = fighter.player;
 	stage.mark(damageMark);
+
+	// The effects of the skill (statistics, status) when it touched
+	if (effectiveness > 0) {
+		ApplySkillEffects(entities, stage, skill, hit.attacker, hit.target);
+	}
 
 	StatisticsChangeEvent event(hit.target, defender, hit.attacker);
 	ged.ska::Observable<StatisticsChangeEvent>::notifyObservers(event);

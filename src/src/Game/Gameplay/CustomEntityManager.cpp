@@ -33,6 +33,7 @@ ska::EntityId CustomEntityManager::createSkill(const SkillsHolderComponent& shc,
 	sc.knockback = sd.knockback;
 	sc.range = sd.range;
 	sc.spriteId = sd.id;
+	sc.skillIndex = index;
 	const auto maxNoise = sd.noise;
 	sc.noise = ska::NumberUtils::random(maxNoise/2, maxNoise);
 	sc.amplitude = sd.amplitude;

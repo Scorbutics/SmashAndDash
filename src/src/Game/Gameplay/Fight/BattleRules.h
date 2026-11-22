@@ -23,8 +23,12 @@ public:
 	int level(int experience, int experienceNeeded);
 	// Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon, "level" : its level)
 	int experience(int dropped, int level);
-	// Damage of a skill hitting a Pokemon
-	int damage(int power, int attack, int defense, int level);
+	// Damage of a skill hitting a Pokemon : "effectiveness" of its type (percents), "stab" : a type of the attacker
+	int damage(int power, int attack, int defense, int level, int effectiveness, bool stab);
+	// Effectiveness of a skill of a type on a Pokemon of two types (percents : 0, 25, 50, 100, 200, 400)
+	int effectiveness(const std::string& skillType, const std::string& type1, const std::string& type2);
+	// A Pokemon played by the AI dodges the attack coming ("startupLeft" : milliseconds before it goes)
+	bool dodge(int monster, int startupLeft, int hp, int maxHp);
 	// Skill used by a wild Pokemon (its index), -1 for none. "ready" : the skills it can use now
 	int decide(int monster, int distanceBlocks, int hp, int maxHp, const std::vector<bool>& ready);
 	// Movement of a Pokemon played by the AI : 0 holds, 1 approaches, 2 retreats, 3 and 4 sidestep (left, right).
@@ -35,6 +39,7 @@ public:
 
 private:
 	long call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback);
+	bool callBool(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, bool fallback);
 
 	ska::scripting::ScriptVM& m_vm;
 	std::string m_rulesFile;

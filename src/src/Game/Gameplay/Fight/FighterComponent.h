@@ -4,6 +4,18 @@
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 
+// A status : it hurts over time (poison, burn : its attack is halved too, leech : it heals the one who gave it), it slows
+// down and sometimes fails its skills (paralysis), it cannot act until it is hit or wakes up (sleep)
+enum class FighterStatus { None, Poison, Burn, Paralysis, Sleep, Leech };
+
+// The statistics changed in a battle (FighterComponent::stages)
+enum FighterStat { StatAttack = 0, StatDefense = 1, StatSpeed = 2 };
+
+// The multiplier of a statistic changed in a battle : 1.5, 2, 2.5 for +1, +2, +3 ; 0.67, 0.5, 0.4 for -1, -2, -3
+inline float StageMultiplier(int stage) {
+	return stage >= 0 ? (2.F + static_cast<float>(stage)) / 2.F : 2.F / (2.F - static_cast<float>(stage));
+}
+
 // What a fighter does now, decided by the battle AI (script) or by the player (keys)
 enum class FighterIntent {
 	Hold = 0,
@@ -52,6 +64,25 @@ public:
 	// Pushed back after a hit (pixels per second), applied when the hit stop ends, then slowed down
 	ska::Point<float> knockback;
 
+	// Its statistics changed by skills (stages, see FighterStat), and the time left of each change
+	std::array<int, 3> stages{};
+	std::array<unsigned int, 3> stageTime{};
+	// Its status, the time it lasts, the time until it hurts again, the fighter who gave it (leech)
+	FighterStatus status = FighterStatus::None;
+	unsigned int statusTime = 0;
+	unsigned int statusTick = 0;
+	ska::EntityId statusSource = 0;
+	// Protected (Abri) : the hits do nothing
+	unsigned int guard = 0;
+	// The dodge : a short dash (it cannot be hit at its start), then a delay before the next one
+	unsigned int dash = 0;
+	unsigned int invulnerable = 0;
+	unsigned int dashCooldown = 0;
+	ska::Point<float> dashDirection;
+	bool dodgeRequested = false;
+	// The attack of an opponent the AI already thought about dodging (its startup)
+	ska::EntityId dodgeChecked = 0;
+
 	// Hit points shown by its bar : they follow the real ones with a delay (the lost part stays visible a moment)
 	float shownHp = 0.F;
 	unsigned int hpDelay = 0;
@@ -61,7 +92,7 @@ public:
 	unsigned int outside = 0;
 
 	// Busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
-	bool busy() const { return knockedOut || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0; }
+	bool busy() const { return knockedOut || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || status == FighterStatus::Sleep; }
 };
 
 SKA_DECLARE_COMPONENT(FighterComponent);

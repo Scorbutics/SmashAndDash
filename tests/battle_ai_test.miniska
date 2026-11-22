@@ -23,4 +23,11 @@ run = function(args: string[]) do
 	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.Hold: string), "it stops sometimes (and changes its side)")
 	Engine.setNextRandom(1)
 	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.SidestepRight: string), "it turns on the other side")
+
+	# Dodges
+	Engine.setNextRandom(0)
+	Test.check(AI.dodge(16, 300, 10, 10), "it dodges an attack coming, sometimes")
+	Test.check(!AI.dodge(16, 50, 10, 10), "too late : it cannot dodge")
+	Engine.setNextRandom(1)
+	Test.check(!AI.dodge(16, 300, 10, 10), "it does not always dodge")
 end

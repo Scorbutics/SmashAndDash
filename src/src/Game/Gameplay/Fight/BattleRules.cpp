@@ -40,9 +40,30 @@ int BattleRules::experience(int dropped, int level) {
 		dropped * level)));
 }
 
-int BattleRules::damage(int power, int attack, int defense, int level) {
+int BattleRules::damage(int power, int attack, int defense, int level, int effectiveness, bool stab) {
+	const auto fallback = power <= 0 || effectiveness <= 0 ? 0 : std::max(1, power * effectiveness / 100);
 	return std::max(0, static_cast<int>(call(m_rulesFile, "damage", { ska::NodeValue{ static_cast<long>(power) }, ska::NodeValue{ static_cast<long>(attack) },
-		ska::NodeValue{ static_cast<long>(defense) }, ska::NodeValue{ static_cast<long>(level) } }, power)));
+		ska::NodeValue{ static_cast<long>(defense) }, ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(effectiveness) }, ska::NodeValue{ stab } }, fallback)));
+}
+
+int BattleRules::effectiveness(const std::string& skillType, const std::string& type1, const std::string& type2) {
+	return std::max(0, static_cast<int>(call(m_rulesFile, "effectiveness", { ska::NodeValue{ std::make_shared<std::string>(skillType) }, ska::NodeValue{ std::make_shared<std::string>(type1) }, ska::NodeValue{ std::make_shared<std::string>(type2) } }, 100)));
+}
+
+bool BattleRules::dodge(int monster, int startupLeft, int hp, int maxHp) {
+	return callBool(m_aiFile, "dodge", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(startupLeft) },
+		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) } }, false);
+}
+
+bool BattleRules::callBool(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, bool fallback) {
+	try {
+		return m_vm.call<bool>(file, function, std::move(arguments));
+	} catch (std::exception& e) {
+		if (m_reported.insert(file + function).second) {
+			SLOG_STATIC(ska::LogLevel::Error, BattleRules) << "Battle rule \"" << function << "\" (" << file << ") : " << e.what() << " : a default value is used";
+		}
+		return fallback;
+	}
 }
 
 int BattleRules::decide(int monster, int distanceBlocks, int hp, int maxHp, const std::vector<bool>& ready) {

@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <string>
 #include <vector>
 #include "Core/ECS/ECSDefines.h"
@@ -20,16 +21,21 @@ enum class BattlePhase {
 	Over
 };
 
+// The sounds of a battle (BattleSounds)
+enum class BattleSound { Cast, Hit, StrongHit, Guard, Status, Dash, KnockOut, Count };
+
 // A feedback drawn over the battle (in the world) : damage numbers, impacts
 struct BattleMark {
 	// Slash : the sprite of a contact skill where it hits ; Trail : where a projectile passed ("value" : the id of the
-	// sprite of the skill)
-	enum class Kind { Damage, Impact, Slash, Trail };
+	// sprite of the skill) ; Text : a word over a fighter ("value" : 0 neutral, 1 good for it, 2 bad for it) ; Wave : an
+	// area skill ("value" : its radius)
+	enum class Kind { Damage, Impact, Slash, Trail, Text, Wave };
 	Kind kind = Kind::Impact;
 	ska::Point<float> position;
 	int value = 0;
 	unsigned int age = 0;
 	bool onPlayer = false;
+	std::string text;
 };
 
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
@@ -60,6 +66,9 @@ public:
 	const std::vector<BattleMark>& marks() const { return m_marks; }
 
 	void shake(unsigned int duration, int intensity);
+	// A sound of the battle (played by the player given, nothing without one)
+	void sound(BattleSound sound) const { if (m_soundPlayer) { m_soundPlayer(sound); } }
+	void setSoundPlayer(std::function<void(BattleSound)> player) { m_soundPlayer = std::move(player); }
 	void setCamera(ska::CameraSystem* camera) { m_camera = camera; }
 	ska::CameraSystem* camera() const { return m_camera; }
 
@@ -84,4 +93,5 @@ private:
 	unsigned int m_bannerAge = 0;
 	std::vector<BattleMark> m_marks;
 	ska::CameraSystem* m_camera = nullptr;
+	std::function<void(BattleSound)> m_soundPlayer;
 };

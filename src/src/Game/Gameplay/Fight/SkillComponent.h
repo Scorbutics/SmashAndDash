@@ -40,6 +40,9 @@ public:
 	bool spent = false;
 	// Its sprite (Sprites/Fight/<id>.png), for its trail
 	int spriteId = 0;
+	// The skill used (its index in the skills of the Pokemon that used it), the fighter that dodged it (it goes through)
+	unsigned int skillIndex = 0;
+	ska::EntityId dodgedBy = 0;
 	unsigned int trailCount = 0;
 };
 

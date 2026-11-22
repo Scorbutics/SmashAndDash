@@ -35,6 +35,11 @@ public:
 
 	static constexpr unsigned int FlashDuration = 150;
 	static constexpr unsigned int ReleaseDuration = 140;
+	// The dodge : a dash of 0.2 s, it cannot be hit during 0.16 s, once every 0.9 s
+	static constexpr unsigned int DashDuration = 200;
+	static constexpr unsigned int DashInvulnerability = 160;
+	static constexpr unsigned int DashCooldown = 900;
+	static constexpr float DashSpeed = 620.F;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;
@@ -47,6 +52,8 @@ private:
 	void setVelocity(ska::EntityId entity, ska::Point<float> velocity);
 	void face(ska::EntityId entity, ska::Point<float> direction);
 	void draw(ska::EntityId entity, FighterComponent& fighter);
+	// The changes of its statistics and its status over time
+	void updateEffects(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);
 
 	ska::EntityManager& m_entities;
 	WorldState& m_worldState;
@@ -55,6 +62,8 @@ private:
 	ska::InputToggleContainer m_toggles;
 	ska::InputToggleContainer m_receivedToggles;
 	bool m_received = false;
+	bool m_dodgeKey = false;
+	unsigned int m_time = 0;
 	// The walk power of the Pokemon of the player (its InputComponent) : the keys move it through this system in a
 	// battle, its power is given back at the end
 	float m_playerPower = -1.F;

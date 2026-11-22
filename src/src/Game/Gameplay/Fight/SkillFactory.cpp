@@ -1,5 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillFactory.h"
+#include <algorithm>
+#include <vector>
 #include "Base/IO/Readers/IniReader.h"
 #include "SkillDescriptor.h"
 #include "SkillsHolderComponent.h"
@@ -60,6 +62,20 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 
 	sd.power = skillData.exists("Particle damage") ? skillData.get<int>("Particle damage") : -sd.buffEnemy.hp;
 	sd.contact = sd.style1 == "Contact" || sd.style2 == "Contact";
+	sd.kind = sd.contact ? SkillKind::Contact : (sd.style2 == "Area" ? SkillKind::Area : (sd.style2 == "Self" ? SkillKind::Self : SkillKind::Projectile));
+	// An area or self skill has no particle : it can be used all the same
+	if (sd.kind == SkillKind::Area || sd.kind == SkillKind::Self) {
+		sd.particleNumber = std::max(sd.particleNumber, 1);
+	}
+	const auto effect = [&skillData](const std::string& key, int fallback) {
+		return skillData.exists("Effects " + key) ? skillData.get<int>("Effects " + key) : fallback;
+	};
+	sd.targetStages = { effect("target_attack", 0), effect("target_defense", 0), effect("target_speed", 0) };
+	sd.selfStages = { effect("self_attack", 0), effect("self_defense", 0), effect("self_speed", 0) };
+	sd.status = skillData.exists("Effects status") ? skillData.get<std::string>("Effects status") : std::string{};
+	sd.statusChance = effect("status_chance", 100);
+	sd.effectDuration = static_cast<unsigned int>(effect("duration", 6000));
+	sd.fixedDamage = effect("fixed_damage", 0);
 	sd.showSprite = !skillData.exists("Particle show_sprite") || skillData.get<int>("Particle show_sprite") != 0;
 	sd.startup = skillData.exists("Stats startup") ? skillData.get<unsigned int>("Stats startup") : (sd.contact ? 200 : 250);
 	sd.recovery = skillData.exists("Stats recovery") ? skillData.get<unsigned int>("Stats recovery") : 250;
@@ -67,10 +83,19 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 }
 
 void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const {
-	for (unsigned int i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))) && i < shc.skills.size(); i++) {
-		if (reader.get<unsigned int>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i)) + "_level") <= m_level) {
-			createSkill(shc.skills[i], reader.get<std::string>("Skills " + ska::StringUtils::intToStr(static_cast<int>(i))));
+	// The last skills learned (up to 4) : the skills of its level and below, in the order they are learned
+	auto learned = std::vector<std::pair<unsigned int, std::string>>{};
+	for (auto i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)); i++) {
+		const auto levelKey = "Skills " + ska::StringUtils::intToStr(i) + "_level";
+		const auto level = reader.exists(levelKey) ? reader.get<unsigned int>(levelKey) : 1u;
+		if (level <= m_level) {
+			learned.emplace_back(level, reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
 		}
+	}
+	std::stable_sort(learned.begin(), learned.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
+	const auto first = learned.size() > shc.skills.size() ? learned.size() - shc.skills.size() : 0;
+	for (auto i = first; i < learned.size(); i++) {
+		createSkill(shc.skills[i - first], learned[i].second);
 	}
 
 	// Every Pokemon has Charge (the basic attack) : in the first slot that cannot be used in a battle

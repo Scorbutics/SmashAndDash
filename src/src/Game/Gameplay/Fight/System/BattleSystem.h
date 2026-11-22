@@ -57,6 +57,10 @@ private:
 	bool canAct(ska::EntityId fighter) const;
 	void createSkill(unsigned int index, ska::EntityId from);
 	void contact(unsigned int index, ska::EntityId entity, FighterComponent& fighter);
+	// An area skill (the fighters of the other side around it) or a self skill (itself)
+	void area(unsigned int index, ska::EntityId entity, FighterComponent& fighter);
+	// The AI may dodge an attack coming (its script decides)
+	void considerDodging(ska::EntityId entity, FighterComponent& fighter);
 	void updateAttack(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);
 	// The fighter played with the keys (0 : none, ex : the AI plays both)
 	ska::EntityId playedByKeys() const;

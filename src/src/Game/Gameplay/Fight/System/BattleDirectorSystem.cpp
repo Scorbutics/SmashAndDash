@@ -105,6 +105,7 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 					fighter.knockedOutTime = 0;
 					m_stage.hitStop(180);
 					m_stage.shake(260, 7);
+					m_stage.sound(BattleSound::KnockOut);
 					SLOG(ska::LogLevel::Info) << "Battle : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " is K.O.";
 				}
 				if (!fighter.knockedOut && fighter.team >= 0 && fighter.team < 2) {
