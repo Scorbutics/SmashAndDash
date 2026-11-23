@@ -9,7 +9,7 @@
       "Bash(ska-run:*)",
       "Bash(ska-console:*)"
     ],
-    "deny": [
+    "ask": [
       "Bash(tools/web/serve.sh:*)"
     ]
   }
