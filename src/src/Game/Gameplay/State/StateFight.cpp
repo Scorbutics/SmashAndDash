@@ -116,7 +116,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	auto opponentState = FighterComponent{};
 	opponentState.team = 1;
 	opponentState.opponent = m_pokemonId;
-	opponentState.controlledByAI = true;
+	// SAD_BATTLE_PASSIVE (environment) : the wild Pokemon do nothing (to test a battle : moving around, the drawing)
+	opponentState.controlledByAI = std::getenv("SAD_BATTLE_PASSIVE") == nullptr;
 	// The AI of the fighters do not decide at the same time
 	opponentState.nextDecision = 150;
 	m_entityManager.addComponent<FighterComponent>(m_opponentId, std::move(opponentState));
@@ -245,7 +246,7 @@ void StateFight::createCompanions(BattleRules& rules) {
 		auto state = FighterComponent{};
 		state.team = 1;
 		state.opponent = m_pokemonId;
-		state.controlledByAI = true;
+		state.controlledByAI = std::getenv("SAD_BATTLE_PASSIVE") == nullptr;
 		state.nextDecision = static_cast<unsigned long>(150 + 90 * index);
 		m_entityManager.addComponent<FighterComponent>(companion, std::move(state));
 		m_companions.push_back(companion);

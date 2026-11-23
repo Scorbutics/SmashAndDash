@@ -72,6 +72,10 @@
 	var Module = {
 		canvas: canvas,
 		preRun: [() => {
+			// The parameters of the page named SAD_... are the environment of the game (ex : ?SAD_BATTLE_PASSIVE=1)
+			for (const [name, value] of new URLSearchParams(location.search)) {
+				if (name.startsWith("SAD_")) Module.ENV[name] = value;
+			}
 			const fs = Module.FS;
 			fs.mkdir(STORED);
 			fs.mount(Module.IDBFS, {}, STORED);

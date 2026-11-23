@@ -67,12 +67,13 @@ constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
 // sorted by their position on the ground). A hop stays on the ground.
 // A tile of the top layer hides the characters whose sprite ends above its depth line, TopLayerDepth pixels under its
 // top (the sprite of a character ends CharacterFeetMargin pixels under its feet, its feet cannot go further inside a
-// wall : CustomEntityManager PhysicsBox) : the characters behind it. A character standing on a block under a tile of
-// the top layer (ex : under the tip of a tree, behind the tree) is sorted one block behind (WorldState) : it is hidden
-// by the tile ; beside the tile (on another block of the same row), it is drawn over it.
+// wall : CustomEntityManager PhysicsBox) : the characters behind it. A character whose feet (CharacterFeetHalfWidth
+// on each side of its middle) are all under the drawing of a tile of the top layer (ex : under the tip of a tree,
+// behind the tree) is sorted behind it (WorldState) ; beside it, it is drawn over it.
 constexpr int TopLayerDepth = 16;
 constexpr int TopLayerPriority = TopLayerDepth;
 constexpr long CharacterFeetMargin = 8;
+constexpr long CharacterFeetHalfWidth = 12;
 constexpr long AirHeight = 48;
 constexpr int AirPriority = 25000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)

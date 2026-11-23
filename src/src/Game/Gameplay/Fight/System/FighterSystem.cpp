@@ -141,7 +141,8 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 	auto move = ska::Point<float>{};
 	if (canMove) {
 		if (!fighter.controlledByAI) {
-			move = keysDirection();
+			// The keys move the Pokemon of the player ; a wild Pokemon without its AI (SAD_BATTLE_PASSIVE) stays
+			move = fighter.player ? keysDirection() : ska::Point<float>{};
 		} else {
 			switch (fighter.intent) {
 			case FighterIntent::Approach: move = toOpponent; break;

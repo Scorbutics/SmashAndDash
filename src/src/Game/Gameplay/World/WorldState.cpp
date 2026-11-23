@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "Graphic/System/GraphicSystem.h"
+#include "Graphic/Texture.h"
 #include "Graphic/System/ShadowSystem.h"
 #include "Graphic/System/AnimationSystem.h"
 #include "Graphic/System/DeleterSystem.h"
@@ -122,6 +123,22 @@ const std::string& WorldState::getTilesetName() const {
 	return m_tileset->getName();
 }
 
+bool WorldState::tileDrawnAt(const ska::Tile& tile, const long x, const long y) {
+	if (m_tilesetPixelsName != getTilesetName()) {
+		m_tilesetPixels.load32(getTilesetName() + ".png");
+		m_tilesetPixelsName = getTilesetName();
+	}
+	const auto size = static_cast<long>(m_tileset->getTileSize());
+	const auto* surface = m_tilesetPixels.getInstance();
+	const auto pixelX = tile.id.x * size + x;
+	const auto pixelY = tile.id.y * size + y;
+	if (surface == nullptr || pixelX < 0 || pixelY < 0 || pixelX >= surface->w || pixelY >= surface->h) {
+		return true;
+	}
+	const auto color = m_tilesetPixels.getPixel32Color(static_cast<int>(pixelX), static_cast<int>(pixelY));
+	return color.a != 0 && !(color.r == ska::Texture::DEFAULT_T_RED && color.g == ska::Texture::DEFAULT_T_GREEN && color.b == ska::Texture::DEFAULT_T_BLUE);
+}
+
 bool WorldState::loadedOnce() const{
 	return m_loadedOnce;
 }
@@ -233,22 +250,31 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	m_graphicSystem = graphicSystem.get();
 	// The characters in the air are drawn over the tree tops, the hops stay on the ground (Utils/IDs.h)
 	graphicSystem->setAirLayer(AirHeight, AirPriority);
-	// A character standing under tiles of the top layer of the map (ex : behind a tree, under its tip ; pushed into its
-	// foliage by a hit) is sorted behind them all (the tiles over its feet, up to the first block without one) ; beside
-	// them (on another block), it is drawn over them
+	// A character whose feet are under the drawing of tiles of the top layer of the map (ex : behind a tree, under its
+	// tip ; pushed into its foliage by a hit) is sorted behind all the tiles over its feet (up to the first block without
+	// one) ; beside them (on another block, by the transparent corner of the tip), it is drawn over them
 	graphicSystem->setSpriteDepth([this](const long x, const long bottom) {
 		const auto& collisions = getWorld().getCollisionProfile();
 		const auto blockSize = static_cast<long>(collisions.getBlockSize());
 		const auto feet = bottom - CharacterFeetMargin;
-		if (collisions.layers() == 0 || x < 0 || feet < 0 || blockSize == 0) {
+		if (collisions.layers() == 0 || feet < 0 || blockSize == 0) {
 			return 0;
 		}
 		const auto top = collisions.layers() - 1;
-		const auto column = static_cast<std::size_t>(x / blockSize);
-		auto row = feet / blockSize;
-		if (collisions.getBlock(top, column, static_cast<std::size_t>(row)) == nullptr) {
+		// A tile of the top layer is drawn at this point of the map
+		const auto drawnAt = [&](const long pointX) {
+			if (pointX < 0) {
+				return false;
+			}
+			const auto* tile = collisions.getBlock(top, static_cast<std::size_t>(pointX / blockSize), static_cast<std::size_t>(feet / blockSize));
+			return tile != nullptr && tileDrawnAt(*tile, pointX % blockSize, feet % blockSize);
+		};
+		// The whole width of the feet : half of them behind the edge of a tree, the character is beside it
+		if (!drawnAt(x) || !drawnAt(x - CharacterFeetHalfWidth) || !drawnAt(x + CharacterFeetHalfWidth)) {
 			return 0;
 		}
+		const auto column = static_cast<std::size_t>(x / blockSize);
+		auto row = feet / blockSize;
 		while (row > 0 && collisions.getBlock(top, column, static_cast<std::size_t>(row - 1)) != nullptr) {
 			row--;
 		}
