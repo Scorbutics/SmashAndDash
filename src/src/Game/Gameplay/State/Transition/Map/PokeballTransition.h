@@ -27,4 +27,7 @@ private:
 	const ska::EntityId& m_pokemonId;
     CustomEntityManager& m_entityManager;
     std::optional<ska::Point<int>> m_destination;
+    // When the pokeball was thrown, when it opened (ticks, 0 : not yet)
+    unsigned int m_thrownAt = 0;
+    unsigned int m_openedAt = 0;
 };

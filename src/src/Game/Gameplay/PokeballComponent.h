@@ -19,6 +19,9 @@ public:
 	ska::Point<int> finalPos;
 	unsigned int speed;
 
+	// The pokeball landed and opened (the Pokemon comes out)
+	bool opened() const { return isOpenning; }
+
 private:
 	/* Parabolic coeffs */
 	float a;

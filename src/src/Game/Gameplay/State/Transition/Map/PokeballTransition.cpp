@@ -5,6 +5,14 @@
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "../../../PokeballComponent.h"
 #include "Graphic/GraphicComponent.h"
+#include "Core/Utils/TimeUtils.h"
+
+namespace {
+	// The Pokemon comes out this long after the pokeball opened (its vortex shows)
+	constexpr unsigned int AppearDelay = 700;
+	// The longest throw : the Pokemon comes out anyway (the battle never waits for a lost pokeball)
+	constexpr unsigned int MaxDuration = 4000;
+}
 
 PokeballTransition::PokeballTransition(unsigned int, CustomEntityManager& em, const ska::EntityId& destinationEntity, const ska::EntityId& sourceEntity, ska::EntityId& pokeballHolder, std::optional<ska::Point<int>> destination) :
 	ska::Task(std::bind(&PokeballTransition::run, this, std::placeholders::_1)),
@@ -37,9 +45,20 @@ bool PokeballTransition::run(ska::Task&){
 		pokePc.x += hc.xOffset + hc.width / 2;
 		pokePc.y += hc.yOffset + hc.height / 2;
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokeball, std::move(pokePc));
+		m_thrownAt = ska::TimeUtils::getTicks();
 
 		return true;
 	}
-	// Continue until pokeball is still visible
-	return m_entityManager.hasComponent<PokeballComponent>(m_pokeball);
+	// Until the pokeball opened, and the Pokemon appears
+	const auto now = ska::TimeUtils::getTicks();
+	if (!m_entityManager.hasComponent<PokeballComponent>(m_pokeball) || now - m_thrownAt >= MaxDuration) {
+		return false;
+	}
+	if (!m_entityManager.getComponent<PokeballComponent>(m_pokeball).opened()) {
+		return true;
+	}
+	if (m_openedAt == 0) {
+		m_openedAt = now;
+	}
+	return now - m_openedAt < AppearDelay;
 }

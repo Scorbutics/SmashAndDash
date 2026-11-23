@@ -73,11 +73,14 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 }
 
 namespace {
-	// The physics shape of a character : at the center of a block when its position is on the corner of the block (as
-	// placed by the maps and the teleports) : on the blocks, it does not touch the walls on their edges
+	// The physics shape of a character (physicsShapeOffset) : on the blocks, it does not touch the walls on their edges ;
+	// its feet are never drawn inside a wall under it (a character moving freely, ex : in a battle), so the top layer of
+	// the maps (TopLayerDepth) hides it only when it is behind
 	ska::Rectangle PhysicsBox(const ska::HitboxComponent& hitbox) {
 		constexpr auto blockSize = 48;
-		return { (blockSize - static_cast<int>(hitbox.width)) / 2, (blockSize - static_cast<int>(hitbox.height)) / 2, static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) };
+		const auto size = ska::Point<int>{ static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) };
+		const auto offset = CustomEntityManager::physicsShapeOffset(size, blockSize);
+		return { offset.x, offset.y, size.x, size.y };
 	}
 }
 
@@ -113,6 +116,10 @@ ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska
 	fillCharacter(em, space, trainer);
 	
 	return trainer;
+}
+
+ska::Point<int> CustomEntityManager::physicsShapeOffset(const ska::Point<int> shapeSize, const int blockSize) {
+	return { (blockSize - shapeSize.x) / 2, blockSize - shapeSize.y - 1 };
 }
 
 void CustomEntityManager::place(ska::EntityManager& em, ska::cp::Space& space, ska::EntityId entity, ska::Point<float> position) {

@@ -23,6 +23,9 @@ public:
 
 	// Moves an entity (pixels) with its physics body, when it has one
 	static void place(ska::EntityManager& em, ska::cp::Space& space, ska::EntityId entity, ska::Point<float> position);
+	// Where the physics shape of a character (its size) is in its block, from the position of the character (the corner of
+	// the block) : centered horizontally, at the bottom of the block (under its feet), 1 pixel away from the block under it
+	static ska::Point<int> physicsShapeOffset(ska::Point<int> shapeSize, int blockSize);
 	static ska::EntityId createCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");
 	// A character moved by forces (inputs, AI movements) : its physics body has a control body, as the trainer
 	static ska::EntityId createMovingCharacterNG(CustomEntityManager& em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const int id, const unsigned int worldBlockSize, const std::string& name = "");

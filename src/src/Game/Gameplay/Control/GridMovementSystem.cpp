@@ -69,15 +69,16 @@ std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId ent
 		return ska::Point<float>{ std::round(position.x / blockSize) * blockSize + vector.x * blockSize, std::round(position.y / blockSize) * blockSize + vector.y * blockSize };
 	}
 
-	// On a block, the physics shape of the character is at the center of the block (it does not touch the walls on the
-	// edges of the block, ex : the water, that starts surfing when touched)
+	// On a block, the physics shape of the character does not touch the walls on the edges of the block (ex : the water,
+	// that starts surfing when touched)
 	auto& space = m_worldState.getSpace();
 	// The shape box comes from the position (the physics shape follows it one physics step late while walking) :
-	// the shape is built at the center of the block whose corner is the position (CustomEntityManager)
+	// the shape is built in the block whose corner is the position (CustomEntityManager::physicsShapeOffset)
 	const auto physicsShape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
 	const auto shapeSize = ska::Point<float>{ static_cast<float>(std::round(physicsShape.r - physicsShape.l)), static_cast<float>(std::round(physicsShape.t - physicsShape.b)) };
-	const auto shapeLeft = static_cast<float>(position.x) + std::floor((blockSize - shapeSize.x) / 2.F);
-	const auto shapeBottom = static_cast<float>(position.y) + std::floor((blockSize - shapeSize.y) / 2.F);
+	const auto offset = CustomEntityManager::physicsShapeOffset(ska::Point<int>{ static_cast<int>(shapeSize.x), static_cast<int>(shapeSize.y) }, static_cast<int>(blockSize));
+	const auto shapeLeft = static_cast<float>(position.x) + static_cast<float>(offset.x);
+	const auto shapeBottom = static_cast<float>(position.y) + static_cast<float>(offset.y);
 	const auto shape = cpBBNew(shapeLeft, shapeBottom, shapeLeft + shapeSize.x, shapeBottom + shapeSize.y);
 	// From the block it is on, to the next one
 	const auto block = ska::Point<float>{ std::round(static_cast<float>(position.x) / blockSize), std::round(static_cast<float>(position.y) / blockSize) };

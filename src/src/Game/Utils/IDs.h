@@ -61,13 +61,20 @@
 constexpr int WorldInterfacePriority = GUI_DEFAULT_DISPLAY_PRIORITY - 10;
 // Drawings over the world, zoomed with it (ex : the damage of the battles)
 constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
-// The drawing order of the world, from the bottom : the characters on the ground (their priority : their position,
-// 0 to the height of the map), the top layer of the maps (tree tops, roofs, tops of furniture : the "T" layer, over the
-// characters on the ground as the classic games), the characters in the air (ex : flying, AirHeight pixels high or more,
+// The drawing order of the world, from the bottom : the ground layers of the maps, then the characters on the ground and
+// the top layer of the maps (tree tops, roofs : the "T" layer) sorted together by their position (0 to the height of the
+// map, the bottom of a sprite : its feet), then the characters in the air (ex : flying, AirHeight pixels high or more,
 // sorted by their position on the ground). A hop stays on the ground.
-constexpr int TopLayerPriority = 20000;
+// A tile of the top layer hides the characters whose sprite ends above its depth line, TopLayerDepth pixels under its
+// top (the sprite of a character ends CharacterFeetMargin pixels under its feet, its feet cannot go further inside a
+// wall : CustomEntityManager PhysicsBox) : the characters behind it. A character standing on a block under a tile of
+// the top layer (ex : under the tip of a tree, behind the tree) is sorted one block behind (WorldState) : it is hidden
+// by the tile ; beside the tile (on another block of the same row), it is drawn over it.
+constexpr int TopLayerDepth = 16;
+constexpr int TopLayerPriority = TopLayerDepth;
+constexpr long CharacterFeetMargin = 8;
 constexpr long AirHeight = 48;
-constexpr int AirPriority = TopLayerPriority + 5000;
+constexpr int AirPriority = 25000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)
 constexpr int FogPriority = WorldOverlayPriority - 2;
 constexpr int WeatherPriority = WorldOverlayPriority - 1;

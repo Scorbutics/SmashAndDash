@@ -5,6 +5,7 @@
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "../Fight/BattleEvent.h"
+#include "../PokeballComponent.h"
 #include "../World/WorldState.h"
 #include "../CustomEntityManager.h"
 #include "Physic/Space.h"
@@ -42,8 +43,14 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, ska::InputComponent{ **m_ic });
 		*m_ic = nullptr;
 
+		// The Pokemon comes out where the pokeball is (where the trainer is, when it is not there anymore)
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
-		auto& pc = m_entityManager.getComponent<ska::PositionComponent>(m_pokeball);
+		auto pc = m_entityManager.hasComponent<ska::PositionComponent>(m_pokeball) ? m_entityManager.getComponent<ska::PositionComponent>(m_pokeball) :
+			m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
+		// The opened pokeball goes away : the Pokemon is out
+		if (m_entityManager.hasComponent<PokeballComponent>(m_pokeball)) {
+			m_entityManager.removeEntity(m_pokeball);
+		}
 		m_pokeball = 0;
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 

@@ -233,6 +233,28 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	m_graphicSystem = graphicSystem.get();
 	// The characters in the air are drawn over the tree tops, the hops stay on the ground (Utils/IDs.h)
 	graphicSystem->setAirLayer(AirHeight, AirPriority);
+	// A character standing under tiles of the top layer of the map (ex : behind a tree, under its tip ; pushed into its
+	// foliage by a hit) is sorted behind them all (the tiles over its feet, up to the first block without one) ; beside
+	// them (on another block), it is drawn over them
+	graphicSystem->setSpriteDepth([this](const long x, const long bottom) {
+		const auto& collisions = getWorld().getCollisionProfile();
+		const auto blockSize = static_cast<long>(collisions.getBlockSize());
+		const auto feet = bottom - CharacterFeetMargin;
+		if (collisions.layers() == 0 || x < 0 || feet < 0 || blockSize == 0) {
+			return 0;
+		}
+		const auto top = collisions.layers() - 1;
+		const auto column = static_cast<std::size_t>(x / blockSize);
+		auto row = feet / blockSize;
+		if (collisions.getBlock(top, column, static_cast<std::size_t>(row)) == nullptr) {
+			return 0;
+		}
+		while (row > 0 && collisions.getBlock(top, column, static_cast<std::size_t>(row - 1)) != nullptr) {
+			row--;
+		}
+		// Sorted as a character whose sprite ends at the top of the highest of these tiles (above their depth line)
+		return static_cast<int>(row * blockSize - bottom);
+	});
 	addGraphic(std::move(graphicSystem));
 
 	auto shadowSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, *m_cameraSystem);
