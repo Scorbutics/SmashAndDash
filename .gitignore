@@ -48,5 +48,9 @@ CMakeCache.txt
 # Compiled shaders (src/shaders)
 /Shaders/
 
-# The web build (tools/web/build.sh)
+# The build (cmake -S . -B build) and the web build (tools/web/build.sh)
+/build/
 /build-web/
+
+# tools/web/sad-web (npm install --prefix tools/web)
+/tools/web/node_modules/
