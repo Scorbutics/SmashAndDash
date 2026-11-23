@@ -231,6 +231,8 @@ void WorldState::beforeLoad(ska::State* lastState) {
 
 	auto graphicSystem = std::make_unique<ska::GraphicSystem>(m_entityManager, m_eventDispatcher, *m_cameraSystem);
 	m_graphicSystem = graphicSystem.get();
+	// The characters in the air are drawn over the tree tops, the hops stay on the ground (Utils/IDs.h)
+	graphicSystem->setAirLayer(AirHeight, AirPriority);
 	addGraphic(std::move(graphicSystem));
 
 	auto shadowSystem = std::make_unique<ska::ShadowSystem>(m_entityManager, *m_cameraSystem);

@@ -61,9 +61,13 @@
 constexpr int WorldInterfacePriority = GUI_DEFAULT_DISPLAY_PRIORITY - 10;
 // Drawings over the world, zoomed with it (ex : the damage of the battles)
 constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
-// The top layer of the maps (tree tops, roofs, tops of furniture : the "T" layer) is drawn over the characters (their
-// priority : their position, 0 to the height of the map, more in the air), as the classic games
+// The drawing order of the world, from the bottom : the characters on the ground (their priority : their position,
+// 0 to the height of the map), the top layer of the maps (tree tops, roofs, tops of furniture : the "T" layer, over the
+// characters on the ground as the classic games), the characters in the air (ex : flying, AirHeight pixels high or more,
+// sorted by their position on the ground). A hop stays on the ground.
 constexpr int TopLayerPriority = 20000;
+constexpr long AirHeight = 48;
+constexpr int AirPriority = TopLayerPriority + 5000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)
 constexpr int FogPriority = WorldOverlayPriority - 2;
 constexpr int WeatherPriority = WorldOverlayPriority - 1;
