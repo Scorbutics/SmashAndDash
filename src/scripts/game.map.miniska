@@ -1,8 +1,13 @@
 # Maps : teleportation, blocks, map effects : Map = import "bind:game.map"
 # Directions : 0 down, 1 right, 2 up, 3 left (4 to 7 : diagonals)
 
-# Goes to a map, at a block position
+# Name of the current map (ex : "Town")
+name = function() : string do return "" end
+
+# Goes to a map, at a block position (the map changes during a screen transition : waitTransition waits for its end)
 teleport = function(map: string, x: int, y: int) do end
+# Waits until the screen transition (a map change) is over
+waitTransition = function() do end
 
 # Block an entity is on
 blockX = function(entity: int) : int do return 0 end

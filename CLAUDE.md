@@ -1,5 +1,7 @@
 # Smash & Dash
 
+How to reach the running game (launch, remote eval in skalang, screenshots, replays): @AGENTS.md
+
 Pokémon fan game with real time battles, built on the ska engine (`external/ska`, with skalang in `external/ska/external/skalang`). The game is a library (`libGame`) loaded by the engine launcher `ska_main`.
 
 ## Build and run

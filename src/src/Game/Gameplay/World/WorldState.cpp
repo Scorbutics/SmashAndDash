@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 #include "Graphic/System/GraphicSystem.h"
 #include "Graphic/Texture.h"
 #include "Graphic/System/ShadowSystem.h"
@@ -70,7 +71,7 @@ ska::TilesetPtr BuildTileset(unsigned int tileSize, const ska::TilesetLoader& lo
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
 	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
 	m_settings(settings), 
-	m_saveManager(em, ed, "save1"),
+	m_saveManager(em, ed, DefaultSaveName()),
 	m_bag(ed),
 	m_worldBGM(DEFAULT_BGM), 
 	m_eventDispatcher(ed),
@@ -88,6 +89,12 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	// Scripts can hide a character (Engine.disableComponent(character, "GraphicComponent"))
 	m_engineScriptModule->registerComponent<ska::GraphicComponent>("GraphicComponent");
 	m_gameScriptModules = std::make_unique<GameScriptModules>(*m_scripts, m_entityManager, m_eventDispatcher, *this);
+	// The code sent to the development console (tools/ska-console eval) sees the game modules, under their usual names
+	for (const auto* prelude : { "GameDialog = import \"bind:game.dialog\"", "Character = import \"bind:game.character\"",
+		"Map = import \"bind:game.map\"", "Party = import \"bind:game.party\"", "Interface = import \"bind:game.interface\"",
+		"Battle = import \"bind:game.battle\"", "Save = import \"bind:game.save\"", "Bag = import \"bind:game.inventory\"" }) {
+		m_scripts->addConsolePrelude(prelude);
+	}
 	m_battleRules = std::make_unique<BattleRules>(*m_scripts);
 	m_scripts->declareEvent("battle.won");
 	m_scripts->declareEvent("battle.lost");
@@ -95,7 +102,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_scripts->declareEvent(InputHooks::Action);
 	m_scripts->declareEvent(InputHooks::Jump);
 
-	ska::IniReader reader("./Data/Saves/" + m_saveManager.getPathName() + "/trainer.ini");
+	ska::IniReader reader(SaveDirectory() + m_saveManager.getPathName() + "/trainer.ini");
 
 	m_posHero.x = reader.get<int>("Trainer start_posx");
 	m_posHero.y = reader.get<int>("Trainer start_posy");
@@ -320,7 +327,7 @@ void WorldState::beforeLoad(ska::State* lastState) {
 }
 
 void WorldState::afterLoad(ska::State* lastState) {
-	m_saveManager.loadGame("save1");
+	m_saveManager.loadGame(DefaultSaveName());
 	m_bag.load(m_saveManager.getPathName());
 }
 

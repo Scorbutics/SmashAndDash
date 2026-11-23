@@ -426,6 +426,18 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 	GameScriptModule(vm, "map") {
 	const auto& handles = worldState.getEntityHandles();
 
+	m_builder.bindField("name", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ std::make_shared<std::string>(worldState.getMapName()) };
+	});
+
+	// Waits until the screen transition (the fade of a map change) is over : at once when there is none
+	m_builder.bindField("waitTransition", [&vm, &worldState](std::vector<ska::NodeValue>) {
+		if (worldState.getFade().running()) {
+			vm.suspendUntil([&worldState]() { return !worldState.getFade().running(); });
+		}
+		return ska::NodeValue{};
+	});
+
 	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
 		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
@@ -521,6 +533,15 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 
 	m_builder.bindField("size", [&worldState](std::vector<ska::NodeValue>) {
 		return ska::NodeValue{ static_cast<long>(Team{ worldState.getSaveGame().getPathName() }.size()) };
+	});
+
+	m_builder.bindField("species", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
+		if (!pokemon.has_value()) {
+			return ska::NodeValue{ std::make_shared<std::string>() };
+		}
+		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+		return ska::NodeValue{ std::make_shared<std::string>(data.exists("Description name") ? data.get<std::string>("Description name") : std::to_string(pokemon->id)) };
 	});
 
 	m_builder.bindField("hp", [&worldState](std::vector<ska::NodeValue> params) {

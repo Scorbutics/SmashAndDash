@@ -17,6 +17,7 @@ public:
 
 	std::string getSaveName() const override;
 	int getGameVariable(const std::string& x) const override;
+	std::vector<std::pair<std::string, int>> getGameVariables() const override;
 	
 	void setGameVariable(const std::string& x, int value) override;
 

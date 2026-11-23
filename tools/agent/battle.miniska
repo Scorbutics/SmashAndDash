@@ -1,0 +1,14 @@
+# Starts a battle against a wild Pokemon and waits for its end. Usage : ska-console run tools/agent/battle.miniska <monster id> <level>
+# Unattended : the run started with --env SAD_BATTLE_AUTOPLAY=1 (the AI plays the Pokemon of the player too)
+Dev = import "bind:ska.dev"
+Battle = import "bind:game.battle"
+Party = import "bind:game.party"
+
+run = function(args: string[]) do
+	if args.size() != 2
+		Dev.reply("usage : battle.miniska <monster id> <level> (Data/Monsters/<id>.ini)")
+		return
+	end
+	won = Battle.start((args[0]: int), (args[1]: int))
+	Dev.reply("won=" + (won: string) + " fled=" + (Battle.lastFled(): string) + " hp=" + (Party.hp(0): string))
+end

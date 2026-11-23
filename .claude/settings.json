@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tools/sad-run:*)",
+      "Bash(tools/doctor:*)",
+      "Bash(tools/web/sad-web:*)",
+      "Bash(external/ska/tools/ska-run:*)",
+      "Bash(external/ska/tools/ska-console:*)",
+      "Bash(ska-run:*)",
+      "Bash(ska-console:*)"
+    ],
+    "deny": [
+      "Bash(tools/web/serve.sh:*)"
+    ]
+  }
+}

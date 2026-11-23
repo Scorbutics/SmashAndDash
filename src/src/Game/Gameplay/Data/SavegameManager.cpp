@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -24,6 +25,12 @@ void SavegameManager::newGame() {
 	m_pathname = "new_game.ini";
 }
 
+
+std::vector<std::pair<std::string, int>> SavegameManager::getGameVariables() const {
+	auto variables = std::vector<std::pair<std::string, int>>{ m_game_variables.begin(), m_game_variables.end() };
+	std::sort(variables.begin(), variables.end());
+	return variables;
+}
 
 int SavegameManager::getGameVariable(const std::string& x) const {
 	const auto search = m_game_variables.find(x);
@@ -52,13 +59,13 @@ void SavegameManager::loadGame(const std::string& pathname) {
 	loadPokemonTeam();
 	loadVariables();
 
-	std::ofstream tmpScriptList(("./Data/Saves/" + m_pathname + "/tmpscripts.data").c_str(), std::ios::trunc);
+	std::ofstream tmpScriptList((SaveDirectory() + m_pathname + "/tmpscripts.data").c_str(), std::ios::trunc);
 }
 
 // variables.ini : the [Variable] section, "name=value" (the numbered variables of the old scripts are named "%00001"...)
 void SavegameManager::loadVariables() {
 	m_game_variables.clear();
-	auto file = std::ifstream{ "./Data/Saves/" + m_pathname + "/variables.ini" };
+	auto file = std::ifstream{ SaveDirectory() + m_pathname + "/variables.ini" };
 	auto line = std::string{};
 	auto inVariables = false;
 	while (std::getline(file, line)) {
@@ -87,7 +94,7 @@ void SavegameManager::saveVariables() const {
 		names.push_back(variable.first);
 	}
 	std::sort(names.begin(), names.end());
-	auto file = std::ofstream{ "./Data/Saves/" + m_pathname + "/variables.ini", std::ios::trunc };
+	auto file = std::ofstream{ SaveDirectory() + m_pathname + "/variables.ini", std::ios::trunc };
 	file << "[Game]\nvar_number=" << names.size() << "\n[Variable]\n";
 	for (const auto& name : names) {
 		file << name << "=" << m_game_variables.at(name) << "\n";
@@ -98,7 +105,7 @@ void SavegameManager::loadPokemonTeam() {
 	ska::IniReader pkmnReader;
 	unsigned int index = 0;
 
-	const auto basePath = "./Data/Saves/" + m_pathname + "/Team/";
+	const auto basePath = SaveDirectory() + m_pathname + "/Team/";
 
 	do {
 		const std::string& id = ska::StringUtils::intToStr(index);
@@ -135,7 +142,7 @@ const std::string& SavegameManager::getPathName() {
 
 
 void SavegameManager::saveTrainer(const std::string& mapName, int blockX, int blockY) {
-	const auto path = "./Data/Saves/" + m_pathname;
+	const auto path = SaveDirectory() + m_pathname;
 	ska::FileUtils::createDirectory(path);
 	ska::FileUtils::createDirectory(path + "/Team");
 	// The other keys (ex : the items) are kept
@@ -149,7 +156,7 @@ void SavegameManager::saveTrainer(const std::string& mapName, int blockX, int bl
 
 void SavegameManager::loadTrainer() {
 
-	ska::IniReader reader("./Data/Saves/" + m_pathname + "/trainer.ini");
+	ska::IniReader reader(SaveDirectory() + m_pathname + "/trainer.ini");
 
 	m_startMapName = reader.get<std::string>("Trainer start_map_name");
 

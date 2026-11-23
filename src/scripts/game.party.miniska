@@ -6,6 +6,8 @@ addPokemon = function(id: int) : bool do return false end
 # The team is saved as it changes. "index" : the place of a Pokemon in the team (0 to 5)
 # Number of Pokemon in the team
 size = function() : int do return 0 end
+# Name of the species of a Pokemon of the team ("" when there is no Pokemon at this index)
+species = function(index: int) : string do return "" end
 # Hit points left of a Pokemon of the team (0 : knocked out, or no Pokemon at this index)
 hp = function(index: int) : int do return 0 end
 # Level of a Pokemon of the team (from its experience, battle rules), 0 when there is no Pokemon at this index

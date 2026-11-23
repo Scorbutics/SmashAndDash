@@ -1,0 +1,206 @@
+#!/usr/bin/env node
+// sad-web : the web build of Smash & Dash (tools/web/build.sh) in a headless browser, for an agent.
+//
+//   tools/web/sad-web up <id> [--env SAD_X=1]... [--build build-web] [--frames N] [--timeout S]
+//       serves <build>/game/bin on 127.0.0.1 (a free port), opens it in headless Chromium (a fresh profile : its own
+//       IndexedDB saves), the SAD_... environment in the URL ; ready once the game has drawn N frames (default 60)
+//   tools/web/sad-web shot <id> <name>            the page's canvas as <run>/shots/<name>.png
+//   tools/web/sad-web press <id> <key> [ms]       a key of the keyboard (Playwright names : Enter, KeyW, Digit1, Space...)
+//   tools/web/sad-web console <id> [--grep RE] [--tail N]   the console of the page (the game's logs, errors)
+//   tools/web/sad-web eval <id> <js>              a JavaScript expression in the page (ex : Module.skaFrames)
+//   tools/web/sad-web down <id> | ps
+// Needs : npm install --prefix tools/web (Playwright) ; a web build (tools/web/build.sh).
+// Runs : $SAD_WEB_RUNS (default /tmp/sad-web-<uid>/<id>) : control.sock, console.log, shots/, run.json.
+import { spawn } from "node:child_process";
+import fs from "node:fs";
+import http from "node:http";
+import net from "node:net";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const RUNS = process.env.SAD_WEB_RUNS || `/tmp/sad-web-${process.getuid()}`;
+const runDir = (id) => {
+	if (!/^[A-Za-z0-9_.-]+$/.test(id)) fail(`bad run id ${JSON.stringify(id)}`);
+	return path.join(RUNS, id);
+};
+
+function fail(message, code = 2) {
+	console.log(JSON.stringify({ ok: false, error: message }));
+	process.exit(code);
+}
+
+function alive(pid) {
+	try { process.kill(pid, 0); return true; } catch (e) { return e.code === "EPERM"; }
+}
+
+function request(id, message, timeoutMs = 60000) {
+	const sock = path.join(runDir(id), "control.sock");
+	return new Promise((resolve, reject) => {
+		const client = net.createConnection(sock);
+		let data = "";
+		const timer = setTimeout(() => { client.destroy(); reject(new Error("no answer")); }, timeoutMs);
+		client.on("connect", () => client.write(JSON.stringify(message) + "\n"));
+		client.on("data", (chunk) => { data += chunk; });
+		client.on("end", () => { clearTimeout(timer); try { resolve(JSON.parse(data)); } catch (e) { reject(e); } });
+		client.on("error", (e) => { clearTimeout(timer); reject(e); });
+	});
+}
+
+const TYPES = { ".html": "text/html", ".js": "text/javascript", ".wasm": "application/wasm", ".data": "application/octet-stream", ".png": "image/png", ".ico": "image/x-icon" };
+
+// The daemon : the static server, the browser, the control socket
+async function daemon(id, options) {
+	const folder = runDir(id);
+	const { chromium } = await import("playwright");
+	const site = path.resolve(options.build, "game/bin");
+	const server = http.createServer((req, res) => {
+		const url = new URL(req.url, "http://127.0.0.1");
+		const file = path.join(site, decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname));
+		if (!file.startsWith(site) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); res.end(); return; }
+		res.writeHead(200, { "Content-Type": TYPES[path.extname(file)] || "application/octet-stream", "Cache-Control": "no-store" });
+		fs.createReadStream(file).pipe(res);
+	});
+	await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+	const port = server.address().port;
+	const query = new URLSearchParams(options.env).toString();
+	const pageUrl = `http://127.0.0.1:${port}/${query ? "?" + query : ""}`;
+
+	const consoleLog = fs.createWriteStream(path.join(folder, "console.log"));
+	const browser = await chromium.launch({ headless: true, args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
+	const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+	const page = await context.newPage();
+	page.on("console", (m) => consoleLog.write(`[${m.type()}] ${m.text()}\n`));
+	page.on("pageerror", (e) => consoleLog.write(`[pageerror] ${e.message}\n`));
+	await page.goto(pageUrl);
+
+	const stop = async () => {
+		await browser.close().catch(() => {});
+		server.close();
+		fs.rmSync(path.join(folder, "control.sock"), { force: true });
+		process.exit(0);
+	};
+	const control = net.createServer((socket) => {
+		let data = "";
+		socket.on("data", async (chunk) => {
+			data += chunk;
+			if (!data.includes("\n")) return;
+			const message = JSON.parse(data.split("\n")[0]);
+			let answer;
+			try {
+				if (message.action === "status") {
+					answer = { ok: true, url: pageUrl, frames: await page.evaluate(() => (window.Module && Module.skaFrames) || 0) };
+				} else if (message.action === "shot") {
+					const file = path.join(folder, "shots", `${message.name.replace(/\.png$/, "")}.png`);
+					await page.locator("#canvas").screenshot({ path: file });
+					answer = { ok: true, path: file, frames: await page.evaluate(() => (window.Module && Module.skaFrames) || 0) };
+				} else if (message.action === "press") {
+					await page.locator("#canvas").focus();
+					await page.keyboard.down(message.key);
+					await page.waitForTimeout(message.ms || 100);
+					await page.keyboard.up(message.key);
+					answer = { ok: true, pressed: message.key };
+				} else if (message.action === "eval") {
+					answer = { ok: true, value: await page.evaluate(message.code) };
+				} else if (message.action === "down") {
+					socket.end(JSON.stringify({ ok: true, stopped: id }) + "\n");
+					await stop();
+					return;
+				} else {
+					answer = { ok: false, error: `unknown action ${message.action}` };
+				}
+			} catch (e) {
+				answer = { ok: false, error: String(e.message || e) };
+			}
+			socket.end(JSON.stringify(answer) + "\n");
+		});
+	});
+	control.listen(path.join(folder, "control.sock"));
+	process.on("SIGTERM", stop);
+}
+
+async function up(id, args) {
+	const folder = runDir(id);
+	const record = path.join(folder, "run.json");
+	if (fs.existsSync(record) && alive(JSON.parse(fs.readFileSync(record)).pid)) fail(`run ${id} is alive : sad-web down ${id}`);
+	fs.rmSync(folder, { recursive: true, force: true });
+	fs.mkdirSync(path.join(folder, "shots"), { recursive: true });
+	const env = {};
+	let build = path.join(ROOT, "build-web"), frames = 60, timeout = 120;
+	for (let i = 0; i < args.length; i++) {
+		if (args[i] === "--env") { const [k, ...v] = args[++i].split("="); env[k] = v.join("="); }
+		else if (args[i] === "--build") build = path.resolve(args[++i]);
+		else if (args[i] === "--frames") frames = Number(args[++i]);
+		else if (args[i] === "--timeout") timeout = Number(args[++i]);
+		else fail(`unknown option ${args[i]}`);
+	}
+	if (!fs.existsSync(path.join(build, "game/bin/index.html"))) fail(`no web build in ${build} : tools/web/build.sh first`);
+	for (const key of Object.keys(env)) if (!key.startsWith("SAD_")) fail(`--env ${key} : the page passes only SAD_... variables to the game`);
+	const log = fs.openSync(path.join(folder, "daemon.log"), "w");
+	const child = spawn(process.execPath, [fileURLToPath(import.meta.url), "__daemon", id, JSON.stringify({ build, env })],
+		{ detached: true, stdio: ["ignore", log, log] });
+	child.unref();
+	fs.writeFileSync(record, JSON.stringify({ run: id, pid: child.pid, build, env, started: Date.now() }));
+	const started = Date.now();
+	let status = null;
+	while (Date.now() - started < timeout * 1000) {
+		if (!alive(child.pid)) fail(`the browser daemon exited : ${fs.readFileSync(path.join(folder, "daemon.log"), "utf8").slice(-800)}`, 1);
+		try {
+			status = await request(id, { action: "status" }, 5000);
+			if (status.ok && status.frames >= frames) break;
+		} catch (e) { /* not yet */ }
+		await new Promise((r) => setTimeout(r, 250));
+	}
+	if (!status || status.frames < frames) fail(`not ready after ${timeout} s (frames : ${status ? status.frames : "none"}) : sad-web console ${id}`, 1);
+	console.log(JSON.stringify({ run: id, url: status.url, frames: status.frames, ready_ms: Date.now() - started, folder }));
+}
+
+async function main() {
+	const [action, id, ...rest] = process.argv.slice(2);
+	if (action === "__daemon") return daemon(id, JSON.parse(rest[0]));
+	if (!action || action === "--help" || action === "-h") {
+		console.log(fs.readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").filter((l) => l.startsWith("//")).map((l) => l.slice(3)).join("\n"));
+		return;
+	}
+	if (action === "ps") {
+		if (!fs.existsSync(RUNS)) return;
+		for (const name of fs.readdirSync(RUNS)) {
+			const file = path.join(RUNS, name, "run.json");
+			if (!fs.existsSync(file)) continue;
+			const r = JSON.parse(fs.readFileSync(file));
+			console.log(`${r.run}  pid ${r.pid}  ${alive(r.pid) ? "up" : "stopped"}  ${JSON.stringify(r.env)}`);
+		}
+		return;
+	}
+	if (!id) fail(`${action} : a run id`);
+	if (action === "up") return up(id, rest);
+	if (action === "console") {
+		const file = path.join(runDir(id), "console.log");
+		if (!fs.existsSync(file)) fail(`no run ${id}`);
+		let lines = fs.readFileSync(file, "utf8").split("\n").filter(Boolean);
+		const grep = rest.indexOf("--grep"), tail = rest.indexOf("--tail");
+		if (grep >= 0) { const re = new RegExp(rest[grep + 1]); lines = lines.filter((l) => re.test(l)); }
+		lines = lines.slice(-(tail >= 0 ? Number(rest[tail + 1]) : 50));
+		console.log(lines.length ? lines.join("\n") : "(no lines)");
+		return;
+	}
+	const message = action === "shot" ? { action, name: rest[0] || "shot" }
+		: action === "press" ? { action, key: rest[0], ms: Number(rest[1] || 100) }
+		: action === "eval" ? { action, code: rest.join(" ") }
+		: { action };
+	if (action === "down") {
+		const file = path.join(runDir(id), "run.json");
+		if (!fs.existsSync(file)) fail(`no run ${id}`);
+		const { pid } = JSON.parse(fs.readFileSync(file));
+		try { await request(id, message, 10000); } catch (e) { if (alive(pid)) process.kill(pid, "SIGTERM"); }
+		for (let i = 0; i < 50 && alive(pid); i++) await new Promise((r) => setTimeout(r, 100));
+		console.log(JSON.stringify({ run: id, stopped: !alive(pid) }));
+		return;
+	}
+	let answer;
+	try { answer = await request(id, message); } catch (e) { fail(`cannot reach run ${id} (${e.message}) : sad-web ps`); }
+	console.log(JSON.stringify(answer));
+	process.exit(answer.ok ? 0 : 1);
+}
+
+main();

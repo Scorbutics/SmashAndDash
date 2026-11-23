@@ -1,0 +1,9 @@
+{
+  "name": "smash-and-dash-web-tools",
+  "private": true,
+  "description": "tools/web/sad-web : the web build in a headless browser (npm install --prefix tools/web)",
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.62.1"
+  }
+}

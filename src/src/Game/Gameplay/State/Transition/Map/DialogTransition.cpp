@@ -4,6 +4,9 @@
 #include "../../../CustomEntityManager.h"
 #include "../../../Data/DialogEvent.h"
 #include "Base/Task/Task.h"
+#include <cstdlib>
+#include "Core/Utils/TimeUtils.h"
+#include "Core/Dev/DevConsole.h"
 
 DialogTransition::DialogTransition(unsigned int, CustomEntityManager& em, PokemonGameEventDispatcher& ged, const ska::EntityId& trainerId, const std::string& message) :
 	ska::Task([&](ska::Task&) {
@@ -15,7 +18,14 @@ DialogTransition::DialogTransition(unsigned int, CustomEntityManager& em, Pokemo
 			auto closed = m_closed;
 			dialog.onClose = [closed](bool) { *closed = true; };
 			m_eventDispatcher.ska::Observable<DialogEvent>::notifyObservers(dialog);
+			m_shownAt = ska::TimeUtils::getTicks();
 			return true;
+		}
+		// SAD_BATTLE_AUTOPLAY : nobody plays, the message is closed after a moment as if the action key was pressed
+		static const auto autoplay = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
+		if (autoplay && !m_autoClosed && !*m_closed && ska::TimeUtils::getTicks() - m_shownAt >= AutoplayMessageDelay) {
+			m_autoClosed = true;
+			ska::DevConsole::get().press("Return", 2);
 		}
 		// Until the player closes the dialog
 		return !*m_closed;

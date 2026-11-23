@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 #include "Bag.h"
 #include <algorithm>
 #include <fstream>
@@ -12,7 +13,7 @@ Bag::Bag(PokemonGameEventDispatcher& ged) :
 void Bag::load(const std::string& saveName) {
 	m_saveName = saveName;
 	m_items.clear();
-	const auto reader = ska::IniReader{ "./Data/Saves/" + saveName + "/trainer.ini" };
+	const auto reader = ska::IniReader{ SaveDirectory() + saveName + "/trainer.ini" };
 	for (auto index = 0; reader.exists("Items " + std::to_string(index) + "_id"); index++) {
 		const auto key = "Items " + std::to_string(index);
 		const auto amount = reader.exists(key + "_amount") ? reader.get<int>(key + "_amount") : 0;
@@ -26,7 +27,7 @@ void Bag::save() {
 	if (m_saveName.empty()) {
 		return;
 	}
-	const auto path = "./Data/Saves/" + m_saveName + "/trainer.ini";
+	const auto path = SaveDirectory() + m_saveName + "/trainer.ini";
 	// The other keys (the trainer position...) are kept
 	auto reader = ska::IniReader{ path };
 	for (auto index = std::size_t{ 0 }; index < m_items.size(); index++) {

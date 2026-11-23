@@ -1,0 +1,34 @@
+#!/bin/sh
+# sad-run : runs Smash & Dash unattended (the engine's ska-run, with the game's options), from a copy of a save.
+#
+#   tools/sad-run up <id> [--save NAME] [--build DIR] [ska-run options : --seed N --fixed-step --env K=V --display ...]
+#       --save NAME   the save it starts from, copied in the run folder (default save1 ; new_game, fixtures/<name>...) :
+#                     the saves of the repository (Data/Saves) are never written
+#       --build DIR   the build directory (default build)
+#   tools/sad-run down|ps|logs|path|rm ...   as external/ska/tools/ska-run
+# Then : external/ska/tools/ska-console eval 'Map.teleport("Town", 12, 8)' , run tools/agent/<script>.miniska ...
+set -eu
+ROOT=$(cd "$(dirname "$0")/.." && pwd)
+SKA_RUN="$ROOT/external/ska/tools/ska-run"
+if [ "${1:-}" != "up" ]; then
+	exec "$SKA_RUN" "$@"
+fi
+shift
+[ $# -ge 1 ] || { echo "sad-run up <id> [--save NAME] [--build DIR] [ska-run options]" >&2; exit 2; }
+ID=$1; shift
+SAVE=save1
+BUILD="$ROOT/build"
+REST=""
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--save) SAVE=$2; shift 2 ;;
+		--build) BUILD=$(cd "$2" && pwd); shift 2 ;;
+		*) REST="$REST $(printf '%s' "$1" | sed "s/'/'\\\\''/g; s/^/'/; s/\$/'/")"; shift ;;
+	esac
+done
+[ -d "$ROOT/Data/Saves/$SAVE" ] || { echo "sad-run: no save Data/Saves/$SAVE" >&2; exit 2; }
+[ -x "$BUILD/bin/ska_main" ] || { echo "sad-run: no $BUILD/bin/ska_main (cmake --build build)" >&2; exit 2; }
+eval "set -- $REST"
+exec "$SKA_RUN" up "$ID" --cwd "$ROOT" --ready eval \
+	--copy "Data/Saves/$SAVE:Saves/$SAVE" --env "SAD_SAVE_DIR={run}/Saves" --env "SAD_SAVE=$SAVE" \
+	--env "LD_LIBRARY_PATH=$BUILD/lib" "$@" -- "$BUILD/bin/ska_main"

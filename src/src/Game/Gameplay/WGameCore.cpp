@@ -125,5 +125,6 @@ int WGameCore::onException(ska::GenericException& e) {
 	SLOG(ska::LogLevel::Error) << e.what();
 	ska::MessagePopup(ska::MessageType::Enum::Error, "Uncaught exception occured", e.what(), nullptr);
 
-	return 0;
+	// The process fails : a launcher (tools/ska-run) sees the error
+	return 1;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <random>
+#include "Base/Values/Numbers/NumberUtils.h"
 #include "Core/ECS/System.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
@@ -88,5 +89,6 @@ private:
 	// The last step was refused by a wall (not a character)
 	mutable bool m_bumped = false;
 	BlockOccupants m_occupants;
-	std::mt19937 m_random { std::random_device{}() };
+	// Seeded from the engine seed (SKA_SEED : the same moves at each run)
+	std::mt19937 m_random { ska::NumberUtils::newSeed() };
 };

@@ -25,4 +25,8 @@ private:
     CustomEntityManager& m_entityManager;
     PokemonGameEventDispatcher& m_eventDispatcher;
 	std::shared_ptr<bool> m_closed = std::make_shared<bool>(false);
+	// SAD_BATTLE_AUTOPLAY : the message closes by itself
+	static constexpr unsigned int AutoplayMessageDelay = 1500;
+	unsigned int m_shownAt = 0;
+	bool m_autoClosed = false;
 };

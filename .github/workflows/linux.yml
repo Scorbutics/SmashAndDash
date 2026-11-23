@@ -19,7 +19,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git cmake make g++ \
-            libsdl3-dev libsdl3-image-dev libsdl3-ttf-dev glslang-tools
+            libsdl3-dev libsdl3-image-dev libsdl3-ttf-dev glslang-tools python3 xvfb xauth mesa-vulkan-drivers
 
       - uses: actions/checkout@v4
         with:
@@ -33,3 +33,9 @@ jobs:
       - name: Script tests
         working-directory: build
         run: ctest --output-on-failure --timeout 300
+
+      # The agent tools against the real game (tools/doctor : ska-run, ska-console, the agent scripts), on a virtual display
+      - name: Agent tools (doctor)
+        env:
+          SDL_AUDIO_DRIVER: dummy
+        run: tools/doctor build

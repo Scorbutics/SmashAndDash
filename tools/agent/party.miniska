@@ -1,0 +1,12 @@
+# The team of the player : species, level, hit points. Usage : ska-console run tools/agent/party.miniska
+Dev = import "bind:ska.dev"
+Party = import "bind:game.party"
+
+run = function(args: string[]) do
+	Dev.reply((Party.size(): string) + " pokemon")
+	for(i = 0
+	i < Party.size()
+	i = i + 1) do
+		Dev.reply("#" + (i: string) + " " + Party.species(i) + " lv" + (Party.level(i): string) + " hp " + (Party.hp(i): string))
+	end
+end

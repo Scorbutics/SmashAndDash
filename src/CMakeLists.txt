@@ -56,6 +56,9 @@ set(GAME_SCRIPT_MODULES
 	${GAME_ROOT_DIR}/Data/Battle/rules.miniska
 	${GAME_ROOT_DIR}/Data/Battle/ai.miniska)
 file(GLOB_RECURSE GAME_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/Levels/*.miniska ${GAME_ROOT_DIR}/Resources/*.miniska)
+# The agent scripts (run by tools/ska-console : tools/agent of the game and of the engine)
+file(GLOB AGENT_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/tools/agent/*.miniska ${GAME_ROOT_DIR}/external/ska/tools/agent/*.miniska)
+list(APPEND GAME_SCRIPTS ${AGENT_SCRIPTS})
 list(REMOVE_ITEM GAME_SCRIPTS ${GAME_SCRIPT_MODULES})
 skalang_check_scripts(smash_and_dash_scripts_check
 	SCRIPTS ${GAME_SCRIPTS}

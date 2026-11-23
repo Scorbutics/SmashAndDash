@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 #include "Team.h"
 #include <fstream>
 #include "Base/IO/Readers/IniReader.h"
@@ -7,7 +8,7 @@
 #include <algorithm>
 
 Team::Team(std::string saveName) :
-	m_directory("./Data/Saves/" + std::move(saveName) + "/Team/") {
+	m_directory(SaveDirectory() + std::move(saveName) + "/Team/") {
 }
 
 std::string Team::file(int index) const {

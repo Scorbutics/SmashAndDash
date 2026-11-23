@@ -1,0 +1,79 @@
+#!/bin/sh
+# doctor : runs the usage examples of the agent tools against the real game, so they fail loudly the day the game changes
+# under them. Needs a build (cmake --build build) and Xvfb. Usage : tools/doctor [build directory, default build]
+#   - tools/sad-run up/down : a run from a copy of save1, ready (console + skalang)
+#   - ska-console : ping, eval (expression, statements), run tools/agent/*.miniska, shot, press, pause/step
+#   - the saves of the repository are not written ; the logs of the run are in its folder
+#   - tools/web/sad-web, when a web build (build-web) and Playwright (tools/web/node_modules) are there
+set -eu
+ROOT=$(cd "$(dirname "$0")/.." && pwd)
+BUILD=$(cd "${1:-$ROOT/build}" && pwd)
+PATH="$ROOT/external/ska/tools:$PATH"
+RUN=doctor-$$
+FAILED=0
+check() {
+	# check <name> <expected text> <command...>
+	name=$1; expected=$2; shift 2
+	if out=$("$@" 2>&1) && printf '%s' "$out" | grep -q -- "$expected"; then
+		echo "ok    $name"
+	else
+		echo "FAIL  $name : $* -> $out"
+		FAILED=1
+	fi
+}
+check_fails() {
+	# check_fails <name> <expected text> <command...> : the command fails (exit 1), with the expected error
+	name=$1; expected=$2; shift 2
+	if out=$("$@" 2>&1); then
+		echo "FAIL  $name : $* succeeded -> $out"
+		FAILED=1
+	elif printf '%s' "$out" | grep -q -- "$expected"; then
+		echo "ok    $name"
+	else
+		echo "FAIL  $name : $* -> $out"
+		FAILED=1
+	fi
+}
+cd "$ROOT"
+saves_before=$(find Data/Saves -type f -exec md5sum {} + | sort)
+trap 'tools/sad-run down $RUN >/dev/null 2>&1 || true' EXIT
+
+check "sad-run up (save1)" '"ready_ms"' tools/sad-run up $RUN --save save1 --build "$BUILD"
+check "ping" '"evaluator": true' ska-console --run $RUN ping
+check "eval expression" '"value": "4"' ska-console --run $RUN eval '2 + 2'
+check "eval statements that wait" '"value": "waited"' ska-console --run $RUN eval 'Engine.wait(200)
+Dev.reply("waited")'
+check_fails "eval compile error (line of the code)" 'l.1, c.6) Symbol not found : Nope' ska-console --run $RUN eval 'Nope.call()'
+check "map name (game prelude)" '"value": "greencity"' ska-console --run $RUN eval 'Map.name()'
+check "state" 'states=WorldState' ska-console --run $RUN run external/ska/tools/agent/state.miniska
+check "entities" 'trainer' ska-console --run $RUN run external/ska/tools/agent/entities.miniska trainer
+check "party" 'pokemon' ska-console --run $RUN run tools/agent/party.miniska
+check "story-step" '"ok": true' ska-console --run $RUN run tools/agent/story-step.miniska
+check "warp" 'spore_ville (12,8)' ska-console --run $RUN run tools/agent/warp.miniska spore_ville 12 8
+check "shot" '"w": ' ska-console --run $RUN shot doctor
+check "press" '"pressed"' ska-console --run $RUN press D 10
+check "pause" 'paused' ska-console --run $RUN pause
+check "step" '"frames": 5' ska-console --run $RUN step 5
+check "resume" 'resumed' ska-console --run $RUN resume
+check "logs in the run folder" 'Random seed' ska-run logs $RUN --grep 'Random seed'
+check "sad-run down" '"exit": 0' tools/sad-run down $RUN
+trap - EXIT
+tools/sad-run rm $RUN >/dev/null 2>&1 || true
+
+if [ "$(find Data/Saves -type f -exec md5sum {} + | sort)" = "$saves_before" ]; then
+	echo "ok    the saves of the repository are untouched"
+else
+	echo "FAIL  the run wrote into Data/Saves"
+	FAILED=1
+fi
+
+if [ -f "$ROOT/build-web/game/bin/index.html" ] && [ -d "$ROOT/tools/web/node_modules/playwright" ]; then
+	WEB=doctor-web-$$
+	check "sad-web up" '"frames"' tools/web/sad-web up $WEB --env SAD_BATTLE_PASSIVE=1
+	check "sad-web shot" '"path"' tools/web/sad-web shot $WEB start
+	check "sad-web eval" '"value"' tools/web/sad-web eval $WEB 'Module.skaFrames'
+	check "sad-web down" '"stopped":true' tools/web/sad-web down $WEB
+else
+	echo "skip  sad-web (no build-web, or npm install --prefix tools/web)"
+fi
+exit $FAILED
