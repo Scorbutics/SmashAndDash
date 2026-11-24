@@ -97,5 +97,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 15 28 2 Levels/teleport.miniska, w_room_22, 11, 9
 12 22 1 Levels/sign.miniska, Hameau Châtaigne¤Les feuilles y tombent toute l'année.
 4 19 1 Levels/sign.miniska, Hameau Châtaigne¤Les feuilles y tombent toute l'année.
-0 0 0 Levels/item.miniska, place, 0, 27, 36, item_w_5_6_27_36
+0 0 0 Levels/item.miniska, place, 2, 27, 33, item_w_5_6_27_33
 0 0 0 Levels/item.miniska, place, 0, 3, 12, item_w_5_6_3_12

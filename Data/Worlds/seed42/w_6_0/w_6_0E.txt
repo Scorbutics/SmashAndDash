@@ -57,4 +57,4 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 25 21 2 Levels/teleport.miniska, w_room_18, 10, 9
 7 34 1 Levels/sign.miniska, Hameau Glace¤L'hiver ne finit jamais ici.
 0 0 0 Levels/item.miniska, place, 1, 25, 10, item_w_6_0_25_10
-0 0 0 Levels/item.miniska, place, 0, 25, 36, item_w_6_0_25_36
+0 0 0 Levels/item.miniska, place, 0, 3, 16, item_w_6_0_3_16

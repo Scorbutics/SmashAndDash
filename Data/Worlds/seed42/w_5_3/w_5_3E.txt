@@ -134,5 +134,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 33 23 2 Levels/teleport.miniska, w_room_26, 11, 9
 19 35 1 Levels/sign.miniska, Village Dune¤La chaleur ne fait pas peur à ses habitants.
 27 20 1 Levels/sign.miniska, Village Dune¤La chaleur ne fait pas peur à ses habitants.
-0 0 0 Levels/item.miniska, place, 0, 23, 5, item_w_5_3_23_5
+0 0 0 Levels/item.miniska, place, 2, 21, 13, item_w_5_3_21_13
 0 0 0 Levels/item.miniska, place, 0, 8, 21, item_w_5_3_8_21

@@ -627,7 +627,8 @@ class Village:
                 spots.append(("west", rx, ry))
             if (rx + 1, ry) not in self.road and (rx, ry - 1) in self.road:
                 spots.append(("east", rx, ry))
-        spots.sort(key=lambda c: h01(c[1] * 3 + len(c[0]), c[2], rng.seed + 17))
+        # (the ties broken by the side and the block : no order of a set in the result, the C++ port gives the same)
+        spots.sort(key=lambda c: (h01(c[1] * 3 + len(c[0]), c[2], rng.seed + 17), c[0], c[1], c[2]))
         for kind, roof, w, h, door in kinds:
             for side, rx, ry in spots:
                 gap = rng.randint(0, 2)
@@ -1349,7 +1350,7 @@ class World:
                     else:
                         self.set("M", x, y, self.chip.cell(("emblem", c, r), lambda c=c, r=r: g.emblem(c, r), True))
         lamps = []
-        for x, y in sorted(v.road, key=lambda c: h01(c[0], c[1], self.seed + 61)):
+        for x, y in sorted(v.road, key=lambda c: (h01(c[0], c[1], self.seed + 61), c[0], c[1])):
             if any(abs(x - a) + abs(y - b) < 7 for a, b in lamps) or len(lamps) > 8:
                 continue
             for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
@@ -1425,7 +1426,7 @@ class World:
                 self.put_object("M", wx, wy, ("well",), g.well, 0.6)
                 break
         # Butterflies over the grass, near the flowers and the garden
-        near = list(v.flowers) + ([(garden[0] + 2, garden[1] + 3)] if garden else [])
+        near = sorted(v.flowers) + ([(garden[0] + 2, garden[1] + 3)] if garden else [])
         flown = 0
         for _ in range(60):
             if flown >= 3 or not near:
