@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """character : the sprite sheet of the hero, a 3D voxel model rendered in the style of the tiles (tilegen).
 
-The model is made of simple volumes (boxes, ellipsoids) in its own space (x right, y forward, z up, the feet at
-z = 0). For each direction it is turned, cut into voxels, then each pixel of the frame casts a ray into the voxels,
-looking down from the front like the camera of the map : the top faces are lit, the front faces less, the sides by the
-light from the left ; the silhouette gets the ink outline of the tiles.
+A chibi in the manner of Cube World : a big rounded head (about half of the height), big eyes low on the face, a
+small round body, round hands floating at its sides, stubby feet, voluminous hair with tufts. The model is made of
+rounded volumes (superellipsoids : rounded cubes) in its own space (x right, y forward, z up, the feet at z = 0, the
+face looking to -y). For each direction it is turned and cut into voxels ; each pixel of the frame casts a ray into the
+voxels, looking down from the front like the camera of the map. A voxel is shaded from the normal of the surface around
+it (its empty neighbours), lit from the top left like the tiles : the round volumes get round gradients. The silhouette
+gets the ink outline of the tiles.
 
 The sheet has the layout of the character sheets (Sprites/Charsets) : 6 x 8 frames of 72 px, 3 animated (a step, the
 standing pose, the other step). Rows : 0 back, 1 right, 2 front, 3 left, 4 back-left, 5 back-right, 6 front-left,
@@ -25,74 +28,80 @@ V = 3                                   # pixels per voxel, as the tiles
 ELEVATION = math.radians(28)            # the camera looks down : the top faces show
 FEET = 66                               # the row of the frame the feet stand on (the surfing sheet cuts at 52)
 ROWS_YAW = [180, 90, 0, 270, 225, 135, 315, 45]
-SCALE = 1.15                            # the model, larger in the voxels (about 1.25 block high)
-INK = (28, 34, 44, 255)
+SCALE = 1.0
+INK = (28, 30, 40, 255)
+# The light, in the space of the view (x right, y away from the camera, z up) : from the top left, in front
+LIGHT = (-0.45, -0.6, 0.9)
+_l = math.sqrt(sum(c * c for c in LIGHT))
+LIGHT = tuple(c / _l for c in LIGHT)
 
-# The colours of the hero : ramps of 4 tones, darkest to lightest (as the tiles)
+# The colours of the hero : ramps of 4 tones, darkest to lightest (as the tiles) ; vivid, as in Cube World
 PAL = {
-    "skin": [(168, 104, 74), (214, 150, 108), (240, 190, 148), (252, 222, 186)],
-    "hair": [(54, 32, 22), (88, 54, 34), (126, 82, 50), (164, 116, 72)],
-    "cap": [(140, 36, 34), (196, 58, 48), (230, 96, 70), (248, 150, 112)],
-    "capwhite": [(170, 176, 186), (220, 224, 230), (244, 246, 248), (255, 255, 255)],
-    "jacket": [(22, 76, 98), (34, 116, 138), (60, 160, 172), (128, 210, 210)],
-    "shirt": [(170, 176, 186), (220, 224, 230), (244, 246, 248), (255, 255, 255)],
-    "pants": [(26, 30, 52), (40, 48, 82), (62, 74, 116), (98, 112, 156)],
-    "shoes": [(120, 30, 30), (178, 50, 42), (220, 84, 62), (244, 140, 110)],
-    "sole": [(150, 150, 150), (200, 200, 200), (232, 232, 232), (250, 250, 250)],
-    "bag": [(150, 98, 20), (206, 146, 34), (238, 188, 62), (252, 226, 120)],
-    "eye": [(20, 22, 34)] * 4,
+    "skin": [(186, 110, 80), (228, 156, 116), (248, 196, 156), (255, 228, 196)],
+    "hair": [(48, 26, 22), (84, 46, 32), (126, 74, 46), (172, 112, 70)],
+    "tunic": [(28, 60, 140), (46, 98, 196), (82, 144, 232), (150, 200, 250)],
+    "scarf": [(136, 26, 36), (198, 46, 52), (238, 84, 76), (252, 146, 124)],
+    "belt": [(70, 40, 22), (110, 66, 36), (150, 100, 58), (190, 144, 96)],
+    "pants": [(48, 40, 44), (76, 64, 66), (108, 94, 92), (146, 132, 126)],
+    "boots": [(70, 38, 22), (112, 64, 36), (154, 98, 58), (196, 142, 96)],
+    "eye": [(18, 20, 34)] * 4,
+    "eyehi": [(255, 255, 255)] * 4,
+    "blush": [(236, 128, 124)] * 4,
+    "mouth": [(132, 48, 46)] * 4,
 }
 
 
-def box(q, x0, x1, y0, y1, z0, z1):
-    return x0 <= q[0] <= x1 and y0 <= q[1] <= y1 and z0 <= q[2] <= z1
-
-
-def ellipsoid(q, cx, cy, cz, rx, ry, rz):
-    return ((q[0] - cx) / rx) ** 2 + ((q[1] - cy) / ry) ** 2 + ((q[2] - cz) / rz) ** 2 <= 1.0
+def rounded(q, c, r, p=2.6):
+    """In a superellipsoid (a rounded cube for p > 2) of centre c and radii r."""
+    return sum(abs((q[i] - c[i]) / r[i]) ** p for i in range(3)) <= 1.0
 
 
 def material(q, step):
     """The material at a point of the model (x right, y forward, z up ; the face looks to -y), or None.
     step : -1, 0, 1, the walk (the left foot forward, standing, the right foot forward)."""
     x, y, z = q
-    swing = 1.3 * step
-    # The head : big (chibi), the face to the front ; the eyes ; the cap and its brim ; the hair under it
-    head = (0.0, -0.3, 13.6)
-    if ellipsoid(q, head[0], head[1], head[2], 4.6, 4.3, 4.2):
-        if z > 15.0:
-            return "capwhite" if y < -2.2 and z < 17.0 and abs(x) < 2.2 else "cap"
-        if abs(abs(x) - 1.6) < 0.6 and 11.0 <= z <= 12.9 and y < -2.6:
-            return "eye"
-        if y > -1.2 or abs(x) > 3.7 or (z > 14.0 and y > -3.6):
+    swing = 1.1 * step
+    # The face : eyes (a highlight on top), blush, a small mouth, on the front of the head
+    in_head = rounded(q, (0.0, 0.0, 13.4), (5.3, 4.8, 4.6))
+    if in_head and y < -2.4:
+        if 1.0 <= abs(x) <= 3.0 and 11.0 <= z <= 14.0:
+            ex = x - (2.0 if x > 0 else -2.0)        # in the eye : -1 its left .. 1 its right
+            return "eyehi" if z >= 13.0 and ex < 0 else "eye"
+        if 3.0 < abs(x) <= 4.3 and 10.0 <= z <= 11.2:
+            return "blush"
+        if abs(x) <= 0.5 and 9.9 <= z <= 10.8:
+            return "mouth"
+    # The hair : a shell over the head, open on the face, the fringe in points ; side locks ; tufts on the top
+    fringe = 15.2 - (0.8 if math.floor(x + 10) % 3 == 0 else 0.0)
+    if rounded(q, (0.0, 0.9, 14.1), (5.8, 5.2, 5.0)):
+        face = in_head and y < -1.0 and z < fringe and abs(x) < 4.7
+        if not face:
             return "hair"
+    for c, r in (((1.6, 1.4, 18.6), (1.5, 1.6, 2.0)), ((-2.2, 2.4, 18.0), (1.4, 1.6, 1.8)),
+                 ((0.4, 4.6, 16.2), (1.4, 1.8, 1.4)), ((4.6, 1.8, 16.4), (1.4, 1.3, 1.5))):
+        if rounded(q, c, r, 2.0):
+            return "hair"
+    if in_head:
         return "skin"
-    if box(q, -2.8, 2.8, -5.6, -3.0, 14.6, 15.4) and ((x / 3.0) ** 2 + ((y + 3.2) / 2.5) ** 2) <= 1.0:
-        return "cap"                                     # the brim
-    if box(q, -0.9, 0.9, -0.6, 0.6, 9.4, 10.2):
-        return "skin"                                    # the neck
-    # The backpack, behind the body
-    if box(q, -2.2, 2.2, 1.6, 3.4, 5.6, 9.8):
-        return "bag"
-    # The body : the jacket open on the shirt
-    if ellipsoid(q, 0.0, 0.0, 7.6, 3.0, 2.0, 2.9) and z >= 5.0:
-        if abs(x) < 0.8 and y < -1.0 and z > 6.0:
-            return "shirt"
-        return "jacket"
-    # The arms, swinging against the legs, the hands
+    # A scarf around the neck, its end behind
+    if 8.3 <= z <= 9.5 and (x / 2.7) ** 2 + (y / 2.3) ** 2 <= 1.0:
+        return "scarf"
+    if 0.4 <= x <= 1.6 and 1.6 <= y <= 2.6 and 6.0 <= z <= 8.6:
+        return "scarf"
+    # The body : a round tunic, a belt
+    if rounded(q, (0.0, 0.0, 6.2), (2.9, 2.3, 2.8), 2.4):
+        return "belt" if 3.9 <= z <= 4.6 else "tunic"
+    # The hands, round, floating at the sides, swinging against the feet
     for side in (-1, 1):
-        ay = -swing * side * 0.8
-        if box(q, side * 3.0 - 0.75, side * 3.0 + 0.75, ay - 0.8, ay + 0.8, 6.2, 9.4):
-            return "jacket"
-        if box(q, side * 3.0 - 0.7, side * 3.0 + 0.7, ay - 0.7, ay + 0.7, 5.0, 6.2):
+        if rounded(q, (side * 3.3, -0.5 - swing * side * 0.9, 5.0), (1.2, 1.2, 1.2), 2.0):
             return "skin"
-    # The legs and the shoes, a step forward and back
+    # Stubby legs and round boots, a step forward and back
     for side in (-1, 1):
         ly = swing * side
-        if box(q, side * 1.3 - 0.9, side * 1.3 + 0.9, ly - 0.9, ly + 0.9, 1.6, 5.2):
+        if 1.6 <= z <= 3.8 and ((x - side * 1.2) / 0.95) ** 2 + ((y - ly) / 0.95) ** 2 <= 1.0:
             return "pants"
-        if box(q, side * 1.3 - 1.0, side * 1.3 + 1.0, ly - 1.7, ly + 1.0, 0.0, 1.6):
-            return "sole" if z < 0.5 else "shoes"
+        if rounded(q, (side * 1.3, ly - 0.4, 1.05), (1.25, 1.9, 1.15), 2.2):
+            return "boots"
     return None
 
 
@@ -108,13 +117,24 @@ def voxels(yaw, step):
                 # The centre of the voxel, back into the model space (turned by -yaw)
                 px, py, pz = (x + 0.5) / SCALE, (y + 0.5) / SCALE, (z + 0.5) / SCALE
                 qx, qy = c * px + s * py, -s * px + c * py
-                m = material((qx, qy, pz), STEP[0])
+                m = material((qx, qy, pz), step)
                 if m:
                     grid[(x, y, z)] = m
     return grid
 
 
-STEP = [0]
+def normal(grid, cell):
+    """The normal of the surface at a voxel : away from its filled neighbours (3 x 3 x 3)."""
+    nx = ny = nz = 0.0
+    for dz in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dx in (-1, 0, 1):
+                if (dx or dy or dz) and (cell[0] + dx, cell[1] + dy, cell[2] + dz) in grid:
+                    nx -= dx
+                    ny -= dy
+                    nz -= dz
+    n = math.sqrt(nx * nx + ny * ny + nz * nz)
+    return (0.0, -0.5, 0.86) if n == 0 else (nx / n, ny / n, nz / n)
 
 
 def render(grid):
@@ -128,37 +148,25 @@ def render(grid):
         for u in range(FRAME):
             x = (u + 0.5 - FRAME / 2) / V
             h = (FEET - (v + 0.5)) / V               # = z * ce + y * se along the ray
-            # Start in front and above : y = -12, z from h
             y, z = -12.0, (h + 12.0 * se) / ce
-            prev = None
-            for _ in range(160):
-                cell = (math.floor(x), math.floor(y), math.floor(z))
+            for _ in range(180):
                 if z < -1 or y > 12:
                     break
+                cell = (math.floor(x), math.floor(y), math.floor(z))
                 m = grid.get(cell)
                 if m:
-                    # The face it entered by : from above (the top), from the front, or a side
-                    face = "front"
-                    if prev is not None:
-                        if prev[2] != cell[2]:
-                            face = "top"
-                        elif prev[0] != cell[0]:
-                            face = "side"
-                    lit = grid.get((cell[0], cell[1], cell[2] + 1)) is None
-                    hit[(u, v)] = (m, face, cell, lit)
+                    hit[(u, v)] = (m, cell)
                     break
-                prev = cell
                 y += 0.15 * ce
                 z -= 0.15 * se
-    for (u, v), (m, face, cell, lit) in hit.items():
-        t = {"top": 2.7, "front": 1.8, "side": 1.3}[face]
-        if face == "front" and not lit:
-            t -= 0.3                                 # under something (the brim, the head) : in its shadow
-        if face == "side" and grid.get((cell[0] - 1, cell[1], cell[2])) is None:
-            t += 0.7                                 # the side to the left, in the light
-        px[u, v] = g.lerp_ramp(PAL[m], max(0.0, min(3.0, t))) + (255,)
-    # The ink outline of the silhouette
-    for (u, v) in hit:
+    shades = {}
+    for (u, v), (m, cell) in hit.items():
+        if cell not in shades:
+            n = normal(grid, cell)
+            lum = n[0] * LIGHT[0] + n[1] * LIGHT[1] + n[2] * LIGHT[2]
+            shades[cell] = max(0.0, min(3.0, 0.5 + 2.6 * max(0.0, lum)))
+        px[u, v] = g.lerp_ramp(PAL[m], shades[cell]) + (255,)
+    for (u, v) in hit:                               # the ink outline of the silhouette
         for du, dv in ((1, 0), (-1, 0), (0, 1), (0, -1)):
             n = (u + du, v + dv)
             if 0 <= n[0] < FRAME and 0 <= n[1] < FRAME and n not in hit:
@@ -170,7 +178,6 @@ def sheet():
     out = Image.new("RGBA", (6 * FRAME, 8 * FRAME), g.KEY + (255,))
     for row, yaw in enumerate(ROWS_YAW):
         for col, step in enumerate((-1, 0, 1)):
-            STEP[0] = step
             out.paste(render(voxels(yaw, step)), (col * FRAME, row * FRAME))
     return out
 
