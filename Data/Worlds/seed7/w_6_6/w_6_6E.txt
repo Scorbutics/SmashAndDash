@@ -1,4 +1,5 @@
 x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
+39 0 2 Levels/teleport.miniska, w_7_6, 1, 0
 0 1 2 Levels/teleport.miniska, w_5_6, 38, 1
 39 1 2 Levels/teleport.miniska, w_7_6, 1, 1
 0 2 2 Levels/teleport.miniska, w_5_6, 38, 2
@@ -52,7 +53,9 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 25 2 Levels/teleport.miniska, w_5_6, 38, 25
 25 0 2 Levels/teleport.miniska, w_6_5, 25, 38
 0 26 2 Levels/teleport.miniska, w_5_6, 38, 26
+0 27 2 Levels/teleport.miniska, w_5_6, 38, 27
 39 27 2 Levels/teleport.miniska, w_7_6, 1, 27
+0 28 2 Levels/teleport.miniska, w_5_6, 38, 28
 0 29 2 Levels/teleport.miniska, w_5_6, 38, 29
 0 30 2 Levels/teleport.miniska, w_5_6, 38, 30
 39 30 2 Levels/teleport.miniska, w_7_6, 1, 30
@@ -66,8 +69,10 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 34 2 Levels/teleport.miniska, w_5_6, 38, 34
 0 35 2 Levels/teleport.miniska, w_5_6, 38, 35
 0 36 2 Levels/teleport.miniska, w_5_6, 38, 36
+0 37 2 Levels/teleport.miniska, w_5_6, 38, 37
 37 0 2 Levels/teleport.miniska, w_6_5, 37, 38
 37 39 2 Levels/teleport.miniska, w_6_7, 37, 1
+0 38 2 Levels/teleport.miniska, w_5_6, 38, 38
 38 0 2 Levels/teleport.miniska, w_6_5, 38, 38
 38 39 2 Levels/teleport.miniska, w_6_7, 38, 1
 0 39 2 Levels/teleport.miniska, w_5_6, 38, 39
@@ -79,4 +84,4 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 15 16 2 Levels/teleport.miniska, w_room_8, 10, 9
 23 13 2 Levels/teleport.miniska, w_room_9, 10, 9
 7 9 2 Levels/teleport.miniska, w_room_10, 10, 9
-3 20 1 Levels/sign.miniska, Village Sable¤La chaleur ne fait pas peur à ses habitants.
+3 20 1 Levels/sign.miniska, Village Mirage¤La chaleur ne fait pas peur à ses habitants.

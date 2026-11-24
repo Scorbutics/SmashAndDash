@@ -111,5 +111,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 39 2 Levels/teleport.miniska, w_4_2, 38, 39
 39 0 2 Levels/teleport.miniska, w_5_1, 39, 38
 0 0 0 Levels/item.miniska, place, 2, 35, 19, item_w_5_2_35_19
-0 0 0 Levels/item.miniska, place, 2, 23, 21, item_w_5_2_23_21
 0 0 0 Levels/item.miniska, place, 2, 12, 16, item_w_5_2_12_16
+0 0 0 Levels/item.miniska, place, 2, 23, 21, item_w_5_2_23_21

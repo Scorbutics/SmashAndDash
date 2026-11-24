@@ -20,12 +20,15 @@ KEY = (190, 151, 255)
 # Saturated, but the hue moves only a little along a ramp (warmer in the light)
 PAL = {
     "ink": [(28, 40, 26)] * 4,
-    "grass": [(34, 122, 26), (66, 164, 34), (116, 204, 58), (182, 240, 84)],
+    "grass": [(44, 128, 58), (74, 166, 72), (106, 198, 90), (156, 226, 126)],
     "grass2": [(34, 122, 26), (60, 152, 34), (104, 194, 54), (168, 232, 80)],
     "water": [(22, 74, 150), (32, 112, 196), (58, 152, 224), (156, 212, 244)],
     "rock": [(92, 70, 52), (150, 116, 76), (196, 162, 106), (232, 210, 150)],
     "stone": [(84, 90, 96), (130, 138, 140), (178, 184, 180), (226, 230, 220)],
-    "leaf": [(12, 72, 26), (28, 112, 32), (58, 152, 40), (118, 196, 60)],
+    "leaf": [(16, 74, 40), (32, 116, 52), (66, 160, 66), (130, 206, 98)],
+    "pave": [(98, 102, 112), (150, 154, 162), (190, 194, 200), (226, 228, 232)],
+    "lamp": [(40, 44, 58), (66, 72, 92), (100, 108, 130), (150, 160, 184)],
+    "soil": [(86, 56, 34), (124, 84, 52), (160, 116, 74), (196, 156, 108)],
     "wood": [(92, 58, 34), (146, 96, 52), (190, 140, 78), (228, 190, 120)],
     "roof": [(30, 84, 110), (42, 122, 146), (66, 160, 172), (138, 206, 204)],
     "roofr": [(118, 40, 36), (176, 66, 48), (214, 104, 66), (240, 156, 102)],
@@ -46,11 +49,11 @@ PAL = {
 # Biomes : the same tiles in other colours (the ramps they change), and their tree. use_biome(name) sets them for the
 # drawings that follow.
 BIOMES = {
-    "meadow": {"tree": "pine", "palette": {}},
-    "autumn": {"tree": "pine", "palette": {
-        "grass": [(108, 118, 34), (150, 156, 44), (196, 190, 70), (234, 222, 118)],
+    "meadow": {"tree": "round", "palette": {}},
+    "autumn": {"tree": "round", "palette": {
+        "grass": [(112, 126, 48), (150, 160, 60), (190, 190, 84), (226, 218, 128)],
         "grass2": [(108, 118, 34), (144, 148, 42), (188, 180, 66), (228, 214, 110)],
-        "leaf": [(116, 36, 22), (172, 68, 28), (218, 114, 40), (244, 176, 76)],
+        "leaf": [(120, 30, 30), (180, 56, 40), (222, 100, 52), (246, 160, 84)],
         "tallgrass": [(94, 68, 24), (138, 98, 34), (184, 138, 52), (226, 190, 98)],
     }},
     "snow": {"tree": "snowpine", "palette": {
@@ -285,23 +288,21 @@ def window(s, x0, y0, x1, y1, frame_mat="white", bar=True):
 # ---------------------------------------------------------------- terrain (seamless : hashes of the voxel position)
 
 def grass_field(s, seed=0):
+    """Calm grass : an even green, a slow shade across the voxels, a few faint speckles."""
     for y in range(N):
         for x in range(N):
-            s.put(x, y, "grass", 0, 1, 2)
-    for i in range(4):                               # a few speckles : light dots, dark dots
+            s.put(x, y, "grass", 0, 1, 2.0 + 0.06 * math.sin((x + 2 * y + seed) * 0.9))
+    for i in range(3):
         x, y = int(h01(i, 1, 70 + seed) * N), int(h01(i, 2, 70 + seed) * N)
-        s.put(x, y, "grass", 0, 1, 3 if i % 2 else 1)
+        s.put(x, y, "grass", 0, 1, 2.35 if i % 2 else 1.7)
 
 
 def tuft_at(s, x, y, flip=False):
-    """A tuft of three blades : the middle one taller, the tips in the light, the root in the shade."""
-    for dx, hgt in ((0, 1), (2, 2), (4, 1)):
-        bx = x + (4 - dx if flip else dx)
+    """A small tuft : two short blades, a little darker than the grass (no bright tips)."""
+    for dx, hgt in ((0, 1), (2, 2)):
+        bx = x + (2 - dx if flip else dx)
         for k in range(hgt):
-            s.put(bx % N, (y - k) % N, "grass", 0, 1, 3 if k == hgt - 1 else 2)
-        s.put(bx % N, (y + 1) % N, "grass", 0, 1, 1)
-    s.put((x + 1) % N, (y + 1) % N, "grass", 0, 1, 1)
-    s.put((x + 3) % N, (y + 1) % N, "grass", 0, 1, 1)
+            s.put(bx % N, (y - k) % N, "grass", 0, 1, 1.55 if k == 0 else 1.75)
 
 
 GRASS_VARIANTS = 4
@@ -315,10 +316,6 @@ def grass(variant=0):
         tuft_at(s, 9, 12, flip=True)
     elif variant == 2:
         tuft_at(s, 10, 4)
-        for dx, dy in ((0, -1), (-1, 0), (1, 0), (0, 1)):  # a small white flower
-            s.put(4 + dx, 11 + dy, "white", 0, 1, 3 if dy < 0 or dx < 0 else 2)
-        s.put(4, 11, "flower", 0, 1, 2)
-        s.put(4, 13, "grass", 0, 1, 1)
     elif variant == 3:
         tuft_at(s, 6, 9)
     return s.render()
@@ -481,6 +478,8 @@ def tree_image(style=None):
     """A tree, 2 x 4 tiles (rows 0, 1, 3 used : the tip, the canopy, the trunk). style : "pine", "snowpine", "cactus"
     (by default the tree of the biome)."""
     style = style or BIOMES[BIOME]["tree"]
+    if style == "round":
+        return round_tree().render()
     if style != "cactus":
         return tree_scene(snow=style == "snowpine").render()
     small = cactus_scene().render()
@@ -785,6 +784,156 @@ def healing_center():
     rect(s, 31, 78, 49, 80, "stone", 3)
     ink_outline(s)
     return s
+
+
+def round_tree():
+    """A 3 x 4 tiles broadleaf tree : a big round canopy (rows 0 to 2), one volume whose height is the union of
+    leaf clusters (a lumpy silhouette, round light), leaves in its texture ; a short trunk on its shadow (row 3)."""
+    W, H = 3 * N, 4 * N
+    s = Scene(W, H)
+    s.box(20, 3 * N - 4, 28, 3 * N + 8, "wood", 1.0)
+    lumps = [(24, 26, 21, 17, 9.0), (11, 27, 11, 11, 7.5), (37, 27, 11, 11, 7.5), (15, 15, 11, 10, 8.5),
+             (33, 14, 11, 10, 8.5), (24, 9, 12, 8, 9.0), (24, 36, 17, 8, 6.0)]
+    pid = s.new_id()
+    for y in range(H):
+        for x in range(W):
+            hgt = None
+            for cx, cy, rx, ry, top in lumps:
+                d = ((x + 0.5 - cx) / rx) ** 2 + ((y + 0.5 - cy) / ry) ** 2
+                if d <= 1:
+                    h = 4.0 + top * math.sqrt(1 - d)
+                    hgt = h if hgt is None else max(hgt, h)
+            if hgt is not None:
+                s.put(x, y, "leaf", hgt, pid)
+    for y in range(H):                               # leaves : darker and lighter voxels in the canopy
+        for x in range(W):
+            if s.mat[y][x] == "leaf":
+                r = h01(x, y, 41)
+                if r < 0.08:
+                    s.hgt[y][x] -= 1.4
+                elif r > 0.95:
+                    s.hgt[y][x] += 0.8
+    ink_outline(s)
+    for y in range(3 * N, H):                        # the ground, after the outline : no frame around it
+        for x in range(W):
+            if s.mat[y][x] is None:
+                d = ((x + 0.5 - W / 2 - 2) / 17) ** 2 + ((y + 0.5 - 3 * N - 7) / 4.5) ** 2
+                s.put(x, y, "grass", 0, 1, 0.9 if d <= 1 else 2)
+    return s
+
+
+def lamp():
+    """A street lamp, 1 x 2 tiles : its lantern (row 0, over the characters), its post on a stone foot (row 1)."""
+    s = Scene(N, 2 * N)
+    s.ellipsoid(9, 2 * N - 3, 5, 1.8, "grass", 0)
+    for x in range(N):
+        for y in range(N, 2 * N):
+            if s.pid[y][x] > 1:
+                s.mat[y][x], s.tone[y][x] = "grass", 0.6
+    s.box(7, 8, 10, 2 * N - 3, "lamp", 2.0)
+    s.box(5, 2 * N - 5, 12, 2 * N - 2, "lamp", 1.0)
+    s.ellipsoid(8.5, 6, 4.2, 4.4, "lamp", 3.0)
+    for y in range(3, 9):
+        for x in range(6, 11):
+            s.put(x, y, "flower", 3.5, 99, 3 if y < 6 else 2)    # the light
+    s.box(5, 1, 12, 3, "lamp", 3.0)
+    ink_outline(s)
+    return s.render()
+
+
+def bush():
+    """A round bush (blocks the way)."""
+    s = Scene(N, N)
+    s.ellipsoid(9, 13, 7, 2.2, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    s.ellipsoid(8, 8.5, 7, 6, "leaf", 6.0)
+    s.ellipsoid(5.5, 6, 3.5, 3, "leaf", 7.0)
+    s.ellipsoid(11, 6.5, 3.5, 3, "leaf", 7.0)
+    ink_outline(s)
+    return s.render()
+
+
+def fence():
+    """A wooden fence across the tile : two rails between posts."""
+    s = Scene(N, N)
+    grass_field(s, 6)
+    pid = s.new_id()
+    for x in (2, 13):
+        for y in range(4, 14):
+            s.put(x, y, "wood", 2, pid, 3 if y == 4 else 2)
+            s.put(x + 1, y, "wood", 2, pid, 1)
+    for y, t in ((6, 3), (7, 2), (10, 3), (11, 2)):
+        for x in range(N):
+            if s.mat[y][x] != "wood" or x not in (2, 3, 13, 14):
+                s.put(x, y, "wood", 1.5, pid, t)
+    for x in range(N):
+        s.put(x, 14, "grass", 0, 1, 1.2)             # its shadow
+    return s.render()
+
+
+def crops():
+    """A row of a vegetable garden : furrows of soil, leafy plants on them."""
+    s = Scene(N, N)
+    for y in range(N):
+        for x in range(N):
+            s.put(x, y, "soil", 0, 1, 1.4 if y % 8 in (6, 7) else 2.0)
+    for row in (1, 9):
+        for cx in (3, 8, 13):
+            pid = s.ellipsoid(cx, row + 2.5, 2.6, 2.4, "leaf", 3.0)
+            s.put(cx, row + 1, "leaf", 4.0, pid, 3)
+    return s.render()
+
+
+def flowerbed(colour="roofr"):
+    """A bed of flowers on the grass : many small blossoms of a colour, their leaves."""
+    s = Scene(N, N)
+    grass_field(s, 7)
+    for y in range(N):
+        for x in range(N):
+            if h01(x, y, 17) < 0.35:
+                s.put(x, y, "leaf", 0, 1, 1.6)
+    for i in range(9):
+        cx, cy = 2 + int(h01(i, 1, 29) * 12), 2 + int(h01(i, 2, 29) * 12)
+        pid = s.new_id()
+        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+            s.put(cx + dx, cy + dy, colour, 1.0, pid, 3 if dy == 0 else 2)
+        s.put(cx, cy, "white", 1.2, pid, 3)
+    return s.render()
+
+
+def emblem(c, r):
+    """A part (c, r : 0..1) of a 2 x 2 tiles emblem painted on the pavement : a round sign, as the plazas have."""
+    s = Scene(N, N)
+    R = N - 2
+    for y in range(N):
+        for x in range(N):
+            gx, gy = x + c * N + 0.5 - N, y + r * N + 0.5 - N      # from the centre of the 2 x 2
+            d = math.hypot(gx, gy)
+            if R - 1.6 <= d <= R or (abs(gy) < 0.8 and d < R) or 3.0 <= d <= 4.4:
+                s.put(x, y, "white", 0, 1, 2.6)
+    return s.render()
+
+
+def mailbox():
+    """A mailbox on a post, by a door."""
+    s = Scene(N, N)
+    s.ellipsoid(8.5, 14, 4, 1.4, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    s.box(7, 8, 9, 14, "wood", 1.0)
+    pid = s.ellipsoid(8, 5.5, 5, 3.6, "roofr", 4.0)
+    for y in range(2, 9):
+        for x in range(3, 13):
+            if s.pid[y][x] == pid and x == 3:
+                s.tone[y][x] = 0
+    s.put(12, 3, "flower", 5.0, pid, 3)
+    ink_outline(s)
+    return s.render()
 
 
 def bridge():

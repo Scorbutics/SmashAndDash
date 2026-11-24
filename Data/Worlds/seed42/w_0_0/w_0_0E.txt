@@ -30,6 +30,8 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 29 39 2 Levels/teleport.miniska, w_0_1, 29, 1
 30 39 2 Levels/teleport.miniska, w_0_1, 30, 1
 31 39 2 Levels/teleport.miniska, w_0_1, 31, 1
+32 39 2 Levels/teleport.miniska, w_0_1, 32, 1
+33 39 2 Levels/teleport.miniska, w_0_1, 33, 1
 34 39 2 Levels/teleport.miniska, w_0_1, 34, 1
 35 39 2 Levels/teleport.miniska, w_0_1, 35, 1
 36 39 2 Levels/teleport.miniska, w_0_1, 36, 1

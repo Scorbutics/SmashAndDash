@@ -29,9 +29,11 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 39 10 2 Levels/teleport.miniska, w_6_3, 1, 10
 10 0 2 Levels/teleport.miniska, w_5_2, 10, 38
 10 39 2 Levels/teleport.miniska, w_5_4, 10, 1
+0 11 2 Levels/teleport.miniska, w_4_3, 38, 11
 39 11 2 Levels/teleport.miniska, w_6_3, 1, 11
 11 0 2 Levels/teleport.miniska, w_5_2, 11, 38
 11 39 2 Levels/teleport.miniska, w_5_4, 11, 1
+0 12 2 Levels/teleport.miniska, w_4_3, 38, 12
 39 12 2 Levels/teleport.miniska, w_6_3, 1, 12
 12 0 2 Levels/teleport.miniska, w_5_2, 12, 38
 12 39 2 Levels/teleport.miniska, w_5_4, 12, 1
@@ -42,7 +44,11 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 14 2 Levels/teleport.miniska, w_4_3, 38, 14
 39 14 2 Levels/teleport.miniska, w_6_3, 1, 14
 14 0 2 Levels/teleport.miniska, w_5_2, 14, 38
+0 15 2 Levels/teleport.miniska, w_4_3, 38, 15
+39 15 2 Levels/teleport.miniska, w_6_3, 1, 15
 15 0 2 Levels/teleport.miniska, w_5_2, 15, 38
+0 16 2 Levels/teleport.miniska, w_4_3, 38, 16
+39 16 2 Levels/teleport.miniska, w_6_3, 1, 16
 16 0 2 Levels/teleport.miniska, w_5_2, 16, 38
 0 17 2 Levels/teleport.miniska, w_4_3, 38, 17
 39 17 2 Levels/teleport.miniska, w_6_3, 1, 17
@@ -50,6 +56,7 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 18 2 Levels/teleport.miniska, w_4_3, 38, 18
 39 18 2 Levels/teleport.miniska, w_6_3, 1, 18
 18 0 2 Levels/teleport.miniska, w_5_2, 18, 38
+18 39 2 Levels/teleport.miniska, w_5_4, 18, 1
 0 19 2 Levels/teleport.miniska, w_4_3, 38, 19
 39 19 2 Levels/teleport.miniska, w_6_3, 1, 19
 19 0 2 Levels/teleport.miniska, w_5_2, 19, 38
@@ -70,20 +77,24 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 24 0 2 Levels/teleport.miniska, w_5_2, 24, 38
 24 39 2 Levels/teleport.miniska, w_5_4, 24, 1
 0 25 2 Levels/teleport.miniska, w_4_3, 38, 25
+39 25 2 Levels/teleport.miniska, w_6_3, 1, 25
 25 0 2 Levels/teleport.miniska, w_5_2, 25, 38
+25 39 2 Levels/teleport.miniska, w_5_4, 25, 1
 0 26 2 Levels/teleport.miniska, w_4_3, 38, 26
 26 0 2 Levels/teleport.miniska, w_5_2, 26, 38
 26 39 2 Levels/teleport.miniska, w_5_4, 26, 1
 0 27 2 Levels/teleport.miniska, w_4_3, 38, 27
+39 27 2 Levels/teleport.miniska, w_6_3, 1, 27
 27 0 2 Levels/teleport.miniska, w_5_2, 27, 38
 27 39 2 Levels/teleport.miniska, w_5_4, 27, 1
-0 28 2 Levels/teleport.miniska, w_4_3, 38, 28
+39 28 2 Levels/teleport.miniska, w_6_3, 1, 28
 28 0 2 Levels/teleport.miniska, w_5_2, 28, 38
 28 39 2 Levels/teleport.miniska, w_5_4, 28, 1
-0 29 2 Levels/teleport.miniska, w_4_3, 38, 29
+39 29 2 Levels/teleport.miniska, w_6_3, 1, 29
 29 0 2 Levels/teleport.miniska, w_5_2, 29, 38
 29 39 2 Levels/teleport.miniska, w_5_4, 29, 1
 0 30 2 Levels/teleport.miniska, w_4_3, 38, 30
+39 30 2 Levels/teleport.miniska, w_6_3, 1, 30
 30 0 2 Levels/teleport.miniska, w_5_2, 30, 38
 30 39 2 Levels/teleport.miniska, w_5_4, 30, 1
 0 31 2 Levels/teleport.miniska, w_4_3, 38, 31
@@ -121,7 +132,7 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 21 32 2 Levels/teleport.miniska, w_room_24, 11, 9
 32 36 2 Levels/teleport.miniska, w_room_25, 10, 9
 33 23 2 Levels/teleport.miniska, w_room_26, 11, 9
-25 39 1 Levels/sign.miniska, Bourg-Sable¤La chaleur ne fait pas peur à ses habitants.
-27 20 1 Levels/sign.miniska, Bourg-Sable¤La chaleur ne fait pas peur à ses habitants.
-0 0 0 Levels/item.miniska, place, 2, 36, 27, item_w_5_3_36_27
-0 0 0 Levels/item.miniska, place, 2, 14, 34, item_w_5_3_14_34
+19 35 1 Levels/sign.miniska, Village Dune¤La chaleur ne fait pas peur à ses habitants.
+27 20 1 Levels/sign.miniska, Village Dune¤La chaleur ne fait pas peur à ses habitants.
+0 0 0 Levels/item.miniska, place, 0, 23, 5, item_w_5_3_23_5
+0 0 0 Levels/item.miniska, place, 2, 12, 30, item_w_5_3_12_30

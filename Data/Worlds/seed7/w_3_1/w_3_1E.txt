@@ -1,21 +1,21 @@
 x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
 39 0 2 Levels/teleport.miniska, w_4_1, 1, 0
+0 0 2 Levels/teleport.miniska, w_3_0, 0, 38
 0 39 2 Levels/teleport.miniska, w_3_2, 0, 1
-0 1 2 Levels/teleport.miniska, w_2_1, 38, 1
+1 0 2 Levels/teleport.miniska, w_3_0, 1, 38
 1 39 2 Levels/teleport.miniska, w_3_2, 1, 1
 0 2 2 Levels/teleport.miniska, w_2_1, 38, 2
-2 0 2 Levels/teleport.miniska, w_3_0, 2, 38
 2 39 2 Levels/teleport.miniska, w_3_2, 2, 1
 0 3 2 Levels/teleport.miniska, w_2_1, 38, 3
 3 39 2 Levels/teleport.miniska, w_3_2, 3, 1
 0 4 2 Levels/teleport.miniska, w_2_1, 38, 4
 39 4 2 Levels/teleport.miniska, w_4_1, 1, 4
+4 0 2 Levels/teleport.miniska, w_3_0, 4, 38
 39 5 2 Levels/teleport.miniska, w_4_1, 1, 5
 0 6 2 Levels/teleport.miniska, w_2_1, 38, 6
 39 6 2 Levels/teleport.miniska, w_4_1, 1, 6
 0 7 2 Levels/teleport.miniska, w_2_1, 38, 7
 39 7 2 Levels/teleport.miniska, w_4_1, 1, 7
-0 8 2 Levels/teleport.miniska, w_2_1, 38, 8
 39 8 2 Levels/teleport.miniska, w_4_1, 1, 8
 39 9 2 Levels/teleport.miniska, w_4_1, 1, 9
 9 39 2 Levels/teleport.miniska, w_3_2, 9, 1
@@ -25,14 +25,15 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 11 0 2 Levels/teleport.miniska, w_3_0, 11, 38
 39 12 2 Levels/teleport.miniska, w_4_1, 1, 12
 12 0 2 Levels/teleport.miniska, w_3_0, 12, 38
-0 13 2 Levels/teleport.miniska, w_2_1, 38, 13
 39 13 2 Levels/teleport.miniska, w_4_1, 1, 13
 13 0 2 Levels/teleport.miniska, w_3_0, 13, 38
-0 14 2 Levels/teleport.miniska, w_2_1, 38, 14
 39 14 2 Levels/teleport.miniska, w_4_1, 1, 14
 14 0 2 Levels/teleport.miniska, w_3_0, 14, 38
 14 39 2 Levels/teleport.miniska, w_3_2, 14, 1
 15 0 2 Levels/teleport.miniska, w_3_0, 15, 38
+0 18 2 Levels/teleport.miniska, w_2_1, 38, 18
+0 19 2 Levels/teleport.miniska, w_2_1, 38, 19
+0 20 2 Levels/teleport.miniska, w_2_1, 38, 20
 20 39 2 Levels/teleport.miniska, w_3_2, 20, 1
 0 21 2 Levels/teleport.miniska, w_2_1, 38, 21
 39 21 2 Levels/teleport.miniska, w_4_1, 1, 21
@@ -51,25 +52,27 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 27 39 2 Levels/teleport.miniska, w_3_2, 27, 1
 39 28 2 Levels/teleport.miniska, w_4_1, 1, 28
 28 39 2 Levels/teleport.miniska, w_3_2, 28, 1
+29 39 2 Levels/teleport.miniska, w_3_2, 29, 1
+30 39 2 Levels/teleport.miniska, w_3_2, 30, 1
 0 31 2 Levels/teleport.miniska, w_2_1, 38, 31
 39 31 2 Levels/teleport.miniska, w_4_1, 1, 31
 31 39 2 Levels/teleport.miniska, w_3_2, 31, 1
 0 32 2 Levels/teleport.miniska, w_2_1, 38, 32
 39 32 2 Levels/teleport.miniska, w_4_1, 1, 32
-32 39 2 Levels/teleport.miniska, w_3_2, 32, 1
 0 33 2 Levels/teleport.miniska, w_2_1, 38, 33
-33 39 2 Levels/teleport.miniska, w_3_2, 33, 1
-34 0 2 Levels/teleport.miniska, w_3_0, 34, 38
-34 39 2 Levels/teleport.miniska, w_3_2, 34, 1
+39 33 2 Levels/teleport.miniska, w_4_1, 1, 33
+39 34 2 Levels/teleport.miniska, w_4_1, 1, 34
 39 35 2 Levels/teleport.miniska, w_4_1, 1, 35
+35 39 2 Levels/teleport.miniska, w_3_2, 35, 1
 0 36 2 Levels/teleport.miniska, w_2_1, 38, 36
 39 36 2 Levels/teleport.miniska, w_4_1, 1, 36
+36 0 2 Levels/teleport.miniska, w_3_0, 36, 38
+36 39 2 Levels/teleport.miniska, w_3_2, 36, 1
 0 37 2 Levels/teleport.miniska, w_2_1, 38, 37
 37 39 2 Levels/teleport.miniska, w_3_2, 37, 1
 38 39 2 Levels/teleport.miniska, w_3_2, 38, 1
 39 39 2 Levels/teleport.miniska, w_4_1, 1, 39
-39 0 2 Levels/teleport.miniska, w_3_0, 39, 38
 39 39 2 Levels/teleport.miniska, w_3_2, 39, 1
 0 0 0 Levels/item.miniska, place, 0, 17, 6, item_w_3_1_17_6
-0 0 0 Levels/item.miniska, place, 2, 29, 18, item_w_3_1_29_18
-0 0 0 Levels/item.miniska, place, 0, 10, 19, item_w_3_1_10_19
+0 0 0 Levels/item.miniska, place, 2, 4, 6, item_w_3_1_4_6
+0 0 0 Levels/item.miniska, place, 2, 32, 22, item_w_3_1_32_22

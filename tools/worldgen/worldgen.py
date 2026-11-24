@@ -100,7 +100,16 @@ WALK_ANIMATED, BLOCK_ANIMATED = (0xAA, 0xAA, 0xAA), (0x46, 0x46, 0x46)
 EMPTY = (255, 255, 255)
 # 8 neighbours : N E S W, then NE SE SW NW
 D8 = [(0, -1), (1, 0), (0, 1), (-1, 0), (1, -1), (1, 1), (-1, 1), (-1, -1)]
-PRIORITY = {"water": 0, "sand": 1, "path": 2, "grass": 3}
+# The grounds over one another : a higher one reaches into the cells of a lower one (the paving : straight curbs)
+PRIORITY = {"water": 0, "pave": 0.5, "sand": 1, "path": 2, "grass": 3}
+# The trees : their width, and their rows (dy from the block of the canopy bottom, row of the image, kind : "top" over
+# the characters, "canopy" blocks and covers them, "trunk" blocks)
+TREE_SHAPES = {
+    "round": (3, [(-2, 0, "top"), (-1, 1, "top"), (0, 2, "canopy"), (1, 3, "trunk")]),
+    "pine": (2, [(-1, 0, "top"), (0, 1, "canopy"), (1, 3, "trunk")]),
+    "snowpine": (2, [(-1, 0, "top"), (0, 1, "canopy"), (1, 3, "trunk")]),
+    "cactus": (2, [(-1, 0, "top"), (0, 1, "canopy"), (1, 3, "trunk")]),
+}
 
 
 # ---------------------------------------------------------------- noise (value noise, seeded, continuous everywhere)
@@ -148,12 +157,20 @@ def wobble(t, phase):
     return 4.2 + 0.9 * math.sin(2 * math.pi * t / 8 + phase) + 0.5 * math.sin(2 * math.pi * t / 16 * 3 + 2 * phase)
 
 
-def intrusion(mask):
-    """The voxels of a tile taken by the neighbours of the mask (rounded, wavy edges)."""
+def intrusion(mask, straight=False):
+    """The voxels of a tile taken by the neighbours of the mask (rounded, wavy edges ; straight : the edges of a
+    paving, square corners)."""
     inside = [[False] * N for _ in range(N)]
     for y in range(N):
         for x in range(N):
             cx, cy = x + 0.5, y + 0.5
+            if straight:
+                d = 3
+                inside[y][x] = (mask[0] and cy < d) or (mask[1] and N - cx < d) or (mask[2] and N - cy < d) \
+                    or (mask[3] and cx < d) or (mask[4] and cy < d and N - cx < d) \
+                    or (mask[5] and N - cy < d and N - cx < d) or (mask[6] and N - cy < d and cx < d) \
+                    or (mask[7] and cy < d and cx < d)
+                continue
             hit = False
             if mask[0] and cy < wobble(cx, 0.0):
                 hit = True
@@ -186,21 +203,30 @@ def ground(mat, over_mat=None, mask=None, shade_north=False, variant=0):
     s = Scene(N, N)
     if mat == "grass":
         g.grass_field(s, variant)
+    elif mat == "pave":                              # slabs in staggered rows, their joints
+        for y in range(N):
+            for x in range(N):
+                joint = y % 8 == 7 or (x + (4 if y // 8 % 2 else 0)) % 8 == 7
+                s.put(x, y, "pave", 0, 1, 1.35 if joint else 2.35 if y % 8 == 0 else 2.0)
     else:
         fill(s, mat, 30 + variant, 6)
         if mat == "path":
             for i in range(3):                      # pebbles
                 s.put(int(h01(i, 5, 41) * N), int(h01(i, 6, 41) * N), "stone", 0, 1, 2)
     if over_mat:
-        inside = intrusion(mask)
+        inside = intrusion(mask, straight=mat == "pave")
+        over = Scene(N, N)
+        if over_mat == "grass":
+            g.grass_field(over, variant)
         for y in range(N):
             for x in range(N):
                 if inside[y][x]:
                     edge = any(0 <= x + dx < N and 0 <= y + dy < N and not inside[y + dy][x + dx]
                                for dx, dy in D8[:4])
-                    s.put(x, y, over_mat, 0, 1, 1 if edge else 2)
+                    t = over.tone[y][x] if over_mat == "grass" and not edge else 1 if edge else 2
+                    s.put(x, y, over_mat, 0, 1, t)
                 elif any(0 <= x + dx < N and 0 <= y + dy < N and inside[y + dy][x + dx] for dx, dy in D8[:4]):
-                    s.tone[y][x] = 1                 # the shadow at the foot of the higher material
+                    s.tone[y][x] = 0.9 if mat == "pave" else 1   # the curb of a paving, the shadow of the edge
     if shade_north:                                  # the foot of a cliff face, to the north
         for y in range(3):
             for x in range(N):
@@ -211,12 +237,12 @@ def ground(mat, over_mat=None, mask=None, shade_north=False, variant=0):
 def water_overlay(over_mat, mask):
     """Over the water (the animated cell under it) : the bank reaching into the water, a foam line along it."""
     s = Scene(N, N)
-    inside = intrusion(mask)
+    inside = intrusion(mask, straight=over_mat == "pave")
     for y in range(N):
         for x in range(N):
             if inside[y][x]:
                 edge = any(0 <= x + dx < N and 0 <= y + dy < N and not inside[y + dy][x + dx] for dx, dy in D8[:4])
-                s.put(x, y, over_mat, 0, 1, 1 if edge else 2)
+                s.put(x, y, over_mat, 0, 1, 1 if edge else 2.4 if over_mat == "pave" else 2)
             elif any(0 <= x + dx < N and 0 <= y + dy < N and inside[y + dy][x + dx] for dx, dy in D8[:4]):
                 s.put(x, y, "water", 0, 1, 3)       # foam
     return s.render()
@@ -496,7 +522,8 @@ def tree_part(style, row, col):
     key = (style, tuple(map(tuple, g.PAL["leaf"])), tuple(map(tuple, g.PAL["grass"])))
     if key not in _TREES:
         img = g.tree_image(style)
-        _TREES[key] = {r: [img.crop((c * T, r * T, c * T + T, r * T + T)) for c in range(2)] for r in range(4)}
+        _TREES[key] = {r: [img.crop((c * T, r * T, c * T + T, r * T + T)) for c in range(img.width // T)]
+                       for r in range(img.height // T)}
     return _TREES[key][row][col]
 
 
@@ -619,7 +646,25 @@ class Village:
                 for y in range(y0 + 1, y0 + h):
                     if (side, y) not in self.road:
                         self.flowers.add((side, y))
-        self.cells = self.road | self.footprint | self.flowers
+        # Yards : sand in front of the buildings (the row under them, but their path)
+        self.yard = set()
+        for kind, roof, x0, y0, w, h, door, _ in self.buildings:
+            for x in range(x0, x0 + w):
+                if (x, y0 + h) not in self.road and (x, y0 + h) not in self.footprint:
+                    self.yard.add((x, y0 + h))
+        # A pond near the plaza (half of the villages) : 4 x 3 water in a ring of paving
+        self.pond, self.pond_ring = set(), set()
+        if rng.random() < 0.6:
+            taken = self.road | self.footprint | self.flowers | self.yard
+            for _ in range(40):
+                px, py = cx + rng.randint(-12, 8), cy + rng.randint(-10, 7)
+                ring = {(x, y) for x in range(px - 1, px + 5) for y in range(py - 1, py + 4)}
+                if ring & taken or any((x + dx, y + dy) in taken for x, y in ring for dx, dy in D8):
+                    continue
+                self.pond = {(x, y) for x in range(px, px + 4) for y in range(py, py + 3)}
+                self.pond_ring = ring - self.pond
+                break
+        self.cells = self.road | self.footprint | self.flowers | self.yard | self.pond | self.pond_ring
 
 
 class World:
@@ -638,6 +683,7 @@ class World:
         self.taken = set()
         self.objects = {}                            # block -> height of what stands on it (light map)
         self.chip = Tiles()
+        self.village_ground = set().union(*(v.yard | v.pond | v.pond_ring for v in self.villages))
         self.terrain = [[self.classify(x, y) for x in range(self.W)] for y in range(self.H)]
         for _ in range(8):                           # until every terrace has its stairs
             self.clean()
@@ -906,11 +952,15 @@ class World:
         """The tree of a block : one of its biomes, at random by their weights."""
         w = sorted(self.weights[y][x].items())
         r = h01(x, y, self.seed + 403) * sum(v for _, v in w)
+        style = g.BIOMES[w[-1][0]]["tree"]
         for b, v in w:
             r -= v
             if r <= 0:
-                return g.BIOMES[b]["tree"]
-        return g.BIOMES[w[-1][0]]["tree"]
+                style = g.BIOMES[b]["tree"]
+                break
+        if style == "round" and h01(x, y, self.seed + 404) < 0.15:
+            style = "pine"                           # a few pines among the broadleaf trees
+        return style
 
     def clean(self):
         """Small patches read as noise : a terrace under 16 blocks goes down a level, sand or water under 5 take the
@@ -945,6 +995,8 @@ class World:
                                 seen.add(c)
                                 patch.append(c)
                                 front.append(c)
+                    if any(c in self.village_ground for c in patch):
+                        continue                     # the yards and ponds of the villages stay
                     if kind[0] == "grass" and kind[1] > 0 and len(patch) < 16:
                         to = ("grass", kind[1] - 1)
                     elif kind[0] in ("sand", "water") and len(patch) < 5:
@@ -1112,7 +1164,14 @@ class World:
         return h * (1 - w) + 0.52 * w
 
     def classify(self, x, y):
-        if (x, y) in self.routes or any((x, y) in v.road for v in self.villages):
+        for v in self.villages:                      # the villages : paved streets, sand yards, ponds
+            if (x, y) in v.road or (x, y) in v.pond_ring:
+                return ("pave", 0)
+            if (x, y) in v.pond:
+                return ("water", 0)
+            if (x, y) in v.yard:
+                return ("sand", 0)
+        if (x, y) in self.routes:
             return ("path", 0)
         h = self.height(x, y)
         if h < 0.40:
@@ -1245,45 +1304,135 @@ class World:
                 make = (lambda b=v.biome: g.styled(g.healing_center(), b).render()) if kind == "center" else \
                     (lambda b=v.biome, rf=roof: g.styled(g.house(rf), b).render())
                 self.stamp(name, make, x0, y0, door=(dc, dr))
-            for x, y in v.flowers:
+            colour = ["roofr", "flower", "roofb", "orange"][int(h01(*v.center, 9) * 4)]
+            for x, y in v.flowers:                   # flower beds along some houses
                 if self.mat(x, y) == "grass" and (x, y) not in self.taken:
-                    self.set("", x, y, FLOWER_CELL)
+                    self.set("M", x, y, self.chip.cell(("flowerbed", colour), lambda c=colour: g.flowerbed(c), True))
                     self.taken.add((x, y))
             self.taken |= v.cells
+            self.decorate(v)
         self.taken |= self.routes
+
+    def deco_ok(self, x, y):
+        """A block for a decoration of a village : free, low flat ground (grass or sand), nothing on it."""
+        return 0 <= x < self.W and 0 <= y < self.H and (x, y) not in self.taken and self.walk[y][x] \
+            and self.terrain[y][x] in (("grass", 0), ("sand", 0)) and self.flat(x, y) \
+            and self.layers["M"][y][x] is None and 1 < x % CHUNK < CHUNK - 2 and 1 < y % CHUNK < CHUNK - 2
+
+    def decorate(self, v):
+        """The details of a village, as in the towns of the old games : a painted emblem on the plaza, street lamps
+        along the streets, a mailbox by each house door, bushes along the houses, a fenced vegetable garden, broadleaf
+        trees around."""
+        rng = Rng(self.seed + 77 + v.center[0])
+        cx, cy = v.center
+        if all((x, y) in v.road for x in (cx - 1, cx) for y in (cy - 1, cy)):
+            for c in range(2):
+                for r in range(2):
+                    self.set("M", cx - 1 + c, cy - 1 + r,
+                             self.chip.cell(("emblem", c, r), lambda c=c, r=r: g.emblem(c, r), True))
+        lamps = []
+        for x, y in sorted(v.road, key=lambda c: h01(c[0], c[1], self.seed + 61)):
+            if any(abs(x - a) + abs(y - b) < 7 for a, b in lamps) or len(lamps) > 8:
+                continue
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                lx, ly = x + dx, y + dy
+                if (lx, ly) not in v.road and self.deco_ok(lx, ly) and self.layers["T"][ly - 1][lx] is None \
+                        and (lx, ly - 1) not in v.footprint:
+                    head = self.chip.cell(("lamp", 0), lambda: g.lamp().crop((0, 0, T, T)), True)
+                    post = self.chip.cell(("lamp", 1), lambda: g.lamp().crop((0, T, T, 2 * T)), False)
+                    self.set("T", lx, ly - 1, head)
+                    self.set("M", lx, ly, post)
+                    self.walk[ly][lx] = False
+                    self.taken.add((lx, ly))
+                    self.objects[(lx, ly)] = 0.6
+                    lamps.append((lx, ly))
+                    break
+        for kind, roof, x0, y0, w, h, dc, dr in v.buildings:
+            if kind == "house":                      # the mailbox, beside the path to the door
+                mx, my = x0 + dc + 1, y0 + h
+                if self.deco_ok(mx, my):
+                    self.set("M", mx, my, self.chip.cell(("mailbox",), g.mailbox, False))
+                    self.walk[my][mx] = False
+                    self.taken.add((mx, my))
+            if rng.random() < 0.6:                   # bushes along a side
+                side = x0 - 1 if rng.random() < 0.5 else x0 + w
+                for y in range(y0 + 1, y0 + h):
+                    if self.deco_ok(side, y):
+                        self.set("M", side, y, self.chip.cell(("bush",), g.bush, False))
+                        self.walk[y][side] = False
+                        self.taken.add((side, y))
+                        self.objects[(side, y)] = 0.5
+        # A vegetable garden : 4 x 2 rows of crops, a fence on its north side
+        for _ in range(60):
+            gx, gy = cx + rng.randint(-16, 12), cy + rng.randint(-14, 12)
+            area = [(gx + i, gy + j) for j in range(3) for i in range(4)]
+            if all(self.deco_ok(x, y) and self.terrain[y][x] == ("grass", 0) for x, y in area) \
+                    and all((x, y + 1) not in v.road or y + 1 > gy + 2 for x, y in area):
+                for i in range(4):
+                    self.set("M", gx + i, gy, self.chip.cell(("fence",), g.fence, False))
+                    self.walk[gy][gx + i] = False
+                    for j in (1, 2):
+                        self.set("M", gx + i, gy + j, self.chip.cell(("crops",), g.crops, True))
+                self.taken |= set(area)
+                break
+        # Broadleaf trees between the houses
+        planted = 0
+        for _ in range(80):
+            if planted >= 5:
+                break
+            tx, ty = cx + rng.randint(-18, 15), cy + rng.randint(-15, 15)
+            if self.near_village.get((tx, ty), 99) < 1 or not self.in_town(tx, ty, 4):
+                continue
+            style = "round" if g.BIOMES[v.biome]["tree"] == "round" else g.BIOMES[v.biome]["tree"]
+            if all(self.deco_ok(tx + c, ty + dy) for c in range(TREE_SHAPES[style][0]) for dy in (-2, -1, 0, 1)):
+                if self.tree_at(tx, ty, style):
+                    planted += 1
 
     def free_cell(self, x, y):
         return (x, y) not in self.taken and self.plain(x, y) and self.layers[""][y][x] != FLOWER_CELL
 
-    def tree_at(self, x, y):
-        """A tree : its tip (row y - 1, over the characters), its canopy (row y), its trunk (row y + 1). Packed trees :
-        the tip of a tree may cover the trunk of the tree above it, as in the forests of the old games."""
-        for c in range(2):
-            if not all(self.free_cell(x + c, y + r) for r in (0, 1)):
-                return False
-            if self.layers["T"][y - 1][x + c] is not None or not self.plain(x + c, y - 1):
-                return False
-        style = self.tree_style(x, y)
-        for c in range(2):
-            self.set("T", x + c, y - 1, self.chip.cell(("tree", style, 0, c), lambda: tree_part(style, 0, c), True))
-            canopy = self.chip.cell(("tree", style, 1, c), lambda: g.over(tree_part(style, 1, c), g.grass(0)), False)
-            self.set("", x + c, y, canopy)
-            self.set("T", x + c, y, canopy)
-            self.set("", x + c, y + 1, self.chip.cell(("tree", style, 3, c),
-                                                      lambda: g.over(tree_part(style, 3, c), g.grass(0)), False))
-            self.taken |= {(x + c, y), (x + c, y + 1)}
-            self.objects[(x + c, y)] = self.objects[(x + c, y + 1)] = 1.6
-            self.objects[(x + c, y - 1)] = max(self.objects.get((x + c, y - 1), 0), 1.2)
-            self.walk[y][x + c] = self.walk[y + 1][x + c] = False
+    def tree_at(self, x, y, style=None):
+        """A tree (TREE_SHAPES) whose canopy bottom is on row y, from column x : its top rows over the characters, its
+        canopy, its trunk. Packed trees : the top of a tree may cover the trunk of the tree above it, as in the forests
+        of the old games."""
+        style = style or self.tree_style(x, y)
+        w, parts = TREE_SHAPES[style]
+        for c in range(w):
+            for dy, row, kind in parts:
+                cx, cy = x + c, y + dy
+                if not (0 <= cx < self.W and 0 <= cy < self.H):
+                    return False
+                if kind == "top":
+                    if self.layers["T"][cy][cx] is not None or not self.plain(cx, cy):
+                        return False
+                elif not self.free_cell(cx, cy):
+                    return False
+        for c in range(w):
+            for dy, row, kind in parts:
+                cx, cy = x + c, y + dy
+                if kind == "top":
+                    self.set("T", cx, cy, self.chip.cell(("tree", style, row, c),
+                                                         lambda r=row, k=c: tree_part(style, r, k), True))
+                    self.objects[(cx, cy)] = max(self.objects.get((cx, cy), 0), 1.2)
+                    continue
+                cell = self.chip.cell(("tree", style, row, c),
+                                      lambda r=row, k=c: g.over(tree_part(style, r, k), g.grass(0)), False)
+                self.set("", cx, cy, cell)
+                if kind == "canopy":
+                    self.set("T", cx, cy, cell)
+                self.taken.add((cx, cy))
+                self.objects[(cx, cy)] = 1.6
+                self.walk[cy][cx] = False
         return True
 
     def place_nature(self):
         # Forests : packed, every 2 blocks, the rows shifted by one (a wall of trees), their edges a bit ragged ;
         # groves : small packed clumps ; a few lone trees
-        for y in range(1, self.H - 2, 2):
-            for x0 in range(0, self.W - 2, 2):
-                x = x0 + (y // 2) % 2
-                if self.in_town(x, y, 4):
+        for wide, step in ((True, 3), (False, 2)):  # the broadleaf trees (3 wide), the others (2 wide)
+          for y in range(2, self.H - 2, step):
+            for x0 in range(0, self.W - step, step):
+                x = x0 + (y // step) % step
+                if self.in_town(x, y, 4) or (self.tree_style(x, y) == "round") != wide:
                     continue
                 forest = fbm(x / 13.0, y / 13.0, self.seed + 1)
                 grove = fbm(x / 4.0, y / 4.0, self.seed + 3)

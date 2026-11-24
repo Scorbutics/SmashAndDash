@@ -2,9 +2,7 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 0 2 Levels/teleport.miniska, w_4_6, 38, 0
 0 0 2 Levels/teleport.miniska, w_5_5, 0, 38
 0 1 2 Levels/teleport.miniska, w_4_6, 38, 1
-1 0 2 Levels/teleport.miniska, w_5_5, 1, 38
 0 2 2 Levels/teleport.miniska, w_4_6, 38, 2
-2 0 2 Levels/teleport.miniska, w_5_5, 2, 38
 0 3 2 Levels/teleport.miniska, w_4_6, 38, 3
 3 0 2 Levels/teleport.miniska, w_5_5, 3, 38
 0 4 2 Levels/teleport.miniska, w_4_6, 38, 4
@@ -32,31 +30,48 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 11 39 2 Levels/teleport.miniska, w_5_7, 11, 1
 0 12 2 Levels/teleport.miniska, w_4_6, 38, 12
 12 39 2 Levels/teleport.miniska, w_5_7, 12, 1
+0 13 2 Levels/teleport.miniska, w_4_6, 38, 13
+39 13 2 Levels/teleport.miniska, w_6_6, 1, 13
 13 39 2 Levels/teleport.miniska, w_5_7, 13, 1
 14 0 2 Levels/teleport.miniska, w_5_5, 14, 38
 14 39 2 Levels/teleport.miniska, w_5_7, 14, 1
+15 0 2 Levels/teleport.miniska, w_5_5, 15, 38
 15 39 2 Levels/teleport.miniska, w_5_7, 15, 1
+0 16 2 Levels/teleport.miniska, w_4_6, 38, 16
+39 16 2 Levels/teleport.miniska, w_6_6, 1, 16
+16 0 2 Levels/teleport.miniska, w_5_5, 16, 38
 16 39 2 Levels/teleport.miniska, w_5_7, 16, 1
+0 17 2 Levels/teleport.miniska, w_4_6, 38, 17
 17 0 2 Levels/teleport.miniska, w_5_5, 17, 38
 17 39 2 Levels/teleport.miniska, w_5_7, 17, 1
+0 18 2 Levels/teleport.miniska, w_4_6, 38, 18
 18 0 2 Levels/teleport.miniska, w_5_5, 18, 38
 18 39 2 Levels/teleport.miniska, w_5_7, 18, 1
 0 19 2 Levels/teleport.miniska, w_4_6, 38, 19
+39 19 2 Levels/teleport.miniska, w_6_6, 1, 19
 19 0 2 Levels/teleport.miniska, w_5_5, 19, 38
 0 20 2 Levels/teleport.miniska, w_4_6, 38, 20
 20 0 2 Levels/teleport.miniska, w_5_5, 20, 38
 20 39 2 Levels/teleport.miniska, w_5_7, 20, 1
+0 21 2 Levels/teleport.miniska, w_4_6, 38, 21
+21 0 2 Levels/teleport.miniska, w_5_5, 21, 38
 21 39 2 Levels/teleport.miniska, w_5_7, 21, 1
+0 22 2 Levels/teleport.miniska, w_4_6, 38, 22
+39 22 2 Levels/teleport.miniska, w_6_6, 1, 22
+22 0 2 Levels/teleport.miniska, w_5_5, 22, 38
 22 39 2 Levels/teleport.miniska, w_5_7, 22, 1
 23 0 2 Levels/teleport.miniska, w_5_5, 23, 38
+24 0 2 Levels/teleport.miniska, w_5_5, 24, 38
 24 39 2 Levels/teleport.miniska, w_5_7, 24, 1
-25 39 2 Levels/teleport.miniska, w_5_7, 25, 1
-26 0 2 Levels/teleport.miniska, w_5_5, 26, 38
-26 39 2 Levels/teleport.miniska, w_5_7, 26, 1
+0 25 2 Levels/teleport.miniska, w_4_6, 38, 25
+39 25 2 Levels/teleport.miniska, w_6_6, 1, 25
+25 0 2 Levels/teleport.miniska, w_5_5, 25, 38
+0 26 2 Levels/teleport.miniska, w_4_6, 38, 26
 0 27 2 Levels/teleport.miniska, w_4_6, 38, 27
-27 0 2 Levels/teleport.miniska, w_5_5, 27, 38
 0 28 2 Levels/teleport.miniska, w_4_6, 38, 28
+39 28 2 Levels/teleport.miniska, w_6_6, 1, 28
 0 29 2 Levels/teleport.miniska, w_4_6, 38, 29
+29 0 2 Levels/teleport.miniska, w_5_5, 29, 38
 0 30 2 Levels/teleport.miniska, w_4_6, 38, 30
 30 0 2 Levels/teleport.miniska, w_5_5, 30, 38
 0 31 2 Levels/teleport.miniska, w_4_6, 38, 31
@@ -65,19 +80,22 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 0 32 2 Levels/teleport.miniska, w_4_6, 38, 32
 39 32 2 Levels/teleport.miniska, w_6_6, 1, 32
 32 0 2 Levels/teleport.miniska, w_5_5, 32, 38
+0 33 2 Levels/teleport.miniska, w_4_6, 38, 33
+39 33 2 Levels/teleport.miniska, w_6_6, 1, 33
 33 0 2 Levels/teleport.miniska, w_5_5, 33, 38
-33 39 2 Levels/teleport.miniska, w_5_7, 33, 1
+0 34 2 Levels/teleport.miniska, w_4_6, 38, 34
+39 34 2 Levels/teleport.miniska, w_6_6, 1, 34
 34 0 2 Levels/teleport.miniska, w_5_5, 34, 38
-34 39 2 Levels/teleport.miniska, w_5_7, 34, 1
-37 39 2 Levels/teleport.miniska, w_5_7, 37, 1
-38 39 2 Levels/teleport.miniska, w_5_7, 38, 1
+35 39 2 Levels/teleport.miniska, w_5_7, 35, 1
+0 37 2 Levels/teleport.miniska, w_4_6, 38, 37
+39 38 2 Levels/teleport.miniska, w_6_6, 1, 38
 39 39 2 Levels/teleport.miniska, w_6_6, 1, 39
 39 39 2 Levels/teleport.miniska, w_5_7, 39, 1
 21 11 2 Levels/teleport.miniska, w_room_19, 11, 9
 32 11 2 Levels/teleport.miniska, w_room_20, 11, 9
 14 18 2 Levels/teleport.miniska, w_room_21, 10, 9
 15 28 2 Levels/teleport.miniska, w_room_22, 11, 9
-13 22 1 Levels/sign.miniska, Bourg-Noisette¤Les feuilles y tombent toute l'année.
-4 19 1 Levels/sign.miniska, Bourg-Noisette¤Les feuilles y tombent toute l'année.
-0 0 0 Levels/item.miniska, place, 1, 29, 35, item_w_5_6_29_35
-0 0 0 Levels/item.miniska, place, 1, 16, 3, item_w_5_6_16_3
+12 22 1 Levels/sign.miniska, Hameau Châtaigne¤Les feuilles y tombent toute l'année.
+4 19 1 Levels/sign.miniska, Hameau Châtaigne¤Les feuilles y tombent toute l'année.
+0 0 0 Levels/item.miniska, place, 0, 3, 12, item_w_5_6_3_12
+0 0 0 Levels/item.miniska, place, 0, 34, 30, item_w_5_6_34_30

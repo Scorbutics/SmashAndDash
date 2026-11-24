@@ -25,8 +25,10 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 15 0 2 Levels/teleport.miniska, w_0_0, 15, 38
 15 39 2 Levels/teleport.miniska, w_0_2, 15, 1
 39 16 2 Levels/teleport.miniska, w_1_1, 1, 16
+16 0 2 Levels/teleport.miniska, w_0_0, 16, 38
 16 39 2 Levels/teleport.miniska, w_0_2, 16, 1
 39 17 2 Levels/teleport.miniska, w_1_1, 1, 17
+17 0 2 Levels/teleport.miniska, w_0_0, 17, 38
 17 39 2 Levels/teleport.miniska, w_0_2, 17, 1
 39 18 2 Levels/teleport.miniska, w_1_1, 1, 18
 18 0 2 Levels/teleport.miniska, w_0_0, 18, 38
@@ -81,4 +83,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 38 31 2 Levels/teleport.miniska, w_room_12, 10, 9
 21 12 2 Levels/teleport.miniska, w_room_13, 10, 9
 20 20 2 Levels/teleport.miniska, w_room_14, 10, 9
-25 33 1 Levels/sign.miniska, Village Soleil¤La chaleur ne fait pas peur à ses habitants.
+25 33 1 Levels/sign.miniska, Bourg-Mirage¤La chaleur ne fait pas peur à ses habitants.
+0 0 0 Levels/item.miniska, place, 2, 11, 15, item_w_0_1_11_15
