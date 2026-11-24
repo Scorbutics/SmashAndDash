@@ -95,17 +95,17 @@ $
 **Finishes:** the game's script verbs (`src/scripts/game.*.miniska`)
 
 ```sh
-$ external/ska/tools/ska-console run tools/agent/warp.miniska spore_ville 12 8
-{"ok": true, "value": "spore_ville (12,8)", "frames": 30}
+$ external/ska/tools/ska-console run tools/agent/warp.miniska w_room_0 11 8
+{"ok": true, "value": "w_room_0 (11,8)", "frames": 30}
 $ external/ska/tools/ska-console run tools/agent/party.miniska
 {"ok": true, "value": "2 pokemon\n#0 Bulbizarre lv4 hp 34\n#1 Pikachu lv4 hp 32", "frames": 0}
 $ external/ska/tools/ska-console --timeout 280 run tools/agent/battle.miniska 25 3      # run started with --env SAD_BATTLE_AUTOPLAY=1
 {"ok": true, "value": "won=false fled=false hp=0", "frames": 4135}
 $ external/ska/tools/ska-console --raw eval 'Map.name()'
-greencity
+w_1_1
 ```
 
-**Is:** `tools/agent/*.miniska` (`warp`, `battle`, `party`, `story-step`), checked by the build with the game scripts (`AGENT_SCRIPTS` in `src/CMakeLists.txt`, with the engine's); the console prelude of the game (`GameDialog`, `Character`, `Map`, `Party`, `Interface`, `Battle`, `Save`, `Bag`: `WorldState.cpp`); new verbs `Map.name()`, `Map.waitTransition()` (waits for the end of the fade of a map change — no polling), `Party.species(index)`, `Engine.variables()` (`SavegameManager::getGameVariables`). Under `SAD_BATTLE_AUTOPLAY` the battle messages close by themselves after 1.5 s (`DialogTransition`: nobody plays), so a battle runs unattended.
+**Is:** `tools/agent/*.miniska` (`warp`, `battle`, `party`, `variables`, was `story-step`), checked by the build with the game scripts (`AGENT_SCRIPTS` in `src/CMakeLists.txt`, with the engine's); the console prelude of the game (`GameDialog`, `Character`, `Map`, `Party`, `Interface`, `Battle`, `Save`, `Bag`: `WorldState.cpp`); new verbs `Map.name()`, `Map.waitTransition()` (waits for the end of the fade of a map change — no polling), `Party.species(index)`, `Engine.variables()` (`SavegameManager::getGameVariables`). Under `SAD_BATTLE_AUTOPLAY` the battle messages close by themselves after 1.5 s (`DialogTransition`: nobody plays), so a battle runs unattended.
 **Gives the agent:** any map, position, battle, team or story step in one command, with the game's own rules.
 **Not a script because:** it is the scripts (one card for the folder).
 **Origin:** map
@@ -116,11 +116,11 @@ greencity
 
 | Script | Usage → prints | Needs |
 |---|---|---|
-| `warp` | `run tools/agent/warp.miniska spore_ville 12 8` → `spore_ville (12,8)` | delivered: `Map.name()`, `Map.waitTransition()` |
+| `warp` | `run tools/agent/warp.miniska w_room_0 11 8` → `w_room_0 (11,8)` | delivered: `Map.name()`, `Map.waitTransition()` |
 | `battle` | `run tools/agent/battle.miniska 25 3` → `won=false fled=false hp=0` | delivered: the messages close under autoplay |
 | `party` | `run tools/agent/party.miniska` → `2 pokemon · #0 Bulbizarre lv4 hp 34 · …` | delivered: `Party.species(index)` |
 | `var` | `eval 'Engine.variable("%00012")'` → `{"value":"0"}` | none |
-| `story-step` | `run tools/agent/story-step.miniska [prefix] [all]` → the variables not 0, `name=value` | delivered: `Engine.variables()` |
+| `variables` (was `story-step`) | `run tools/agent/variables.miniska [prefix] [all]` → the variables not 0, `name=value` | delivered: `Engine.variables()` |
 
 **Verified:** demoed — 2026-11-23 (each row ran; a battle of 82 s unattended; `tools/doctor`).
 
@@ -255,7 +255,7 @@ flowchart LR
 
 | Rule (where) | Guard | Kind |
 |---|---|---|
-| "Add a test with a script change when the script has logic" (`CLAUDE.md`, Build and run) | CI check: a change to `Data/Battle/*.miniska`, `Levels/story.miniska`, `Levels/dialog.miniska` without a change in `tests/` warns | CI |
+| "Add a test with a script change when the script has logic" (`CLAUDE.md`, Build and run) | CI check: a change to `Data/Battle/*.miniska`, `Levels/dialog.miniska` without a change in `tests/` warns | CI |
 | "A script only imported by other scripts (no `run` function) is listed in `GAME_SCRIPT_MODULES`" (`CLAUDE.md`, Scripts) | already enforced by `smash_and_dash_scripts_check` (a module without `run` fails) — confirm, else a check in the build | lint |
 | "Script files with accents are Latin-1" (`CLAUDE.md`, Scripts) | pre-tool hook / build check: reject UTF-8 multibyte sequences in `Levels/**/*.miniska`, `Data/**/*.ini` | hook |
 | "Change the template with the C++ binding" (`CLAUDE.md`, Scripts) | a build check that each `bindField("x")` of `src/src/Game/Script/GameScriptModule.cpp` has `x = function` in `src/scripts/game.<module>.miniska` | lint |

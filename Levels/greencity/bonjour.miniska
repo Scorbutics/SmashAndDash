@@ -1,5 +1,0 @@
-Dialog = import "wd:Levels/dialog"
-
-run = function(args: string[]) do
-	Dialog.say("Bonjour !")
-end

@@ -20,4 +20,5 @@ price = function(item: int) : int do return 0 end
 
 # Uses an item of the bag on a Pokemon of the team (index) : a healing item gives hit points.
 # false (the item is kept) when it has no effect (no such item in the bag, not a healing item, the Pokemon is not hurt)
+# (It uses the battle rules, scripts : the script waits for the next update.)
 use = function(item: int, pokemon: int) : bool do return false end

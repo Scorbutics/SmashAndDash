@@ -1,0 +1,12 @@
+# A rest in a bed (Levels/rest.miniska)
+Test = import "bind:std.native.test"
+GameDialog = import "bind:game.dialog"
+Rest = import "wd:Levels/rest"
+
+run = function(args: string[]) do
+	Rest.rest()
+	messages = GameDialog.messages()
+	Test.equal((messages.size(): string), "2", "two messages")
+	Test.equal(messages[0], "Tu te reposes un moment...", "the rest")
+	Test.equal(messages[1], "Ton équipe est en pleine forme !", "the team healed")
+end

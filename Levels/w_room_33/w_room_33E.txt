@@ -1,0 +1,3 @@
+x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
+11 10 2 Levels/teleport.miniska, w_2_0, 20, 24
+12 10 2 Levels/teleport.miniska, w_2_0, 20, 24

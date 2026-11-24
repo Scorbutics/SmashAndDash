@@ -1,4 +1,0 @@
-x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
-0 0 0 Levels/add_character.miniska, -2, 13, 5, npc-2_0, fixed, Levels/say.miniska, Bonjour!
-0 0 0 Levels/add_character.miniska, -3, 15, 5, npc-3_0, fixed, Levels/say.miniska, Bonjour!
-14 1 2 Levels/temple_koa/start_script.miniska

@@ -1,7 +1,7 @@
 #!/bin/sh
 # doctor : runs the usage examples of the agent tools against the real game, so they fail loudly the day the game changes
 # under them. Needs a build (cmake --build build) and Xvfb. Usage : tools/doctor [build directory, default build]
-#   - tools/sad-run up/down : a run from a copy of save1, ready (console + skalang)
+#   - tools/sad-run up/down : a run from a copy of save1 (the world of tools/worldgen, seed 7), ready (console + skalang)
 #   - ska-console : ping, eval (expression, statements), run tools/agent/*.miniska, shot, press, pause/step
 #   - the saves of the repository are not written ; the logs of the run are in its folder
 #   - tools/web/sad-web, when a web build (build-web) and Playwright (tools/web/node_modules) are there
@@ -44,12 +44,12 @@ check "eval expression" '"value": "4"' ska-console --run $RUN eval '2 + 2'
 check "eval statements that wait" '"value": "waited"' ska-console --run $RUN eval 'Engine.wait(200)
 Dev.reply("waited")'
 check_fails "eval compile error (line of the code)" 'l.1, c.6) Symbol not found : Nope' ska-console --run $RUN eval 'Nope.call()'
-check "map name (game prelude)" '"value": "greencity"' ska-console --run $RUN eval 'Map.name()'
+check "map name (game prelude)" '"value": "w_5_4"' ska-console --run $RUN eval 'Map.name()'
 check "state" 'states=WorldState' ska-console --run $RUN run external/ska/tools/agent/state.miniska
 check "entities" 'trainer' ska-console --run $RUN run external/ska/tools/agent/entities.miniska trainer
 check "party" 'pokemon' ska-console --run $RUN run tools/agent/party.miniska
-check "story-step" '"ok": true' ska-console --run $RUN run tools/agent/story-step.miniska
-check "warp" 'spore_ville (12,8)' ska-console --run $RUN run tools/agent/warp.miniska spore_ville 12 8
+check "variables" '"ok": true' ska-console --run $RUN run tools/agent/variables.miniska
+check "warp" 'w_room_0 (11,8)' ska-console --run $RUN run tools/agent/warp.miniska w_room_0 11 8
 check "shot" '"w": ' ska-console --run $RUN shot doctor
 check "press" '"pressed"' ska-console --run $RUN press D 10
 check "pause" 'paused' ska-console --run $RUN pause

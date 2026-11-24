@@ -9,6 +9,7 @@
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
+#include "World/LightMap.h"
 #include "Core/Rectangle.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
@@ -106,7 +107,7 @@ public:
 	std::vector<ska::IniReader>& getMobSettings() override;
 
 	const std::string& getFileName() const;
-	// Name of the current map (its directory in Levels, ex : "greencity")
+	// Name of the current map (its directory in Levels, ex : "w_5_4")
 	std::string getMapName() const;
 	const std::string& getTilesetName() const;
 	// The tile is drawn at this point (in the tile : 0 to its size), not transparent
@@ -153,6 +154,8 @@ private:
 	std::string m_worldFileName;
 	
 	WorldImpl m_world;
+	// The light of the map (Levels/<map>/<map>L.png, made by tools/worldgen) : soft shade and light over it
+	ska::LightMap m_lightMap;
 
 	ska::CameraSystem* m_cameraSystem{};
 	ska::Rectangle m_screenSize{};

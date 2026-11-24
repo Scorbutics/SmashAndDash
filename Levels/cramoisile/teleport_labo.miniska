@@ -1,5 +1,0 @@
-Map = import "bind:game.map"
-
-run = function(args: string[]) do
-	Map.teleport("cramoisile_labo", 11, 16)
-end

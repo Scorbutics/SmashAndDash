@@ -1,0 +1,17 @@
+# A rest in a bed (the beds of the rest houses, tools/worldgen) : the team is healed, the game is not saved
+GameDialog = import "bind:game.dialog"
+Party = import "bind:game.party"
+
+rest = function() do
+	GameDialog.message("Tu te reposes un moment...")
+	for(i = 0
+	 i < 6
+	 i = i + 1) do
+		Party.heal(i, 999)
+	end
+	GameDialog.message("Ton équipe est en pleine forme !")
+end
+
+run = function(args: string[]) do
+	rest()
+end

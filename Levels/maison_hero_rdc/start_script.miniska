@@ -1,9 +1,0 @@
-# Exit of the house
-Character = import "bind:game.character"
-Map = import "bind:game.map"
-Story = import "wd:Levels/story"
-
-run = function(args: string[]) do
-	Map.teleport("greencity", 17, 17)
-	Character.setDirection(Story.player(), 0)
-end

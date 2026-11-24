@@ -1,0 +1,6 @@
+# A sign : its text (placed by tools/worldgen). Map event, action key : Levels/sign.miniska, <text>
+GameDialog = import "bind:game.dialog"
+
+run = function(args: string[]) do
+	GameDialog.message(args[0])
+end

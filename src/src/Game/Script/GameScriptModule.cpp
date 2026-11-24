@@ -502,12 +502,23 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 	m_builder.generate();
 }
 
+namespace {
+	// The battle rules are scripts, and no script can be called during the step of another one : a native function that
+	// needs them suspends the running script, does its work between the steps (at the next update) and gives its value
+	// to the script then
+	ska::NodeValue AfterStep(ska::scripting::ScriptVM& vm, std::function<ska::NodeValue()> work) {
+		vm.suspendUntil([]() { return true; }, std::move(work));
+		return ska::NodeValue{};
+	}
+}
+
 PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	GameScriptModule(vm, "party") {
 	(void) entityManager;
 
-	m_builder.bindField("addPokemon", [&ged, &worldState](std::vector<ska::NodeValue> params) {
+	m_builder.bindField("addPokemon", [&vm, &ged, &worldState](std::vector<ska::NodeValue> params) {
 		const auto id = Int(params[0]);
+		return AfterStep(vm, [&ged, &worldState, id]() {
 		const auto dataFile = "./Data/Monsters/" + std::to_string(id) + ".ini";
 		if (!std::ifstream{ dataFile }.good()) {
 			SLOG_STATIC(ska::LogLevel::Warn, GameScriptModule) << "Script : no data for the pokemon " << id << " (" << dataFile << ")";
@@ -529,6 +540,7 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 		auto loadEvent = EntityLoadEvent{ details, static_cast<unsigned int>(id), hp };
 		ged.ska::Observable<EntityLoadEvent>::notifyObservers(loadEvent);
 		return ska::NodeValue{ true };
+		});
 	});
 
 	m_builder.bindField("size", [&worldState](std::vector<ska::NodeValue>) {
@@ -549,19 +561,26 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 		return ska::NodeValue{ static_cast<long>(pokemon.has_value() ? pokemon->hp : 0) };
 	});
 
-	m_builder.bindField("level", [&worldState](std::vector<ska::NodeValue> params) {
-		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
-		if (!pokemon.has_value()) {
-			return ska::NodeValue{ 0L };
-		}
-		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
-		const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
-		return ska::NodeValue{ static_cast<long>(worldState.getBattleRules().level(pokemon->experience, needed)) };
+	m_builder.bindField("level", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		return AfterStep(vm, [&worldState, index]() {
+			const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(index);
+			if (!pokemon.has_value()) {
+				return ska::NodeValue{ 0L };
+			}
+			const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+			const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+			return ska::NodeValue{ static_cast<long>(worldState.getBattleRules().level(pokemon->experience, needed)) };
+		});
 	});
 
-	m_builder.bindField("heal", [&worldState](std::vector<ska::NodeValue> params) {
-		HealTeamMember(worldState.getSaveGame().getPathName(), Int(params[0]), Int(params[1]), worldState.getBattleRules());
-		return ska::NodeValue{};
+	m_builder.bindField("heal", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		const auto amount = Int(params[1]);
+		return AfterStep(vm, [&worldState, index, amount]() {
+			HealTeamMember(worldState.getSaveGame().getPathName(), index, amount, worldState.getBattleRules());
+			return ska::NodeValue{};
+		});
 	});
 
 	m_builder.bindField("pokemonOut", [](std::vector<ska::NodeValue>) { NotAvailable("pokemonOut"); return ska::NodeValue{}; });
@@ -728,8 +747,12 @@ InventoryScriptModule::InventoryScriptModule(ska::scripting::ScriptVM& vm, Custo
 		const auto item = Bag::data(Int(params[0]));
 		return ska::NodeValue{ static_cast<long>(item.has_value() ? item->price : 0) };
 	});
-	m_builder.bindField("use", [&bag, &worldState](std::vector<ska::NodeValue> params) {
-		return ska::NodeValue{ UseItem(worldState, bag, Int(params[0]), Int(params[1])) };
+	m_builder.bindField("use", [&vm, &bag, &worldState](std::vector<ska::NodeValue> params) {
+		const auto item = Int(params[0]);
+		const auto pokemon = Int(params[1]);
+		return AfterStep(vm, [&bag, &worldState, item, pokemon]() {
+			return ska::NodeValue{ UseItem(worldState, bag, item, pokemon) };
+		});
 	});
 
 	m_builder.generate();

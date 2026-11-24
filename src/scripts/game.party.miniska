@@ -1,6 +1,7 @@
 # Pokemon team of the player : Party = import "bind:game.party"
 
 # Adds a pokemon to the team of the player : false if it could not (no data for this pokemon, full team)
+# (It uses the battle rules, scripts : the script waits for the next update.)
 addPokemon = function(id: int) : bool do return false end
 
 # The team is saved as it changes. "index" : the place of a Pokemon in the team (0 to 5)
@@ -11,9 +12,11 @@ species = function(index: int) : string do return "" end
 # Hit points left of a Pokemon of the team (0 : knocked out, or no Pokemon at this index)
 hp = function(index: int) : int do return 0 end
 # Level of a Pokemon of the team (from its experience, battle rules), 0 when there is no Pokemon at this index
+# (It uses the battle rules, scripts : the script waits for the next update.)
 level = function(index: int) : int do return 0 end
 
 # Gives hit points to a Pokemon of the team, up to its hit points at its level (nothing when there is no Pokemon at this index)
+# (It uses the battle rules, scripts : the script waits for the next update.)
 heal = function(index: int, value: int) do end
 
 # Not available in this version of the game (logged, nothing is done)

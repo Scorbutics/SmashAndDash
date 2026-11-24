@@ -25,6 +25,7 @@
 #include "World/TileWorldLoaderAggregate.h"
 #include "World/LayerLoaderImage.h"
 #include "World/TilesetLoaderImage.h"
+#include "Base/IO/Files/FileUtils.h"
 #include "World/TilesetEventLoaderText.h"
 #include "Scripting/ScriptVM.h"
 #include "Scripting/EngineModule.h"
@@ -79,7 +80,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_entityLocator(ed),
 	m_entityHandles(ed),
 	m_correspondanceMapper("Resources/Chipsets/corr.png"),
-	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset"), BuildTilesetEventLoader("Resources/Chipsets/chipset"))),
+	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset_world"), BuildTilesetEventLoader("Resources/Chipsets/chipset_world"))),
 	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
 	m_debugDrawer(ed, em, m_entityLocator, m_tileset->getTileSize()) {
@@ -181,6 +182,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
+	m_lightMap.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	//TODO enlever la météo de world
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
@@ -417,6 +419,9 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(spawnBlock.x * static_cast<int>(blockSize)), static_cast<float>(spawnBlock.y * static_cast<int>(blockSize))));
 
 				successfulSpawns++;
+				SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " level " << level << " at block (" << spawnBlock.x << ", " << spawnBlock.y << ")";
+			} else {
+				SLOG(ska::LogLevel::Debug) << "Wild pokemon " << idMob << " : no spawn at block (" << dest.x / blockSize << ", " << dest.y / blockSize << ")";
 			}
 		}
 		angle += static_cast<float>((2.0*M_PI) / nbrSpawns);
@@ -446,15 +451,23 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	//FIN CLEAN UP
 
 	//DEBUT WORLD
+	// The previous tileset lives until the world has loaded the new one : the world still points to it (it compares
+	// the names to know whether the tileset changed)
+	auto previousTileset = ska::TilesetPtr{};
 	if (getTilesetName() != chipsetName) {
-		m_tileset = BuildTileset(m_tileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
+		previousTileset = std::move(m_tileset);
+		m_tileset = BuildTileset(previousTileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
 	}
 
-	if (getFileName() != fileName) {
+	if (getFileName() != fileName || previousTileset != nullptr) {
 		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
 		// The map the player is on (the return from a battle, the saves)
 		m_worldFileName = fileName;
 	}
+	// Its light, when it has one : "Levels/<map>" -> "Levels/<map>/<map>L.png"
+	const auto mapName = ska::FileNameData{ fileName }.name;
+	m_lightMap.setPriority(LightMapPriority);
+	m_lightMap.load(fileName + "/" + mapName + "L.png", static_cast<unsigned int>(m_world.getBlockSize()), static_cast<unsigned int>(m_world.getBlocksX()), static_cast<unsigned int>(m_world.getBlocksY()));
 	//FIN WORLD
 
 	//DEBUT PLAYER

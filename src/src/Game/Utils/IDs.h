@@ -78,7 +78,11 @@ constexpr long AirHeight = 48;
 constexpr int AirPriority = 25000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)
 constexpr int FogPriority = WorldOverlayPriority - 2;
+// The light of the map (ska::LightMap) : over the ground, the characters and the top layer, under the fog and the weather
+constexpr int LightMapPriority = WorldOverlayPriority - 3;
 constexpr int WeatherPriority = WorldOverlayPriority - 1;
-#define SKILLS_DEFAULT_DISPLAY_PRIORITY GUI_DEFAULT_DISPLAY_PRIORITY - 1
+// The projectiles of the skills : zoomed with the world (under WorldInterfacePriority), over their trails (GUIBattle,
+// WorldOverlayPriority)
+constexpr int SKILLS_DEFAULT_DISPLAY_PRIORITY = WorldOverlayPriority + 1;
 
 #define DEFAULT_BGM "./Music/Greencity.mp3"

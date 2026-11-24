@@ -5,7 +5,8 @@ Map = import "bind:game.map"
 
 # Block property of the water
 Water = 1
-# Sprites of the player : walking, surfing (Sprites/Charsets, made by tools/assets/surf_sprite.py)
+# Sprites of the player : walking (Sprites/Charsets/0.png, made by tools/tilegen/character.py), surfing (made from it by
+# tools/assets/surf_sprite.py)
 HeroSprite = 0
 SurfSprite = 1000
 

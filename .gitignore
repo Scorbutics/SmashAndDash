@@ -54,3 +54,4 @@ CMakeCache.txt
 
 # tools/web/sad-web (npm install --prefix tools/web)
 /tools/web/node_modules/
+__pycache__/

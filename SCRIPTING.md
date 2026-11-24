@@ -4,11 +4,8 @@ The game is scripted with [skalang](https://github.com/Scorbutics/skalang) (`.mi
 
 ## Where scripts are started
 
-- **Map events** (`Levels/<map>/<map>E.txt`): `x y trigger script, arguments`. The trigger is `0` when the map is loaded, `1` for the action key, and `2` when the player walks onto the block.
-  - Characters are added when the map is loaded, with `Levels/add_character.miniska, sprite, x, y, name, movement, script, arguments...`.
-  - The movement is `fixed`, `wander`, or a path of directions walked again and again: `b` down, `d` right, `h` up, `g` left.
-  - The script runs when the player talks to the character.
-- **Tiles**: `Resources/Chipsets/<chipset>/Scripts/<tile x>_<tile y>_<trigger>.miniska`. The trigger is `1` for action, `2` for walked on, `3` for walked out and `4` for touched. The arguments are the previous block (x, y), the new block (x, y) and the direction.
+- **Map events** (`Levels/<map>/<map>E.txt`): `x y trigger script, arguments`. The trigger is `0` when the map is loaded, `1` for the action key, and `2` when the player walks onto the block. The maps are generated (see "The world"): their events are the teleports of the chunk edges and the doors (`Levels/teleport.miniska, map, x, y`) and the healing counters (`Levels/pokescript.miniska`, action key).
+- **Tiles**: `Resources/Chipsets/<chipset>/Scripts/<tile x>_<tile y>_<trigger>.miniska`, listed in `Resources/Chipsets/<chipset>/scripts.txt`. The trigger is `1` for action, `2` for walked on, `3` for walked out and `4` for touched. The arguments are the previous block (x, y), the new block (x, y) and the direction. The world generator copies them from `Resources/Chipsets/tile_scripts` (`water`: starts surfing; `ledge_left`, `ledge_down`, `ledge_right`: the jumps over a ledge, not placed by the generator yet).
 - **Scripts**: `Engine.script(file, arguments)` starts another script.
 
 A script declares `run = function(args: string[]) do ... end`. A script started by a trigger does not start again while it is still running.
@@ -29,7 +26,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | Saving | `Save = import "bind:game.save"` | save |
 | Bag | `Bag = import "bind:game.inventory"` | count, items, add, remove, money, earn, pay, name, price, use |
 
-The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `step`, `jumpOver`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game.
+The script templates in `src/scripts` declare these functions, with comments. The functions that wait (`wait`, `move`, `step`, `jumpOver`, `message`, `choice`, `cinematic`) suspend the script until the action is over, without blocking the game. The functions that use the battle rules (`Party.addPokemon`, `Party.level`, `Party.heal`, `Bag.use`) wait for the next update: the rules are scripts, and no script can be called during the step of another one.
 
 Some features of the old scripts do not exist in this version of the game. Their functions only log a warning: `crumbling`, `pokemonOut` and `Interface.shop` (the shops are scripts: `Levels/shop.miniska`).
 
@@ -68,19 +65,21 @@ Battles are real time (C++), played like a fighting game: the bars of the two fi
   - `status`: `poison`, `burn` (damage over time; a burn halves the physical damage), `paralysis` (slower, 1 attack in 4 fails), `sleep` (no action, a hit wakes it up), `leech` (damage over time healing the Pokemon that used it), `flinch` (a short stun), `guard` (on itself: blocks the hits). `status_chance` (percentage, 100 by default), for `duration` milliseconds.
   - `fixed_damage`: damage that does not depend on the statistics (Draco-Rage).
 
+## The world
+
+The maps are made by `tools/worldgen/worldgen.py --seed N --save save1` (Python, Pillow), with the tiles of `tools/tilegen`: an island of 8 x 8 chunks of 40 x 40 blocks (`Levels/w_<x>_<y>`, edges linked by teleports), a village, forests, cliffs and stairs, water, and the inside of the buildings (`Levels/w_room_<n>`, from the templates of `tools/worldgen/rooms`). Each map has a light map (`<map>L.png`). The biomes (meadow, autumn, snow, desert: `tools/tilegen` `BIOMES`, `tools/worldgen` `NATURE`, `SPAWNS`, `BIOME_LIFT`) come from a climate, as in Minecraft: a temperature and a humidity noise spanning about 150 blocks, and a table (`climate_biome`: cold snow, hot desert, temperate and wet autumn, else meadow); a region under 500 blocks joins its neighbour. A biome has its colours, its tree, its vegetation, its wild Pokemon (those of the biome of most of the chunk) and raises the land a little (dry deserts). The relief is a variable of the climate apart from the biome (a third noise, `RELIEF_FROM`, `RELIEF_FULL`): any biome can be mountains, terraces up to 4 levels high whose rock faces are about 1.5 blocks tall; every terrace has stairs down to a lower one. The first village grows in the meadow nearest the middle of the world, where the game starts; others grow in each biome (`VILLAGE_STYLE`: roofs, snow on the roofs, adobe or log walls, names), each with a healing centre, linked by roads (A* around the water, cutting passes through the mountains). Signs at the village exits (`Levels/sign.miniska, <text>`, action key) give their names. Beside the roads, places to find (`POI_KINDS`): camps (a tent, a campfire, an item), ruins (stone pillars around an item), rest houses (a cabin whose bed heals the team: `Levels/rest.miniska`). Items to find also lie on open ground off the roads, rather on the mountains and in the forests (`Levels/item.miniska`: an item ball, a character added when the map is loaded unless its game variable `item_<map>_<x>_<y>` is set; talking to it puts the item in the bag, once). The borders of the biomes blend over about 10 blocks: each block corner has its mix of biomes, and a tile is drawn with the mix of its corners blended across it. Each map has its own chipset with the tiles it uses (`Resources/Chipsets/chipset_<map>.png`, as high as needed; `chipset_world` for the rooms); `Resources/Chipsets/corr.png` names 30 x 64 cells. The new game (`Data/Saves/new_game`) and `save1` start in the village. There is no story and no character but the player.
+
 ## Wild Pokemon
 
-The wild Pokemon of a map are `Levels/<map>/Monsters/0.ini`, `1.ini`... (`[Data] id`, `level_min`, `level_max`, `path_type`: 1 wanders block by block, 2 stays; `[Spawn] probability_percent`, `on_blockid_<i>`: blocks where it does not appear). They appear around the player (out of sight, never in a wall). A battle starts sometimes when one is close to the player; 1 encounter in 5 is a group of two Pokemon of the same species.
+The wild Pokemon of a map are `Levels/<map>/Monsters/0.ini` (written by the generator for the biome of the chunk: `SPAWNS` in `tools/worldgen/worldgen.py`). The game logs each one: `Wild pokemon <id> level <l> at block (x, y)`, `1.ini`... (`[Data] id`, `level_min`, `level_max`, `path_type`: 1 wanders block by block, 2 stays; `[Spawn] probability_percent`, `on_blockid_<i>`: blocks where it does not appear). They appear around the player (out of sight, never in a wall). A battle starts sometimes when one is close to the player; 1 encounter in 5 is a group of two Pokemon of the same species.
 
 ## Shared script modules
 
 - `Levels/dialog.miniska`: `Dialog.say(text)`. The player cannot move during the message, and only one dialog runs at a time.
-- `Levels/story.miniska`: helpers for the story.
-  - `Story.player()`
-  - `Story.npc(number, index)`: the character with the sprite `pnj<number>`, named `npc-<number>_<index>` in the map events.
-  - `Story.walk(entity, direction, blocks)`
-  - Story steps, saved with the game: `Story.done(step)` / `Story.setDone(step)`.
 - `Levels/surf.miniska`, `Levels/jump_wall.miniska`: water and ledges.
+- `Levels/shop.miniska` (with the seller `Levels/shopscript.miniska`), `Levels/pokescript.miniska` (heals the team and saves), `Levels/teleport.miniska`.
+
+The player is `Engine.entity("trainer")`.
 
 ## Keys and movement
 

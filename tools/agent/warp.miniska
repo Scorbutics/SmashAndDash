@@ -2,7 +2,6 @@
 Engine = import "bind:ska.engine"
 Dev = import "bind:ska.dev"
 Map = import "bind:game.map"
-Story = import "wd:Levels/story"
 
 run = function(args: string[]) do
 	if args.size() != 3
@@ -12,6 +11,6 @@ run = function(args: string[]) do
 	map = args[0]
 	Map.teleport(map, (args[1]: int), (args[2]: int))
 	Map.waitTransition()
-	player = Story.player()
+	player = Engine.entity("trainer")
 	Dev.reply(Map.name() + " (" + (Map.blockX(player): string) + "," + (Map.blockY(player): string) + ")")
 end

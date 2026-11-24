@@ -1,6 +1,0 @@
-x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
-0 0 0 Levels/add_character.miniska, -1, 12, 5, npc-1_0, wander, Levels/say.miniska, Bonjour !
-0 0 0 Levels/add_character.miniska, -2, 8, 4, npc-2_0, fixed, Levels/cramoisile_labo/starter_choice.miniska
-11 17 2 Levels/cramoisile_labo/teleport_cramoisile.miniska
-0 0 0 Levels/add_character.miniska, -11, 7, 4, npc-11_0, fixed, Levels/cramoisile_labo/starter_2.miniska
-0 0 0 Levels/add_character.miniska, -11, 7, 3, npc-11_1, fixed, Levels/cramoisile_labo/starter_1.miniska

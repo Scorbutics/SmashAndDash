@@ -1,2 +1,0 @@
-x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
-14 5 2 Levels/maison_hero/start_script.miniska

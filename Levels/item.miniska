@@ -1,0 +1,42 @@
+# An item to find on the map, in an item ball (placed by tools/worldgen).
+# Map event, when the map is loaded : Levels/item.miniska, place, <item>, <x>, <y>, <flag> : the ball on the block,
+# unless the item was taken (the game variable <flag> is set).
+# The ball, when the player talks to it : take, <item>, <flag> : the item goes in the bag, once.
+Engine = import "bind:ska.engine"
+Character = import "bind:game.character"
+GameDialog = import "bind:game.dialog"
+Bag = import "bind:game.inventory"
+
+# Sprites/Charsets/pnj900.png (tools/worldgen)
+BallSprite = -900
+
+taken = function(flag: string) : bool do
+	return Engine.variable(flag) != 0
+end
+
+# The item goes in the bag and the flag is set ; false when it was already taken
+take = function(item: int, flag: string) : bool do
+	if taken(flag)
+		return false
+	end
+	Engine.setVariable(flag, 1)
+	Bag.add(item, 1)
+	GameDialog.message("Tu as trouvé : " + Bag.name(item) + " !")
+	return true
+end
+
+run = function(args: string[]) do
+	flag = args[args.size() - 1]
+	if args[0] == "place"
+		if taken(flag) == false
+			Character.addCharacter(BallSprite, (args[2]: int), (args[3]: int), flag, "Levels/item.miniska", ["take", args[1], flag])
+		end
+		return
+	end
+	if take((args[1]: int), flag)
+		ball = Engine.entity(flag)
+		if Engine.exists(ball)
+			Character.remove(ball)
+		end
+	end
+end

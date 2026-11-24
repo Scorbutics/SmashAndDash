@@ -48,7 +48,6 @@ set(GAME_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 # Scripts only imported by the other scripts (no "run" function)
 set(GAME_SCRIPT_MODULES
 	${GAME_ROOT_DIR}/Levels/dialog.miniska
-	${GAME_ROOT_DIR}/Levels/story.miniska
 	${GAME_ROOT_DIR}/Levels/surf.miniska
 	${GAME_ROOT_DIR}/Levels/jump_wall.miniska
 	${GAME_ROOT_DIR}/Levels/shop.miniska
