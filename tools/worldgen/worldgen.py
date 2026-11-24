@@ -43,6 +43,17 @@ WATER_CELL, FLOWER_CELL, TALL_CELL = "water", "flower", "tall"
 CAMPFIRE_CELL = "campfire"
 ANIMATED = {WATER_CELL: g.water, FLOWER_CELL: g.flowers, TALL_CELL: g.tall_grass, CAMPFIRE_CELL: g.campfire}
 ANIMATED_WALK = {WATER_CELL: False, FLOWER_CELL: True, TALL_CELL: True, CAMPFIRE_CELL: False}
+# The life of the villages : the lanterns of the lamps flicker, the fountains splash, the flower beds sway, butterflies
+FLOWERBED_COLOURS = ["roofr", "flower", "roofb", "orange"]
+ANIMATED["lamphead"], ANIMATED_WALK["lamphead"] = g.lamp_head, True
+ANIMATED["butterfly"], ANIMATED_WALK["butterfly"] = g.butterfly, True
+for _c in range(2):
+    for _r in range(2):
+        ANIMATED[f"fountain_{_c}_{_r}"] = (lambda c, r: lambda f: g.fountain(c, r, f))(_c, _r)
+        ANIMATED_WALK[f"fountain_{_c}_{_r}"] = False
+for _colour in FLOWERBED_COLOURS:
+    ANIMATED[f"flowerbed_{_colour}"] = (lambda col: lambda f: g.flowerbed_anim(col, f))(_colour)
+    ANIMATED_WALK[f"flowerbed_{_colour}"] = True
 # The cells with a touch script (Resources/Chipsets/tile_scripts/<name>.miniska ; also there : ledge_left, ledge_down,
 # ledge_right, the jumps over a ledge, for when the world has ledges)
 TILE_SCRIPTS = {WATER_CELL: "water"}
@@ -1304,10 +1315,10 @@ class World:
                 make = (lambda b=v.biome: g.styled(g.healing_center(), b).render()) if kind == "center" else \
                     (lambda b=v.biome, rf=roof: g.styled(g.house(rf), b).render())
                 self.stamp(name, make, x0, y0, door=(dc, dr))
-            colour = ["roofr", "flower", "roofb", "orange"][int(h01(*v.center, 9) * 4)]
-            for x, y in v.flowers:                   # flower beds along some houses
+            colour = FLOWERBED_COLOURS[int(h01(*v.center, 9) * len(FLOWERBED_COLOURS))]
+            for x, y in v.flowers:                   # flower beds along some houses (they sway)
                 if self.mat(x, y) == "grass" and (x, y) not in self.taken:
-                    self.set("M", x, y, self.chip.cell(("flowerbed", colour), lambda c=colour: g.flowerbed(c), True))
+                    self.set("M", x, y, f"flowerbed_{colour}")
                     self.taken.add((x, y))
             self.taken |= v.cells
             self.decorate(v)
@@ -1326,10 +1337,17 @@ class World:
         rng = Rng(self.seed + 77 + v.center[0])
         cx, cy = v.center
         if all((x, y) in v.road for x in (cx - 1, cx) for y in (cy - 1, cy)):
+            fountain = rng.random() < 0.5            # a fountain on the plaza, else a painted emblem
             for c in range(2):
                 for r in range(2):
-                    self.set("M", cx - 1 + c, cy - 1 + r,
-                             self.chip.cell(("emblem", c, r), lambda c=c, r=r: g.emblem(c, r), True))
+                    x, y = cx - 1 + c, cy - 1 + r
+                    if fountain:
+                        self.set("M", x, y, f"fountain_{c}_{r}")
+                        self.walk[y][x] = False
+                        self.taken.add((x, y))
+                        self.objects[(x, y)] = 0.4
+                    else:
+                        self.set("M", x, y, self.chip.cell(("emblem", c, r), lambda c=c, r=r: g.emblem(c, r), True))
         lamps = []
         for x, y in sorted(v.road, key=lambda c: h01(c[0], c[1], self.seed + 61)):
             if any(abs(x - a) + abs(y - b) < 7 for a, b in lamps) or len(lamps) > 8:
@@ -1338,22 +1356,39 @@ class World:
                 lx, ly = x + dx, y + dy
                 if (lx, ly) not in v.road and self.deco_ok(lx, ly) and self.layers["T"][ly - 1][lx] is None \
                         and (lx, ly - 1) not in v.footprint:
-                    head = self.chip.cell(("lamp", 0), lambda: g.lamp().crop((0, 0, T, T)), True)
                     post = self.chip.cell(("lamp", 1), lambda: g.lamp().crop((0, T, T, 2 * T)), False)
-                    self.set("T", lx, ly - 1, head)
+                    self.set("T", lx, ly - 1, "lamphead")
                     self.set("M", lx, ly, post)
                     self.walk[ly][lx] = False
                     self.taken.add((lx, ly))
                     self.objects[(lx, ly)] = 0.6
                     lamps.append((lx, ly))
                     break
+        # Benches around the plaza, a bin by one of them
+        benches = 0
+        for _ in range(60):
+            if benches >= 2:
+                break
+            bx, by = cx + rng.randint(-5, 5), cy + rng.randint(-4, 4)
+            if (bx, by) in v.road or not self.deco_ok(bx, by) \
+                    or not any((bx + dx, by + dy) in v.road for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                continue
+            self.put_object("M", bx, by, ("bench",), g.bench, 0.3)
+            benches += 1
+            if benches == 1 and self.deco_ok(bx + 1, by) and (bx + 1, by) not in v.road:
+                self.put_object("M", bx + 1, by, ("bin",), g.bin_, 0.4)
+        pot = FLOWERBED_COLOURS[int(h01(cx, cy, 31) * len(FLOWERBED_COLOURS))]
         for kind, roof, x0, y0, w, h, dc, dr in v.buildings:
-            if kind == "house":                      # the mailbox, beside the path to the door
+            if kind == "house":                      # the mailbox, beside the path to the door ; a pot of flowers
                 mx, my = x0 + dc + 1, y0 + h
                 if self.deco_ok(mx, my):
                     self.set("M", mx, my, self.chip.cell(("mailbox",), g.mailbox, False))
                     self.walk[my][mx] = False
                     self.taken.add((mx, my))
+                if self.deco_ok(x0 + dc - 1, my):
+                    self.put_object("M", x0 + dc - 1, my, ("flowerpot", pot), lambda: g.flowerpot(pot), 0.4)
+            if v.biome in ("desert", "autumn") and rng.random() < 0.6 and self.deco_ok(x0 + w, y0 + h - 1):
+                self.put_object("M", x0 + w, y0 + h - 1, ("barrel",), g.barrel, 0.5)
             if rng.random() < 0.6:                   # bushes along a side
                 side = x0 - 1 if rng.random() < 0.5 else x0 + w
                 for y in range(y0 + 1, y0 + h):
@@ -1362,19 +1397,50 @@ class World:
                         self.walk[y][side] = False
                         self.taken.add((side, y))
                         self.objects[(side, y)] = 0.5
-        # A vegetable garden : 4 x 2 rows of crops, a fence on its north side
-        for _ in range(60):
+        # A vegetable garden : 4 x 2 rows of crops, fenced on its north and sides (open to the south), butterflies
+        garden = None
+        for _ in range(80):
             gx, gy = cx + rng.randint(-16, 12), cy + rng.randint(-14, 12)
-            area = [(gx + i, gy + j) for j in range(3) for i in range(4)]
+            area = [(gx + i, gy + j) for j in range(3) for i in range(6)]
             if all(self.deco_ok(x, y) and self.terrain[y][x] == ("grass", 0) for x, y in area) \
-                    and all((x, y + 1) not in v.road or y + 1 > gy + 2 for x, y in area):
-                for i in range(4):
-                    self.set("M", gx + i, gy, self.chip.cell(("fence",), g.fence, False))
+                    and all(self.deco_ok(x, gy + 3) for x in range(gx + 1, gx + 5)):
+                for i in range(6):
+                    kind = "tl" if i == 0 else "tr" if i == 5 else None
+                    cell = self.chip.cell(("fence", kind), (lambda k=kind: g.fence_post(k)) if kind else g.fence, False)
+                    self.set("M", gx + i, gy, cell)
                     self.walk[gy][gx + i] = False
-                    for j in (1, 2):
+                for j in (1, 2):
+                    for i in (0, 5):
+                        self.set("M", gx + i, gy + j, self.chip.cell(("fence", "v"), lambda: g.fence_post("v"), False))
+                        self.walk[gy + j][gx + i] = False
+                    for i in range(1, 5):
                         self.set("M", gx + i, gy + j, self.chip.cell(("crops",), g.crops, True))
                 self.taken |= set(area)
+                garden = (gx, gy)
                 break
+        # A well
+        for _ in range(60):
+            wx, wy = cx + rng.randint(-12, 12), cy + rng.randint(-10, 10)
+            if all(self.deco_ok(wx + dx, wy + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                self.put_object("M", wx, wy, ("well",), g.well, 0.6)
+                break
+        # Butterflies over the grass, near the flowers and the garden
+        near = list(v.flowers) + ([(garden[0] + 2, garden[1] + 3)] if garden else [])
+        flown = 0
+        for _ in range(60):
+            if flown >= 3 or not near:
+                break
+            fx, fy = rng.choice(near)
+            bx, by = fx + rng.randint(-3, 3), fy + rng.randint(-2, 3)
+            if self.deco_ok(bx, by) and self.terrain[by][bx] == ("grass", 0) and self.plain(bx, by) \
+                    and self.layers["T"][by][bx] is None:
+                self.set("", bx, by, "butterfly")
+                self.taken.add((bx, by))
+                flown += 1
+        # Water lilies on the pond
+        lilies = [c for c in sorted(v.pond) if self.layers["M"][c[1]][c[0]] is None]
+        for x, y in lilies[:2]:
+            self.set("M", x, y, self.chip.cell(("lily",), g.lily, False))
         # Broadleaf trees between the houses
         planted = 0
         for _ in range(80):

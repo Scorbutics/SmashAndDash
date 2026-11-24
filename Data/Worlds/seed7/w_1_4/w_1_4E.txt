@@ -105,5 +105,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 8 15 2 Levels/teleport.miniska, w_room_36, 11, 9
 21 12 2 Levels/teleport.miniska, w_room_37, 11, 9
 21 23 1 Levels/sign.miniska, Rousseville¤Les feuilles y tombent toute l'année.
+0 0 0 Levels/item.miniska, place, 2, 9, 23, item_w_1_4_9_23
 0 0 0 Levels/item.miniska, place, 0, 18, 31, item_w_1_4_18_31
-0 0 0 Levels/item.miniska, place, 1, 33, 11, item_w_1_4_33_11

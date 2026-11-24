@@ -823,22 +823,9 @@ def round_tree():
 
 
 def lamp():
-    """A street lamp, 1 x 2 tiles : its lantern (row 0, over the characters), its post on a stone foot (row 1)."""
-    s = Scene(N, 2 * N)
-    s.ellipsoid(9, 2 * N - 3, 5, 1.8, "grass", 0)
-    for x in range(N):
-        for y in range(N, 2 * N):
-            if s.pid[y][x] > 1:
-                s.mat[y][x], s.tone[y][x] = "grass", 0.6
-    s.box(7, 8, 10, 2 * N - 3, "lamp", 2.0)
-    s.box(5, 2 * N - 5, 12, 2 * N - 2, "lamp", 1.0)
-    s.ellipsoid(8.5, 6, 4.2, 4.4, "lamp", 3.0)
-    for y in range(3, 9):
-        for x in range(6, 11):
-            s.put(x, y, "flower", 3.5, 99, 3 if y < 6 else 2)    # the light
-    s.box(5, 1, 12, 3, "lamp", 3.0)
-    ink_outline(s)
-    return s.render()
+    """A street lamp, 1 x 2 tiles : its lantern (row 0, over the characters ; animated : lamp_head), its post on a
+    stone foot (row 1)."""
+    return lamp_scene(0).render()
 
 
 def bush():
@@ -933,6 +920,232 @@ def mailbox():
                 s.tone[y][x] = 0
     s.put(12, 3, "flower", 5.0, pid, 3)
     ink_outline(s)
+    return s.render()
+
+
+def lamp_head(frame):
+    """The lantern of a street lamp (animated, 4 frames : its flame flickers, a halo of light around it)."""
+    full = lamp_scene(frame)
+    return full.render().crop((0, 0, T, T))
+
+
+def lamp_scene(frame=0):
+    s = Scene(N, 2 * N)
+    s.ellipsoid(9, 2 * N - 3, 5, 1.8, "grass", 0)
+    for x in range(N):
+        for y in range(N, 2 * N):
+            if s.pid[y][x] > 1:
+                s.mat[y][x], s.tone[y][x] = "grass", 0.6
+    s.box(7, 8, 10, 2 * N - 3, "lamp", 2.0)
+    s.box(5, 2 * N - 5, 12, 2 * N - 2, "lamp", 1.0)
+    s.ellipsoid(8.5, 6, 4.2, 4.4, "lamp", 3.0)
+    glow = (3.0, 2.5, 2.9, 2.2)[frame]
+    for y in range(3, 9):
+        for x in range(6, 11):
+            s.put(x, y, "flower", 3.5, 99, glow if y < 6 else glow - 0.6)
+    s.box(5, 1, 12, 3, "lamp", 3.0)
+    ink_outline(s)
+    if frame in (0, 2):                              # sparks of light around the lantern
+        for i, (x, y) in enumerate(((2, 4), (14, 6), (3, 9), (13, 2))):
+            if (i + frame // 2) % 2 == 0:
+                s.put(x, y, "flower", 4.0, 98, 3)
+    return s
+
+
+def fountain(c, r, frame):
+    """A part (c, r : 0..1) of a 2 x 2 tiles fountain (animated) : a round stone basin of water, a pillar, jets of
+    water arcing out of it, their drops falling in turn."""
+    W = 2 * N
+    s = Scene(W, W)
+    for y in range(W):
+        for x in range(W):
+            d = math.hypot((x + 0.5 - W / 2) / 14.5, (y + 0.5 - W / 2 - 2) / 11.5)
+            if d <= 1.0:
+                s.put(x, y, "stone", 2.0, 2, 3 if y < W / 2 - 6 else 2 if d > 0.82 else None)
+                if d <= 0.82:
+                    ripple = (x + y + frame * 2) % 6 == 0 or math.hypot(x - 16, y - 18) % 5 < 0.6 + frame * 0.1
+                    s.put(x, y, "water", 0, 3, 3 if ripple else 1.6)
+    s.box(14, 6, 18, 18, "stone", 6.0)
+    s.ellipsoid(16, 6, 3.4, 2.2, "stone", 7.0)
+    for side in (-1, 1):                             # the jets, their drops moving down the arc
+        for k in range(10):
+            t = (k + frame * 2.5) % 10 / 10.0
+            x = 16 + side * (1.5 + t * 9)
+            y = 4 - 6 * math.sin(t * math.pi) + t * 12
+            for dx, dy in ((0, 0), (side, 0), (0, 1)):
+                s.put(int(x) + dx, int(y) + dy, "white", 8.0, 50, 3 if dy == 0 else 2)
+    ink_outline(s)
+    img = s.render()
+    return img.crop((c * T, r * T, c * T + T, r * T + T))
+
+
+def flowerbed_anim(colour, frame):
+    """A bed of flowers (animated) : the blossoms sway in the breeze, in turn."""
+    s = Scene(N, N)
+    grass_field(s, 7)
+    for y in range(N):
+        for x in range(N):
+            if h01(x, y, 17) < 0.35:
+                s.put(x, y, "leaf", 0, 1, 1.6)
+    for i in range(9):
+        sway = (0, 1, 0, -1)[(frame + i) % 4] if i % 2 else 0
+        cx, cy = 2 + int(h01(i, 1, 29) * 12) + sway, 2 + int(h01(i, 2, 29) * 12)
+        pid = s.new_id()
+        for dx, dy in ((0, 0), (1, 0), (0, 1), (1, 1)):
+            s.put(cx + dx, cy + dy, colour, 1.0, pid, 3 if dy == 0 else 2)
+        s.put(cx, cy, "white", 1.2, pid, 3)
+    return s.render()
+
+
+def butterfly(frame):
+    """A butterfly over the grass (animated) : it flutters round, its wings open and close."""
+    s = Scene(N, N)
+    grass_field(s, 8)
+    a = frame * math.pi / 2
+    cx, cy = int(8 + 3 * math.cos(a)), int(7 + 2 * math.sin(a))
+    open_ = frame % 2 == 0
+    pid = s.new_id()
+    s.put(cx, cy, "ink", 4, pid, 0)
+    s.put(cx, cy + 1, "ink", 4, pid, 0)
+    for side in (-1, 1):
+        wings = [(side, 0), (side * 2, 0), (side, -1), (side * 2, -1), (side, 1)] if open_ else [(side, 0), (side, -1)]
+        for dx, dy in wings:
+            s.put(cx + dx, cy + dy, "roofo" if dy < 1 else "flower", 4, pid, 3)
+    s.put(cx + 1, cy + 5, "grass", 0, 1, 1.4)       # its shadow on the grass
+    s.put(cx, cy + 5, "grass", 0, 1, 1.4)
+    return s.render()
+
+
+def bench():
+    """A wooden bench across the tile : its seat, its back, iron feet."""
+    s = Scene(N, N)
+    pid = s.new_id()
+    for y, t in ((3, 3), (4, 2), (5, 2)):           # the back
+        for x in range(1, N - 1):
+            s.put(x, y, "wood", 3, pid, t if x % 5 else t - 1)
+    for y, t in ((8, 3), (9, 2), (10, 1)):          # the seat
+        for x in range(1, N - 1):
+            s.put(x, y, "wood", 2, pid, t)
+    for x in (2, 13):
+        for y in range(4, 13):
+            if s.mat[y][x] != "wood" or y > 10:
+                s.put(x, y, "lamp", 2, pid, 1)
+    ink_outline(s)
+    return s.render()
+
+
+def bin_():
+    """A litter bin : a green bin, its lid."""
+    s = Scene(N, N)
+    s.ellipsoid(8.5, 13.5, 5, 1.6, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    s.box(4, 5, 12, 14, "roofg", 3.0)
+    for x in range(4, 12):
+        s.put(x, 4, "lamp", 4.0, s.pid[6][6], 3)
+        s.put(x, 5, "lamp", 4.0, s.pid[6][6], 2)
+    for y in range(6, 14, 3):
+        for x in range(4, 12):
+            s.put(x, y, "roofg", 3.0, s.pid[7][6], 1)
+    ink_outline(s)
+    return s.render()
+
+
+def flowerpot(colour="roofr"):
+    """A clay pot of flowers, by a door."""
+    s = Scene(N, N)
+    s.ellipsoid(8.5, 14, 4.5, 1.4, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    s.box(5, 9, 12, 14, "orange", 2.0)
+    s.ellipsoid(8.5, 6.5, 4.5, 3.5, "leaf", 4.0)
+    for i, (x, y) in enumerate(((6, 5), (9, 4), (11, 7), (7, 8))):
+        s.put(x, y, colour, 5.0, 90 + i, 3)
+    ink_outline(s)
+    return s.render()
+
+
+def well():
+    """A stone well : a round wall of stones, dark water inside, a little wooden roof."""
+    s = Scene(N, N)
+    s.ellipsoid(8.5, 13.5, 7, 2, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    pid = s.new_id()
+    for y in range(6, 15):
+        for x in range(2, 15):
+            d = ((x + 0.5 - 8.5) / 6.5) ** 2 + ((y + 0.5 - 10) / 4.5) ** 2
+            if d <= 1:
+                inner = ((x + 0.5 - 8.5) / 4.5) ** 2 + ((y + 0.5 - 9) / 2.2) ** 2 <= 1
+                s.put(x, y, "water" if inner else "stone", 3, pid, 0.4 if inner else 3 if (x + y) % 3 else 2)
+    for x in (3, 13):
+        s.box(x, 1, x + 1, 9, "wood", 4.0)
+    s.box(1, 0, 16, 3, "roofr", 5.0)
+    ink_outline(s)
+    return s.render()
+
+
+def barrel():
+    """A wooden barrel, its hoops."""
+    s = Scene(N, N)
+    s.ellipsoid(8.5, 13.5, 5, 1.6, "grass", 0)
+    for y in range(N):
+        for x in range(N):
+            if s.pid[y][x] > 1:
+                s.tone[y][x] = 0.7
+    pid = s.ellipsoid(8, 8.5, 5, 6, "wood", 5.0)
+    for y in (5, 12):
+        for x in range(2, 14):
+            if s.pid[y][x] == pid:
+                s.mat[y][x], s.tone[y][x] = "lamp", 1
+    s.ellipsoid(8, 3.5, 4, 1.4, "wood", 6.0)
+    ink_outline(s)
+    return s.render()
+
+
+def lily():
+    """Water lilies on a pond : round pads, a pink flower (over the water)."""
+    s = Scene(N, N)
+    for i, (cx, cy, r) in enumerate(((5, 5, 3.2), (11, 10, 2.6), (4, 12, 2.0))):
+        pid = s.ellipsoid(cx, cy, r, r * 0.8, "leaf", 1.0)
+        for y in range(N):
+            for x in range(N):
+                if s.pid[y][x] == pid and x > cx and abs(y - cy) < 0.6:
+                    s.mat[y][x] = None                # the notch of the pad
+    for x, y in ((5, 4), (6, 4), (5, 5)):
+        s.put(x, y, "roofr", 2.0, 77, 3)
+    s.put(6, 5, "white", 2.0, 77, 3)
+    ink_outline(s)
+    return s.render()
+
+
+def fence_post(kind):
+    """The fences of a garden : "v" a side (posts down the tile, rails along), "tl"/"tr" the corners."""
+    s = Scene(N, N)
+    grass_field(s, 6)
+    pid = s.new_id()
+    if kind == "v":
+        for y in range(N):
+            for x in (7, 8):
+                s.put(x, y, "wood", 2, pid, 3 if x == 7 else 1)
+        for y in (2, 10):
+            for x in range(6, 10):
+                s.put(x, y, "wood", 2.5, pid, 3)
+                s.put(x, y + 1, "wood", 2.5, pid, 1)
+        return s.render()
+    for y in range(4, N):
+        for x in (7, 8):
+            s.put(x, y, "wood", 2, pid, 3 if x == 7 else 1)
+    rng = range(8, N) if kind == "tl" else range(0, 9)
+    for y, t in ((6, 3), (7, 2), (10, 3), (11, 2)):
+        for x in rng:
+            s.put(x, y, "wood", 1.5, pid, t)
     return s.render()
 
 

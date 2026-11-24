@@ -80,4 +80,4 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 3 16 2 Levels/teleport.miniska, w_room_23, 11, 9
 10 23 1 Levels/sign.miniska, Bourg-Châtaigne¤Les feuilles y tombent toute l'année.
 0 0 0 Levels/item.miniska, place, 2, 16, 33, item_w_7_2_16_33
-0 0 0 Levels/item.miniska, place, 2, 9, 3, item_w_7_2_9_3
+0 0 0 Levels/item.miniska, place, 2, 32, 4, item_w_7_2_32_4

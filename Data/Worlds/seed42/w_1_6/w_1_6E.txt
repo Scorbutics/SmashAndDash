@@ -85,4 +85,3 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 29 32 2 Levels/teleport.miniska, w_room_32, 11, 9
 17 13 1 Levels/sign.miniska, Village Frimas¤L'hiver ne finit jamais ici.
 31 24 1 Levels/sign.miniska, Village Frimas¤L'hiver ne finit jamais ici.
-0 0 0 Levels/item.miniska, place, 2, 36, 15, item_w_1_6_36_15

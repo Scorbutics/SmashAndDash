@@ -49,4 +49,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 23 22 2 Levels/teleport.miniska, w_room_17, 11, 9
 32 29 1 Levels/sign.miniska, Givreville¤L'hiver ne finit jamais ici.
 9 18 1 Levels/sign.miniska, Givreville¤L'hiver ne finit jamais ici.
-0 0 0 Levels/item.miniska, place, 2, 3, 34, item_w_3_6_3_34
+0 0 0 Levels/item.miniska, place, 0, 16, 36, item_w_3_6_16_36
+0 0 0 Levels/item.miniska, place, 1, 3, 32, item_w_3_6_3_32

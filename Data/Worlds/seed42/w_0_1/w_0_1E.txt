@@ -84,4 +84,5 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 21 12 2 Levels/teleport.miniska, w_room_13, 10, 9
 20 20 2 Levels/teleport.miniska, w_room_14, 10, 9
 25 33 1 Levels/sign.miniska, Bourg-Mirage¤La chaleur ne fait pas peur à ses habitants.
-0 0 0 Levels/item.miniska, place, 2, 11, 15, item_w_0_1_11_15
+0 0 0 Levels/item.miniska, place, 1, 11, 18, item_w_0_1_11_18
+0 0 0 Levels/item.miniska, place, 0, 21, 34, item_w_0_1_21_34
