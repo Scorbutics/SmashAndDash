@@ -80,8 +80,9 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_entityLocator(ed),
 	m_entityHandles(ed),
 	m_correspondanceMapper("Resources/Chipsets/corr.png"),
-	m_tileset(BuildTileset(48, BuildTilesetLoader("Resources/Chipsets/chipset_world"), BuildTilesetEventLoader("Resources/Chipsets/chipset_world"))),
-	m_worldFileName("Levels/" + m_saveManager.getStartMapName()),
+	// The tileset of the start map of the save (its world is known once the save is loaded)
+	m_tileset(BuildTileset(48, BuildTilesetLoader(TilesetName(m_saveManager.getStartChipsetName())), BuildTilesetEventLoader(TilesetName(m_saveManager.getStartChipsetName())))),
+	m_worldFileName(MapDirectory(m_saveManager.getStartMapName())),
 	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
 	m_debugDrawer(ed, em, m_entityLocator, m_tileset->getTileSize()) {
 
@@ -109,8 +110,7 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_posHero.y = reader.get<int>("Trainer start_posy");
 	auto startMapName = reader.get<std::string>("Trainer start_map_name");
 
-	const auto buf = "./Levels/" + startMapName + "/" + startMapName + ".ini";
-	ska::IniReader mapReader(buf);
+	ska::IniReader mapReader(MapIni(startMapName));
 	mapReader.get<std::string>("Chipset file");
 }
 
@@ -464,7 +464,7 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 		// The map the player is on (the return from a battle, the saves)
 		m_worldFileName = fileName;
 	}
-	// Its light, when it has one : "Levels/<map>" -> "Levels/<map>/<map>L.png"
+	// Its light, when it has one : "<world>/<map>" -> "<world>/<map>/<map>L.png"
 	const auto mapName = ska::FileNameData{ fileName }.name;
 	m_lightMap.setPriority(LightMapPriority);
 	m_lightMap.load(fileName + "/" + mapName + "L.png", static_cast<unsigned int>(m_world.getBlockSize()), static_cast<unsigned int>(m_world.getBlocksX()), static_cast<unsigned int>(m_world.getBlocksY()));

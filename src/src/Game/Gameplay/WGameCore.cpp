@@ -12,6 +12,7 @@
 #include "World/Inputs/KeyboardInputGUIContext.h"
 #include "Graphic/SDLWindow.h"
 #include "Core/Draw/VectorDrawableContainer.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 
 WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	GameCore(std::forward<GameConfPtr>(gc)),
@@ -25,7 +26,7 @@ WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
 	
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
-	const auto& pathStartMapName = "./Levels/" + startMapName;
+	const auto pathStartMapName = MapDirectory(startMapName);
 	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
 	
 	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
@@ -65,7 +66,7 @@ void WGameCore::switchState(const MapEvent& me) {
 				resetAccumulator();
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, "./Levels/" + me.mapName, me.chipsetName, me.position, me.walkIn);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, MapDirectory(me.mapName), me.chipsetName, me.position, me.walkIn);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
 				resetAccumulator();

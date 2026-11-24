@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """worldgen : a procedural world for Smash & Dash, from a seed.
 
-The world is a grid of chunks ; each chunk is an ordinary map of 40 x 40 blocks (Levels/w_<cx>_<cy> : the 3 layers,
+The world is a grid of chunks ; each chunk is an ordinary map of 40 x 40 blocks (Data/Worlds/<world>/w_<cx>_<cy> : the 3 layers,
 the .ini, the events, the wild Pokemon), linked to its neighbours by teleports on its edges. The terrain comes from
 one continuous noise over the whole world, so the chunks match on their borders. The tiles are drawn by
 tools/tilegen (same style) : each combination of neighbours (shores, sand and path edges, cliff faces) gets a tile of
 its own. Each chunk has a biome (BIOMES : meadow, autumn, snow, desert) : its colours and its tree (tilegen.BIOMES),
 its vegetation (NATURE), its wild Pokemon (SPAWNS). The village is in the meadow ; the north is colder. The borders of
 the biomes wander and blend : a tile is drawn with the biomes of its 4 corners blended across it. Each map gets a
-chipset of the tiles it uses (Resources/Chipsets/chipset_<map>.png ; chipset_world : the rooms).
+chipset of the tiles it uses (Data/Worlds/<world>/Chipsets/chipset_<map>.png ; chipset_rooms : the rooms).
 
-  tools/worldgen/worldgen.py [--seed N] [--chunks 8x8] [--root .] [--save NAME] [--preview out.png]
+  tools/worldgen/worldgen.py [--seed N] [--chunks 8x8] [--world NAME] [--root .] [--save NAME]... [--preview out.png]
 
-  --save NAME   the new game (Data/Saves/new_game) starts in the town, and the save Data/Saves/NAME is a copy of it
+  A world per save : the world goes in Data/Worlds/<world> (default seed<N>) ; each --save NAME (repeatable) is a save
+  starting in its village (Data/Saves/NAME, made from new_game ; new_game : the new game itself), whose trainer.ini
+  names the world ([World] directory). Ex : --seed 7 --save new_game --save save1 ; --seed 42 --save save2
   --preview     the whole world in one image (the 3 layers, the colour key transparent)
 
 In the chipsets : the water at (1, 4) (animated, its touch script starts surfing ; the game makes x < 6, y < 4 and
@@ -461,7 +463,8 @@ class Chipset:
         self.col = self.col.crop((0, 0, CHIP_COLS, self.rows))
         self.used = len(taken - WATER_REGION) + len(self.water) * 4
 
-    def save(self, chips, name):
+    def save(self, chips, name, sources):
+        """Writes the chipset (its image, collisions, properties, touch scripts copied from sources) in chips."""
         base = f"{chips}/{name}"
         self.image.save(f"{base}.png")
         self.col.save(f"{base}.png.col", format="PNG")
@@ -473,7 +476,7 @@ class Chipset:
         with open(f"{base}/scripts.txt", "w") as f:
             f.write("".join(f"{x}_{y}\n" for x, y, _ in scripts))
         for x, y, script in scripts:
-            shutil.copyfile(f"{chips}/tile_scripts/{script}.miniska", f"{base}/Scripts/{x}_{y}_4.miniska")
+            shutil.copyfile(f"{sources}/{script}.miniska", f"{base}/Scripts/{x}_{y}_4.miniska")
 
 
 _TREES = {}
@@ -1520,21 +1523,21 @@ class World:
                     lines.append(f"{ex} {ey} 2 Levels/teleport.miniska, w_{ncx}_{ncy}, {ax}, {ay}")
         return lines + self.door_events.get((cx, cy), []) + self.events.get((cx, cy), [])
 
-    def write(self, root):
+    def write(self, root, world):
+        """The world in Data/Worlds/<world> : a folder per map (chunks and rooms), Chipsets (a chipset per map). The
+        game finds it through the save ([World] directory of its trainer.ini : write_save)."""
         corr = correspondance(f"{root}/Resources/Chipsets/corr.png")
         colour = {(x, y): corr.getpixel((x, y)) for x in range(corr.width) for y in range(corr.height)}
-        chips = f"{root}/Resources/Chipsets"
-        for name in os.listdir(chips):                # the chipsets of an earlier run
-            if name.startswith("chipset_world") or name.startswith("chipset_w_"):
-                path = f"{chips}/{name}"
-                shutil.rmtree(path) if os.path.isdir(path) else os.remove(path)
+        levels = f"{root}/Data/Worlds/{world}"
+        if os.path.exists(levels):                  # an earlier run
+            shutil.rmtree(levels)
+        chips = f"{levels}/Chipsets"
+        os.makedirs(chips)
+        scripts = f"{root}/Resources/Chipsets/tile_scripts"
+        chip_path = f"./Data/Worlds/{world}/Chipsets"
         self.stats = {}
         g.use_biome("meadow")
         g.item_ball_charset().convert("RGB").save(f"{root}/Sprites/Charsets/pnj{BALL_SPRITE}.png")
-        levels = f"{root}/Levels"
-        for name in os.listdir(levels):
-            if name.startswith("w_") and os.path.isdir(f"{levels}/{name}"):
-                shutil.rmtree(f"{levels}/{name}")
         header = "x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) " \
                  "parametresSupplementaires"
         for cy in range(self.ch):
@@ -1546,7 +1549,7 @@ class World:
                 used = {(self.layers[l][y][x], self.pal[y][x]) for l in ("", "M", "T") for x, y in blocks
                         if self.layers[l][y][x] is not None}
                 chip = Chipset(self.chip, used)
-                chip.save(chips, f"chipset_{name}")
+                chip.save(chips, f"chipset_{name}", scripts)
                 self.stats[name] = (len(used), chip.used)
                 for l in ("", "M", "T"):
                     im = Image.new("RGB", (CHUNK, CHUNK))
@@ -1559,17 +1562,17 @@ class World:
                 self.light_image(cx, cy).save(f"{folder}/{name}L.png")
                 biome = self.biome[(cx, cy)]
                 with open(f"{folder}/{name}.ini", "w") as f:
-                    f.write(f"[Chipset]\nfile=./Resources/Chipsets/chipset_{name}.png\n\n"
+                    f.write(f"[Chipset]\nfile={chip_path}/chipset_{name}.png\n\n"
                             "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
                 with open(f"{folder}/{name}E.txt", "w", encoding="latin-1") as f:
                     f.write("\n".join([header] + self.chunk_events(cx, cy)) + "\n")
                 write_spawns(f"{folder}/Monsters", biome)
                 open(f"{folder}/scripts.data", "w").close()
-        # The rooms : one chipset for all (chipset_world, also the chipset the game starts with)
+        # The rooms : one chipset for all (chipset_rooms)
         used = {(c, MEADOW) for room in self.rooms for grid in room["layers"].values() for line in grid for c in line
                 if c is not None}
         room_chip = Chipset(self.chip, used)
-        room_chip.save(chips, "chipset_world")
+        room_chip.save(chips, "chipset_rooms", scripts)
         self.stats["rooms"] = (len(used), room_chip.used)
         for room in self.rooms:
             name, rows = room["name"], room["rows"]
@@ -1591,19 +1594,31 @@ class World:
                     light.putpixel((i, j), c)
             light.save(f"{folder}/{name}L.png")
             with open(f"{folder}/{name}.ini", "w") as f:
-                f.write("[Chipset]\nfile=./Resources/Chipsets/chipset_world.png\n\n"
+                f.write(f"[Chipset]\nfile={chip_path}/chipset_rooms.png\n\n"
                         "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
             with open(f"{folder}/{name}E.txt", "w", encoding="latin-1") as f:
                 f.write("\n".join([header] + room["events"]) + "\n")
             open(f"{folder}/scripts.data", "w").close()
 
-    def write_save(self, root, name):
-        """The start of the game in the village : in the new game (Data/Saves/new_game), and a save NAME copied from it."""
+    def write_save(self, root, name, world):
+        """A save that starts in the village of the world : Data/Saves/<name> (made from new_game when it does not
+        exist ; new_game itself : the new game), its trainer.ini pointing to the world ([World] directory)."""
         cx, cy = self.town[0] // CHUNK, self.town[1] // CHUNK
-        path = f"{root}/Data/Saves/new_game/trainer.ini"
-        lines = open(path, encoding="latin-1").read().splitlines()
-        out = []
+        dest = f"{root}/Data/Saves/{name}"
+        if name != "new_game":
+            if os.path.exists(dest):
+                shutil.rmtree(dest)
+            shutil.copytree(f"{root}/Data/Saves/new_game", dest)
+        path = f"{dest}/trainer.ini"
+        lines = [l for l in open(path, encoding="latin-1").read().splitlines()]
+        out, in_world = [], False
         for line in lines:
+            if line.startswith("["):
+                in_world = line == "[World]"
+                if in_world:
+                    continue
+            if in_world:
+                continue                             # the old [World] section : written again below
             if line.startswith("start_map_name="):
                 line = f"start_map_name=w_{cx}_{cy}"
             elif line.startswith("start_posx="):
@@ -1611,11 +1626,8 @@ class World:
             elif line.startswith("start_posy="):
                 line = f"start_posy={self.town[1] - cy * CHUNK + 1}"
             out.append(line)
+        out += ["[World]", f"directory=./Data/Worlds/{world}/"]
         open(path, "w", encoding="latin-1").write("\n".join(out) + "\n")
-        dest = f"{root}/Data/Saves/{name}"
-        if os.path.exists(dest):
-            shutil.rmtree(dest)
-        shutil.copytree(f"{root}/Data/Saves/new_game", dest)
 
     def preview(self, path, scale=1, light=True):
         """The whole world in one image, each block P = T * scale pixels (the tiles shrunk one by one)."""
@@ -1679,7 +1691,7 @@ def correspondance(path):
 
 
 def write_spawns(folder, biome):
-    """The wild Pokemon of a map (Levels/<map>/Monsters/<i>.ini, read by the game : MobSpawningSystem)."""
+    """The wild Pokemon of a map (<map folder>/Monsters/<i>.ini, read by the game : MobSpawningSystem)."""
     os.makedirs(folder)
     for i, (pid, lo, hi, path, chance, excluded) in enumerate(SPAWNS[biome]):
         with open(f"{folder}/{i}.ini", "w") as f:
@@ -1694,15 +1706,18 @@ def main():
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--chunks", default="8x8")
     ap.add_argument("--root", default=".")
-    ap.add_argument("--save")
+    ap.add_argument("--world", help="the folder of the world in Data/Worlds (default : seed<N>)")
+    ap.add_argument("--save", action="append", default=[],
+                    help="a save starting in this world (Data/Saves/<NAME> ; new_game : the new game) ; repeatable")
     ap.add_argument("--preview")
     a = ap.parse_args()
     cw, ch = (int(v) for v in a.chunks.split("x"))
     world = World(a.seed, cw, ch)
     world.build()
-    world.write(a.root)
-    if a.save:
-        world.write_save(a.root, a.save)
+    name = a.world or f"seed{a.seed}"
+    world.write(a.root, name)
+    for save in a.save:
+        world.write_save(a.root, save, name)
     if a.preview:
         world.preview(a.preview, 0.25)
     print("villages : " + ", ".join(f"{v.name} ({v.biome}, w_{v.center[0] // CHUNK}_{v.center[1] // CHUNK})"

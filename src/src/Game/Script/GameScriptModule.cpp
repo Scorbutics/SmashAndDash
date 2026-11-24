@@ -43,6 +43,7 @@
 #include "../Gameplay/Data/ItemUse.h"
 #include "ScriptConstants.h"
 #include "../Gameplay/Fight/System/FightStartSystem.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 
 namespace {
 	// Entity of a script entity handle (an error when the entity was removed)
@@ -441,7 +442,7 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
 		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
-		const auto mapReader = ska::IniReader{ "./Levels/" + mapName + "/" + mapName + ".ini" };
+		const auto mapReader = ska::IniReader{ MapIni(mapName) };
 		auto mapEvent = MapEvent{ MapEventType::Switch_Map };
 		mapEvent.chipsetName = mapReader.get<std::string>("Chipset file");
 		mapEvent.mapName = mapName;

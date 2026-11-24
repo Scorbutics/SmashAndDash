@@ -10,6 +10,7 @@
 #include "../BattleRules.h"
 #include "../../Data/MapEvent.h"
 #include "../../../Script/ScriptConstants.h"
+#include "Game/Gameplay/Data/SavePaths.h"
 
 BattleDirectorSystem::BattleDirectorSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, BattleStage& stage, int teamIndex) :
 	System(em),
@@ -175,7 +176,7 @@ void BattleDirectorSystem::end() {
 	// Back to the map, where the player is, when the screen is black (the map changes : WGameCore)
 	MapEvent me(MapEventType::Switch_Map);
 	me.mapName = m_worldState.getMapName();
-	const auto mapReader = ska::IniReader{ "./Levels/" + me.mapName + "/" + me.mapName + ".ini" };
+	const auto mapReader = ska::IniReader{ MapIni(me.mapName) };
 	me.chipsetName = mapReader.get<std::string>("Chipset file");
 	const auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);

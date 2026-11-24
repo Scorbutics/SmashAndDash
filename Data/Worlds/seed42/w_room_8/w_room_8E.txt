@@ -1,0 +1,8 @@
+x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) parametresSupplementaires
+11 10 2 Levels/teleport.miniska, w_0_1, 37, 14
+12 10 2 Levels/teleport.miniska, w_0_1, 37, 14
+9 6 1 Levels/pokescript.miniska
+10 6 1 Levels/pokescript.miniska
+11 6 1 Levels/pokescript.miniska
+12 6 1 Levels/pokescript.miniska
+13 6 1 Levels/pokescript.miniska

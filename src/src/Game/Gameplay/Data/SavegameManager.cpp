@@ -159,14 +159,14 @@ void SavegameManager::loadTrainer() {
 	ska::IniReader reader(SaveDirectory() + m_pathname + "/trainer.ini");
 
 	m_startMapName = reader.get<std::string>("Trainer start_map_name");
+	// The world of the save : its own folder of maps, or the maps of Levels
+	auto world = reader.exists("World directory") ? reader.get<std::string>("World directory") : std::string{ "./Levels/" };
+	if (!world.empty() && world.back() != '/') {
+		world += '/';
+	}
+	WorldDirectoryRef() = world;
 
-	std::string buf = "./Levels/";
-	buf += m_startMapName;
-	buf +=  "/";
-	buf += m_startMapName;
-	buf += ".ini";
-
-	ska::IniReader mapReader(buf);
+	ska::IniReader mapReader(MapIni(m_startMapName));
 	m_startMapChipsetName = mapReader.get<std::string>("Chipset file");
 
 	for (unsigned int i = 0; reader.exists("Items " + ska::StringUtils::intToStr(i) + "_id"); i++) {
