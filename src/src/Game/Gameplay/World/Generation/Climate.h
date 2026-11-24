@@ -23,6 +23,7 @@ namespace worldgen {
 	public:
 		Climate(std::int64_t seed, int chunksX, int chunksY);
 
+		std::int64_t seed() const { return m_seed; }
 		int width() const { return m_width; }
 		int height() const { return m_height; }
 		// The biome of a block (its climate, the small regions merged), its relief (0 flat .. 1 mountains)

@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include <map>
+#include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -12,6 +13,7 @@
 #include "Game/Gameplay/World/Generation/Noise.h"
 #include "Game/Gameplay/World/Generation/Climate.h"
 #include "Game/Gameplay/World/Generation/Villages.h"
+#include "Game/Gameplay/World/Generation/Terrain.h"
 
 namespace {
 	std::uint64_t Fnv(const std::vector<unsigned char>& data) {
@@ -207,5 +209,85 @@ TEST_CASE("the villages and the biome weights are those of the Python generator"
 			}
 			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "mixes of seed " << seed);
 		}
+	}
+}
+
+namespace {
+	const worldgen::Terrain& TerrainOf(std::int64_t seed) {
+		static auto terrains = std::map<std::int64_t, std::unique_ptr<worldgen::Terrain>>{};
+		auto found = terrains.find(seed);
+		if (found == terrains.end()) {
+			found = terrains.emplace(seed, std::make_unique<worldgen::Terrain>(PlanOf(seed))).first;
+		}
+		return *found->second;
+	}
+
+	std::string Path(const std::vector<worldgen::Block>& path) {
+		auto data = std::vector<unsigned char>{};
+		for (const auto& [x, y] : path) {
+			AppendInt(data, x);
+			AppendInt(data, y);
+		}
+		return std::to_string(Fnv(data));
+	}
+}
+
+TEST_CASE("the roads, the terrain, the stairs and the places are those of the Python generator") {
+	auto routeIndex = std::map<std::int64_t, std::size_t>{};
+	auto poiIndex = std::map<std::int64_t, std::size_t>{};
+	for (const auto& words : Golden()) {
+		const auto& kind = words[0];
+		if (kind != "routes" && kind != "route" && kind != "nearroute" && kind != "terrain" && kind != "stairs" && kind != "poi") {
+			continue;
+		}
+		const auto seed = std::stoll(words[1]);
+		const auto& terrain = TerrainOf(seed);
+		if (kind == "routes") {
+			CHECK_MESSAGE(Cells(terrain.routes()) == words[2], "routes of seed " << seed);
+			CHECK(terrain.routePaths().size() == std::stoul(words[3]));
+		} else if (kind == "route") {
+			const auto i = routeIndex[seed]++;
+			REQUIRE(i < terrain.routePaths().size());
+			const auto& route = terrain.routePaths()[i];
+			INFO("route " << i << " of seed " << seed);
+			CHECK(route.from == std::stoi(words[2]));
+			CHECK(route.to == std::stoi(words[3]));
+			CHECK(route.path.size() == std::stoul(words[4]));
+			CHECK(Path(route.path) == words[5]);
+		} else if (kind == "nearroute") {
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [c, d] : terrain.nearRoute()) {
+				AppendInt(data, c.first);
+				AppendInt(data, c.second);
+				AppendInt(data, d);
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "near route of seed " << seed);
+		} else if (kind == "terrain") {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = 0; y < terrain.height(); y++) {
+				for (auto x = 0; x < terrain.width(); x++) {
+					data.push_back(static_cast<unsigned char>(terrain.cell(x, y).ground));
+					data.push_back(static_cast<unsigned char>(terrain.cell(x, y).level));
+				}
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "terrain of seed " << seed);
+		} else if (kind == "stairs") {
+			CHECK_MESSAGE(Cells(terrain.stairs()) == words[2], "stairs of seed " << seed);
+		} else {
+			const auto i = poiIndex[seed]++;
+			REQUIRE(i < terrain.pois().size());
+			const auto& poi = terrain.pois()[i];
+			INFO("place " << i << " of seed " << seed);
+			CHECK(poi.kind == words[2]);
+			CHECK(poi.x == std::stoi(words[3]));
+			CHECK(poi.y == std::stoi(words[4]));
+			CHECK(poi.w == std::stoi(words[5]));
+			CHECK(poi.h == std::stoi(words[6]));
+			CHECK(Path(poi.spur) == words[7]);
+			CHECK(static_cast<int>(poi.biome) == std::stoi(words[8]));
+		}
+	}
+	for (const auto& [seed, count] : poiIndex) {
+		CHECK_MESSAGE(TerrainOf(seed).pois().size() == count, "the number of places of seed " << seed);
 	}
 }

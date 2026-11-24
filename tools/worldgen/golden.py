@@ -62,6 +62,32 @@ def villages(world):
     return out
 
 
+MATS = ["water", "sand", "path", "grass", "pave"]
+
+
+def terrain(world):
+    """Stage 2b : the roads, the terrain (classified, cleaned, its stairs), the places."""
+    world.plan_routes()
+    world.village_ground = set().union(*(v.yard | v.pond | v.pond_ring for v in world.villages))
+    world.terrain = [[world.classify(x, y) for x in range(world.W)] for y in range(world.H)]
+    for _ in range(8):
+        world.clean()
+        if not world.place_stairs():
+            break
+    world.plan_pois()
+    out = [f"routes {world.seed} {cells(world.routes)} {len(world.route_paths)}"]
+    for a, b, path in world.route_paths:
+        out.append(f"route {world.seed} {a} {b} {len(path)} {fnv(b''.join(struct.pack('<ii', x, y) for x, y in path))}")
+    near = sorted(world.near_route.items())
+    out.append(f"nearroute {world.seed} {fnv(b''.join(struct.pack('<iii', x, y, d) for (x, y), d in near))}")
+    out.append(f"terrain {world.seed} {fnv(bytes(v for line in world.terrain for m, lv in line for v in (MATS.index(m), lv)))}")
+    out.append(f"stairs {world.seed} {cells(world.stairs)}")
+    for p in world.pois:
+        spur = b''.join(struct.pack('<ii', x, y) for x, y in p["spur"])
+        out.append(f"poi {world.seed} {p['kind']} {p['x']} {p['y']} {p['w']} {p['h']} {fnv(spur)} {w.BIOMES.index(p['biome'])}")
+    return out
+
+
 def main():
     out = []
     # Noise : a few values
@@ -78,6 +104,7 @@ def main():
                                                 for cy in range(world.ch) for cx in range(world.cw)))
         out.append(f"height {seed} {doubles(world.height(x, y) for y in range(world.H) for x in range(world.W))}")
         out += villages(world)
+        out += terrain(world)
     print("\n".join(out))
 
 

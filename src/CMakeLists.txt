@@ -77,7 +77,8 @@ skalang_check_scripts(smash_and_dash_scripts_check
 add_executable(sad_worldgen_test ${GAME_ROOT_DIR}/tests/worldgen/WorldgenTest.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Noise.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Climate.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Villages.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Villages.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Terrain.cpp)
 target_include_directories(sad_worldgen_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${GAME_ROOT_DIR}/external/ska/external/doctest)
 add_test(NAME sad_worldgen COMMAND sad_worldgen_test WORKING_DIRECTORY ${GAME_ROOT_DIR})
 
