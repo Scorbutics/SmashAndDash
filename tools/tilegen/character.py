@@ -2,7 +2,7 @@
 """character : the sprite sheet of the hero, a 3D voxel model rendered in the style of the tiles (tilegen).
 
 A chibi in the manner of Cube World : a big rounded head (about half of the height), big eyes low on the face, a
-small round body, round hands floating at its sides, stubby feet, voluminous hair with tufts. The model is made of
+red cap over voluminous hair (tufts out of it), a small round body, round hands floating at its sides, stubby feet. The model is made of
 rounded volumes (superellipsoids : rounded cubes) in its own space (x right, y forward, z up, the feet at z = 0, the
 face looking to -y). For each direction it is turned and cut into voxels ; each pixel of the frame casts a ray into the
 voxels, looking down from the front like the camera of the map. A voxel is shaded from the normal of the surface around
@@ -39,6 +39,8 @@ LIGHT = tuple(c / _l for c in LIGHT)
 PAL = {
     "skin": [(186, 110, 80), (228, 156, 116), (248, 196, 156), (255, 228, 196)],
     "hair": [(48, 26, 22), (84, 46, 32), (126, 74, 46), (172, 112, 70)],
+    "cap": [(140, 30, 34), (200, 54, 50), (236, 92, 72), (252, 148, 116)],
+    "capwhite": [(176, 180, 192), (222, 226, 234), (244, 246, 250), (255, 255, 255)],
     "tunic": [(28, 60, 140), (46, 98, 196), (82, 144, 232), (150, 200, 250)],
     "scarf": [(136, 26, 36), (198, 46, 52), (238, 84, 76), (252, 146, 124)],
     "belt": [(70, 40, 22), (110, 66, 36), (150, 100, 58), (190, 144, 96)],
@@ -71,14 +73,21 @@ def material(q, step):
             return "blush"
         if abs(x) <= 0.5 and 9.9 <= z <= 10.8:
             return "mouth"
-    # The hair : a shell over the head, open on the face, the fringe in points ; side locks ; tufts on the top
+    # The cap : a rounded dome on the hair, a white panel in front, a button on top ; a short brim over the eyes
+    if rounded(q, (0.0, 0.7, 16.0), (5.6, 5.2, 3.0)) and z >= 15.6:
+        if z >= 18.5 and abs(x) < 0.8 and abs(y - 0.7) < 0.8:
+            return "capwhite"
+        return "capwhite" if y < -2.6 and abs(x) < 1.8 and z < 17.8 else "cap"
+    if 15.1 <= z <= 15.9 and (x / 4.2) ** 2 + ((y + 4.3) / 2.6) ** 2 <= 1.0 and y < -2.5:
+        return "cap"
+    # The hair : a shell over the head, open on the face, the fringe in points ; side locks ; tufts out of the cap
     fringe = 15.2 - (0.8 if math.floor(x + 10) % 3 == 0 else 0.0)
     if rounded(q, (0.0, 0.9, 14.1), (5.8, 5.2, 5.0)):
         face = in_head and y < -1.0 and z < fringe and abs(x) < 4.7
         if not face:
             return "hair"
-    for c, r in (((1.6, 1.4, 18.6), (1.5, 1.6, 2.0)), ((-2.2, 2.4, 18.0), (1.4, 1.6, 1.8)),
-                 ((0.4, 4.6, 16.2), (1.4, 1.8, 1.4)), ((4.6, 1.8, 16.4), (1.4, 1.3, 1.5))):
+    for c, r in (((0.4, 5.4, 15.0), (1.5, 1.8, 1.4)), ((-2.6, 5.0, 14.4), (1.3, 1.6, 1.3)),
+                 ((5.4, 2.0, 15.0), (1.3, 1.4, 1.4)), ((-5.4, 1.4, 14.8), (1.3, 1.4, 1.3))):
         if rounded(q, c, r, 2.0):
             return "hair"
     if in_head:
@@ -111,7 +120,7 @@ def voxels(yaw, step):
     a = math.radians(yaw)
     c, s = math.cos(a), math.sin(a)
     grid = {}
-    for z in range(0, 23):
+    for z in range(0, 24):
         for y in range(-10, 10):
             for x in range(-10, 10):
                 # The centre of the voxel, back into the model space (turned by -yaw)
