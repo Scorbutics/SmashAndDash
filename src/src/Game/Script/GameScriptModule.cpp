@@ -44,6 +44,7 @@
 #include "ScriptConstants.h"
 #include "../Gameplay/Fight/System/FightStartSystem.h"
 #include "Game/Gameplay/Data/SavePaths.h"
+#include "Game/Gameplay/Fight/BattleStage.h"
 
 namespace {
 	// Entity of a script entity handle (an error when the entity was removed)
@@ -680,6 +681,14 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 
 	m_builder.bindField("lastFled", [&worldState](std::vector<ska::NodeValue>) {
 		return ska::NodeValue{ worldState.lastBattleFled() };
+	});
+
+	// A banner over the battle going on (big text in the middle of the screen) ; nothing out of a battle
+	m_builder.bindField("announce", [&worldState](std::vector<ska::NodeValue> params) {
+		if (auto* stage = worldState.battleStage(); stage != nullptr) {
+			stage->announce(String(params[0]));
+		}
+		return ska::NodeValue{};
 	});
 
 	m_builder.generate();

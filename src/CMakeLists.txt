@@ -58,6 +58,8 @@ file(GLOB_RECURSE GAME_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/Levels/*.minis
 # The agent scripts (run by tools/ska-console : tools/agent of the game and of the engine)
 file(GLOB AGENT_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/tools/agent/*.miniska ${GAME_ROOT_DIR}/external/ska/tools/agent/*.miniska)
 list(APPEND GAME_SCRIPTS ${AGENT_SCRIPTS})
+# The steps of the battles : a script started by the battle (BattleDirectorSystem)
+list(APPEND GAME_SCRIPTS ${GAME_ROOT_DIR}/Data/Battle/steps.miniska)
 list(REMOVE_ITEM GAME_SCRIPTS ${GAME_SCRIPT_MODULES})
 skalang_check_scripts(smash_and_dash_scripts_check
 	SCRIPTS ${GAME_SCRIPTS}

@@ -27,6 +27,7 @@
 #include "Physic/Shape.h"
 #include <chipmunk/chipmunk.h>
 #include <cstdlib>
+#include "Scripting/ScriptVM.h"
 
 namespace {
 	BattleComponent Fighter(BattleRules& rules, const ska::IniReader& data, int monster, int level) {
@@ -85,7 +86,28 @@ bool StateFight::onGameEvent(ska::GameEvent& ge) {
 	return true;
 }
 
+namespace {
+	// A line of the dialogs of the battle, from the script of its steps (Data/Battle/steps.miniska : message), else the
+	// fallback
+	std::string StepMessage(WorldState& worldState, const std::string& step, const std::string& name, std::string fallback) {
+		try {
+			return worldState.getScripts().call<std::string>(BattleDirectorSystem::StepsFile, "message",
+				{ ska::NodeValue{ std::make_shared<std::string>(step) }, ska::NodeValue{ std::make_shared<std::string>(name) } });
+		} catch (std::exception& e) {
+			SLOG_STATIC(ska::LogLevel::Warn, StateFight) << "Battle : no message for the step " << step << " : " << e.what();
+			return fallback;
+		}
+	}
+}
+
+StateFight::~StateFight() {
+	if (m_worldState.battleStage() == &m_stage) {
+		m_worldState.setBattleStage(nullptr);
+	}
+}
+
 void StateFight::beforeLoad(ska::State* lastScene) {
+	m_worldState.setBattleStage(&m_stage);
 	/* If already loaded... */
 	/*
 	if (m_worldState.loadedOnce()) {
@@ -174,7 +196,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 
 
 	auto delay = 3000;
-	auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, "Un " + m_descriptor.getName() + " sauvage apparaît !");
+	auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, StepMessage(m_worldState, "intro", m_descriptor.getName(), "Un " + m_descriptor.getName() + " sauvage apparaît !"));
 	// The Pokemon of the player has no position yet : the pokeball is thrown where it appears
 	auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball, m_pokemonPosition);
 
@@ -196,8 +218,10 @@ void StateFight::beforeUnload() {
     std::unique_ptr<ska::CompoundTask> firstTask;
     {
         auto pokeballTask = std::make_unique<PokeballTransition>(delay, m_entityManager, m_pokemonId, m_trainerId, m_pokeball);
-        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, m_worldState.lastBattleWon() ?
-			"Le " + m_descriptor.getName() + " a été battu." : (m_worldState.lastBattleFled() ? "Vous prenez la fuite !" : "Votre Pokémon est K.O."));
+        auto dialogTask = std::make_unique<DialogTransition>(delay, m_entityManager, m_eventDispatcher, m_trainerId, 
+			m_worldState.lastBattleWon() ? StepMessage(m_worldState, "won", m_descriptor.getName(), "Le " + m_descriptor.getName() + " a été battu.")
+			: (m_worldState.lastBattleFled() ? StepMessage(m_worldState, "fled", m_descriptor.getName(), "Vous prenez la fuite !")
+				: StepMessage(m_worldState, "lost", m_descriptor.getName(), "Votre Pokémon est K.O.")));
         firstTask = std::make_unique<ska::CompoundTask>(std::move(pokeballTask), std::move(dialogTask));
     }
 

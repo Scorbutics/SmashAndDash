@@ -79,7 +79,8 @@ private:
 	void renderBanner(ska::Renderer& renderer) const;
 	void renderMarks(ska::Renderer& renderer) const;
 	void updateScreenShader(ska::Renderer& renderer) const;
-	void text(ska::Renderer& renderer, const std::string& value, unsigned int size, ska::Color color, int x, int y, int align, float scale = 1.F, unsigned char alpha = 255) const;
+	// "outlined" : a black outline (over the map) ; false : on a panel of the theme
+	void text(ska::Renderer& renderer, const std::string& value, unsigned int size, ska::Color color, int x, int y, int align, float scale = 1.F, unsigned char alpha = 255, bool outlined = true) const;
 
 	ska::EntityManager& m_entities;
 	BattleStage& m_stage;

@@ -31,7 +31,7 @@ public:
 	StateFight(const StateFight&) = delete;
 	StateFight& operator=(const StateFight&) = delete;
 
-	~StateFight() override = default;
+	~StateFight() override;
 
 protected:
 	virtual void beforeLoad(ska::State* lastScene) override;

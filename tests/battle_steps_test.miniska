@@ -1,0 +1,19 @@
+# The steps of a battle (Data/Battle/steps.miniska)
+Test = import "bind:std.native.test"
+Battle = import "bind:game.battle"
+Steps = import "wd:Data/Battle/steps"
+
+run = function(args: string[]) do
+	Steps.run(["start", "PIKACHU", "RATTATA", "3"])
+	Steps.run(["knockout", "won", "PIKACHU", "RATTATA"])
+	Steps.run(["knockout", "lost", "PIKACHU", "RATTATA"])
+	Steps.run(["fled", "PIKACHU"])
+	shown = Battle.announced()
+	Test.equal((shown.size(): string), "4", "a banner for each step")
+	Test.equal(shown[0], "COMBAT !", "the start")
+	Test.equal(shown[1], "VICTOIRE !", "a knock out won")
+	Test.equal(shown[2], "K.O. !", "a knock out lost")
+	Test.equal(shown[3], "FUITE !", "fled")
+	Test.equal(Steps.message("intro", "Rattata"), "Un Rattata sauvage apparaît !", "the intro dialog")
+	Test.equal(Steps.message("won", "Rattata"), "Le Rattata a été battu.", "the dialog of a battle won")
+end

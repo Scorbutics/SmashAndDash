@@ -351,6 +351,11 @@ def write(root):
         "inventory_square_highlight.png": slot(True),
         "hpbar.png": hpbar(),
         "hpbarcontent.png": hpbar_content(),
+        # Small panels (48 x 48, 9-slice of 16 px parts) for the screens that draw themselves (the battle : Theme)
+        "panel_small.png": panel(48, 48, px=2, radius=3, border=1),
+        "panel_small_teal.png": panel(48, 48, px=2, radius=3, border=1, body="frame", light=0.3),
+        "panel_small_red.png": panel(48, 48, px=2, radius=3, border=1, frame="red", body="red"),
+        "panel_small_dark.png": panel(48, 48, px=2, radius=3, border=1, frame="dark", body="dark", light=0.2),
         "mouse_cursor.png": cursor(),
         "mouse_cursor_grab.png": cursor(True),
     }

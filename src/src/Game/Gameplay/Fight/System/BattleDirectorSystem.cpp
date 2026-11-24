@@ -11,6 +11,7 @@
 #include "../../Data/MapEvent.h"
 #include "../../../Script/ScriptConstants.h"
 #include "Game/Gameplay/Data/SavePaths.h"
+#include "Scripting/ScriptVM.h"
 
 BattleDirectorSystem::BattleDirectorSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, BattleStage& stage, int teamIndex) :
 	System(em),
@@ -56,9 +57,45 @@ void BattleDirectorSystem::start() {
 	for (const auto entity : getEntities()) {
 		m_componentAccessor.get<FighterComponent>(entity).shownHp = static_cast<float>(m_componentAccessor.get<BattleComponent>(entity).hp);
 	}
-	m_stage.changePhase(BattlePhase::Fight);
-	m_stage.announce("COMBAT !");
+	m_stage.changePhase(BattlePhase::Starting);
+	const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
+	runStep({ "start", name(m_stage.player), name(opponent), std::to_string(m_componentAccessor.get<BattleComponent>(opponent).level) });
 	SLOG(ska::LogLevel::Info) << "Battle : fight in the arena " << x << ", " << y << " (" << width << " x " << height << ")";
+}
+
+void BattleDirectorSystem::runStep(std::vector<std::string> arguments) {
+	auto done = std::make_shared<bool>(false);
+	m_stepDone = done;
+	auto context = ska::scripting::ScriptContext{};
+	context.name = StepsFile;
+	const auto step = arguments.empty() ? std::string{} : arguments[0];
+	SLOG(ska::LogLevel::Info) << "Battle : step " << step;
+	const auto started = m_worldState.getScripts().start(StepsFile, std::move(arguments), context, [done, step](bool ok, const std::string& text) {
+		if (!ok) {
+			SLOG_STATIC(ska::LogLevel::Error, BattleDirectorSystem) << "Battle : the step " << step << " failed : " << text;
+		}
+		*done = true;
+	});
+	if (!started) {
+		*done = true;
+	}
+}
+
+bool BattleDirectorSystem::stepDone() const {
+	if (m_stepDone == nullptr || *m_stepDone) {
+		return true;
+	}
+	if (m_stage.phaseTime() >= StepTimeout) {
+		SLOG(ska::LogLevel::Warn) << "Battle : the step script runs for too long, the battle goes on";
+		*m_stepDone = true;
+	}
+	return *m_stepDone;
+}
+
+std::string BattleDirectorSystem::name(ska::EntityId fighter) const {
+	const auto& bc = m_componentAccessor.get<BattleComponent>(fighter);
+	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(bc.monster) + ".ini" };
+	return data.exists("Description name") ? data.get<std::string>("Description name") : std::string{ "?" };
 }
 
 void BattleDirectorSystem::updateBars(unsigned int ellapsedTime) {
@@ -83,6 +120,8 @@ void BattleDirectorSystem::updateBars(unsigned int ellapsedTime) {
 }
 
 void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
+	// The scripts go on during the battle (the map, that updates them, is not running) : its steps wait
+	m_worldState.getScripts().update(ellapsedTime);
 	m_stage.update(ellapsedTime);
 	updateBars(ellapsedTime);
 
@@ -90,6 +129,12 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 	case BattlePhase::Intro:
 		if (std::all_of(m_stage.fighters.begin(), m_stage.fighters.end(), [this](ska::EntityId entity) { return present(entity); })) {
 			start();
+		}
+		break;
+
+	case BattlePhase::Starting:
+		if (stepDone()) {
+			m_stage.changePhase(BattlePhase::Fight);
 		}
 		break;
 
@@ -117,25 +162,26 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 				m_stage.hitStop(250);
 				m_stage.slowMotion(0.25F, 1400);
 				m_stage.shake(400, 10);
-				m_stage.announce("K.O. !");
+				const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
+				runStep({ "knockout", m_stage.winnerTeam == 0 ? "won" : "lost", name(m_stage.player), name(opponent) });
 				SLOG(ska::LogLevel::Info) << "Battle : the side " << m_stage.winnerTeam << " won";
 			}
 		}
 		if (m_stage.phase() == BattlePhase::Fight && m_stage.canFlee && present(m_stage.player) && m_componentAccessor.get<FighterComponent>(m_stage.player).outside >= BattleStage::FleeDelay) {
 			m_stage.changePhase(BattlePhase::Fled);
-			m_stage.announce("FUITE !");
+			runStep({ "fled", name(m_stage.player) });
 			SLOG(ska::LogLevel::Info) << "Battle : the player flees";
 		}
 		break;
 
 	case BattlePhase::KnockOut:
-		if (m_stage.phaseTime() >= KnockOutDuration) {
+		if (m_stage.phaseTime() >= KnockOutDuration && stepDone()) {
 			end();
 		}
 		break;
 
 	case BattlePhase::Fled:
-		if (m_stage.phaseTime() >= FleeDuration) {
+		if (m_stage.phaseTime() >= FleeDuration && stepDone()) {
 			end();
 		}
 		break;

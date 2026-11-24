@@ -30,6 +30,7 @@ namespace ska {
 }
 struct GameScriptModules;
 class BattleRules;
+class BattleStage;
 
 // End of a battle
 struct BattleResult {
@@ -93,6 +94,9 @@ public:
 	ScreenFade& getFade() { return m_fade; }
 	// Battle rules and AI (scripts)
 	BattleRules& getBattleRules();
+	// The battle going on (StateFight), else nullptr : the scripts act on it (Battle.announce)
+	void setBattleStage(BattleStage* stage) { m_battleStage = stage; }
+	BattleStage* battleStage() { return m_battleStage; }
 
 	// End of a battle : its result is given to the scripts waiting for it (Battle.start), and to the hooks
 	// ("battle.won", "battle.lost", with the player)
@@ -180,5 +184,6 @@ private:
 	bool m_lastBattleWon = false;
 	bool m_lastBattleFled = false;
 
+	BattleStage* m_battleStage = nullptr;
 };
 

@@ -13,6 +13,8 @@ namespace ska {
 enum class BattlePhase {
 	// The fighters appear (dialog, pokeball)
 	Intro,
+	// The step "start" of the battle runs (Data/Battle/steps.miniska) : the fighters wait in the arena
+	Starting,
 	Fight,
 	// A fighter is K.O. : slow motion, then the end of the battle
 	KnockOut,
