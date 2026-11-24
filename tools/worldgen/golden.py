@@ -88,6 +88,43 @@ def terrain(world):
     return out
 
 
+def tile(c):
+    return "None" if c is None else str(c)
+
+
+def grid(g):
+    """A grid of tiles as text : a tile id, an animated tile's name or None, by rows."""
+    return fnv(";".join(",".join(tile(c) for c in line) for line in g).encode())
+
+
+def layers(world):
+    """Stage 3a : the tiles of each block of the three layers, the blocks walked on, the events, the light, the rooms."""
+    world.layers = {l: [[None] * world.W for _ in range(world.H)] for l in ("", "M", "T")}
+    world.walk = [[True] * world.W for _ in range(world.H)]
+    world.taken = set()
+    world.objects = {}
+    world.chip = w.Tiles()
+    world.build()
+    keys = sorted(world.chip.ids.items(), key=lambda kv: kv[1])
+    out = [f"tiles {world.seed} {len(keys)} {fnv(chr(10).join(repr(k) for k, _ in keys).encode())}"]
+    for name, l in (("base", ""), ("middle", "M"), ("top", "T")):
+        out.append(f"layer {world.seed} {name} {grid(world.layers[l])}")
+    out.append(f"walk {world.seed} {fnv(bytes(int(v) for line in world.walk for v in line))}")
+    out.append(f"taken {world.seed} {cells(world.taken)}")
+    out.append(f"objects {world.seed} {fnv(b''.join(struct.pack('<iid', x, y, v) for (x, y), v in sorted(world.objects.items())))}")
+    out.append(f"items {world.seed} {fnv(b''.join(struct.pack('<iii', x, y, i) for x, y, i in world.items))}")
+    events = [chr(10).join(world.chunk_events(cx, cy)) for cy in range(world.ch) for cx in range(world.cw)]
+    out.append(f"events {world.seed} {fnv(chr(12).join(events).encode('latin-1'))}")
+    light = bytes(v for j in range(world.H + 1) for i in range(world.W + 1) for v in world.corner_light(i, j))
+    out.append(f"light {world.seed} {fnv(light)}")
+    for i, room in enumerate(world.rooms):
+        out.append(f"room {world.seed} {i} {room['template']} {fnv(chr(10).join(room['rows']).encode())} "
+                   f"{grid(room['layers'][''])} {grid(room['layers']['M'])} "
+                   f"{fnv(bytes(int(v) for line in room['walk'] for v in line))} "
+                   f"{fnv(chr(10).join(room['events']).encode('latin-1'))}")
+    return out
+
+
 def main():
     out = []
     # Noise : a few values
@@ -105,6 +142,7 @@ def main():
         out.append(f"height {seed} {doubles(world.height(x, y) for y in range(world.H) for x in range(world.W))}")
         out += villages(world)
         out += terrain(world)
+        out += layers(world)
     print("\n".join(out))
 
 

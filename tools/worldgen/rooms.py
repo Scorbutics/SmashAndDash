@@ -1,4 +1,4 @@
-"""rooms : the inside of the buildings, from the templates of tools/worldgen/rooms (see its README).
+"""rooms : the inside of the buildings, from the templates of Resources/Worldgen/rooms (see its README).
 
 A room is drawn with the tiles of the world (tilegen style) : the floor and the walls on the ground layer, the
 furniture on the middle layer (the floor shows around it). build_room gives its layers, the blocks the player can walk
@@ -10,7 +10,7 @@ import os
 import tilegen as g
 from tilegen import Scene, N, T, h01
 
-ROOMS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rooms")
+ROOMS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Resources", "Worldgen", "rooms")
 WALKABLE = set(".ERe")
 
 

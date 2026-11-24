@@ -33,21 +33,6 @@ namespace {
 
 	constexpr std::array<std::array<int, 2>, 8> D8{ { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } } };
 
-	struct Style {
-		std::vector<std::string> roofs;
-		std::vector<std::string> words; // Latin-1
-	};
-
-	const Style& VillageStyle(worldgen::Biome biome) {
-		static const auto styles = std::map<worldgen::Biome, Style>{
-			{ worldgen::Biome::Meadow, Style{ { "roofr", "roofb", "roofg", "roofo" }, { "Tr\xe8""fle", "Verdure", "Prairie", "Bourgeon", "Coquelicot" } } },
-			{ worldgen::Biome::Autumn, Style{ { "roofr", "roofo", "roofg" }, { "Ch\xe2""taigne", "Noisette", "Feuillage", "Brume", "Rousse" } } },
-			{ worldgen::Biome::Snow, Style{ { "roofb", "roofr", "roofg" }, { "Givre", "Frimas", "Flocon", "Glace", "Neige" } } },
-			{ worldgen::Biome::Desert, Style{ { "roofo", "roofr" }, { "Dune", "Sable", "Ocre", "Mirage", "Soleil" } } },
-		};
-		return styles.at(biome);
-	}
-
 	std::string NameForm(std::size_t form, const std::string& word) {
 		switch (form) {
 		case 0: return "Bourg-" + word;
@@ -246,6 +231,16 @@ worldgen::Village::Village(int cx, int cy, Rng& rng, const std::vector<std::stri
 	}
 }
 
+const worldgen::VillageStyle& worldgen::StyleOf(Biome biome) {
+	static const auto styles = std::map<Biome, VillageStyle>{
+		{ Biome::Meadow, VillageStyle{ { "roofr", "roofb", "roofg", "roofo" }, { "Tr\xe8""fle", "Verdure", "Prairie", "Bourgeon", "Coquelicot" }, "Un village paisible au milieu des pr\xe9s." } },
+		{ Biome::Autumn, VillageStyle{ { "roofr", "roofo", "roofg" }, { "Ch\xe2""taigne", "Noisette", "Feuillage", "Brume", "Rousse" }, "Les feuilles y tombent toute l'ann\xe9""e." } },
+		{ Biome::Snow, VillageStyle{ { "roofb", "roofr", "roofg" }, { "Givre", "Frimas", "Flocon", "Glace", "Neige" }, "L'hiver ne finit jamais ici." } },
+		{ Biome::Desert, VillageStyle{ { "roofo", "roofr" }, { "Dune", "Sable", "Ocre", "Mirage", "Soleil" }, "La chaleur ne fait pas peur \xe0 ses habitants." } },
+	};
+	return styles.at(biome);
+}
+
 std::string worldgen::Village::buildingsRepr() const {
 	auto out = std::ostringstream{};
 	out << "[";
@@ -377,7 +372,7 @@ void worldgen::WorldPlan::planVillages() {
 	for (auto i = 0u; i < sites.size(); i++) {
 		const auto& [site, biome] = sites[i];
 		auto rng = Rng{ m_seed + 1000 * static_cast<std::int64_t>(i) };
-		const auto& style = VillageStyle(biome);
+		const auto& style = StyleOf(biome);
 		auto village = Village{ site.first, site.second, rng, style.roofs, i == 0 ? 5 : 3, i == 0 ? 8 : 6 };
 		village.biome = biome;
 		auto words = std::vector<std::string>{};

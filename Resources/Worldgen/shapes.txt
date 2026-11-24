@@ -1,0 +1,38 @@
+stamp center_autumn 5 5 #####/#####/#####/#####/#####
+stamp center_desert 5 5 #####/#####/#####/#####/#####
+stamp center_meadow 5 5 #####/#####/#####/#####/#####
+stamp center_snow 5 5 #####/#####/#####/#####/#####
+stamp house_roofb_autumn 4 4 ####/####/####/####
+stamp house_roofb_desert 4 4 ####/####/####/####
+stamp house_roofb_meadow 4 4 ####/####/####/####
+stamp house_roofb_snow 4 4 ####/####/####/####
+stamp house_roofg_autumn 4 4 ####/####/####/####
+stamp house_roofg_desert 4 4 ####/####/####/####
+stamp house_roofg_meadow 4 4 ####/####/####/####
+stamp house_roofg_snow 4 4 ####/####/####/####
+stamp house_roofo_autumn 4 4 ####/####/####/####
+stamp house_roofo_desert 4 4 ####/####/####/####
+stamp house_roofo_meadow 4 4 ####/####/####/####
+stamp house_roofo_snow 4 4 ####/####/####/####
+stamp house_roofr_autumn 4 4 ####/####/####/####
+stamp house_roofr_desert 4 4 ####/####/####/####
+stamp house_roofr_meadow 4 4 ####/####/####/####
+stamp house_roofr_snow 4 4 ####/####/####/####
+stamp pillar_False 1 2 #/#
+stamp pillar_True 1 2 #/#
+stamp tent_roofb 2 2 ##/##
+stamp tent_roofg 2 2 ##/##
+stamp tent_roofo 2 2 ##/##
+stamp tent_roofr 2 2 ##/##
+furniture B 1 2 roofb #/#
+furniture B 1 2 roofg #/#
+furniture B 1 2 roofr #/#
+furniture C 5 2 - #####/#####
+furniture K 1 2 - #/#
+furniture K 2 2 - ##/##
+furniture P 1 1 - #
+furniture S 1 2 - #/#
+furniture S 2 2 - ##/##
+furniture T 2 1 - ##
+furniture T 2 2 - ##/##
+furniture c 1 1 - #

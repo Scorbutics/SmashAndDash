@@ -14,6 +14,7 @@
 #include "Game/Gameplay/World/Generation/Climate.h"
 #include "Game/Gameplay/World/Generation/Villages.h"
 #include "Game/Gameplay/World/Generation/Terrain.h"
+#include "Game/Gameplay/World/Generation/Layers.h"
 
 namespace {
 	std::uint64_t Fnv(const std::vector<unsigned char>& data) {
@@ -289,5 +290,144 @@ TEST_CASE("the roads, the terrain, the stairs and the places are those of the Py
 	}
 	for (const auto& [seed, count] : poiIndex) {
 		CHECK_MESSAGE(TerrainOf(seed).pois().size() == count, "the number of places of seed " << seed);
+	}
+}
+
+namespace {
+	const worldgen::World& WorldOf(std::int64_t seed) {
+		static auto shapes = [] {
+			auto file = std::ifstream{ "Resources/Worldgen/shapes.txt" };
+			REQUIRE(file.good());
+			return worldgen::Shapes::Parse(file);
+		}();
+		static const auto templates = worldgen::LoadRoomTemplates("Resources/Worldgen/rooms");
+		static auto worlds = std::map<std::int64_t, std::unique_ptr<worldgen::World>>{};
+		auto found = worlds.find(seed);
+		if (found == worlds.end()) {
+			found = worlds.emplace(seed, std::make_unique<worldgen::World>(TerrainOf(seed), shapes, templates)).first;
+		}
+		return *found->second;
+	}
+
+	std::string Text(const std::string& text) {
+		return std::to_string(Fnv(std::vector<unsigned char>(text.begin(), text.end())));
+	}
+
+	// A grid of tiles as the reference values write it : by rows (";"), the tiles of a row (",")
+	std::string Grid(const std::vector<worldgen::TileId>& tiles, int width) {
+		auto text = std::string{};
+		for (auto i = 0u; i < tiles.size(); i++) {
+			if (i > 0) {
+				text += i % static_cast<unsigned>(width) == 0 ? ";" : ",";
+			}
+			text += worldgen::TileName(tiles[i]);
+		}
+		return Text(text);
+	}
+
+	std::string Bools(const std::vector<bool>& values) {
+		auto data = std::vector<unsigned char>{};
+		for (const auto v : values) {
+			data.push_back(v ? 1 : 0);
+		}
+		return std::to_string(Fnv(data));
+	}
+
+	std::string Lines(const std::vector<std::string>& lines, char separator = '\n') {
+		auto text = std::string{};
+		for (auto i = 0u; i < lines.size(); i++) {
+			text += (i ? std::string(1, separator) : std::string{}) + lines[i];
+		}
+		return text;
+	}
+}
+
+TEST_CASE("the tiles of the blocks, the events, the light and the rooms are those of the Python generator") {
+	auto roomIndex = std::map<std::int64_t, std::size_t>{};
+	for (const auto& words : Golden()) {
+		const auto& kind = words[0];
+		if (kind != "tiles" && kind != "layer" && kind != "walk" && kind != "taken" && kind != "objects" && kind != "items"
+			&& kind != "events" && kind != "light" && kind != "room") {
+			continue;
+		}
+		const auto seed = std::stoll(words[1]);
+		const auto& world = WorldOf(seed);
+		const auto W = world.width();
+		const auto H = world.height();
+		if (kind == "tiles") {
+			auto keys = std::vector<std::string>{};
+			for (auto t = 0; t < static_cast<int>(world.tiles().size()); t++) {
+				keys.push_back("(" + world.tiles().key(t) + ", " + (world.tiles().walkable(t) ? "True" : "False") + ")");
+			}
+			CHECK_MESSAGE(world.tiles().size() == std::stoul(words[2]), "tiles of seed " << seed);
+			CHECK_MESSAGE(Text(Lines(keys)) == words[3], "tile keys of seed " << seed);
+		} else if (kind == "layer") {
+			const auto layer = words[2] == "base" ? worldgen::Layer::Base : words[2] == "middle" ? worldgen::Layer::Middle : worldgen::Layer::Top;
+			auto tiles = std::vector<worldgen::TileId>{};
+			for (auto y = 0; y < H; y++) {
+				for (auto x = 0; x < W; x++) {
+					tiles.push_back(world.tile(layer, x, y));
+				}
+			}
+			CHECK_MESSAGE(Grid(tiles, W) == words[3], "layer " << words[2] << " of seed " << seed);
+		} else if (kind == "walk") {
+			auto walk = std::vector<bool>{};
+			for (auto y = 0; y < H; y++) {
+				for (auto x = 0; x < W; x++) {
+					walk.push_back(world.walk(x, y));
+				}
+			}
+			CHECK_MESSAGE(Bools(walk) == words[2], "walk of seed " << seed);
+		} else if (kind == "taken") {
+			CHECK_MESSAGE(Cells(world.taken()) == words[2], "taken of seed " << seed);
+		} else if (kind == "objects") {
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [c, v] : world.objects()) {
+				AppendInt(data, c.first);
+				AppendInt(data, c.second);
+				Append(data, v);
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "objects of seed " << seed);
+		} else if (kind == "items") {
+			auto data = std::vector<unsigned char>{};
+			for (const auto& item : world.items()) {
+				AppendInt(data, item.x);
+				AppendInt(data, item.y);
+				AppendInt(data, item.item);
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "items of seed " << seed);
+		} else if (kind == "events") {
+			auto chunks = std::vector<std::string>{};
+			for (auto cy = 0; cy < H / worldgen::Chunk; cy++) {
+				for (auto cx = 0; cx < W / worldgen::Chunk; cx++) {
+					chunks.push_back(Lines(world.chunkEvents(cx, cy)));
+				}
+			}
+			CHECK_MESSAGE(Text(Lines(chunks, '\f')) == words[2], "events of seed " << seed);
+		} else if (kind == "light") {
+			auto data = std::vector<unsigned char>{};
+			for (auto j = 0; j <= H; j++) {
+				for (auto i = 0; i <= W; i++) {
+					for (const auto v : world.cornerLight(i, j)) {
+						data.push_back(v);
+					}
+				}
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "light of seed " << seed);
+		} else {
+			const auto i = roomIndex[seed]++;
+			REQUIRE(i < world.rooms().size());
+			const auto& room = world.rooms()[i];
+			INFO("room " << i << " of seed " << seed);
+			CHECK(room.templateName == words[3]);
+			CHECK(Text(Lines(room.rows)) == words[4]);
+			CHECK(Grid(room.base, room.width) == words[5]);
+			CHECK(Grid(room.middle, room.width) == words[6]);
+			CHECK(Bools(room.walk) == words[7]);
+			CHECK(Text(Lines(room.events)) == words[8]);
+		}
+	}
+	for (const auto& [seed, count] : roomIndex) {
+		CHECK_MESSAGE(WorldOf(seed).rooms().size() == count, "the number of rooms of seed " << seed);
 	}
 }

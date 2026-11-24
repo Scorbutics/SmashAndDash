@@ -31,6 +31,14 @@ namespace worldgen {
 		std::int64_t m_n = 0;
 	};
 
+	// The villages of a biome : their roofs, the words of their names, the line of their signs (Latin-1)
+	struct VillageStyle {
+		std::vector<std::string> roofs;
+		std::vector<std::string> words;
+		std::string line;
+	};
+	const VillageStyle& StyleOf(Biome biome);
+
 	struct Building {
 		std::string kind;   // "center", "house"
 		std::string roof;   // "" for none (the centre)

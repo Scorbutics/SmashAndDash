@@ -36,10 +36,25 @@ namespace worldgen {
 		Biome biome;
 	};
 
+	// The 8 neighbours : N E S W, then NE SE SW NW
+	constexpr std::array<std::array<int, 2>, 8> D8{ { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } } };
+
 	// The neighbours of a block for which a test holds : 8 bits (N E S W NE SE SW NW), a diagonal only when its two sides
 	// do not
 	template <class Test>
-	std::array<bool, 8> Mask8(Test cellIs, int x, int y);
+	std::array<bool, 8> Mask8(Test cellIs, int x, int y) {
+		auto bits = std::array<bool, 8>{};
+		for (auto k = 0u; k < 8; k++) {
+			bits[k] = cellIs(x + D8[k][0], y + D8[k][1]);
+		}
+		constexpr std::array<std::array<std::size_t, 2>, 4> sides{ { { 0, 1 }, { 2, 1 }, { 2, 3 }, { 0, 3 } } };
+		for (auto k = 4u; k < 8; k++) {
+			if (bits[sides[k - 4][0]] || bits[sides[k - 4][1]]) {
+				bits[k] = false;
+			}
+		}
+		return bits;
+	}
 
 	class Terrain {
 	public:

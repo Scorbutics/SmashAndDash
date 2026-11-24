@@ -7,7 +7,6 @@
 #include "Noise.h"
 
 namespace {
-	constexpr std::array<std::array<int, 2>, 8> D8{ { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } } };
 	constexpr double NoCost = -1.0;
 	// The lift of each biome (BIOME_LIFT), in the order of the biomes
 	constexpr std::array<double, worldgen::BiomeCount> BiomeLift{ 0.0, 0.015, 0.0, 0.05 };
@@ -32,21 +31,6 @@ namespace {
 	const std::array<std::string, 3> PoiKinds{ "camp", "ruins", "rest" };
 }
 
-template <class Test>
-std::array<bool, 8> worldgen::Mask8(Test cellIs, int x, int y) {
-	auto bits = std::array<bool, 8>{};
-	for (auto k = 0u; k < 8; k++) {
-		bits[k] = cellIs(x + D8[k][0], y + D8[k][1]);
-	}
-	const std::array<std::array<int, 2>, 4> sides{ { { 0, 1 }, { 2, 1 }, { 2, 3 }, { 0, 3 } } };
-	for (auto k = 4u; k < 8; k++) {
-		const auto& [a, b] = sides[k - 4];
-		if (bits[static_cast<std::size_t>(a)] || bits[static_cast<std::size_t>(b)]) {
-			bits[k] = false;
-		}
-	}
-	return bits;
-}
 
 worldgen::Terrain::Terrain(const WorldPlan& plan) :
 	m_plan(plan) {
