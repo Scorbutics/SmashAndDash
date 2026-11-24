@@ -1,0 +1,29 @@
+# The encounters with the wild Pokemon, asked by the map when the player is close to one (they cannot wait). The dice
+# are rolled by the game with the sizes given here (the replays stay the same).
+
+# A battle starts : 1 time in "startOdds" (every second near a wild Pokemon)
+startOdds = function() : int do
+	return 5
+end
+
+# The wild Pokemon is not alone : 1 time in "groupOdds", "groupSize" others of its kind join it
+groupOdds = function() : int do
+	return 5
+end
+
+groupSize = function() : int do
+	return 1
+end
+
+# The level of a companion : the level of the wild Pokemon, give or take "levelSpread" (the offset is rolled)
+levelSpread = function() : int do
+	return 1
+end
+
+companionLevel = function(level: int, offset: int) : int do
+	value = level + offset
+	if value < 1
+		return 1
+	end
+	return value
+end

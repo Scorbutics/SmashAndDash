@@ -1,0 +1,39 @@
+# The skills a Pokemon knows in a battle, asked when the battle starts (they cannot wait) : its skills are in its data
+# (Data/Monsters/<id>.ini [Skills]), each with the level it is learned at ("levels", in the order of the data).
+# It knows the last ones it learned at its level, "slots" at most.
+
+# The skills learned at its level, in the order they are learned (the order of the data for the same level)
+learned = function(levels: int[], level: int) : int[] do
+	order = []: int
+	for(lv = 1
+	 lv <= level
+	 lv = lv + 1) do
+		for(i = 0
+		 i < levels.size()
+		 i = i + 1) do
+			if levels[i] == lv
+				order = order + i
+			end
+		end
+	end
+	return order
+end
+
+# How many skills it knows
+knownCount = function(levels: int[], level: int, slots: int) : int do
+	count = learned(levels, level).size()
+	if count > slots
+		return slots
+	end
+	return count
+end
+
+# The k-th skill it knows : its index in the data
+known = function(levels: int[], level: int, slots: int, k: int) : int do
+	order = learned(levels, level)
+	first = 0
+	if order.size() > slots
+		first = order.size() - slots
+	end
+	return order[first + k]
+end

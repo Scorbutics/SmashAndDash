@@ -5,6 +5,7 @@
 #include "Base/IO/Readers/IniReader.h"
 #include "SkillDescriptor.h"
 #include "SkillsHolderComponent.h"
+#include "Game/Gameplay/Fight/BattleRules.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
 	stats.hp = data.get<int>(block + " hp");
@@ -83,19 +84,17 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 }
 
 void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const {
-	// The last skills learned (up to 4) : the skills of its level and below, in the order they are learned
-	auto learned = std::vector<std::pair<unsigned int, std::string>>{};
+	// The skills it knows (Data/Battle/skills.miniska) : from the levels its skills are learned at
+	auto names = std::vector<std::string>{};
+	auto levels = std::vector<int>{};
 	for (auto i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)); i++) {
 		const auto levelKey = "Skills " + ska::StringUtils::intToStr(i) + "_level";
-		const auto level = reader.exists(levelKey) ? reader.get<unsigned int>(levelKey) : 1u;
-		if (level <= m_level) {
-			learned.emplace_back(level, reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
-		}
+		names.push_back(reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
+		levels.push_back(reader.exists(levelKey) ? reader.get<int>(levelKey) : 1);
 	}
-	std::stable_sort(learned.begin(), learned.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
-	const auto first = learned.size() > shc.skills.size() ? learned.size() - shc.skills.size() : 0;
-	for (auto i = first; i < learned.size(); i++) {
-		createSkill(shc.skills[i - first], learned[i].second);
+	const auto known = m_worldState.getBattleRules().knownSkills(levels, static_cast<int>(m_level), static_cast<int>(shc.skills.size()));
+	for (auto k = 0u; k < known.size() && k < shc.skills.size(); k++) {
+		createSkill(shc.skills[k], names[static_cast<std::size_t>(known[k])]);
 	}
 
 	// Every Pokemon has Charge (the basic attack) : in the first slot that cannot be used in a battle

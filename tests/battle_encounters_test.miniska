@@ -1,0 +1,17 @@
+# Encounters and skills known (Data/Battle/encounters.miniska, Data/Battle/skills.miniska)
+Test = import "bind:std.native.test"
+Encounters = import "wd:Data/Battle/encounters"
+Skills = import "wd:Data/Battle/skills"
+
+run = function(args: string[]) do
+	Test.equal((Encounters.startOdds(): string), "5", "a battle 1 time in 5")
+	Test.equal((Encounters.groupOdds(): string), "5", "a group 1 time in 5")
+	Test.equal((Encounters.companionLevel(1, -1): string), "1", "at least level 1")
+	Test.equal((Encounters.companionLevel(4, 1): string), "5", "one level more")
+	levels = [1, 1, 5, 3, 9, 4]
+	Test.equal((Skills.knownCount(levels, 2, 4): string), "2", "two skills at level 2")
+	Test.equal((Skills.known(levels, 2, 4, 1): string), "1", "in the order of the data")
+	Test.equal((Skills.knownCount(levels, 9, 4): string), "4", "four at most")
+	Test.equal((Skills.known(levels, 9, 4, 0): string), "3", "the last four learned : level 3 first")
+	Test.equal((Skills.known(levels, 9, 4, 3): string), "4", "the one of level 9 last")
+end

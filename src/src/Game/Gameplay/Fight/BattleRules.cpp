@@ -3,12 +3,14 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
 	m_statusFile(std::move(statusFile)),
-	m_stagesFile(std::move(stagesFile)) {
+	m_stagesFile(std::move(stagesFile)),
+	m_encountersFile(std::move(encountersFile)),
+	m_skillsFile(std::move(skillsFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -152,4 +154,60 @@ float BattleRules::stageMultiplier(int stage) {
 	const auto numerator = call(m_stagesFile, "numerator", { ska::NodeValue{ static_cast<long>(stage) } }, stage >= 0 ? 2L + stage : 2L);
 	const auto denominator = call(m_stagesFile, "denominator", { ska::NodeValue{ static_cast<long>(stage) } }, stage >= 0 ? 2L : 2L - stage);
 	return denominator <= 0 ? 1.F : static_cast<float>(numerator) / static_cast<float>(denominator);
+}
+
+int BattleRules::encounterOdds() {
+	return static_cast<int>(std::max(1L, call(m_encountersFile, "startOdds", {}, 5L)));
+}
+
+int BattleRules::groupOdds() {
+	return static_cast<int>(std::max(1L, call(m_encountersFile, "groupOdds", {}, 5L)));
+}
+
+int BattleRules::groupSize() {
+	return static_cast<int>(std::max(0L, std::min(3L, call(m_encountersFile, "groupSize", {}, 1L))));
+}
+
+int BattleRules::levelSpread() {
+	return static_cast<int>(std::max(0L, call(m_encountersFile, "levelSpread", {}, 1L)));
+}
+
+int BattleRules::companionLevel(int level, int offset) {
+	return static_cast<int>(std::max(1L, call(m_encountersFile, "companionLevel", { ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(offset) } },
+		std::max(1L, static_cast<long>(level + offset)))));
+}
+
+std::vector<int> BattleRules::knownSkills(const std::vector<int>& levels, int level, int slots) {
+	auto levelValues = [&levels]() {
+		auto values = std::make_shared<ska::NodeValueArrayRaw>();
+		for (const auto value : levels) {
+			values->push_back(ska::NodeValue{ static_cast<long>(value) });
+		}
+		return ska::NodeValue{ ska::NodeValueArray{ std::move(values) } };
+	};
+	// The fallback : the last skills learned at its level (stable : the order of the data for the same level)
+	auto fallback = std::vector<int>{};
+	for (auto lv = 1; lv <= level; lv++) {
+		for (auto i = 0u; i < levels.size(); i++) {
+			if (levels[i] == lv) {
+				fallback.push_back(static_cast<int>(i));
+			}
+		}
+	}
+	if (static_cast<int>(fallback.size()) > slots) {
+		fallback.erase(fallback.begin(), fallback.end() - slots);
+	}
+	const auto count = call(m_skillsFile, "knownCount", { levelValues(), ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(slots) } }, -1L);
+	if (count < 0) {
+		return fallback;
+	}
+	auto known = std::vector<int>{};
+	for (auto k = 0L; k < std::min(count, static_cast<long>(slots)); k++) {
+		const auto index = call(m_skillsFile, "known", { levelValues(), ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(slots) }, ska::NodeValue{ k } }, -1L);
+		if (index < 0 || index >= static_cast<long>(levels.size())) {
+			return fallback;
+		}
+		known.push_back(static_cast<int>(index));
+	}
+	return known;
 }

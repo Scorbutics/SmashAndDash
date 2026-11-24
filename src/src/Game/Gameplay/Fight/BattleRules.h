@@ -15,7 +15,8 @@ namespace ska {
 class BattleRules {
 public:
 	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska",
-		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska");
+		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska",
+		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -54,6 +55,16 @@ public:
 	unsigned int stageDuration(unsigned int effect);
 	float stageMultiplier(int stage);
 
+	// The encounters (Data/Battle/encounters.miniska) : the sizes of the dice (a battle starts, a group), the companions
+	int encounterOdds();
+	int groupOdds();
+	int groupSize();
+	int levelSpread();
+	int companionLevel(int level, int offset);
+	// The skills a Pokemon knows (Data/Battle/skills.miniska) : the indexes of its skills in its data ("levels" : the level
+	// each is learned at), "slots" at most
+	std::vector<int> knownSkills(const std::vector<int>& levels, int level, int slots);
+
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
 private:
@@ -65,5 +76,7 @@ private:
 	std::string m_aiFile;
 	std::string m_statusFile;
 	std::string m_stagesFile;
+	std::string m_encountersFile;
+	std::string m_skillsFile;
 	std::unordered_set<std::string> m_reported;
 };

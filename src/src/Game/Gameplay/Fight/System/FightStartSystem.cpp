@@ -14,6 +14,7 @@
 #include "../../Data/SavegameManager.h"
 #include "../../Data/Team.h"
 #include "../../../Script/ScriptConstants.h"
+#include "Game/Gameplay/Fight/BattleRules.h"
 
 bool StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId trainer, ska::EntityId opponent) {
 	auto& fc = cem.getComponent<FightComponent>(opponent);
@@ -94,13 +95,18 @@ void FightStartSystem::refresh(unsigned int) {
 
 		if (*trainer != entityId && ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
 			if (currentDelay >= BATTLE_START_TICKS) {
-				if (ska::NumberUtils::random(1, BATTLE_START_CHANCE) == 1) {
-					// Sometimes the wild Pokemon is not alone : another one of its kind joins the battle
+				// The rules of the encounters (Data/Battle/encounters.miniska) : the sizes of the dice, the companions
+				auto& rules = m_worldScene.getBattleRules();
+				if (ska::NumberUtils::random(1, rules.encounterOdds()) == 1) {
+					// Sometimes the wild Pokemon is not alone : others of its kind join the battle
 					auto& fc = m_componentAccessor.get<FightComponent>(entityId);
 					fc.companions.clear();
-					if (ska::NumberUtils::random(1, GroupChance) == 1) {
-						const auto level = std::max(1, static_cast<int>(fc.level) + ska::NumberUtils::random(-1, 1));
-						fc.companions.emplace_back(fc.opponentScriptId, static_cast<unsigned int>(level));
+					if (ska::NumberUtils::random(1, rules.groupOdds()) == 1) {
+						const auto spread = rules.levelSpread();
+						for (auto i = 0, size = rules.groupSize(); i < size; i++) {
+							const auto level = rules.companionLevel(static_cast<int>(fc.level), ska::NumberUtils::random(-spread, spread));
+							fc.companions.emplace_back(fc.opponentScriptId, static_cast<unsigned int>(level));
+						}
 					}
 					StartBattle(m_cem, m_ged, m_worldScene, *trainer, entityId);
 				}
