@@ -125,6 +125,42 @@ def layers(world):
     return out
 
 
+def chip_slots(chip, grids):
+    """The cells of the chipset of the blocks of a map : grids of (tile, mix) or None."""
+    return fnv(";".join(",".join("-" if c is None else "%d_%d" % chip.cells[c] for c in line)
+                        for g in grids for line in g).encode())
+
+
+def chip_line(name, chip, grids):
+    return f"{name} {chip.rows} {chip.used} {fnv(chip.image.tobytes())} {fnv(chip.col.tobytes())} " \
+           f"{fnv(repr(chip.water).encode())} {chip_slots(chip, grids)}"
+
+
+def chipsets(world):
+    """Stage 3b : the chipset of each chunk and of the rooms (every tile is in the atlas of tools/worldgen/atlas.py)."""
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Resources", "Worldgen",
+                           "tiles.txt")) as f:
+        atlas = {line.rstrip("\n").split(" ", 1)[1] for line in f}
+    missing = [k for k, _ in world.chip.ids if repr(k) not in atlas]
+    if missing:
+        raise SystemExit(f"golden : tiles not in the atlas (tools/worldgen/atlas.py) : {missing[:5]}")
+    out = []
+    for cy in range(world.ch):
+        for cx in range(world.cw):
+            grids = []
+            for l in ("", "M", "T"):
+                grids.append([[(world.layers[l][y][x], world.pal[y][x]) if world.layers[l][y][x] is not None else None
+                               for x in range(cx * w.CHUNK, cx * w.CHUNK + w.CHUNK)]
+                              for y in range(cy * w.CHUNK, cy * w.CHUNK + w.CHUNK)])
+            used = {c for g in grids for line in g for c in line if c is not None}
+            out.append(chip_line(f"chipset {world.seed} {cx} {cy}", w.Chipset(world.chip, used), grids))
+    grids = [[[(c, w.MEADOW) if c is not None else None for c in line] for line in room["layers"][l]]
+             for room in world.rooms for l in ("", "M")]
+    used = {c for g in grids for line in g for c in line if c is not None}
+    out.append(chip_line(f"roomchipset {world.seed}", w.Chipset(world.chip, used), grids))
+    return out
+
+
 def main():
     out = []
     # Noise : a few values
@@ -143,6 +179,7 @@ def main():
         out += villages(world)
         out += terrain(world)
         out += layers(world)
+        out += chipsets(world)
     print("\n".join(out))
 
 

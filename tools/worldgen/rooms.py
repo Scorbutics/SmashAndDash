@@ -168,6 +168,27 @@ def furniture(kind, w, h, extra=None):
     return s.render()
 
 
+def draw_key(key):
+    """The image of a tile of a room from its key (build_room)."""
+    kind = key[0]
+    if kind == "room floor":
+        return floor_tile(key[1])
+    if kind == "room wall top":
+        return wall_top()
+    if kind == "room wall":
+        return wall_face(*key[1:])
+    if kind == "room rug":
+        return rug(key[1])
+    if kind == "room mat":
+        return mat()
+    if kind == "room furniture":
+        if key[1] == "H":
+            return furniture("H", 1, 1)
+        char, rw, th, extra, c, r = key[1:]
+        return furniture(char, rw, th, extra).crop((c * T, r * T, c * T + T, r * T + T))
+    raise KeyError(key)
+
+
 # ---------------------------------------------------------------- a room
 
 def rects(rows, char):
@@ -200,22 +221,22 @@ def build_room(chip, kind, rows, seed):
     mid = [[None] * w for _ in range(h)]
     walk = [[c in WALKABLE for c in row] for row in rows]
     paper = "white" if kind == "center" else "wall"
-    floor_cell = chip.cell(("room floor", kind), lambda: floor_tile(kind), True)          # planks but in a centre
+    floor_cell = chip.cell(("room floor", kind), True)          # planks but in a centre
     for y, row in enumerate(rows):
         for x, c in enumerate(row):
             if c == "#":
-                base[y][x] = chip.cell(("room wall top",), wall_top, False)
+                base[y][x] = chip.cell(("room wall top",), False)
                 walk[y][x] = False
             elif c in "=WF":
                 item = c if c in "WF" else None
-                base[y][x] = chip.cell(("room wall", item, paper), lambda: wall_face(item, paper), False)
+                base[y][x] = chip.cell(("room wall", item, paper), False)
                 walk[y][x] = False
             elif c == "R":
                 mk = tuple(0 <= y + dy < h and 0 <= x + dx < w and rows[y + dy][x + dx] == "R"
                            for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0)))
-                base[y][x] = chip.cell(("room rug", mk), lambda: rug(mk), True)
+                base[y][x] = chip.cell(("room rug", mk), True)
             elif c == "E":
-                base[y][x] = chip.cell(("room mat",), mat, True)
+                base[y][x] = chip.cell(("room mat",), True)
             else:
                 base[y][x] = floor_cell
     blanket = ["roofb", "roofr", "roofg"][int(h01(seed, 1, 7) * 3)]
@@ -232,13 +253,12 @@ def build_room(chip, kind, rows, seed):
                     tile = img.crop((c * T, r * T, c * T + T, r * T + T))
                     if g.blank(tile):
                         continue
-                    mid[top + r][x0 + c] = chip.cell(("room furniture", char, rw, th, extra, c, r), lambda: tile, False)
+                    mid[top + r][x0 + c] = chip.cell(("room furniture", char, rw, th, extra, c, r), False)
                     walk[top + r][x0 + c] = False
             if char == "C":
                 counter += [(x, y0 + rh - 1) for x in range(x0, x0 + rw)]
     for x0, y0, rw, rh in rects(rows, "H"):
-        img = furniture("H", 1, 1)
-        mid[y0][x0] = chip.cell(("room furniture", "H"), lambda: img, False)
+        mid[y0][x0] = chip.cell(("room furniture", "H"), False)
         walk[y0][x0] = False
     exits = [(x, y) for y, row in enumerate(rows) for x, c in enumerate(row) if c == "E"]
     beds = [(x, y) for y, row in enumerate(rows) for x, c in enumerate(row) if c == "B"]

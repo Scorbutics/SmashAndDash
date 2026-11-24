@@ -28,19 +28,6 @@ def mask(img):
                     for r in range(th)), tw, th
 
 
-def stamps():
-    out = {}
-    for b in w.BIOMES:
-        out[f"center_{b}"] = lambda b=b: g.styled(g.healing_center(), b).render()
-        for roof in w.ROOFS:
-            out[f"house_{roof}_{b}"] = lambda b=b, rf=roof: g.styled(g.house(rf), b).render()
-    for canvas in ["roofo", "roofg", "roofb", "roofr"]:
-        out[f"tent_{canvas}"] = lambda cv=canvas: g.tent(cv)
-    for broken in (False, True):
-        out[f"pillar_{broken}"] = lambda br=broken: g.pillar(br)
-    return out
-
-
 def furniture():
     sizes = set()
     for kind in ("house", "center", "rest"):
@@ -59,7 +46,7 @@ def main():
     for b in w.BIOMES:                               # the palette of the biome, as the generator draws them
         g.use_biome(b)
     g.use_biome("meadow")
-    for name, make in sorted(stamps().items()):
+    for name, make in sorted(w.STAMP_MAKERS.items()):
         rows, tw, th = mask(make())
         lines.append(f"stamp {name} {tw} {th} {rows}")
     for char, rw, th, extra in furniture():

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -15,6 +16,7 @@
 #include "Game/Gameplay/World/Generation/Villages.h"
 #include "Game/Gameplay/World/Generation/Terrain.h"
 #include "Game/Gameplay/World/Generation/Layers.h"
+#include "Game/Gameplay/World/Generation/Chipset.h"
 
 namespace {
 	std::uint64_t Fnv(const std::vector<unsigned char>& data) {
@@ -429,5 +431,123 @@ TEST_CASE("the tiles of the blocks, the events, the light and the rooms are thos
 	}
 	for (const auto& [seed, count] : roomIndex) {
 		CHECK_MESSAGE(WorldOf(seed).rooms().size() == count, "the number of rooms of seed " << seed);
+	}
+}
+
+namespace {
+	const worldgen::Atlas& TheAtlas() {
+		static const auto atlas = [] {
+			auto index = std::ifstream{ "Resources/Worldgen/tiles.txt" };
+			REQUIRE(index.good());
+			return worldgen::Atlas{ worldgen::ReadPng("Resources/Worldgen/tiles.png"), index };
+		}();
+		return atlas;
+	}
+
+	std::string Bytes(const std::vector<std::uint8_t>& bytes) {
+		return std::to_string(Fnv(std::vector<unsigned char>(bytes.begin(), bytes.end())));
+	}
+
+	std::string Water(const std::vector<worldgen::Block>& water) {
+		auto text = std::string{ "[" };
+		for (auto i = 0u; i < water.size(); i++) {
+			text += (i ? ", (" : "(") + std::to_string(water[i].first) + ", " + std::to_string(water[i].second) + ")";
+		}
+		return Text(text + "]");
+	}
+
+	// The cells of the blocks of a map, as the reference values write them
+	std::string Slots(const worldgen::Chipset& chip, const std::vector<std::vector<std::vector<std::optional<worldgen::TileUse>>>>& grids) {
+		auto text = std::string{};
+		auto firstLine = true;
+		for (const auto& grid : grids) {
+			for (const auto& line : grid) {
+				text += firstLine ? "" : ";";
+				firstLine = false;
+				for (auto i = 0u; i < line.size(); i++) {
+					text += i ? "," : "";
+					if (!line[i]) {
+						text += "-";
+					} else {
+						const auto& cell = chip.cells.at(*line[i]);
+						text += std::to_string(cell.first) + "_" + std::to_string(cell.second);
+					}
+				}
+			}
+		}
+		return Text(text);
+	}
+
+	void CheckChipset(const worldgen::Chipset& chip, const std::vector<std::vector<std::vector<std::optional<worldgen::TileUse>>>>& grids,
+		const std::vector<std::string>& words, std::size_t from) {
+		CHECK(chip.rows == std::stoi(words[from]));
+		CHECK(chip.used == std::stoi(words[from + 1]));
+		CHECK(Bytes(chip.image.rgb) == words[from + 2]);
+		CHECK(Bytes(chip.col.rgb) == words[from + 3]);
+		CHECK(Water(chip.water) == words[from + 4]);
+		CHECK(Slots(chip, grids) == words[from + 5]);
+	}
+}
+
+TEST_CASE("the png reader reads the atlas of the tiles") {
+	const auto image = worldgen::ReadPng("Resources/Worldgen/tiles.png");
+	CHECK(image.width == worldgen::BiomeCount * 4 * worldgen::Voxels);
+	CHECK(image.height % worldgen::Voxels == 0);
+	// The first tile (the water, frame 0, meadow) : no colour key in it
+	const auto* p = image.at(0, 0);
+	CHECK(!(p[0] == 190 && p[1] == 151 && p[2] == 255));
+}
+
+TEST_CASE("the chipsets are those of the Python generator") {
+	using Grids = std::vector<std::vector<std::vector<std::optional<worldgen::TileUse>>>>;
+	auto images = std::map<std::int64_t, std::unique_ptr<worldgen::TileImages>>{};
+	for (const auto& words : Golden()) {
+		if (words[0] != "chipset" && words[0] != "roomchipset") {
+			continue;
+		}
+		const auto seed = std::stoll(words[1]);
+		const auto& world = WorldOf(seed);
+		auto& tileImages = images[seed];
+		if (!tileImages) {
+			tileImages = std::make_unique<worldgen::TileImages>(TheAtlas(), world.tiles());
+		}
+		auto grids = Grids{};
+		if (words[0] == "chipset") {
+			const auto cx = std::stoi(words[2]);
+			const auto cy = std::stoi(words[3]);
+			INFO("chipset " << cx << " " << cy << " of seed " << seed);
+			for (const auto layer : { worldgen::Layer::Base, worldgen::Layer::Middle, worldgen::Layer::Top }) {
+				auto grid = std::vector<std::vector<std::optional<worldgen::TileUse>>>{};
+				for (auto y = cy * worldgen::Chunk; y < cy * worldgen::Chunk + worldgen::Chunk; y++) {
+					auto line = std::vector<std::optional<worldgen::TileUse>>{};
+					for (auto x = cx * worldgen::Chunk; x < cx * worldgen::Chunk + worldgen::Chunk; x++) {
+						const auto tile = world.tile(layer, x, y);
+						line.push_back(tile == worldgen::NoTile ? std::nullopt
+							: std::optional<worldgen::TileUse>{ worldgen::TileUse{ tile, worldgen::BlockMix(world.terrain().plan(), x, y) } });
+					}
+					grid.push_back(std::move(line));
+				}
+				grids.push_back(std::move(grid));
+			}
+			CheckChipset(worldgen::Chipset{ *tileImages, worldgen::ChunkTiles(world, cx, cy) }, grids, words, 4);
+		} else {
+			INFO("the chipset of the rooms of seed " << seed);
+			const auto meadow = worldgen::PureMix(worldgen::Biome::Meadow);
+			for (const auto& room : world.rooms()) {
+				for (const auto* tiles : { &room.base, &room.middle }) {
+					auto grid = std::vector<std::vector<std::optional<worldgen::TileUse>>>{};
+					for (auto y = 0; y < room.height; y++) {
+						auto line = std::vector<std::optional<worldgen::TileUse>>{};
+						for (auto x = 0; x < room.width; x++) {
+							const auto tile = (*tiles)[static_cast<std::size_t>(y * room.width + x)];
+							line.push_back(tile == worldgen::NoTile ? std::nullopt : std::optional<worldgen::TileUse>{ worldgen::TileUse{ tile, meadow } });
+						}
+						grid.push_back(std::move(line));
+					}
+					grids.push_back(std::move(grid));
+				}
+			}
+			CheckChipset(worldgen::Chipset{ *tileImages, worldgen::RoomTiles(world) }, grids, words, 2);
+		}
 	}
 }
