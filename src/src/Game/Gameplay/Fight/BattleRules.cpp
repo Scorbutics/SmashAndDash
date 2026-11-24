@@ -3,10 +3,11 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
-	m_aiFile(std::move(aiFile)) {
+	m_aiFile(std::move(aiFile)),
+	m_statusFile(std::move(statusFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -83,4 +84,55 @@ int BattleRules::move(int monster, int distance, int reach, int hp, int maxHp) {
 	const auto movement = call(m_aiFile, "move", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(distance) },
 		ska::NodeValue{ static_cast<long>(reach) }, ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) } }, fallback);
 	return movement >= 0 && movement <= 4 ? static_cast<int>(movement) : 0;
+}
+
+namespace {
+	ska::NodeValue Text(const std::string& text) {
+		return ska::NodeValue{ std::make_shared<std::string>(text) };
+	}
+}
+
+bool BattleRules::statusLands(const std::string& status, int chance, int roll, const std::string& current) {
+	const auto fallback = !status.empty() && status != "guard" && roll < chance && (status == "flinch" || current == "none");
+	return callBool(m_statusFile, "lands", { Text(status), ska::NodeValue{ static_cast<long>(chance) }, ska::NodeValue{ static_cast<long>(roll) }, Text(current) }, fallback);
+}
+
+unsigned int BattleRules::statusDuration(const std::string& status, unsigned int effect) {
+	const auto fallback = status == "sleep" ? std::min(effect, 3500u) : effect;
+	return static_cast<unsigned int>(std::max(0L, call(m_statusFile, "duration", { Text(status), ska::NodeValue{ static_cast<long>(effect) } }, static_cast<long>(fallback))));
+}
+
+unsigned int BattleRules::statusStun(const std::string& status) {
+	const auto fallback = status == "flinch" ? 450L : (status == "paralysis" ? 500L : 0L);
+	return static_cast<unsigned int>(std::max(0L, call(m_statusFile, "stun", { Text(status) }, fallback)));
+}
+
+unsigned int BattleRules::statusTickPeriod(const std::string& status) {
+	const auto fallback = status == "poison" || status == "burn" || status == "leech" ? 1000L : 0L;
+	return static_cast<unsigned int>(std::max(0L, call(m_statusFile, "tickPeriod", { Text(status) }, fallback)));
+}
+
+int BattleRules::statusTickDamage(const std::string& status, int maxHp) {
+	const auto fallback = status == "poison" || status == "burn" || status == "leech" ? std::max(1, maxHp / 16) : 0;
+	return static_cast<int>(std::max(0L, call(m_statusFile, "tickDamage", { Text(status), ska::NodeValue{ static_cast<long>(maxHp) } }, fallback)));
+}
+
+bool BattleRules::statusLeech(const std::string& status) {
+	return callBool(m_statusFile, "leech", { Text(status) }, status == "leech");
+}
+
+int BattleRules::statusSpeedPercent(const std::string& status) {
+	return static_cast<int>(std::max(0L, call(m_statusFile, "speedPercent", { Text(status) }, status == "paralysis" ? 60L : 100L)));
+}
+
+int BattleRules::statusFailOdds(const std::string& status) {
+	return static_cast<int>(std::max(0L, call(m_statusFile, "failOdds", { Text(status) }, status == "paralysis" ? 4L : 0L)));
+}
+
+int BattleRules::statusAttackPercent(const std::string& status, bool special) {
+	return static_cast<int>(std::max(0L, call(m_statusFile, "attackPercent", { Text(status), ska::NodeValue{ special } }, status == "burn" && !special ? 50L : 100L)));
+}
+
+bool BattleRules::statusWakes(const std::string& status, int damage) {
+	return callBool(m_statusFile, "wakes", { Text(status), ska::NodeValue{ static_cast<long>(damage) } }, status == "sleep" && damage > 0);
 }

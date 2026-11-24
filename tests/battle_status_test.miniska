@@ -1,0 +1,26 @@
+# Status rules (Data/Battle/status.miniska)
+Test = import "bind:std.native.test"
+Status = import "wd:Data/Battle/status"
+
+run = function(args: string[]) do
+	Test.equal((Status.lands("poison", 30, 29, "none"): string), "true", "under the chance : it lands")
+	Test.equal((Status.lands("poison", 30, 30, "none"): string), "false", "at the chance : it misses")
+	Test.equal((Status.lands("burn", 100, 0, "poison"): string), "false", "one lasting status at a time")
+	Test.equal((Status.lands("flinch", 100, 0, "poison"): string), "true", "a flinch even with a status")
+	Test.equal((Status.lands("guard", 100, 0, "none"): string), "false", "guard is not a status")
+	Test.equal((Status.duration("sleep", 6000): string), "3500", "a sleep is short")
+	Test.equal((Status.duration("poison", 6000): string), "6000", "the duration of the skill")
+	Test.equal((Status.tickDamage("poison", 40): string), "2", "a sixteenth of the hit points")
+	Test.equal((Status.tickDamage("burn", 10): string), "1", "at least one")
+	Test.equal((Status.tickDamage("paralysis", 40): string), "0", "a paralysis does not hurt")
+	Test.equal((Status.tickPeriod("leech"): string), "1000", "every second")
+	Test.equal((Status.leech("leech"): string), "true", "a leech heals its giver")
+	Test.equal((Status.speedPercent("paralysis"): string), "60", "a paralysis slows down")
+	Test.equal((Status.failOdds("paralysis"): string), "4", "a skill fails 1 time in 4")
+	Test.equal((Status.failOdds("burn"): string), "0", "a burn does not make skills fail")
+	Test.equal((Status.attackPercent("burn", false): string), "50", "a burn halves a physical attack")
+	Test.equal((Status.attackPercent("burn", true): string), "100", "not a special one")
+	Test.equal((Status.wakes("sleep", 3): string), "true", "a hit wakes it up")
+	Test.equal((Status.wakes("sleep", 0): string), "false", "no damage : it sleeps on")
+	Test.equal((Status.stun("flinch"): string), "450", "the stun of a flinch")
+end

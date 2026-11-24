@@ -39,8 +39,12 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	auto attack = attacker == nullptr ? 1.F : static_cast<float>(skill.special ? attacker->speAttack : attacker->attack);
 	if (attackerFighter != nullptr) {
 		attack *= StageMultiplier(attackerFighter->stages[StatAttack]);
-		if (attackerFighter->status == FighterStatus::Burn && !skill.special) {
-			attack *= 0.5F;
+		// Its status changes its attack (a burn : the physical attacks, Data/Battle/status.miniska)
+		if (attackerFighter->status != FighterStatus::None) {
+			const auto percent = rules.statusAttackPercent(StatusKey(attackerFighter->status), skill.special);
+			if (percent != 100) {
+				attack *= static_cast<float>(percent) / 100.F;
+			}
 		}
 	}
 	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * StageMultiplier(fighter.stages[StatDefense]);
@@ -60,10 +64,9 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 			MarkText(entities, stage, hit.target, "PEU EFFICACE...", 1);
 		}
 	}
-	// A hit wakes it up
-	if (damage > 0 && fighter.status == FighterStatus::Sleep) {
-		fighter.status = FighterStatus::None;
-		fighter.statusTime = 0;
+	// A hit wakes it up (Data/Battle/status.miniska)
+	if (fighter.status != FighterStatus::None && rules.statusWakes(StatusKey(fighter.status), damage)) {
+		fighter.clearStatus();
 	}
 
 	// A hit during the startup of an attack cancels it (its cooldown is lost)
@@ -105,7 +108,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 
 	// The effects of the skill (statistics, status) when it touched
 	if (effectiveness > 0) {
-		ApplySkillEffects(entities, stage, skill, hit.attacker, hit.target);
+		ApplySkillEffects(entities, stage, rules, skill, hit.attacker, hit.target);
 	}
 
 	StatisticsChangeEvent event(hit.target, defender, hit.attacker);

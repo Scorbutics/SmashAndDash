@@ -72,6 +72,21 @@ public:
 	unsigned int statusTime = 0;
 	unsigned int statusTick = 0;
 	ska::EntityId statusSource = 0;
+	// The rules of its status (Data/Battle/status.miniska), asked when it lands : every statusTickPeriod milliseconds it
+	// loses statusDamage hit points (statusLeech : they heal its source), its speed in percents
+	unsigned int statusTickPeriod = 0;
+	int statusDamage = 0;
+	bool statusLeech = false;
+	int statusSpeed = 100;
+	// The status is over : no status, no effect
+	void clearStatus() {
+		status = FighterStatus::None;
+		statusTime = 0;
+		statusTickPeriod = 0;
+		statusDamage = 0;
+		statusLeech = false;
+		statusSpeed = 100;
+	}
 	// Protected (Abri) : the hits do nothing
 	unsigned int guard = 0;
 	// The dodge : a short dash (it cannot be hit at its start), then a delay before the next one

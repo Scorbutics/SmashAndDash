@@ -14,7 +14,8 @@ namespace ska {
 // When a script fails (or is missing), the error is logged once and a default value is used : the battle goes on.
 class BattleRules {
 public:
-	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska");
+	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska",
+		std::string statusFile = "./Data/Battle/status.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -35,6 +36,19 @@ public:
 	// "distance" to its opponent and "reach" of its longest ready skill (0 : none ready), in pixels
 	int move(int monster, int distance, int reach, int hp, int maxHp);
 
+	// Statuses (Data/Battle/status.miniska ; the names : "none", "poison", "burn", "paralysis", "sleep", "leech",
+	// "flinch"). The dice are rolled by the battle : "roll" 0 .. 99
+	bool statusLands(const std::string& status, int chance, int roll, const std::string& current);
+	unsigned int statusDuration(const std::string& status, unsigned int effect);
+	unsigned int statusStun(const std::string& status);
+	unsigned int statusTickPeriod(const std::string& status);
+	int statusTickDamage(const std::string& status, int maxHp);
+	bool statusLeech(const std::string& status);
+	int statusSpeedPercent(const std::string& status);
+	int statusFailOdds(const std::string& status);
+	int statusAttackPercent(const std::string& status, bool special);
+	bool statusWakes(const std::string& status, int damage);
+
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
 private:
@@ -44,5 +58,6 @@ private:
 	ska::scripting::ScriptVM& m_vm;
 	std::string m_rulesFile;
 	std::string m_aiFile;
+	std::string m_statusFile;
 	std::unordered_set<std::string> m_reported;
 };

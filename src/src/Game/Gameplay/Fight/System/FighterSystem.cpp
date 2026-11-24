@@ -171,7 +171,7 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 
 	// The battle time can be slower (slow motion) ; the speed changes with its statistics, a paralysis slows it down
 	const auto scale = ellapsedTime == 0 ? 0.F : static_cast<float>(delta) / static_cast<float>(ellapsedTime);
-	const auto slowed = fighter.status == FighterStatus::Paralysis ? 0.6F : 1.F;
+	const auto slowed = fighter.statusSpeed == 100 ? 1.F : static_cast<float>(fighter.statusSpeed) / 100.F;
 	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(entity)) * StageMultiplier(fighter.stages[StatSpeed]) * slowed * scale;
 	auto velocity = ska::Point<float>{ move.x * speed, move.y * speed };
 
@@ -312,14 +312,15 @@ void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighte
 	if (fighter.status == FighterStatus::None) {
 		return;
 	}
-	// Its status hurts it every second (poison, burn, leech : the one who gave it is healed)
-	const auto hurts = fighter.status == FighterStatus::Poison || fighter.status == FighterStatus::Burn || fighter.status == FighterStatus::Leech;
+	// Its status hurts it over time (the rules of its status, asked when it landed : poison, burn, leech heals the one
+	// who gave it)
+	const auto hurts = fighter.statusTickPeriod > 0 && fighter.statusDamage > 0;
 	if (hurts && delta > 0) {
 		fighter.statusTick = Decrease(fighter.statusTick, delta);
 		if (fighter.statusTick == 0) {
-			fighter.statusTick = 1000;
+			fighter.statusTick = fighter.statusTickPeriod;
 			auto& bc = m_componentAccessor.get<BattleComponent>(entity);
-			const auto damage = std::max(1, bc.maxHp / 16);
+			const auto damage = fighter.statusDamage;
 			bc.hp -= damage;
 			auto mark = BattleMark{};
 			mark.kind = BattleMark::Kind::Damage;
@@ -328,7 +329,7 @@ void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighte
 			mark.onPlayer = fighter.player;
 			m_stage.mark(mark);
 			fighter.hpDelay = 300;
-			if (fighter.status == FighterStatus::Leech && m_entities.hasComponent<BattleComponent>(fighter.statusSource)) {
+			if (fighter.statusLeech && m_entities.hasComponent<BattleComponent>(fighter.statusSource)) {
 				auto& source = m_entities.getComponent<BattleComponent>(fighter.statusSource);
 				if (source.hp > 0) {
 					source.hp = std::min(source.maxHp, source.hp + damage);
@@ -338,7 +339,7 @@ void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighte
 	}
 	fighter.statusTime = Decrease(fighter.statusTime, delta);
 	if (fighter.statusTime == 0) {
-		fighter.status = FighterStatus::None;
+		fighter.clearStatus();
 	}
 }
 

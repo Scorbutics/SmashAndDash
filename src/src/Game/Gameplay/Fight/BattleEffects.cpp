@@ -7,6 +7,8 @@
 #include "Base/Values/Numbers/NumberUtils.h"
 #include "BattleStage.h"
 #include "SkillDescriptor.h"
+#include "BattleRules.h"
+#include "BattleComponent.h"
 
 namespace {
 	FighterStatus StatusFromName(const std::string& name) {
@@ -84,15 +86,28 @@ void MarkText(ska::EntityManager& entities, BattleStage& stage, ska::EntityId fi
 	stage.mark(std::move(mark));
 }
 
-void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target) {
+const char* StatusKey(FighterStatus status) {
+	switch (status) {
+	case FighterStatus::Poison: return "poison";
+	case FighterStatus::Burn: return "burn";
+	case FighterStatus::Paralysis: return "paralysis";
+	case FighterStatus::Sleep: return "sleep";
+	case FighterStatus::Leech: return "leech";
+	default: return "none";
+	}
+}
+
+void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target) {
 	const auto targetFights = target != 0 && entities.hasComponent<FighterComponent>(target) && !entities.getComponent<FighterComponent>(target).knockedOut;
 	if (targetFights) {
 		ChangeStages(entities, stage, target, skill.targetStages, skill.effectDuration);
 		auto& fighter = entities.getComponent<FighterComponent>(target);
-		if (!skill.status.empty() && skill.status != "guard" && ska::NumberUtils::random(0, 99) < skill.statusChance) {
+		// The dice are rolled here, the rules decide (Data/Battle/status.miniska)
+		if (!skill.status.empty() && skill.status != "guard"
+				&& rules.statusLands(skill.status, skill.statusChance, ska::NumberUtils::random(0, 99), StatusKey(fighter.status))) {
 			if (skill.status == "flinch") {
 				// Flinched : it stops a moment (its attack in preparation is lost)
-				fighter.stun = std::max(fighter.stun, 450u);
+				fighter.stun = std::max(fighter.stun, rules.statusStun("flinch"));
 				fighter.windUp = 0;
 				fighter.pendingSkill = -1;
 				MarkText(entities, stage, target, "APEUR\xC9", 2);
@@ -100,9 +115,14 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, const S
 				const auto status = StatusFromName(skill.status);
 				// One status at a time
 				if (status != FighterStatus::None && fighter.status == FighterStatus::None) {
+					const auto maxHp = entities.hasComponent<BattleComponent>(target) ? entities.getComponent<BattleComponent>(target).maxHp : 1;
 					fighter.status = status;
-					fighter.statusTime = status == FighterStatus::Sleep ? std::min(skill.effectDuration, 3500u) : skill.effectDuration;
-					fighter.statusTick = 1000;
+					fighter.statusTime = rules.statusDuration(skill.status, skill.effectDuration);
+					fighter.statusTickPeriod = rules.statusTickPeriod(skill.status);
+					fighter.statusTick = fighter.statusTickPeriod;
+					fighter.statusDamage = rules.statusTickDamage(skill.status, maxHp);
+					fighter.statusLeech = rules.statusLeech(skill.status);
+					fighter.statusSpeed = rules.statusSpeedPercent(skill.status);
 					fighter.statusSource = user;
 					if (status == FighterStatus::Sleep) {
 						fighter.windUp = 0;

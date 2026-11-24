@@ -68,9 +68,10 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	auto& fighter = m_componentAccessor.get<FighterComponent>(from);
 	// 0 means "never used"
 	fighter.lastUses[index] = m_time == 0 ? 1 : m_time;
-	// Paralyzed : it fails a skill sometimes (the cooldown is lost)
-	if (fighter.status == FighterStatus::Paralysis && ska::NumberUtils::random(0, 3) == 0) {
-		fighter.stun = std::max(fighter.stun, 500u);
+	// A status makes it fail a skill sometimes (the cooldown is lost) : 1 time in "failOdds" (Data/Battle/status.miniska)
+	const auto failOdds = fighter.status == FighterStatus::None ? 0 : m_rules.statusFailOdds(StatusKey(fighter.status));
+	if (failOdds > 0 && ska::NumberUtils::random(0, failOdds - 1) == 0) {
+		fighter.stun = std::max(fighter.stun, m_rules.statusStun(StatusKey(fighter.status)));
 		MarkText(m_customEM, m_stage, from, "PARALYS\xC9", 2);
 		return true;
 	}
@@ -340,7 +341,7 @@ void BattleSystem::area(unsigned int index, ska::EntityId entity, FighterCompone
 		// On itself only
 		wave.value = 40;
 		m_stage.mark(wave);
-		ApplySkillEffects(m_customEM, m_stage, skill, entity, 0);
+		ApplySkillEffects(m_customEM, m_stage, m_rules, skill, entity, 0);
 		SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " uses " << skill.name << " on itself";
 		return;
 	}
@@ -373,7 +374,7 @@ void BattleSystem::area(unsigned int index, ska::EntityId entity, FighterCompone
 			} else if (target.guard > 0) {
 				MarkText(m_customEM, m_stage, other, "BLOQU\xC9", 1);
 			} else {
-				ApplySkillEffects(m_customEM, m_stage, skill, entity, other);
+				ApplySkillEffects(m_customEM, m_stage, m_rules, skill, entity, other);
 			}
 		}
 	}
@@ -382,7 +383,7 @@ void BattleSystem::area(unsigned int index, ska::EntityId entity, FighterCompone
 		auto selfOnly = skill;
 		selfOnly.targetStages = {};
 		selfOnly.status.clear();
-		ApplySkillEffects(m_customEM, m_stage, selfOnly, entity, 0);
+		ApplySkillEffects(m_customEM, m_stage, m_rules, selfOnly, entity, 0);
 	}
 	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "a wild pokemon") << " uses " << skill.name << " around it : " << touched << " touched";
 }

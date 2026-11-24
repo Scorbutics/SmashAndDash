@@ -1,0 +1,95 @@
+# Status rules : the battle asks these functions (they cannot wait) when a skill touches a Pokemon, when a Pokemon uses a
+# skill, when it is hit. The statuses : "none", "poison", "burn", "paralysis", "sleep", "leech" (they last), "flinch" (a
+# short stun, at once) ; "guard" is the shield of a skill on its user (not a status). The dice are rolled by the battle
+# and given here (a roll : the replays of a battle stay the same).
+
+# The status of a skill lands on its target : its chance (percents) against the roll (0 .. 99) ; one lasting status at
+# a time ("current" : the status it has)
+lands = function(status: string, chance: int, roll: int, current: string) : bool do
+	if status == "" || status == "guard" || status == "none"
+		return false
+	end
+	if roll >= chance
+		return false
+	end
+	if status == "flinch"
+		return true
+	end
+	return current == "none"
+end
+
+# How long a status lasts (milliseconds), from the duration of the effects of the skill : a sleep is short
+duration = function(status: string, effect: int) : int do
+	if status == "sleep" && effect > 3500
+		return 3500
+	end
+	return effect
+end
+
+# The stun of a status (milliseconds) : a flinch, a paralysis that makes a skill fail
+stun = function(status: string) : int do
+	if status == "flinch"
+		return 450
+	end
+	if status == "paralysis"
+		return 500
+	end
+	return 0
+end
+
+# The statuses that hurt over time : every "tickPeriod" milliseconds (0 : never), "tickDamage" hit points
+hurts = function(status: string) : bool do
+	return status == "poison" || status == "burn" || status == "leech"
+end
+
+tickPeriod = function(status: string) : int do
+	if hurts(status)
+		return 1000
+	end
+	return 0
+end
+
+tickDamage = function(status: string, maxHp: int) : int do
+	if hurts(status) == false
+		return 0
+	end
+	damage = maxHp / 16
+	if damage < 1
+		return 1
+	end
+	return damage
+end
+
+# The hit points lost by a leech heal the one who gave it
+leech = function(status: string) : bool do
+	return status == "leech"
+end
+
+# Its speed (percents) : a paralysis slows down
+speedPercent = function(status: string) : int do
+	if status == "paralysis"
+		return 60
+	end
+	return 100
+end
+
+# A skill fails sometimes : 1 time in "failOdds" (0 : never). The battle rolls 0 .. failOdds - 1 : 0 fails
+failOdds = function(status: string) : int do
+	if status == "paralysis"
+		return 4
+	end
+	return 0
+end
+
+# The attack of a Pokemon (percents) for a skill : a burn halves the physical attacks
+attackPercent = function(status: string, special: bool) : int do
+	if status == "burn" && special == false
+		return 50
+	end
+	return 100
+end
+
+# A hit wakes a sleeping Pokemon up
+wakes = function(status: string, damage: int) : bool do
+	return status == "sleep" && damage > 0
+end
