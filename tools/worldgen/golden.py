@@ -38,6 +38,30 @@ def climate(seed, cw, ch):
     return world
 
 
+def cells(seq):
+    """A set of blocks, sorted, as bytes (two 32 bits signed integers each)."""
+    return fnv(b"".join(struct.pack("<ii", x, y) for x, y in sorted(seq)))
+
+
+def villages(world):
+    """Stage 2a : the villages, the distance to them, the biome weights and the mixes of the corners."""
+    world.town = world.village_site()
+    world.plan_villages()
+    world.near_village = world.distance_to(set().union(*(v.cells for v in world.villages)), 8)
+    world.biome_field()
+    out = [f"town {world.seed} {world.town[0]} {world.town[1]}"]
+    for i, v in enumerate(world.villages):
+        name = v.name.encode("latin-1").hex()
+        out.append(f"village {world.seed} {i} {v.center[0]} {v.center[1]} {w.BIOMES.index(v.biome)} {name} "
+                   f"{len(v.buildings)} {fnv(repr(v.buildings).encode())} {cells(v.road)} {cells(v.footprint)} "
+                   f"{cells(v.flowers)} {cells(v.yard)} {cells(v.pond)} {cells(v.pond_ring)}")
+    near = sorted(world.near_village.items())
+    out.append(f"near {world.seed} {fnv(b''.join(struct.pack('<iii', x, y, d) for (x, y), d in near))}")
+    out.append(f"weights {world.seed} {doubles(wt.get(b, 0.0) for line in world.weights for wt in line for b in w.BIOMES)}")
+    out.append(f"mixes {world.seed} {fnv(bytes(n for line in world.pal for mix in line for corner in mix for n in corner))}")
+    return out
+
+
 def main():
     out = []
     # Noise : a few values
@@ -53,6 +77,7 @@ def main():
         out.append(f"chunks {seed} " + "".join(str(names.index(world.biome[(cx, cy)]))
                                                 for cy in range(world.ch) for cx in range(world.cw)))
         out.append(f"height {seed} {doubles(world.height(x, y) for y in range(world.H) for x in range(world.W))}")
+        out += villages(world)
     print("\n".join(out))
 
 

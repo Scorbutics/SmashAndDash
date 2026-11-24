@@ -11,6 +11,7 @@
 #include "doctest.h"
 #include "Game/Gameplay/World/Generation/Noise.h"
 #include "Game/Gameplay/World/Generation/Climate.h"
+#include "Game/Gameplay/World/Generation/Villages.h"
 
 namespace {
 	std::uint64_t Fnv(const std::vector<unsigned char>& data) {
@@ -102,5 +103,109 @@ TEST_CASE("the climate is the climate of the Python generator") {
 			}
 		}
 		CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], words[0] << " of seed " << seed);
+	}
+}
+
+namespace {
+	std::map<std::int64_t, worldgen::WorldPlan>& Plans() {
+		static auto plans = std::map<std::int64_t, worldgen::WorldPlan>{};
+		return plans;
+	}
+
+	const worldgen::WorldPlan& PlanOf(std::int64_t seed) {
+		auto found = Plans().find(seed);
+		if (found == Plans().end()) {
+			found = Plans().emplace(seed, worldgen::WorldPlan{ seed, 8, 8 }).first;
+		}
+		return found->second;
+	}
+
+	void AppendInt(std::vector<unsigned char>& data, std::int32_t value) {
+		unsigned char bytes[sizeof(std::int32_t)];
+		std::memcpy(bytes, &value, sizeof(std::int32_t));
+		data.insert(data.end(), bytes, bytes + sizeof(std::int32_t));
+	}
+
+	std::string Cells(const worldgen::Blocks& blocks) {
+		auto data = std::vector<unsigned char>{};
+		for (const auto& [x, y] : blocks) {
+			AppendInt(data, x);
+			AppendInt(data, y);
+		}
+		return std::to_string(Fnv(data));
+	}
+
+	std::string Hex(const std::string& text) {
+		static const char* digits = "0123456789abcdef";
+		auto out = std::string{};
+		for (const auto c : text) {
+			const auto b = static_cast<unsigned char>(c);
+			out += digits[b >> 4];
+			out += digits[b & 15];
+		}
+		return out;
+	}
+}
+
+TEST_CASE("the villages and the biome weights are those of the Python generator") {
+	for (const auto& words : Golden()) {
+		const auto& kind = words[0];
+		if (kind != "town" && kind != "village" && kind != "near" && kind != "weights" && kind != "mixes") {
+			continue;
+		}
+		const auto seed = std::stoll(words[1]);
+		const auto& plan = PlanOf(seed);
+		if (kind == "town") {
+			CHECK(plan.town().first == std::stoi(words[2]));
+			CHECK(plan.town().second == std::stoi(words[3]));
+		} else if (kind == "village") {
+			const auto i = std::stoul(words[2]);
+			REQUIRE(i < plan.villages().size());
+			const auto& v = plan.villages()[i];
+			INFO("village " << i << " of seed " << seed);
+			CHECK(v.center.first == std::stoi(words[3]));
+			CHECK(v.center.second == std::stoi(words[4]));
+			CHECK(static_cast<int>(v.biome) == std::stoi(words[5]));
+			CHECK(Hex(v.name) == words[6]);
+			CHECK(v.buildings.size() == std::stoul(words[7]));
+			const auto repr = v.buildingsRepr();
+			CHECK(std::to_string(Fnv(std::vector<unsigned char>(repr.begin(), repr.end()))) == words[8]);
+			CHECK(Cells(v.road) == words[9]);
+			CHECK(Cells(v.footprint) == words[10]);
+			CHECK(Cells(v.flowers) == words[11]);
+			CHECK(Cells(v.yard) == words[12]);
+			CHECK(Cells(v.pond) == words[13]);
+			CHECK(Cells(v.pondRing) == words[14]);
+		} else if (kind == "near") {
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [c, d] : plan.nearVillage()) {
+				AppendInt(data, c.first);
+				AppendInt(data, c.second);
+				AppendInt(data, d);
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "near of seed " << seed);
+		} else if (kind == "weights") {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = 0; y < plan.climate().height(); y++) {
+				for (auto x = 0; x < plan.climate().width(); x++) {
+					for (auto b = 0; b < worldgen::BiomeCount; b++) {
+						Append(data, plan.weight(x, y, static_cast<worldgen::Biome>(b)));
+					}
+				}
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "weights of seed " << seed);
+		} else {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = 0; y < plan.climate().height(); y++) {
+				for (auto x = 0; x < plan.climate().width(); x++) {
+					for (const auto& [i, j] : { std::pair<int, int>{ x, y }, { x + 1, y }, { x, y + 1 }, { x + 1, y + 1 } }) {
+						for (const auto n : plan.corner(i, j)) {
+							data.push_back(n);
+						}
+					}
+				}
+			}
+			CHECK_MESSAGE(std::to_string(Fnv(data)) == words[2], "mixes of seed " << seed);
+		}
 	}
 }
