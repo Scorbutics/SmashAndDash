@@ -14,7 +14,7 @@ m_timeout(timeout),
 m_name(name),
 m_scroll(scroll) {
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, rect.w, rect.h }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
-	tileSurface.setOpacity(170);
+	tileSurface.setOpacity(245);
 	// Letter by letter
 	addWidget<ska::ScrollingMultiLineLabel>(text, m_fontSize, 45.F, ska::Point<int>(16, 16));
 }

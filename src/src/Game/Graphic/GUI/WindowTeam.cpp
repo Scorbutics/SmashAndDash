@@ -13,7 +13,7 @@ m_mouseCursor(mouseCursor) {
 
 	setTitle("Equipe Pokémon");
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
-	tileSurface.setOpacity(210);
+	tileSurface.setOpacity(240);
 
 	auto count = -1;
 	m_slots.push_back(&addWidget<SlotPokemon>(ska::Point<int>(14, 20 + count * 2 * 32)));

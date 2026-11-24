@@ -8,7 +8,7 @@ WindowBag::WindowBag(ska::WidgetPanel& parent, const ska::Point<int>& absolutePo
 	MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 8 * 32, 8 * 32 }) {
 	setTitle("Sac");
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
-	tileSurface.setOpacity(210);
+	tileSurface.setOpacity(240);
 	for (auto line = std::size_t{ 0 }; line < Lines; line++) {
 		m_lines.push_back(&addWidget<ska::Label>(" ", 11, ska::Point<int>(16, 32 + static_cast<int>(line) * 20)));
 	}
