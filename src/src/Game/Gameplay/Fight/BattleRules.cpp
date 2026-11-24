@@ -3,11 +3,12 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
-	m_statusFile(std::move(statusFile)) {
+	m_statusFile(std::move(statusFile)),
+	m_stagesFile(std::move(stagesFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -135,4 +136,20 @@ int BattleRules::statusAttackPercent(const std::string& status, bool special) {
 
 bool BattleRules::statusWakes(const std::string& status, int damage) {
 	return callBool(m_statusFile, "wakes", { Text(status), ska::NodeValue{ static_cast<long>(damage) } }, status == "sleep" && damage > 0);
+}
+
+int BattleRules::stage(int current, int change) {
+	return static_cast<int>(call(m_stagesFile, "stage", { ska::NodeValue{ static_cast<long>(current) }, ska::NodeValue{ static_cast<long>(change) } },
+		std::max(-3, std::min(3, current + change))));
+}
+
+unsigned int BattleRules::stageDuration(unsigned int effect) {
+	return static_cast<unsigned int>(std::max(0L, call(m_stagesFile, "duration", { ska::NodeValue{ static_cast<long>(effect) } }, static_cast<long>(effect))));
+}
+
+float BattleRules::stageMultiplier(int stage) {
+	// numerator / denominator : the same float as the formula of before ((2 + stage) / 2, 2 / (2 - stage))
+	const auto numerator = call(m_stagesFile, "numerator", { ska::NodeValue{ static_cast<long>(stage) } }, stage >= 0 ? 2L + stage : 2L);
+	const auto denominator = call(m_stagesFile, "denominator", { ska::NodeValue{ static_cast<long>(stage) } }, stage >= 0 ? 2L : 2L - stage);
+	return denominator <= 0 ? 1.F : static_cast<float>(numerator) / static_cast<float>(denominator);
 }

@@ -38,7 +38,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	// The statistics with their changes in the battle ; a burn halves the physical attack
 	auto attack = attacker == nullptr ? 1.F : static_cast<float>(skill.special ? attacker->speAttack : attacker->attack);
 	if (attackerFighter != nullptr) {
-		attack *= StageMultiplier(attackerFighter->stages[StatAttack]);
+		attack *= attackerFighter->stageMultipliers[StatAttack];
 		// Its status changes its attack (a burn : the physical attacks, Data/Battle/status.miniska)
 		if (attackerFighter->status != FighterStatus::None) {
 			const auto percent = rules.statusAttackPercent(StatusKey(attackerFighter->status), skill.special);
@@ -47,7 +47,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 			}
 		}
 	}
-	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * StageMultiplier(fighter.stages[StatDefense]);
+	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * fighter.stageMultipliers[StatDefense];
 	const auto effectiveness = rules.effectiveness(skill.type, defender.type1, defender.type2);
 	const auto stab = attacker != nullptr && (skill.type == attacker->type1 || skill.type == attacker->type2);
 	const auto damage = skill.fixedDamage > 0 ? (effectiveness > 0 ? skill.fixedDamage : 0) :

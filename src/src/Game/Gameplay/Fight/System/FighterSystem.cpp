@@ -172,7 +172,7 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 	// The battle time can be slower (slow motion) ; the speed changes with its statistics, a paralysis slows it down
 	const auto scale = ellapsedTime == 0 ? 0.F : static_cast<float>(delta) / static_cast<float>(ellapsedTime);
 	const auto slowed = fighter.statusSpeed == 100 ? 1.F : static_cast<float>(fighter.statusSpeed) / 100.F;
-	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(entity)) * StageMultiplier(fighter.stages[StatSpeed]) * slowed * scale;
+	const auto speed = WalkSpeed(m_componentAccessor.get<BattleComponent>(entity)) * fighter.stageMultipliers[StatSpeed] * slowed * scale;
 	auto velocity = ska::Point<float>{ move.x * speed, move.y * speed };
 
 	// The dodge : a short dash (the keys, or away from the opponent ; the AI goes aside), it cannot be hit at its start
@@ -306,6 +306,7 @@ void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighte
 			fighter.stageTime[stat] = Decrease(fighter.stageTime[stat], delta);
 			if (fighter.stageTime[stat] == 0) {
 				fighter.stages[stat] = 0;
+				fighter.stageMultipliers[stat] = 1.F;
 			}
 		}
 	}

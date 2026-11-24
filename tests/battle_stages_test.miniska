@@ -1,0 +1,13 @@
+# The changes of the statistics (Data/Battle/stages.miniska)
+Test = import "bind:std.native.test"
+Stages = import "wd:Data/Battle/stages"
+
+run = function(args: string[]) do
+	Test.equal((Stages.stage(2, 3): string), "3", "at most 3")
+	Test.equal((Stages.stage(-2, -5): string), "-3", "at least -3")
+	Test.equal((Stages.stage(0, -1): string), "-1", "one stage down")
+	Test.equal((Stages.numerator(1): string) + "/" + (Stages.denominator(1): string), "3/2", "+1 : x1.5")
+	Test.equal((Stages.numerator(-2): string) + "/" + (Stages.denominator(-2): string), "2/4", "-2 : x0.5")
+	Test.equal((Stages.numerator(0): string) + "/" + (Stages.denominator(0): string), "2/2", "0 : unchanged")
+	Test.equal((Stages.duration(6000): string), "6000", "the duration of the skill")
+end

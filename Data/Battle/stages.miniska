@@ -1,0 +1,34 @@
+# The changes of the statistics in a battle (attack, defense, speed) : stages, asked by the battle when a skill changes
+# them (they cannot wait). A stage multiplies its statistic by numerator / denominator.
+
+# The stage after a change : between -3 and 3
+stage = function(current: int, change: int) : int do
+	value = current + change
+	if value > 3
+		return 3
+	end
+	if value < -3
+		return -3
+	end
+	return value
+end
+
+# How long a change lasts (milliseconds), from the duration of the effects of the skill
+duration = function(effect: int) : int do
+	return effect
+end
+
+# The factor of a stage : (2 + stage) / 2 over 0, 2 / (2 - stage) under 0
+numerator = function(stage: int) : int do
+	if stage >= 0
+		return 2 + stage
+	end
+	return 2
+end
+
+denominator = function(stage: int) : int do
+	if stage >= 0
+		return 2
+	end
+	return 2 - stage
+end

@@ -54,7 +54,8 @@ set(GAME_SCRIPT_MODULES
 	# Called by the battles (BattleRules)
 	${GAME_ROOT_DIR}/Data/Battle/rules.miniska
 	${GAME_ROOT_DIR}/Data/Battle/ai.miniska
-	${GAME_ROOT_DIR}/Data/Battle/status.miniska)
+	${GAME_ROOT_DIR}/Data/Battle/status.miniska
+	${GAME_ROOT_DIR}/Data/Battle/stages.miniska)
 file(GLOB_RECURSE GAME_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/Levels/*.miniska ${GAME_ROOT_DIR}/Resources/*.miniska)
 # The agent scripts (run by tools/ska-console : tools/agent of the game and of the engine)
 file(GLOB AGENT_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/tools/agent/*.miniska ${GAME_ROOT_DIR}/external/ska/tools/agent/*.miniska)

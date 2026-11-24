@@ -28,15 +28,16 @@ namespace {
 		}
 	}
 
-	void ChangeStages(ska::EntityManager& entities, BattleStage& stage, ska::EntityId entity, const std::array<int, 3>& changes, unsigned int duration) {
+	void ChangeStages(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, ska::EntityId entity, const std::array<int, 3>& changes, unsigned int duration) {
 		auto& fighter = entities.getComponent<FighterComponent>(entity);
 		for (auto stat = 0; stat < 3; stat++) {
 			if (changes[static_cast<std::size_t>(stat)] == 0) {
 				continue;
 			}
 			auto& value = fighter.stages[static_cast<std::size_t>(stat)];
-			value = std::max(-3, std::min(3, value + changes[static_cast<std::size_t>(stat)]));
-			fighter.stageTime[static_cast<std::size_t>(stat)] = duration;
+			value = rules.stage(value, changes[static_cast<std::size_t>(stat)]);
+			fighter.stageMultipliers[static_cast<std::size_t>(stat)] = rules.stageMultiplier(value);
+			fighter.stageTime[static_cast<std::size_t>(stat)] = rules.stageDuration(duration);
 			const auto up = changes[static_cast<std::size_t>(stat)] > 0;
 			MarkText(entities, stage, entity, std::string{ StatShortName(stat) } + (up ? " +" : " -"), up ? 1 : 2);
 		}
@@ -100,7 +101,7 @@ const char* StatusKey(FighterStatus status) {
 void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target) {
 	const auto targetFights = target != 0 && entities.hasComponent<FighterComponent>(target) && !entities.getComponent<FighterComponent>(target).knockedOut;
 	if (targetFights) {
-		ChangeStages(entities, stage, target, skill.targetStages, skill.effectDuration);
+		ChangeStages(entities, stage, rules, target, skill.targetStages, skill.effectDuration);
 		auto& fighter = entities.getComponent<FighterComponent>(target);
 		// The dice are rolled here, the rules decide (Data/Battle/status.miniska)
 		if (!skill.status.empty() && skill.status != "guard"
@@ -136,7 +137,7 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleR
 	}
 
 	if (user != 0 && entities.hasComponent<FighterComponent>(user)) {
-		ChangeStages(entities, stage, user, skill.selfStages, skill.effectDuration);
+		ChangeStages(entities, stage, rules, user, skill.selfStages, skill.effectDuration);
 		if (skill.status == "guard") {
 			auto& fighter = entities.getComponent<FighterComponent>(user);
 			fighter.guard = std::min(skill.effectDuration, 1500u);

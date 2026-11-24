@@ -15,7 +15,7 @@ namespace ska {
 class BattleRules {
 public:
 	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska",
-		std::string statusFile = "./Data/Battle/status.miniska");
+		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -49,6 +49,11 @@ public:
 	int statusAttackPercent(const std::string& status, bool special);
 	bool statusWakes(const std::string& status, int damage);
 
+	// The changes of the statistics (Data/Battle/stages.miniska) : the stage after a change, how long it lasts, its factor
+	int stage(int current, int change);
+	unsigned int stageDuration(unsigned int effect);
+	float stageMultiplier(int stage);
+
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
 private:
@@ -59,5 +64,6 @@ private:
 	std::string m_rulesFile;
 	std::string m_aiFile;
 	std::string m_statusFile;
+	std::string m_stagesFile;
 	std::unordered_set<std::string> m_reported;
 };

@@ -11,10 +11,7 @@ enum class FighterStatus { None, Poison, Burn, Paralysis, Sleep, Leech };
 // The statistics changed in a battle (FighterComponent::stages)
 enum FighterStat { StatAttack = 0, StatDefense = 1, StatSpeed = 2 };
 
-// The multiplier of a statistic changed in a battle : 1.5, 2, 2.5 for +1, +2, +3 ; 0.67, 0.5, 0.4 for -1, -2, -3
-inline float StageMultiplier(int stage) {
-	return stage >= 0 ? (2.F + static_cast<float>(stage)) / 2.F : 2.F / (2.F - static_cast<float>(stage));
-}
+// The multiplier of a statistic changed in a battle : the rules, Data/Battle/stages.miniska (BattleRules::stageMultiplier)
 
 // What a fighter does now, decided by the battle AI (script) or by the player (keys)
 enum class FighterIntent {
@@ -66,6 +63,9 @@ public:
 
 	// Its statistics changed by skills (stages, see FighterStat), and the time left of each change
 	std::array<int, 3> stages{};
+	// The factors of the stages (Data/Battle/stages.miniska), asked when a stage changes : read by the hits and the
+	// speed (every frame)
+	std::array<float, 3> stageMultipliers{ 1.F, 1.F, 1.F };
 	std::array<unsigned int, 3> stageTime{};
 	// Its status, the time it lasts, the time until it hurts again, the fighter who gave it (leech)
 	FighterStatus status = FighterStatus::None;
