@@ -1,0 +1,15 @@
+# The rewards of a battle, asked when it ends (they cannot wait) : what the Pokemon of the player wins. The place of the
+# rewards to come (money, items dropped).
+Rules = import "wd:Data/Battle/rules"
+
+# The experience won : for each wild Pokemon K.O. ("dropped" : [Experience] level_1_exp_dropped of its data, "levels" :
+# its level), the experience rule (rules.miniska), all of it to the Pokemon that fought. "won", "fled" : the result
+experience = function(dropped: int[], levels: int[], won: bool, fled: bool) : int do
+	total = 0
+	for(i = 0
+	 i < dropped.size()
+	 i = i + 1) do
+		total = total + Rules.experience(dropped[i], levels[i])
+	end
+	return total
+end

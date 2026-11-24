@@ -3,14 +3,15 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
 	m_statusFile(std::move(statusFile)),
 	m_stagesFile(std::move(stagesFile)),
 	m_encountersFile(std::move(encountersFile)),
-	m_skillsFile(std::move(skillsFile)) {
+	m_skillsFile(std::move(skillsFile)),
+	m_rewardsFile(std::move(rewardsFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -210,4 +211,20 @@ std::vector<int> BattleRules::knownSkills(const std::vector<int>& levels, int le
 		known.push_back(static_cast<int>(index));
 	}
 	return known;
+}
+
+int BattleRules::rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, bool won, bool fled) {
+	auto values = [](const std::vector<int>& list) {
+		auto array = std::make_shared<ska::NodeValueArrayRaw>();
+		for (const auto value : list) {
+			array->push_back(ska::NodeValue{ static_cast<long>(value) });
+		}
+		return ska::NodeValue{ ska::NodeValueArray{ std::move(array) } };
+	};
+	// The fallback : the experience rule for each wild Pokemon K.O.
+	auto fallback = 0L;
+	for (auto i = 0u; i < dropped.size() && i < levels.size(); i++) {
+		fallback += experience(dropped[i], levels[i]);
+	}
+	return static_cast<int>(std::max(0L, call(m_rewardsFile, "experience", { values(dropped), values(levels), ska::NodeValue{ won }, ska::NodeValue{ fled } }, fallback)));
 }

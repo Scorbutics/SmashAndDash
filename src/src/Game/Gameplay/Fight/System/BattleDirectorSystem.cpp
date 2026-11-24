@@ -204,15 +204,19 @@ void BattleDirectorSystem::end() {
 	result.teamIndex = m_teamIndex;
 	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player);
 	result.hpLeft = std::max(0, pokemon.hp);
+	// The rewards (Data/Battle/rewards.miniska) : for the wild Pokemon K.O.
+	auto dropped = std::vector<int>{};
+	auto levels = std::vector<int>{};
 	for (const auto entity : m_stage.fighters) {
 		if (!present(entity) || m_componentAccessor.get<FighterComponent>(entity).team != 1 || !m_componentAccessor.get<FighterComponent>(entity).knockedOut) {
 			continue;
 		}
 		const auto& opponent = m_componentAccessor.get<BattleComponent>(entity);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(opponent.monster) + ".ini" };
-		const auto dropped = data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0;
-		result.experience += m_worldState.getBattleRules().experience(dropped, opponent.level);
+		dropped.push_back(data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0);
+		levels.push_back(static_cast<int>(opponent.level));
 	}
+	result.experience = m_worldState.getBattleRules().rewardExperience(dropped, levels, won, fled);
 	// The wild Pokemon of the map is defeated (the others of its group only exist during the battle : StateFight)
 	if (won && m_stage.fighters.size() > 1) {
 		scheduleDeferredRemove(m_stage.fighters[1]);

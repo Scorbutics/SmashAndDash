@@ -16,7 +16,8 @@ class BattleRules {
 public:
 	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska",
 		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska",
-		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska");
+		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska",
+		std::string rewardsFile = "./Data/Battle/rewards.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -65,6 +66,10 @@ public:
 	// each is learned at), "slots" at most
 	std::vector<int> knownSkills(const std::vector<int>& levels, int level, int slots);
 
+	// The rewards of a battle (Data/Battle/rewards.miniska) : the experience won by the Pokemon of the player, for the wild
+	// Pokemon K.O. ("dropped" : the experience of their data, their "levels")
+	int rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, bool won, bool fled);
+
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
 private:
@@ -78,5 +83,6 @@ private:
 	std::string m_stagesFile;
 	std::string m_encountersFile;
 	std::string m_skillsFile;
+	std::string m_rewardsFile;
 	std::unordered_set<std::string> m_reported;
 };

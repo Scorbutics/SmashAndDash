@@ -1,0 +1,10 @@
+# The rewards of a battle (Data/Battle/rewards.miniska)
+Test = import "bind:std.native.test"
+Rules = import "wd:Data/Battle/rules"
+Rewards = import "wd:Data/Battle/rewards"
+
+run = function(args: string[]) do
+	expected = Rules.experience(10, 3) + Rules.experience(20, 4)
+	Test.equal((Rewards.experience([10, 20], [3, 4], true, false): string), (expected: string), "the experience of each wild Pokemon K.O.")
+	Test.equal((Rewards.experience([]: int, []: int, false, true): string), "0", "none K.O. : nothing")
+end
