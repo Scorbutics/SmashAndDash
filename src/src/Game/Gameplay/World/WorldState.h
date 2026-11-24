@@ -185,5 +185,7 @@ private:
 	bool m_lastBattleFled = false;
 
 	BattleStage* m_battleStage = nullptr;
+	// The map was loaded by reinit (its data with it)
+	bool m_worldLoaded = false;
 };
 
