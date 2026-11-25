@@ -3,7 +3,8 @@
 #
 #   tools/sad-run up <id> [--save NAME] [--build DIR] [ska-run options : --seed N --fixed-step --env K=V --display ...]
 #       --save NAME   the save it starts from, copied in the run folder (default save1 ; new_game, fixtures/<name>...) :
-#                     the saves of the repository (Data/Saves) are never written
+#                     the saves of the repository (Data/Saves) are never written. A name with no save there : a new
+#                     game (the game makes it from new_game and generates its world ; --env SAD_WORLD_SEED=N : its seed)
 #       --build DIR   the build directory (default build)
 #   tools/sad-run down|ps|logs|path|rm ...   as external/ska/tools/ska-run
 # Then : external/ska/tools/ska-console eval 'Map.teleport("Town", 12, 8)' , run tools/agent/<script>.miniska ...
@@ -26,9 +27,14 @@ while [ $# -gt 0 ]; do
 		*) REST="$REST $(printf '%s' "$1" | sed "s/'/'\\\\''/g; s/^/'/; s/\$/'/")"; shift ;;
 	esac
 done
-[ -d "$ROOT/Data/Saves/$SAVE" ] || { echo "sad-run: no save Data/Saves/$SAVE" >&2; exit 2; }
+COPY="--copy"
+COPY_ARG="Data/Saves/$SAVE:Saves/$SAVE"
+if [ ! -d "$ROOT/Data/Saves/$SAVE" ]; then         # a new game : nothing to copy
+	COPY="--env"
+	COPY_ARG="SAD_NEW_GAME=$SAVE"
+fi
 [ -x "$BUILD/bin/ska_main" ] || { echo "sad-run: no $BUILD/bin/ska_main (cmake --build build)" >&2; exit 2; }
 eval "set -- $REST"
 exec "$SKA_RUN" up "$ID" --cwd "$ROOT" --ready eval \
-	--copy "Data/Saves/$SAVE:Saves/$SAVE" --env "SAD_SAVE_DIR={run}/Saves" --env "SAD_SAVE=$SAVE" \
+	"$COPY" "$COPY_ARG" --env "SAD_SAVE_DIR={run}/Saves" --env "SAD_SAVE=$SAVE" \
 	--env "LD_LIBRARY_PATH=$BUILD/lib" "$@" -- "$BUILD/bin/ska_main"

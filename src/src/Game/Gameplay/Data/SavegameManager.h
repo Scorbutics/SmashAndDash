@@ -28,6 +28,7 @@ public:
 
 private:
 	void loadItem(int id, unsigned int amount);
+	void prepareSave();
 	void loadTrainer();
 	void saveTrainer(const std::string& mapName, int blockX, int blockY);
 	void loadPokemonTeam();

@@ -1,0 +1,311 @@
+#include <algorithm>
+#include <cmath>
+#include <stdexcept>
+#include <tuple>
+#include "Chipset.h"
+
+namespace {
+	using namespace worldgen;
+
+	constexpr std::array<std::uint8_t, 3> Key{ 190, 151, 255 };
+	constexpr std::array<std::uint8_t, 3> Walk{ 255, 255, 255 };
+	constexpr std::array<std::uint8_t, 3> Blocked{ 0, 0, 0 };
+	constexpr std::array<std::uint8_t, 3> WalkAnimated{ 0xAA, 0xAA, 0xAA };
+	constexpr std::array<std::uint8_t, 3> BlockedAnimated{ 0x46, 0x46, 0x46 };
+
+	// The game makes these cells water in every chipset (WorldState BuildTileset) : the water goes there, nothing else
+	bool InWaterRegion(const Block& c) {
+		return (c.first < 6 && c.second < 4) || (c.first < 3 && c.second >= 4 && c.second < 8);
+	}
+
+	std::vector<Block> WaterSlots() {
+		auto out = std::vector<Block>{ { 1, 4 } };
+		for (auto x = 0; x < 6; x++) {
+			out.push_back({ x, 0 });
+		}
+		out.push_back({ 0, 4 });
+		out.push_back({ 2, 4 });
+		return out;
+	}
+
+	// Where the other animated tiles go (their 4 frames down from there)
+	std::vector<Block> AnimatedSlots() {
+		auto out = std::vector<Block>{};
+		for (auto x = 3; x < ChipColumns; x++) {
+			out.push_back({ x, 4 });
+		}
+		for (auto x = 6; x < ChipColumns; x++) {
+			out.push_back({ x, 0 });
+		}
+		for (auto y = 8; y < ChipRows; y += 4) {
+			for (auto x = 0; x < ChipColumns; x++) {
+				out.push_back({ x, y });
+			}
+		}
+		return out;
+	}
+
+	// The weights of the 4 corners (NW NE SW SE, 0 .. 1) blended across a tile, per voxel (blend_mask)
+	std::array<std::uint8_t, Voxels * Voxels> BlendMask(const std::array<double, 4>& weights) {
+		auto mask = std::array<std::uint8_t, Voxels * Voxels>{};
+		const auto [nw, ne, sw, se] = weights;
+		for (auto vy = 0; vy < Voxels; vy++) {
+			const auto v = (vy + 0.5) / Voxels;
+			for (auto vx = 0; vx < Voxels; vx++) {
+				const auto u = (vx + 0.5) / Voxels;
+				const auto w = (nw * (1 - u) + ne * u) * (1 - v) + (sw * (1 - u) + se * u) * v;
+				mask[static_cast<std::size_t>(vy * Voxels + vx)] = static_cast<std::uint8_t>(static_cast<int>(std::nearbyint(255 * w)));
+			}
+		}
+		return mask;
+	}
+}
+
+worldgen::Mix worldgen::PureMix(Biome biome) {
+	auto corner = Corner{};
+	corner[static_cast<std::size_t>(biome)] = MixSteps;
+	return { corner, corner, corner, corner };
+}
+
+worldgen::Mix worldgen::BlockMix(const WorldPlan& plan, int x, int y) {
+	return { plan.corner(x, y), plan.corner(x + 1, y), plan.corner(x, y + 1), plan.corner(x + 1, y + 1) };
+}
+
+worldgen::Atlas::Atlas(RgbImage image, std::istream& index) : m_image(std::move(image)) {
+	auto line = std::string{};
+	auto row = 0;
+	while (std::getline(index, line)) {
+		if (line.empty()) {
+			continue;
+		}
+		const auto space = line.find(' ');
+		m_rows[line.substr(space + 1)] = { row++, std::stoi(line.substr(0, space)) };
+	}
+	if (m_image.height < row * Voxels || m_image.width < BiomeCount * 4 * Voxels) {
+		throw std::runtime_error{ "worldgen : the atlas of the tiles is smaller than its index" };
+	}
+}
+
+std::vector<worldgen::TileVoxels> worldgen::Atlas::frames(const std::string& key, Biome biome) const {
+	const auto found = m_rows.find(key);
+	if (found == m_rows.end()) {
+		throw std::runtime_error{ "worldgen : the tile " + key + " is not in the atlas (tools/worldgen/atlas.py)" };
+	}
+	const auto [row, count] = found->second;
+	auto out = std::vector<TileVoxels>(static_cast<std::size_t>(count));
+	for (auto f = 0; f < count; f++) {
+		const auto x0 = (static_cast<int>(biome) * 4 + f) * Voxels;
+		for (auto vy = 0; vy < Voxels; vy++) {
+			const auto* src = m_image.at(x0, row * Voxels + vy);
+			std::copy(src, src + Voxels * 3, out[static_cast<std::size_t>(f)].begin() + vy * Voxels * 3);
+		}
+	}
+	return out;
+}
+
+const std::vector<worldgen::TileVoxels>& worldgen::TileImages::pure(TileId tile, Biome biome) {
+	auto found = m_pure.find({ tile, biome });
+	if (found == m_pure.end()) {
+		found = m_pure.emplace(std::make_pair(tile, biome), m_atlas.frames(key(tile), biome)).first;
+	}
+	return found->second;
+}
+
+const std::vector<worldgen::TileVoxels>& worldgen::TileImages::frames(TileId tile, const Mix& mix) {
+	auto found = m_cache.find({ tile, mix });
+	if (found != m_cache.end()) {
+		return found->second;
+	}
+	// The geometry of a tile does not change with the colours : a mix is the blend, voxel by voxel, of the tile in
+	// each biome (PIL Image.composite : (out * (255 - mask) + in * mask) / 255, rounded as PIL does)
+	auto out = std::vector<TileVoxels>{};
+	auto total = std::array<double, 4>{};
+	for (auto k = 0; k < BiomeCount; k++) {
+		auto w = std::array<double, 4>{};
+		auto any = false;
+		for (auto i = 0u; i < 4; i++) {
+			w[i] = mix[i][static_cast<std::size_t>(k)] / static_cast<double>(MixSteps);
+			any = any || w[i] != 0.0;
+		}
+		if (!any) {
+			continue;
+		}
+		const auto& images = pure(tile, static_cast<Biome>(k));
+		if (out.empty()) {
+			out = images;
+			total = w;
+			continue;
+		}
+		auto ratio = std::array<double, 4>{};
+		for (auto i = 0u; i < 4; i++) {
+			total[i] = total[i] + w[i];
+			ratio[i] = total[i] != 0.0 ? w[i] / total[i] : 0.0;
+		}
+		const auto mask = BlendMask(ratio);
+		for (auto f = 0u; f < out.size(); f++) {
+			for (auto p = 0u; p < static_cast<unsigned>(Voxels * Voxels); p++) {
+				const unsigned m = mask[p];
+				for (auto c = 0u; c < 3; c++) {
+					const auto t = static_cast<unsigned>(out[f][p * 3 + c]) * (255 - m) + static_cast<unsigned>(images[f][p * 3 + c]) * m + 128;
+					out[f][p * 3 + c] = static_cast<std::uint8_t>(((t >> 8) + t) >> 8);
+				}
+			}
+		}
+	}
+	return m_cache.emplace(std::make_pair(tile, mix), std::move(out)).first->second;
+}
+
+worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTiles) {
+	auto taken = std::set<Block>{};
+	for (auto y = 0; y < ChipRows; y++) {
+		for (auto x = 0; x < ChipColumns; x++) {
+			if (InWaterRegion({ x, y })) {
+				taken.insert({ x, y });
+			}
+		}
+	}
+	auto grid = std::map<Block, TileVoxels>{};
+	auto colours = std::map<Block, std::array<std::uint8_t, 3>>{};
+	auto animatedCells = std::map<std::pair<TileId, std::vector<TileVoxels>>, Block>{};
+	auto stillCells = std::map<std::pair<bool, TileVoxels>, Block>{};
+	auto waterSlots = WaterSlots();
+	auto animatedSlots = AnimatedSlots();
+	// The order of the Python generator : by the text of the tile, then by the mix
+	auto order = std::vector<std::tuple<std::string, Mix, TileId>>{};
+	for (const auto& [tile, mix] : usedTiles) {
+		order.emplace_back(TileName(tile), mix, tile);
+	}
+	std::sort(order.begin(), order.end());
+	// The animated tiles first : 4 cells in a column
+	for (const auto& [name, mix, tile] : order) {
+		if (!IsAnimated(tile)) {
+			continue;
+		}
+		const auto& frames = images.frames(tile, mix);
+		const auto sig = std::make_pair(tile, frames);
+		auto found = animatedCells.find(sig);
+		if (found == animatedCells.end()) {
+			auto slot = Block{};
+			if (AnimatedOf(tile) == Animated::Water) {
+				if (waterSlots.empty()) {
+					throw std::runtime_error{ "worldgen : too many kinds of water in one map" };
+				}
+				slot = waterSlots.front();
+				waterSlots.erase(waterSlots.begin());
+				water.push_back(slot);
+			} else {
+				const auto free = std::find_if(animatedSlots.begin(), animatedSlots.end(), [&taken](const Block& c) {
+					for (auto f = 0; f < 4; f++) {
+						if (taken.count({ c.first, c.second + f })) {
+							return false;
+						}
+					}
+					return true;
+				});
+				if (free == animatedSlots.end()) {
+					throw std::runtime_error{ "worldgen : no room for the animated tiles of a map" };
+				}
+				slot = *free;
+				animatedSlots.erase(free);
+			}
+			for (auto f = 0u; f < frames.size(); f++) {
+				const auto cell = Block{ slot.first, slot.second + static_cast<int>(f) };
+				grid[cell] = frames[f];
+				taken.insert(cell);
+			}
+			colours[slot] = images.walkable(tile) ? WalkAnimated : BlockedAnimated;
+			found = animatedCells.emplace(sig, slot).first;
+		}
+		cells[{ tile, mix }] = found->second;
+	}
+	auto free = std::vector<Block>{};
+	for (auto y = 0; y < ChipRows; y++) {
+		for (auto x = 0; x < ChipColumns; x++) {
+			if (!taken.count({ x, y })) {
+				free.push_back({ x, y });
+			}
+		}
+	}
+	auto next = free.begin();
+	for (const auto& [name, mix, tile] : order) {
+		if (IsAnimated(tile)) {
+			continue;
+		}
+		const auto& frame = images.frames(tile, mix)[0];
+		const auto sig = std::make_pair(images.walkable(tile), frame);
+		auto found = stillCells.find(sig);
+		if (found == stillCells.end()) {
+			if (next == free.end()) {
+				throw std::runtime_error{ "worldgen : the chipset of a map is full (" + std::to_string(usedTiles.size()) + " tiles)" };
+			}
+			const auto cell = *next++;
+			taken.insert(cell);
+			grid[cell] = frame;
+			colours[cell] = images.walkable(tile) ? Walk : Blocked;
+			found = stillCells.emplace(sig, cell).first;
+		}
+		cells[{ tile, mix }] = found->second;
+	}
+	// As high as needed (a multiple of 4 rows, 16 at least)
+	auto high = 16;
+	for (const auto& c : taken) {
+		if (!InWaterRegion(c)) {
+			high = std::max(high, c.second + 1);
+		}
+	}
+	rows = (high + 3) / 4 * 4;
+	auto inside = 0;
+	for (const auto& c : taken) {
+		inside += InWaterRegion(c) ? 0 : 1;
+	}
+	used = inside + static_cast<int>(water.size()) * 4;
+	image = RgbImage{ ChipColumns * TileSize, rows * TileSize, Key[0], Key[1], Key[2] };
+	col = RgbImage{ ChipColumns, rows, Blocked[0], Blocked[1], Blocked[2] };
+	for (const auto& [cell, voxels] : grid) {
+		if (cell.second >= rows) {
+			continue;
+		}
+		for (auto py = 0; py < TileSize; py++) {
+			for (auto px = 0; px < TileSize; px++) {
+				const auto* v = &voxels[static_cast<std::size_t>(((py / 3) * Voxels + px / 3) * 3)];
+				std::copy(v, v + 3, image.at(cell.first * TileSize + px, cell.second * TileSize + py));
+			}
+		}
+	}
+	for (const auto& [cell, colour] : colours) {
+		if (cell.second < rows) {
+			std::copy(colour.begin(), colour.end(), col.at(cell.first, cell.second));
+		}
+	}
+}
+
+std::set<worldgen::TileUse> worldgen::ChunkTiles(const World& world, int cx, int cy) {
+	auto used = std::set<TileUse>{};
+	const auto& plan = world.terrain().plan();
+	for (auto y = cy * Chunk; y < cy * Chunk + Chunk; y++) {
+		for (auto x = cx * Chunk; x < cx * Chunk + Chunk; x++) {
+			for (const auto layer : { Layer::Base, Layer::Middle, Layer::Top }) {
+				const auto tile = world.tile(layer, x, y);
+				if (tile != NoTile) {
+					used.insert({ tile, BlockMix(plan, x, y) });
+				}
+			}
+		}
+	}
+	return used;
+}
+
+std::set<worldgen::TileUse> worldgen::RoomTiles(const World& world) {
+	auto used = std::set<TileUse>{};
+	const auto meadow = PureMix(Biome::Meadow);
+	for (const auto& room : world.rooms()) {
+		for (const auto* grid : { &room.base, &room.middle }) {
+			for (const auto tile : *grid) {
+				if (tile != NoTile) {
+					used.insert({ tile, meadow });
+				}
+			}
+		}
+	}
+	return used;
+}

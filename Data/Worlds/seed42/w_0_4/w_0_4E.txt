@@ -83,3 +83,4 @@ x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement 
 30 28 1 Levels/sign.miniska, Village Trèfle¤Un village paisible au milieu des prés.
 29 14 1 Levels/sign.miniska, Village Trèfle¤Un village paisible au milieu des prés.
 0 0 0 Levels/item.miniska, place, 1, 34, 4, item_w_0_4_34_4
+0 0 0 Levels/item.miniska, place, 0, 13, 29, item_w_0_4_13_29

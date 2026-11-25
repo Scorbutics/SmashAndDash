@@ -27,7 +27,6 @@ import math
 import os
 import shutil
 import sys
-import types
 from PIL import Image
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tilegen"))
@@ -351,20 +350,6 @@ def cliff_foot(mat, west, east, stairs=False):
 
 # ---------------------------------------------------------------- the tiles of the world
 
-def frozen(fn):
-    """The function with the values its closure holds now (a tile is drawn later, once per palette : the loop
-    variables it reads have changed by then)."""
-    if not getattr(fn, "__closure__", None):
-        return fn
-    cells = []
-    for c in fn.__closure__:
-        try:
-            cells.append(types.CellType(c.cell_contents))
-        except ValueError:                           # not assigned yet
-            cells.append(types.CellType())
-    return types.FunctionType(fn.__code__, fn.__globals__, fn.__name__, fn.__defaults__, tuple(cells))
-
-
 def pure(biome):
     """A corner all in one biome."""
     return tuple(MIX_STEPS if b == biome else 0 for b in BIOMES)
@@ -408,13 +393,14 @@ class Tiles:
             self.walkable[tid] = ANIMATED_WALK[tid]
         self.cache, self.pure = {}, {}
 
-    def cell(self, key, draw, walkable):
-        """The id of a tile (its key : what it shows ; draw : its image, in the current palette)."""
-        key = (key, walkable)
-        if key not in self.ids:
+    def cell(self, key, walkable):
+        """The id of a tile (its key : what it shows, its image drawn by draw_key in the current palette)."""
+        full = (key, walkable)
+        if full not in self.ids:
             tid = len(self.ids)
-            self.ids[key], self.draws[tid], self.walkable[tid] = tid, frozen(draw), walkable
-        return self.ids[key]
+            self.ids[full], self.walkable[tid] = tid, walkable
+            self.draws[tid] = lambda: draw_key(key, walkable)
+        return self.ids[full]
 
     def pure_frames(self, tid, biome):
         """The frames of a tile in the colours of one biome (4 for an animated tile, else 1)."""
@@ -520,6 +506,61 @@ _TREES = {}
 _STAMPS = {}
 
 
+def stamp_makers():
+    """The structures stamped on the world (World.stamp) : name -> its image, drawn in the current palette."""
+    out = {}
+    for b in BIOMES:
+        out[f"center_{b}"] = lambda b=b: g.styled(g.healing_center(), b).render()
+        for roof in ROOFS:
+            out[f"house_{roof}_{b}"] = lambda b=b, rf=roof: g.styled(g.house(rf), b).render()
+    for canvas in ["roofo", "roofg", "roofb", "roofr"]:
+        out[f"tent_{canvas}"] = lambda cv=canvas: g.tent(cv)
+    for broken in (False, True):
+        out[f"pillar_{broken}"] = lambda br=broken: g.pillar(br)
+    return out
+
+
+def crop(img, c, r):
+    return img.crop((c * T, r * T, c * T + T, r * T + T))
+
+
+def draw_key(key, walkable):
+    """The image of a tile (not animated) from its key, in the current palette : the keys of World.build and of
+    rooms.build_room."""
+    kind = key[0]
+    if kind == "cliff":
+        return cliff(*key[1:])
+    if kind == "bank":
+        return water_overlay(*key[1:])
+    if kind == "foot":
+        return cliff_foot(*key[1:])
+    if kind == "ground":
+        return ground(key[1], None, None, key[4]) if len(key) == 6 else ground(*key[1:])
+    if kind == "grass":
+        return g.grass(key[1])
+    if kind == "stamp":
+        name, c, r = key[1:]
+        tile = crop(stamp_image(name, STAMP_MAKERS[name]), c, r)
+        return tile if r == 0 else g.over(tile, g.grass(0))
+    if kind == "tree":
+        style, row, c = key[1:]
+        return tree_part(style, row, c) if walkable else g.over(tree_part(style, row, c), g.grass(0))
+    if kind == "emblem":
+        return g.emblem(*key[1:])
+    if kind == "lamp":
+        return g.lamp().crop((0, T, T, 2 * T))
+    if kind == "fence":
+        return g.fence_post(key[1]) if key[1] else g.fence()
+    if kind == "flowerpot":
+        return g.flowerpot(key[1])
+    simple = {"bench": g.bench, "bin": g.bin_, "mailbox": g.mailbox, "barrel": g.barrel, "bush": g.bush,
+              "crops": g.crops, "well": g.well, "lily": g.lily, "boulder": g.boulder, "log seat": g.log_seat,
+              "sign": g.sign}
+    if kind in simple:
+        return simple[kind]()
+    return rooms.draw_key(key)
+
+
 def stamp_image(name, make):
     """The image of a structure in the current palette (drawn once per palette)."""
     key = (name, tuple(map(tuple, g.PAL["path"])), tuple(map(tuple, g.PAL["grass"])))
@@ -558,6 +599,7 @@ class Rng:
 
 
 ROOFS = ["roofr", "roofb", "roofg", "roofo"]
+STAMP_MAKERS = stamp_makers()
 # The villages of each biome : their roofs, their names (a word and a form), the line of their sign
 VILLAGE_STYLE = {
     "meadow": dict(roofs=ROOFS, words=["Trèfle", "Verdure", "Prairie", "Bourgeon", "Coquelicot"],
@@ -627,7 +669,8 @@ class Village:
                 spots.append(("west", rx, ry))
             if (rx + 1, ry) not in self.road and (rx, ry - 1) in self.road:
                 spots.append(("east", rx, ry))
-        spots.sort(key=lambda c: h01(c[1] * 3 + len(c[0]), c[2], rng.seed + 17))
+        # (the ties broken by the side and the block : no order of a set in the result, the C++ port gives the same)
+        spots.sort(key=lambda c: (h01(c[1] * 3 + len(c[0]), c[2], rng.seed + 17), c[0], c[1], c[2]))
         for kind, roof, w, h, door in kinds:
             for side, rx, ry in spots:
                 gap = rng.randint(0, 2)
@@ -1234,7 +1277,7 @@ class World:
                     stairs = (x, y) in self.stairs
                     foot = low[2] and self.is_foot(x, y + 1)
                     walk = stairs or not any(low[:4])
-                    self.set("", x, y, chip.cell(("cliff", low, stairs, foot), lambda: cliff(low, stairs, foot), walk))
+                    self.set("", x, y, chip.cell(("cliff", low, stairs, foot), walk))
                     self.walk[y][x] = walk
                     continue
                 if m == "water":
@@ -1246,13 +1289,12 @@ class World:
                         over = max((self.mat(x + dx, y + dy) for (dx, dy), b in zip(D8, mk) if b),
                                    key=lambda k: PRIORITY[k])
                         over = "sand" if over == "path" else over
-                        self.set("M", x, y, chip.cell(("bank", over, mk), lambda: water_overlay(over, mk), True))
+                        self.set("M", x, y, chip.cell(("bank", over, mk), True))
                     continue
                 if self.is_foot(x, y):
                     stairs = (x, y - 1) in self.stairs
                     west, east = self.is_foot(x - 1, y), self.is_foot(x + 1, y)
-                    self.set("", x, y, chip.cell(("foot", m, west, east, stairs),
-                                                 lambda: cliff_foot(m, west, east, stairs), stairs))
+                    self.set("", x, y, chip.cell(("foot", m, west, east, stairs), stairs))
                     self.walk[y][x] = stairs
                     self.objects[(x, y)] = 0.5
                     continue
@@ -1262,8 +1304,7 @@ class World:
                 if higher:
                     over = max(higher, key=lambda k: PRIORITY[k])
                     mk = mask8(lambda a, b: self.mat(a, b) == over and self.level(a, b) == lv, x, y)
-                    self.set("", x, y, chip.cell(("ground", m, over, mk, shade),
-                                                 lambda: ground(m, over, mk, shade), True))
+                    self.set("", x, y, chip.cell(("ground", m, over, mk, shade), True))
                     continue
                 if m == "grass" and not shade:
                     r = h01(x, y, self.seed + 97)
@@ -1271,10 +1312,9 @@ class World:
                         self.set("", x, y, FLOWER_CELL)
                         continue
                     v = 0 if r < 0.5 else 1 if r < 0.75 else 3 if r < 0.92 else 2
-                    self.set("", x, y, chip.cell(("grass", v), lambda: g.grass(v), True))
+                    self.set("", x, y, chip.cell(("grass", v), True))
                 else:
-                    self.set("", x, y, chip.cell(("ground", m, None, None, shade, 0),
-                                                 lambda: ground(m, None, None, shade), True))
+                    self.set("", x, y, chip.cell(("ground", m, None, None, shade, 0), True))
         self.place_town()
         self.lone_buildings = []
         self.events = {}
@@ -1286,25 +1326,24 @@ class World:
         self.place_items()
         self.place_rooms()
 
-    def stamp(self, name, make, x0, y0, door=None):
+    def stamp(self, name, x0, y0, door=None):
         """A structure : its first row over the characters, the other rows on the ground (blocked, but the door).
-        make() : its image, drawn in the current palette (each biome draws it in its colours, on its ground)."""
-        img = make()
+        Its image : STAMP_MAKERS (each biome draws it in its colours, on its ground)."""
+        img = STAMP_MAKERS[name]()
         tw, th = img.width // T, img.height // T
         for r in range(th):
             for c in range(tw):
                 if g.blank(img.crop((c * T, r * T, c * T + T, r * T + T))):
                     continue
-                tile = lambda c=c, r=r: stamp_image(name, make).crop((c * T, r * T, c * T + T, r * T + T))
                 x, y = x0 + c, y0 + r
                 key = ("stamp", name, c, r)
                 self.taken.add((x, y))
                 self.objects[(x, y)] = 1.3
                 if r == 0:
-                    self.set("T", x, y, self.chip.cell(key, tile, True))
+                    self.set("T", x, y, self.chip.cell(key, True))
                 else:
                     walk = door == (c, r)
-                    self.set("", x, y, self.chip.cell(key, lambda: g.over(tile(), g.grass(0)), walk))
+                    self.set("", x, y, self.chip.cell(key, walk))
                     self.walk[y][x] = walk
                     self.set("M", x, y, None)
 
@@ -1312,9 +1351,7 @@ class World:
         for v in self.villages:
             for kind, roof, x0, y0, w, h, dc, dr in v.buildings:
                 name = f"{kind}_{v.biome}" if kind == "center" else f"house_{roof}_{v.biome}"
-                make = (lambda b=v.biome: g.styled(g.healing_center(), b).render()) if kind == "center" else \
-                    (lambda b=v.biome, rf=roof: g.styled(g.house(rf), b).render())
-                self.stamp(name, make, x0, y0, door=(dc, dr))
+                self.stamp(name, x0, y0, door=(dc, dr))
             colour = FLOWERBED_COLOURS[int(h01(*v.center, 9) * len(FLOWERBED_COLOURS))]
             for x, y in v.flowers:                   # flower beds along some houses (they sway)
                 if self.mat(x, y) == "grass" and (x, y) not in self.taken:
@@ -1347,16 +1384,16 @@ class World:
                         self.taken.add((x, y))
                         self.objects[(x, y)] = 0.4
                     else:
-                        self.set("M", x, y, self.chip.cell(("emblem", c, r), lambda c=c, r=r: g.emblem(c, r), True))
+                        self.set("M", x, y, self.chip.cell(("emblem", c, r), True))
         lamps = []
-        for x, y in sorted(v.road, key=lambda c: h01(c[0], c[1], self.seed + 61)):
+        for x, y in sorted(v.road, key=lambda c: (h01(c[0], c[1], self.seed + 61), c[0], c[1])):
             if any(abs(x - a) + abs(y - b) < 7 for a, b in lamps) or len(lamps) > 8:
                 continue
             for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 lx, ly = x + dx, y + dy
                 if (lx, ly) not in v.road and self.deco_ok(lx, ly) and self.layers["T"][ly - 1][lx] is None \
                         and (lx, ly - 1) not in v.footprint:
-                    post = self.chip.cell(("lamp", 1), lambda: g.lamp().crop((0, T, T, 2 * T)), False)
+                    post = self.chip.cell(("lamp", 1), False)
                     self.set("T", lx, ly - 1, "lamphead")
                     self.set("M", lx, ly, post)
                     self.walk[ly][lx] = False
@@ -1373,27 +1410,27 @@ class World:
             if (bx, by) in v.road or not self.deco_ok(bx, by) \
                     or not any((bx + dx, by + dy) in v.road for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
                 continue
-            self.put_object("M", bx, by, ("bench",), g.bench, 0.3)
+            self.put_object("M", bx, by, ("bench",), 0.3)
             benches += 1
             if benches == 1 and self.deco_ok(bx + 1, by) and (bx + 1, by) not in v.road:
-                self.put_object("M", bx + 1, by, ("bin",), g.bin_, 0.4)
+                self.put_object("M", bx + 1, by, ("bin",), 0.4)
         pot = FLOWERBED_COLOURS[int(h01(cx, cy, 31) * len(FLOWERBED_COLOURS))]
         for kind, roof, x0, y0, w, h, dc, dr in v.buildings:
             if kind == "house":                      # the mailbox, beside the path to the door ; a pot of flowers
                 mx, my = x0 + dc + 1, y0 + h
                 if self.deco_ok(mx, my):
-                    self.set("M", mx, my, self.chip.cell(("mailbox",), g.mailbox, False))
+                    self.set("M", mx, my, self.chip.cell(("mailbox",), False))
                     self.walk[my][mx] = False
                     self.taken.add((mx, my))
                 if self.deco_ok(x0 + dc - 1, my):
-                    self.put_object("M", x0 + dc - 1, my, ("flowerpot", pot), lambda: g.flowerpot(pot), 0.4)
+                    self.put_object("M", x0 + dc - 1, my, ("flowerpot", pot), 0.4)
             if v.biome in ("desert", "autumn") and rng.random() < 0.6 and self.deco_ok(x0 + w, y0 + h - 1):
-                self.put_object("M", x0 + w, y0 + h - 1, ("barrel",), g.barrel, 0.5)
+                self.put_object("M", x0 + w, y0 + h - 1, ("barrel",), 0.5)
             if rng.random() < 0.6:                   # bushes along a side
                 side = x0 - 1 if rng.random() < 0.5 else x0 + w
                 for y in range(y0 + 1, y0 + h):
                     if self.deco_ok(side, y):
-                        self.set("M", side, y, self.chip.cell(("bush",), g.bush, False))
+                        self.set("M", side, y, self.chip.cell(("bush",), False))
                         self.walk[y][side] = False
                         self.taken.add((side, y))
                         self.objects[(side, y)] = 0.5
@@ -1406,15 +1443,15 @@ class World:
                     and all(self.deco_ok(x, gy + 3) for x in range(gx + 1, gx + 5)):
                 for i in range(6):
                     kind = "tl" if i == 0 else "tr" if i == 5 else None
-                    cell = self.chip.cell(("fence", kind), (lambda k=kind: g.fence_post(k)) if kind else g.fence, False)
+                    cell = self.chip.cell(("fence", kind), False)
                     self.set("M", gx + i, gy, cell)
                     self.walk[gy][gx + i] = False
                 for j in (1, 2):
                     for i in (0, 5):
-                        self.set("M", gx + i, gy + j, self.chip.cell(("fence", "v"), lambda: g.fence_post("v"), False))
+                        self.set("M", gx + i, gy + j, self.chip.cell(("fence", "v"), False))
                         self.walk[gy + j][gx + i] = False
                     for i in range(1, 5):
-                        self.set("M", gx + i, gy + j, self.chip.cell(("crops",), g.crops, True))
+                        self.set("M", gx + i, gy + j, self.chip.cell(("crops",), True))
                 self.taken |= set(area)
                 garden = (gx, gy)
                 break
@@ -1422,10 +1459,10 @@ class World:
         for _ in range(60):
             wx, wy = cx + rng.randint(-12, 12), cy + rng.randint(-10, 10)
             if all(self.deco_ok(wx + dx, wy + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
-                self.put_object("M", wx, wy, ("well",), g.well, 0.6)
+                self.put_object("M", wx, wy, ("well",), 0.6)
                 break
         # Butterflies over the grass, near the flowers and the garden
-        near = list(v.flowers) + ([(garden[0] + 2, garden[1] + 3)] if garden else [])
+        near = sorted(v.flowers) + ([(garden[0] + 2, garden[1] + 3)] if garden else [])
         flown = 0
         for _ in range(60):
             if flown >= 3 or not near:
@@ -1440,7 +1477,7 @@ class World:
         # Water lilies on the pond
         lilies = [c for c in sorted(v.pond) if self.layers["M"][c[1]][c[0]] is None]
         for x, y in lilies[:2]:
-            self.set("M", x, y, self.chip.cell(("lily",), g.lily, False))
+            self.set("M", x, y, self.chip.cell(("lily",), False))
         # Broadleaf trees between the houses
         planted = 0
         for _ in range(80):
@@ -1477,12 +1514,10 @@ class World:
             for dy, row, kind in parts:
                 cx, cy = x + c, y + dy
                 if kind == "top":
-                    self.set("T", cx, cy, self.chip.cell(("tree", style, row, c),
-                                                         lambda r=row, k=c: tree_part(style, r, k), True))
+                    self.set("T", cx, cy, self.chip.cell(("tree", style, row, c), True))
                     self.objects[(cx, cy)] = max(self.objects.get((cx, cy), 0), 1.2)
                     continue
-                cell = self.chip.cell(("tree", style, row, c),
-                                      lambda r=row, k=c: g.over(tree_part(style, r, k), g.grass(0)), False)
+                cell = self.chip.cell(("tree", style, row, c), False)
                 self.set("", cx, cy, cell)
                 if kind == "canopy":
                     self.set("T", cx, cy, cell)
@@ -1516,13 +1551,13 @@ class World:
                 if fbm(x / 6.0, y / 6.0, self.seed + 2) > p["tall"] and fbm(x / 13.0, y / 13.0, self.seed + 1) < 0.5:
                     self.set("M", x, y, TALL_CELL)
                 elif h01(x, y, self.seed + 21) < p["boulder"]:
-                    self.set("M", x, y, self.chip.cell(("boulder",), g.boulder, False))
+                    self.set("M", x, y, self.chip.cell(("boulder",), False))
                     self.walk[y][x] = False
                     self.objects[(x, y)] = 0.4
 
-    def put_object(self, layer, x, y, key, draw, height=0.4):
+    def put_object(self, layer, x, y, key, height=0.4):
         """A blocking object on a block (a campfire, a log...)."""
-        self.set(layer, x, y, key if key in ANIMATED else self.chip.cell(key, draw, False))
+        self.set(layer, x, y, key if key in ANIMATED else self.chip.cell(key, False))
         self.walk[y][x] = False
         self.taken.add((x, y))
         self.objects[(x, y)] = height
@@ -1543,25 +1578,24 @@ class World:
             self.taken |= {(ax + i, ay + j) for j in range(h) for i in range(w)} | set(p["spur"])
             if p["kind"] == "camp":
                 canvas = ["roofo", "roofg", "roofb", "roofr"][int(h01(ax, ay, 3) * 4)]
-                self.stamp(f"tent_{canvas}", lambda cv=canvas: g.tent(cv), ax + 1, ay)
-                self.put_object("M", ax + 3, ay + 3, CAMPFIRE_CELL, None, 0.3)
-                self.put_object("M", ax + 2, ay + 3, ("log seat",), g.log_seat, 0.3)
-                self.put_object("M", ax + 4, ay + 3, ("log seat",), g.log_seat, 0.3)
+                self.stamp(f"tent_{canvas}", ax + 1, ay)
+                self.put_object("M", ax + 3, ay + 3, CAMPFIRE_CELL, 0.3)
+                self.put_object("M", ax + 2, ay + 3, ("log seat",), 0.3)
+                self.put_object("M", ax + 4, ay + 3, ("log seat",), 0.3)
                 self.item_event(ax + 4, ay + 1, 0 if h01(ax, ay, 9) < 0.6 else 2)
             elif p["kind"] == "ruins":
                 for i, (px, py) in enumerate(((0, 0), (3, 0), (6, 0), (0, 4), (6, 4), (0, 2), (6, 2))):
                     broken = h01(ax + px, ay + py, 11) < 0.45
-                    self.stamp(f"pillar_{broken}", lambda b=broken: g.pillar(b), ax + px, ay + py)
+                    self.stamp(f"pillar_{broken}", ax + px, ay + py)
                 for i in range(2):
                     bx, by = ax + 1 + int(h01(ax, ay, 20 + i) * 5), ay + 6
                     if (bx, by) != (ax + 3, ay + 6):
-                        self.put_object("M", bx, by, ("boulder",), g.boulder)
+                        self.put_object("M", bx, by, ("boulder",))
                 self.item_event(ax + 3, ay + 3, 1 if h01(ax, ay, 13) < 0.6 else 2)
             else:
                 biome = p["biome"]
                 roof = VILLAGE_STYLE[biome]["roofs"][int(h01(ax, ay, 5) * len(VILLAGE_STYLE[biome]["roofs"]))]
-                self.stamp(f"house_{roof}_{biome}", lambda b=biome, rf=roof: g.styled(g.house(rf), b).render(),
-                           ax + 1, ay + h - 5, door=(2, 3))
+                self.stamp(f"house_{roof}_{biome}", ax + 1, ay + h - 5, door=(2, 3))
                 self.lone_buildings.append(("rest", roof, ax + 1, ay + h - 5, 4, 4, 2, 3))
 
     def add_event(self, x, y, line):
@@ -1584,7 +1618,7 @@ class World:
                                (x + (ny - y) * 2, y + (nx - x) * 2), (x - (ny - y) * 2, y - (nx - x) * 2)):
                     if 0 <= sx < self.W and 0 <= sy < self.H and (sx, sy) not in self.taken \
                             and self.walk[sy][sx] and self.layers["M"][sy][sx] is None and self.flat(sx, sy):
-                        self.set("M", sx, sy, self.chip.cell(("sign",), g.sign, False))
+                        self.set("M", sx, sy, self.chip.cell(("sign",), False))
                         self.walk[sy][sx] = False
                         self.taken.add((sx, sy))
                         self.objects[(sx, sy)] = 0.4
