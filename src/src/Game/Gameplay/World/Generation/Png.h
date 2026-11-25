@@ -4,7 +4,7 @@
 #include <vector>
 
 // The images of the world generator, plain C++ (no engine) : PNG read (8 bits RGB or RGBA, not interlaced : the atlas
-// of the tiles), BMP written (24 bits : the maps and the chipsets, read by the game through SDL_image).
+// of the tiles) and written (the chipsets, the light), BMP written (24 bits : the layers of the maps).
 namespace worldgen {
 	struct RgbImage {
 		int width = 0;
@@ -24,4 +24,9 @@ namespace worldgen {
 	RgbImage ReadPng(const std::string& path);
 	// A 24 bits BMP file
 	std::vector<std::uint8_t> EncodeBmp(const RgbImage& image);
+	// A zlib stream of the data (deflate : LZ77, the fixed Huffman codes)
+	std::vector<std::uint8_t> Deflate(const std::vector<std::uint8_t>& data);
+	// An 8 bits RGB PNG file (alpha : an opaque RGBA one)
+	std::vector<std::uint8_t> EncodePng(const RgbImage& image, bool alpha = false);
+	void WriteFile(const std::string& path, const std::vector<std::uint8_t>& bytes);
 }

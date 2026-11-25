@@ -2,9 +2,13 @@
 // generator (tests/worldgen/golden.txt, made by tools/worldgen/golden.py) : the same numbers, bit for bit.
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <cstdint>
+#include <chrono>
 #include <cstring>
+#include <filesystem>
+#include <iterator>
 #include <fstream>
 #include <map>
+#include <set>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -17,6 +21,7 @@
 #include "Game/Gameplay/World/Generation/Terrain.h"
 #include "Game/Gameplay/World/Generation/Layers.h"
 #include "Game/Gameplay/World/Generation/Chipset.h"
+#include "Game/Gameplay/World/Generation/Files.h"
 
 namespace {
 	std::uint64_t Fnv(const std::vector<unsigned char>& data) {
@@ -550,4 +555,88 @@ TEST_CASE("the chipsets are those of the Python generator") {
 			CheckChipset(worldgen::Chipset{ *tileImages, worldgen::RoomTiles(world) }, grids, words, 2);
 		}
 	}
+}
+
+namespace {
+	std::vector<std::uint8_t> FileBytes(const std::filesystem::path& path) {
+		auto in = std::ifstream{ path, std::ios::binary };
+		return std::vector<std::uint8_t>(std::istreambuf_iterator<char>{ in }, std::istreambuf_iterator<char>{});
+	}
+
+	// The pixels of a 24 bits BMP (PIL or EncodeBmp)
+	worldgen::RgbImage DecodeBmp(const std::vector<std::uint8_t>& file) {
+		REQUIRE(file.size() >= 54);
+		const auto get32 = [&file](std::size_t at) {
+			return static_cast<std::int32_t>(file[at] | (file[at + 1] << 8) | (file[at + 2] << 16) | (static_cast<std::uint32_t>(file[at + 3]) << 24));
+		};
+		const auto offset = static_cast<std::size_t>(get32(10));
+		const auto width = get32(18);
+		const auto height = get32(22);
+		REQUIRE(file[28] == 24);
+		const auto rows = height < 0 ? -height : height;
+		const auto stride = (static_cast<std::size_t>(width) * 3 + 3) / 4 * 4;
+		auto image = worldgen::RgbImage{ width, rows };
+		for (auto y = 0; y < rows; y++) {
+			const auto line = static_cast<std::size_t>(height < 0 ? y : rows - 1 - y);
+			for (auto x = 0; x < width; x++) {
+				const auto* p = &file[offset + line * stride + static_cast<std::size_t>(x) * 3];
+				auto* out = image.at(x, y);
+				out[0] = p[2];
+				out[1] = p[1];
+				out[2] = p[0];
+			}
+		}
+		return image;
+	}
+
+	std::set<std::string> FilesOf(const std::filesystem::path& root) {
+		auto out = std::set<std::string>{};
+		for (const auto& entry : std::filesystem::recursive_directory_iterator{ root }) {
+			if (entry.is_regular_file()) {
+				out.insert(std::filesystem::relative(entry.path(), root).generic_string());
+			}
+		}
+		return out;
+	}
+}
+
+TEST_CASE("the png writer writes what the png reader reads") {
+	auto image = worldgen::RgbImage{ 37, 21 };
+	for (auto i = 0u; i < image.rgb.size(); i++) {
+		image.rgb[i] = static_cast<std::uint8_t>((i * 7 / 9) % 256 ^ (i % 5 == 0 ? 0 : 3));
+	}
+	CHECK(worldgen::DecodePng(worldgen::EncodePng(image)).rgb == image.rgb);
+	const auto atlas = worldgen::ReadPng("Resources/Worldgen/tiles.png");
+	CHECK(worldgen::DecodePng(worldgen::EncodePng(atlas)).rgb == atlas.rgb);
+}
+
+TEST_CASE("the files of a world are those of the Python generator (Data/Worlds/seed7)") {
+	const auto folder = std::filesystem::temp_directory_path() / "sad_worldgen_test_seed7";
+	const auto begin = std::chrono::steady_clock::now();
+	const auto start = worldgen::GenerateWorld(7, folder.string(), "./Data/Worlds/seed7/");
+	MESSAGE("seed 7 generated and written in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms");
+	CHECK(start.map == "w_5_4");
+	CHECK(start.x == 17);
+	CHECK(start.y == 16);
+	const auto reference = std::filesystem::path{ "Data/Worlds/seed7" };
+	const auto files = FilesOf(folder);
+	CHECK(files == FilesOf(reference));
+	for (const auto& file : files) {
+		INFO(file);
+		const auto mine = FileBytes(folder / file);
+		const auto theirs = FileBytes(reference / file);
+		const auto ext = std::filesystem::path{ file }.extension().string();
+		if (ext == ".bmp") {
+			CHECK(DecodeBmp(mine).rgb == DecodeBmp(theirs).rgb);
+		} else if (ext == ".png" || ext == ".col" || ext == ".prop") {
+			const auto a = worldgen::DecodePng(mine);
+			const auto b = worldgen::DecodePng(theirs);
+			CHECK(a.width == b.width);
+			CHECK(a.height == b.height);
+			CHECK(a.rgb == b.rgb);
+		} else {
+			CHECK(mine == theirs);
+		}
+	}
+	std::filesystem::remove_all(folder);
 }

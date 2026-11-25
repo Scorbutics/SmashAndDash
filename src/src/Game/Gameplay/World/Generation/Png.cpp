@@ -312,3 +312,245 @@ std::vector<std::uint8_t> worldgen::EncodeBmp(const RgbImage& image) {
 	}
 	return out;
 }
+
+namespace {
+	class BitWriter {
+	public:
+		explicit BitWriter(std::vector<std::uint8_t>& out) : m_out(out) {}
+		void put(std::uint32_t bits, int count) {
+			m_buffer |= bits << m_count;
+			m_count += count;
+			while (m_count >= 8) {
+				m_out.push_back(static_cast<std::uint8_t>(m_buffer & 0xFF));
+				m_buffer >>= 8;
+				m_count -= 8;
+			}
+		}
+		// A Huffman code : its bits from the most significant one
+		void code(std::uint32_t bits, int count) {
+			auto reversed = 0u;
+			for (auto i = 0; i < count; i++) {
+				reversed = (reversed << 1) | ((bits >> i) & 1);
+			}
+			put(reversed, count);
+		}
+		void flush() {
+			if (m_count > 0) {
+				m_out.push_back(static_cast<std::uint8_t>(m_buffer & 0xFF));
+			}
+			m_buffer = 0;
+			m_count = 0;
+		}
+	private:
+		std::vector<std::uint8_t>& m_out;
+		std::uint32_t m_buffer = 0;
+		int m_count = 0;
+	};
+
+	void Literal(BitWriter& out, int symbol) {
+		if (symbol < 144) {
+			out.code(static_cast<std::uint32_t>(0x30 + symbol), 8);
+		} else if (symbol < 256) {
+			out.code(static_cast<std::uint32_t>(0x190 + symbol - 144), 9);
+		} else if (symbol < 280) {
+			out.code(static_cast<std::uint32_t>(symbol - 256), 7);
+		} else {
+			out.code(static_cast<std::uint32_t>(0xC0 + symbol - 280), 8);
+		}
+	}
+
+	void Match(BitWriter& out, int length, int distance) {
+		auto l = LengthBase.size() - 1;
+		while (LengthBase[l] > length) {
+			l--;
+		}
+		Literal(out, 257 + static_cast<int>(l));
+		out.put(static_cast<std::uint32_t>(length - LengthBase[l]), LengthExtra[l]);
+		auto d = DistBase.size() - 1;
+		while (DistBase[d] > distance) {
+			d--;
+		}
+		out.code(static_cast<std::uint32_t>(d), 5);
+		out.put(static_cast<std::uint32_t>(distance - DistBase[d]), DistExtra[d]);
+	}
+
+	std::uint32_t Crc32(const std::uint8_t* data, std::size_t size, std::uint32_t crc = 0) {
+		static const auto table = [] {
+			auto t = std::array<std::uint32_t, 256>{};
+			for (auto n = 0u; n < 256; n++) {
+				auto c = n;
+				for (auto k = 0; k < 8; k++) {
+					c = c & 1 ? 0xEDB88320u ^ (c >> 1) : c >> 1;
+				}
+				t[n] = c;
+			}
+			return t;
+		}();
+		crc = ~crc;
+		for (auto i = std::size_t{ 0 }; i < size; i++) {
+			crc = table[(crc ^ data[i]) & 0xFF] ^ (crc >> 8);
+		}
+		return ~crc;
+	}
+
+	void PutBigEndian(std::vector<std::uint8_t>& out, std::uint32_t v) {
+		for (auto k = 3; k >= 0; k--) {
+			out.push_back(static_cast<std::uint8_t>(v >> (8 * k)));
+		}
+	}
+
+	void Chunk(std::vector<std::uint8_t>& out, const char* type, const std::vector<std::uint8_t>& data) {
+		PutBigEndian(out, static_cast<std::uint32_t>(data.size()));
+		const auto start = out.size();
+		out.insert(out.end(), type, type + 4);
+		out.insert(out.end(), data.begin(), data.end());
+		PutBigEndian(out, Crc32(&out[start], out.size() - start));
+	}
+}
+
+std::vector<std::uint8_t> worldgen::Deflate(const std::vector<std::uint8_t>& data) {
+	constexpr int Window = 32768;
+	constexpr int MinMatch = 3;
+	constexpr int MaxMatch = 258;
+	constexpr int MaxChain = 24;
+	constexpr int HashBits = 15;
+	auto out = std::vector<std::uint8_t>{ 0x78, 0x01 };
+	auto bits = BitWriter{ out };
+	bits.put(1, 1); // the last block
+	bits.put(1, 2); // the fixed codes
+	auto head = std::vector<int>(1 << HashBits, -1);
+	auto prev = std::vector<int>(Window, -1);
+	const auto n = static_cast<int>(data.size());
+	const auto hash = [&data](int i) {
+		return ((static_cast<unsigned>(data[static_cast<std::size_t>(i)]) << 10) ^ (static_cast<unsigned>(data[static_cast<std::size_t>(i + 1)]) << 5)
+			^ data[static_cast<std::size_t>(i + 2)]) & ((1u << HashBits) - 1);
+	};
+	const auto insert = [&](int i) {
+		if (i + MinMatch <= n) {
+			const auto h = hash(i);
+			prev[static_cast<std::size_t>(i % Window)] = head[h];
+			head[h] = i;
+		}
+	};
+	auto pos = 0;
+	while (pos < n) {
+		auto bestLength = 0;
+		auto bestDistance = 0;
+		if (pos + MinMatch <= n) {
+			auto candidate = head[hash(pos)];
+			const auto limit = std::min(MaxMatch, n - pos);
+			for (auto chain = 0; chain < MaxChain && candidate >= 0 && pos - candidate <= Window; chain++) {
+				auto length = 0;
+				while (length < limit && data[static_cast<std::size_t>(candidate + length)] == data[static_cast<std::size_t>(pos + length)]) {
+					length++;
+				}
+				if (length > bestLength) {
+					bestLength = length;
+					bestDistance = pos - candidate;
+					if (length == limit) {
+						break;
+					}
+				}
+				const auto next = prev[static_cast<std::size_t>(candidate % Window)];
+				if (next >= candidate) {
+					break;
+				}
+				candidate = next;
+			}
+		}
+		if (bestLength >= MinMatch) {
+			Match(bits, bestLength, bestDistance);
+			// A long match (the runs of zeros of the filtered rows) : only its end is indexed, as zlib does
+			for (auto i = bestLength > 32 ? bestLength - 4 : 0; i < bestLength; i++) {
+				insert(pos + i);
+			}
+			pos += bestLength;
+		} else {
+			Literal(bits, data[static_cast<std::size_t>(pos)]);
+			insert(pos);
+			pos++;
+		}
+	}
+	Literal(bits, 256);
+	bits.flush();
+	auto a = 1u, b = 0u;
+	for (const auto byte : data) {
+		a = (a + byte) % 65521;
+		b = (b + a) % 65521;
+	}
+	PutBigEndian(out, (b << 16) | a);
+	return out;
+}
+
+std::vector<std::uint8_t> worldgen::EncodePng(const RgbImage& image, bool alpha) {
+	const auto channels = alpha ? 4u : 3u;
+	const auto stride = static_cast<std::size_t>(image.width) * channels;
+	auto raw = std::vector<std::uint8_t>{};
+	raw.reserve((stride + 1) * static_cast<std::size_t>(image.height));
+	auto line = std::vector<std::uint8_t>(stride);
+	auto previous = std::vector<std::uint8_t>(stride, 0);
+	auto filtered = std::array<std::vector<std::uint8_t>, 5>{};
+	for (auto& f : filtered) {
+		f.resize(stride);
+	}
+	for (auto y = 0; y < image.height; y++) {
+		for (auto x = 0; x < image.width; x++) {
+			const auto* p = image.at(x, y);
+			for (auto k = 0u; k < 3; k++) {
+				line[static_cast<std::size_t>(x) * channels + k] = p[k];
+			}
+			if (alpha) {
+				line[static_cast<std::size_t>(x) * channels + 3] = 255;
+			}
+		}
+		// The filter of the row : up (zeros) for a row like the one above (a tile is drawn by voxels of 3 x 3 pixels),
+		// else sub (zeros along a voxel), else paeth, the one with the smallest sum of its bytes (as signed values)
+		auto best = 2u;
+		if (y == 0 || line != previous) {
+			auto bestSum = ~std::uint64_t{ 0 };
+			for (const auto f : { 1u, 4u }) {
+				auto sum = std::uint64_t{ 0 };
+				for (auto i = std::size_t{ 0 }; i < stride; i++) {
+					const int a = i >= channels ? line[i - channels] : 0;
+					auto predictor = a;
+					if (f == 4) {
+						const int b = previous[i];
+						const int c = i >= channels ? previous[i - channels] : 0;
+						const auto p = a + b - c;
+						const auto pa = std::abs(p - a), pb = std::abs(p - b), pc = std::abs(p - c);
+						predictor = pa <= pb && pa <= pc ? a : pb <= pc ? b : c;
+					}
+					const auto v = static_cast<std::uint8_t>(line[i] - predictor);
+					filtered[f][i] = v;
+					sum += static_cast<std::uint64_t>(v < 128 ? v : 256 - v);
+				}
+				if (sum < bestSum) {
+					bestSum = sum;
+					best = f;
+				}
+			}
+		} else {
+			std::fill(filtered[2].begin(), filtered[2].end(), std::uint8_t{ 0 });
+		}
+		raw.push_back(static_cast<std::uint8_t>(best));
+		raw.insert(raw.end(), filtered[best].begin(), filtered[best].end());
+		std::swap(line, previous);
+	}
+	auto out = std::vector<std::uint8_t>{ 137, 80, 78, 71, 13, 10, 26, 10 };
+	auto header = std::vector<std::uint8_t>{};
+	PutBigEndian(header, static_cast<std::uint32_t>(image.width));
+	PutBigEndian(header, static_cast<std::uint32_t>(image.height));
+	header.insert(header.end(), { 8, static_cast<std::uint8_t>(alpha ? 6 : 2), 0, 0, 0 });
+	Chunk(out, "IHDR", header);
+	Chunk(out, "IDAT", Deflate(raw));
+	Chunk(out, "IEND", {});
+	return out;
+}
+
+void worldgen::WriteFile(const std::string& path, const std::vector<std::uint8_t>& bytes) {
+	auto file = std::ofstream{ path, std::ios::binary | std::ios::trunc };
+	if (!file) {
+		throw std::runtime_error{ "worldgen : cannot write " + path };
+	}
+	file.write(reinterpret_cast<const char*>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
+}
