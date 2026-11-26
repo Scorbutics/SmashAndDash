@@ -1,5 +1,6 @@
-# A wild Pokemon arrives near the player (at the next frame), as the rules want it (Data/Battle/encounters.miniska "arrival" : a bird flies
-# in and lands, a Rattata comes out of a hideout, the others walk in from out of the screen). Usage :
+# A wild Pokemon arrives near the player (at the next frame), as the rules want it (Data/Battle/encounters.miniska "arrival",
+# then Data/Battle/arrivals.miniska : a bird flies in and lands, a Rattata comes out of a hideout, the others walk in from
+# out of the screen). Usage :
 # ska-console run tools/agent/spawn.miniska <monster id> <level>   (then wild.miniska : it is there once arrived)
 Dev = import "bind:ska.dev"
 Battle = import "bind:game.battle"

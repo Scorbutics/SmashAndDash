@@ -12,7 +12,6 @@ run = function(args: string[]) do
 	Test.equal(Encounters.arrival(16), "fly", "Roucool flies in")
 	Test.equal(Encounters.arrival(19), "hideout", "Rattata comes out of a hideout")
 	Test.equal(Encounters.arrival(25), "walk", "Pikachu walks in")
-	Test.equal((Encounters.stay(16, 0): string), "12000", "a bird stays 12 s at least")
 	Test.equal((Encounters.groupOdds(): string), "5", "a group 1 time in 5")
 	Test.equal((Encounters.companionLevel(1, -1): string), "1", "at least level 1")
 	Test.equal((Encounters.companionLevel(4, 1): string), "5", "one level more")

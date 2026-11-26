@@ -578,7 +578,8 @@ STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "
 ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
                  "fountain_1_1": 0}
 # The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
-# bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk...)
+# bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk... : the
+# scripts read it, Data/Battle/arrivals.miniska)
 HIDEOUT = 2
 HIDEOUTS = {"bin", "barrel", "log seat", "bush"}
 _STAMP_ROWS = {}

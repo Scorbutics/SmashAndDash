@@ -12,6 +12,19 @@ message = function(text: string) do
 end
 wild = function() : string[] do return []: string end
 spawnWild = function(monster: int, level: int) : bool do return false end
+arrived = []: string
+land = function(monster: int, level: int, attitude: string, x: int, y: int, stay: int) : bool do
+	arrived = arrived + ("land " + (monster: string) + " " + attitude + " " + (x: string) + " " + (y: string) + " " + (stay: string))
+	return true
+end
+emerge = function(monster: int, level: int, attitude: string, hideoutX: int, hideoutY: int, x: int, y: int, rustle: int) : bool do
+	arrived = arrived + ("emerge " + (monster: string) + " " + (hideoutX: string) + " " + (hideoutY: string) + " " + (x: string) + " " + (y: string))
+	return true
+end
+walkIn = function(monster: int, level: int, attitude: string) : bool do
+	arrived = arrived + ("walk " + (monster: string))
+	return true
+end
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end
 lastFled = function() : bool do return false end
@@ -22,4 +35,8 @@ announced = function() : string[] do
 end
 messages = function() : string[] do
 	return said
+end
+# The arrivals asked (land, emerge, walkIn), as texts
+arrivals = function() : string[] do
+	return arrived
 end

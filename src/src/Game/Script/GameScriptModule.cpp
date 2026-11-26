@@ -644,6 +644,17 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		return ska::NodeValue{ worldState.spawnWild(Int(params[0]), Int(params[1])) };
 	});
 
+	// The arrivals (Data/Battle/arrivals.miniska) : the script does not wait, the wild Pokemon is there once arrived
+	m_builder.bindField("land", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ worldState.land(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, Int(params[5])) };
+	});
+	m_builder.bindField("emerge", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ worldState.emerge(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, { Int(params[5]), Int(params[6]) }, Int(params[7])) };
+	});
+	m_builder.bindField("walkIn", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ worldState.walkIn(Int(params[0]), Int(params[1]), String(params[2])) };
+	});
+
 	// A battle against wild Pokemon (the first one, and the others of its group), the script waits for its end
 	auto startBattle = [&vm, &entityManager, &ged, &worldState](const std::vector<std::pair<int, unsigned int>>& monsters, bool canFlee) {
 		if (monsters.empty()) {

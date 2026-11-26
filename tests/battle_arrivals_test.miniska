@@ -1,0 +1,35 @@
+# The arrivals of the wild Pokemon that do not walk in (Data/Battle/arrivals.miniska) : the flights, the hideouts
+Test = import "bind:std.native.test"
+Battle = import "bind:game.battle"
+Map = import "bind:game.map"
+Arrivals = import "wd:Data/Battle/arrivals"
+
+last = function() : string do
+	all = Battle.arrivals()
+	return all[all.size() - 1]
+end
+
+run = function(args: string[]) do
+	Test.equal((Arrivals.stay(16, 0): string), "12000", "a bird stays 12 s at least")
+
+	# A bird lands on a free block seen from the player, not too close to it (the first one : the top left corner)
+	Arrivals.run(["fly", "16", "3", "passive", "10", "10", "0", "40"])
+	Test.equal(last(), "land 16 passive 4 7 18000", "the first free block seen, stays 12 s + 150 ms a roll")
+	Test.equal((Arrivals.landings(10, 10).size() / 2): string, "86", "13 x 7 blocks seen, but the player's one and the 4 next to it")
+
+	# A hideout seen : it comes out on its south side when free, else the next free side
+	Map.setProperty(1, 12, 9, 2)
+	Arrivals.run(["hideout", "19", "2", "fearful", "10", "10", "0", "0"])
+	Test.equal(last(), "emerge 19 12 9 12 10", "out of the bin, south")
+	Map.setWall(12, 10)
+	Arrivals.run(["hideout", "19", "2", "fearful", "10", "10", "0", "0"])
+	Test.equal(last(), "emerge 19 12 9 13 9", "south taken : east")
+
+	# A hideout out of sight is not one
+	Map.setProperty(1, 30, 30, 2)
+	Test.equal((Arrivals.hideouts(10, 10).size() / 4): string, "1", "only the bin seen")
+
+	# No hideout seen : it walks in
+	Arrivals.run(["hideout", "19", "2", "fearful", "40", "40", "0", "0"])
+	Test.equal(last(), "walk 19", "nowhere to hide : it walks in")
+end

@@ -66,6 +66,8 @@ file(GLOB AGENT_SCRIPTS CONFIGURE_DEPENDS ${GAME_ROOT_DIR}/tools/agent/*.miniska
 list(APPEND GAME_SCRIPTS ${AGENT_SCRIPTS})
 # The steps of the battles : a script started by the battle (BattleDirectorSystem)
 list(APPEND GAME_SCRIPTS ${GAME_ROOT_DIR}/Data/Battle/steps.miniska)
+# The arrivals of the wild Pokemon flying in or out of a hideout : a script started by the spawner (WorldState)
+list(APPEND GAME_SCRIPTS ${GAME_ROOT_DIR}/Data/Battle/arrivals.miniska)
 list(REMOVE_ITEM GAME_SCRIPTS ${GAME_SCRIPT_MODULES})
 skalang_check_scripts(smash_and_dash_scripts_check
 	SCRIPTS ${GAME_SCRIPTS}

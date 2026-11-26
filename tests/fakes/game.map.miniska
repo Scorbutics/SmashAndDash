@@ -1,0 +1,40 @@
+# Fake of the map for the headless script tests (it replaces the template of "bind:game.map") : every block is free
+# and has no property, unless the test says otherwise (walls, properties of the tiles).
+
+walls = [:]: int
+properties = [:]: int
+
+key = function(x: int, y: int) : string do
+	return (x: string) + " " + (y: string)
+end
+
+name = function() : string do return "test" end
+teleport = function(map: string, x: int, y: int) do end
+waitTransition = function() do end
+blockX = function(entity: int) : int do return 0 end
+blockY = function(entity: int) : int do return 0 end
+
+blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do
+	k = (layer: string) + " " + key(x, y)
+	if properties.has(k)
+		return (properties[k] / property) % 2 == 1
+	end
+	return false
+end
+
+blockFree = function(x: int, y: int) : bool do
+	return !walls.has(key(x, y))
+end
+
+shake = function(duration: int, intensity: int) do end
+crumbling = function(duration: int) do end
+
+# Test controls (only in the fake)
+setWall = function(x: int, y: int) do
+	walls[key(x, y)] = 1
+end
+
+# The properties of the tile of a layer at a block (a bit mask : one bit property tested)
+setProperty = function(layer: int, x: int, y: int, mask: int) do
+	properties[(layer: string) + " " + key(x, y)] = mask
+end

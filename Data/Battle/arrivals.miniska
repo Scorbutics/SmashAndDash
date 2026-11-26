@@ -1,0 +1,129 @@
+# The arrival of a wild Pokemon near the player, when it does not walk in (Data/Battle/encounters.miniska "arrival") : the
+# spawner of the map starts this script. A bird flies in and lands on a free block on the screen, it flies away after a
+# while ; a Rattata comes out of a hideout on the screen (a bin, a bush, a log, a trunk : a property of its tile in the
+# tileset). Nowhere to arrive : it walks in. The dice are rolled by the game (the replays stay the same).
+# Arguments : the arrival ("fly", "hideout"), the monster, its level, its attitude, the block of the player (x, y), two
+# rolls (0 .. 9999).
+Battle = import "bind:game.battle"
+Map = import "bind:game.map"
+
+# The properties of the tiles (the red channel of the .prop of a tileset : tools/worldgen/worldgen.py, tile_flags)
+Water = 1
+Hideout = 2
+Layers = 3
+# The blocks seen around the player (at the zoom of the map, about 17 x 10 blocks) ; not too close to it
+SeenX = 6
+SeenY = 3
+Closest = 2
+# A Pokemon comes out of its hideout after it rustled this long (ms)
+Rustle = 700
+
+# How long a bird stays on the ground before it flies away (ms ; "roll" : 0 .. 99). A fearful one flies away as soon as
+# it sees the player.
+stay = function(monster: int, roll: int) : int do
+	return 12000 + 150 * roll
+end
+
+distance = function(x: int, y: int, px: int, py: int) : int do
+	dx = x - px
+	if dx < 0
+		dx = 0 - dx
+	end
+	dy = y - py
+	if dy < 0
+		dy = 0 - dy
+	end
+	return dx + dy
+end
+
+# A block a wild Pokemon can stand on : no wall, nobody there, no water
+standable = function(x: int, y: int) : bool do
+	return Map.blockFree(x, y) && !Map.blockHasProperty(0, x, y, Water)
+end
+
+# A tile of a layer of the block is a hideout
+hideout = function(x: int, y: int) : bool do
+	layer = 0
+	while layer < Layers do
+		if Map.blockHasProperty(layer, x, y, Hideout)
+			return true
+		end
+		layer = layer + 1
+	end
+	return false
+end
+
+# The free blocks seen around the player : x, y, x, y...
+landings = function(px: int, py: int) : int[] do
+	found = []: int
+	y = py - SeenY
+	while y <= py + SeenY do
+		x = px - SeenX
+		while x <= px + SeenX do
+			if distance(x, y, px, py) >= Closest && standable(x, y)
+				found = found + [x, y]
+			end
+			x = x + 1
+		end
+		y = y + 1
+	end
+	return found
+end
+
+# The hideouts seen around the player, with the free block it comes out on (south first : towards the player's side of
+# the screen) : hideout x, y, then out x, y...
+hideouts = function(px: int, py: int) : int[] do
+	found = []: int
+	# South, east, west, north : dx, dy
+	sides = [0, 1, 1, 0, -1, 0, 0, -1]
+	y = py - SeenY
+	while y <= py + SeenY do
+		x = px - SeenX
+		while x <= px + SeenX do
+			if distance(x, y, px, py) >= Closest && hideout(x, y)
+				side = 0
+				while side < sides.size() do
+					ox = x + sides[side]
+					oy = y + sides[side + 1]
+					if standable(ox, oy)
+						found = found + [x, y, ox, oy]
+						side = sides.size()
+					else
+						side = side + 2
+					end
+				end
+			end
+			x = x + 1
+		end
+		y = y + 1
+	end
+	return found
+end
+
+run = function(args: string[]) do
+	kind = args[0]
+	monster = (args[1]: int)
+	level = (args[2]: int)
+	attitude = args[3]
+	px = (args[4]: int)
+	py = (args[5]: int)
+	roll = (args[6]: int)
+	stayRoll = (args[7]: int)
+	if kind == "fly"
+		found = landings(px, py)
+		if found.size() > 0
+			i = (roll % (found.size() / 2)) * 2
+			Battle.land(monster, level, attitude, found[i], found[i + 1], stay(monster, stayRoll % 100))
+			return
+		end
+	end
+	if kind == "hideout"
+		found = hideouts(px, py)
+		if found.size() > 0
+			i = (roll % (found.size() / 4)) * 4
+			Battle.emerge(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle)
+			return
+		end
+	end
+	Battle.walkIn(monster, level, attitude)
+end

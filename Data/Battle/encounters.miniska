@@ -54,8 +54,8 @@ companionLevel = function(level: int, offset: int) : int do
 end
 
 # How a wild Pokemon arrives on the map : "fly" (it flies in from out of the screen and lands on a free block near the
-# player, it flies away after a while : "stay"), "hideout" (it comes out of a hideout near the player : a bin, a bush, a
-# log, a trunk ; the property of the tile in the tileset), "walk" (it appears out of the screen).
+# player, it flies away after a while), "hideout" (it comes out of a hideout near the player : a bin, a bush, a log, a
+# trunk), "walk" (it appears out of the screen). The flights and the hideouts : Data/Battle/arrivals.miniska.
 # The birds fly : Roucool (16), Roucoups (17), Roucarnage (18), Piafabec (21), Rapasdepic (22) ; the rats hide : Rattata
 # (19), Rattatac (20).
 arrival = function(monster: int) : string do
@@ -66,10 +66,4 @@ arrival = function(monster: int) : string do
 		return "hideout"
 	end
 	return "walk"
-end
-
-# How long a bird stays on the ground before it flies away (ms ; "roll" : 0 .. 99). A fearful one flies away as soon as
-# it sees the player.
-stay = function(monster: int, roll: int) : int do
-	return 12000 + 150 * roll
 end

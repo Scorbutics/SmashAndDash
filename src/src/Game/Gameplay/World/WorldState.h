@@ -81,6 +81,16 @@ public:
 	// A wild Pokemon arrives near the player at the next frame, as the rules want it (flying in, out of a hideout, walking
 	// in) : the scripts (Battle.spawnWild ; the rules are scripts, not called while a script runs). False : no player
 	bool spawnWild(int monster, int level);
+	// The verbs of the arrivals (Data/Battle/arrivals.miniska ; Battle.land, Battle.emerge, Battle.walkIn). False : no player.
+	// A bird flies in from out of the screen (beyond the block, seen from the player) and lands on the block ; it flies away
+	// after "stay" ms (0 : it stays)
+	bool land(int monster, int level, const std::string& attitude, ska::Point<int> block, int stay);
+	// The hideout rustles "rustle" ms, then the Pokemon hops out of it onto the block
+	bool emerge(int monster, int level, const std::string& attitude, ska::Point<int> hideout, ska::Point<int> block, int rustle);
+	// It walks in from out of the screen (no room for it : false)
+	bool walkIn(int monster, int level, const std::string& attitude);
+	// The script of the arrivals that do not walk in : the spawner starts it
+	static constexpr auto ArrivalsFile = "./Data/Battle/arrivals.miniska";
 	// An arrival is over (ArrivalSystem) : the wild Pokemon on its block
 	void wildArrived(const ArrivalComponent& arrival);
 	// A wild bird flies away (its stay is over, a fearful one sees the player) : a drawing flies off, the wild Pokemon goes
@@ -88,11 +98,6 @@ public:
 	// The birds fly in from this far (blocks) and this high (pixels : over the highest buildings, the air of the drawing)
 	static constexpr float FlightDistance = 13.F;
 	static constexpr int FlightHeight = 280;
-	// The blocks seen around the player (at MapZoom, about 17 x 10 blocks) : the birds land there, the hideouts are there
-	static constexpr int SeenBlocksX = 6;
-	static constexpr int SeenBlocksY = 3;
-	// A Pokemon comes out of its hideout after it rustled this long (ms)
-	static constexpr unsigned int HideoutRustle = 700;
 
 	const ska::EntityLocator& getEntityLocator() const;
 	// The entities given to the scripts (handles)
@@ -139,12 +144,13 @@ public:
 
 	bool spawnWildNow(int monster, int level);
 	std::vector<std::pair<int, int>> m_wildToSpawn;
-	// One wild Pokemon near a point (the player) : as its arrival wants it ; walking in, between rmin and rmax pixels away
+	// One wild Pokemon near a point (the player) : as its arrival wants it (the script of the arrivals) ; walking in, between
+	// rmin and rmax pixels away
 	bool spawnOne(int idMob, int level, int pathType, ska::Point<int> near, float angle, unsigned int rmin, unsigned int rmax, const std::vector<unsigned int>& idBlocks);
+	bool walkInAt(int idMob, int level, int pathType, const std::string& attitude, ska::Point<int> near, float angle, unsigned int rmin, unsigned int rmax, const std::vector<unsigned int>& idBlocks);
+	std::optional<ska::Point<float>> playerPosition();
 	// A block a wild Pokemon can stand on : on the map, no wall, no water, nobody there
 	bool freeBlock(int x, int y);
-	// A hideout seen near a block (a tile with the property HideoutProperty) and the free block beside it, else none
-	std::optional<std::pair<ska::Point<int>, ska::Point<int>>> hideoutNear(ska::Point<int> center);
 	// The drawing of a wild Pokemon arriving or leaving (no physics body)
 	ska::EntityId arrivalDrawing(int monster, ArrivalComponent arrival);
 	void reinit(const std::string& fileName, const std::string& chipsetName);

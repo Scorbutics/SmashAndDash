@@ -332,38 +332,6 @@ bool WorldState::freeBlock(const int x, const int y) {
 	return !getSpace().shapeIn(cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin));
 }
 
-std::optional<std::pair<ska::Point<int>, ska::Point<int>>> WorldState::hideoutNear(const ska::Point<int> center) {
-	// The hideouts (the property of their tile in the tileset : a bin, a bush, a log, a trunk) near the player, with a free
-	// block beside them (south first : it comes out towards the player's side of the screen)
-	auto found = std::vector<std::pair<ska::Point<int>, ska::Point<int>>>{};
-	const auto& collisions = m_world.getCollisionProfile();
-	for (auto y = center.y - SeenBlocksY; y <= center.y + SeenBlocksY; y++) {
-		for (auto x = center.x - SeenBlocksX; x <= center.x + SeenBlocksX; x++) {
-			if (x < 0 || y < 0 || std::abs(x - center.x) + std::abs(y - center.y) < 2) {
-				continue;
-			}
-			auto hideout = false;
-			for (auto layer = 0u; layer < collisions.layers() && !hideout; layer++) {
-				const auto* tile = collisions.getBlock(layer, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
-				hideout = tile != nullptr && (tile->properties.bitMask & HideoutProperty) != 0;
-			}
-			if (!hideout) {
-				continue;
-			}
-			for (const auto& [dx, dy] : { std::pair<int, int>{ 0, 1 }, { 1, 0 }, { -1, 0 }, { 0, -1 } }) {
-				if (freeBlock(x + dx, y + dy)) {
-					found.push_back({ { x, y }, { x + dx, y + dy } });
-					break;
-				}
-			}
-		}
-	}
-	if (found.empty()) {
-		return std::nullopt;
-	}
-	return found[static_cast<std::size_t>(rand()) % found.size()];
-}
-
 ska::EntityId WorldState::createWild(const int monster, const int level, const int pathType, const std::string& attitude, const ska::Point<int> block, const std::optional<int> stay) {
 	const auto blockSize = m_world.getBlockSize();
 	auto mob = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), block, monster, blockSize);
@@ -454,59 +422,101 @@ void WorldState::takeOff(const ska::EntityId wild) {
 	m_entityManager.removeEntity(wild);
 }
 
-bool WorldState::spawnOne(const int idMob, const int level, const int pathType, const ska::Point<int> near, const float angle, const unsigned int rmin, const unsigned int rmax, const std::vector<unsigned int>& idBlocks) {
-	const auto blockSize = m_world.getBlockSize();
-	// How it arrives (Data/Battle/encounters.miniska) : it flies in, it comes out of a hideout, it walks in
-	const auto arrival = m_battleRules->arrival(idMob);
-	const auto playerBlock = ska::Point<int>{ (near.x + static_cast<int>(blockSize) / 2) / static_cast<int>(blockSize), (near.y + static_cast<int>(blockSize) / 2) / static_cast<int>(blockSize) };
-	// Its attitude towards the player (Data/Battle/encounters.miniska)
-	const auto attitude = m_battleRules->attitude(idMob, level, teamLevel(), rand() % 100);
-
-	if (arrival == "fly") {
-		// It lands on a free block near the player (on the screen), it comes from out of the screen, high in the sky
-		const auto distance = 2 + rand() % 5;
-		const auto landing = ska::Point<int>{ playerBlock.x + std::clamp(static_cast<int>(std::lround(distance * std::cos(angle))), -SeenBlocksX, SeenBlocksX),
-			playerBlock.y + std::clamp(static_cast<int>(std::lround(distance * std::sin(angle))), -SeenBlocksY, SeenBlocksY) };
-		if (!freeBlock(landing.x, landing.y)) {
-			return false;
-		}
-		auto flight = ArrivalComponent{};
-		flight.kind = ArrivalComponent::Kind::Land;
-		flight.to = { static_cast<float>(landing.x * static_cast<int>(blockSize)), static_cast<float>(landing.y * static_cast<int>(blockSize)) };
-		flight.from = { flight.to.x + static_cast<float>(std::cos(angle) * FlightDistance * blockSize), flight.to.y + static_cast<float>(std::sin(angle) * FlightDistance * blockSize) };
-		flight.fromHeight = static_cast<float>(FlightHeight);
-		flight.duration = 3400;
-		flight.monster = idMob;
-		flight.level = level;
-		flight.pathType = pathType;
-		flight.attitude = attitude;
-		flight.stay = m_battleRules->stay(idMob, rand() % 100);
-		arrivalDrawing(idMob, std::move(flight));
-		SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " flies in to block (" << landing.x << ", " << landing.y << ")";
-		return true;
+std::optional<ska::Point<float>> WorldState::playerPosition() {
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer == nullptr || !m_entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+		return std::nullopt;
 	}
-	if (arrival == "hideout") {
-		const auto hideout = hideoutNear(playerBlock);
-		if (hideout.has_value()) {
-			auto emerge = ArrivalComponent{};
-			emerge.kind = ArrivalComponent::Kind::Emerge;
-			emerge.from = { static_cast<float>(hideout->first.x * static_cast<int>(blockSize)), static_cast<float>(hideout->first.y * static_cast<int>(blockSize)) };
-			emerge.to = { static_cast<float>(hideout->second.x * static_cast<int>(blockSize)), static_cast<float>(hideout->second.y * static_cast<int>(blockSize)) };
-			emerge.arc = 30.F;
-			emerge.wait = HideoutRustle;
-			emerge.duration = 420;
-			emerge.monster = idMob;
-			emerge.level = level;
-			emerge.pathType = pathType;
-			emerge.attitude = attitude;
-			emerge.hideout = hideout->first;
-			arrivalDrawing(idMob, std::move(emerge));
-			SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " comes out of the hideout at block (" << hideout->first.x << ", " << hideout->first.y << ")";
+	const auto& position = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
+	return ska::Point<float>{ static_cast<float>(position.x), static_cast<float>(position.y) };
+}
+
+bool WorldState::land(const int monster, const int level, const std::string& attitude, const ska::Point<int> block, const int stay) {
+	const auto player = playerPosition();
+	if (!player.has_value()) {
+		return false;
+	}
+	const auto blockSize = static_cast<float>(m_world.getBlockSize());
+	auto flight = ArrivalComponent{};
+	flight.kind = ArrivalComponent::Kind::Land;
+	flight.to = { static_cast<float>(block.x) * blockSize, static_cast<float>(block.y) * blockSize };
+	// From out of the screen, high in the sky : beyond its block, seen from the player
+	auto away = ska::Point<float>{ flight.to.x - player->x, flight.to.y - player->y };
+	const auto length = std::hypot(away.x, away.y);
+	away = length > 1.F ? ska::Point<float>{ away.x / length, away.y / length } : ska::Point<float>{ 0.F, -1.F };
+	flight.from = { flight.to.x + away.x * FlightDistance * blockSize, flight.to.y + away.y * FlightDistance * blockSize };
+	flight.fromHeight = static_cast<float>(FlightHeight);
+	flight.duration = 3400;
+	flight.monster = monster;
+	flight.level = level;
+	flight.pathType = 1;
+	flight.attitude = attitude;
+	flight.stay = stay > 0 ? std::optional<int>{ stay } : std::nullopt;
+	arrivalDrawing(monster, std::move(flight));
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " flies in to block (" << block.x << ", " << block.y << ")";
+	return true;
+}
+
+bool WorldState::emerge(const int monster, const int level, const std::string& attitude, const ska::Point<int> hideout, const ska::Point<int> block, const int rustle) {
+	if (!playerPosition().has_value()) {
+		return false;
+	}
+	const auto blockSize = static_cast<float>(m_world.getBlockSize());
+	auto emerge = ArrivalComponent{};
+	emerge.kind = ArrivalComponent::Kind::Emerge;
+	emerge.from = { static_cast<float>(hideout.x) * blockSize, static_cast<float>(hideout.y) * blockSize };
+	emerge.to = { static_cast<float>(block.x) * blockSize, static_cast<float>(block.y) * blockSize };
+	emerge.arc = 30.F;
+	emerge.wait = static_cast<unsigned int>(std::max(0, rustle));
+	emerge.duration = 420;
+	emerge.monster = monster;
+	emerge.level = level;
+	emerge.pathType = 1;
+	emerge.attitude = attitude;
+	emerge.hideout = hideout;
+	arrivalDrawing(monster, std::move(emerge));
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " comes out of the hideout at block (" << hideout.x << ", " << hideout.y << ")";
+	return true;
+}
+
+bool WorldState::walkIn(const int monster, const int level, const std::string& attitude) {
+	const auto player = playerPosition();
+	if (!player.has_value()) {
+		return false;
+	}
+	const auto blockSize = m_world.getBlockSize();
+	// A few tries around the player (a block may be a wall)
+	for (auto i = 0; i < 12; i++) {
+		const auto angle = static_cast<float>((2 * M_PI * (rand() % 360)) / 360);
+		if (walkInAt(monster, level, 1, attitude, { static_cast<int>(player->x), static_cast<int>(player->y) }, angle, 8 * blockSize, 13 * blockSize, {})) {
 			return true;
 		}
-		// No hideout near : it walks in
 	}
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " : no room for it near the player";
+	return false;
+}
 
+bool WorldState::spawnOne(const int idMob, const int level, const int pathType, const ska::Point<int> near, const float angle, const unsigned int rmin, const unsigned int rmax, const std::vector<unsigned int>& idBlocks) {
+	const auto blockSize = static_cast<int>(m_world.getBlockSize());
+	// How it arrives (Data/Battle/encounters.miniska) ; its attitude towards the player
+	const auto arrival = m_battleRules->arrival(idMob);
+	const auto attitude = m_battleRules->attitude(idMob, level, teamLevel(), rand() % 100);
+	if (arrival != "walk") {
+		// It flies in, it comes out of a hideout : the script places it (Data/Battle/arrivals.miniska), the dice rolled here
+		const auto playerBlock = ska::Point<int>{ (near.x + blockSize / 2) / blockSize, (near.y + blockSize / 2) / blockSize };
+		auto context = ska::scripting::ScriptContext{};
+		context.name = ArrivalsFile;
+		const auto started = getScripts().start(ArrivalsFile, { arrival, std::to_string(idMob), std::to_string(level), attitude,
+			std::to_string(playerBlock.x), std::to_string(playerBlock.y), std::to_string(rand() % 10000), std::to_string(rand() % 10000) }, context);
+		if (started) {
+			return true;
+		}
+	}
+	return walkInAt(idMob, level, pathType, attitude, near, angle, rmin, rmax, idBlocks);
+}
+
+bool WorldState::walkInAt(const int idMob, const int level, const int pathType, const std::string& attitude, const ska::Point<int> near, const float angle, const unsigned int rmin, const unsigned int rmax, const std::vector<unsigned int>& idBlocks) {
+	const auto blockSize = m_world.getBlockSize();
 	// It walks in : out of the screen
 	const auto radius = rmin + rand() % (rmax - rmin + 1);
 	auto dest = ska::Point<int>{ static_cast<int>(radius * ska::NumberUtils::cosinus(angle) + near.x), static_cast<int>(radius * ska::NumberUtils::sinus(angle) + near.y) };
@@ -549,16 +559,15 @@ bool WorldState::spawnWild(const int monster, const int level) {
 }
 
 bool WorldState::spawnWildNow(const int monster, const int level) {
-	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
-	if (trainer == nullptr || !m_entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+	const auto player = playerPosition();
+	if (!player.has_value()) {
 		return false;
 	}
-	const auto& position = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
 	const auto blockSize = m_world.getBlockSize();
-	// A few tries around the player (a landing block may be a wall)
+	// A few tries around the player (walking in, a block may be a wall)
 	for (auto i = 0; i < 12; i++) {
 		const auto angle = static_cast<float>((2 * M_PI * (rand() % 360)) / 360);
-		if (spawnOne(monster, level, 1, { static_cast<int>(position.x), static_cast<int>(position.y) }, angle, 8 * blockSize, 13 * blockSize, {})) {
+		if (spawnOne(monster, level, 1, { static_cast<int>(player->x), static_cast<int>(player->y) }, angle, 8 * blockSize, 13 * blockSize, {})) {
 			return true;
 		}
 	}

@@ -30,7 +30,7 @@ struct ArrivalComponent {
 	// Its walk (the data of the map : 1, it wanders)
 	int pathType = 0;
 	std::string attitude = "passive";
-	// A bird : how long it stays on the ground before it flies away (ms, Data/Battle/encounters.miniska "stay")
+	// A bird : how long it stays on the ground before it flies away (ms, Data/Battle/arrivals.miniska "stay")
 	std::optional<int> stay;
 	// The block of the hideout it comes out of (Emerge)
 	std::optional<ska::Point<int>> hideout;

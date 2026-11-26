@@ -182,10 +182,6 @@ std::string BattleRules::arrival(int monster) {
 	return callString(m_encountersFile, "arrival", { ska::NodeValue{ static_cast<long>(monster) } }, "walk");
 }
 
-int BattleRules::stay(int monster, int roll) {
-	return static_cast<int>(std::max(1000L, call(m_encountersFile, "stay", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(roll) } }, 15000L)));
-}
-
 int BattleRules::groupOdds() {
 	return static_cast<int>(std::max(1L, call(m_encountersFile, "groupOdds", {}, 5L)));
 }

@@ -9,6 +9,7 @@
 MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay) :
 	System(entityManager),
 	m_wild(entityManager),
+	m_arriving(entityManager),
 	m_mobSpawner(ms) {
 
 	m_t0 = ska::TimeUtils::getTicks();
@@ -19,7 +20,7 @@ MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawn
 }
 
 void MobSpawningSystem::refresh(unsigned int) {
-	if (m_wild.getEntities().size() < SPAWN_LIMIT_ALLOWED && ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
+	if (m_wild.getEntities().size() + m_arriving.getEntities().size() < SPAWN_LIMIT_ALLOWED && ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
 		ska::IniReader* reader = GetRandomMobSettings(m_mobSpawner);
 		if (reader != nullptr) {
 			const auto& processed = getEntities();
