@@ -1269,6 +1269,21 @@ class World:
             self.layers[layer][y][x] = cell
 
     def build(self):
+        self.ground()
+        self.place_town()
+        self.lone_buildings = []
+        self.events = {}
+        self.place_pois()
+        for x, y in self.stairs:                     # nothing in the way of the stairs (trees, boulders)
+            self.taken |= {(x, y - 2), (x, y - 1), (x, y + 2), (x, y + 3)}
+        self.place_nature()
+        self.place_signs()
+        self.place_items()
+        self.place_rooms()
+
+    def ground(self):
+        """The tiles of the terrain : grounds, cliffs and their feet, the water and its banks (tools/worldgen/tileroom.py
+        uses it alone)."""
         chip = self.chip
         for y in range(self.H):
             for x in range(self.W):
@@ -1316,16 +1331,6 @@ class World:
                     self.set("", x, y, chip.cell(("grass", v), True))
                 else:
                     self.set("", x, y, chip.cell(("ground", m, None, None, shade, 0), True))
-        self.place_town()
-        self.lone_buildings = []
-        self.events = {}
-        self.place_pois()
-        for x, y in self.stairs:                     # nothing in the way of the stairs (trees, boulders)
-            self.taken |= {(x, y - 2), (x, y - 1), (x, y + 2), (x, y + 3)}
-        self.place_nature()
-        self.place_signs()
-        self.place_items()
-        self.place_rooms()
 
     def stamp(self, name, x0, y0, door=None):
         """A structure : its first row over the characters, the other rows on the ground (blocked, but the door).
@@ -1394,12 +1399,7 @@ class World:
                 lx, ly = x + dx, y + dy
                 if (lx, ly) not in v.road and self.deco_ok(lx, ly) and self.layers["T"][ly - 1][lx] is None \
                         and (lx, ly - 1) not in v.footprint:
-                    post = self.chip.cell(("lamp", 1), False)
-                    self.set("T", lx, ly - 1, "lamphead")
-                    self.set("M", lx, ly, post)
-                    self.walk[ly][lx] = False
-                    self.taken.add((lx, ly))
-                    self.objects[(lx, ly)] = 0.6
+                    self.lamp(lx, ly)
                     lamps.append((lx, ly))
                     break
         # Benches around the plaza, a bin by one of them
@@ -1555,6 +1555,14 @@ class World:
                     self.set("M", x, y, self.chip.cell(("boulder",), False))
                     self.walk[y][x] = False
                     self.objects[(x, y)] = 0.4
+
+    def lamp(self, x, y):
+        """A street lamp : its post on the block (blocks the way), its lantern on the block above (over the characters)."""
+        self.set("T", x, y - 1, "lamphead")
+        self.set("M", x, y, self.chip.cell(("lamp", 1), False))
+        self.walk[y][x] = False
+        self.taken.add((x, y))
+        self.objects[(x, y)] = 0.6
 
     def put_object(self, layer, x, y, key, height=0.4):
         """A blocking object on a block (a campfire, a log...)."""

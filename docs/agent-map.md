@@ -121,6 +121,9 @@ w_1_1
 | `party` | `run tools/agent/party.miniska` → `2 pokemon · #0 Bulbizarre lv4 hp 34 · …` | delivered: `Party.species(index)` |
 | `var` | `eval 'Engine.variable("%00012")'` → `{"value":"0"}` | none |
 | `variables` (was `story-step`) | `run tools/agent/variables.miniska [prefix] [all]` → the variables not 0, `name=value` | delivered: `Engine.variables()` |
+| `wild` | `run tools/agent/wild.miniska` → `monster level x y attitude` per wild Pokemon | delivered: `Battle.wild()` |
+| `walls` | `run tools/agent/walls.miniska 52 54` → a row per block row, `.` free, `#` a wall (the physics) | none: `Map.blockFree` |
+| tile room | `tools/worldgen/tileroom.py <save>/World` → the map `w_tiles` (every tile of the generator, its exhibits and where to stand) ; `--walls walls.json --at X Y` → the walls of the game against the generator's | `tools/doctor` (2026-11-26) |
 
 **Verified:** demoed — 2026-11-23 (each row ran; a battle of 82 s unattended; `tools/doctor`).
 

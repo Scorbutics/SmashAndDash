@@ -116,8 +116,6 @@ public:
 	// Name of the current map (its directory in Levels, ex : "w_5_4")
 	std::string getMapName() const;
 	const std::string& getTilesetName() const;
-	// The tile is drawn at this point (in the tile : 0 to its size), not transparent
-	bool tileDrawnAt(const ska::Tile& tile, long x, long y);
 
 	void reinit(const std::string& fileName, const std::string& chipsetName);
 
@@ -152,10 +150,6 @@ private:
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
 	ska::TilesetPtr m_tileset;
-	// The pixels of the chipset (m_tileset) : a character is behind a tile of the top layer where the tile is drawn
-	// under its feet (tileDrawnAt)
-	ska::SDLSurface m_tilesetPixels;
-	std::string m_tilesetPixelsName;
 	ScreenFade m_fade;
 	std::string m_worldFileName;
 	

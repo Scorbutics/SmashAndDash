@@ -19,7 +19,7 @@ jobs:
         run: |
           apt-get update
           DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git cmake make g++ \
-            libsdl3-dev libsdl3-image-dev libsdl3-ttf-dev glslang-tools python3 xvfb xauth mesa-vulkan-drivers
+            libsdl3-dev libsdl3-image-dev libsdl3-ttf-dev glslang-tools python3 python3-pil xvfb xauth mesa-vulkan-drivers
 
       - uses: actions/checkout@v4
         with:

@@ -1,0 +1,36 @@
+# The walls of the map as the physics sees them (what stops a character walking) : a line per row of blocks, "." free,
+# "#" a wall or a character (the player too ; the water is free : its surf script stops the walk). Usage :
+# ska-console run tools/agent/walls.miniska [width height [x y]]  (default : 40 x 40 from 0 0, a chunk of the world)
+Dev = import "bind:ska.dev"
+Map = import "bind:game.map"
+
+run = function(args: string[]) do
+	width = 40
+	height = 40
+	x0 = 0
+	y0 = 0
+	if args.size() >= 2
+		width = (args[0]: int)
+		height = (args[1]: int)
+	end
+	if args.size() >= 4
+		x0 = (args[2]: int)
+		y0 = (args[3]: int)
+	end
+	Dev.reply(Map.name() + " : " + (width: string) + " x " + (height: string) + " blocks from " + (x0: string) + " " + (y0: string))
+	y = y0
+	while y < y0 + height do
+		row = ""
+		x = x0
+		while x < x0 + width do
+			if Map.blockFree(x, y)
+				row = row + "."
+			else
+				row = row + "#"
+			end
+			x = x + 1
+		end
+		Dev.reply(row)
+		y = y + 1
+	end
+end
