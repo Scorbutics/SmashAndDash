@@ -1,0 +1,63 @@
+# The web version of the game (WebAssembly : tools/web/build.sh) on GitHub Pages, at each push on master. The saves are
+# kept by each browser (IndexedDB, src/web/shell.html) : nothing on a server.
+name: Web (GitHub Pages)
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  EMSCRIPTEN_VERSION: 7.0.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Emscripten
+        run: |
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$HOME/emsdk"
+          "$HOME/emsdk/emsdk" install "$EMSCRIPTEN_VERSION"
+          "$HOME/emsdk/emsdk" activate "$EMSCRIPTEN_VERSION"
+
+      # The SDL3 libraries for the web (external/ska/tools/web/build_deps.sh) : built once
+      - uses: actions/cache@v4
+        with:
+          path: build-web/deps
+          key: web-deps-${{ env.EMSCRIPTEN_VERSION }}-${{ hashFiles('external/ska/tools/web/build_deps.sh') }}
+
+      - name: Build
+        run: EMSDK="$HOME/emsdk" tools/web/build.sh build-web
+
+      - name: Page
+        run: |
+          mkdir -p site
+          cp build-web/game/bin/index.html build-web/game/bin/index.js build-web/game/bin/index.wasm build-web/game/bin/index.data site/
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
