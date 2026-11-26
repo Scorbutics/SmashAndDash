@@ -6,9 +6,10 @@
 #include "Graphic/System/CameraSystem.h"
 #include "../../Utils/IDs.h"
 
-WildPokemonMarks::WildPokemonMarks(ska::EntityManager& entityManager, ska::CameraSystem& camera) :
+WildPokemonMarks::WildPokemonMarks(ska::EntityManager& entityManager, ska::CameraSystem& camera, const ArrivalSystem* arrivals) :
 	System(entityManager),
 	m_camera(camera),
+	m_arrivals(arrivals),
 	m_layer([this](Ui::Canvas& canvas) { render(canvas); }, WorldOverlayPriority) {
 }
 
@@ -18,6 +19,24 @@ void WildPokemonMarks::graphicUpdate(ska::DrawableContainer& drawables) {
 
 void WildPokemonMarks::render(Ui::Canvas& canvas) {
 	const auto& camera = m_camera.getDisplay();
+	if (m_arrivals != nullptr) {
+		// A hideout rustles : bits of leaves and dust jump out of its top, more and more
+		constexpr auto blockSize = 48;
+		for (const auto& rustle : m_arrivals->rustles()) {
+			const auto x0 = rustle.block.x * blockSize - camera.x;
+			const auto y0 = rustle.block.y * blockSize - camera.y;
+			const auto bits = 2 + static_cast<int>(rustle.age / 150);
+			for (auto i = 0; i < bits; i++) {
+				const auto phase = static_cast<float>((rustle.age + static_cast<unsigned int>(i) * 97u) % 420u) / 420.F;
+				const auto side = (i % 2 == 0 ? -1.F : 1.F) * (6.F + static_cast<float>((i * 7) % 13));
+				const auto x = x0 + blockSize / 2 + static_cast<int>(side * phase);
+				const auto y = y0 + 10 - static_cast<int>(22.F * 4.F * phase * (1.F - phase));
+				const auto leaf = i % 3 != 0;
+				const auto colour = leaf ? ska::Color{ 70, 150, 60, 255 } : ska::Color{ 200, 190, 160, 255 };
+				canvas.fill(colour, ska::Rectangle{ x, y, leaf ? 4 : 3, leaf ? 3 : 3 });
+			}
+		}
+	}
 	for (const auto entity : getEntities()) {
 		const auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
 		const auto& wild = m_componentAccessor.get<WildPokemonComponent>(entity);

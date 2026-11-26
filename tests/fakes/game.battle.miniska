@@ -11,6 +11,7 @@ message = function(text: string) do
 	said = said + text
 end
 wild = function() : string[] do return []: string end
+spawnWild = function(monster: int, level: int) : bool do return false end
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end
 lastFled = function() : bool do return false end

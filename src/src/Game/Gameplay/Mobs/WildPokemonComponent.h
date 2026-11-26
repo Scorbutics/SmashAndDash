@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include <string>
 #include "Core/ECS/Component.h"
 #include "../Control/GridMovementComponent.h"
@@ -11,6 +12,9 @@ struct WildPokemonComponent {
 	Attitude attitude = Attitude::Passive;
 	// Milliseconds left during which it ignores the player and no battle starts with it (ex : after the player fled)
 	unsigned int calm = 0;
+	// A bird (Data/Battle/encounters.miniska "arrival" : "fly") : milliseconds left before it flies away ; a fearful one
+	// flies away as soon as it sees the player (FightStartSystem, WorldState::takeOff)
+	std::optional<int> stay;
 
 	static Attitude FromName(const std::string& name) {
 		if (name == "aggressive") {

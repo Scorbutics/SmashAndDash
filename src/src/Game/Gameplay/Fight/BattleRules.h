@@ -62,6 +62,9 @@ public:
 	// charges the player in sight, "fearful" : it runs away, "passive" : it wanders ; "teamLevel" : the level of the first
 	// Pokemon of the team able to fight, "roll" 0 .. 99), the size of the dice of a group, the companions
 	std::string attitude(int monster, int level, int teamLevel, int roll);
+	// How it arrives on the map : "fly", "hideout" or "walk" ; how long a bird stays on the ground (ms)
+	std::string arrival(int monster);
+	int stay(int monster, int roll);
 	int groupOdds();
 	int groupSize();
 	int levelSpread();

@@ -389,10 +389,10 @@ class Tiles:
     maps are made from them (Chipset)."""
 
     def __init__(self):
-        self.ids, self.draws, self.walkable, self.base = {}, {}, {}, {}
+        self.ids, self.draws, self.walkable, self.base, self.flags = {}, {}, {}, {}, {}
         for tid in ANIMATED:
             self.walkable[tid] = ANIMATED_WALK[tid]
-            self.base[tid] = tile_base(tid)
+            self.base[tid], self.flags[tid] = tile_base(tid), tile_flags(tid)
         self.cache, self.pure = {}, {}
 
     def cell(self, key, walkable):
@@ -400,7 +400,8 @@ class Tiles:
         full = (key, walkable)
         if full not in self.ids:
             tid = len(self.ids)
-            self.ids[full], self.walkable[tid], self.base[tid] = tid, walkable, tile_base(key)
+            self.ids[full], self.walkable[tid], self.base[tid], self.flags[tid] = tid, walkable, tile_base(key), \
+                tile_flags(key)
             self.draws[tid] = lambda: draw_key(key, walkable)
         return self.ids[full]
 
@@ -439,7 +440,8 @@ class Chipset:
     def __init__(self, tiles, used):
         self.image = Image.new("RGB", (CHIP_COLS * T, CHIP_ROWS * T), KEY)
         self.col = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), BLOCK)
-        self.prop = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), (0, 0, 0))     # green : the base of a tile + 1 (0 flat)
+        # red : the properties of a tile (tile_flags) ; green : its base + 1 (0 flat)
+        self.prop = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), (0, 0, 0))
         self.cells, self.water = {}, []
         taken = set(WATER_REGION)
         by_image = {}
@@ -465,7 +467,7 @@ class Chipset:
                     self.image.paste(im, (slot[0] * T, (slot[1] + f) * T))
                     taken.add((slot[0], slot[1] + f))
                 self.col.putpixel(slot, WALK_ANIMATED if tiles.walkable[tid] else BLOCK_ANIMATED)
-                self.prop.putpixel(slot, (0, tiles.base[tid] + 1, 0))
+                self.prop.putpixel(slot, (tiles.flags[tid], tiles.base[tid] + 1, 0))
                 by_image[sig] = slot
             self.cells[(tid, pal)] = by_image[sig]
         free = [(x, y) for y in range(CHIP_ROWS) for x in range(CHIP_COLS) if (x, y) not in taken]
@@ -473,7 +475,7 @@ class Chipset:
             if tid in ANIMATED:
                 continue
             im = tiles.frames(tid, pal)[0]
-            sig = (tiles.walkable[tid], tiles.base[tid], im.tobytes())
+            sig = (tiles.walkable[tid], tiles.base[tid], tiles.flags[tid], im.tobytes())
             if sig not in by_image:
                 if not free:
                     raise SystemExit(f"worldgen : the chipset of a map is full ({len(used)} tiles, {CHIP_ROWS} rows)")
@@ -481,7 +483,7 @@ class Chipset:
                 taken.add(c)
                 self.image.paste(im, (c[0] * T, c[1] * T))
                 self.col.putpixel(c, WALK if tiles.walkable[tid] else BLOCK)
-                self.prop.putpixel(c, (0, tiles.base[tid] + 1, 0))
+                self.prop.putpixel(c, (tiles.flags[tid], tiles.base[tid] + 1, 0))
                 by_image[sig] = c
             self.cells[(tid, pal)] = by_image[sig]
         # As high as needed (a multiple of 4 rows, 16 at least)
@@ -575,7 +577,21 @@ STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "
             "sign"}
 ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
                  "fountain_1_1": 0}
+# The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
+# bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk...)
+HIDEOUT = 2
+HIDEOUTS = {"bin", "barrel", "log seat", "bush"}
 _STAMP_ROWS = {}
+
+
+def tile_flags(key):
+    """The properties of a tile (its key, or the name of an animated tile) for the game : bits (HIDEOUT)."""
+    if isinstance(key, str):
+        return 0
+    if key[0] == "tree":
+        style, row, c = key[1:]
+        return HIDEOUT if any(part == "trunk" and part_row == row for _, part_row, part in TREE_SHAPES[style][1]) else 0
+    return HIDEOUT if key[0] in HIDEOUTS else 0
 
 
 def tile_base(key):

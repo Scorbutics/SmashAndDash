@@ -73,12 +73,22 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 	const auto ready = ska::TimeUtils::getTicks() - m_t0 >= BATTLE_START_TICKS && m_cem.hasComponent<ska::InputComponent>(*trainer) &&
 		!m_worldScene.getFade().running();
 
+	auto leaving = std::vector<ska::EntityId>{};
 	for (const auto entityId : getEntities()) {
 		auto& wild = m_componentAccessor.get<WildPokemonComponent>(entityId);
 		wild.calm = wild.calm > ellapsedTime ? wild.calm - ellapsedTime : 0;
 		auto* grid = m_componentPossibleAccessor.get<GridMovementComponent>(entityId);
 		if (grid != nullptr) {
 			ReactToPlayer(*grid, wild.calm > 0 ? WildPokemonComponent::Attitude::Passive : wild.attitude, *trainer);
+		}
+		// A bird flies away when its stay is over, a fearful one as soon as it sees the player (while the player plays)
+		if (wild.stay.has_value()) {
+			wild.stay = std::max(0, *wild.stay - static_cast<int>(ellapsedTime));
+			const auto scared = wild.attitude == WildPokemonComponent::Attitude::Fearful && wild.calm == 0 && grid != nullptr && grid->seeing;
+			if (ready && (*wild.stay == 0 || scared)) {
+				leaving.push_back(entityId);
+				continue;
+			}
 		}
 		if (!ready || wild.calm > 0) {
 			continue;
@@ -106,6 +116,9 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 			wild.calm = CalmAfterBattle;
 		}
 		break;
+	}
+	for (const auto entity : leaving) {
+		m_worldScene.takeOff(entity);
 	}
 }
 

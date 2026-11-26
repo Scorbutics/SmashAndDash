@@ -639,6 +639,11 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		return ska::NodeValue{ std::move(lines) };
 	});
 
+	// A wild Pokemon arrives near the player now (flying in, out of a hideout, walking in)
+	m_builder.bindField("spawnWild", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ worldState.spawnWild(Int(params[0]), Int(params[1])) };
+	});
+
 	// A battle against wild Pokemon (the first one, and the others of its group), the script waits for its end
 	auto startBattle = [&vm, &entityManager, &ged, &worldState](const std::vector<std::pair<int, unsigned int>>& monsters, bool canFlee) {
 		if (monsters.empty()) {

@@ -27,6 +27,10 @@ announce = function(text: string) do end
 # fearful, passive : Data/Battle/encounters.miniska)
 wild = function() : string[] do return []: string end
 
+# A wild Pokemon arrives near the player (from the next frame), as Data/Battle/encounters.miniska wants it ("arrival" :
+# flying in, out of a hideout, walking in from out of the screen) ; it is in Battle.wild() once arrived. False : no player
+spawnWild = function(monster: int, level: int) : bool do return false end
+
 # Number of battles since the game started, result of the last one
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end

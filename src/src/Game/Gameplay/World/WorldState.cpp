@@ -41,6 +41,8 @@
 #include "Physic/MovementSystem.h"
 #include "Core/CodeDebug/CodeDebug.h"
 #include "Physic/ZGravityForceSystem.h"
+#include "../Mobs/ArrivalComponent.h"
+#include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 
 //#define PKMN_DRAW_DBG_SHAPES
 
@@ -209,6 +211,12 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
+	// The wild Pokemon asked by the scripts (Battle.spawnWild), out of their run
+	auto wild = std::move(m_wildToSpawn);
+	m_wildToSpawn.clear();
+	for (const auto& [monster, level] : wild) {
+		spawnWildNow(monster, level);
+	}
 	m_tileset->update();
 	m_fade.update(timeStep);
 	m_debugDrawer.eventUpdate(timeStep);
@@ -306,102 +314,279 @@ int WorldState::teamLevel() {
 	return m_battleRules->level(pokemon->experience, needed);
 }
 
+bool WorldState::freeBlock(const int x, const int y) {
+	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= m_world.getBlocksX() || static_cast<std::size_t>(y) >= m_world.getBlocksY()) {
+		return false;
+	}
+	const auto& collisions = m_world.getCollisionProfile();
+	if (collisions.collide(1, static_cast<std::size_t>(x), static_cast<std::size_t>(y))) {
+		return false;
+	}
+	const auto* ground = collisions.getBlock(0, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+	if (ground != nullptr && (ground->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) != 0) {
+		return false;
+	}
+	// Nobody there (a character, another wild Pokemon)
+	const auto blockSize = static_cast<double>(m_world.getBlockSize());
+	const auto margin = 4.;
+	return !getSpace().shapeIn(cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin));
+}
+
+std::optional<std::pair<ska::Point<int>, ska::Point<int>>> WorldState::hideoutNear(const ska::Point<int> center) {
+	// The hideouts (the property of their tile in the tileset : a bin, a bush, a log, a trunk) near the player, with a free
+	// block beside them (south first : it comes out towards the player's side of the screen)
+	auto found = std::vector<std::pair<ska::Point<int>, ska::Point<int>>>{};
+	const auto& collisions = m_world.getCollisionProfile();
+	for (auto y = center.y - SeenBlocksY; y <= center.y + SeenBlocksY; y++) {
+		for (auto x = center.x - SeenBlocksX; x <= center.x + SeenBlocksX; x++) {
+			if (x < 0 || y < 0 || std::abs(x - center.x) + std::abs(y - center.y) < 2) {
+				continue;
+			}
+			auto hideout = false;
+			for (auto layer = 0u; layer < collisions.layers() && !hideout; layer++) {
+				const auto* tile = collisions.getBlock(layer, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+				hideout = tile != nullptr && (tile->properties.bitMask & HideoutProperty) != 0;
+			}
+			if (!hideout) {
+				continue;
+			}
+			for (const auto& [dx, dy] : { std::pair<int, int>{ 0, 1 }, { 1, 0 }, { -1, 0 }, { 0, -1 } }) {
+				if (freeBlock(x + dx, y + dy)) {
+					found.push_back({ { x, y }, { x + dx, y + dy } });
+					break;
+				}
+			}
+		}
+	}
+	if (found.empty()) {
+		return std::nullopt;
+	}
+	return found[static_cast<std::size_t>(rand()) % found.size()];
+}
+
+ska::EntityId WorldState::createWild(const int monster, const int level, const int pathType, const std::string& attitude, const ska::Point<int> block, const std::optional<int> stay) {
+	const auto blockSize = m_world.getBlockSize();
+	auto mob = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), block, monster, blockSize);
+	auto wild = WildPokemonComponent{};
+	wild.attitude = WildPokemonComponent::FromName(attitude);
+	wild.stay = stay;
+	// Random : it wanders block by block, as the characters (GridMovementSystem). Predefined paths are not written in the
+	// data : it stays, unless it charges the player or runs away from it
+	if (pathType == 1 || wild.attitude != WildPokemonComponent::Attitude::Passive) {
+		auto grid = GridMovementComponent{};
+		grid.mode = GridMovementComponent::Mode::Wander;
+		grid.wait = static_cast<unsigned int>(500 + rand() % 1500);
+		const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+		ReactToPlayer(grid, wild.attitude, trainer == nullptr ? 0 : *trainer);
+		m_entityManager.addComponent<GridMovementComponent>(mob, std::move(grid));
+	}
+	m_entityManager.addComponent<WildPokemonComponent>(mob, std::move(wild));
+
+	FightComponent fc;
+	fc.level = level;
+	fc.opponentScriptId = monster;
+	m_entityManager.addComponent<FightComponent>(mob, std::move(fc));
+	// Exactly on the block (the position of a character is the corner of its block)
+	CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(block.x * static_cast<int>(blockSize)), static_cast<float>(block.y * static_cast<int>(blockSize))));
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " level " << level << " at block (" << block.x << ", " << block.y << "), " << attitude;
+	return mob;
+}
+
+ska::EntityId WorldState::arrivalDrawing(const int monster, ArrivalComponent arrival) {
+	// The character without its physics body (it flies over the walls) : its drawing, its shadow, its feet (the hitbox, as a
+	// character with a body : CustomEntityManager)
+	const auto blockSize = m_world.getBlockSize();
+	auto entity = m_entityManager.createCharacter(ska::Point<int>{ 0, 0 }, monster, blockSize);
+	m_entityManager.removeComponent<ska::AnimationComponent>(entity);
+	auto& hitbox = m_entityManager.getComponent<ska::HitboxComponent>(entity);
+	hitbox.yOffset -= static_cast<int>(hitbox.height);
+	auto& position = m_entityManager.getComponent<ska::PositionComponent>(entity);
+	position.x = static_cast<long>(arrival.from.x);
+	position.y = static_cast<long>(arrival.from.y);
+	position.z = static_cast<long>(arrival.fromHeight);
+	m_entityManager.addComponent<ArrivalComponent>(entity, std::move(arrival));
+	return entity;
+}
+
+void WorldState::wildArrived(const ArrivalComponent& arrival) {
+	const auto blockSize = static_cast<int>(m_world.getBlockSize());
+	auto block = ska::Point<int>{ static_cast<int>(std::lround(arrival.to.x)) / blockSize, static_cast<int>(std::lround(arrival.to.y)) / blockSize };
+	// Someone came there meanwhile : the nearest free block
+	if (!freeBlock(block.x, block.y)) {
+		const auto& hc = ska::Rectangle{ block.x * blockSize, block.y * blockSize, blockSize, blockSize };
+		const auto target = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hc, 2);
+		block = { target.x / blockSize, target.y / blockSize };
+	}
+	createWild(arrival.monster, arrival.level, arrival.pathType, arrival.attitude, block, arrival.stay);
+}
+
+void WorldState::takeOff(const ska::EntityId wild) {
+	if (!m_entityManager.hasComponent<FightComponent>(wild) || !m_entityManager.hasComponent<ska::PositionComponent>(wild)) {
+		return;
+	}
+	// Copies : the drawing made below moves the components
+	const auto monster = static_cast<int>(m_entityManager.getComponent<FightComponent>(wild).opponentScriptId);
+	const auto position = m_entityManager.getComponent<ska::PositionComponent>(wild);
+	const auto blockSize = static_cast<float>(m_world.getBlockSize());
+	// Away from the player, out of the screen
+	auto away = ska::Point<float>{ 0.F, -1.F };
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer != nullptr && m_entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+		const auto& player = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
+		const auto dx = static_cast<float>(position.x - player.x);
+		const auto dy = static_cast<float>(position.y - player.y);
+		const auto length = std::hypot(dx, dy);
+		if (length > 1.F) {
+			away = { dx / length, dy / length };
+		}
+	}
+	auto arrival = ArrivalComponent{};
+	arrival.kind = ArrivalComponent::Kind::TakeOff;
+	arrival.from = { static_cast<float>(position.x), static_cast<float>(position.y) };
+	arrival.to = { arrival.from.x + away.x * FlightDistance * blockSize, arrival.from.y + away.y * FlightDistance * blockSize };
+	arrival.fromHeight = 0.F;
+	arrival.toHeight = static_cast<float>(FlightHeight);
+	arrival.duration = 2200;
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " flies away from block (" << position.x / static_cast<long>(blockSize) << ", " << position.y / static_cast<long>(blockSize) << ")";
+	arrivalDrawing(monster, std::move(arrival));
+	// The wild Pokemon leaves : its body parked out of the physics space (it keeps it), then removed
+	CustomEntityManager::place(m_entityManager, getSpace(), wild, ska::Point<float>{ -100000.F, -100000.F });
+	m_entityManager.removeEntity(wild);
+}
+
+bool WorldState::spawnOne(const int idMob, const int level, const int pathType, const ska::Point<int> near, const float angle, const unsigned int rmin, const unsigned int rmax, const std::vector<unsigned int>& idBlocks) {
+	const auto blockSize = m_world.getBlockSize();
+	// How it arrives (Data/Battle/encounters.miniska) : it flies in, it comes out of a hideout, it walks in
+	const auto arrival = m_battleRules->arrival(idMob);
+	const auto playerBlock = ska::Point<int>{ (near.x + static_cast<int>(blockSize) / 2) / static_cast<int>(blockSize), (near.y + static_cast<int>(blockSize) / 2) / static_cast<int>(blockSize) };
+	// Its attitude towards the player (Data/Battle/encounters.miniska)
+	const auto attitude = m_battleRules->attitude(idMob, level, teamLevel(), rand() % 100);
+
+	if (arrival == "fly") {
+		// It lands on a free block near the player (on the screen), it comes from out of the screen, high in the sky
+		const auto distance = 2 + rand() % 5;
+		const auto landing = ska::Point<int>{ playerBlock.x + std::clamp(static_cast<int>(std::lround(distance * std::cos(angle))), -SeenBlocksX, SeenBlocksX),
+			playerBlock.y + std::clamp(static_cast<int>(std::lround(distance * std::sin(angle))), -SeenBlocksY, SeenBlocksY) };
+		if (!freeBlock(landing.x, landing.y)) {
+			return false;
+		}
+		auto flight = ArrivalComponent{};
+		flight.kind = ArrivalComponent::Kind::Land;
+		flight.to = { static_cast<float>(landing.x * static_cast<int>(blockSize)), static_cast<float>(landing.y * static_cast<int>(blockSize)) };
+		flight.from = { flight.to.x + static_cast<float>(std::cos(angle) * FlightDistance * blockSize), flight.to.y + static_cast<float>(std::sin(angle) * FlightDistance * blockSize) };
+		flight.fromHeight = static_cast<float>(FlightHeight);
+		flight.duration = 3400;
+		flight.monster = idMob;
+		flight.level = level;
+		flight.pathType = pathType;
+		flight.attitude = attitude;
+		flight.stay = m_battleRules->stay(idMob, rand() % 100);
+		arrivalDrawing(idMob, std::move(flight));
+		SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " flies in to block (" << landing.x << ", " << landing.y << ")";
+		return true;
+	}
+	if (arrival == "hideout") {
+		const auto hideout = hideoutNear(playerBlock);
+		if (hideout.has_value()) {
+			auto emerge = ArrivalComponent{};
+			emerge.kind = ArrivalComponent::Kind::Emerge;
+			emerge.from = { static_cast<float>(hideout->first.x * static_cast<int>(blockSize)), static_cast<float>(hideout->first.y * static_cast<int>(blockSize)) };
+			emerge.to = { static_cast<float>(hideout->second.x * static_cast<int>(blockSize)), static_cast<float>(hideout->second.y * static_cast<int>(blockSize)) };
+			emerge.arc = 30.F;
+			emerge.wait = HideoutRustle;
+			emerge.duration = 420;
+			emerge.monster = idMob;
+			emerge.level = level;
+			emerge.pathType = pathType;
+			emerge.attitude = attitude;
+			emerge.hideout = hideout->first;
+			arrivalDrawing(idMob, std::move(emerge));
+			SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " comes out of the hideout at block (" << hideout->first.x << ", " << hideout->first.y << ")";
+			return true;
+		}
+		// No hideout near : it walks in
+	}
+
+	// It walks in : out of the screen
+	const auto radius = rmin + rand() % (rmax - rmin + 1);
+	auto dest = ska::Point<int>{ static_cast<int>(radius * ska::NumberUtils::cosinus(angle) + near.x), static_cast<int>(radius * ska::NumberUtils::sinus(angle) + near.y) };
+	dest.x = (dest.x / static_cast<int>(blockSize)) * static_cast<int>(blockSize);
+	dest.y = (dest.y / static_cast<int>(blockSize)) * static_cast<int>(blockSize);
+	const auto boxWorld = ska::Rectangle{ 0, 0, static_cast<int>(m_world.getPixelWidth()), static_cast<int>(m_world.getPixelHeight()) };
+	if (!ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
+		return false;
+	}
+	// Not in a wall, nor on the blocks excluded by the data (on_blockid_<i>)
+	const auto bX = dest.x / static_cast<int>(blockSize);
+	const auto bY = dest.y / static_cast<int>(blockSize);
+	auto spawnAllowed = static_cast<std::size_t>(bX) < m_world.getBlocksX() && static_cast<std::size_t>(bY) < m_world.getBlocksY() && !m_world.getCollisionProfile().collide(1, bX, bY);
+	if (spawnAllowed) {
+		const auto* block = m_world.getCollisionProfile().getBlock(0, bX, bY);
+		for (const auto idBlock : idBlocks) {
+			if (block != nullptr && static_cast<unsigned int>(block->id.x + block->id.y * static_cast<int>(blockSize)) == idBlock) {
+				spawnAllowed = false;
+			}
+		}
+	}
+	if (!spawnAllowed) {
+		SLOG(ska::LogLevel::Debug) << "Wild pokemon " << idMob << " : no spawn at block (" << bX << ", " << bY << ")";
+		return false;
+	}
+	const auto hitbox = ska::Rectangle{ dest.x, dest.y, static_cast<int>(blockSize), static_cast<int>(blockSize) };
+	const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
+	createWild(idMob, level, pathType, attitude, { targetBlock.x / static_cast<int>(blockSize), targetBlock.y / static_cast<int>(blockSize) }, std::nullopt);
+	return true;
+}
+
+bool WorldState::spawnWild(const int monster, const int level) {
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer == nullptr || !m_entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+		return false;
+	}
+	// Asked by a script : the rules (scripts too) cannot be called while it runs, the next frame spawns it
+	m_wildToSpawn.emplace_back(monster, level);
+	return true;
+}
+
+bool WorldState::spawnWildNow(const int monster, const int level) {
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer == nullptr || !m_entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
+		return false;
+	}
+	const auto& position = m_entityManager.getComponent<ska::PositionComponent>(*trainer);
+	const auto blockSize = m_world.getBlockSize();
+	// A few tries around the player (a landing block may be a wall)
+	for (auto i = 0; i < 12; i++) {
+		const auto angle = static_cast<float>((2 * M_PI * (rand() % 360)) / 360);
+		if (spawnOne(monster, level, 1, { static_cast<int>(position.x), static_cast<int>(position.y) }, angle, 8 * blockSize, 13 * blockSize, {})) {
+			return true;
+		}
+	}
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " : no room for it near the player";
+	return false;
+}
+
 //TODO SRP
 int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
-
 	if (nbrSpawns == 0) {
 		return 0;
 	}
-
 	std::vector<unsigned int> idBlocks;
 	for (unsigned int i = 0; dataSpawn->exists("Spawn on_blockid_" + ska::StringUtils::intToStr(i)); i++) {
 		idBlocks.push_back(dataSpawn->get<int>("Spawn on_blockid_" + ska::StringUtils::intToStr(i)));
 	}
-
-	const unsigned int idMob = dataSpawn->get<int>("Data id");
-	const auto blockSize = m_world.getBlockSize();
-
+	const auto idMob = dataSpawn->get<int>("Data id");
+	/* 0 = Predifined, 1 = Random, 2 = Fixe */
+	const auto pathType = dataSpawn->get<int>("Data path_type");
 	auto successfulSpawns = 0;
 	auto angle = static_cast<float>((2 * M_PI* (rand() % 360)) / 360);
 	for (unsigned int i = 0; i < nbrSpawns; i++) {
-		const auto radius = rmin + rand() % (rmax - rmin + 1);
-
-		ska::Point<int> dest;
-		dest.x = static_cast<int>(radius*ska::NumberUtils::cosinus(angle) + pos.x);
-		dest.y = static_cast<int>(radius*ska::NumberUtils::sinus(angle) + pos.y);
-		dest.x = (dest.x / blockSize) * blockSize;
-		dest.y = (dest.y / blockSize) * blockSize;
-
-		ska::Rectangle boxWorld{};
-		boxWorld.x = 0;
-		boxWorld.y = 0;
-		boxWorld.w = m_world.getPixelWidth();
-		boxWorld.h = m_world.getPixelHeight();
-
-		std::vector<ska::Point<int>> blockColPos;
-		if (ska::RectangleUtils::isPositionInBox(dest, boxWorld)) {
-			// Not in a wall, nor on the blocks excluded by the data (on_blockid_<i>)
-			const auto bX = dest.x / blockSize;
-			const auto bY = dest.y / blockSize;
-			auto spawnAllowed = bX < m_world.getBlocksX() && bY < m_world.getBlocksY() && !m_world.getCollisionProfile().collide(1, bX, bY);
-			if (spawnAllowed) {
-				const auto* block = m_world.getCollisionProfile().getBlock(0, bX, bY);
-				for (const auto idBlock : idBlocks) {
-					if (block != nullptr && static_cast<unsigned int>(block->id.x + block->id.y * blockSize) == idBlock) {
-						spawnAllowed = false;
-					}
-				}
-			}
-
-			if (spawnAllowed) {
-				// Between the minimum and the maximum level of the area
-				const auto levelMin = dataSpawn->get<int>("Data level_min");
-				const auto levelMax = std::max(levelMin, dataSpawn->get<int>("Data level_max"));
-				auto level = rand() % (levelMax - levelMin + 1) + levelMin;
-				auto mob = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), ska::Point<int>(dest.x / blockSize, dest.y / blockSize), idMob, blockSize);
-				/* 0 = Predifined */
-				/* 1 = Random */
-				/* 2 = Fixe */
-				auto type = dataSpawn->get<int>("Data path_type");
-				// Its attitude towards the player (Data/Battle/encounters.miniska)
-				auto wild = WildPokemonComponent{};
-				wild.attitude = WildPokemonComponent::FromName(m_battleRules->attitude(static_cast<int>(idMob), level, teamLevel(), rand() % 100));
-				// Random : it wanders block by block, as the characters (GridMovementSystem). Predefined paths are not
-				// written in the data : it stays, unless it charges the player or runs away from it
-				if (type == 1 || wild.attitude != WildPokemonComponent::Attitude::Passive) {
-					auto grid = GridMovementComponent{};
-					grid.mode = GridMovementComponent::Mode::Wander;
-					grid.wait = static_cast<unsigned int>(500 + rand() % 1500);
-					const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
-					ReactToPlayer(grid, wild.attitude, trainer == nullptr ? 0 : *trainer);
-					m_entityManager.addComponent<GridMovementComponent>(mob, std::move(grid));
-				}
-				m_entityManager.addComponent<WildPokemonComponent>(mob, std::move(wild));
-
-				FightComponent fc;
-				fc.level = level;
-				fc.opponentScriptId = idMob;
-				m_entityManager.addComponent<FightComponent>(mob, std::move(fc));
-
-				auto& pc = m_entityManager.getComponent<ska::PositionComponent>(mob);
-				const auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(mob);
-				ska::Rectangle hitbox{ static_cast<int>(pc.x + hc.xOffset), static_cast<int>(pc.y + hc.yOffset), static_cast<int>(hc.width), static_cast<int>(hc.height) };
-
-				const auto targetBlock = m_world.getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
-				// Exactly on the block (the position of a character is the corner of its block : drawn and sorted with the
-				// rows of the map from there)
-				const auto spawnBlock = ska::Point<int>{ targetBlock.x / static_cast<int>(blockSize), targetBlock.y / static_cast<int>(blockSize) };
-				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(spawnBlock.x * static_cast<int>(blockSize)), static_cast<float>(spawnBlock.y * static_cast<int>(blockSize))));
-
-				successfulSpawns++;
-				SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " level " << level << " at block (" << spawnBlock.x << ", " << spawnBlock.y << "), "
-					<< AttitudeName(m_entityManager.getComponent<WildPokemonComponent>(mob).attitude);
-			} else {
-				SLOG(ska::LogLevel::Debug) << "Wild pokemon " << idMob << " : no spawn at block (" << dest.x / blockSize << ", " << dest.y / blockSize << ")";
-			}
-		}
-		angle += static_cast<float>((2.0*M_PI) / nbrSpawns);
-
+		// Between the minimum and the maximum level of the area
+		const auto levelMin = dataSpawn->get<int>("Data level_min");
+		const auto levelMax = std::max(levelMin, dataSpawn->get<int>("Data level_max"));
+		const auto level = rand() % (levelMax - levelMin + 1) + levelMin;
+		successfulSpawns += spawnOne(idMob, level, pathType, { pos.x, pos.y }, angle, rmin, rmax, idBlocks) ? 1 : 0;
+		angle += static_cast<float>((2.0 * M_PI) / nbrSpawns);
 	}
 	return successfulSpawns;
 }

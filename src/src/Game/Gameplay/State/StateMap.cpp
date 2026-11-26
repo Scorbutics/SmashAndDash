@@ -6,6 +6,7 @@
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../Fight/System/FightStartSystem.h"
+#include "../Mobs/System/ArrivalSystem.h"
 #include "Graphic/System/CameraFollowStrategy.h"
 #include "../World/WorldState.h"
 #include "StateMap.h"
@@ -63,7 +64,11 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::move(scriptSystem));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getEntityLocator()));
-	m_wildMarks = std::make_unique<WildPokemonMarks>(m_entityManager, m_worldState.getCamera());
+	// The wild Pokemon arriving (flying in, out of a hideout) or flying away
+	auto arrivals = std::make_unique<ArrivalSystem>(m_entityManager, [this](const ArrivalComponent& arrival) { m_worldState.wildArrived(arrival); });
+	const auto* arrivalSystem = arrivals.get();
+	addLogic(std::move(arrivals));
+	m_wildMarks = std::make_unique<WildPokemonMarks>(m_entityManager, m_worldState.getCamera(), arrivalSystem);
 }
 
 void StateMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) {

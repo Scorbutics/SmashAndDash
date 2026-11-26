@@ -52,6 +52,8 @@ check "state" 'states=WorldState' ska-console --run $RUN run external/ska/tools/
 check "entities" 'trainer' ska-console --run $RUN run external/ska/tools/agent/entities.miniska trainer
 check "party" 'pokemon' ska-console --run $RUN run tools/agent/party.miniska
 check "variables" '"ok": true' ska-console --run $RUN run tools/agent/variables.miniska
+check "spawn (a wild Pokemon arrives)" 'arriving' ska-console --run $RUN run tools/agent/spawn.miniska 19 3
+check "wild" 'wild pokemon' ska-console --run $RUN run tools/agent/wild.miniska
 check "warp" 'w_room_0 (11,8)' ska-console --run $RUN run tools/agent/warp.miniska w_room_0 11 8
 # The tile room (tools/worldgen/tileroom.py) : every tile of the generator on a map of the run, its walls in the game
 WORLD="${SKA_RUNS_DIR:-/tmp/ska-runs-$(id -u)}/$RUN/Saves/save1/World"

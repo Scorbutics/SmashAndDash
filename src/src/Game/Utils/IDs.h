@@ -64,10 +64,15 @@ constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
 // a lamp, a tree, a building, its roof included, are drawn at the base line of their object) sorted together by their
 // ground line : a character by its feet (the bottom of its hitbox), a standing object by the middle of the block it
 // stands on (TopLayerPriority : a character on the row behind it is hidden by it, on its block or in front of it, drawn
-// over it), then the characters in the air (ex : flying, AirHeight pixels high or more, sorted by their ground line).
+// over it), then the characters in the air (ex : flying, AirHeight pixels high or more : over the highest objects, a building of 5
+// rows ; sorted by their ground line). A bird coming down under AirHeight is sorted on the ground : behind a tree top.
 // A hop stays on the ground.
 constexpr int TopLayerPriority = 24;
-constexpr long AirHeight = 48;
+// The properties of the tiles for the game (the bits of the red of the .prop of a tileset, ska TileProperties::bitMask ;
+// 1 is the water of the engine) : a wild Pokemon may come out of a hideout (a bin, a bush, a log, a trunk : tools/worldgen
+// tile_flags ; Data/Battle/encounters.miniska "arrival")
+constexpr unsigned int HideoutProperty = 2;
+constexpr long AirHeight = 260;
 constexpr int AirPriority = 25000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)
 constexpr int FogPriority = WorldOverlayPriority - 2;

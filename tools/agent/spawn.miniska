@@ -1,0 +1,17 @@
+# A wild Pokemon arrives near the player (at the next frame), as the rules want it (Data/Battle/encounters.miniska "arrival" : a bird flies
+# in and lands, a Rattata comes out of a hideout, the others walk in from out of the screen). Usage :
+# ska-console run tools/agent/spawn.miniska <monster id> <level>   (then wild.miniska : it is there once arrived)
+Dev = import "bind:ska.dev"
+Battle = import "bind:game.battle"
+
+run = function(args: string[]) do
+	if args.size() != 2
+		Dev.reply("usage : spawn.miniska <monster id> <level>")
+		return
+	end
+	if Battle.spawnWild((args[0]: int), (args[1]: int))
+		Dev.reply("arriving : wild.miniska lists it once arrived")
+	else
+		Dev.reply("no player on the map")
+	end
+end
