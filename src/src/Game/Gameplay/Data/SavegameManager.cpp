@@ -1,10 +1,8 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "Game/Gameplay/Data/SavePaths.h"
 #include <chrono>
-#include <filesystem>
 #include <iostream>
 #include <fstream>
-#include <random>
 #include <algorithm>
 #include <vector>
 #include "SavegameManager.h"
@@ -15,6 +13,7 @@
 #include "Logging/Logger.h"
 #include "Core/ECS/EntityManager.h"
 #include "Game/Gameplay/World/Generation/Files.h"
+#include "SaveSlots.h"
 
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
 	m_entityManager(em),
@@ -158,50 +157,21 @@ void SavegameManager::saveTrainer(const std::string& mapName, int blockX, int bl
 	m_startMapName = mapName;
 }
 
-namespace {
-	// The seed of the world of a new game : SAD_WORLD_SEED (environment), else drawn
-	long long NewWorldSeed() {
-		const auto* seed = std::getenv("SAD_WORLD_SEED");
-		if (seed != nullptr && *seed != '\0') {
-			return std::atoll(seed);
-		}
-		auto device = std::random_device{};
-		return std::uniform_int_distribution<long long>{ 1, 999999 }(device);
-	}
-}
-
-// A new game : a save that does not exist yet is made from Data/Saves/new_game, its world to generate ([World]
-// generate, seed). A world to generate is generated in the save (<save>/World/ : the web keeps it with the save), the
-// trainer starts in its first village.
+// A new game : a save that does not exist yet is made from Data/Saves/new_game, its world to generate (SaveSlots). A
+// world to generate is generated in the save at once (the title screen generates it step by step before : StateTitle).
 void SavegameManager::prepareSave() {
-	namespace fs = std::filesystem;
-	const auto save = fs::path{ SaveDirectory() + m_pathname };
-	const auto trainer = (save / "trainer.ini").string();
-	if (!fs::exists(trainer)) {
-		fs::create_directories(save);
-		fs::copy("./Data/Saves/new_game", save, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-		auto reader = ska::IniReader{ trainer };
-		reader.set("World generate", true);
-		reader.set("World seed", NewWorldSeed());
-		reader.save(trainer);
-		SLOG(ska::LogLevel::Info) << "Savegame : new game " << m_pathname;
+	if (!SaveSlots::Exists(m_pathname)) {
+		SaveSlots::Create(m_pathname, SaveSlots::NewSeed());
 	}
-	auto reader = ska::IniReader{ trainer };
-	if (!reader.exists("World generate") || !reader.get<bool>("World generate")) {
+	const auto seed = SaveSlots::WorldToGenerate(m_pathname);
+	if (!seed) {
 		return;
 	}
-	const auto seed = std::atoll(reader.get<std::string>("World seed").c_str());
-	const auto worldPath = SaveDirectory() + m_pathname + "/World/";
 	const auto begin = std::chrono::steady_clock::now();
-	const auto start = worldgen::GenerateWorld(seed, (save / "World").string(), worldPath);
-	SLOG(ska::LogLevel::Info) << "Savegame : the world of seed " << seed << " generated in "
-		<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms (" << worldPath << ")";
-	reader.set("World directory", worldPath);
-	reader.set("World generate", false);
-	reader.set("Trainer start_map_name", start.map);
-	reader.set("Trainer start_posx", start.x);
-	reader.set("Trainer start_posy", start.y);
-	reader.save(trainer);
+	const auto start = worldgen::GenerateWorld(*seed, SaveSlots::WorldPath(m_pathname), SaveSlots::WorldPath(m_pathname));
+	SLOG(ska::LogLevel::Info) << "Savegame : the world of seed " << *seed << " generated in "
+		<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms (" << SaveSlots::WorldPath(m_pathname) << ")";
+	SaveSlots::WorldGenerated(m_pathname, *seed, start);
 }
 
 void SavegameManager::loadTrainer() {

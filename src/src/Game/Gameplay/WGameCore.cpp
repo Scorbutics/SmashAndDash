@@ -13,27 +13,64 @@
 #include "Graphic/SDLWindow.h"
 #include "Core/Draw/VectorDrawableContainer.h"
 #include "Game/Gameplay/Data/SavePaths.h"
+#include "Game/Gameplay/Data/SaveSlots.h"
+#include "State/StateTitle.h"
 
 WGameCore::WGameCore(CustomEntityManager& em, GameConfPtr&& gc):
 	GameCore(std::forward<GameConfPtr>(gc)),
     m_settings(m_eventDispatcher, "gamesettings.ini"),
 	m_entityManager(em),
-	ska::SubObserver<MapEvent>(std::bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher) {
+	ska::SubObserver<MapEvent>(std::bind(&WGameCore::onTeleport, this, std::placeholders::_1), m_eventDispatcher),
+	ska::SubObserver<ska::StateEvent>(std::bind(&WGameCore::onStateEvent, this, std::placeholders::_1), m_eventDispatcher),
+	ska::SubObserver<ska::GameEvent>(std::bind(&WGameCore::onGameEvent, this, std::placeholders::_1), m_eventDispatcher) {
 
 	SLOG(ska::LogLevel::Info) << "Game initialization";
 
-	/* Let's start on the map state */
-	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher,  m_settings);
-	
+	// The title screen ; a save given by the environment (SAD_SAVE : the agent runs) is played at once (its world
+	// generated before, on the loading screen, when it is to generate)
+	const auto direct = EnvironmentSaveName();
+	if (!direct.empty() && SaveSlots::Exists(direct) && !SaveSlots::WorldToGenerate(direct)) {
+		startWorld(direct);
+	} else {
+		m_titleShown = true;
+		navigateToState<StateTitle>(m_eventDispatcher, [this](const std::string& save) { startWorld(save); }, direct);
+	}
+}
+
+void WGameCore::startWorld(const std::string& save) {
+	SLOG(ska::LogLevel::Info) << "Game : the save " << save;
+	ChosenSaveRef() = save;
+	m_worldPending = m_titleShown;
+	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher, m_settings);
+
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
 	const auto pathStartMapName = MapDirectory(startMapName);
 	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
-	
+
 	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
 	guiState.bindGUI(m_settings);
 
 	m_settings.load();
+}
 
+bool WGameCore::onStateEvent(ska::StateEvent& se) {
+	// The world after the title screen : the window is ready for it too (the engine says it to the first state only)
+	if (se.type == ska::StateEventType::STATE_CHANGE && m_worldPending) {
+		m_worldPending = false;
+		ska::GameEvent ge(ska::GameEventType::GAME_WINDOW_READY);
+		ge.windowWidth = m_windowSize.x;
+		ge.windowHeight = m_windowSize.y;
+		m_eventDispatcher.ska::Observable<ska::GameEvent>::notifyObservers(ge);
+		resetAccumulator();
+	}
+	return false;
+}
+
+bool WGameCore::onGameEvent(ska::GameEvent& ge) {
+	if (ge.getEventType() == ska::GameEventType::GAME_WINDOW_READY || ge.getEventType() == ska::GameEventType::GAME_WINDOW_RESIZED) {
+		m_windowSize = { static_cast<unsigned int>(ge.windowWidth), static_cast<unsigned int>(ge.windowHeight) };
+	}
+	return false;
 }
 
 float WGameCore::ticksWanted() const {

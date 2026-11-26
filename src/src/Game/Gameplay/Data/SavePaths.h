@@ -13,10 +13,25 @@ inline std::string SaveDirectory() {
 	return path.back() == '/' ? path : path + "/";
 }
 
-// The save loaded at the start : SAD_SAVE (environment), else "save1"
-inline std::string DefaultSaveName() {
+// The save chosen on the title screen (StateTitle), else empty
+inline std::string& ChosenSaveRef() {
+	static auto name = std::string{};
+	return name;
+}
+
+// The save given by the environment (SAD_SAVE : the agent runs, ?SAD_SAVE= on the web), else empty : the title screen
+inline std::string EnvironmentSaveName() {
 	const auto* name = std::getenv("SAD_SAVE");
-	return name == nullptr || *name == '\0' ? std::string{ "save1" } : std::string{ name };
+	return name == nullptr ? std::string{} : std::string{ name };
+}
+
+// The save the game plays : the one chosen on the title screen, else SAD_SAVE, else "save1"
+inline std::string DefaultSaveName() {
+	if (!ChosenSaveRef().empty()) {
+		return ChosenSaveRef();
+	}
+	const auto name = EnvironmentSaveName();
+	return name.empty() ? std::string{ "save1" } : name;
 }
 
 // The folder of the maps of the world of the save ([World] directory of its trainer.ini, ex : ./Data/Worlds/seed7/ :

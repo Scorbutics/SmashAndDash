@@ -93,86 +93,104 @@ worldgen::RgbImage worldgen::RoomLight(const Room& room) {
 	return out;
 }
 
-void worldgen::WriteWorld(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
-	const std::string& folder, const std::string& worldPath) {
-	const auto root = fs::path{ folder };
-	if (fs::exists(root)) { // an earlier run
-		fs::remove_all(root);
+namespace {
+	void PrepareFolder(const fs::path& root) {
+		if (fs::exists(root)) { // an earlier run
+			fs::remove_all(root);
+		}
+		fs::create_directories(root / "Chipsets");
 	}
-	const auto chips = root / "Chipsets";
-	fs::create_directories(chips);
-	const auto chipPath = worldPath + "Chipsets";
-	const auto& plan = world.terrain().plan();
-	const auto colour = [&corr](const Block& cell) { return corr.at(cell.first, cell.second); };
-	for (auto cy = 0; cy < world.height() / Chunk; cy++) {
-		for (auto cx = 0; cx < world.width() / Chunk; cx++) {
-			const auto name = "w_" + std::to_string(cx) + "_" + std::to_string(cy);
-			const auto map = root / name;
-			fs::create_directories(map / "Monsters");
-			const auto chip = Chipset{ images, ChunkTiles(world, cx, cy) };
-			SaveChipset(chip, chips, "chipset_" + name, tileScripts);
-			const std::pair<Layer, const char*> layers[] = { { Layer::Base, "" }, { Layer::Middle, "M" }, { Layer::Top, "T" } };
-			for (const auto& [layer, suffix] : layers) {
-				auto image = RgbImage{ Chunk, Chunk, Empty[0], Empty[1], Empty[2] };
-				for (auto y = 0; y < Chunk; y++) {
-					for (auto x = 0; x < Chunk; x++) {
-						const auto wx = cx * Chunk + x;
-						const auto wy = cy * Chunk + y;
-						const auto tile = world.tile(layer, wx, wy);
-						if (tile != NoTile) {
-							PutColour(image, x, y, colour(chip.cells.at({ tile, BlockMix(plan, wx, wy) })));
+
+	void WriteChunk(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts, const fs::path& root,
+		const std::string& worldPath, int cx, int cy) {
+		const auto chips = root / "Chipsets";
+		const auto chipPath = worldPath + "Chipsets";
+		const auto& plan = world.terrain().plan();
+		const auto colour = [&corr](const Block& cell) { return corr.at(cell.first, cell.second); };
+		const auto name = "w_" + std::to_string(cx) + "_" + std::to_string(cy);
+		const auto map = root / name;
+		fs::create_directories(map / "Monsters");
+		const auto chip = Chipset{ images, ChunkTiles(world, cx, cy) };
+		SaveChipset(chip, chips, "chipset_" + name, tileScripts);
+		const std::pair<Layer, const char*> layers[] = { { Layer::Base, "" }, { Layer::Middle, "M" }, { Layer::Top, "T" } };
+		for (const auto& [layer, suffix] : layers) {
+			auto image = RgbImage{ Chunk, Chunk, Empty[0], Empty[1], Empty[2] };
+			for (auto y = 0; y < Chunk; y++) {
+				for (auto x = 0; x < Chunk; x++) {
+					const auto wx = cx * Chunk + x;
+					const auto wy = cy * Chunk + y;
+					const auto tile = world.tile(layer, wx, wy);
+					if (tile != NoTile) {
+						PutColour(image, x, y, colour(chip.cells.at({ tile, BlockMix(plan, wx, wy) })));
+					}
+				}
+			}
+			WriteFile((map / (name + suffix + ".bmp")).string(), EncodeBmp(image));
+		}
+		auto light = RgbImage{ Chunk + 1, Chunk + 1 };
+		for (auto j = 0; j <= Chunk; j++) {
+			for (auto i = 0; i <= Chunk; i++) {
+				const auto c = world.cornerLight(cx * Chunk + i, cy * Chunk + j);
+				PutColour(light, i, j, c.data());
+			}
+		}
+		WriteFile((map / (name + "L.png")).string(), EncodePng(light));
+		WriteText(map / (name + ".ini"), MapIniText(chipPath + "/chipset_" + name + ".png"));
+		WriteText(map / (name + "E.txt"), EventsText(world.chunkEvents(cx, cy)));
+		const auto& spawns = SpawnsOf(plan.climate().chunkBiome(cx, cy));
+		for (auto i = 0u; i < spawns.size(); i++) {
+			const auto& s = spawns[i];
+			WriteText(map / "Monsters" / (std::to_string(i) + ".ini"), "[Data]\nid=" + std::to_string(s.id) + "\nlevel_min=" + std::to_string(s.levelMin)
+				+ "\nlevel_max=" + std::to_string(s.levelMax) + "\npath_type=" + std::to_string(s.path) + "\n\n[Spawn]\nprobability_percent="
+				+ std::to_string(s.chance) + "\n");
+		}
+		WriteText(map / "scripts.data", "");
+	}
+
+	// The rooms : one chipset for all (chipset_rooms)
+	void WriteRooms(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts, const fs::path& root,
+		const std::string& worldPath) {
+		const auto chipPath = worldPath + "Chipsets";
+		const auto colour = [&corr](const Block& cell) { return corr.at(cell.first, cell.second); };
+		const auto roomChip = Chipset{ images, RoomTiles(world) };
+		SaveChipset(roomChip, root / "Chipsets", "chipset_rooms", tileScripts);
+		const auto meadow = PureMix(Biome::Meadow);
+		for (const auto& room : world.rooms()) {
+			const auto map = root / room.name;
+			fs::create_directories(map);
+			const std::pair<const std::vector<TileId>*, const char*> layers[] = { { &room.base, "" }, { &room.middle, "M" }, { nullptr, "T" } };
+			for (const auto& [grid, suffix] : layers) {
+				auto image = RgbImage{ room.width, room.height, Empty[0], Empty[1], Empty[2] };
+				if (grid != nullptr) {
+					for (auto y = 0; y < room.height; y++) {
+						for (auto x = 0; x < room.width; x++) {
+							const auto tile = (*grid)[static_cast<std::size_t>(y * room.width + x)];
+							if (tile != NoTile) {
+								PutColour(image, x, y, colour(roomChip.cells.at({ tile, meadow })));
+							}
 						}
 					}
 				}
-				WriteFile((map / (name + suffix + ".bmp")).string(), EncodeBmp(image));
+				WriteFile((map / (room.name + suffix + ".bmp")).string(), EncodeBmp(image));
 			}
-			auto light = RgbImage{ Chunk + 1, Chunk + 1 };
-			for (auto j = 0; j <= Chunk; j++) {
-				for (auto i = 0; i <= Chunk; i++) {
-					const auto c = world.cornerLight(cx * Chunk + i, cy * Chunk + j);
-					PutColour(light, i, j, c.data());
-				}
-			}
-			WriteFile((map / (name + "L.png")).string(), EncodePng(light));
-			WriteText(map / (name + ".ini"), MapIniText(chipPath + "/chipset_" + name + ".png"));
-			WriteText(map / (name + "E.txt"), EventsText(world.chunkEvents(cx, cy)));
-			const auto& spawns = SpawnsOf(plan.climate().chunkBiome(cx, cy));
-			for (auto i = 0u; i < spawns.size(); i++) {
-				const auto& s = spawns[i];
-				WriteText(map / "Monsters" / (std::to_string(i) + ".ini"), "[Data]\nid=" + std::to_string(s.id) + "\nlevel_min=" + std::to_string(s.levelMin)
-					+ "\nlevel_max=" + std::to_string(s.levelMax) + "\npath_type=" + std::to_string(s.path) + "\n\n[Spawn]\nprobability_percent="
-					+ std::to_string(s.chance) + "\n");
-			}
+			WriteFile((map / (room.name + "L.png")).string(), EncodePng(RoomLight(room)));
+			WriteText(map / (room.name + ".ini"), MapIniText(chipPath + "/chipset_rooms.png"));
+			WriteText(map / (room.name + "E.txt"), EventsText(room.events));
 			WriteText(map / "scripts.data", "");
 		}
 	}
-	// The rooms : one chipset for all (chipset_rooms)
-	const auto roomChip = Chipset{ images, RoomTiles(world) };
-	SaveChipset(roomChip, chips, "chipset_rooms", tileScripts);
-	const auto meadow = PureMix(Biome::Meadow);
-	for (const auto& room : world.rooms()) {
-		const auto map = root / room.name;
-		fs::create_directories(map);
-		const std::pair<const std::vector<TileId>*, const char*> layers[] = { { &room.base, "" }, { &room.middle, "M" }, { nullptr, "T" } };
-		for (const auto& [grid, suffix] : layers) {
-			auto image = RgbImage{ room.width, room.height, Empty[0], Empty[1], Empty[2] };
-			if (grid != nullptr) {
-				for (auto y = 0; y < room.height; y++) {
-					for (auto x = 0; x < room.width; x++) {
-						const auto tile = (*grid)[static_cast<std::size_t>(y * room.width + x)];
-						if (tile != NoTile) {
-							PutColour(image, x, y, colour(roomChip.cells.at({ tile, meadow })));
-						}
-					}
-				}
-			}
-			WriteFile((map / (room.name + suffix + ".bmp")).string(), EncodeBmp(image));
+}
+
+void worldgen::WriteWorld(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
+	const std::string& folder, const std::string& worldPath) {
+	const auto root = fs::path{ folder };
+	PrepareFolder(root);
+	for (auto cy = 0; cy < world.height() / Chunk; cy++) {
+		for (auto cx = 0; cx < world.width() / Chunk; cx++) {
+			WriteChunk(world, images, corr, tileScripts, root, worldPath, cx, cy);
 		}
-		WriteFile((map / (room.name + "L.png")).string(), EncodePng(RoomLight(room)));
-		WriteText(map / (room.name + ".ini"), MapIniText(chipPath + "/chipset_rooms.png"));
-		WriteText(map / (room.name + "E.txt"), EventsText(room.events));
-		WriteText(map / "scripts.data", "");
 	}
+	WriteRooms(world, images, corr, tileScripts, root, worldPath);
 }
 
 worldgen::Start worldgen::StartOf(const WorldPlan& plan) {
@@ -182,20 +200,93 @@ worldgen::Start worldgen::StartOf(const WorldPlan& plan) {
 	return { "w_" + std::to_string(cx) + "_" + std::to_string(cy), tx - cx * Chunk, ty - cy * Chunk + 1 };
 }
 
-worldgen::Start worldgen::GenerateWorld(std::int64_t seed, const std::string& folder, const std::string& worldPath, const Resources& resources) {
-	const auto data = resources.root + "/Worldgen";
-	auto shapesFile = std::ifstream{ data + "/shapes.txt" };
-	auto index = std::ifstream{ data + "/tiles.txt" };
-	if (!shapesFile || !index) {
-		throw std::runtime_error{ "worldgen : no " + data + "/shapes.txt or tiles.txt" };
+// The steps : the data, the plan (climate, villages), the terrain, the tiles of the blocks, a step per chunk, the rooms
+struct worldgen::WorldWriter::State {
+	Shapes shapes;
+	std::vector<RoomTemplate> templates;
+	std::unique_ptr<Atlas> atlas;
+	RgbImage corr;
+	std::unique_ptr<WorldPlan> plan;
+	std::unique_ptr<Terrain> terrain;
+	std::unique_ptr<World> world;
+	std::unique_ptr<TileImages> images;
+};
+
+namespace {
+	constexpr int ChunksX = 8;
+	constexpr int ChunksY = 8;
+	constexpr int FirstChunkStep = 4;
+}
+
+worldgen::WorldWriter::WorldWriter(std::int64_t seed, std::string folder, std::string worldPath, Resources resources) :
+	m_seed(seed), m_folder(std::move(folder)), m_worldPath(std::move(worldPath)), m_resources(std::move(resources)), m_state(std::make_unique<State>()) {
+}
+
+worldgen::WorldWriter::~WorldWriter() = default;
+
+int worldgen::WorldWriter::steps() const {
+	return FirstChunkStep + ChunksX * ChunksY + 1;
+}
+
+std::string worldgen::WorldWriter::stage() const {
+	if (m_step == 0) {
+		return "Pr\xe9""paration";
 	}
-	const auto shapes = Shapes::Parse(shapesFile);
-	const auto templates = LoadRoomTemplates(data + "/rooms");
-	const auto atlas = Atlas{ ReadPng(data + "/tiles.png"), index };
-	const auto plan = WorldPlan{ seed, 8, 8 };
-	const auto terrain = Terrain{ plan };
-	const auto world = World{ terrain, shapes, templates };
-	auto images = TileImages{ atlas, world.tiles() };
-	WriteWorld(world, images, ReadPng(resources.root + "/Chipsets/corr.png"), resources.root + "/Chipsets/tile_scripts", folder, worldPath);
-	return StartOf(plan);
+	if (m_step == 1) {
+		return "Le climat et les villages";
+	}
+	if (m_step == 2) {
+		return "Le relief et les routes";
+	}
+	if (m_step == 3) {
+		return "La nature et les maisons";
+	}
+	if (m_step < FirstChunkStep + ChunksX * ChunksY) {
+		return "Les cartes (" + std::to_string(m_step - FirstChunkStep + 1) + " / " + std::to_string(ChunksX * ChunksY) + ")";
+	}
+	return done() ? "Termin\xe9""" : "Les int\xe9""rieurs";
+}
+
+bool worldgen::WorldWriter::step() {
+	if (done()) {
+		return false;
+	}
+	auto& s = *m_state;
+	const auto data = m_resources.root + "/Worldgen";
+	const auto tileScripts = m_resources.root + "/Chipsets/tile_scripts";
+	if (m_step == 0) {
+		auto shapesFile = std::ifstream{ data + "/shapes.txt" };
+		auto index = std::ifstream{ data + "/tiles.txt" };
+		if (!shapesFile || !index) {
+			throw std::runtime_error{ "worldgen : no " + data + "/shapes.txt or tiles.txt" };
+		}
+		s.shapes = Shapes::Parse(shapesFile);
+		s.templates = LoadRoomTemplates(data + "/rooms");
+		s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index);
+		s.corr = ReadPng(m_resources.root + "/Chipsets/corr.png");
+		PrepareFolder(m_folder);
+	} else if (m_step == 1) {
+		s.plan = std::make_unique<WorldPlan>(m_seed, ChunksX, ChunksY);
+		m_start = StartOf(*s.plan);
+	} else if (m_step == 2) {
+		s.terrain = std::make_unique<Terrain>(*s.plan);
+	} else if (m_step == 3) {
+		s.world = std::make_unique<World>(*s.terrain, s.shapes, s.templates);
+		s.images = std::make_unique<TileImages>(*s.atlas, s.world->tiles());
+	} else if (m_step < FirstChunkStep + ChunksX * ChunksY) {
+		const auto chunk = m_step - FirstChunkStep;
+		WriteChunk(*s.world, *s.images, s.corr, tileScripts, m_folder, m_worldPath, chunk % ChunksX, chunk / ChunksX);
+	} else {
+		WriteRooms(*s.world, *s.images, s.corr, tileScripts, m_folder, m_worldPath);
+		m_state.reset();
+	}
+	m_step++;
+	return !done();
+}
+
+worldgen::Start worldgen::GenerateWorld(std::int64_t seed, const std::string& folder, const std::string& worldPath, const Resources& resources) {
+	auto writer = WorldWriter{ seed, folder, worldPath, resources };
+	while (writer.step()) {
+	}
+	return writer.start();
 }

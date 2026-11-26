@@ -2,7 +2,7 @@
 #include <array>
 #include <map>
 #include <string>
-#include "Core/Draw/DrawableFixedPriority.h"
+#include "Canvas.h"
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 #include "Graphic/Texture.h"
@@ -38,23 +38,6 @@ public:
 	void renderOverlay(ska::Renderer& renderer) const;
 
 private:
-	// A drawing at a fixed priority, done by the interface
-	class Layer : public ska::DrawableFixedPriority {
-	public:
-		enum class Kind { Ground, WorldOverlay, Interface };
-		Layer(const GUIBattle& gui, Kind kind) : m_gui(gui), m_kind(kind) {}
-		void render(ska::Renderer& renderer) const override {
-			switch (m_kind) {
-			case Kind::Ground: m_gui.renderGround(renderer); break;
-			case Kind::WorldOverlay: m_gui.renderWorldOverlay(renderer); break;
-			default: m_gui.renderOverlay(renderer); break;
-			}
-		}
-	private:
-		const GUIBattle& m_gui;
-		Kind m_kind;
-	};
-
 	struct Sprite {
 		ska::Point<int> position;
 		int width = 0;
@@ -79,16 +62,14 @@ private:
 	void renderBanner(ska::Renderer& renderer) const;
 	void renderMarks(ska::Renderer& renderer) const;
 	void updateScreenShader(ska::Renderer& renderer) const;
-	// "outlined" : a black outline (over the map) ; false : on a panel of the theme
-	void text(ska::Renderer& renderer, const std::string& value, unsigned int size, ska::Color color, int x, int y, int align, float scale = 1.F, unsigned char alpha = 255, bool outlined = true) const;
 
 	ska::EntityManager& m_entities;
 	BattleStage& m_stage;
 	const BattleSystem& m_battle;
 	ska::CameraSystem& m_camera;
-	Layer m_groundLayer;
-	Layer m_worldOverlayLayer;
-	Layer m_overlayLayer;
+	Ui::Layer m_groundLayer;
+	Ui::Layer m_worldOverlayLayer;
+	Ui::Layer m_overlayLayer;
 	// The names of the fighters (loaded at their first drawing)
 	mutable std::map<ska::EntityId, std::string> m_names;
 	ska::Texture m_ringPlayer;

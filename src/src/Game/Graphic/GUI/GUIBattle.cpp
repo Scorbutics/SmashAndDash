@@ -19,7 +19,7 @@
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Utils/IDs.h"
-#include "Theme.h"
+#include "Canvas.h"
 
 namespace {
 	constexpr int GroundPriority = 9;
@@ -36,17 +36,23 @@ namespace {
 		return text;
 	}
 
-	void FillRect(ska::Renderer& renderer, ska::Color color, int x, int y, int w, int h) {
-		if (w > 0 && h > 0) {
-			renderer.drawColorRect(color, ska::Rectangle{ x, y, w, h });
-		}
+
+
+	// The texts of the battle : "outlined" in black over the map, else on a panel of the theme
+	Ui::TextStyle Style(unsigned int size, ska::Color color, bool outlined = true, float scale = 1.F, unsigned char alpha = 255) {
+		auto style = Ui::TextStyle{};
+		style.size = size;
+		style.color = color;
+		style.outline = outlined ? 2 : 0;
+		style.scale = scale;
+		style.alpha = alpha;
+		return style;
 	}
 
 	const ska::Color PlayerColor{ 60, 150, 255, 255 };
 	const ska::Color OpponentColor{ 255, 70, 60, 255 };
-	// The text on the panels of the theme (Theme) : the ink of the tiles, white on the colored pills
-	const ska::Color Ink{ 34, 40, 54, 255 };
-	const ska::Color White{ 255, 255, 255, 255 };
+	const auto& Ink = Ui::Ink;
+	const auto& White = Ui::White;
 }
 
 GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera) :
@@ -54,9 +60,9 @@ GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSys
 	m_stage(stage),
 	m_battle(battle),
 	m_camera(camera),
-	m_groundLayer(*this, Layer::Kind::Ground),
-	m_worldOverlayLayer(*this, Layer::Kind::WorldOverlay),
-	m_overlayLayer(*this, Layer::Kind::Interface),
+	m_groundLayer([this](Ui::Canvas& canvas) { renderGround(canvas.renderer()); }),
+	m_worldOverlayLayer([this](Ui::Canvas& canvas) { renderWorldOverlay(canvas.renderer()); }),
+	m_overlayLayer([this](Ui::Canvas& canvas) { renderOverlay(canvas.renderer()); }),
 	m_ringPlayer("./Sprites/Fight/ring-player.png"),
 	m_ringOpponent("./Sprites/Fight/ring-opponent.png"),
 	m_arrow("./Sprites/Fight/arrow-player.png"),
@@ -76,6 +82,7 @@ GUIBattle::~GUIBattle() {
 }
 
 void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	m_renderer = &renderer;
 	// The strongest recent impact splits the colors, a K.O. turns the screen gray
 	auto split = 0.F;
@@ -155,35 +162,9 @@ ska::Point<int> GUIBattle::toScreen(ska::Point<float> world) const {
 	return ska::Point<int>{ static_cast<int>(world.x) - camera.x, static_cast<int>(world.y) - camera.y };
 }
 
-void GUIBattle::text(ska::Renderer& renderer, const std::string& value, unsigned int size, ska::Color color, int x, int y, int align, float scale, unsigned char alpha, bool outlined) const {
-	if (value.empty()) {
-		return;
-	}
-	auto texture = ska::Texture{};
-	texture.loadFromText(size, value, color);
-	auto outline = ska::Texture{};
-	outline.loadFromText(size, value, ska::Color{ 0, 0, 0, 255 });
-	const auto width = static_cast<int>(texture.getWidth());
-	const auto left = align < 0 ? x : (align == 0 ? x - width / 2 : x - width);
-
-	auto effect = ska::RenderEffect{};
-	effect.scaleX = scale;
-	effect.scaleY = scale;
-	effect.anchorBottom = false;
-	effect.alpha = alpha;
-	renderer.setEffect(&effect);
-	// An outline : readable over the map
-	const int offsets[][2] = { { -2, 0 }, { 2, 0 }, { 0, -2 }, { 0, 2 }, { 2, 2 } };
-	for (const auto& offset : offsets) {
-		if (outlined) {
-			renderer.render(outline, left + offset[0], y + offset[1], nullptr);
-		}
-	}
-	renderer.render(texture, left, y, nullptr);
-	renderer.setEffect(nullptr);
-}
 
 void GUIBattle::renderArena(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	const auto& arena = m_stage.arena;
 	const auto topLeft = toScreen(ska::Point<float>{ static_cast<float>(arena.x), static_cast<float>(arena.y) });
 	const auto x = topLeft.x;
@@ -198,35 +179,34 @@ void GUIBattle::renderArena(ska::Renderer& renderer) const {
 	const auto edge = leaving ? ska::Color{ 255, 80, 60, static_cast<uint8_t>(140 + pulse) } : ska::Color{ 255, 255, 255, 150 };
 	const auto floor = leaving ? ska::Color{ 255, 60, 40, 26 } : ska::Color{ 255, 255, 255, 20 };
 
-	FillRect(renderer, floor, x, y, w, h);
+	canvas.fill(floor, ska::Rectangle{ x, y, w, h });
 	// Dashed edges : an overlay, not a wall
 	constexpr auto dash = 18;
 	constexpr auto gap = 12;
 	for (auto i = 0; i < w; i += dash + gap) {
-		FillRect(renderer, edge, x + i, y, std::min(dash, w - i), 2);
-		FillRect(renderer, edge, x + i, y + h - 2, std::min(dash, w - i), 2);
+		canvas.fill(edge, ska::Rectangle{ x + i, y, std::min(dash, w - i), 2 });
+		canvas.fill(edge, ska::Rectangle{ x + i, y + h - 2, std::min(dash, w - i), 2 });
 	}
 	for (auto i = 0; i < h; i += dash + gap) {
-		FillRect(renderer, edge, x, y + i, 2, std::min(dash, h - i));
-		FillRect(renderer, edge, x + w - 2, y + i, 2, std::min(dash, h - i));
+		canvas.fill(edge, ska::Rectangle{ x, y + i, 2, std::min(dash, h - i) });
+		canvas.fill(edge, ska::Rectangle{ x + w - 2, y + i, 2, std::min(dash, h - i) });
 	}
 	// Corners
 	constexpr auto corner = 30;
 	constexpr auto thick = 4;
-	FillRect(renderer, edge, x - 1, y - 1, corner, thick);
-	FillRect(renderer, edge, x - 1, y - 1, thick, corner);
-	FillRect(renderer, edge, x + w - corner + 1, y - 1, corner, thick);
-	FillRect(renderer, edge, x + w - thick + 1, y - 1, thick, corner);
-	FillRect(renderer, edge, x - 1, y + h - thick + 1, corner, thick);
-	FillRect(renderer, edge, x - 1, y + h - corner + 1, thick, corner);
-	FillRect(renderer, edge, x + w - corner + 1, y + h - thick + 1, corner, thick);
-	FillRect(renderer, edge, x + w - thick + 1, y + h - corner + 1, thick, corner);
+	canvas.fill(edge, ska::Rectangle{ x - 1, y - 1, corner, thick });
+	canvas.fill(edge, ska::Rectangle{ x - 1, y - 1, thick, corner });
+	canvas.fill(edge, ska::Rectangle{ x + w - corner + 1, y - 1, corner, thick });
+	canvas.fill(edge, ska::Rectangle{ x + w - thick + 1, y - 1, thick, corner });
+	canvas.fill(edge, ska::Rectangle{ x - 1, y + h - thick + 1, corner, thick });
+	canvas.fill(edge, ska::Rectangle{ x - 1, y + h - corner + 1, thick, corner });
+	canvas.fill(edge, ska::Rectangle{ x + w - corner + 1, y + h - thick + 1, corner, thick });
+	canvas.fill(edge, ska::Rectangle{ x + w - thick + 1, y + h - corner + 1, thick, corner });
 }
 
 void GUIBattle::renderGround(ska::Renderer& renderer) const {
-	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
+	const auto canvas = Ui::Canvas{ renderer };
 	renderArena(renderer);
-	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
 
 	// A ring under each fighter : blue for the player, red for the opponent
 	for (const auto entity : m_stage.fighters) {
@@ -243,6 +223,7 @@ void GUIBattle::renderGround(ska::Renderer& renderer) const {
 }
 
 void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool left, int slot) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	const auto* state = fighter(entity);
 	if (state == nullptr || !m_entities.hasComponent<BattleComponent>(entity)) {
 		return;
@@ -259,16 +240,16 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 	const auto y = margin + slot * (height + 8);
 
 	// A panel of the theme
-	Theme::panel(renderer, "panel_small.png", ska::Rectangle{ x, y, width, height }, 16, 240);
+	canvas.panel("panel_small.png", ska::Rectangle{ x, y, width, height }, 16, 240);
 
 	// Who it is : the tag (a pill of its side) and the name
 	const auto tag = fighter.player ? std::string{ "VOUS" } : std::string{ "SAUVAGE" };
 	const auto label = name(entity) + "  Nv." + std::to_string(bc.level) + (fighter.knockedOut ? "  K.O." : "");
 	const auto tagWidth = fighter.player ? 62 : 92;
 	const auto tagX = left ? x + 12 : x + width - 12 - tagWidth;
-	Theme::panel(renderer, fighter.player ? "panel_small_teal.png" : "panel_small_red.png", ska::Rectangle{ tagX, y + 9, tagWidth, 24 }, 8);
-	text(renderer, tag, 14, White, tagX + tagWidth / 2, y + 11, 0, 1.F, 255, false);
-	text(renderer, label, 18, Ink, left ? tagX + tagWidth + 10 : tagX - 10, y + 9, left ? -1 : 1, 1.F, 255, false);
+	canvas.panel(fighter.player ? "panel_small_teal.png" : "panel_small_red.png", ska::Rectangle{ tagX, y + 9, tagWidth, 24 }, 8);
+	canvas.text(tag, Style(14, White, false), tagX + tagWidth / 2, y + 11, Ui::Align::Center);
+	canvas.text(label, Style(18, Ink, false), left ? tagX + tagWidth + 10 : tagX - 10, y + 9, left ? Ui::Align::Left : Ui::Align::Right);
 
 	// The hit points : a bar in the dark groove of the theme ; it empties towards the middle of the screen, the lost part
 	// stays a moment
@@ -276,22 +257,17 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 	const auto barY = y + 40;
 	const auto barWidth = width - 28;
 	const auto barHeight = 18;
-	Theme::panel(renderer, "panel_small_dark.png", ska::Rectangle{ barX - 4, barY - 4, barWidth + 8, barHeight + 8 }, 8);
 	const auto maxHp = static_cast<float>(std::max(1, bc.maxHp));
 	const auto hp = std::max(0.F, static_cast<float>(bc.hp));
-	const auto shown = std::max(hp, fighter.shownHp);
-	const auto hpWidth = static_cast<int>(static_cast<float>(barWidth) * hp / maxHp);
-	const auto shownWidth = static_cast<int>(static_cast<float>(barWidth) * shown / maxHp);
 	const auto ratio = hp / maxHp;
-	const auto fill = ratio > 0.5F ? ska::Color{ 76, 200, 96, 255 } : (ratio > 0.25F ? ska::Color{ 240, 196, 52, 255 } : ska::Color{ 226, 64, 56, 255 });
-	const auto lostX = left ? barX : barX + barWidth - shownWidth;
-	const auto hpX = left ? barX : barX + barWidth - hpWidth;
-	FillRect(renderer, ska::Color{ 255, 236, 200, 255 }, lostX, barY, shownWidth, barHeight);
-	FillRect(renderer, fill, hpX, barY, hpWidth, barHeight);
-	FillRect(renderer, ska::Color{ 255, 255, 255, 110 }, hpX, barY, hpWidth, 5);
-	FillRect(renderer, ska::Color{ 0, 0, 0, 50 }, hpX, barY + barHeight - 4, hpWidth, 4);
+	auto bar = Ui::Bar{};
+	bar.ratio = ratio;
+	bar.trail = std::max(hp, fighter.shownHp) / maxHp;
+	bar.fill = ratio > 0.5F ? ska::Color{ 76, 200, 96, 255 } : (ratio > 0.25F ? ska::Color{ 240, 196, 52, 255 } : ska::Color{ 226, 64, 56, 255 });
+	bar.fromRight = !left;
+	canvas.bar(ska::Rectangle{ barX, barY, barWidth, barHeight }, bar);
 	if (fighter.player) {
-		text(renderer, std::to_string(std::max(0, bc.hp)) + " / " + std::to_string(bc.maxHp), 14, White, barX + barWidth - 6, barY + 1, 1);
+		canvas.text(std::to_string(std::max(0, bc.hp)) + " / " + std::to_string(bc.maxHp), Style(14, White), barX + barWidth - 6, barY + 1, Ui::Align::Right);
 	}
 
 	// Its status and the changes of its statistics
@@ -307,19 +283,20 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 		tags += (tags.empty() ? "" : "  ") + std::string{ "ABRI" };
 	}
 	if (!tags.empty()) {
-		text(renderer, tags, 13, ska::Color{ 168, 74, 24, 255 }, left ? barX : barX + barWidth, barY + barHeight + 6, left ? -1 : 1, 1.F, 255, false);
+		canvas.text(tags, Style(13, ska::Color{ 168, 74, 24, 255 }, false), left ? barX : barX + barWidth, barY + barHeight + 6, left ? Ui::Align::Left : Ui::Align::Right);
 	}
 
 	// Fleeing : the time left outside of the arena
 	if (fighter.player && fighter.outside > 0 && m_stage.phase() == BattlePhase::Fight) {
 		const auto progress = std::min(1.F, static_cast<float>(fighter.outside) / static_cast<float>(BattleStage::FleeDelay));
-		Theme::panel(renderer, "panel_small_dark.png", ska::Rectangle{ x, y + height + 4, width / 2, 30 }, 8);
-		FillRect(renderer, ska::Color{ 255, 90, 60, 255 }, x + 6, y + height + 26, static_cast<int>(static_cast<float>(width / 2 - 12) * progress), 4);
-		text(renderer, "FUITE...", 16, White, x + 12, y + height + 7, -1, 1.F, 255, false);
+		canvas.panel("panel_small_dark.png", ska::Rectangle{ x, y + height + 4, width / 2, 30 }, 8);
+		canvas.fill(ska::Color{ 255, 90, 60, 255 }, ska::Rectangle{ x + 6, y + height + 26, static_cast<int>(static_cast<float>(width / 2 - 12) * progress), 4 });
+		canvas.text("FUITE...", Style(16, White, false), x + 12, y + height + 7, Ui::Align::Left);
 	}
 }
 
 void GUIBattle::renderSkills(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	const auto* player = fighter(m_stage.player);
 	if (player == nullptr || !m_entities.hasComponent<SkillsHolderComponent>(m_stage.player) || player->controlledByAI) {
 		return;
@@ -340,11 +317,11 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 	// A slot of the theme : a panel, its key in a pill (teal : ready), the cooldown a shade shrinking over it
 	auto slotPanel = [&](int sx, int width, int keyWidth, const std::string& key, const std::string& label, float cooldown) {
 		const auto ready = cooldown <= 0.F;
-		Theme::panel(renderer, "panel_small.png", ska::Rectangle{ sx, y, width, slotHeight }, 16, 240);
-		Theme::panel(renderer, ready ? "panel_small_teal.png" : "panel_small_dark.png", ska::Rectangle{ sx + 5, y + 5, keyWidth, slotHeight - 10 }, 8);
-		text(renderer, key, key.size() > 1 ? 15 : 20, White, sx + 5 + keyWidth / 2, y + (key.size() > 1 ? 13 : 10), 0, 1.F, 255, false);
-		text(renderer, label, 15, ready ? Ink : ska::Color{ 130, 134, 144, 255 }, sx + keyWidth + 14, y + 13, -1, 1.F, 255, false);
-		FillRect(renderer, ska::Color{ 34, 40, 54, 90 }, sx + keyWidth + 8, y + 5, static_cast<int>(static_cast<float>(width - keyWidth - 14) * cooldown), slotHeight - 10);
+		canvas.panel("panel_small.png", ska::Rectangle{ sx, y, width, slotHeight }, 16, 240);
+		canvas.panel(ready ? "panel_small_teal.png" : "panel_small_dark.png", ska::Rectangle{ sx + 5, y + 5, keyWidth, slotHeight - 10 }, 8);
+		canvas.text(key, Style(key.size() > 1 ? 15 : 20, White, false), sx + 5 + keyWidth / 2, y + (key.size() > 1 ? 13 : 10), Ui::Align::Center);
+		canvas.text(label, Style(15, ready ? Ink : ska::Color{ 130, 134, 144, 255 }, false), sx + keyWidth + 14, y + 13, Ui::Align::Left);
+		canvas.fill(ska::Color{ 34, 40, 54, 90 }, ska::Rectangle{ sx + keyWidth + 8, y + 5, static_cast<int>(static_cast<float>(width - keyWidth - 14) * cooldown), slotHeight - 10 });
 	};
 	for (auto index = 0u; index < skills.size(); index++) {
 		const auto& skill = skills[index];
@@ -359,6 +336,7 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 }
 
 void GUIBattle::renderBanner(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	const auto& banner = m_stage.banner();
 	if (banner.empty()) {
 		return;
@@ -373,7 +351,7 @@ void GUIBattle::renderBanner(ska::Renderer& renderer) const {
 	const auto alpha = !lasting && age > 900 ? static_cast<unsigned char>(255 * (1200 - age) / 300) : static_cast<unsigned char>(255);
 	const auto color = banner == "K.O. !" ? ska::Color{ 255, 70, 50, 255 } : (banner == "FUITE !" ? ska::Color{ 255, 255, 255, 255 } : ska::Color{ 255, 215, 60, 255 });
 	const auto screen = m_camera.getScreenSize();
-	text(renderer, banner, 64, color, screen.x / 2, screen.y / 2 - 80, 0, scale, alpha);
+	canvas.text(banner, Style(64, color, true, scale, alpha), screen.x / 2, screen.y / 2 - 80, Ui::Align::Center);
 }
 
 const ska::Texture& GUIBattle::skillSprite(int id) const {
@@ -385,6 +363,7 @@ const ska::Texture& GUIBattle::skillSprite(int id) const {
 }
 
 void GUIBattle::renderMarks(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	for (const auto& mark : m_stage.marks()) {
 		const auto position = toScreen(mark.position);
 		if (mark.kind == BattleMark::Kind::Trail) {
@@ -435,7 +414,7 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 			const auto alpha = mark.age > 800 ? static_cast<unsigned char>(255 * (1100 - std::min(1100u, mark.age)) / 300) : static_cast<unsigned char>(255);
 			const auto color = mark.value == 1 ? ska::Color{ 130, 230, 255, 255 } : (mark.value == 2 ? ska::Color{ 255, 140, 210, 255 } : ska::Color{ 255, 255, 255, 255 });
 			const auto scale = mark.age < 100 ? 1.4F - 0.4F * static_cast<float>(mark.age) / 100.F : 1.F;
-			text(renderer, mark.text, 16, color, position.x, position.y - static_cast<int>(24.F * progress), 0, scale, alpha);
+			canvas.text(mark.text, Style(16, color, true, scale, alpha), position.x, position.y - static_cast<int>(24.F * progress), Ui::Align::Center);
 			continue;
 		}
 		if (mark.kind == BattleMark::Kind::Wave) {
@@ -464,11 +443,12 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 		const auto scale = mark.age < 120 ? 1.8F - 0.8F * static_cast<float>(mark.age) / 120.F : 1.F;
 		const auto alpha = mark.age > 600 ? static_cast<unsigned char>(255 * (900 - std::min(900u, mark.age)) / 300) : static_cast<unsigned char>(255);
 		const auto color = mark.onPlayer ? ska::Color{ 255, 100, 90, 255 } : ska::Color{ 255, 225, 80, 255 };
-		text(renderer, mark.value > 0 ? std::to_string(mark.value) : std::string{ "0" }, mark.value >= 8 ? 34 : 28, color, position.x, position.y - 20 - rise, 0, scale, alpha);
+		canvas.text(mark.value > 0 ? std::to_string(mark.value) : std::string{ "0" }, Style(mark.value >= 8 ? 34 : 28, color, true, scale, alpha), position.x, position.y - 20 - rise, Ui::Align::Center);
 	}
 }
 
 void GUIBattle::renderWorldOverlay(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	// The arrow over the Pokemon of the player
 	if (visible(m_stage.player) && m_stage.phase() == BattlePhase::Fight) {
 		const auto drawn = sprite(m_stage.player);
@@ -483,15 +463,15 @@ void GUIBattle::renderWorldOverlay(ska::Renderer& renderer) const {
 		}
 		const auto drawn = sprite(entity);
 		const auto progress = state->windUpDuration == 0 ? 1.F : 1.F - static_cast<float>(state->windUp) / static_cast<float>(state->windUpDuration);
-		text(renderer, "!", 30, ska::Color{ 255, static_cast<uint8_t>(220 - 160 * progress), 60, 255 }, drawn.position.x + drawn.width / 2, drawn.position.y - 34, 0, 0.8F + 0.5F * progress);
+		canvas.text("!", Style(30, ska::Color{ 255, static_cast<uint8_t>(220 - 160 * progress), 60, 255 }, true, 0.8F + 0.5F * progress, 255), drawn.position.x + drawn.width / 2, drawn.position.y - 34, Ui::Align::Center);
 	}
 	renderMarks(renderer);
 }
 
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
 	updateScreenShader(renderer);
 
-	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
 	// The side of the player on the left, the wild Pokemon on the right
 	std::array<int, 2> slots{ 0, 0 };
 	for (const auto entity : m_stage.fighters) {
@@ -502,8 +482,7 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 		renderPanel(renderer, entity, state->team == 0, slots[static_cast<std::size_t>(state->team)]++);
 	}
 	renderSkills(renderer);
-	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
 	const auto screen = m_camera.getScreenSize();
-	text(renderer, "VS", 26, ska::Color{ 255, 255, 255, 255 }, screen.x / 2, 28, 0);
+	canvas.text("VS", Style(26, ska::Color{ 255, 255, 255, 255 }), screen.x / 2, 28, Ui::Align::Center);
 	renderBanner(renderer);
 }

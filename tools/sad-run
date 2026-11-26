@@ -5,7 +5,10 @@
 #       --save NAME   the save it starts from, copied in the run folder (default save1 ; new_game, fixtures/<name>...) :
 #                     the saves of the repository (Data/Saves) are never written. A name with no save there : a new
 #                     game (the game makes it from new_game and generates its world ; --env SAD_WORLD_SEED=N : its seed)
+#       --title       the title screen : no save given (the saves of the repository copied in the run folder)
 #       --build DIR   the build directory (default build)
+#   Ready once the game plays the save (WorldState : a world to generate is generated before, on the loading screen),
+#   or once it is paused (--pause-at), or at the title screen (--title).
 #   tools/sad-run down|ps|logs|path|rm ...   as external/ska/tools/ska-run
 # Then : external/ska/tools/ska-console eval 'Map.teleport("Town", 12, 8)' , run tools/agent/<script>.miniska ...
 set -eu
@@ -18,11 +21,13 @@ shift
 [ $# -ge 1 ] || { echo "sad-run up <id> [--save NAME] [--build DIR] [ska-run options]" >&2; exit 2; }
 ID=$1; shift
 SAVE=save1
+TITLE=0
 BUILD="$ROOT/build"
 REST=""
 while [ $# -gt 0 ]; do
 	case "$1" in
 		--save) SAVE=$2; shift 2 ;;
+		--title) TITLE=1; shift ;;
 		--build) BUILD=$(cd "$2" && pwd); shift 2 ;;
 		*) REST="$REST $(printf '%s' "$1" | sed "s/'/'\\\\''/g; s/^/'/; s/\$/'/")"; shift ;;
 	esac
@@ -35,6 +40,29 @@ if [ ! -d "$ROOT/Data/Saves/$SAVE" ]; then         # a new game : nothing to cop
 fi
 [ -x "$BUILD/bin/ska_main" ] || { echo "sad-run: no $BUILD/bin/ska_main (cmake --build build)" >&2; exit 2; }
 eval "set -- $REST"
-exec "$SKA_RUN" up "$ID" --cwd "$ROOT" --ready eval \
-	"$COPY" "$COPY_ARG" --env "SAD_SAVE_DIR={run}/Saves" --env "SAD_SAVE=$SAVE" \
-	--env "LD_LIBRARY_PATH=$BUILD/lib" "$@" -- "$BUILD/bin/ska_main"
+if [ "$TITLE" = 1 ]; then
+	COPY="--copy"
+	COPY_ARG="Data/Saves:Saves"
+	SAVE_ENV="SAD_TITLE=1"
+	READY=ping                                     # no script VM before a save is played
+else
+	SAVE_ENV="SAD_SAVE=$SAVE"
+	READY=eval
+fi
+OUT=$("$SKA_RUN" up "$ID" --cwd "$ROOT" --ready $READY \
+	"$COPY" "$COPY_ARG" --env "SAD_SAVE_DIR={run}/Saves" --env "$SAVE_ENV" \
+	--env "LD_LIBRARY_PATH=$BUILD/lib" "$@" -- "$BUILD/bin/ska_main") || { echo "$OUT"; exit 1; }
+if [ "$TITLE" = 0 ]; then
+	# The loading screen : until the game plays the save (or is paused)
+	i=0
+	while [ $i -lt 600 ]; do
+		state=$("$ROOT/external/ska/tools/ska-console" --run "$ID" ping 2>/dev/null || true)
+		case "$state" in
+			*WorldState*|*'"paused": true'*) break ;;
+		esac
+		sleep 0.1
+		i=$((i + 1))
+	done
+	OUT=$(printf '%s' "$OUT" | sed "s/\"state\": \"[^\"]*\"/\"state\": \"$(printf '%s' "$state" | sed -n 's/.*"state": "\([^"]*\)".*/\1/p')\"/")
+fi
+echo "$OUT"

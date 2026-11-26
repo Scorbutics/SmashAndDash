@@ -1,7 +1,0 @@
-# Water touched : arguments are the previous block (x, y), the touched block (x, y) and the direction
-Engine = import "bind:ska.engine"
-Surf = import "wd:Levels/surf"
-
-run = function(args: string[]) do
-	Surf.enter(Engine.origin(), (args[4]: int))
-end
