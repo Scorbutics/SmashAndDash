@@ -28,6 +28,8 @@ class GUIMap :
 	public ska::Observer<InventoryEvent> {
 
 public:
+	// The size of the text of the dialogs, in pixels (the longest lines of the scripts, about 50 letters, fit the width)
+	static constexpr unsigned int DialogFontSize = 24;
 	GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
 	GUIMap& operator=(const GUIMap&) = delete;
 

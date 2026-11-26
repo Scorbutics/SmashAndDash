@@ -12,6 +12,7 @@
 4 -1 0 flowerbed_flower
 4 -1 0 flowerbed_roofb
 4 -1 0 flowerbed_orange
+4 1 0 tallfront
 1 -1 0 ('cliff', (False, False, False, False, False, False, False, True), False, False)
 1 -1 0 ('cliff', (False, False, False, False, False, False, False, True), True, False)
 1 -1 0 ('cliff', (False, False, False, False, False, False, True, False), False, False)

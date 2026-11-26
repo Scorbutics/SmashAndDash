@@ -20,9 +20,9 @@ namespace worldgen {
 	// The animated tiles (4 frames), in the order of the Python generator (ANIMATED)
 	enum class Animated : int {
 		Water, Flower, Tall, Campfire, LampHead, Butterfly, Fountain00, Fountain01, Fountain10, Fountain11,
-		FlowerbedRoofr, FlowerbedFlower, FlowerbedRoofb, FlowerbedOrange
+		FlowerbedRoofr, FlowerbedFlower, FlowerbedRoofb, FlowerbedOrange, TallFront
 	};
-	constexpr int AnimatedCount = 14;
+	constexpr int AnimatedCount = 15;
 	constexpr TileId AnimatedTile(Animated animated) { return -2 - static_cast<int>(animated); }
 	constexpr bool IsAnimated(TileId tile) { return tile <= -2; }
 	constexpr Animated AnimatedOf(TileId tile) { return static_cast<Animated>(-2 - tile); }

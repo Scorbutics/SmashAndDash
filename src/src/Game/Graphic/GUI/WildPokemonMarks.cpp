@@ -48,8 +48,9 @@ void WildPokemonMarks::render(Ui::Canvas& canvas) {
 		const auto& hc = m_componentAccessor.get<ska::HitboxComponent>(entity);
 		const auto drawn = graphic.drawnPosition(m_componentAccessor.get<ska::PositionComponent>(entity));
 		const auto width = graphic.animatedSprites.empty() ? 0 : static_cast<int>(graphic.animatedSprites[0].getWidth());
-		const auto x = static_cast<int>(std::lround(drawn.x)) - static_cast<int>(hc.width / 2) + hc.xOffset / 2 - camera.x + width / 2;
-		const auto y = static_cast<int>(std::lround(drawn.y)) - static_cast<int>(hc.height / 2) - 5 - camera.y - static_cast<int>(std::lround(drawn.z));
+		const auto origin = graphic.spriteOrigin(std::lround(drawn.x), std::lround(drawn.y), hc);
+		const auto x = origin.x - camera.x + width / 2;
+		const auto y = origin.y - camera.y - static_cast<int>(std::lround(drawn.z));
 
 		// It pops (big, then normal, a small jump), then fades
 		const auto age = grid.seen;

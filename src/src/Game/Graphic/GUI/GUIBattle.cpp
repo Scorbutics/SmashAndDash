@@ -153,8 +153,9 @@ GUIBattle::Sprite GUIBattle::sprite(ska::EntityId fighter) const {
 	const auto drawn = graphic.drawnPosition(m_entities.getComponent<ska::PositionComponent>(fighter));
 	const auto& camera = m_camera.getDisplay();
 	auto result = Sprite{};
-	result.position.x = static_cast<int>(std::lround(drawn.x)) - static_cast<int>(hc.width / 2) + hc.xOffset / 2 - camera.x;
-	result.position.y = static_cast<int>(std::lround(drawn.y)) - static_cast<int>(hc.height / 2) - 5 - camera.y - static_cast<int>(std::lround(drawn.z));
+	const auto origin = graphic.spriteOrigin(std::lround(drawn.x), std::lround(drawn.y), hc);
+	result.position.x = origin.x - camera.x;
+	result.position.y = origin.y - camera.y - static_cast<int>(std::lround(drawn.z));
 	if (!graphic.animatedSprites.empty()) {
 		result.width = static_cast<int>(graphic.animatedSprites[0].getWidth());
 		result.height = static_cast<int>(graphic.animatedSprites[0].getHeight());

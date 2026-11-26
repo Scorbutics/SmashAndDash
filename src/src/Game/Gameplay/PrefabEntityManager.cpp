@@ -47,6 +47,13 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	hc.yOffset = gc.animatedSprites[0].getHeight() * 0.66;
 	hc.height = gc.animatedSprites[0].getHeight() - hc.yOffset;
 	hc.width = gc.animatedSprites[0].getWidth() - 2 * hc.xOffset;
+	// The drawing on its block, as its physics shape (CustomEntityManager::physicsShapeOffset) : centred, the bottom of the
+	// frame (its feet) on the bottom of the block. The hitbox alone placed it 6 px right and 6 px low (a 72 px frame)
+	const auto spriteWidth = static_cast<int>(gc.animatedSprites[0].getWidth());
+	const auto spriteHeight = static_cast<int>(gc.animatedSprites[0].getHeight());
+	const auto block = static_cast<int>(worldBlockSize);
+	const auto placed = gc.spriteOrigin(0, 0, hc);
+	gc.drawOffset = { (block - spriteWidth) / 2 - placed.x, block + 1 - spriteHeight - placed.y };
 	addComponent<HitboxComponent>(hero, std::move(hc));
 
 	addComponent<CollidableComponent>(hero, CollidableComponent());

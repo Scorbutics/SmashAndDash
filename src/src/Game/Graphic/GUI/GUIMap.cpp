@@ -157,7 +157,7 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
 
 		auto startRect = absoluteRect;
 		startRect.y += startRect.h - 1;
-        auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, 12);
+        auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, DialogFontSize);
 		
 		m_dialogScript = de.callbackActive ? de.callback : std::optional<ska::ScriptSleepComponent>{};
 		// (Each dialog has its own close callback : several scripts can show a dialog)

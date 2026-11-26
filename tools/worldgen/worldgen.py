@@ -54,6 +54,9 @@ for _c in range(2):
 for _colour in FLOWERBED_COLOURS:
     ANIMATED[f"flowerbed_{_colour}"] = (lambda col: lambda f: g.flowerbed_anim(col, f))(_colour)
     ANIMATED_WALK[f"flowerbed_{_colour}"] = True
+# The front leaves of the tall grass, on the top layer of its block : over the character walking in it (base 1)
+TALLFRONT_CELL = "tallfront"
+ANIMATED[TALLFRONT_CELL], ANIMATED_WALK[TALLFRONT_CELL] = (lambda f: g.tall_grass(f, front=True)), True
 # The cells with a touch script (Resources/Chipsets/tile_scripts/<name>.miniska ; also there : ledge_left, ledge_down,
 # ledge_right, the jumps over a ledge, for when the world has ledges)
 TILE_SCRIPTS = {WATER_CELL: "water"}
@@ -575,7 +578,7 @@ FLAT = -1
 # The objects standing on their block (the posts, the furniture of the villages, the rocks)
 STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "bush", "well", "boulder", "log seat",
             "sign"}
-ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
+ANIMATED_BASE = {"lamphead": 1, TALLFRONT_CELL: 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
                  "fountain_1_1": 0}
 # The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
 # bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk... : the
@@ -1607,11 +1610,18 @@ class World:
                     continue
                 p = self.nature(x, y)
                 if fbm(x / 6.0, y / 6.0, self.seed + 2) > p["tall"] and fbm(x / 13.0, y / 13.0, self.seed + 1) < 0.5:
-                    self.set("M", x, y, TALL_CELL)
+                    self.tall_grass(x, y)
                 elif h01(x, y, self.seed + 21) < p["boulder"]:
                     self.set("M", x, y, self.chip.cell(("boulder",), False))
                     self.walk[y][x] = False
                     self.objects[(x, y)] = 0.4
+
+    def tall_grass(self, x, y):
+        """Tall grass : its leaves on the middle layer ; its front leaves on the top layer (base 1 : drawn over a
+        character in the grass, under the ones on the block below), unless something is there (a tree top)."""
+        self.set("M", x, y, TALL_CELL)
+        if 0 <= x < self.W and 0 <= y < self.H and self.layers["T"][y][x] is None:
+            self.set("T", x, y, TALLFRONT_CELL)
 
     def lamp(self, x, y):
         """A street lamp : its post on the block (blocks the way), its lantern on the block above (over the characters)."""

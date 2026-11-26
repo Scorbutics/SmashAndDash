@@ -446,6 +446,10 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 	});
 
 	m_builder.bindField("teleport", [&ged, &worldState](std::vector<ska::NodeValue> params) {
+		// The map does not change under a battle (its fighters, its arena, the map it goes back to) : an error of the script
+		if (worldState.battleStage() != nullptr) {
+			throw std::runtime_error("no teleport during a battle (to " + String(params[0]) + ") : wait for its end (Battle.start returns then)");
+		}
 		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
 		const auto mapReader = ska::IniReader{ MapIni(mapName) };

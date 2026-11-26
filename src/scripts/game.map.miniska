@@ -4,7 +4,8 @@
 # Name of the current map (ex : "Town")
 name = function() : string do return "" end
 
-# Goes to a map, at a block position (the map changes during a screen transition : waitTransition waits for its end)
+# Goes to a map, at a block position (the map changes during a screen transition : waitTransition waits for its end).
+# During a battle : an error of the script (the map does not change under a battle)
 teleport = function(map: string, x: int, y: int) do end
 # Waits until the screen transition (a map change) is over
 waitTransition = function() do end
