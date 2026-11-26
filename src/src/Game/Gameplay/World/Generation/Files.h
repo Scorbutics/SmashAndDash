@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <memory>
 #include <string>
 #include "Chipset.h"
 
@@ -29,6 +30,33 @@ namespace worldgen {
 
 	Start StartOf(const WorldPlan& plan);
 
-	// A world of 8 x 8 chunks from a seed, written in folder (worldPath : as the maps name it, ends with '/')
+	// A world of 8 x 8 chunks from a seed, written in folder (worldPath : as the maps name it, ends with '/'), step by
+	// step (a step : a few hundred milliseconds at most ; the screen can be drawn between two of them)
+	class WorldWriter {
+	public:
+		WorldWriter(std::int64_t seed, std::string folder, std::string worldPath, Resources resources = {});
+		~WorldWriter();
+		// Does the next step : false once the world is written
+		bool step();
+		bool done() const { return m_step >= steps(); }
+		// 0 .. 1
+		double progress() const { return static_cast<double>(m_step) / steps(); }
+		// What the next step does (French, Latin-1 as the texts of the game : the loading screen)
+		std::string stage() const;
+		// Where the player starts (once done)
+		const Start& start() const { return m_start; }
+	private:
+		struct State;
+		int steps() const;
+
+		std::int64_t m_seed;
+		std::string m_folder, m_worldPath;
+		Resources m_resources;
+		std::unique_ptr<State> m_state;
+		int m_step = 0;
+		Start m_start;
+	};
+
+	// A world written at once (WorldWriter)
 	Start GenerateWorld(std::int64_t seed, const std::string& folder, const std::string& worldPath, const Resources& resources = {});
 }

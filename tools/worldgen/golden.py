@@ -161,6 +161,37 @@ def chipsets(world):
     return out
 
 
+def file_hash(path):
+    """A file of a world : the bytes of a text, the size and the RGB pixels of an image."""
+    if path.endswith((".bmp", ".png", ".col", ".prop")):
+        from PIL import Image
+        im = Image.open(path).convert("RGB")
+        return fnv(struct.pack("<ii", im.width, im.height) + im.tobytes())
+    with open(path, "rb") as f:
+        return fnv(f.read())
+
+
+def files(world):
+    """Stage 3c : the files of the world (World.write), each summed up (file_hash)."""
+    import shutil
+    import tempfile
+    here = os.path.dirname(os.path.abspath(__file__))
+    root = tempfile.mkdtemp(prefix="golden_world_")
+    try:
+        os.symlink(os.path.join(here, "..", "..", "Resources"), os.path.join(root, "Resources"))
+        os.makedirs(os.path.join(root, "Sprites", "Charsets"))
+        world.write(root, f"seed{world.seed}")
+        base = os.path.join(root, "Data", "Worlds", f"seed{world.seed}")
+        out = []
+        for folder, _, names in sorted(os.walk(base)):
+            for name in sorted(names):
+                path = os.path.join(folder, name)
+                out.append(f"file {world.seed} {os.path.relpath(path, base)} {file_hash(path)}")
+        return sorted(out)
+    finally:
+        shutil.rmtree(root)
+
+
 def main():
     out = []
     # Noise : a few values
@@ -180,6 +211,8 @@ def main():
         out += terrain(world)
         out += layers(world)
         out += chipsets(world)
+        if seed == 7:
+            out += files(world)
     print("\n".join(out))
 
 

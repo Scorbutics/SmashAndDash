@@ -12,9 +12,10 @@ chipset of the tiles it uses (Data/Worlds/<world>/Chipsets/chipset_<map>.png ; c
 
   tools/worldgen/worldgen.py [--seed N] [--chunks 8x8] [--world NAME] [--root .] [--save NAME]... [--preview out.png]
 
-  A world per save : the world goes in Data/Worlds/<world> (default seed<N>) ; each --save NAME (repeatable) is a save
-  starting in its village (Data/Saves/NAME, made from new_game ; new_game : the new game itself), whose trainer.ini
-  names the world ([World] directory). Ex : --seed 7 --save new_game --save save1 ; --seed 42 --save save2
+  The world goes in Data/Worlds/<world> (default seed<N> ; not kept in git : the reference of the C++ port, a look at
+  it) ; each --save NAME (repeatable) is a save starting in its village (Data/Saves/NAME, made from new_game), whose
+  world the game generates from the seed ([World] generate, seed : the C++ port of this generator). Ex : --seed 7
+  --save save1 ; --seed 42 --save save2
   --preview     the whole world in one image (the 3 layers, the colour key transparent)
 
 In the chipsets : the water at (1, 4) (animated, its touch script starts surfing ; the game makes x < 6, y < 4 and
@@ -1875,7 +1876,8 @@ class World:
             elif line.startswith("start_posy="):
                 line = f"start_posy={self.town[1] - cy * CHUNK + 1}"
             out.append(line)
-        out += ["[World]", f"directory=./Data/Worlds/{world}/"]
+        if name != "new_game":                       # the game generates the world of the save from its seed
+            out += ["[World]", "generate=true", f"seed={self.seed}"]
         open(path, "w", encoding="latin-1").write("\n".join(out) + "\n")
 
     def preview(self, path, scale=1, light=True):

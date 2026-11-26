@@ -610,7 +610,14 @@ TEST_CASE("the png writer writes what the png reader reads") {
 	CHECK(worldgen::DecodePng(worldgen::EncodePng(atlas)).rgb == atlas.rgb);
 }
 
-TEST_CASE("the files of a world are those of the Python generator (Data/Worlds/seed7)") {
+TEST_CASE("the files of a world are those of the Python generator (seed 7)") {
+	auto expected = std::map<std::string, std::string>{};
+	for (const auto& words : Golden()) {
+		if (words[0] == "file" && words[1] == "7") {
+			expected[words[2]] = words[3];
+		}
+	}
+	REQUIRE(!expected.empty());
 	const auto folder = std::filesystem::temp_directory_path() / "sad_worldgen_test_seed7";
 	const auto begin = std::chrono::steady_clock::now();
 	const auto start = worldgen::GenerateWorld(7, folder.string(), "./Data/Worlds/seed7/");
@@ -618,24 +625,24 @@ TEST_CASE("the files of a world are those of the Python generator (Data/Worlds/s
 	CHECK(start.map == "w_5_4");
 	CHECK(start.x == 17);
 	CHECK(start.y == 16);
-	const auto reference = std::filesystem::path{ "Data/Worlds/seed7" };
 	const auto files = FilesOf(folder);
-	CHECK(files == FilesOf(reference));
+	CHECK(files.size() == expected.size());
 	for (const auto& file : files) {
 		INFO(file);
-		const auto mine = FileBytes(folder / file);
-		const auto theirs = FileBytes(reference / file);
+		const auto found = expected.find(file);
+		REQUIRE(found != expected.end());
+		auto bytes = FileBytes(folder / file);
 		const auto ext = std::filesystem::path{ file }.extension().string();
-		if (ext == ".bmp") {
-			CHECK(DecodeBmp(mine).rgb == DecodeBmp(theirs).rgb);
-		} else if (ext == ".png" || ext == ".col" || ext == ".prop") {
-			const auto a = worldgen::DecodePng(mine);
-			const auto b = worldgen::DecodePng(theirs);
-			CHECK(a.width == b.width);
-			CHECK(a.height == b.height);
-			CHECK(a.rgb == b.rgb);
+		if (ext == ".bmp" || ext == ".png" || ext == ".col" || ext == ".prop") {
+			// The size and the pixels of an image (the Python files are compressed otherwise)
+			const auto image = ext == ".bmp" ? DecodeBmp(bytes) : worldgen::DecodePng(bytes);
+			auto data = std::vector<unsigned char>{};
+			AppendInt(data, image.width);
+			AppendInt(data, image.height);
+			data.insert(data.end(), image.rgb.begin(), image.rgb.end());
+			CHECK(std::to_string(Fnv(data)) == found->second);
 		} else {
-			CHECK(mine == theirs);
+			CHECK(Bytes(bytes) == found->second);
 		}
 	}
 	std::filesystem::remove_all(folder);
