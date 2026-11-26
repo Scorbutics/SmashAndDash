@@ -224,6 +224,30 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 	auto& effect = m_componentAccessor.get<ska::GraphicComponent>(entity).effect;
 	effect = ska::RenderEffect{};
 
+	// Recalled in its pokeball : it turns red, flashes and shrinks into the light, then it is gone
+	if (fighter.recall >= 0) {
+		const auto progress = std::min(1.F, static_cast<float>(fighter.recall) / static_cast<float>(FighterComponent::RecallDuration));
+		if (progress >= 1.F || fighter.knockedOut) {
+			effect.alpha = 0;
+			return;
+		}
+		effect.green = effect.blue = static_cast<unsigned char>(255.F * (1.F - 0.75F * std::min(1.F, progress * 3.F)));
+		effect.flash = static_cast<unsigned char>(200.F * std::min(1.F, progress * 2.F));
+		const auto shrink = progress < 0.35F ? 1.F : 1.F - (progress - 0.35F) / 0.65F;
+		effect.scaleX = std::max(0.05F, shrink * (1.F - 0.3F * progress));
+		effect.scaleY = std::max(0.05F, shrink);
+		return;
+	}
+
+	// Out of its pokeball : it grows out of the light, white, a little too big, then settles
+	if (fighter.appear < FighterComponent::AppearDuration) {
+		const auto progress = static_cast<float>(fighter.appear) / static_cast<float>(FighterComponent::AppearDuration);
+		const auto grow = progress < 0.7F ? 0.15F + 1.0F * progress / 0.7F : 1.15F - 0.15F * (progress - 0.7F) / 0.3F;
+		effect.scaleX = effect.scaleY = grow;
+		effect.flash = static_cast<unsigned char>(255.F * std::max(0.F, 1.F - progress * 1.3F));
+		return;
+	}
+
 	// K.O. : a flash, then it sinks and disappears
 	if (fighter.knockedOut) {
 		const auto time = fighter.knockedOutTime;
@@ -365,12 +389,22 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 		if (processed.find(fighter.opponent) == processed.end()) {
 			continue;
 		}
+		// Coming out of its pokeball, going back in it : real time (the hit stops do not hold them)
+		if (fighter.appear < FighterComponent::AppearDuration) {
+			fighter.appear = std::min(FighterComponent::AppearDuration, fighter.appear + ellapsedTime);
+		}
+		if (fighter.recall >= 0 && fighter.recall < FighterComponent::RecallDuration) {
+			fighter.recall = std::min(FighterComponent::RecallDuration, fighter.recall + static_cast<int>(ellapsedTime));
+		}
 		if (fighter.knockedOut) {
 			// It does not fight anymore : it stops where it is, and sinks (draw)
 			fighter.knockedOutTime += ellapsedTime;
 			if (m_stage.phase() != BattlePhase::Over) {
 				setVelocity(entity, {});
 			}
+		} else if (m_stage.phase() == BattlePhase::Outro) {
+			// The battle is over : everybody stands still
+			setVelocity(entity, {});
 		} else if (m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
 			control(entity, fighter, ellapsedTime);
 		}

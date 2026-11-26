@@ -21,6 +21,8 @@ struct MapEvent {
 	std::string chipsetName;
 	// The player comes through a door or a map edge : it appears one block behind the position, and walks to it
 	bool walkIn = false;
+	// Back from a battle : the map is still there (its characters, its physics), it is not loaded again, no fade
+	bool resume = false;
 
 	~MapEvent() = default;
 

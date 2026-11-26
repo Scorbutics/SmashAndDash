@@ -94,6 +94,8 @@ public:
 	ScreenFade& getFade() { return m_fade; }
 	// Battle rules and AI (scripts)
 	BattleRules& getBattleRules();
+	// The level of the first Pokemon of the team able to fight (1 : none)
+	int teamLevel();
 	// The battle going on (StateFight), else nullptr : the scripts act on it (Battle.announce)
 	void setBattleStage(BattleStage* stage) { m_battleStage = stage; }
 	BattleStage* battleStage() { return m_battleStage; }

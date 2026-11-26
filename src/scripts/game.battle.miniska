@@ -15,9 +15,17 @@ start = function(monster: int, level: int) : bool do return false end
 # battle (the arena cannot be left). The script waits as with start.
 startWith = function(monsters: int[], levels: int[], canFlee: bool) : bool do return false end
 
+# A message of the battle, in the dialog window : the script waits until the player closes it (it closes by itself with
+# SAD_BATTLE_AUTOPLAY). For the steps of the battles (Data/Battle/steps.miniska : the outro)
+message = function(text: string) do end
+
 # A banner over the battle going on (big text in the middle of the screen) ; nothing out of a battle. For the steps of
 # the battles (Data/Battle/steps.miniska)
 announce = function(text: string) do end
+
+# The wild Pokemon on the map, one line each : "<monster> <level> <block x> <block y> <attitude>" (attitude : aggressive,
+# fearful, passive : Data/Battle/encounters.miniska)
+wild = function() : string[] do return []: string end
 
 # Number of battles since the game started, result of the last one
 battles = function() : int do return 0 end

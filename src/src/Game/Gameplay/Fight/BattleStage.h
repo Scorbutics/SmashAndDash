@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <optional>
 #include <string>
 #include <vector>
 #include "Core/ECS/ECSDefines.h"
@@ -20,6 +21,9 @@ enum class BattlePhase {
 	KnockOut,
 	// The player left the arena (a wild Pokemon) : the battle ends
 	Fled,
+	// The end of the battle : the Pokemon of the player goes back in its pokeball, the experience won, the camera goes
+	// back to the trainer (the step "outro" : its dialogs)
+	Outro,
 	Over
 };
 
@@ -38,6 +42,19 @@ struct BattleMark {
 	unsigned int age = 0;
 	bool onPlayer = false;
 	std::string text;
+};
+
+// The end of a battle as the interface shows it (BattlePhase::Outro) : the experience won by the Pokemon of the player,
+// its level and its progress towards the next one before and after (0 .. 1)
+struct BattleOutro {
+	std::string pokemon;
+	int experience = 0;
+	int levelBefore = 1;
+	int levelAfter = 1;
+	float progressBefore = 0.F;
+	float progressAfter = 0.F;
+	// The screen was gray (a K.O.) : it comes back to its colors
+	bool fromKnockOut = false;
 };
 
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
@@ -82,6 +99,9 @@ public:
 	bool canFlee = true;
 	// The side that won (-1 : none yet)
 	int winnerTeam = -1;
+	// The trainer of the player (it throws the pokeball, the camera goes back to it at the end)
+	std::optional<ska::EntityId> trainer;
+	BattleOutro outro;
 
 private:
 	unsigned int m_delta = 0;

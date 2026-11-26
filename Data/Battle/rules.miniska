@@ -22,6 +22,14 @@ level = function(experience: int, needed: int) : int do
 	return Math.clamp(1 + experience / needed, 1, 100)
 end
 
+# The experience of a Pokemon when it reaches a level (the start of the level : "level" above), "needed" as above
+levelExperience = function(level: int, needed: int) : int do
+	if needed <= 0 || level <= 1
+		return 0
+	end
+	return (level - 1) * needed
+end
+
 # Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon) of a level
 experience = function(dropped: int, level: int) : int do
 	return dropped * level

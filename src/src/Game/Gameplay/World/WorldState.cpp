@@ -14,6 +14,7 @@
 #include "AI/IADefinedMovementComponent.h"
 #include "WorldState.h"
 #include "../Control/GridMovementComponent.h"
+#include "../Mobs/WildPokemonComponent.h"
 #include "../Data/Settings.h"
 #include "../../Utils/IDs.h"
 #include "Core/Exceptions/CorruptedFileException.h"
@@ -337,6 +338,21 @@ void WorldState::beforeUnload() {
 	m_worldBGM.setVolume(m_settings.getSoundVolume());
 }
 
+int WorldState::teamLevel() {
+	const auto team = Team{ m_saveManager.getPathName() };
+	const auto index = team.firstAble();
+	if (!index.has_value()) {
+		return 1;
+	}
+	const auto pokemon = team.member(*index);
+	if (!pokemon.has_value()) {
+		return 1;
+	}
+	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+	const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+	return m_battleRules->level(pokemon->experience, needed);
+}
+
 //TODO SRP
 int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rmax, unsigned int nbrSpawns, ska::IniReader* dataSpawn) {
 
@@ -394,14 +410,20 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				/* 1 = Random */
 				/* 2 = Fixe */
 				auto type = dataSpawn->get<int>("Data path_type");
+				// Its attitude towards the player (Data/Battle/encounters.miniska)
+				auto wild = WildPokemonComponent{};
+				wild.attitude = WildPokemonComponent::FromName(m_battleRules->attitude(static_cast<int>(idMob), level, teamLevel(), rand() % 100));
 				// Random : it wanders block by block, as the characters (GridMovementSystem). Predefined paths are not
-				// written in the data : it stays
-				if (type == 1) {
+				// written in the data : it stays, unless it charges the player or runs away from it
+				if (type == 1 || wild.attitude != WildPokemonComponent::Attitude::Passive) {
 					auto grid = GridMovementComponent{};
 					grid.mode = GridMovementComponent::Mode::Wander;
 					grid.wait = static_cast<unsigned int>(500 + rand() % 1500);
+					const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+					ReactToPlayer(grid, wild.attitude, trainer == nullptr ? 0 : *trainer);
 					m_entityManager.addComponent<GridMovementComponent>(mob, std::move(grid));
 				}
+				m_entityManager.addComponent<WildPokemonComponent>(mob, std::move(wild));
 
 				FightComponent fc;
 				fc.level = level;
@@ -419,7 +441,8 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 				CustomEntityManager::place(m_entityManager, getSpace(), mob, ska::Point<float>(static_cast<float>(spawnBlock.x * static_cast<int>(blockSize)), static_cast<float>(spawnBlock.y * static_cast<int>(blockSize))));
 
 				successfulSpawns++;
-				SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " level " << level << " at block (" << spawnBlock.x << ", " << spawnBlock.y << ")";
+				SLOG(ska::LogLevel::Info) << "Wild pokemon " << idMob << " level " << level << " at block (" << spawnBlock.x << ", " << spawnBlock.y << "), "
+					<< AttitudeName(m_entityManager.getComponent<WildPokemonComponent>(mob).attitude);
 			} else {
 				SLOG(ska::LogLevel::Debug) << "Wild pokemon " << idMob << " : no spawn at block (" << dest.x / blockSize << ", " << dest.y / blockSize << ")";
 			}

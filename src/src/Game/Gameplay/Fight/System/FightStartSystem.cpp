@@ -4,6 +4,7 @@
 #include "../../../Utils/IDs.h"
 #include "Core/Utils/RectangleUtils.h"
 #include "Core/Utils/TimeUtils.h"
+#include "Core/ECS/Basics/Input/InputComponent.h"
 #include "Base/Values/Numbers/NumberUtils.h"
 #include "../../State/StateFight.h"
 #include "../../World/WorldState.h"
@@ -62,59 +63,49 @@ FightStartSystem::FightStartSystem(CustomEntityManager& cem, PokemonGameEventDis
 	m_t0 = ska::TimeUtils::getTicks();
 }
 
-void FightStartSystem::refresh(unsigned int) {
+void FightStartSystem::refresh(unsigned int ellapsedTime) {
 	auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
-	if (trainer == nullptr) {
+	if (trainer == nullptr || !m_cem.hasComponent<ska::PositionComponent>(*trainer)) {
 		return;
 	}
-	ska::PositionComponent& pcPlayer = m_componentAccessor.get<ska::PositionComponent>(*trainer);
-	ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(*trainer);
-	ska::Point<float> pPlayer(pcPlayer.x, pcPlayer.y);
+	const auto* trainerGrid = m_cem.hasComponent<GridMovementComponent>(*trainer) ? &m_cem.getComponent<GridMovementComponent>(*trainer) : nullptr;
+	// Not right after the map appeared, nor while the player does not play (a cutscene, a map change)
+	const auto ready = ska::TimeUtils::getTicks() - m_t0 >= BATTLE_START_TICKS && m_cem.hasComponent<ska::InputComponent>(*trainer) &&
+		!m_worldScene.getFade().running();
 
-	if (gc.animatedSprites.empty()) {
-		return;
-	}
-
-	pPlayer.x += gc.animatedSprites[0].getWidth() / 2;
-	pPlayer.y += gc.animatedSprites[0].getHeight() / 2;
-
-
-	const unsigned int currentDelay = ska::TimeUtils::getTicks() - m_t0;
-	const auto& processed = getEntities();
-	for (ska::EntityId entityId : processed) {
-		ska::PositionComponent& pc = m_componentAccessor.get<ska::PositionComponent>(entityId);
-		ska::GraphicComponent& gc = m_componentAccessor.get<ska::GraphicComponent>(entityId);
-		ska::Point<float> p(pc.x, pc.y);
-
-		if (gc.animatedSprites.empty()) {
+	for (const auto entityId : getEntities()) {
+		auto& wild = m_componentAccessor.get<WildPokemonComponent>(entityId);
+		wild.calm = wild.calm > ellapsedTime ? wild.calm - ellapsedTime : 0;
+		auto* grid = m_componentPossibleAccessor.get<GridMovementComponent>(entityId);
+		if (grid != nullptr) {
+			ReactToPlayer(*grid, wild.calm > 0 ? WildPokemonComponent::Attitude::Passive : wild.attitude, *trainer);
+		}
+		if (!ready || wild.calm > 0) {
 			continue;
 		}
-
-		p.x += gc.animatedSprites[0].getWidth() / 2;
-		p.y += gc.animatedSprites[0].getHeight() / 2;
-
-		if (*trainer != entityId && ska::RectangleUtils::distanceSquared(pPlayer, p) < BATTLE_START_DISTANCE_SQUARED) {
-			if (currentDelay >= BATTLE_START_TICKS) {
-				// The rules of the encounters (Data/Battle/encounters.miniska) : the sizes of the dice, the companions
-				auto& rules = m_worldScene.getBattleRules();
-				if (ska::NumberUtils::random(1, rules.encounterOdds()) == 1) {
-					// Sometimes the wild Pokemon is not alone : others of its kind join the battle
-					auto& fc = m_componentAccessor.get<FightComponent>(entityId);
-					fc.companions.clear();
-					if (ska::NumberUtils::random(1, rules.groupOdds()) == 1) {
-						const auto spread = rules.levelSpread();
-						for (auto i = 0, size = rules.groupSize(); i < size; i++) {
-							const auto level = rules.companionLevel(static_cast<int>(fc.level), ska::NumberUtils::random(-spread, spread));
-							fc.companions.emplace_back(fc.opponentScriptId, static_cast<unsigned int>(level));
-						}
-					}
-					StartBattle(m_cem, m_ged, m_worldScene, *trainer, entityId);
-				}
-				m_t0 = ska::TimeUtils::getTicks();
-				break;
+		const auto touched = (trainerGrid != nullptr && trainerGrid->touched == std::optional<ska::EntityId>{ entityId }) ||
+			(grid != nullptr && grid->touched == std::optional<ska::EntityId>{ *trainer });
+		if (!touched) {
+			continue;
+		}
+		SLOG(ska::LogLevel::Info) << "Battle : the trainer and a " << AttitudeName(wild.attitude) << " wild pokemon touch";
+		// The rules of the encounters (Data/Battle/encounters.miniska) : sometimes the wild Pokemon is not alone, others of
+		// its kind join the battle
+		auto& rules = m_worldScene.getBattleRules();
+		auto& fc = m_componentAccessor.get<FightComponent>(entityId);
+		fc.companions.clear();
+		if (ska::NumberUtils::random(1, rules.groupOdds()) == 1) {
+			const auto spread = rules.levelSpread();
+			for (auto i = 0, size = rules.groupSize(); i < size; i++) {
+				const auto level = rules.companionLevel(static_cast<int>(fc.level), ska::NumberUtils::random(-spread, spread));
+				fc.companions.emplace_back(fc.opponentScriptId, static_cast<unsigned int>(level));
 			}
 		}
-
+		if (!StartBattle(m_cem, m_ged, m_worldScene, *trainer, entityId)) {
+			// No Pokemon of the team can fight : it leaves the player alone for a while
+			wild.calm = CalmAfterBattle;
+		}
+		break;
 	}
 }
 

@@ -7,6 +7,7 @@
 
 BattleCameraSystem::BattleCameraSystem(ska::EntityManager& em, ska::CameraSystem& camera, BattleStage& stage) :
 	System(em),
+	m_entities(em),
 	m_camera(camera),
 	m_stage(stage) {
 }
@@ -115,12 +116,20 @@ void BattleCameraSystem::refresh(unsigned int ellapsedTime) {
 		zoom = WorldState::MapZoom;
 		speed = 2.F;
 		break;
+	case BattlePhase::Outro:
+		// Back to the trainer, as the map shows it : the map goes on from there
+		if (m_stage.trainer.has_value() && m_entities.hasComponent<ska::PositionComponent>(*m_stage.trainer) && m_entities.hasComponent<ska::HitboxComponent>(*m_stage.trainer)) {
+			target = ska::PositionComponent::getCenterPosition(m_entities.getComponent<ska::PositionComponent>(*m_stage.trainer), m_entities.getComponent<ska::HitboxComponent>(*m_stage.trainer));
+		}
+		zoom = WorldState::MapZoom;
+		speed = 2.4F;
+		break;
 	default:
 		// The push in of the start of the fight is slower
 		speed = m_stage.phaseTime() < 1200 ? 1.6F : 3.F;
 		break;
 	}
-	zoom = std::max(MinZoom, std::min(MaxZoom + 0.3F, zoom)) + m_kick;
+	zoom = phase == BattlePhase::Outro ? zoom : std::max(MinZoom, std::min(MaxZoom + 0.3F, zoom)) + m_kick;
 
 	// Smoothly : the point and the zoom follow their targets
 	const auto follow = 1.F - std::exp(-seconds * speed);

@@ -35,6 +35,13 @@ public:
 	// K.O. : it does not fight anymore (it sinks and disappears), since "knockedOutTime" milliseconds
 	bool knockedOut = false;
 	unsigned int knockedOutTime = 0;
+	// It comes out of its pokeball : milliseconds since (it grows out of the light ; AppearDuration : done)
+	unsigned int appear = AppearDuration;
+	static constexpr unsigned int AppearDuration = 420;
+	// Recalled in its pokeball at the end of the battle : milliseconds since (it turns red and shrinks, then it is not
+	// drawn anymore), -1 : not recalled
+	int recall = -1;
+	static constexpr int RecallDuration = 450;
 
 	FighterIntent intent = FighterIntent::Hold;
 	// Battle time of its next AI decision

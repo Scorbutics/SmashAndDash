@@ -80,9 +80,9 @@ float WGameCore::ticksWanted() const {
 }
 
 bool WGameCore::onTeleport(MapEvent& me) {
-	// A battle starts on the map (no transition) ; another map : the screen fades to black, the map changes, the screen
+	// A battle starts on the map, the map goes on after a battle (no transition) ; another map : the screen fades to black, the map changes, the screen
 	// comes back (the change is already in a transition : now)
-	if (me.eventType == MapEventType::Switch_Battle || m_worldState->getFade().running()) {
+	if (me.eventType == MapEventType::Switch_Battle || me.resume || m_worldState->getFade().running()) {
 		switchState(me);
 		return true;
 	}
@@ -103,7 +103,7 @@ void WGameCore::switchState(const MapEvent& me) {
 				resetAccumulator();
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, MapDirectory(me.mapName), me.chipsetName, me.position, me.walkIn);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, MapDirectory(me.mapName), me.chipsetName, me.position, me.walkIn, me.resume);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
 				resetAccumulator();

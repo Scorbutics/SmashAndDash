@@ -33,6 +33,10 @@ public:
 
 	~StateFight() override;
 
+	// The room between the trainer and the wild Pokemon when the battle starts (blocks) : the wild Pokemon touched jumps
+	// back
+	static constexpr int IntroGap = 3;
+
 protected:
 	virtual void beforeLoad(ska::State* lastScene) override;
 	virtual void beforeUnload() override;
@@ -66,7 +70,8 @@ private:
 
 	ska::InputComponent* m_ic;
 	ska::InputComponent m_input;
-	ska::EntityId m_pokeball;
+	// Where the pokeball of the intro opened (world pixels)
+	ska::Point<float> m_landing;
 
 	SkillFactory m_skillFactory;
 	StateFightLoading m_loader;
@@ -82,6 +87,11 @@ private:
 	void createCompanions(BattleRules& rules);
 	// The trainer does not block the fighters during the battle (its physics shape becomes a sensor)
 	void trainerBlocks(bool blocks);
+	// The intro : the points of the throw of the pokeball, from the trainer to the block next to the wild Pokemon
+	std::pair<ska::Point<float>, ska::Point<float>> throwPath();
+	// An entity removed after the battle : its physics body goes away first (the space keeps the bodies of the removed
+	// entities, and the map is not loaded again after a battle)
+	void park(ska::EntityId entity);
 
 
 };

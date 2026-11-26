@@ -98,6 +98,11 @@ void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
 		const auto progress = std::min(1.F, static_cast<float>(m_stage.phaseTime()) / 500.F);
 		gray = 0.85F * progress;
 		vignette = 0.8F * progress;
+	} else if (m_stage.phase() == BattlePhase::Outro && m_stage.outro.fromKnockOut) {
+		// The colors come back
+		const auto progress = 1.F - std::min(1.F, static_cast<float>(m_stage.phaseTime()) / 600.F);
+		gray = 0.85F * progress;
+		vignette = 0.8F * progress;
 	}
 	if (split <= 0.F && gray <= 0.F) {
 		renderer.setScreenShader(nullptr);
@@ -206,6 +211,10 @@ void GUIBattle::renderArena(ska::Renderer& renderer) const {
 
 void GUIBattle::renderGround(ska::Renderer& renderer) const {
 	const auto canvas = Ui::Canvas{ renderer };
+	// The battle is over : the map again
+	if (m_stage.phase() == BattlePhase::Outro) {
+		return;
+	}
 	renderArena(renderer);
 
 	// A ring under each fighter : blue for the player, red for the opponent
@@ -343,12 +352,19 @@ void GUIBattle::renderBanner(ska::Renderer& renderer) const {
 	}
 	const auto age = m_stage.bannerAge();
 	const auto lasting = m_stage.phase() == BattlePhase::KnockOut || m_stage.phase() == BattlePhase::Over;
-	if (!lasting && age > 1200) {
+	if (!lasting && age > 1200 && m_stage.phase() != BattlePhase::Outro) {
+		return;
+	}
+	// The outro : the banner of the end goes away
+	if (m_stage.phase() == BattlePhase::Outro && m_stage.phaseTime() >= 300) {
 		return;
 	}
 	// It hits the screen (big, then normal), then fades
 	const auto scale = age < 160 ? 2.2F - 1.2F * static_cast<float>(age) / 160.F : 1.F;
-	const auto alpha = !lasting && age > 900 ? static_cast<unsigned char>(255 * (1200 - age) / 300) : static_cast<unsigned char>(255);
+	auto alpha = !lasting && age > 900 && m_stage.phase() != BattlePhase::Outro ? static_cast<unsigned char>(255 * (1200 - std::min(1200u, age)) / 300) : static_cast<unsigned char>(255);
+	if (m_stage.phase() == BattlePhase::Outro) {
+		alpha = static_cast<unsigned char>(255 * (300 - m_stage.phaseTime()) / 300);
+	}
 	const auto color = banner == "K.O. !" ? ska::Color{ 255, 70, 50, 255 } : (banner == "FUITE !" ? ska::Color{ 255, 255, 255, 255 } : ska::Color{ 255, 215, 60, 255 });
 	const auto screen = m_camera.getScreenSize();
 	canvas.text(banner, Style(64, color, true, scale, alpha), screen.x / 2, screen.y / 2 - 80, Ui::Align::Center);
@@ -468,9 +484,65 @@ void GUIBattle::renderWorldOverlay(ska::Renderer& renderer) const {
 	renderMarks(renderer);
 }
 
+void GUIBattle::renderOutro(ska::Renderer& renderer) const {
+	const auto canvas = Ui::Canvas{ renderer };
+	const auto& outro = m_stage.outro;
+	if (outro.experience <= 0 && outro.levelAfter == outro.levelBefore) {
+		return;
+	}
+	const auto time = m_stage.phaseTime();
+	if (time < OutroCardDelay) {
+		return;
+	}
+	// The card slides in from the top, the bar fills (towards the next level, again for each level won)
+	const auto screen = m_camera.getScreenSize();
+	const auto width = 460;
+	const auto height = 92;
+	const auto slide = std::min(1.F, static_cast<float>(time - OutroCardDelay) / 260.F);
+	const auto x = screen.x / 2 - width / 2;
+	const auto y = static_cast<int>(-static_cast<float>(height) + (14.F + static_cast<float>(height)) * (1.F - (1.F - slide) * (1.F - slide)));
+	canvas.panel("panel_small.png", ska::Rectangle{ x, y, width, height }, 16, 240);
+
+	const auto fill = std::clamp(static_cast<float>(static_cast<int>(time) - static_cast<int>(OutroBarDelay)) / static_cast<float>(OutroBarDuration), 0.F, 1.F);
+	const auto eased = 1.F - (1.F - fill) * (1.F - fill);
+	const auto before = static_cast<float>(outro.levelBefore) + outro.progressBefore;
+	const auto after = static_cast<float>(outro.levelAfter) + outro.progressAfter;
+	const auto value = before + (after - before) * eased;
+	auto level = std::min(outro.levelAfter, static_cast<int>(std::floor(value)));
+	auto ratio = value - static_cast<float>(level);
+	if (level == outro.levelAfter && fill >= 1.F) {
+		ratio = outro.progressAfter;
+	}
+
+	canvas.panel("panel_small_teal.png", ska::Rectangle{ x + 12, y + 9, 62, 24 }, 8);
+	canvas.text("EXP", Style(14, White, false), x + 12 + 31, y + 11, Ui::Align::Center);
+	canvas.text(Upper(outro.pokemon) + "  Nv." + std::to_string(level), Style(18, Ink, false), x + 84, y + 9, Ui::Align::Left);
+	if (outro.experience > 0) {
+		canvas.text("+" + std::to_string(outro.experience) + " EXP", Style(18, ska::Color{ 196, 132, 20, 255 }, false), x + width - 14, y + 9, Ui::Align::Right);
+	}
+	auto bar = Ui::Bar{};
+	bar.ratio = std::clamp(ratio, 0.F, 1.F);
+	bar.trail = bar.ratio;
+	bar.fill = ska::Color{ 80, 160, 255, 255 };
+	canvas.bar(ska::Rectangle{ x + 14, y + 44, width - 28, 16 }, bar);
+
+	// A level won : it pops over the card
+	if (level > outro.levelBefore) {
+		const auto levelUpAt = OutroBarDelay + static_cast<unsigned int>(static_cast<float>(OutroBarDuration) * std::clamp((static_cast<float>(outro.levelBefore + 1) - before) / std::max(0.001F, after - before), 0.F, 1.F));
+		const auto age = time > levelUpAt ? time - levelUpAt : 0u;
+		const auto scale = age < 160 ? 1.8F - 0.8F * static_cast<float>(age) / 160.F : 1.F + 0.04F * std::sin(static_cast<float>(m_time) / 90.F);
+		canvas.text("NIVEAU SUP\xc9""RIEUR !", Style(30, ska::Color{ 255, 215, 60, 255 }, true, scale), screen.x / 2, y + height + 10, Ui::Align::Center);
+	}
+}
+
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	const auto canvas = Ui::Canvas{ renderer };
 	updateScreenShader(renderer);
+	if (m_stage.phase() == BattlePhase::Outro) {
+		renderOutro(renderer);
+		renderBanner(renderer);
+		return;
+	}
 
 	// The side of the player on the left, the wild Pokemon on the right
 	std::array<int, 2> slots{ 0, 0 };

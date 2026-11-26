@@ -16,4 +16,17 @@ run = function(args: string[]) do
 	Test.equal(shown[3], "FUITE !", "fled")
 	Test.equal(Steps.message("intro", "Rattata"), "Un Rattata sauvage apparaît !", "the intro dialog")
 	Test.equal(Steps.message("won", "Rattata"), "Le Rattata a été battu.", "the dialog of a battle won")
+
+	# The outro : its dialogs, no banner
+	Steps.run(["outro", "won", "PIKACHU", "Rattata", "24", "5", "6"])
+	said = Battle.messages()
+	Test.equal((said.size(): string), "3", "won with a level up : three dialogs")
+	Test.equal(said[0], "Le Rattata a été battu.", "the battle won")
+	Test.equal(said[1], "PIKACHU gagne 24 points d'expérience !", "the experience")
+	Test.equal(said[2], "PIKACHU monte au niveau 6 !", "the new level")
+	Steps.run(["outro", "fled", "PIKACHU", "Rattata", "0", "5", "5"])
+	Test.equal((Battle.messages().size(): string), "3", "fled : no dialog (its banner said it)")
+	Steps.run(["outro", "lost", "PIKACHU", "Rattata", "0", "5", "5"])
+	Test.equal(Battle.messages()[3], "Votre Pokémon est K.O.", "lost")
+	Test.equal((Battle.announced().size(): string), "4", "no banner in the outro")
 end

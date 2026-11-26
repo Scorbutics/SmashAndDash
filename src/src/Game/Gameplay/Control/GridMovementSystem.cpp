@@ -1,6 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GridMovementSystem.h"
 #include <cmath>
+#include <vector>
 #include <algorithm>
 #include "Core/Inputs/InputContextManager.h"
 #include "Core/Utils/TimeUtils.h"
@@ -103,6 +104,8 @@ std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId ent
 		}
 		const auto otherShape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(other).shapeIndex);
 		if (cpBBIntersects(targetBox, otherShape)) {
+			// It stands there : the step walks into it
+			m_blockedBy = other;
 			return {};
 		}
 		if (m_entities.hasComponent<GridMovementComponent>(other)) {
@@ -144,6 +147,10 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 	for (const auto entity : getEntities()) {
 		auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
 		auto* input = m_componentPossibleAccessor.get<ska::InputComponent>(entity);
+		grid.touched.reset();
+		if (grid.seeing) {
+			grid.seen += ellapsedTime;
+		}
 		const auto keys = grid.mode == GridMovementComponent::Mode::Keys;
 
 		// The power of the normal walk is kept, the free movement of the keys is disabled
@@ -350,8 +357,12 @@ void GridMovementSystem::forcedStep(ska::EntityId entity, GridMovementComponent&
 }
 
 bool GridMovementSystem::step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration) {
+	m_blockedBy.reset();
 	const auto target = nextBlock(entity, direction);
 	if (!target.has_value()) {
+		if (m_blockedBy.has_value()) {
+			grid.touched = m_blockedBy;
+		}
 		return false;
 	}
 	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
@@ -364,7 +375,92 @@ bool GridMovementSystem::step(ska::EntityId entity, GridMovementComponent& grid,
 	return true;
 }
 
+bool GridMovementSystem::react(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime) {
+	if (grid.mode != GridMovementComponent::Mode::Wander || grid.reaction == GridMovementComponent::Reaction::None || !grid.reactTo.has_value() ||
+		!m_entities.hasComponent<ska::PositionComponent>(*grid.reactTo)) {
+		grid.seeing = false;
+		return false;
+	}
+	// In blocks : where it is, where the other one is
+	const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+	const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+	const auto& other = m_entities.getComponent<ska::PositionComponent>(*grid.reactTo);
+	const auto dx = static_cast<int>(std::lround(static_cast<float>(other.x) / blockSize)) - static_cast<int>(std::lround(static_cast<float>(position.x) / blockSize));
+	const auto dy = static_cast<int>(std::lround(static_cast<float>(other.y) / blockSize)) - static_cast<int>(std::lround(static_cast<float>(position.y) / blockSize));
+	if (std::abs(dx) + std::abs(dy) > grid.sight) {
+		grid.seeing = false;
+		return false;
+	}
+	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
+	// 0 : down, 1 : right, 2 : up, 3 : left
+	const auto towardsX = dx > 0 ? 1 : 3;
+	const auto towardsY = dy > 0 ? 0 : 2;
+	const auto towards = std::abs(dx) >= std::abs(dy) ? (dx != 0 ? towardsX : towardsY) : towardsY;
+	if (!grid.seeing) {
+		// It notices it : it turns to it and stops a moment (its mark shows)
+		grid.seeing = true;
+		grid.seen = 0;
+		grid.facing = towards;
+		animation.state = towards;
+		grid.wait = NoticeDelay;
+		SLOG(ska::LogLevel::Info) << "Grid : a character at block (" << std::lround(static_cast<float>(position.x) / blockSize) << ", " << std::lround(static_cast<float>(position.y) / blockSize)
+			<< ") notices the one it " << (grid.reaction == GridMovementComponent::Reaction::Approach ? "approaches" : "avoids");
+		return true;
+	}
+	if (grid.wait > ellapsedTime) {
+		grid.wait -= ellapsedTime;
+		return true;
+	}
+	grid.wait = 0;
+
+	// The directions to try, the best first
+	auto directions = std::vector<int>{};
+	if (grid.reaction == GridMovementComponent::Reaction::Approach) {
+		// Along the longest way first ; next to it, it walks into it (the step is refused : it touches it)
+		const auto first = std::abs(dx) >= std::abs(dy) ? (dx != 0 ? towardsX : towardsY) : towardsY;
+		directions.push_back(first);
+		if (dx != 0 && dy != 0) {
+			directions.push_back(first == towardsX ? towardsY : towardsX);
+		}
+	} else {
+		// Away : straight away first, then aside, never towards it
+		const auto awayX = dx > 0 ? 3 : 1;
+		const auto awayY = dy > 0 ? 2 : 0;
+		const auto first = std::abs(dx) >= std::abs(dy) ? (dx != 0 ? awayX : awayY) : awayY;
+		directions.push_back(first);
+		directions.push_back(first == awayX || first == towardsX ? awayY : awayX);
+		const auto side = std::uniform_int_distribution<int>{ 0, 1 }(m_random) == 0;
+		if (dx == 0) {
+			directions.push_back(side ? 1 : 3);
+			directions.push_back(side ? 3 : 1);
+		}
+		if (dy == 0) {
+			directions.push_back(side ? 0 : 2);
+			directions.push_back(side ? 2 : 0);
+		}
+	}
+	for (const auto direction : directions) {
+		grid.facing = direction;
+		animation.state = direction;
+		if (step(entity, grid, direction, grid.reactStep)) {
+			break;
+		}
+		// Walking into the other one : it touched it, no other way
+		if (grid.touched == grid.reactTo) {
+			break;
+		}
+	}
+	// It charges without stopping ; it runs away hesitating (the player can catch it)
+	grid.wait = grid.reaction == GridMovementComponent::Reaction::Approach ? 40u :
+		static_cast<unsigned int>(std::uniform_int_distribution<int>{ 80, 320 }(m_random));
+	return true;
+}
+
 void GridMovementSystem::startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking) {
+	// Towards or away from a character in sight
+	if (react(entity, grid, ellapsedTime)) {
+		return;
+	}
 	// A wandering character waits between its steps, a path is walked without stopping (it waits at the end of a loop)
 	if (grid.wait > ellapsedTime) {
 		grid.wait -= ellapsedTime;

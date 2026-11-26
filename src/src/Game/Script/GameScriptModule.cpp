@@ -28,6 +28,11 @@
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 #include "../Gameplay/Data/EntityLoadEvent.h"
+#include <cstdlib>
+#include "../Gameplay/Mobs/System/MobSpawningSystem.h"
+#include "../Gameplay/Fight/FightComponent.h"
+#include "Core/Utils/TimeUtils.h"
+#include "Core/Dev/DevConsole.h"
 #include "../Gameplay/Data/SavegameManager.h"
 #include "World/TileWorld.h"
 #include "World/CollisionProfile.h"
@@ -610,8 +615,29 @@ InterfaceScriptModule::InterfaceScriptModule(ska::scripting::ScriptVM& vm, Custo
 	m_builder.generate();
 }
 
+BattleScriptModule::~BattleScriptModule() = default;
+
 BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
-	GameScriptModule(vm, "battle") {
+	GameScriptModule(vm, "battle"),
+	m_wild(std::make_unique<WildPokemons>(entityManager)) {
+
+	// The wild Pokemon on the map : "<monster> <level> <block x> <block y> <attitude>" each
+	m_builder.bindField("wild", [this, &entityManager, &worldState](std::vector<ska::NodeValue>) {
+		auto lines = std::make_shared<ska::NodeValueArrayRaw>();
+		const auto blockSize = static_cast<float>(worldState.getWorld().getBlockSize());
+		for (const auto entity : m_wild->getEntities()) {
+			if (!entityManager.hasComponent<ska::PositionComponent>(entity) || !entityManager.hasComponent<FightComponent>(entity)) {
+				continue;
+			}
+			const auto& position = entityManager.getComponent<ska::PositionComponent>(entity);
+			const auto& fight = entityManager.getComponent<FightComponent>(entity);
+			const auto& wild = entityManager.getComponent<WildPokemonComponent>(entity);
+			lines->push_back(ska::NodeValue{ std::make_shared<std::string>(std::to_string(fight.opponentScriptId) + " " + std::to_string(fight.level) + " " +
+				std::to_string(std::lround(static_cast<float>(position.x) / blockSize)) + " " + std::to_string(std::lround(static_cast<float>(position.y) / blockSize)) + " " +
+				AttitudeName(wild.attitude)) });
+		}
+		return ska::NodeValue{ std::move(lines) };
+	});
 
 	// A battle against wild Pokemon (the first one, and the others of its group), the script waits for its end
 	auto startBattle = [&vm, &entityManager, &ged, &worldState](const std::vector<std::pair<int, unsigned int>>& monsters, bool canFlee) {
@@ -681,6 +707,24 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 
 	m_builder.bindField("lastFled", [&worldState](std::vector<ska::NodeValue>) {
 		return ska::NodeValue{ worldState.lastBattleFled() };
+	});
+
+	// A message of the battle (the dialog window) : the script waits until the player closes it. With SAD_BATTLE_AUTOPLAY
+	// (nobody plays), it closes by itself after a moment, as if the action key was pressed
+	m_builder.bindField("message", [&vm, &ged](std::vector<ska::NodeValue> params) {
+		auto closed = std::make_shared<bool>(false);
+		ShowDialog(ged, String(params[0]), false, [closed](bool) { *closed = true; });
+		static const auto autoplay = std::getenv("SAD_BATTLE_AUTOPLAY") != nullptr;
+		const auto shownAt = ska::TimeUtils::getTicks();
+		auto pressed = std::make_shared<bool>(false);
+		vm.suspendUntil([closed, shownAt, pressed]() {
+			if (autoplay && !*closed && !*pressed && ska::TimeUtils::getTicks() - shownAt >= 1500) {
+				*pressed = true;
+				ska::DevConsole::get().press("Return", 2);
+			}
+			return *closed;
+		});
+		return ska::NodeValue{};
 	});
 
 	// A banner over the battle going on (big text in the middle of the screen) ; nothing out of a battle

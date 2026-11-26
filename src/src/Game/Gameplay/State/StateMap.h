@@ -5,6 +5,7 @@
 #include <memory>
 #include "StateFight.h"
 #include "Core/State/StateBase.h"
+#include "../../Graphic/GUI/WildPokemonMarks.h"
 
 struct WorldStateChanger;
 class WorldState;
@@ -19,7 +20,7 @@ class StateMap :
 	public ska::StateBase,
 	public ska::SubObserver<ska::GameEvent> {
 public:
-	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition = std::optional<ska::Point<int>>(), bool walkIn = false);
+	StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition = std::optional<ska::Point<int>>(), bool walkIn = false, bool resume = false);
 	
 	~StateMap() override = default;
 
@@ -31,6 +32,7 @@ public:
 private:
 	void beforeLoad(ska::State* lastState) override final;
 	void afterLoad(ska::State* lastState) override final;
+	void onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) override;
 	bool onGameEvent(ska::GameEvent& ge);
 
 	PokemonGameEventDispatcher& m_eventDispatcher;
@@ -48,6 +50,10 @@ private:
 	std::optional<ska::Point<int>> m_trainerPosition;
 	// The player comes through a door : it walks from the block behind its position (MapEvent::walkIn)
 	bool m_walkIn = false;
+	// Back from a battle : the map is still there, it is not loaded again (MapEvent::resume)
+	bool m_resume = false;
+	// The marks over the wild Pokemon that notice the player
+	std::unique_ptr<WildPokemonMarks> m_wildMarks;
 
 };
 

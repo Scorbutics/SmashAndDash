@@ -4,7 +4,11 @@ Encounters = import "wd:Data/Battle/encounters"
 Skills = import "wd:Data/Battle/skills"
 
 run = function(args: string[]) do
-	Test.equal((Encounters.startOdds(): string), "5", "a battle 1 time in 5")
+	Test.equal(Encounters.attitude(25, 5, 5, 0), "aggressive", "the low rolls : aggressive")
+	Test.equal(Encounters.attitude(25, 5, 5, 45), "fearful", "then fearful")
+	Test.equal(Encounters.attitude(25, 5, 5, 80), "passive", "then passive")
+	Test.equal(Encounters.attitude(25, 9, 3, 65), "aggressive", "much stronger than the team : aggressive more often")
+	Test.equal(Encounters.attitude(25, 2, 8, 50), "fearful", "much weaker : fearful more often")
 	Test.equal((Encounters.groupOdds(): string), "5", "a group 1 time in 5")
 	Test.equal((Encounters.companionLevel(1, -1): string), "1", "at least level 1")
 	Test.equal((Encounters.companionLevel(4, 1): string), "5", "one level more")

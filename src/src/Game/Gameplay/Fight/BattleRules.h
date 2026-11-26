@@ -24,6 +24,8 @@ public:
 	int maxHp(int baseHp, int level);
 	// Level of a Pokemon from its experience ("experienceNeeded" : [Experience] level_1_exp_needed)
 	int level(int experience, int experienceNeeded);
+	// The experience a Pokemon has when it reaches a level (the start of the level : its progress bar)
+	int levelExperience(int level, int experienceNeeded);
 	// Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon, "level" : its level)
 	int experience(int dropped, int level);
 	// Damage of a skill hitting a Pokemon : "effectiveness" of its type (percents), "stab" : a type of the attacker
@@ -56,8 +58,10 @@ public:
 	unsigned int stageDuration(unsigned int effect);
 	float stageMultiplier(int stage);
 
-	// The encounters (Data/Battle/encounters.miniska) : the sizes of the dice (a battle starts, a group), the companions
-	int encounterOdds();
+	// The encounters (Data/Battle/encounters.miniska) : the attitude of a wild Pokemon on the map ("aggressive" : it
+	// charges the player in sight, "fearful" : it runs away, "passive" : it wanders ; "teamLevel" : the level of the first
+	// Pokemon of the team able to fight, "roll" 0 .. 99), the size of the dice of a group, the companions
+	std::string attitude(int monster, int level, int teamLevel, int roll);
 	int groupOdds();
 	int groupSize();
 	int levelSpread();
@@ -74,6 +78,7 @@ public:
 
 private:
 	long call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback);
+	std::string callString(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, std::string fallback);
 	bool callBool(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, bool fallback);
 
 	ska::scripting::ScriptVM& m_vm;

@@ -37,7 +37,9 @@ protected:
 // power of their normal walk is kept by MovementModeComponent, ex : for the battles). Characters moved by a script
 // (IADefinedMovementComponent) or without InputComponent (ex : disabled during a cutscene) do not take steps.
 // The other characters wander (random steps after random waits) or walk a path, with the same rules (they wait when the
-// next block is not free).
+// next block is not free). A wandering character can react to another one in sight (the wild Pokemon and the trainer) :
+// it approaches it (until it walks into it) or runs away from it.
+// A step refused because a character stands on the next block "touches" it (GridMovementComponent::touched).
 // Forced steps (GridMovementComponent::forcedSteps : a script, the player leaving a door) go through the obstacles, the
 // keys are ignored meanwhile ; they wait for the screen to show the map (ScreenFade).
 class GridMovementSystem :
@@ -49,6 +51,8 @@ public:
 	static constexpr unsigned int RunStep = 130;
 	// A press shorter than this, towards a new direction, only turns the character
 	static constexpr unsigned int TurnDelay = 90;
+	// A character that reacts to another one (GridMovementComponent::reaction) stops this long when it notices it
+	static constexpr unsigned int NoticeDelay = 500;
 	// The hop of the jump key on the map : height (pixels), duration (ms)
 	static constexpr float HopHeight = 16.F;
 	static constexpr unsigned int HopDuration = 280;
@@ -72,6 +76,8 @@ private:
 	void startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking);
 	// The next step of a character not controlled by the player (wander, path)
 	void startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking);
+	// A wandering character with a reaction (approach, avoid) towards a character in sight : its step. False : none in sight
+	bool react(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime);
 	// The wall in a direction is touched (as the physics does : the touch scripts of its block)
 	void touch(ska::EntityId entity, int direction);
 	bool step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration);
@@ -86,8 +92,9 @@ private:
 	bool m_received = false;
 	// The jump key was pressed since the last frame
 	bool m_jumpPressed = false;
-	// The last step was refused by a wall (not a character)
+	// The last step was refused by a wall (not a character), by a character standing there (0 : none)
 	mutable bool m_bumped = false;
+	mutable std::optional<ska::EntityId> m_blockedBy;
 	BlockOccupants m_occupants;
 	// Seeded from the engine seed (SKA_SEED : the same moves at each run)
 	std::mt19937 m_random { ska::NumberUtils::newSeed() };

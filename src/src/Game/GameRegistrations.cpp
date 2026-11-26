@@ -13,6 +13,7 @@
 #include "Gameplay/Control/GridMovementComponent.h"
 #include "Gameplay/PokeballComponent.h"
 #include "Gameplay/Mobs/MobSpawnAreaComponent.h"
+#include "Gameplay/Mobs/WildPokemonComponent.h"
 #include "Graphic/GUI/SlotPokemon.h"
 
 SKA_DEFINE_COMPONENT(SkillsHolderComponent);
@@ -24,6 +25,7 @@ SKA_DEFINE_COMPONENT(MovementModeComponent);
 SKA_DEFINE_COMPONENT(GridMovementComponent);
 SKA_DEFINE_COMPONENT(PokeballComponent);
 SKA_DEFINE_COMPONENT(MobSpawnAreaComponent);
+SKA_DEFINE_COMPONENT(WildPokemonComponent);
 
 namespace ska {
 	SKA_DEFINE_GUI_EVENT(ska::ValueChangedEventListener<int>);

@@ -1,0 +1,11 @@
+# The wild Pokemon on the map : monster, level, block, attitude. Usage : ska-console run tools/agent/wild.miniska
+Dev = import "bind:ska.dev"
+Battle = import "bind:game.battle"
+
+run = function(args: string[]) do
+	wild = Battle.wild()
+	Dev.reply((wild.size(): string) + " wild pokemon (monster level x y attitude)")
+	wild | (line) do
+		Dev.reply(line)
+	end
+end

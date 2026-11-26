@@ -12,13 +12,13 @@
 #include "Physic/Body.h"
 #include "Physic/Vect.h"
 
-StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, ska::EntityId& pokeball, ska::InputComponent** ic) :
+StateFightLoading::StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, const ska::Point<float>& landing, ska::InputComponent** ic) :
 	m_eventDispatcher(ged),
 	m_entityManager(em),
 	m_pokemonId(pokemonId),
 	m_opponentId(opponentId),
 	m_trainerId(trainerId),
-	m_pokeball(pokeball),
+	m_landing(landing),
 	m_ic(ic),
 	m_worldState(ws) {
 
@@ -43,15 +43,11 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		m_entityManager.addComponent<ska::InputComponent>(m_pokemonId, ska::InputComponent{ **m_ic });
 		*m_ic = nullptr;
 
-		// The Pokemon comes out where the pokeball is (where the trainer is, when it is not there anymore)
+		// The Pokemon comes out where the pokeball opened (its feet : the middle of its hitbox there)
 		auto& hc = m_entityManager.getComponent<ska::HitboxComponent>(m_pokemonId);
-		auto pc = m_entityManager.hasComponent<ska::PositionComponent>(m_pokeball) ? m_entityManager.getComponent<ska::PositionComponent>(m_pokeball) :
-			m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
-		// The opened pokeball goes away : the Pokemon is out
-		if (m_entityManager.hasComponent<PokeballComponent>(m_pokeball)) {
-			m_entityManager.removeEntity(m_pokeball);
-		}
-		m_pokeball = 0;
+		auto pc = ska::PositionComponent{};
+		pc.x = m_landing.x - static_cast<float>(hc.xOffset) - static_cast<float>(hc.width) / 2.F;
+		pc.y = m_landing.y - static_cast<float>(hc.yOffset) - static_cast<float>(hc.height) / 2.F;
 		ska::Rectangle hitbox{ pc.x + hc.xOffset, pc.y + hc.yOffset, static_cast<int>(hc.width), static_cast<int>(hc.height) };
 
 		const auto targetBlock = m_worldState.getWorld().getCollisionProfile().placeOnNearestPracticableBlock(1, hitbox, 1);
@@ -60,6 +56,10 @@ std::unique_ptr<ska::Task> StateFightLoading::load() {
 		// Its physics body moves with it
 		CustomEntityManager::place(m_entityManager, m_worldState.getSpace(), m_pokemonId, ska::Point<float>(static_cast<float>(pc.x), static_cast<float>(pc.y)));
 		m_entityManager.addComponent<ska::PositionComponent>(m_pokemonId, std::move(pc));
+		// It grows out of the light
+		if (m_entityManager.hasComponent<FighterComponent>(m_pokemonId)) {
+			m_entityManager.getComponent<FighterComponent>(m_pokemonId).appear = 0;
+		}
 
 		auto be = BattleEvent{ BATTLE_START };
 		m_eventDispatcher.ska::Observable<BattleEvent>::notifyObservers(be);

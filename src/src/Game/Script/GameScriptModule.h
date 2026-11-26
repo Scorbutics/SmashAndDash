@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <string>
 #include "BytecodeInterpreter/BytecodeScript.h"
 #include "BytecodeInterpreter/Value/BytecodeInterpreterTypes.h"
@@ -19,6 +20,8 @@ namespace ska {
 
 // Game functions for the scripts, by domain (ex : Character = import "bind:game.character", see the "game.<domain>" script
 // templates)
+class WildPokemons;
+
 class GameScriptModule : public ska::lang::Module<ska::bytecode::Interpreter> {
 protected:
 	GameScriptModule(ska::scripting::ScriptVM& vm, const std::string& name);
@@ -60,6 +63,10 @@ public:
 class BattleScriptModule : public GameScriptModule {
 public:
 	BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
+	~BattleScriptModule() override;
+private:
+	// The wild Pokemon on the map (Battle.wild)
+	std::unique_ptr<WildPokemons> m_wild;
 };
 
 // Saving the game : Save = import "bind:game.save"

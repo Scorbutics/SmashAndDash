@@ -5,7 +5,6 @@
 #define TAILLEBLOC 48 //Taille d'un bloc dans le chipset du monde courant
 
 #define BATTLE_START_TICKS 1000
-#define BATTLE_START_DISTANCE_SQUARED 20736 // 3 * 48 = 3 blocs
 
 //Types de boutons pouvant composer une fenêtre
 #define BUTTON_CLOSE 0

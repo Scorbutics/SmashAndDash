@@ -25,6 +25,17 @@ long BattleRules::call(const std::string& file, const std::string& function, std
 	}
 }
 
+std::string BattleRules::callString(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, std::string fallback) {
+	try {
+		return m_vm.call<std::string>(file, function, std::move(arguments));
+	} catch (std::exception& e) {
+		if (m_reported.insert(file + function).second) {
+			SLOG_STATIC(ska::LogLevel::Error, BattleRules) << "Battle rule \"" << function << "\" (" << file << ") : " << e.what() << " : a default value is used";
+		}
+		return fallback;
+	}
+}
+
 int BattleRules::stat(int base, int level) {
 	return static_cast<int>(call(m_rulesFile, "stat", { ska::NodeValue{ static_cast<long>(base) }, ska::NodeValue{ static_cast<long>(level) } },
 		base * level / 50 + 5));
@@ -38,6 +49,11 @@ int BattleRules::maxHp(int baseHp, int level) {
 int BattleRules::level(int experience, int experienceNeeded) {
 	return std::max(1, static_cast<int>(call(m_rulesFile, "level", { ska::NodeValue{ static_cast<long>(experience) }, ska::NodeValue{ static_cast<long>(experienceNeeded) } },
 		1 + (experienceNeeded > 0 ? experience / experienceNeeded : 0))));
+}
+
+int BattleRules::levelExperience(int level, int experienceNeeded) {
+	return std::max(0, static_cast<int>(call(m_rulesFile, "levelExperience", { ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(experienceNeeded) } },
+		std::max(0, level - 1) * std::max(0, experienceNeeded))));
 }
 
 int BattleRules::experience(int dropped, int level) {
@@ -157,8 +173,9 @@ float BattleRules::stageMultiplier(int stage) {
 	return denominator <= 0 ? 1.F : static_cast<float>(numerator) / static_cast<float>(denominator);
 }
 
-int BattleRules::encounterOdds() {
-	return static_cast<int>(std::max(1L, call(m_encountersFile, "startOdds", {}, 5L)));
+std::string BattleRules::attitude(int monster, int level, int teamLevel, int roll) {
+	return callString(m_encountersFile, "attitude", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(level) },
+		ska::NodeValue{ static_cast<long>(teamLevel) }, ska::NodeValue{ static_cast<long>(roll) } }, "passive");
 }
 
 int BattleRules::groupOdds() {

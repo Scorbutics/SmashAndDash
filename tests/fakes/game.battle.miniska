@@ -1,11 +1,16 @@
-# Fake of the battles for the headless script tests : the banners are recorded.
+# Fake of the battles for the headless script tests : the banners and the messages are recorded.
 shown = []: string
+said = []: string
 
 start = function(monster: int, level: int) : bool do return false end
 startWith = function(monsters: int[], levels: int[], canFlee: bool) : bool do return false end
 announce = function(text: string) do
 	shown = shown + text
 end
+message = function(text: string) do
+	said = said + text
+end
+wild = function() : string[] do return []: string end
 battles = function() : int do return 0 end
 lastWon = function() : bool do return false end
 lastFled = function() : bool do return false end
@@ -13,4 +18,7 @@ lastFled = function() : bool do return false end
 # Test controls (only in the fake)
 announced = function() : string[] do
 	return shown
+end
+messages = function() : string[] do
+	return said
 end

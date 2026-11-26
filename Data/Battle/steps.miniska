@@ -3,7 +3,10 @@
 #   start : the name of the Pokemon of the player, the name and the level of the (first) wild Pokemon
 #   knockout : "won" or "lost", the name of the Pokemon of the player, the name of the (first) wild Pokemon
 #   fled : the name of the Pokemon of the player
-# The dialogs before and after the battle come from "message" (called by the battle : it cannot wait).
+#   outro : "won", "lost" or "fled", the name of the Pokemon of the player, the name of the (first) wild Pokemon, the
+#           experience won, the level of the Pokemon of the player before and after (it goes back in its pokeball, its
+#           experience bar fills meanwhile : the battle waits for the dialogs)
+# The dialog before the battle comes from "message" (called by the battle : it cannot wait).
 Battle = import "bind:game.battle"
 Engine = import "bind:ska.engine"
 
@@ -38,7 +41,27 @@ message = function(step: string, name: string) : string do
 	return "Votre Pokémon est K.O."
 end
 
+# The dialogs of the end of a battle
+outro = function(args: string[]) do
+	if args[1] == "won"
+		Battle.message(message("won", args[3]))
+	end
+	if args[1] == "lost"
+		Battle.message(message("lost", args[3]))
+	end
+	if args[4] != "0"
+		Battle.message(args[2] + " gagne " + args[4] + " points d'expérience !")
+	end
+	if args[6] != args[5]
+		Battle.message(args[2] + " monte au niveau " + args[6] + " !")
+	end
+end
+
 run = function(args: string[]) do
+	if args[0] == "outro"
+		outro(args)
+		return
+	end
 	text = banner(args)
 	if text != ""
 		Battle.announce(text)

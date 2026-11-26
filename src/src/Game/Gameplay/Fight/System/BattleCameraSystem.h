@@ -39,6 +39,7 @@ protected:
 private:
 	ska::Point<float> center(ska::EntityId entity);
 
+	ska::EntityManager& m_entities;
 	ska::CameraSystem& m_camera;
 	BattleStage& m_stage;
 	BattleCameraStrategy* m_strategy = nullptr;

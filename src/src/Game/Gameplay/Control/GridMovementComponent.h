@@ -1,6 +1,8 @@
 #pragma once
+#include <optional>
 #include <vector>
 #include "Core/ECS/Component.h"
+#include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 
 // A character that moves block by block on the map (GridMovementSystem)
@@ -28,6 +30,21 @@ struct GridMovementComponent {
 	unsigned int heldTime = 0;
 	// Direction of the wall it walks against (-1 : none) : the wall is touched once (its scripts, ex : the water to surf)
 	int bumpDirection = -1;
+	// The character its last step walked into (refused : that character stands on the block), 0 : none. Set again at each
+	// logic update (ex : the trainer walks into a wild Pokemon : a battle starts). Entity ids start at 0 (the trainer) : none is
+	// "no value"
+	std::optional<ska::EntityId> touched;
+
+	// Wander : a character in sight ("reactTo", within "sight" blocks) is approached or avoided instead (the wild
+	// Pokemon : their attitude), with steps of "reactStep" ms and short waits
+	enum class Reaction { None, Approach, Avoid };
+	Reaction reaction = Reaction::None;
+	std::optional<ska::EntityId> reactTo;
+	int sight = 0;
+	unsigned int reactStep = 220;
+	// It sees the character it reacts to : since "seen" ms (the mark over it when it notices it)
+	bool seeing = false;
+	unsigned int seen = 0;
 
 	// Steps asked by a script or by the game (ex : the jump over a ledge, leaving a door) : block by block, through the
 	// obstacles, without the keys. The character is a ghost during these steps (no physics contact, no touched wall).

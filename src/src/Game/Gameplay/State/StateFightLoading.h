@@ -14,7 +14,8 @@ namespace ska {
 
 class StateFightLoading {
 public:
-	StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, ska::EntityId& pokeball, ska::InputComponent** ic);
+	// "landing" : where the pokeball opened (world pixels) : the Pokemon of the player comes out there
+	StateFightLoading(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& ws, ska::EntityId pokemonId, ska::EntityId opponentId, ska::EntityId trainerId, const ska::Point<float>& landing, ska::InputComponent** ic);
 	// Battle statistics of the Pokemon of the player and of its opponent, given when the battle starts
 	void setFighters(BattleComponent pokemon, BattleComponent opponent);
 	std::unique_ptr<ska::Task> load();
@@ -27,7 +28,7 @@ private:
 	ska::EntityId m_pokemonId;
 	ska::EntityId m_opponentId;
 	ska::EntityId m_trainerId;
-	ska::EntityId& m_pokeball;
+	const ska::Point<float>& m_landing;
 	ska::InputComponent** m_ic;
 	WorldState& m_worldState;
 	BattleComponent m_pokemonFighter;

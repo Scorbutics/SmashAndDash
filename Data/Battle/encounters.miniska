@@ -1,9 +1,34 @@
-# The encounters with the wild Pokemon, asked by the map when the player is close to one (they cannot wait). The dice
-# are rolled by the game with the sizes given here (the replays stay the same).
+# The encounters with the wild Pokemon, asked by the map (they cannot wait). The dice are rolled by the game with the
+# sizes given here (the replays stay the same). A battle starts when the trainer and a wild Pokemon touch : one walks
+# into the other.
 
-# A battle starts : 1 time in "startOdds" (every second near a wild Pokemon)
-startOdds = function() : int do
-	return 5
+# The attitude of a wild Pokemon on the map, decided when it appears : "aggressive" (it charges the player in sight),
+# "fearful" (it runs away from the player), "passive" (it wanders, the player walks into it to fight). "level" : its
+# level, "teamLevel" : the level of the first Pokemon of the team able to fight, "roll" : 0 .. 99.
+# Stronger than the team : more often aggressive ; weaker : more often fearful.
+attitude = function(monster: int, level: int, teamLevel: int, roll: int) : string do
+	gap = level - teamLevel
+	aggressive = 30 + 10 * gap
+	if aggressive < 10
+		aggressive = 10
+	end
+	if aggressive > 70
+		aggressive = 70
+	end
+	fearful = 30 - 10 * gap
+	if fearful < 10
+		fearful = 10
+	end
+	if fearful > 60
+		fearful = 60
+	end
+	if roll < aggressive
+		return "aggressive"
+	end
+	if roll < aggressive + fearful
+		return "fearful"
+	end
+	return "passive"
 end
 
 # The wild Pokemon is not alone : 1 time in "groupOdds", "groupSize" others of its kind join it

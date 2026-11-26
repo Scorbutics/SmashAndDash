@@ -12,6 +12,11 @@
 #include "../../../Script/ScriptConstants.h"
 #include "Game/Gameplay/Data/SavePaths.h"
 #include "Scripting/ScriptVM.h"
+#include "../../Data/Team.h"
+#include "../../PokeballComponent.h"
+#include "../../System/PokeballSystem.h"
+#include "../../CustomEntityManager.h"
+#include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 
 BattleDirectorSystem::BattleDirectorSystem(ska::EntityManager& em, WorldState& ws, PokemonGameEventDispatcher& ged, BattleStage& stage, int teamIndex) :
 	System(em),
@@ -85,7 +90,8 @@ bool BattleDirectorSystem::stepDone() const {
 	if (m_stepDone == nullptr || *m_stepDone) {
 		return true;
 	}
-	if (m_stage.phaseTime() >= StepTimeout) {
+	// The dialogs of the outro wait for the player
+	if (m_stage.phase() != BattlePhase::Outro && m_stage.phaseTime() >= StepTimeout) {
 		SLOG(ska::LogLevel::Warn) << "Battle : the step script runs for too long, the battle goes on";
 		*m_stepDone = true;
 	}
@@ -176,14 +182,18 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 
 	case BattlePhase::KnockOut:
 		if (m_stage.phaseTime() >= KnockOutDuration && stepDone()) {
-			end();
+			outro();
 		}
 		break;
 
 	case BattlePhase::Fled:
 		if (m_stage.phaseTime() >= FleeDuration && stepDone()) {
-			end();
+			outro();
 		}
+		break;
+
+	case BattlePhase::Outro:
+		updateOutro();
 		break;
 
 	default:
@@ -191,19 +201,21 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 	}
 }
 
-void BattleDirectorSystem::end() {
+void BattleDirectorSystem::outro() {
 	const auto fled = m_stage.phase() == BattlePhase::Fled;
 	const auto won = !fled && m_stage.winnerTeam == 0;
-	m_stage.changePhase(BattlePhase::Over);
-	SLOG(ska::LogLevel::Info) << "Battle " << (fled ? "fled" : (won ? "won" : "lost"));
+	m_stage.outro = BattleOutro{};
+	m_stage.outro.fromKnockOut = !fled;
+	m_stage.changePhase(BattlePhase::Outro);
+	SLOG(ska::LogLevel::Info) << "Battle " << (fled ? "fled" : (won ? "won" : "lost")) << " : the outro";
 
 	// Result : hit points left of the Pokemon of the player, experience won for each wild Pokemon K.O. (battle rules)
-	auto result = BattleResult{};
-	result.won = won;
-	result.fled = fled;
-	result.teamIndex = m_teamIndex;
+	m_result = BattleResult{};
+	m_result.won = won;
+	m_result.fled = fled;
+	m_result.teamIndex = m_teamIndex;
 	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player);
-	result.hpLeft = std::max(0, pokemon.hp);
+	m_result.hpLeft = std::max(0, pokemon.hp);
 	// The rewards (Data/Battle/rewards.miniska) : for the wild Pokemon K.O.
 	auto dropped = std::vector<int>{};
 	auto levels = std::vector<int>{};
@@ -216,14 +228,80 @@ void BattleDirectorSystem::end() {
 		dropped.push_back(data.exists("Experience level_1_exp_dropped") ? data.get<int>("Experience level_1_exp_dropped") : 0);
 		levels.push_back(static_cast<int>(opponent.level));
 	}
-	result.experience = m_worldState.getBattleRules().rewardExperience(dropped, levels, won, fled);
-	// The wild Pokemon of the map is defeated (the others of its group only exist during the battle : StateFight)
-	if (won && m_stage.fighters.size() > 1) {
+	auto& rules = m_worldState.getBattleRules();
+	m_result.experience = rules.rewardExperience(dropped, levels, won, fled);
+
+	// The experience bar of the outro : the level and its progress, before and after
+	m_stage.outro.pokemon = name(m_stage.player);
+	m_stage.outro.experience = m_result.experience;
+	m_stage.outro.levelBefore = m_stage.outro.levelAfter = static_cast<int>(pokemon.level);
+	if (m_teamIndex >= 0) {
+		const auto member = Team{ m_worldState.getSaveGame().getPathName() }.member(m_teamIndex);
+		if (member.has_value()) {
+			const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(member->id) + ".ini" };
+			const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+			const auto progress = [&rules, needed](int experience, int& level) {
+				level = rules.level(experience, needed);
+				const auto start = rules.levelExperience(level, needed);
+				const auto next = rules.levelExperience(level + 1, needed);
+				return next > start ? std::clamp(static_cast<float>(experience - start) / static_cast<float>(next - start), 0.F, 1.F) : 1.F;
+			};
+			m_stage.outro.progressBefore = progress(member->experience, m_stage.outro.levelBefore);
+			m_stage.outro.progressAfter = progress(member->experience + m_result.experience, m_stage.outro.levelAfter);
+		}
+	}
+
+	// The Pokemon of the player goes back in its pokeball (K.O. : it already disappeared, the ball comes back at once)
+	auto& fighter = m_componentAccessor.get<FighterComponent>(m_stage.player);
+	fighter.recall = fighter.knockedOut ? FighterComponent::RecallDuration : 0;
+	m_recallBall.reset();
+	m_recallThrown = false;
+	m_stage.sound(BattleSound::Cast);
+
+	const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
+	runStep({ "outro", fled ? "fled" : (won ? "won" : "lost"), name(m_stage.player), name(opponent), std::to_string(m_result.experience),
+		std::to_string(m_stage.outro.levelBefore), std::to_string(m_stage.outro.levelAfter) });
+}
+
+void BattleDirectorSystem::updateOutro() {
+	auto& fighter = m_componentAccessor.get<FighterComponent>(m_stage.player);
+	const auto* trainer = m_stage.trainer.has_value() && m_entities.hasComponent<ska::PositionComponent>(*m_stage.trainer) && m_entities.hasComponent<ska::HitboxComponent>(*m_stage.trainer) ?
+		&*m_stage.trainer : nullptr;
+	// Recalled : the ball flies from it back to the trainer (who faces it)
+	if (!m_recallThrown && fighter.recall >= FighterComponent::RecallDuration) {
+		m_recallThrown = true;
+		m_recallThrownAt = m_stage.phaseTime();
+		if (trainer != nullptr) {
+			const auto from = center(m_stage.player);
+			const auto to = ska::PositionComponent::getCenterPosition(m_entities.getComponent<ska::PositionComponent>(*trainer), m_entities.getComponent<ska::HitboxComponent>(*trainer));
+			m_recallBall = PokeballSystem::Throw(m_entities, from, to, true);
+			if (m_entities.hasComponent<ska::AnimationComponent>(*trainer)) {
+				const auto dx = from.x - to.x;
+				const auto dy = from.y - to.y;
+				m_entities.getComponent<ska::AnimationComponent>(*trainer).state = std::abs(dx) > std::abs(dy) ? (dx > 0.F ? 1 : 3) : (dy > 0.F ? 0 : 2);
+			}
+		}
+	}
+	const auto ballBack = m_recallThrown && (!m_recallBall.has_value() || !m_entities.hasComponent<PokeballComponent>(*m_recallBall) ||
+		m_stage.phaseTime() - m_recallThrownAt >= RecallBallTimeout);
+	if (ballBack && m_stage.phaseTime() >= OutroDuration && stepDone()) {
+		end();
+	}
+}
+
+void BattleDirectorSystem::end() {
+	m_stage.changePhase(BattlePhase::Over);
+	SLOG(ska::LogLevel::Info) << "Battle " << (m_result.fled ? "fled" : (m_result.won ? "won" : "lost"));
+
+	// The wild Pokemon of the map is defeated (the others of its group only exist during the battle : StateFight). Its
+	// physics body goes away (the map is not loaded again)
+	if (m_result.won && m_stage.fighters.size() > 1) {
+		CustomEntityManager::place(m_entities, m_worldState.getSpace(), m_stage.fighters[1], ska::Point<float>{ -100000.F, -100000.F });
 		scheduleDeferredRemove(m_stage.fighters[1]);
 	}
-	m_worldState.battleEnded(result);
+	m_worldState.battleEnded(m_result);
 
-	// Back to the map, where the player is, when the screen is black (the map changes : WGameCore)
+	// Back to the map, as it is : no fade, no loading (the camera already went back to the trainer)
 	MapEvent me(MapEventType::Switch_Map);
 	me.mapName = m_worldState.getMapName();
 	const auto mapReader = ska::IniReader{ MapIni(me.mapName) };
@@ -231,14 +309,8 @@ void BattleDirectorSystem::end() {
 	const auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);
 	me.position = pc;
-	auto back = [this, event = me]() {
-		// The camera follows the player again
-		m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
-		m_worldState.getCamera().setZoom(WorldState::MapZoom);
-		auto mapEvent = event;
-		m_ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
-	};
-	if (!m_worldState.getFade().start(back)) {
-		back();
-	}
+	me.resume = true;
+	m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
+	m_worldState.getCamera().setZoom(WorldState::MapZoom);
+	m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 }

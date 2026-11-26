@@ -19,7 +19,7 @@
 
 #define MOB_SPAWNING_DELAY 5000
 
-StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition, bool walkIn) :
+StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition, bool walkIn, bool resume) :
 	ska::SubObserver<ska::GameEvent>(std::bind(&StateMap::onGameEvent, this, std::placeholders::_1), pged),
 	m_eventDispatcher(pged),
 	m_entityManager(em),
@@ -27,7 +27,8 @@ StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, Wo
 	m_fileName(std::move(worldFileName)),
 	m_tilesetName(std::move(worldChipsetName)),
 	m_trainerPosition(trainerPosition),
-	m_walkIn(walkIn) {
+	m_walkIn(walkIn),
+	m_resume(resume) {
 
 	const auto tilesetFnData = ska::FileNameData{ m_tilesetName };
 	m_tilesetName = tilesetFnData.path + "/" + tilesetFnData.name;
@@ -62,10 +63,20 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::move(scriptSystem));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getEntityLocator()));
+	m_wildMarks = std::make_unique<WildPokemonMarks>(m_entityManager, m_worldState.getCamera());
+}
+
+void StateMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
+	if (m_wildMarks != nullptr) {
+		m_wildMarks->graphicUpdate(drawables);
+	}
 }
 
 void StateMap::afterLoad(ska::State * lastState){
-	m_worldState.reinit(m_fileName, m_tilesetName);
+	// Back from a battle : the map goes on as it is (its characters, its wild Pokemon, its scripts)
+	if (!m_resume) {
+		m_worldState.reinit(m_fileName, m_tilesetName);
+	}
 	m_worldState.getCamera().setZoom(WorldState::MapZoom);
 	// The player moves block by block on the map (GridMovementSystem)
 	if (auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER); trainer != nullptr) {
@@ -73,6 +84,10 @@ void StateMap::afterLoad(ska::State * lastState){
 		auto grid = GridMovementComponent{};
 		if (m_entityManager.hasComponent<GridMovementComponent>(*trainer)) {
 			grid.facing = m_entityManager.getComponent<GridMovementComponent>(*trainer).facing;
+		}
+		// Back from a battle : it faces where it threw its pokeball
+		if (m_resume && m_entityManager.hasComponent<ska::AnimationComponent>(*trainer)) {
+			grid.facing = m_entityManager.getComponent<ska::AnimationComponent>(*trainer).state;
 		}
 		m_entityManager.addComponent<GridMovementComponent>(*trainer, std::move(grid));
 	}
