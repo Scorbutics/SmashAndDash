@@ -5,8 +5,9 @@ Resources/Worldgen/tiles.png and tiles.txt.
 
 The tiles are drawn on a grid of voxels (tilegen : V x V pixels each) : the atlas keeps one pixel per voxel (16 x 16 a
 tile). A row of the atlas per tile : 4 biomes (BIOMES order) of 4 frames each (one for a tile that is not animated).
-tiles.txt : a line per row, "<frames> <key>" : the key of the tile (the text of its Python key, World.build and
-rooms.build_room), or the name of an animated tile.
+tiles.txt : a line per row, "<frames> <base> <key>" : the base of the tile (worldgen.tile_base : -1 flat, n a part of
+an object standing n blocks lower ; the property of the chipsets), the key of the tile (the text of its Python key,
+World.build and rooms.build_room), or the name of an animated tile.
 
   tools/worldgen/atlas.py [folder]      (after a change of the drawings, of the keys or of a room template)
 """
@@ -108,23 +109,23 @@ def voxels(img):
 
 def main():
     folder = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "Resources", "Worldgen")
-    entries = [(name, 4, lambda f, n=name: w.ANIMATED[n](f)) for name in w.ANIMATED]
+    entries = [(name, 4, w.tile_base(name), lambda f, n=name: w.ANIMATED[n](f)) for name in w.ANIMATED]
     seen = set()
     for key, walkable in keys():
         if repr(key) in seen:
             raise SystemExit(f"atlas : the key {key!r} twice")
         seen.add(repr(key))
-        entries.append((repr(key), 1, lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
+        entries.append((repr(key), 1, w.tile_base(key), lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
     atlas = Image.new("RGB", (len(w.BIOMES) * 4 * N, len(entries) * N), g.KEY)
     for b, biome in enumerate(w.BIOMES):
         g.use_biome(biome)
-        for row, (_, frames, draw) in enumerate(entries):
+        for row, (_, frames, _, draw) in enumerate(entries):
             for f in range(frames):
                 atlas.paste(voxels(draw(f)), ((b * 4 + f) * N, row * N))
     g.use_biome("meadow")
     atlas.save(os.path.join(folder, "tiles.png"), optimize=True)
     with open(os.path.join(folder, "tiles.txt"), "w") as out:
-        out.write("".join(f"{frames} {name}\n" for name, frames, _ in entries))
+        out.write("".join(f"{frames} {base} {name}\n" for name, frames, base, _ in entries))
     print(f"{folder}/tiles.png : {len(entries)} tiles")
 
 

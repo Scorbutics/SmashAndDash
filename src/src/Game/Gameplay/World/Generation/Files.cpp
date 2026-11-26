@@ -43,13 +43,13 @@ namespace {
 		return text + "\n";
 	}
 
-	// The chipset files : its image, its collisions, its properties (not read by the game yet), its touch scripts (the
+	// The chipset files : its image, its collisions, its properties (the depth of the tiles), its touch scripts (the
 	// water surfs)
 	void SaveChipset(const Chipset& chip, const fs::path& chips, const std::string& name, const std::string& tileScripts) {
 		const auto base = chips / name;
 		WriteFile((chips / (name + ".png")).string(), EncodePng(chip.image));
 		WriteFile((chips / (name + ".png.col")).string(), EncodePng(chip.col));
-		WriteFile((chips / (name + ".png.prop")).string(), EncodePng(RgbImage{ chip.col.width, chip.col.height }));
+		WriteFile((chips / (name + ".png.prop")).string(), EncodePng(chip.prop));
 		fs::create_directories(base / "Scripts");
 		auto list = std::string{};
 		for (const auto& [x, y] : chip.water) {

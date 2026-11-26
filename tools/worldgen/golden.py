@@ -140,7 +140,7 @@ def chipsets(world):
     """Stage 3b : the chipset of each chunk and of the rooms (every tile is in the atlas of tools/worldgen/atlas.py)."""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Resources", "Worldgen",
                            "tiles.txt")) as f:
-        atlas = {line.rstrip("\n").split(" ", 1)[1] for line in f}
+        atlas = {line.rstrip("\n").split(" ", 2)[2] for line in f}
     missing = [k for k, _ in world.chip.ids if repr(k) not in atlas]
     if missing:
         raise SystemExit(f"golden : tiles not in the atlas (tools/worldgen/atlas.py) : {missing[:5]}")

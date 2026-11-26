@@ -389,9 +389,10 @@ class Tiles:
     maps are made from them (Chipset)."""
 
     def __init__(self):
-        self.ids, self.draws, self.walkable = {}, {}, {}
+        self.ids, self.draws, self.walkable, self.base = {}, {}, {}, {}
         for tid in ANIMATED:
             self.walkable[tid] = ANIMATED_WALK[tid]
+            self.base[tid] = tile_base(tid)
         self.cache, self.pure = {}, {}
 
     def cell(self, key, walkable):
@@ -399,7 +400,7 @@ class Tiles:
         full = (key, walkable)
         if full not in self.ids:
             tid = len(self.ids)
-            self.ids[full], self.walkable[tid] = tid, walkable
+            self.ids[full], self.walkable[tid], self.base[tid] = tid, walkable, tile_base(key)
             self.draws[tid] = lambda: draw_key(key, walkable)
         return self.ids[full]
 
@@ -438,6 +439,7 @@ class Chipset:
     def __init__(self, tiles, used):
         self.image = Image.new("RGB", (CHIP_COLS * T, CHIP_ROWS * T), KEY)
         self.col = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), BLOCK)
+        self.prop = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), (0, 0, 0))     # green : the base of a tile + 1 (0 flat)
         self.cells, self.water = {}, []
         taken = set(WATER_REGION)
         by_image = {}
@@ -463,6 +465,7 @@ class Chipset:
                     self.image.paste(im, (slot[0] * T, (slot[1] + f) * T))
                     taken.add((slot[0], slot[1] + f))
                 self.col.putpixel(slot, WALK_ANIMATED if tiles.walkable[tid] else BLOCK_ANIMATED)
+                self.prop.putpixel(slot, (0, tiles.base[tid] + 1, 0))
                 by_image[sig] = slot
             self.cells[(tid, pal)] = by_image[sig]
         free = [(x, y) for y in range(CHIP_ROWS) for x in range(CHIP_COLS) if (x, y) not in taken]
@@ -470,7 +473,7 @@ class Chipset:
             if tid in ANIMATED:
                 continue
             im = tiles.frames(tid, pal)[0]
-            sig = (tiles.walkable[tid], im.tobytes())
+            sig = (tiles.walkable[tid], tiles.base[tid], im.tobytes())
             if sig not in by_image:
                 if not free:
                     raise SystemExit(f"worldgen : the chipset of a map is full ({len(used)} tiles, {CHIP_ROWS} rows)")
@@ -478,6 +481,7 @@ class Chipset:
                 taken.add(c)
                 self.image.paste(im, (c[0] * T, c[1] * T))
                 self.col.putpixel(c, WALK if tiles.walkable[tid] else BLOCK)
+                self.prop.putpixel(c, (0, tiles.base[tid] + 1, 0))
                 by_image[sig] = c
             self.cells[(tid, pal)] = by_image[sig]
         # As high as needed (a multiple of 4 rows, 16 at least)
@@ -485,6 +489,7 @@ class Chipset:
         self.rows = (rows + 3) // 4 * 4
         self.image = self.image.crop((0, 0, CHIP_COLS * T, self.rows * T))
         self.col = self.col.crop((0, 0, CHIP_COLS, self.rows))
+        self.prop = self.prop.crop((0, 0, CHIP_COLS, self.rows))
         self.used = len(taken - WATER_REGION) + len(self.water) * 4
 
     def save(self, chips, name, sources):
@@ -492,8 +497,7 @@ class Chipset:
         base = f"{chips}/{name}"
         self.image.save(f"{base}.png")
         self.col.save(f"{base}.png.col", format="PNG")
-        prop = Image.open(f"{DATA}/chipset.prop.png")         # the properties : not read by the game yet
-        Image.new(prop.mode, self.col.size).save(f"{base}.png.prop", format="PNG")
+        self.prop.save(f"{base}.png.prop", format="PNG")       # the properties : the depth of the tiles
         # The touch scripts of the cells (Resources/Chipsets/tile_scripts, checked by the build) : the water surfs
         os.makedirs(f"{base}/Scripts")
         scripts = [(x, y, TILE_SCRIPTS[WATER_CELL]) for x, y in self.water]
@@ -560,6 +564,42 @@ def draw_key(key, walkable):
     if kind in simple:
         return simple[kind]()
     return rooms.draw_key(key)
+
+
+# The depth of the tiles (the property "base" of a tileset, written in the .prop of each chipset, read by the game :
+# ska TileProperties) : FLAT, a tile on the ground (drawn under the characters) ; n >= 0, a part of an object standing n
+# blocks lower (drawn over the characters behind that base line, under the ones in front of it)
+FLAT = -1
+# The objects standing on their block (the posts, the furniture of the villages, the rocks)
+STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "bush", "well", "boulder", "log seat",
+            "sign"}
+ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
+                 "fountain_1_1": 0}
+_STAMP_ROWS = {}
+
+
+def tile_base(key):
+    """The base of a tile (its key, or the name of an animated tile) : FLAT, or how many blocks lower its object
+    stands (a roof : the bottom row of its building ; a tree top : its trunk)."""
+    if isinstance(key, str):
+        return ANIMATED_BASE.get(key, FLAT)
+    kind = key[0]
+    if kind == "stamp":
+        name, c, r = key[1:]
+        if name not in _STAMP_ROWS:
+            _STAMP_ROWS[name] = stamp_image(name, STAMP_MAKERS[name]).height // T
+        return _STAMP_ROWS[name] - 1 - r
+    if kind == "tree":
+        style, row, c = key[1:]
+        dy = next(dy for dy, part_row, _ in TREE_SHAPES[style][1] if part_row == row)
+        trunk = next(dy for dy, _, part in TREE_SHAPES[style][1] if part == "trunk")
+        return trunk - dy
+    if kind == "room furniture":
+        if key[1] == "H":
+            return 0
+        char, rw, th, extra, c, r = key[1:]
+        return th - 1 - r
+    return 0 if kind in STANDING else FLAT
 
 
 def stamp_image(name, make):

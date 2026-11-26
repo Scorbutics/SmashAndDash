@@ -14,6 +14,10 @@ namespace worldgen {
 		std::string root = "./Resources";
 	};
 
+	// The format of the generated worlds : a save whose world is older is generated again (the same seed, SaveSlots).
+	// 2 : the depth of the tiles in the properties of the chipsets (.prop)
+	constexpr int WorldVersion = 2;
+
 	// Where the player starts : the block below the centre of the first village
 	struct Start {
 		std::string map;

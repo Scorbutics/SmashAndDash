@@ -34,9 +34,12 @@ namespace worldgen {
 		// The frames (1, or 4 for an animated tile) of a tile (its key, the name of an animated tile) in a biome
 		std::vector<TileVoxels> frames(const std::string& key, Biome biome) const;
 		bool has(const std::string& key) const { return m_rows.count(key) > 0; }
+		// The depth of a tile (tools/worldgen tile_base : -1 flat, n a part of an object standing n blocks lower)
+		int base(const std::string& key) const;
 	private:
 		RgbImage m_image;
 		std::map<std::string, std::pair<int, int>> m_rows; // key -> row, frames
+		std::map<std::string, int> m_bases;
 	};
 
 	// The frames of the tiles of a world in the mixes of the biomes (cached)
@@ -46,6 +49,7 @@ namespace worldgen {
 		const std::vector<TileVoxels>& frames(TileId tile, const Mix& mix);
 		bool walkable(TileId tile) const { return IsAnimated(tile) ? AnimatedWalkable(AnimatedOf(tile)) : m_tiles.walkable(tile); }
 		std::string key(TileId tile) const { return IsAnimated(tile) ? AnimatedName(AnimatedOf(tile)) : m_tiles.key(tile); }
+		int base(TileId tile) const { return m_atlas.base(key(tile)); }
 	private:
 		const std::vector<TileVoxels>& pure(TileId tile, Biome biome);
 
@@ -58,12 +62,14 @@ namespace worldgen {
 	using TileUse = std::pair<TileId, Mix>;
 
 	// The chipset of a map : the tiles it uses in their mixes (the same images share a cell), its collisions (.col : white
-	// walked on, 0xAA walked on and animated, 0x46 blocked and animated, black blocked), its water cells
+	// walked on, 0xAA walked on and animated, 0x46 blocked and animated, black blocked), its properties (.prop : green, the
+	// base of the tile + 1, 0 flat : ska TileProperties), its water cells
 	struct Chipset {
 		Chipset(TileImages& images, const std::set<TileUse>& used);
 
 		RgbImage image;
 		RgbImage col;
+		RgbImage prop;
 		std::map<TileUse, Block> cells;
 		std::vector<Block> water;
 		int rows = 0;

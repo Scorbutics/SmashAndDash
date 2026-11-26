@@ -78,8 +78,12 @@ worldgen::Atlas::Atlas(RgbImage image, std::istream& index) : m_image(std::move(
 		if (line.empty()) {
 			continue;
 		}
+		// "<frames> <base> <key>"
 		const auto space = line.find(' ');
-		m_rows[line.substr(space + 1)] = { row++, std::stoi(line.substr(0, space)) };
+		const auto second = line.find(' ', space + 1);
+		const auto key = line.substr(second + 1);
+		m_rows[key] = { row++, std::stoi(line.substr(0, space)) };
+		m_bases[key] = std::stoi(line.substr(space + 1, second - space - 1));
 	}
 	if (m_image.height < row * Voxels || m_image.width < BiomeCount * 4 * Voxels) {
 		throw std::runtime_error{ "worldgen : the atlas of the tiles is smaller than its index" };
@@ -166,8 +170,9 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 	}
 	auto grid = std::map<Block, TileVoxels>{};
 	auto colours = std::map<Block, std::array<std::uint8_t, 3>>{};
+	auto bases = std::map<Block, int>{};
 	auto animatedCells = std::map<std::pair<TileId, std::vector<TileVoxels>>, Block>{};
-	auto stillCells = std::map<std::pair<bool, TileVoxels>, Block>{};
+	auto stillCells = std::map<std::tuple<bool, int, TileVoxels>, Block>{};
 	auto waterSlots = WaterSlots();
 	auto animatedSlots = AnimatedSlots();
 	// The order of the Python generator : by the text of the tile, then by the mix
@@ -214,6 +219,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 				taken.insert(cell);
 			}
 			colours[slot] = images.walkable(tile) ? WalkAnimated : BlockedAnimated;
+			bases[slot] = images.base(tile);
 			found = animatedCells.emplace(sig, slot).first;
 		}
 		cells[{ tile, mix }] = found->second;
@@ -232,7 +238,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			continue;
 		}
 		const auto& frame = images.frames(tile, mix)[0];
-		const auto sig = std::make_pair(images.walkable(tile), frame);
+		const auto sig = std::make_tuple(images.walkable(tile), images.base(tile), frame);
 		auto found = stillCells.find(sig);
 		if (found == stillCells.end()) {
 			if (next == free.end()) {
@@ -242,6 +248,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			taken.insert(cell);
 			grid[cell] = frame;
 			colours[cell] = images.walkable(tile) ? Walk : Blocked;
+			bases[cell] = images.base(tile);
 			found = stillCells.emplace(sig, cell).first;
 		}
 		cells[{ tile, mix }] = found->second;
@@ -277,6 +284,17 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			std::copy(colour.begin(), colour.end(), col.at(cell.first, cell.second));
 		}
 	}
+	prop = RgbImage{ ChipColumns, rows, 0, 0, 0 };
+	for (const auto& [cell, base] : bases) {
+		if (cell.second < rows) {
+			prop.at(cell.first, cell.second)[1] = static_cast<std::uint8_t>(base + 1);
+		}
+	}
+}
+
+int worldgen::Atlas::base(const std::string& key) const {
+	const auto found = m_bases.find(key);
+	return found == m_bases.end() ? -1 : found->second;
 }
 
 std::set<worldgen::TileUse> worldgen::ChunkTiles(const World& world, int cx, int cy) {

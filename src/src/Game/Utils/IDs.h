@@ -59,18 +59,14 @@
 constexpr int WorldInterfacePriority = GUI_DEFAULT_DISPLAY_PRIORITY - 10;
 // Drawings over the world, zoomed with it (ex : the damage of the battles)
 constexpr int WorldOverlayPriority = GUI_DEFAULT_DISPLAY_PRIORITY - 50;
-// The drawing order of the world, from the bottom : the ground layers of the maps, then the characters on the ground and
-// the top layer of the maps (tree tops, roofs : the "T" layer) sorted together by their position (0 to the height of the
-// map, the bottom of a sprite : its feet), then the characters in the air (ex : flying, AirHeight pixels high or more,
-// sorted by their position on the ground). A hop stays on the ground.
-// A tile of the top layer hides the characters whose sprite ends above its depth line, TopLayerDepth pixels under its
-// top (the sprite of a character ends CharacterFeetMargin pixels under its feet, its feet cannot go further inside a
-// wall : CustomEntityManager PhysicsBox) : the characters behind it. A character whose feet (their middle) are on a
-// block of the top layer (ex : the tip of a tree, the lantern of a lamp : behind the object) is sorted behind it
-// (WorldState) ; beside it, it is drawn over it.
-constexpr int TopLayerDepth = 16;
-constexpr int TopLayerPriority = TopLayerDepth;
-constexpr long CharacterFeetMargin = 8;
+// The drawing order of the world, from the bottom : the flat tiles of the maps (grounds, carpets), then the characters on
+// the ground and the standing tiles of the maps (their depth : the property "base" of the tileset, ska TileProperties ;
+// a lamp, a tree, a building, its roof included, are drawn at the base line of their object) sorted together by their
+// ground line : a character by its feet (the bottom of its hitbox), a standing object by the middle of the block it
+// stands on (TopLayerPriority : a character on the row behind it is hidden by it, on its block or in front of it, drawn
+// over it), then the characters in the air (ex : flying, AirHeight pixels high or more, sorted by their ground line).
+// A hop stays on the ground.
+constexpr int TopLayerPriority = 24;
 constexpr long AirHeight = 48;
 constexpr int AirPriority = 25000;
 // The fog and the weather : over the world, zoomed with it (they cover the whole screen whatever the zoom)

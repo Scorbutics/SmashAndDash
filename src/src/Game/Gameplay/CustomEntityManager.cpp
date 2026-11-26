@@ -74,8 +74,7 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 
 namespace {
 	// The physics shape of a character (physicsShapeOffset) : on the blocks, it does not touch the walls on their edges ;
-	// its feet are never drawn inside a wall under it (a character moving freely, ex : in a battle), so the top layer of
-	// the maps (TopLayerDepth) hides it only when it is behind
+	// its feet (the bottom of the shape : its drawing order, ska GraphicSystem) are never inside a wall under it
 	ska::Rectangle PhysicsBox(const ska::HitboxComponent& hitbox) {
 		constexpr auto blockSize = 48;
 		const auto size = ska::Point<int>{ static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) };

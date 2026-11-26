@@ -19,9 +19,11 @@ The walls of the game against the blocks the generator made walkable (tools/agen
   tools/worldgen/tileroom.py --walls walls.json --at 1 1       (--at : the block of the player, a wall for the game)
 
 It checks that it shows every kind of tile the generator draws (draw_key, the animated tiles, the trees, the
-structures, the furniture) : a new kind of tile not placed here fails it (place it in EXHIBITS or below). And that
-each tile of the top layer (drawn over the characters) over a walkable block stands over the blocking base of its
-object (a lamp post, a trunk, the walls of a building) : the game draws a character on such a block behind the object.
+structures, the furniture) : a new kind of tile not placed here fails it (place it in lay_out). And the depth of the
+tiles (worldgen.tile_base, the property "base" of the chipsets : the game draws a standing tile sorted with the
+characters at the base line of its object) : each tile of the top layer over a walkable block stands over the blocking
+base of its object (a lamp post, a trunk, the walls of a building) ; no tile of the top layer is flat ; an object that
+blocks the way (on the middle layer, out of the water) is not flat (drawn under the characters behind it).
 """
 import argparse
 import inspect
@@ -206,6 +208,23 @@ class TileRoom(w.World):
                            f"{'walkable' if self.walk[y][x] else 'blocked'} for the generator (near : {near})")
         return out
 
+    def flat_objects(self):
+        """The tiles that should stand but are flat (worldgen.tile_base) : on the top layer, or blocking on the middle
+        layer out of the water."""
+        out = []
+        keys = {tid: key for (key, _), tid in self.chip.ids.items()}
+        for y in range(H):
+            for x in range(W):
+                for layer in ("M", "T"):
+                    cell = self.layers[layer][y][x]
+                    if cell is None:
+                        continue
+                    base = w.tile_base(cell if isinstance(cell, str) else keys[cell])
+                    blocking = layer == "M" and not self.walk[y][x] and self.terrain[y][x][0] != "water"
+                    if base == w.FLAT and (layer == "T" or blocking):
+                        out.append((x, y, cell if isinstance(cell, str) else keys[cell]))
+        return out
+
     # Output -----------------------------------------------------------------------------------------------------
     def write_map(self, world, name):
         corr = w.correspondance(f"{ROOT}/Resources/Chipsets/corr.png")
@@ -267,6 +286,11 @@ def main():
     if floating:
         print("tileroom : tiles over the characters with no blocking base under them : "
               + ", ".join(f"({x}, {y})" for x, y in floating))
+        failed = True
+    flat = room.flat_objects()
+    if flat:
+        print("tileroom : objects with no base (worldgen.tile_base : add their kind to STANDING) : "
+              + ", ".join(f"({x}, {y}) {key}" for x, y, key in flat))
         failed = True
     if a.walls:
         with open(a.walls) as f:
