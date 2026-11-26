@@ -13,6 +13,8 @@ LD_LIBRARY_PATH=build/lib build/bin/ska_main   # from the repository root (the g
 
 The build compiles every script (`smash_and_dash_scripts_check`): a script error fails the build, with its file and line.
 
+Build time: about 2 min clean at `-j8` (6 cores, 12 threads: more jobs barely help), seconds for a game file, more for an engine header (included everywhere). The game sources compile while the engine links (object libraries `smash_and_dash_objects`, `smash_and_dash_worldgen`), the C++ standard headers are precompiled (ska `SKA_PRECOMPILED_HEADERS`), ccache is used when installed.
+
 Battle simulation: `SAD_BATTLE_AUTOPLAY=1` makes the battle AI play the Pokemon of the player too; the debug log traces the battle (`Battle t=...`: decisions, skills used, hits, misses).
 
 Script tests, headless (no window): `cd build && ctest`. They are `tests/*_test.miniska` (assertions: `Test = import "bind:std.native.test"`), run with the templates of the engine and game functions (default bodies) and the fakes of `tests/fakes` (ex: the engine keeps the game variables, `setNextRandom` chooses the random values). Add a test with a script change when the script has logic (rules, AI, helpers).

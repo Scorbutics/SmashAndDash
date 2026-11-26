@@ -10,6 +10,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(SKA_BUILD_NO_TEST TRUE)
 
+# ccache, when installed (the engine and the game : a file compiled before is taken from its cache)
+include(external/ska/cmake/SkaCompilerCache.cmake)
 # The web build (Emscripten) : tools/web/build.sh
 include(external/ska/cmake/SkaWeb.cmake)
 

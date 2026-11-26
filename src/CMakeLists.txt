@@ -10,17 +10,35 @@ string(REGEX REPLACE "[^;]*CMakeFiles/[^;]+;?" "" SOURCES "${SOURCES}")
 
 include_directories(src)
 
+# The world generator (plain C++, no engine) : compiled once, for the game and for its test (sad_worldgen_test)
+file(GLOB WORLDGEN_SOURCES CONFIGURE_DEPENDS src/Game/Gameplay/World/Generation/*.cpp)
+list(REMOVE_ITEM SOURCES ${WORLDGEN_SOURCES})
+add_library(smash_and_dash_worldgen OBJECT ${WORLDGEN_SOURCES})
+set_target_properties(smash_and_dash_worldgen PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# The sources of the game : compiled without waiting for the engine to be linked (the engine headers are on the include
+# path of every target : the root CMakeLists.txt), the game library links them with the engine
+add_library(smash_and_dash_objects OBJECT ${SOURCES})
+set_target_properties(smash_and_dash_objects PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 # The game is a library ("libGame") loaded and run by the ska launcher executable (ska_main). On the web, it is linked
 # with the engine in the page (ska_web_executable)
 if(EMSCRIPTEN)
-	add_library(smash_and_dash STATIC ${SOURCES})
+	add_library(smash_and_dash STATIC $<TARGET_OBJECTS:smash_and_dash_objects> $<TARGET_OBJECTS:smash_and_dash_worldgen>)
 else()
-	add_library(smash_and_dash SHARED ${SOURCES})
+	add_library(smash_and_dash SHARED $<TARGET_OBJECTS:smash_and_dash_objects> $<TARGET_OBJECTS:smash_and_dash_worldgen>)
 endif()
 set_target_properties(smash_and_dash PROPERTIES OUTPUT_NAME Game)
 add_dependencies(smash_and_dash ska_main)
 set(TARGET_LIBS skalog skabase ska_ai ska_audio ska_core ska_draw ska_gui ska_particle ska_physic_chipmunk ska_script ska_scripting ska_world)
 target_link_libraries(smash_and_dash ${TARGET_LIBS})
+ska_precompile_std(smash_and_dash_objects smash_and_dash_worldgen)
+# The objects get the include directories the engine libraries give to the game (TARGET_PROPERTY : no build order)
+foreach(objects smash_and_dash_objects smash_and_dash_worldgen)
+	foreach(library ${TARGET_LIBS})
+		target_include_directories(${objects} PRIVATE $<TARGET_PROPERTY:${library},INTERFACE_INCLUDE_DIRECTORIES>)
+	endforeach()
+endforeach()
 
 # The game bindings script templates are deployed with the skalang standard library ones (in "std", next to the executables)
 add_custom_command(TARGET smash_and_dash POST_BUILD
@@ -77,15 +95,7 @@ skalang_check_scripts(smash_and_dash_scripts_check
 
 # The C++ port of the world generator (World/Generation : plain C++, no engine) against the values of the Python
 # generator (tests/worldgen/golden.txt, tools/worldgen/golden.py)
-add_executable(sad_worldgen_test ${GAME_ROOT_DIR}/tests/worldgen/WorldgenTest.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Noise.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Climate.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Villages.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Terrain.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Layers.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Png.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Chipset.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/Game/Gameplay/World/Generation/Files.cpp)
+add_executable(sad_worldgen_test ${GAME_ROOT_DIR}/tests/worldgen/WorldgenTest.cpp $<TARGET_OBJECTS:smash_and_dash_worldgen>)
 target_include_directories(sad_worldgen_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${GAME_ROOT_DIR}/external/ska/external/doctest)
 add_test(NAME sad_worldgen COMMAND sad_worldgen_test WORKING_DIRECTORY ${GAME_ROOT_DIR})
 
