@@ -70,6 +70,10 @@ ska::EntityId FollowerSystem::make(int species, const TrailPoint& at) {
 	// A drawing only : it blocks nothing (no physics body), it is sorted by its exact position
 	m_cem.removeComponent<ska::CollidableComponent>(follower);
 	m_cem.getComponent<ska::GraphicComponent>(follower).sortStep = 0;
+	// Its hitbox as the characters with a physics body have it (CustomEntityManager::fill) : the drawing, the shadow and the
+	// depth come from it (else it is drawn a hitbox high over its shadow)
+	auto& hitbox = m_cem.getComponent<ska::HitboxComponent>(follower);
+	hitbox.yOffset -= hitbox.height;
 	m_appear = 0;
 	m_still = 0;
 	m_last = at;
