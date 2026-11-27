@@ -85,10 +85,10 @@ bool TrainerItemSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	if (processed.find(m_stage.player) == processed.end() || m_componentAccessor.get<FighterComponent>(m_stage.player).controlledByAI) {
 		return true;
 	}
-	if (actions[ska::DeleteChar]) {
+	if (actions[ska::NextItem]) {
 		next();
 	}
-	if (actions[ska::DoAction]) {
+	if (actions[ska::UseItem]) {
 		use();
 	}
 	return true;

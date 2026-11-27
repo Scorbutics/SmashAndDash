@@ -40,7 +40,8 @@
 	<div id="buttons">
 		<button class="skill" data-key="1">1</button><button class="skill" data-key="2">2</button><button data-key="Enter">A</button>
 		<button class="skill" data-key="3">3</button><button class="skill" data-key="4">4</button><button data-key="Backspace">B</button>
-		<button data-key="Shift" data-toggle style="grid-column: 3; font-size: 11px">Courir</button>
+		<button data-key="e" style="font-size: 11px">Obj.</button><button data-key="r" style="font-size: 11px">Suiv.</button>
+		<button data-key="Shift" data-toggle style="font-size: 11px">Courir</button>
 	</div>
 </div>
 <script>
@@ -112,6 +113,7 @@
 	const KEYS = {
 		w: { key: "w", code: "KeyW" }, a: { key: "a", code: "KeyA" }, s: { key: "s", code: "KeyS" }, d: { key: "d", code: "KeyD" },
 		1: { key: "1", code: "Digit1" }, 2: { key: "2", code: "Digit2" }, 3: { key: "3", code: "Digit3" }, 4: { key: "4", code: "Digit4" },
+		e: { key: "e", code: "KeyE" }, r: { key: "r", code: "KeyR" },
 		Enter: { key: "Enter", code: "Enter" }, Backspace: { key: "Backspace", code: "Backspace" }, Shift: { key: "Shift", code: "ShiftLeft", location: 1 },
 	};
 	function sendKey(name, down) {

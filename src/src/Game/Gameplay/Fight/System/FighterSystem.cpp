@@ -386,9 +386,9 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 	}
 	for (const auto entity : processed) {
 		auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
-		if (processed.find(fighter.opponent) == processed.end()) {
-			continue;
-		}
+		// Without an opponent (gone) it does not move, but it is still drawn : its animations go on (coming out of a
+		// pokeball, going in it), else its drawing would stay as it was (ex : a few pixels, shrunk in a pokeball)
+		const auto hasOpponent = processed.find(fighter.opponent) != processed.end();
 		// Coming out of its pokeball, going back in it : real time (the hit stops do not hold them)
 		if (fighter.appear < FighterComponent::AppearDuration) {
 			fighter.appear = std::min(FighterComponent::AppearDuration, fighter.appear + ellapsedTime);
@@ -405,7 +405,7 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 		} else if (m_stage.phase() == BattlePhase::Outro) {
 			// The battle is over : everybody stands still
 			setVelocity(entity, {});
-		} else if (m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
+		} else if (hasOpponent && m_stage.phase() != BattlePhase::Intro && m_stage.phase() != BattlePhase::Over) {
 			control(entity, fighter, ellapsedTime);
 		}
 		draw(entity, fighter);

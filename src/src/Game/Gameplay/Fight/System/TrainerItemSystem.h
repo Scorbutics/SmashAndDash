@@ -13,8 +13,9 @@
 class WorldState;
 
 // The item slot of the trainer in a battle : the items of the bag usable in a battle (a healing item, a pokeball), one
-// chosen at a time (BattleStage::itemSlot, drawn by GUIBattle). The action key (Return, the A of the pad) uses it, the
-// key of "delete" (Backspace, the B of the pad) chooses the next one. A healing item heals the Pokemon of the player
+// chosen at a time (BattleStage::itemSlot, drawn by GUIBattle). E (the "Obj." of the pad) uses it, R (the "Suiv." of
+// the pad) chooses the next one : keys of their own (Return closes the dialogs : pressed at the start of the fight, it
+// threw pokeballs). A healing item heals the Pokemon of the player
 // fighting ; a pokeball is thrown at its opponent : the wild Pokemon goes in, the ball shakes, it is captured (it joins
 // the team, the battle rules give the chance : BattleRules::captureChance) or it breaks free. A pause after each use.
 class TrainerItemSystem :

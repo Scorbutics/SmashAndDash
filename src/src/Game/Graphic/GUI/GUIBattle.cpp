@@ -350,14 +350,14 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 	}
 	// The dodge (space key)
 	slotPanel(x, 132, 46, "ESP", "ESQUIVE", static_cast<float>(player->dashCooldown) / static_cast<float>(FighterSystem::DashCooldown));
-	// The item of the trainer (TrainerItemSystem), over the skills : the action key (Entrée, A) uses it, the key of
-	// "delete" (Retour, B) chooses the next one
+	// The item of the trainer (TrainerItemSystem), over the skills : E (the "Obj." of the pad) uses it, R (the "Suiv." of
+	// the pad) chooses the next one
 	const auto& item = m_stage.itemSlot;
 	if (item.item >= 0) {
 		y -= slotHeight + 10;
 		const auto label = Upper(item.name) + " x" + std::to_string(item.amount);
-		slotPanel(rowX, 214, 46, "ENT", label, item.cooldown);
-		canvas.text("RET : OBJET SUIVANT", Style(13, White, true), rowX + 224, y + 14, Ui::Align::Left);
+		slotPanel(rowX, 214, 30, "E", label, item.cooldown);
+		canvas.text("R : OBJET SUIVANT", Style(13, White, true), rowX + 224, y + 14, Ui::Align::Left);
 	}
 }
 

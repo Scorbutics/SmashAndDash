@@ -274,6 +274,13 @@ void StateFight::beforeUnload() {
 			m_entityManager.removeEntity(companion);
 		}
 		m_companions.clear();
+		// The fighters still on the map are drawn as they are : the effects of the battle are over (a flash, a shrink into a
+		// pokeball, a fade...), else they would stay as they were at its end (ex : a wild Pokemon of a few pixels)
+		for (const auto fighter : m_stage.fighters) {
+			if (m_entityManager.hasComponent<ska::GraphicComponent>(fighter)) {
+				m_entityManager.getComponent<ska::GraphicComponent>(fighter).effect = ska::RenderEffect{};
+			}
+		}
 		// The wild Pokemon still there (the player fled, or lost) : it stands still, and leaves the player alone a while
 		if (m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId)) {
 			if (m_entityManager.hasComponent<ska::GraphicComponent>(m_opponentId)) {
