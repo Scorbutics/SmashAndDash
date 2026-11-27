@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include "../System/TallGrassSystem.h"
+#include "../System/SilhouetteSystem.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Graphic/System/CameraFixedStrategy.h"
@@ -134,6 +135,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	addLogic(std::make_unique<PokeballSystem>(m_entityManager));
 	// The fighters in tall grass too
 	addLogic(std::make_unique<TallGrassSystem>(m_entityManager, m_worldState));
+	// The characters hidden behind the objects of the map : their silhouette
+	addLogic(std::make_unique<SilhouetteSystem>(m_entityManager, m_worldState));
 	auto& rules = m_worldState.getBattleRules();
 	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
 

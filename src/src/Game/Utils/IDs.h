@@ -74,6 +74,9 @@ constexpr int AirPriority = 25000;
 constexpr int FogPriority = WorldOverlayPriority - 2;
 // The light of the map (ska::LightMap) : over the ground, the characters and the top layer, under the fog and the weather
 constexpr int LightMapPriority = WorldOverlayPriority - 3;
+// The silhouettes of the characters hidden behind the objects of the map (SilhouetteSystem) : over the world, under its
+// light
+constexpr int SilhouettePriority = WorldOverlayPriority - 4;
 constexpr int WeatherPriority = WorldOverlayPriority - 1;
 // The projectiles of the skills : zoomed with the world (under WorldInterfacePriority), over their trails (GUIBattle,
 // WorldOverlayPriority)
