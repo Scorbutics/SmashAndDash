@@ -5,9 +5,10 @@ Resources/Worldgen/tiles.png and tiles.txt.
 
 The tiles are drawn on a grid of voxels (tilegen : V x V pixels each) : the atlas keeps one pixel per voxel (16 x 16 a
 tile). A row of the atlas per tile : 4 biomes (BIOMES order) of 4 frames each (one for a tile that is not animated).
-tiles.txt : a line per row, "<frames> <base> <flags> <key>" : the base of the tile (worldgen.tile_base : -1 flat, n a
-part of an object standing n blocks lower), its properties for the game (worldgen.tile_flags : HIDEOUT ; both written
-in the .prop of the chipsets), the key of the tile (the text of its Python key,
+tiles.txt : a line per row, "<frames> <base> <flags> <mask> <key>" : the base of the tile (worldgen.tile_base : -1
+flat, n a part of an object standing n blocks lower), its properties for the game (worldgen.tile_flags : HIDEOUT ; both
+written in the .prop of the chipsets), its collision mask when it blocks (worldgen.tile_mask : 16 bits, the .png.mask of
+the chipsets), the key of the tile (the text of its Python key,
 World.build and rooms.build_room), or the name of an animated tile.
 
   tools/worldgen/atlas.py [folder]      (after a change of the drawings, of the keys or of a room template)
@@ -110,14 +111,15 @@ def voxels(img):
 
 def main():
     folder = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "Resources", "Worldgen")
-    entries = [(name, 4, (w.tile_base(name), w.tile_flags(name)), lambda f, n=name: w.ANIMATED[n](f))
+    entries = [(name, 4, (w.tile_base(name), w.tile_flags(name), w.tile_mask(name, False)), lambda f, n=name: w.ANIMATED[n](f))
                for name in w.ANIMATED]
     seen = set()
     for key, walkable in keys():
         if repr(key) in seen:
             raise SystemExit(f"atlas : the key {key!r} twice")
         seen.add(repr(key))
-        entries.append((repr(key), 1, (w.tile_base(key), w.tile_flags(key)), lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
+        entries.append((repr(key), 1, (w.tile_base(key), w.tile_flags(key), w.tile_mask(key, False)),
+                        lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
     atlas = Image.new("RGB", (len(w.BIOMES) * 4 * N, len(entries) * N), g.KEY)
     for b, biome in enumerate(w.BIOMES):
         g.use_biome(biome)
@@ -127,7 +129,7 @@ def main():
     g.use_biome("meadow")
     atlas.save(os.path.join(folder, "tiles.png"), optimize=True)
     with open(os.path.join(folder, "tiles.txt"), "w") as out:
-        out.write("".join(f"{frames} {base} {flags} {name}\n" for name, frames, (base, flags), _ in entries))
+        out.write("".join(f"{frames} {base} {flags} {mask} {name}\n" for name, frames, (base, flags, mask), _ in entries))
     print(f"{folder}/tiles.png : {len(entries)} tiles")
 
 

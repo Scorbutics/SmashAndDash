@@ -19,7 +19,8 @@ blockY = function(entity: int) : int do return 0 end
 # grass, 8 the leaves of a tree, 16 a rock ; the generated worlds, tools/worldgen tile_flags)
 blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
 
-# Nothing at a block position : no wall, no character (the water is free, blockHasProperty tells it). Out of the map : false
+# Nothing at a block position where a character stands on it (the middle of its lower half) : no solid part of a tile,
+# no character (the water is free, blockHasProperty tells it). Out of the map : false
 blockFree = function(x: int, y: int) : bool do return false end
 
 # Shakes the camera during "duration" milliseconds, up to "intensity" pixels (less and less). The script does not wait.

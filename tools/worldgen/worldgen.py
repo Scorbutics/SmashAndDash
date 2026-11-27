@@ -259,6 +259,13 @@ def water_overlay(over_mat, mask):
     return s.render()
 
 
+def scene_image(s):
+    """The image of a scene, the scene kept with it (tile_mask reads the materials of its voxels)."""
+    img = s.render()
+    img.info["scene"] = s
+    return img
+
+
 def cliff(low, stairs=False, foot=False):
     """A cell of a plateau next to lower ground (low : 8 bits, N E S W NE SE SW NW). A low south : a rock face in
     the lower part of the cell (the plateau seen from the front) ; a low west or east : the rock side ; a low north :
@@ -311,7 +318,7 @@ def cliff(low, stairs=False, foot=False):
                     s.put(x, y, "stone", 0, 1, 3 if step == 0 else 2 if step == 1 else 1)
                 s.put(3, y, "rock", 0, 1, 0)
                 s.put(12, y, "rock", 0, 1, 0)
-    return s.render()
+    return scene_image(s)
 
 
 def cliff_foot(mat, west, east, stairs=False):
@@ -346,7 +353,7 @@ def cliff_foot(mat, west, east, stairs=False):
             if y < bottom:
                 s.put(3, y, "rock", 0, 1, 0)
                 s.put(12, y, "rock", 0, 1, 0)
-    return s.render()
+    return scene_image(s)
 
 
 # ---------------------------------------------------------------- the tiles of the world
@@ -389,10 +396,11 @@ class Tiles:
     maps are made from them (Chipset)."""
 
     def __init__(self):
-        self.ids, self.draws, self.walkable, self.base, self.flags = {}, {}, {}, {}, {}
+        self.ids, self.draws, self.walkable, self.base, self.flags, self.mask = {}, {}, {}, {}, {}, {}
         for tid in ANIMATED:
             self.walkable[tid] = ANIMATED_WALK[tid]
             self.base[tid], self.flags[tid] = tile_base(tid), tile_flags(tid)
+            self.mask[tid] = tile_mask(tid, ANIMATED_WALK[tid])
         self.cache, self.pure = {}, {}
 
     def cell(self, key, walkable):
@@ -402,6 +410,7 @@ class Tiles:
             tid = len(self.ids)
             self.ids[full], self.walkable[tid], self.base[tid], self.flags[tid] = tid, walkable, tile_base(key), \
                 tile_flags(key)
+            self.mask[tid] = tile_mask(key, walkable)
             self.draws[tid] = lambda: draw_key(key, walkable)
         return self.ids[full]
 
@@ -440,6 +449,8 @@ class Chipset:
     def __init__(self, tiles, used):
         self.image = Image.new("RGB", (CHIP_COLS * T, CHIP_ROWS * T), KEY)
         self.col = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), BLOCK)
+        # The collision masks of the tiles (tile_mask) : 4 x 4 pixels a cell, white a solid part
+        self.mask = Image.new("RGB", (CHIP_COLS * MASK_CELLS, CHIP_ROWS * MASK_CELLS), (0, 0, 0))
         # red : the properties of a tile (tile_flags) ; green : its base + 1 (0 flat)
         self.prop = Image.new("RGB", (CHIP_COLS, CHIP_ROWS), (0, 0, 0))
         self.cells, self.water = {}, []
@@ -467,6 +478,8 @@ class Chipset:
                     self.image.paste(im, (slot[0] * T, (slot[1] + f) * T))
                     taken.add((slot[0], slot[1] + f))
                 self.col.putpixel(slot, WALK_ANIMATED if tiles.walkable[tid] else BLOCK_ANIMATED)
+                for f in range(len(frames)):
+                    self.put_mask((slot[0], slot[1] + f), tiles.mask[tid])
                 self.prop.putpixel(slot, (tiles.flags[tid], tiles.base[tid] + 1, 0))
                 by_image[sig] = slot
             self.cells[(tid, pal)] = by_image[sig]
@@ -475,7 +488,7 @@ class Chipset:
             if tid in ANIMATED:
                 continue
             im = tiles.frames(tid, pal)[0]
-            sig = (tiles.walkable[tid], tiles.base[tid], tiles.flags[tid], im.tobytes())
+            sig = (tiles.walkable[tid], tiles.base[tid], tiles.flags[tid], tiles.mask[tid], im.tobytes())
             if sig not in by_image:
                 if not free:
                     raise SystemExit(f"worldgen : the chipset of a map is full ({len(used)} tiles, {CHIP_ROWS} rows)")
@@ -483,6 +496,7 @@ class Chipset:
                 taken.add(c)
                 self.image.paste(im, (c[0] * T, c[1] * T))
                 self.col.putpixel(c, WALK if tiles.walkable[tid] else BLOCK)
+                self.put_mask(c, tiles.mask[tid])
                 self.prop.putpixel(c, (tiles.flags[tid], tiles.base[tid] + 1, 0))
                 by_image[sig] = c
             self.cells[(tid, pal)] = by_image[sig]
@@ -491,14 +505,22 @@ class Chipset:
         self.rows = (rows + 3) // 4 * 4
         self.image = self.image.crop((0, 0, CHIP_COLS * T, self.rows * T))
         self.col = self.col.crop((0, 0, CHIP_COLS, self.rows))
+        self.mask = self.mask.crop((0, 0, CHIP_COLS * MASK_CELLS, self.rows * MASK_CELLS))
         self.prop = self.prop.crop((0, 0, CHIP_COLS, self.rows))
         self.used = len(taken - WATER_REGION) + len(self.water) * 4
+
+    def put_mask(self, cell, bits):
+        for cy in range(MASK_CELLS):
+            for cx in range(MASK_CELLS):
+                if bits >> (cy * MASK_CELLS + cx) & 1:
+                    self.mask.putpixel((cell[0] * MASK_CELLS + cx, cell[1] * MASK_CELLS + cy), (255, 255, 255))
 
     def save(self, chips, name, sources):
         """Writes the chipset (its image, collisions, properties, touch scripts copied from sources) in chips."""
         base = f"{chips}/{name}"
         self.image.save(f"{base}.png")
         self.col.save(f"{base}.png.col", format="PNG")
+        self.mask.save(f"{base}.png.mask", format="PNG")       # the collision masks : the solid parts of the tiles
         self.prop.save(f"{base}.png.prop", format="PNG")       # the properties : the depth of the tiles
         # The touch scripts of the cells (Resources/Chipsets/tile_scripts, checked by the build) : the water surfs
         os.makedirs(f"{base}/Scripts")
@@ -607,6 +629,90 @@ def tile_flags(key):
     if key[0] == "boulder":
         return ROCK
     return HIDEOUT if key[0] in HIDEOUTS else 0
+
+
+# The collision mask of a tile (the walls of the game : ska Tile::mask, the .png.mask of the chipsets) : 4 x 4 cells of
+# 12 pixels (4 x 4 voxels), a bit by cell (bit row * 4 + column) set when the cell is solid. A walkable tile : none. The
+# rock of a cliff : the cells more than half rock (the rim of a plateau, its corners, its face : the grass next to them
+# stays free). A tree : its trunk only (its canopy and its top are drawn over the characters, they walk behind them). An
+# object (a post, a bench, a building) : the cells a fifth drawn, down to the bottom of the tile (it stands on the ground).
+MASK_CELLS = 4
+FULL_MASK = (1 << (MASK_CELLS * MASK_CELLS)) - 1
+_MASKS = {}
+
+
+def mask_of(count, total, threshold, strict):
+    """A bit mask of the cells : count(cx, cy) solid units of a cell out of "total"."""
+    bits = 0
+    for cy in range(MASK_CELLS):
+        for cx in range(MASK_CELLS):
+            n = count(cx, cy)
+            if n > threshold * total if strict else n >= threshold * total:
+                bits |= 1 << (cy * MASK_CELLS + cx)
+    return bits
+
+
+def scene_mask(s, x0, y0, solid, threshold, strict):
+    """The mask of the tile of a scene at the voxel x0, y0 : its voxels of a solid material."""
+    k = N // MASK_CELLS
+    return mask_of(lambda cx, cy: sum(1 for j in range(k) for i in range(k)
+                                      if s.mat[y0 + cy * k + j][x0 + cx * k + i] in solid), k * k, threshold, strict)
+
+
+def image_mask(img):
+    """The mask of an object drawn on the key colour : its drawn pixels."""
+    k = T // MASK_CELLS
+    px = img.convert("RGB").load()
+    return mask_of(lambda cx, cy: sum(1 for j in range(k) for i in range(k)
+                                      if px[cx * k + i, cy * k + j] != KEY), k * k, 0.2, False)
+
+
+def stands(bits):
+    """An object stands on the ground : its cells go down to the bottom of the tile."""
+    for cx in range(MASK_CELLS):
+        for cy in range(MASK_CELLS):
+            if bits >> (cy * MASK_CELLS + cx) & 1:
+                for below in range(cy, MASK_CELLS):
+                    bits |= 1 << (below * MASK_CELLS + cx)
+                break
+    return bits
+
+
+def tile_mask(key, walkable):
+    """The collision mask of a tile (its key, or the name of an animated tile)."""
+    if walkable:
+        return 0
+    if (key, walkable) in _MASKS:
+        return _MASKS[(key, walkable)]
+    bits = FULL_MASK
+    if isinstance(key, str):
+        if key in ANIMATED and key != WATER_CELL:
+            bits = stands(image_mask(ANIMATED[key](0)))
+    elif key[0] in ("cliff", "foot"):
+        img = draw_key(key, walkable)
+        bits = scene_mask(img.info["scene"], 0, 0, {"rock"}, 0.5, True) if "scene" in img.info else FULL_MASK
+    elif key[0] == "tree":
+        style, row, c = key[1:]
+        part = [p for _, r, p in TREE_SHAPES[style][1] if r == row][0]
+        if part != "trunk":
+            bits = 0                                 # drawn over the characters : they walk behind it
+        else:
+            scene = g.round_tree() if style == "round" else g.cactus_scene() if style == "cactus" else \
+                g.tree_scene(snow=style == "snowpine")
+            src = {0: 0, 1: 1, 2: 1, 3: 2}[row] if style == "cactus" else row
+            # Its trunk (the foliage reaching down into the row is drawn over the characters ; a cactus : its body)
+            solid = {"wood", "leaf", "white"} if style == "cactus" else {"wood"}
+            bits = stands(scene_mask(scene, c * N, src * N, solid, 0.2, False))
+    elif key[0] == "stamp":
+        name, c, r = key[1:]
+        bits = stands(image_mask(crop(stamp_image(name, STAMP_MAKERS[name]), c, r)))
+    else:
+        img = draw_key(key, walkable)
+        drawn = image_mask(img)
+        # Fully drawn on the key colour : an object ; no key colour at all (a ground, a wall of a room) : fully solid
+        bits = stands(drawn) if any(p[:3] == KEY for p in img.convert("RGB").getdata()) else FULL_MASK
+    _MASKS[(key, walkable)] = bits
+    return bits
 
 
 def tile_base(key):

@@ -49,6 +49,7 @@ namespace {
 		const auto base = chips / name;
 		WriteFile((chips / (name + ".png")).string(), EncodePng(chip.image));
 		WriteFile((chips / (name + ".png.col")).string(), EncodePng(chip.col));
+		WriteFile((chips / (name + ".png.mask")).string(), EncodePng(chip.mask));
 		WriteFile((chips / (name + ".png.prop")).string(), EncodePng(chip.prop));
 		fs::create_directories(base / "Scripts");
 		auto list = std::string{};

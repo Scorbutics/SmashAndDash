@@ -52,6 +52,9 @@ ROOM = ["############",
         ".....EE....."]
 
 
+# The cells of a block under a character standing on it (ska CollisionProfile::StandCells : the middle of its lower half)
+STAND_CELLS = (1 << 9) | (1 << 10) | (1 << 13) | (1 << 14)
+
 class TileRoom(w.World):
     """A flat meadow (no climate, no villages) : the generator places the exhibits on it."""
 
@@ -195,13 +198,25 @@ class TileRoom(w.World):
                 if self.layers["T"][y][x] is not None and self.walk[y][x]
                 and not any(0 <= y + k < H and not self.walk[y + k][x] for k in (1, 2, 3))]
 
+    def stood_on(self, x, y):
+        """A character can stand on the block : walkable for the generator, or the solid parts of its tiles (worldgen
+        tile_mask, the layers of the walls of the game : the ground and the middle) leave free the cells under it."""
+        if self.walk[y][x]:
+            return True
+        solid = 0
+        for layer in ("", "M"):
+            cell = self.layers[layer][y][x]
+            if cell is not None:
+                solid |= self.chip.mask.get(cell, w.FULL_MASK)
+        return solid & STAND_CELLS == 0
+
     def wall_mismatches(self, rows, player=None):
         """The blocks where the walls of the game (rows : "." free, "#" a wall or a character) are not what the
         generator wants (the water aside : free for the physics, its surf script stops the walk)."""
         out = []
         for y, row in enumerate(rows[:H]):
             for x, c in enumerate(row[:W]):
-                if self.terrain[y][x][0] == "water" or self.walk[y][x] == (c == ".") or (x, y) == player:
+                if self.terrain[y][x][0] == "water" or self.stood_on(x, y) == (c == ".") or (x, y) == player:
                     continue
                 near = min(self.exhibits, key=lambda e: abs(e[1] - x) + abs(e[2] - y))[0]
                 out.append(f"({x}, {y}) {'free' if c == '.' else 'a wall'} in the game, "

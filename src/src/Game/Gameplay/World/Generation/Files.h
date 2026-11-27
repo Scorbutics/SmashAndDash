@@ -18,8 +18,9 @@ namespace worldgen {
 	// 2 : the depth of the tiles in the properties of the chipsets (.prop) ; 3 : the hideouts of the wild Pokemon there ;
 	// 4 : the front leaves of the tall grass (over the characters in it) ; 5 : the texts of the events in UTF-8 ; 6 : no
 	// front leaves, the tall grass flagged in the chipsets (the legs of the characters in it are not drawn) ; 7 : no tree
-	// canopy over the top of another tree ; 8 : the canopies and the boulders flagged (hideouts)
-	constexpr int WorldVersion = 8;
+	// canopy over the top of another tree ; 8 : the canopies and the boulders flagged (hideouts) ; 9 : the collision masks of
+	// the tiles (.png.mask : the walls are the solid parts of the tiles, not their whole blocks)
+	constexpr int WorldVersion = 9;
 
 	// Where the player starts : the block below the centre of the first village
 	struct Start {

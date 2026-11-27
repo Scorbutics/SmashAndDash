@@ -78,14 +78,16 @@ worldgen::Atlas::Atlas(RgbImage image, std::istream& index) : m_image(std::move(
 		if (line.empty()) {
 			continue;
 		}
-		// "<frames> <base> <flags> <key>"
+		// "<frames> <base> <flags> <mask> <key>"
 		const auto space = line.find(' ');
 		const auto second = line.find(' ', space + 1);
 		const auto third = line.find(' ', second + 1);
-		const auto key = line.substr(third + 1);
+		const auto fourth = line.find(' ', third + 1);
+		const auto key = line.substr(fourth + 1);
 		m_rows[key] = { row++, std::stoi(line.substr(0, space)) };
 		m_bases[key] = std::stoi(line.substr(space + 1, second - space - 1));
 		m_flags[key] = std::stoi(line.substr(second + 1, third - second - 1));
+		m_masks[key] = std::stoi(line.substr(third + 1, fourth - third - 1));
 	}
 	if (m_image.height < row * Voxels || m_image.width < BiomeCount * 4 * Voxels) {
 		throw std::runtime_error{ "worldgen : the atlas of the tiles is smaller than its index" };
@@ -173,8 +175,9 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 	auto grid = std::map<Block, TileVoxels>{};
 	auto colours = std::map<Block, std::array<std::uint8_t, 3>>{};
 	auto bases = std::map<Block, std::pair<int, int>>{};
+	auto masks = std::map<Block, int>{};
 	auto animatedCells = std::map<std::pair<TileId, std::vector<TileVoxels>>, Block>{};
-	auto stillCells = std::map<std::tuple<bool, int, int, TileVoxels>, Block>{};
+	auto stillCells = std::map<std::tuple<bool, int, int, int, TileVoxels>, Block>{};
 	auto waterSlots = WaterSlots();
 	auto animatedSlots = AnimatedSlots();
 	// The order of the Python generator : by the text of the tile, then by the mix
@@ -221,6 +224,9 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 				taken.insert(cell);
 			}
 			colours[slot] = images.walkable(tile) ? WalkAnimated : BlockedAnimated;
+			for (auto f = 0u; f < frames.size(); f++) {
+				masks[{ slot.first, slot.second + static_cast<int>(f) }] = images.mask(tile);
+			}
 			bases[slot] = { images.base(tile), images.flags(tile) };
 			found = animatedCells.emplace(sig, slot).first;
 		}
@@ -240,7 +246,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			continue;
 		}
 		const auto& frame = images.frames(tile, mix)[0];
-		const auto sig = std::make_tuple(images.walkable(tile), images.base(tile), images.flags(tile), frame);
+		const auto sig = std::make_tuple(images.walkable(tile), images.base(tile), images.flags(tile), images.mask(tile), frame);
 		auto found = stillCells.find(sig);
 		if (found == stillCells.end()) {
 			if (next == free.end()) {
@@ -250,6 +256,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			taken.insert(cell);
 			grid[cell] = frame;
 			colours[cell] = images.walkable(tile) ? Walk : Blocked;
+			masks[cell] = images.mask(tile);
 			bases[cell] = { images.base(tile), images.flags(tile) };
 			found = stillCells.emplace(sig, cell).first;
 		}
@@ -286,6 +293,20 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			std::copy(colour.begin(), colour.end(), col.at(cell.first, cell.second));
 		}
 	}
+	mask = RgbImage{ ChipColumns * MaskCells, rows * MaskCells, 0, 0, 0 };
+	for (const auto& [cell, bits] : masks) {
+		if (cell.second >= rows) {
+			continue;
+		}
+		for (auto cy = 0; cy < MaskCells; cy++) {
+			for (auto cx = 0; cx < MaskCells; cx++) {
+				if ((bits >> (cy * MaskCells + cx)) & 1) {
+					auto* pixel = mask.at(cell.first * MaskCells + cx, cell.second * MaskCells + cy);
+					pixel[0] = pixel[1] = pixel[2] = 255;
+				}
+			}
+		}
+	}
 	prop = RgbImage{ ChipColumns, rows, 0, 0, 0 };
 	for (const auto& [cell, properties] : bases) {
 		if (cell.second < rows) {
@@ -293,6 +314,11 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 			prop.at(cell.first, cell.second)[1] = static_cast<std::uint8_t>(properties.first + 1);
 		}
 	}
+}
+
+int worldgen::Atlas::mask(const std::string& key) const {
+	const auto found = m_masks.find(key);
+	return found == m_masks.end() ? 0 : found->second;
 }
 
 int worldgen::Atlas::base(const std::string& key) const {

@@ -491,6 +491,7 @@ namespace {
 		CHECK(Bytes(chip.col.rgb) == words[from + 3]);
 		CHECK(Water(chip.water) == words[from + 4]);
 		CHECK(Slots(chip, grids) == words[from + 5]);
+		CHECK(Bytes(chip.mask.rgb) == words[from + 6]);
 	}
 }
 
@@ -633,7 +634,7 @@ TEST_CASE("the files of a world are those of the Python generator (seed 7)") {
 		REQUIRE(found != expected.end());
 		auto bytes = FileBytes(folder / file);
 		const auto ext = std::filesystem::path{ file }.extension().string();
-		if (ext == ".bmp" || ext == ".png" || ext == ".col" || ext == ".prop") {
+		if (ext == ".bmp" || ext == ".png" || ext == ".col" || ext == ".prop" || ext == ".mask") {
 			// The size and the pixels of an image (the Python files are compressed otherwise)
 			const auto image = ext == ".bmp" ? DecodeBmp(bytes) : worldgen::DecodePng(bytes);
 			auto data = std::vector<unsigned char>{};

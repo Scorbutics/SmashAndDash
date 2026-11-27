@@ -133,14 +133,14 @@ def chip_slots(chip, grids):
 
 def chip_line(name, chip, grids):
     return f"{name} {chip.rows} {chip.used} {fnv(chip.image.tobytes())} {fnv(chip.col.tobytes())} " \
-           f"{fnv(repr(chip.water).encode())} {chip_slots(chip, grids)}"
+           f"{fnv(repr(chip.water).encode())} {chip_slots(chip, grids)} {fnv(chip.mask.tobytes())}"
 
 
 def chipsets(world):
     """Stage 3b : the chipset of each chunk and of the rooms (every tile is in the atlas of tools/worldgen/atlas.py)."""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Resources", "Worldgen",
                            "tiles.txt")) as f:
-        atlas = {line.rstrip("\n").split(" ", 3)[3] for line in f}
+        atlas = {line.rstrip("\n").split(" ", 4)[4] for line in f}
     missing = [k for k, _ in world.chip.ids if repr(k) not in atlas]
     if missing:
         raise SystemExit(f"golden : tiles not in the atlas (tools/worldgen/atlas.py) : {missing[:5]}")
@@ -163,7 +163,7 @@ def chipsets(world):
 
 def file_hash(path):
     """A file of a world : the bytes of a text, the size and the RGB pixels of an image."""
-    if path.endswith((".bmp", ".png", ".col", ".prop")):
+    if path.endswith((".bmp", ".png", ".col", ".prop", ".mask")):
         from PIL import Image
         im = Image.open(path).convert("RGB")
         return fnv(struct.pack("<ii", im.width, im.height) + im.tobytes())

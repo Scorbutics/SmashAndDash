@@ -515,10 +515,13 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= world.getBlocksX() || static_cast<std::size_t>(y) >= world.getBlocksY()) {
 			return ska::NodeValue{ false };
 		}
-		// The physics : the walls (filled), the characters ; the outline of the water on the edges of the block is not inside
+		// The physics : the walls (the solid parts of the tiles), the characters, where a character stands on the block (the
+		// middle of its lower half : ska CollisionProfile::StandCells) ; the outline of the water on the edges of the block is
+		// not inside
 		const auto blockSize = static_cast<double>(world.getBlockSize());
-		const auto margin = 4.;
-		const auto box = cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin);
+		const auto margin = 2.;
+		const auto box = cpBBNew(x * blockSize + blockSize / 4. + margin, y * blockSize + blockSize / 2. + margin,
+			x * blockSize + 3. * blockSize / 4. - margin, (y + 1) * blockSize - margin);
 		return ska::NodeValue{ !worldState.getSpace().shapeIn(box) };
 	});
 

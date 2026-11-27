@@ -85,7 +85,9 @@ std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId ent
 	const auto block = ska::Point<float>{ std::round(static_cast<float>(position.x) / blockSize), std::round(static_cast<float>(position.y) / blockSize) };
 	const auto target = ska::Point<float>{ (block.x + vector.x) * blockSize, (block.y + vector.y) * blockSize };
 	const auto shift = ska::Point<float>{ target.x - static_cast<float>(position.x), target.y - static_cast<float>(position.y) };
-	const auto margin = 4.;
+	// (6 pixels : the shape, 32 pixels wide from 8 to 40 in its block, stays off the outer cells of the masks of the tiles,
+	// 12 pixels each : a rim along the side of a block does not stop a walk along it ; touching counts for the physics)
+	const auto margin = 6.;
 	const auto targetBox = cpBBNew(shape.l + shift.x + margin, shape.b + shift.y + margin, shape.r + shift.x - margin, shape.t + shift.y - margin);
 
 	// Out of the map : a wall (its edges lead to the neighbouring maps by teleports on the edge blocks themselves ; an edge

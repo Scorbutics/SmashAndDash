@@ -112,9 +112,9 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 
 	// Never inside a wall : only the outline of a wall stops the bodies, a fast push (a hit, a dash) can cross it
 	const auto& world = m_worldState.getWorld();
-	const auto blockSize = static_cast<float>(world.getBlockSize());
 	const auto& positionComponent = m_componentAccessor.get<ska::PositionComponent>(entity);
-	const auto inWall = position.x >= 0.F && position.y >= 0.F && world.getCollisionProfile().collide(1, static_cast<std::size_t>(position.x / blockSize), static_cast<std::size_t>(position.y / blockSize));
+	// Its center in a solid part of a tile (the walls are the solid cells of the tiles : Tile::mask)
+	const auto inWall = position.x >= 0.F && position.y >= 0.F && world.getCollisionProfile().solidAt(1, static_cast<int>(position.x), static_cast<int>(position.y));
 	if (inWall) {
 		if (fighter.hasLastFree) {
 			CustomEntityManager::place(m_entities, m_worldState.getSpace(), entity, fighter.lastFree);

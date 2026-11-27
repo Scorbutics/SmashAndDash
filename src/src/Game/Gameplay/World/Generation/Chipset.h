@@ -18,6 +18,7 @@ namespace worldgen {
 	constexpr int Voxels = 16;    // voxels a tile side (3 x 3 pixels each)
 	constexpr int ChipColumns = 30;
 	constexpr int ChipRows = 64;  // Resources/Chipsets/corr.png names 30 x 64 cells
+	constexpr int MaskCells = 4;  // the collision mask of a tile : 4 x 4 cells (tools/worldgen tile_mask)
 
 	// The biomes of the 4 corners of a block (NW NE SW SE) : MixSteps shares of each biome
 	using Corner = std::array<std::uint8_t, BiomeCount>;
@@ -38,11 +39,14 @@ namespace worldgen {
 		int base(const std::string& key) const;
 		// Its properties for the game (tools/worldgen tile_flags : 2 a hideout of the wild Pokemon)
 		int flags(const std::string& key) const;
+		// Its collision mask when it blocks (tools/worldgen tile_mask : 4 x 4 cells, a bit by solid cell)
+		int mask(const std::string& key) const;
 	private:
 		RgbImage m_image;
 		std::map<std::string, std::pair<int, int>> m_rows; // key -> row, frames
 		std::map<std::string, int> m_bases;
 		std::map<std::string, int> m_flags;
+		std::map<std::string, int> m_masks;
 	};
 
 	// The frames of the tiles of a world in the mixes of the biomes (cached)
@@ -54,6 +58,8 @@ namespace worldgen {
 		std::string key(TileId tile) const { return IsAnimated(tile) ? AnimatedName(AnimatedOf(tile)) : m_tiles.key(tile); }
 		int base(TileId tile) const { return m_atlas.base(key(tile)); }
 		int flags(TileId tile) const { return m_atlas.flags(key(tile)); }
+		// Walked on : no solid part
+		int mask(TileId tile) const { return walkable(tile) ? 0 : m_atlas.mask(key(tile)); }
 	private:
 		const std::vector<TileVoxels>& pure(TileId tile, Biome biome);
 
@@ -73,6 +79,8 @@ namespace worldgen {
 
 		RgbImage image;
 		RgbImage col;
+		// The collision masks of its cells (tools/worldgen tile_mask) : 4 x 4 pixels a cell, white a solid part
+		RgbImage mask;
 		RgbImage prop;
 		std::map<TileUse, Block> cells;
 		std::vector<Block> water;
