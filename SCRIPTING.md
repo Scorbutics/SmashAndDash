@@ -18,7 +18,7 @@ The scripts are checked during the build (`smash_and_dash_scripts_check` in `src
 | --- | --- | --- |
 | Engine (ska) | `Engine = import "bind:ska.engine"` | wait, log, random, origin (the entity that triggered the script), entity (by name), disableComponent / enableComponent, variable / setVariable (saved game variables), script |
 | Dialogs | `GameDialog = import "bind:game.dialog"` | message, choice (yes / no), cinematic |
-| Characters | `Character = import "bind:game.character"` | setMovement / movement (`walk`, `run`, `locked` for the player), move, step (whole blocks, through the obstacles), jumpOver (step in the air : a ledge), jump, direction / setDirection, setLayer, playAnimation, setSprite (another sheet, ex : surfing), place, remove, wander, patrol, addCharacter, follow (walks after another character, until `follow(entity, -1)`) |
+| Characters | `Character = import "bind:game.character"` | setMovement / movement (`walk`, `run`, `locked` for the player), move, step (whole blocks, through the obstacles), jumpOver (step in the air : a ledge), jump, direction / setDirection, setLayer, playAnimation, setSprite (another sheet, ex : surfing), place, remove, wander, patrol, addCharacter, anchor (nothing pushes it: an object, ex the item balls), follow (walks after another character, until `follow(entity, -1)`) |
 | Maps | `Map = import "bind:game.map"` | teleport, blockX / blockY, blockHasProperty, blockFree (no wall, no character), shake (camera), crumbling |
 | Team | `Party = import "bind:game.party"` | addPokemon, size, hp, level, heal, pokemonOut |
 | Interface | `Interface = import "bind:game.interface"` | hideInterface (buttons and windows, not the messages), shop |

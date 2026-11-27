@@ -629,8 +629,10 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 		m_tileset = BuildTileset(previousTileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
 	}
 
-	// The first map too : the world built with the state did not load its data (wild Pokemon, weather, fog : WorldImpl)
-	if (getFileName() != fileName || previousTileset != nullptr || !m_worldLoaded) {
+	// Loaded again even when it is the same map (a teleport on the map the player is on) : its entities were removed
+	// above, its loading events (its characters, its item balls) run again. The first map too : the world built with the
+	// state did not load its data (wild Pokemon, weather, fog : WorldImpl)
+	{
 		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
 		m_worldLoaded = true;
 		// The map the player is on (the return from a battle, the saves)

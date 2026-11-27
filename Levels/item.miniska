@@ -29,7 +29,9 @@ run = function(args: string[]) do
 	flag = args[args.size() - 1]
 	if args[0] == "place"
 		if taken(flag) == false
-			Character.addCharacter(BallSprite, (args[2]: int), (args[3]: int), flag, "Levels/item.miniska", ["take", args[1], flag])
+			ball = Character.addCharacter(BallSprite, (args[2]: int), (args[3]: int), flag, "Levels/item.miniska", ["take", args[1], flag])
+			# An object : it stays on its block (nothing pushes it, the player finds it in front of them)
+			Character.anchor(ball)
 		end
 		return
 	end

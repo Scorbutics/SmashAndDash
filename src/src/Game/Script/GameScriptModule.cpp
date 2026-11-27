@@ -83,6 +83,9 @@ namespace {
 			Require<ska::HitboxComponent>(entityManager, entity, "be located (no hitbox)"));
 	}
 
+	// The mass of an anchored character (Character.anchor) : the others (about 1) do not push it
+	constexpr auto AnchoredMass = 1.0e15;
+
 	// Speed of the "run" movement mode, compared to the walk
 	constexpr auto RunFactor = 1.8F;
 
@@ -351,6 +354,21 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		// Removing the entity does not remove its physics body : the body is moved away from the map
 		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ -100000.F, -100000.F });
 		entityManager.removeEntity(entity);
+		return ska::NodeValue{};
+	});
+
+	m_builder.bindField("anchor", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
+		const auto entity = Entity(handles, entityManager, params[0]);
+		// Its physics body is too heavy to be pushed (a fighter in a battle, a wild Pokemon charging) : it stays on its
+		// block (the action key finds it in front of the player). Not kinematic : the constraint that ties it to its
+		// control body would join two bodies of infinite mass (the solver divides by zero : its position is lost)
+		if (entityManager.hasComponent<ska::cp::HitboxComponent>(entity)) {
+			const auto& hitbox = entityManager.getComponent<ska::cp::HitboxComponent>(entity);
+			auto& body = worldState.getSpace().getBody(hitbox.bodyIndex);
+			cpBodySetMass(&body.body(), AnchoredMass);
+			cpBodySetMoment(&body.body(), INFINITY);
+			body.setVelocity(ska::cp::Vect{ 0.F, 0.F });
+		}
 		return ska::NodeValue{};
 	});
 

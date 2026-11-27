@@ -40,6 +40,10 @@ place = function(entity: int, x: int, y: int) do end
 # Removes an entity from the map
 remove = function(entity: int) do end
 
+# The character does not move anymore and nothing pushes it (a fighter in a battle, a wild Pokemon) : an object on its
+# block (ex : an item ball)
+anchor = function(entity: int) do end
+
 # The character walks around randomly, block by block : it waits 1 to 3 seconds, turns, and often takes a step
 wander = function(entity: int) do end
 
