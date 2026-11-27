@@ -108,11 +108,15 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleR
 		if (!skill.status.empty() && skill.status != "guard"
 				&& rules.statusLands(skill.status, skill.statusChance, ska::NumberUtils::random(0, 99), StatusKey(fighter.status))) {
 			if (skill.status == "flinch") {
-				// Flinched : it stops a moment (its attack in preparation is lost)
-				fighter.stun = std::max(fighter.stun, rules.statusStun("flinch"));
-				fighter.windUp = 0;
-				fighter.pendingSkill = -1;
-				MarkText(entities, stage, target, "APEURÉ", 2);
+				// Flinched : it stops a moment (its attack in preparation is lost) ; not again before a while (no chain of
+				// flinches : Data/Battle/status.miniska "immunity")
+				if (fighter.flinchGuard == 0) {
+					fighter.stun = std::max(fighter.stun, rules.statusStun("flinch"));
+					fighter.flinchGuard = rules.statusImmunity("flinch");
+					fighter.windUp = 0;
+					fighter.pendingSkill = -1;
+					MarkText(entities, stage, target, "APEURÉ", 2);
+				}
 			} else {
 				const auto status = StatusFromName(skill.status);
 				// One status at a time

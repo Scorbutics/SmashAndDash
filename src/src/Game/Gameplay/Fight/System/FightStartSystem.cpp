@@ -126,6 +126,8 @@ void FightStartSystem::refresh(unsigned int ellapsedTime) {
 				fc.companions.emplace_back(fc.opponentScriptId, static_cast<unsigned int>(level));
 			}
 		}
+		// A wild Pokemon : the easy AI
+		rules.setDifficulty(BattleRules::Easy);
 		if (!StartBattle(m_cem, m_ged, m_worldScene, *trainer, entityId)) {
 			// No Pokemon of the team can fight : it leaves the player alone for a while
 			wild.calm = CalmAfterBattle;

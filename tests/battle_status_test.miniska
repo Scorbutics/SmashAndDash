@@ -23,4 +23,7 @@ run = function(args: string[]) do
 	Test.equal((Status.wakes("sleep", 3): string), "true", "a hit wakes it up")
 	Test.equal((Status.wakes("sleep", 0): string), "false", "no damage : it sleeps on")
 	Test.equal((Status.stun("flinch"): string), "450", "the stun of a flinch")
+	# A flinch is not chained : a while before it can flinch again
+	Test.check(Status.immunity("flinch") > Status.stun("flinch"), "after a flinch, a while without one")
+	Test.equal((Status.immunity("poison"): string), "0", "the other statuses : no immunity")
 end

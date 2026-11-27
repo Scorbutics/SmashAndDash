@@ -44,7 +44,7 @@ public:
 	float cooldown(unsigned int index, ska::EntityId from) const;
 	~BattleSystem() override = default;
 
-	static constexpr unsigned int DecisionDelay = 300;
+	// (The delay between two decisions of the AI : BattleRules::pause, by the difficulty of the battle)
 	// The active part of a contact skill : the Pokemon lunges forward (it hits at its start)
 	static constexpr unsigned int LungeDuration = 140;
 

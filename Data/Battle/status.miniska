@@ -37,6 +37,15 @@ stun = function(status: string) : int do
 	return 0
 end
 
+# After a status, how long (milliseconds) it cannot have it again : a flinch is not chained (a contact skill that
+# flinches, Charge, cannot lock its target)
+immunity = function(status: string) : int do
+	if status == "flinch"
+		return 2500
+	end
+	return 0
+end
+
 # The statuses that hurt over time : every "tickPeriod" milliseconds (0 : never), "tickDamage" hit points
 hurts = function(status: string) : bool do
 	return status == "poison" || status == "burn" || status == "leech"

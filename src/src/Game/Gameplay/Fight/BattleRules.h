@@ -37,6 +37,15 @@ public:
 	int captureChance(int rate, int hp, int maxHp, const std::string& status);
 	// Effectiveness of a skill of a type on a Pokemon of two types (percents : 0, 25, 50, 100, 200, 400)
 	int effectiveness(const std::string& skillType, const std::string& type1, const std::string& type2);
+	// The difficulty of the AI of the battle (Data/Battle/ai.miniska : 0 easy, the wild Pokemon ; 1 normal ; 2 hard, a trainer
+	// that is a challenge) : the wild battles are easy, a script sets it before a battle (Battle.difficulty), back to easy
+	// at the end of the battle
+	static constexpr int Easy = 0;
+	static constexpr int Hard = 2;
+	void setDifficulty(int difficulty) { m_difficulty = difficulty < Easy ? Easy : (difficulty > Hard ? Hard : difficulty); }
+	int difficulty() const { return m_difficulty; }
+	// How long the AI waits between two decisions (milliseconds)
+	unsigned int pause();
 	// A Pokemon played by the AI dodges the attack coming ("startupLeft" : milliseconds before it goes)
 	bool dodge(int monster, int startupLeft, int hp, int maxHp);
 	// Skill used by a wild Pokemon (its index), -1 for none. "ready" : the skills it can use now
@@ -50,6 +59,8 @@ public:
 	bool statusLands(const std::string& status, int chance, int roll, const std::string& current);
 	unsigned int statusDuration(const std::string& status, unsigned int effect);
 	unsigned int statusStun(const std::string& status);
+	// After a status, how long it cannot have it again (ex : a flinch, not chained)
+	unsigned int statusImmunity(const std::string& status);
 	unsigned int statusTickPeriod(const std::string& status);
 	int statusTickDamage(const std::string& status, int maxHp);
 	bool statusLeech(const std::string& status);
@@ -97,4 +108,5 @@ private:
 	std::string m_skillsFile;
 	std::string m_rewardsFile;
 	std::unordered_set<std::string> m_reported;
+	int m_difficulty = Easy;
 };

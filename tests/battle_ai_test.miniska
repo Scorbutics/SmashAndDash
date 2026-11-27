@@ -6,28 +6,36 @@ AI = import "wd:Data/Battle/ai"
 run = function(args: string[]) do
 	# Skills
 	Engine.setNextRandom(1)
-	Test.equal((AI.decide(16, 2, 10, 10, [false, false]): string), "-1", "no skill ready")
-	Test.equal((AI.decide(16, 2, 10, 10, [true, false, true]): string), "2", "one of the ready skills, chosen at random")
-	Test.equal((AI.decide(16, 2, 10, 10, [false, true]): string), "1", "the only ready skill")
+	Test.equal((AI.decide(16, 2, 10, 10, [false, false], AI.Normal): string), "-1", "no skill ready")
+	Test.equal((AI.decide(16, 2, 10, 10, [true, false, true], AI.Normal): string), "2", "one of the ready skills, chosen at random")
+	Test.equal((AI.decide(16, 2, 10, 10, [false, true], AI.Normal): string), "1", "the only ready skill")
 	Engine.setNextRandom(0)
-	Test.equal((AI.decide(16, 2, 10, 10, [true]): string), "-1", "it hesitates sometimes")
+	Test.equal((AI.decide(16, 2, 10, 10, [true], AI.Normal): string), "-1", "it hesitates sometimes")
 
 	# Movements
 	Engine.setNextRandom(1)
-	Test.equal((AI.move(16, 300, 288, 10, 10): string), (AI.Approach: string), "a skill ready but too far : it comes closer")
-	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.SidestepLeft: string), "in reach : it moves around its opponent")
-	Test.equal((AI.move(16, 60, 0, 10, 10): string), (AI.Retreat: string), "nothing ready, too close : it retreats")
-	Test.equal((AI.move(16, 180, 0, 2, 10): string), (AI.Retreat: string), "hurt : it keeps further")
-	Test.equal((AI.move(16, 500, 0, 10, 10): string), (AI.Approach: string), "nothing ready but far : it stays in the fight")
+	Test.equal((AI.move(16, 300, 288, 10, 10, AI.Normal): string), (AI.Approach: string), "a skill ready but too far : it comes closer")
+	Test.equal((AI.move(16, 30, 48, 10, 10, AI.Normal): string), (AI.SidestepLeft: string), "in reach : it moves around its opponent")
+	Test.equal((AI.move(16, 60, 0, 10, 10, AI.Normal): string), (AI.Retreat: string), "nothing ready, too close : it retreats")
+	Test.equal((AI.move(16, 180, 0, 2, 10, AI.Normal): string), (AI.Retreat: string), "hurt : it keeps further")
+	Test.equal((AI.move(16, 500, 0, 10, 10, AI.Normal): string), (AI.Approach: string), "nothing ready but far : it stays in the fight")
 	Engine.setNextRandom(0)
-	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.Hold: string), "it stops sometimes (and changes its side)")
+	Test.equal((AI.move(16, 30, 48, 10, 10, AI.Normal): string), (AI.Hold: string), "it stops sometimes (and changes its side)")
 	Engine.setNextRandom(1)
-	Test.equal((AI.move(16, 30, 48, 10, 10): string), (AI.SidestepRight: string), "it turns on the other side")
+	Test.equal((AI.move(16, 30, 48, 10, 10, AI.Normal): string), (AI.SidestepRight: string), "it turns on the other side")
 
 	# Dodges
 	Engine.setNextRandom(0)
-	Test.check(AI.dodge(16, 300, 10, 10), "it dodges an attack coming, sometimes")
-	Test.check(!AI.dodge(16, 50, 10, 10), "too late : it cannot dodge")
+	Test.check(AI.dodge(16, 300, 10, 10, AI.Normal), "it dodges an attack coming, sometimes")
+	Test.check(!AI.dodge(16, 50, 10, 10, AI.Normal), "too late : it cannot dodge")
 	Engine.setNextRandom(1)
-	Test.check(!AI.dodge(16, 300, 10, 10), "it does not always dodge")
+	Test.check(!AI.dodge(16, 300, 10, 10, AI.Normal), "it does not always dodge")
+
+	# The difficulty : an easy one waits longer between two decisions and stays still more often
+	Test.check(AI.pause(AI.Easy) > AI.pause(AI.Normal), "an easy one thinks slower")
+	Test.check(AI.pause(AI.Normal) > AI.pause(AI.Hard), "a hard one thinks faster")
+	Engine.setNextRandom(0)
+	Test.equal((AI.decide(16, 2, 10, 10, [true], AI.Easy): string), "-1", "an easy one hesitates")
+	Engine.setNextRandom(1)
+	Test.equal((AI.decide(16, 2, 10, 10, [true], AI.Hard): string), "0", "a hard one uses its skill")
 end

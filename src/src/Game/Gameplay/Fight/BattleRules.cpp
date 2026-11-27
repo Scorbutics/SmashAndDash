@@ -85,7 +85,12 @@ int BattleRules::effectiveness(const std::string& skillType, const std::string& 
 
 bool BattleRules::dodge(int monster, int startupLeft, int hp, int maxHp) {
 	return callBool(m_aiFile, "dodge", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(startupLeft) },
-		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) } }, false);
+		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) }, ska::NodeValue{ static_cast<long>(m_difficulty) } }, false);
+}
+
+unsigned int BattleRules::pause() {
+	const auto fallback = m_difficulty == Easy ? 700L : (m_difficulty == Hard ? 300L : 450L);
+	return static_cast<unsigned int>(std::max(100L, call(m_aiFile, "pause", { ska::NodeValue{ static_cast<long>(m_difficulty) } }, fallback)));
 }
 
 bool BattleRules::callBool(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, bool fallback) {
@@ -107,14 +112,16 @@ int BattleRules::decide(int monster, int distanceBlocks, int hp, int maxHp, cons
 	const auto firstReady = std::find(ready.begin(), ready.end(), true);
 	const auto fallback = firstReady == ready.end() ? -1L : static_cast<long>(firstReady - ready.begin());
 	const auto decision = call(m_aiFile, "decide", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(distanceBlocks) },
-		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) }, ska::NodeValue{ ska::NodeValueArray{ std::move(readyValues) } } }, fallback);
+		ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) }, ska::NodeValue{ ska::NodeValueArray{ std::move(readyValues) } },
+		ska::NodeValue{ static_cast<long>(m_difficulty) } }, fallback);
 	return decision >= 0 && decision < static_cast<long>(ready.size()) && ready[static_cast<std::size_t>(decision)] ? static_cast<int>(decision) : -1;
 }
 
 int BattleRules::move(int monster, int distance, int reach, int hp, int maxHp) {
 	const auto fallback = reach > 0 && distance > reach ? 1L : 0L;
 	const auto movement = call(m_aiFile, "move", { ska::NodeValue{ static_cast<long>(monster) }, ska::NodeValue{ static_cast<long>(distance) },
-		ska::NodeValue{ static_cast<long>(reach) }, ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) } }, fallback);
+		ska::NodeValue{ static_cast<long>(reach) }, ska::NodeValue{ static_cast<long>(hp) }, ska::NodeValue{ static_cast<long>(maxHp) },
+		ska::NodeValue{ static_cast<long>(m_difficulty) } }, fallback);
 	return movement >= 0 && movement <= 4 ? static_cast<int>(movement) : 0;
 }
 
@@ -137,6 +144,11 @@ unsigned int BattleRules::statusDuration(const std::string& status, unsigned int
 unsigned int BattleRules::statusStun(const std::string& status) {
 	const auto fallback = status == "flinch" ? 450L : (status == "paralysis" ? 500L : 0L);
 	return static_cast<unsigned int>(std::max(0L, call(m_statusFile, "stun", { Text(status) }, fallback)));
+}
+
+unsigned int BattleRules::statusImmunity(const std::string& status) {
+	const auto fallback = status == "flinch" ? 2500L : 0L;
+	return static_cast<unsigned int>(std::max(0L, call(m_statusFile, "immunity", { Text(status) }, fallback)));
 }
 
 unsigned int BattleRules::statusTickPeriod(const std::string& status) {

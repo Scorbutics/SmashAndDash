@@ -14,6 +14,9 @@ start = function(monster: int, level: int) : bool do return false end
 # They all fight the Pokemon of the player ; the battle is won when they are all K.O. "canFlee" : false for a story
 # battle (the arena cannot be left). The script waits as with start.
 startWith = function(monsters: int[], levels: int[], canFlee: bool) : bool do return false end
+# The difficulty of the AI of the next battle started by a script (0 easy, as the wild Pokemon ; 1 normal ; 2 hard : a
+# trainer that is a challenge, a gym leader). Back to easy at the end of the battle
+difficulty = function(level: int) do end
 
 # A message of the battle, in the dialog window : the script waits until the player closes it (it closes by itself with
 # SAD_BATTLE_AUTOPLAY). For the steps of the battles (Data/Battle/steps.miniska : the outro)

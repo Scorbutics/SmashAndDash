@@ -25,6 +25,7 @@ drop = function(monster: int, level: int, attitude: string, leavesX: int, leaves
 	arrived = arrived + ("drop " + (monster: string) + " " + (leavesX: string) + " " + (leavesY: string) + " " + (x: string) + " " + (y: string))
 	return true
 end
+difficulty = function(level: int) do end
 walkIn = function(monster: int, level: int, attitude: string) : bool do
 	arrived = arrived + ("walk " + (monster: string))
 	return true

@@ -56,6 +56,8 @@ public:
 
 	// Milliseconds left : stunned after a hit (no control), white flash
 	unsigned int stun = 0;
+	// Milliseconds left before it can flinch again (a flinch is not chained : BattleRules::statusImmunity)
+	unsigned int flinchGuard = 0;
 	unsigned int flash = 0;
 	// An attack : the startup (the Pokemon prepares it), the lunge of a contact skill (it hits), the recovery. The
 	// Pokemon cannot move during all of it, it can be hit (a hit during the startup cancels the attack)

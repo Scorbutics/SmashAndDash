@@ -50,8 +50,11 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * fighter.stageMultipliers[StatDefense];
 	const auto effectiveness = rules.effectiveness(skill.type, defender.type1, defender.type2);
 	const auto stab = attacker != nullptr && (skill.type == attacker->type1 || skill.type == attacker->type2);
+	// The power of a skill is shared by its particles (Bulles d'O : 3 bubbles, each a third of it)
+	const auto particles = std::max(1, skill.particleNumber);
+	const auto power = skill.power > 0 ? std::max(1, (skill.power + particles - 1) / particles) : skill.power;
 	auto damage = skill.fixedDamage > 0 ? (effectiveness > 0 ? skill.fixedDamage : 0) :
-		rules.damage(skill.power, std::max(1, static_cast<int>(attack)), std::max(1, static_cast<int>(defense)), attacker == nullptr ? 1 : attacker->level, effectiveness, stab);
+		rules.damage(power, std::max(1, static_cast<int>(attack)), std::max(1, static_cast<int>(defense)), attacker == nullptr ? 1 : attacker->level, effectiveness, stab);
 	// A wild Pokemon hits softer (the rules)
 	if (attackerFighter != nullptr && attackerFighter->team != 0 && damage > 0) {
 		damage = rules.wildDamage(damage);

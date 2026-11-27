@@ -195,7 +195,7 @@ void BattleSystem::refresh(unsigned int) {
 			}
 			if (fighter.controlledByAI && m_time >= fighter.nextDecision) {
 				// A little irregular : the AI do not act at the same time
-				fighter.nextDecision = m_time + DecisionDelay + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
+				fighter.nextDecision = m_time + m_rules.pause() + static_cast<unsigned long>(ska::NumberUtils::random(0, 120));
 				decide(entity, fighter);
 			}
 		}

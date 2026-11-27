@@ -310,6 +310,8 @@ void BattleDirectorSystem::end() {
 		scheduleDeferredRemove(m_stage.fighters[1]);
 	}
 	m_worldState.battleEnded(m_result);
+	// The next battle : easy, unless a script asks otherwise (Battle.difficulty)
+	m_worldState.getBattleRules().setDifficulty(BattleRules::Easy);
 
 	// Back to the map, as it is : no fade, no loading (the camera already went back to the trainer)
 	MapEvent me(MapEventType::Switch_Map);

@@ -13,18 +13,38 @@ SidestepRight = 4
 # The side it turns around its opponent : it changes sometimes
 side = SidestepLeft
 
+# The difficulty of the AI (the battle gives it : the wild Pokemon are easy, a trainer can be harder : Battle.difficulty)
+Easy = 0
+Normal = 1
+Hard = 2
+
+# How long it waits between two decisions (milliseconds) : an easy one thinks slowly, the player has room to act
+pause = function(difficulty: int) : int do
+	if difficulty == Easy
+		return 700
+	end
+	if difficulty == Normal
+		return 450
+	end
+	return 300
+end
+
 # Skill used by the Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.
 # "distance" : distance to its opponent, in blocks. "ready" : the skills it can use now (known, not cooling down, reaching)
-decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[]) : int do
-	# Hesitates often (a third of the time), more when it is hurt (half of the time) : the player has room to act
-	if hp * 3 < maxHp
-		if Engine.random(2) == 0
-			return -1
+decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[], difficulty: int) : int do
+	# Hesitates : an easy one half of the time, a normal one a third (half when it is hurt), a hard one rarely
+	hesitation = 2
+	if difficulty == Normal
+		hesitation = 3
+		if hp * 3 < maxHp
+			hesitation = 2
 		end
-	else
-		if Engine.random(3) == 0
-			return -1
-		end
+	end
+	if difficulty == Hard
+		hesitation = 6
+	end
+	if Engine.random(hesitation) == 0
+		return -1
 	end
 	# One of the skills it can use, at random
 	usable = []: int
@@ -39,8 +59,8 @@ decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[
 	return usable[Engine.random(usable.size())]
 end
 
-# Around its opponent, sometimes still
-aside = function() : int do
+# Around its opponent, sometimes still (an easy one half of the time : it does not dance around)
+aside = function(difficulty: int) : int do
 	if Engine.random(4) == 0
 		if side == SidestepLeft
 			side = SidestepRight
@@ -48,20 +68,24 @@ aside = function() : int do
 			side = SidestepLeft
 		end
 	end
-	if Engine.random(4) == 0
+	still = 4
+	if difficulty == Easy
+		still = 2
+	end
+	if Engine.random(still) == 0
 		return Hold
 	end
 	return side
 end
 
 # Movement of the Pokemon : "distance" to its opponent and "reach" of its longest ready skill (0 : none ready), in pixels
-move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int) : int do
+move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int, difficulty: int) : int do
 	if reach > 0
 		# A skill is ready : it comes in reach, then moves around while it attacks
 		if distance > reach - 16
 			return Approach
 		end
-		return aside()
+		return aside(difficulty)
 	end
 	# Nothing ready : it keeps its distance, further when it is hurt
 	safe = 140
@@ -74,18 +98,32 @@ move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int) : 
 	if distance > safe + 140
 		return Approach
 	end
-	return aside()
+	return aside(difficulty)
 end
 
-# Dodges an attack coming ("startupLeft" : milliseconds before it goes) : rarely (one in five), more often when it is
-# hurt (one in three). Too late (less than 80 ms) : it cannot
-dodge = function(monster: int, startupLeft: int, hp: int, maxHp: int) : bool do
+# Dodges an attack coming ("startupLeft" : milliseconds before it goes) : an easy one rarely (one in eight, one in five
+# when it is hurt), a normal one one in five (one in three), a hard one one in three (one in two). Too late (less than
+# 80 ms) : it cannot
+dodge = function(monster: int, startupLeft: int, hp: int, maxHp: int, difficulty: int) : bool do
 	if startupLeft < 80
 		return false
 	end
-	chance = 5
-	if hp * 3 < maxHp
+	hurt = hp * 3 < maxHp
+	chance = 8
+	if hurt
+		chance = 5
+	end
+	if difficulty == Normal
+		chance = 5
+		if hurt
+			chance = 3
+		end
+	end
+	if difficulty == Hard
 		chance = 3
+		if hurt
+			chance = 2
+		end
 	end
 	return Engine.random(chance) == 0
 end
