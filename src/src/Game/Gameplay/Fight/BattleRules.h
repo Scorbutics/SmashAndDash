@@ -108,6 +108,9 @@ public:
 	bool opening(int left);
 	bool playerFirst(int speed, int other, int roll);
 	unsigned int turnCooldown();
+	// The rounds of a clash, the skill of the opponent after the first one (the power of each of its skills : its index)
+	int clashRounds();
+	int clashPick(const std::vector<int>& powers, int roll);
 
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 

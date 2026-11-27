@@ -3,20 +3,32 @@
 #include <cmath>
 #include "Base/IO/Readers/IniReader.h"
 #include "Base/Values/Numbers/NumberUtils.h"
+#include "Core/Data/Events/SoundEvent.h"
 #include "Core/Inputs/InputContextManager.h"
 #include "../BattleEffects.h"
 #include "../BattleHit.h"
 #include "../BattleRules.h"
 #include "../SkillsHolderComponent.h"
+#include "../../World/WorldState.h"
 
-ClashSystem::ClashSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, BattleRules& rules, BattleStage& stage, unsigned int blockSize) :
+ClashSystem::ClashSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, WorldState& worldState, BattleStage& stage, unsigned int blockSize) :
 	System(em),
 	SubObserver<ska::InputKeyEvent>(std::bind(&ClashSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
 	m_entities(em),
 	m_ged(ged),
-	m_rules(rules),
+	m_worldState(worldState),
+	m_rules(worldState.getBattleRules()),
 	m_stage(stage),
-	m_blockSize(static_cast<float>(blockSize)) {
+	m_blockSize(static_cast<float>(blockSize)),
+	m_music("./Music/clash.ogg") {
+}
+
+ClashSystem::~ClashSystem() {
+	// The battle ended during a clash : the music of the map again
+	if (m_stage.turn.active()) {
+		interface(false);
+	}
+	music(false);
 }
 
 bool ClashSystem::standing(ska::EntityId entity) const {
@@ -64,10 +76,21 @@ int ClashSystem::strongest(ska::EntityId entity) const {
 	return best;
 }
 
+int ClashSystem::opponentPick() const {
+	if (!m_entities.hasComponent<SkillsHolderComponent>(m_opponent)) {
+		return 0;
+	}
+	auto powers = std::vector<int>{};
+	for (const auto& skill : m_entities.getComponent<SkillsHolderComponent>(m_opponent).skills) {
+		const auto usable = !skill.name.empty() && skill.particleNumber > 0;
+		powers.push_back(usable ? std::max({ skill.power, skill.fixedDamage, 1 }) : 0);
+	}
+	return m_rules.clashPick(powers, ska::NumberUtils::random(0, 99));
+}
+
 std::string ClashSystem::who(ska::EntityId entity) const {
 	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(m_componentAccessor.get<BattleComponent>(entity).monster) + ".ini" };
-	const auto name = data.exists("Description name") ? data.get<std::string>("Description name") : "?";
-	return m_componentAccessor.get<FighterComponent>(entity).team == 0 ? name : name + " sauvage";
+	return data.exists("Description name") ? data.get<std::string>("Description name") : "?";
 }
 
 bool ClashSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
@@ -83,8 +106,13 @@ bool ClashSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 			return true;
 		}
 	}
+	const auto before = m_choice.selected();
 	if (m_choice.keys(event.icm)) {
 		choose(m_choice.selected());
+		return true;
+	}
+	if (m_choice.selected() != before) {
+		m_stage.sound(BattleSound::ClashCursor);
 	}
 	turn.selected = m_choice.selected();
 	return true;
@@ -98,6 +126,14 @@ void ClashSystem::watch() {
 	auto& fighter = m_componentAccessor.get<FighterComponent>(player);
 	const auto opponent = fighter.opponent;
 	const auto ready = !m_hadTurn || m_time - m_lastTurn >= m_rules.turnCooldown();
+	// Asked by a script (Battle.clash) : now, with the strongest skill of the opponent
+	if (m_stage.clashRequested) {
+		m_stage.clashRequested = false;
+		if (standing(opponent)) {
+			start(BattleTurn::Kind::Clash, opponent, strongest(opponent));
+			return;
+		}
+	}
 
 	// An opening : its dash starts when the attack of an opponent is about to go
 	const auto dashing = fighter.dash > 0;
@@ -144,8 +180,8 @@ void ClashSystem::start(BattleTurn::Kind kind, ska::EntityId opponent, int oppon
 	m_opponentSkill = opponentSkill;
 	m_actions.clear();
 	m_action = 0;
-	m_hit = false;
-	// Their attacks stop : the round replaces them
+	m_announced = false;
+	// Their attacks stop : the rounds replace them
 	for (const auto entity : { m_stage.player, opponent }) {
 		auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
 		fighter.windUp = 0;
@@ -158,22 +194,107 @@ void ClashSystem::start(BattleTurn::Kind kind, ska::EntityId opponent, int oppon
 	auto& turn = m_stage.turn;
 	turn = BattleTurn{};
 	turn.kind = kind;
+	turn.id = ++m_turns;
+	turn.player = m_stage.player;
+	turn.opponent = opponent;
+	const auto mine = center(m_stage.player);
+	const auto theirs = center(opponent);
+	turn.center = ska::Point<float>{ (mine.x + theirs.x) / 2.F, (mine.y + theirs.y) / 2.F };
 	turn.pokemon = who(m_stage.player);
+	turn.opponentName = who(opponent);
+	turn.rounds = m_rules.clashRounds();
 	if (m_entities.hasComponent<SkillsHolderComponent>(m_stage.player)) {
 		for (const auto& skill : m_entities.getComponent<SkillsHolderComponent>(m_stage.player).skills) {
 			if (!skill.name.empty()) {
 				turn.skills.push_back(skill.name);
+				turn.skillTypes.push_back(skill.type);
 			}
 		}
 	}
 	m_choice = Ui::ChoiceList{};
 	m_choice.setCount(turn.skills.size());
+	step(BattleTurn::Step::Impact);
+	interface(true);
 	m_stage.hitStop(200);
-	m_stage.announce(kind == BattleTurn::Kind::Clash ? "CLASH !" : "OUVERTURE !");
+	m_stage.sound(BattleSound::ClashImpact);
 	m_stage.sound(BattleSound::StrongHit);
-	m_stage.shake(220, 5);
+	m_stage.shake(320, 9);
 	m_stage.cue(BattleCue{ kind == BattleTurn::Kind::Clash ? "clash" : "opening", "" });
-	SLOG(ska::LogLevel::Info) << "Battle : " << (kind == BattleTurn::Kind::Clash ? "a clash" : "an opening") << ", a turn as in the classic battles";
+	SLOG(ska::LogLevel::Info) << "Battle : " << (kind == BattleTurn::Kind::Clash ? "a clash" : "an opening") << ", " << turn.rounds << " rounds as in the classic battles";
+}
+
+void ClashSystem::step(BattleTurn::Step next) {
+	auto& turn = m_stage.turn;
+	turn.step = next;
+	turn.time = 0;
+	switch (next) {
+	case BattleTurn::Step::Zoom:
+		m_stage.sound(BattleSound::ClashWoosh);
+		break;
+	case BattleTurn::Step::Shatter:
+		m_stage.sound(BattleSound::ClashShatter);
+		break;
+	case BattleTurn::Step::Versus:
+		m_stage.sound(BattleSound::ClashVersus);
+		music(true);
+		break;
+	case BattleTurn::Step::Rebuild:
+		m_stage.sound(BattleSound::ClashSwoosh);
+		break;
+	case BattleTurn::Step::Round:
+		m_stage.sound(BattleSound::ClashRound);
+		turn.message.clear();
+		break;
+	case BattleTurn::Step::Menu:
+		turn.message = "Que doit faire " + turn.pokemon + " ?";
+		turn.messageAge = 0;
+		break;
+	case BattleTurn::Step::KnockOut:
+		m_stage.sound(BattleSound::ClashKnockOut);
+		m_stage.sound(BattleSound::KnockOut);
+		break;
+	case BattleTurn::Step::Return:
+		m_stage.sound(BattleSound::ClashWoosh);
+		m_stage.sound(BattleSound::ClashShatter);
+		turn.message.clear();
+		break;
+	default:
+		break;
+	}
+}
+
+void ClashSystem::intro(unsigned int before, unsigned int now) {
+	const auto crossed = [before, now](unsigned int at) { return before < at && now >= at; };
+	switch (m_stage.turn.step) {
+	case BattleTurn::Step::Shatter:
+		if (crossed(380) || crossed(620)) {
+			m_stage.sound(BattleSound::ClashShatter);
+		}
+		break;
+	case BattleTurn::Step::Versus:
+		// "VS" lands
+		if (crossed(420)) {
+			m_stage.sound(BattleSound::StrongHit);
+		}
+		if (crossed(1250)) {
+			m_stage.sound(BattleSound::ClashSwoosh);
+		}
+		break;
+	case BattleTurn::Step::Rebuild:
+		// The two platforms land
+		if (crossed(700) || crossed(860)) {
+			m_stage.sound(BattleSound::ClashLand);
+		}
+		break;
+	case BattleTurn::Step::Round:
+		if (crossed(BattleTurn::FightAt)) {
+			m_stage.sound(BattleSound::ClashShine);
+			m_stage.sound(BattleSound::StrongHit);
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 void ClashSystem::choose(std::size_t index) {
@@ -182,9 +303,15 @@ void ClashSystem::choose(std::size_t index) {
 		return;
 	}
 	turn.selected = index;
+	m_stage.sound(BattleSound::ClashSelect);
 	const auto mine = Action{ m_stage.player, m_opponent, static_cast<int>(index) };
-	if (turn.kind == BattleTurn::Kind::Clash && m_opponentSkill >= 0) {
-		const auto theirs = Action{ m_opponent, m_stage.player, m_opponentSkill };
+	// The first round : the skill the opponent was attacking with (a clash), none (an opening) ; then its choice
+	auto theirsSkill = turn.round == 1 ? m_opponentSkill : opponentPick();
+	if (turn.round == 1 && turn.kind == BattleTurn::Kind::Opening) {
+		theirsSkill = -1;
+	}
+	if (theirsSkill >= 0 && standing(m_opponent)) {
+		const auto theirs = Action{ m_opponent, m_stage.player, theirsSkill };
 		const auto& speed = m_componentAccessor.get<BattleComponent>(m_stage.player).speed;
 		const auto& other = m_componentAccessor.get<BattleComponent>(m_opponent).speed;
 		if (m_rules.playerFirst(speed, other, ska::NumberUtils::random(0, 99))) {
@@ -197,25 +324,24 @@ void ClashSystem::choose(std::size_t index) {
 	}
 	turn.step = BattleTurn::Step::Acting;
 	turn.time = 0;
+	turn.message.clear();
 	m_action = 0;
-	m_hit = false;
 	m_announced = false;
-	SLOG(ska::LogLevel::Info) << "Battle : the turn, the player chooses " << turn.skills[index];
+	SLOG(ska::LogLevel::Info) << "Battle : the clash, round " << turn.round << ", the player chooses " << turn.skills[index];
 }
 
 void ClashSystem::hit(const Action& action) {
+	auto& turn = m_stage.turn;
+	turn.hit = true;
+	turn.hitAge = 0;
+	turn.damage = 0;
 	if (!standing(action.attacker) || !m_entities.hasComponent<SkillsHolderComponent>(action.attacker)) {
 		return;
 	}
 	// The whole skill at once (no particles to share its power), it cannot miss
 	auto skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
 	skill.particleNumber = 1;
-	auto wave = BattleMark{};
-	wave.kind = BattleMark::Kind::Wave;
-	wave.position = center(action.attacker);
-	wave.value = 40;
-	wave.onPlayer = m_componentAccessor.get<FighterComponent>(action.attacker).team == 0;
-	m_stage.mark(wave);
+	m_stage.sound(BattleSound::ClashHit);
 	if (skill.kind == SkillKind::Self) {
 		ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, 0);
 		return;
@@ -223,6 +349,8 @@ void ClashSystem::hit(const Action& action) {
 	if (!standing(action.target)) {
 		return;
 	}
+	auto& hp = m_componentAccessor.get<BattleComponent>(action.target).hp;
+	const auto before = hp;
 	m_componentAccessor.get<FighterComponent>(action.target).invulnerable = 0;
 	if (skill.power > 0 || skill.fixedDamage > 0) {
 		auto battleHit = BattleHit{};
@@ -237,6 +365,66 @@ void ClashSystem::hit(const Action& action) {
 	} else {
 		ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, action.target);
 	}
+	turn.damage = std::max(0, before - hp);
+	if (turn.damage > 0) {
+		turn.combo = action.attacker == m_stage.player ? turn.combo + 1 : 0;
+	}
+	if (hp <= 0) {
+		turn.knockedOut = action.target;
+	}
+}
+
+void ClashSystem::act(unsigned int before) {
+	auto& turn = m_stage.turn;
+	if (m_action >= m_actions.size()) {
+		endRound();
+		return;
+	}
+	const auto& action = m_actions[m_action];
+	if (!m_announced) {
+		// Its message, a K.O. skips it
+		if (!standing(action.attacker)) {
+			m_action++;
+			turn.time = 0;
+			return;
+		}
+		m_announced = true;
+		const auto& skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
+		const auto wild = m_componentAccessor.get<FighterComponent>(action.attacker).team != 0;
+		turn.message = who(action.attacker) + (wild ? " sauvage" : "") + " utilise " + skill.name + " !";
+		turn.messageAge = 0;
+		turn.attacker = action.attacker;
+		turn.target = action.target;
+		turn.skillSprite = skill.id;
+		turn.contact = skill.contact;
+		turn.hit = false;
+		turn.damage = 0;
+		m_stage.sound(BattleSound::ClashAttack);
+		m_stage.sound(BattleSound::Cast);
+	}
+	// The wind up, then it charges
+	if (before < 420 && turn.time >= 420) {
+		m_stage.sound(BattleSound::Dash);
+	}
+	if (!turn.hit && turn.time >= BattleTurn::HitDelay) {
+		hit(action);
+	}
+	if (turn.time >= BattleTurn::ActionDuration) {
+		if (turn.knockedOut != 0) {
+			step(BattleTurn::Step::KnockOut);
+			return;
+		}
+		m_action++;
+		m_announced = false;
+		turn.time = 0;
+		turn.hit = false;
+		turn.attacker = 0;
+		turn.message.clear();
+	}
+}
+
+void ClashSystem::endRound() {
+	step(BattleTurn::Step::RoundEnd);
 }
 
 void ClashSystem::end() {
@@ -244,7 +432,26 @@ void ClashSystem::end() {
 	m_lastTurn = m_time;
 	m_hadTurn = true;
 	m_actions.clear();
-	SLOG(ska::LogLevel::Info) << "Battle : the turn is over, the real time goes on";
+	music(false);
+	interface(false);
+	SLOG(ska::LogLevel::Info) << "Battle : the clash is over, the real time goes on";
+}
+
+void ClashSystem::interface(bool hidden) {
+	auto event = InterfaceEvent{};
+	event.hidden = hidden;
+	m_ged.ska::Observable<InterfaceEvent>::notifyObservers(event);
+}
+
+void ClashSystem::music(bool clash) {
+	if (clash == m_musicPlayed) {
+		return;
+	}
+	auto& played = clash ? m_music : m_worldState.getWorldMusic();
+	played.setVolume(m_worldState.getSoundVolume());
+	auto event = ska::SoundEvent{ &played, ska::SoundEventType::PLAY_MUSIC };
+	m_ged.ska::Observable<ska::SoundEvent>::notifyObservers(event);
+	m_musicPlayed = clash;
 }
 
 void ClashSystem::refresh(unsigned int ellapsedTime) {
@@ -256,66 +463,80 @@ void ClashSystem::refresh(unsigned int ellapsedTime) {
 		}
 		return;
 	}
-	// The battle ended meanwhile (a K.O.)
+	// The battle ended meanwhile (it should not : the K.O. waits for the end of the clash)
 	if (m_stage.phase() != BattlePhase::Fight) {
 		end();
 		return;
 	}
+	const auto before = turn.time;
 	turn.time += ellapsedTime;
+	turn.total += ellapsedTime;
 	turn.messageAge += ellapsedTime;
-	// The battle stays stopped during the turn (the bars drain : real time)
+	turn.hitAge += ellapsedTime;
+	// The battle stays stopped during the clash (the bars drain : real time)
 	m_stage.hitStop(120);
+	intro(before, turn.time);
 	const auto ai = standing(m_stage.player) && m_componentAccessor.get<FighterComponent>(m_stage.player).controlledByAI;
 	switch (turn.step) {
-	case BattleTurn::Step::Intro:
-		if (turn.time >= BattleTurn::IntroDuration) {
-			turn.step = BattleTurn::Step::Menu;
-			turn.time = 0;
-			turn.message = "Que doit faire " + turn.pokemon + " ?";
-			turn.messageAge = 0;
+	case BattleTurn::Step::Impact:
+		if (turn.time >= BattleTurn::ImpactDuration) {
+			step(BattleTurn::Step::Zoom);
+		}
+		break;
+	case BattleTurn::Step::Zoom:
+		if (turn.time >= BattleTurn::ZoomDuration) {
+			step(BattleTurn::Step::Shatter);
+		}
+		break;
+	case BattleTurn::Step::Shatter:
+		if (turn.time >= BattleTurn::ShatterDuration) {
+			step(BattleTurn::Step::Versus);
+		}
+		break;
+	case BattleTurn::Step::Versus:
+		if (turn.time >= BattleTurn::VersusDuration) {
+			step(BattleTurn::Step::Rebuild);
+		}
+		break;
+	case BattleTurn::Step::Rebuild:
+		if (turn.time >= BattleTurn::RebuildDuration) {
+			step(BattleTurn::Step::Round);
+		}
+		break;
+	case BattleTurn::Step::Round:
+		if (turn.time >= BattleTurn::RoundDuration) {
+			step(BattleTurn::Step::Menu);
 		}
 		break;
 	case BattleTurn::Step::Menu:
-		if (ai && turn.time >= 800) {
+		if (ai && turn.time >= 900) {
 			choose(static_cast<std::size_t>(strongest(m_stage.player)));
 		} else if (turn.time >= BattleTurn::MenuDuration) {
 			choose(turn.selected);
 		}
 		break;
-	case BattleTurn::Step::Acting: {
-		if (m_action >= m_actions.size()) {
-			turn.step = BattleTurn::Step::Outro;
-			turn.time = 0;
-			break;
-		}
-		const auto& action = m_actions[m_action];
-		if (!m_announced) {
-			// Its message, a K.O. skips it
-			if (!standing(action.attacker)) {
-				m_action++;
-				turn.time = 0;
-				break;
+	case BattleTurn::Step::Acting:
+		act(before);
+		break;
+	case BattleTurn::Step::RoundEnd:
+		if (turn.time >= BattleTurn::RoundEndDuration) {
+			if (turn.round < turn.rounds && standing(m_stage.player) && standing(m_opponent)) {
+				turn.round++;
+				m_choice = Ui::ChoiceList{};
+				m_choice.setCount(turn.skills.size());
+				step(BattleTurn::Step::Round);
+			} else {
+				step(BattleTurn::Step::Return);
 			}
-			m_announced = true;
-			const auto& skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
-			turn.message = who(action.attacker) + " utilise " + skill.name + " !";
-			turn.messageAge = 0;
-			m_hit = false;
-			m_stage.sound(BattleSound::Cast);
-		}
-		if (!m_hit && turn.time >= BattleTurn::HitDelay) {
-			m_hit = true;
-			hit(action);
-		}
-		if (turn.time >= BattleTurn::ActionDuration) {
-			m_action++;
-			m_announced = false;
-			turn.time = 0;
 		}
 		break;
-	}
-	case BattleTurn::Step::Outro:
-		if (turn.time >= BattleTurn::OutroDuration) {
+	case BattleTurn::Step::KnockOut:
+		if (turn.time >= BattleTurn::KnockOutDuration) {
+			step(BattleTurn::Step::Return);
+		}
+		break;
+	case BattleTurn::Step::Return:
+		if (turn.time >= BattleTurn::ReturnDuration) {
 			end();
 		}
 		break;

@@ -1,7 +1,9 @@
-# The turns of the classic battles in the real time battle (ClashSystem) : the battle stops, the menu of the skills, one
-# round played as in the first games ("Bulbizarre utilise Charge !"), then the real time goes on. Two ways to get one :
+# The clashes in the real time battle (ClashSystem) : the battle stops, a battleground as in the first games, rounds of
+# the menu of the skills played as in those games ("Bulbizarre utilise Charge !"), then the real time goes on. Two ways
+# to get one :
 #   a clash : the Pokemon of the player and its opponent attack each other at once, close : both act, the faster first
-#   an opening : the Pokemon of the player dodges an attack at the last moment : it acts alone, its hit cannot miss
+#   an opening : the Pokemon of the player dodges an attack at the last moment : it acts alone in the first round, its
+#   hits cannot miss
 # Called by the battle (it cannot wait) ; the dice are rolled by the battle (roll : 0 .. 99).
 
 # Two attacks at once, "distance" blocks apart : a clash ?
@@ -29,4 +31,34 @@ end
 # The least time between two turns (milliseconds of battle) : they stay rare
 cooldown = function() : int do
 	return 15000
+end
+
+# The rounds of a clash (a K.O. ends it sooner)
+rounds = function() : int do
+	return 3
+end
+
+# After the first round, the skill of the opponent : "powers" the power of each of its skills (0 : one that does not hit),
+# roll : 0 .. 99. Its strongest one time in two, else the first one that hits from the roll on (its index)
+pick = function(powers: int[], roll: int) : int do
+	best = 0
+	for(i = 1
+	 i < powers.size()
+	 i = i + 1) do
+		if powers[i] > powers[best]
+			best = i
+		end
+	end
+	if roll < 50 || powers.size() == 0
+		return best
+	end
+	for(k = 0
+	 k < powers.size()
+	 k = k + 1) do
+		i = (roll + k) % powers.size()
+		if powers[i] > 0
+			return i
+		end
+	end
+	return best
 end

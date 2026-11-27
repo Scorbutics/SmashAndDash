@@ -8,7 +8,7 @@ class Settings;
 
 class StateGUIBattle : public ska::StateBase {
 public:
-	StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera);
+	StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera, WorldState& worldState);
     //void bindGUI(Settings& s);
     virtual ~StateGUIBattle() = default;
 

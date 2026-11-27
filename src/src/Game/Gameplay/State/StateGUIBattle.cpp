@@ -2,8 +2,8 @@
 #include "StateGUIBattle.h"
 #include "Core/Draw/DrawableContainer.h"
 
-StateGUIBattle::StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera) :
-	m_gui(em, stage, battle, camera) {
+StateGUIBattle::StateGUIBattle(CustomEntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera, WorldState& worldState) :
+	m_gui(em, stage, battle, camera, worldState) {
 
 }
 void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {

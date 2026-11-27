@@ -802,6 +802,15 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		return ska::NodeValue{};
 	});
 
+	m_builder.bindField("clash", [&worldState](std::vector<ska::NodeValue>) {
+		auto* stage = worldState.battleStage();
+		if (stage == nullptr || stage->phase() != BattlePhase::Fight || stage->turn.active()) {
+			return ska::NodeValue{ false };
+		}
+		stage->clashRequested = true;
+		return ska::NodeValue{ true };
+	});
+
 	m_builder.generate();
 }
 

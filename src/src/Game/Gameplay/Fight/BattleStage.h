@@ -28,7 +28,14 @@ enum class BattlePhase {
 };
 
 // The sounds of a battle (BattleSounds)
-enum class BattleSound { Cast, Hit, StrongHit, Guard, Status, Dash, KnockOut, Count };
+enum class BattleSound {
+	Cast, Hit, StrongHit, Guard, Status, Dash, KnockOut,
+	// The clash (ClashSystem) : the impact, the zoom, the tiles that break, the screen "VS", the battleground rebuilt, the
+	// rounds, the attacks, the K.O., the menu
+	ClashImpact, ClashWoosh, ClashShatter, ClashVersus, ClashSwoosh, ClashLand, ClashRound, ClashShine, ClashAttack, ClashHit,
+	ClashKnockOut, ClashCursor, ClashSelect,
+	Count
+};
 
 // A feedback drawn over the battle (in the world) : damage numbers, impacts
 struct BattleMark {
@@ -96,29 +103,67 @@ struct BondCinematic {
 	bool released = false;
 };
 
-// A turn as in the classic battles in the real time battle (ClashSystem) : the battle stops, the player chooses a skill
-// in a menu, one round is played with its messages ("Bulbizarre utilise Charge !"), then the real time goes on
+// A clash as in a cross-over of the classic battles and the fighting games (ClashSystem, drawn by ClashArena) : the battle
+// stops, the camera dives on the two Pokemon, the map around them breaks tile by tile, a screen "VS", a battleground is
+// rebuilt from those tiles (seen from behind the Pokemon of the player, the opponent in front of it), then rounds as in
+// the first games : the menu of the skills, each skill with its message and its hit. Then the tiles go back, the real time
+// goes on. Its times are real time (ms).
 struct BattleTurn {
-	// A clash (both attacked at once : both act), an opening (a dodge at the last moment : the player acts alone)
+	// A clash (both attacked at once : both act), an opening (a dodge at the last moment : the player acts alone in the
+	// first round)
 	enum class Kind { None, Clash, Opening };
-	// Its announce, the menu of the skills, the round, its end
-	enum class Step { Intro, Menu, Acting, Outro };
-	static constexpr unsigned int IntroDuration = 700;
+	enum class Step { Impact, Zoom, Shatter, Versus, Rebuild, Round, Menu, Acting, RoundEnd, KnockOut, Return };
+	static constexpr unsigned int ImpactDuration = 500;
+	static constexpr unsigned int ZoomDuration = 650;
+	static constexpr unsigned int ShatterDuration = 900;
+	static constexpr unsigned int VersusDuration = 1500;
+	static constexpr unsigned int RebuildDuration = 1100;
+	// "ROUND 1", then "FIGHT !"
+	static constexpr unsigned int RoundDuration = 1400;
+	static constexpr unsigned int FightAt = 750;
 	static constexpr unsigned int MenuDuration = 10000;
-	// An action : its message, then its hit, then the next one
-	static constexpr unsigned int HitDelay = 650;
-	static constexpr unsigned int ActionDuration = 1500;
-	static constexpr unsigned int OutroDuration = 350;
+	// An action : its message, the wind up, the hit, then the next one
+	static constexpr unsigned int HitDelay = 700;
+	static constexpr unsigned int ActionDuration = 1600;
+	static constexpr unsigned int RoundEndDuration = 600;
+	static constexpr unsigned int KnockOutDuration = 2000;
+	static constexpr unsigned int ReturnDuration = 1000;
+	// The battleground is shown from the step Versus to the step Return
+	bool arena() const { return active() && step != Step::Impact && step != Step::Zoom && step != Step::Shatter; }
+
 	Kind kind = Kind::None;
-	Step step = Step::Intro;
-	// Time in the step (real time, ms)
+	Step step = Step::Impact;
+	// A number for each turn (the drawing keeps the tiles of a turn)
+	unsigned int id = 0;
+	// Time in the step, since the start (real time, ms)
 	unsigned int time = 0;
+	unsigned int total = 0;
+	int round = 1;
+	int rounds = 3;
+	ska::EntityId player = 0;
+	ska::EntityId opponent = 0;
+	// Between the two Pokemon (world pixels) : the camera dives there, the tiles around it make the battleground
+	ska::Point<float> center;
 	std::string pokemon;
+	std::string opponentName;
 	std::vector<std::string> skills;
+	std::vector<std::string> skillTypes;
 	std::size_t selected = 0;
 	// The message of the round (it appears letter by letter), since when
 	std::string message;
 	unsigned int messageAge = 0;
+	// The action played : who, on whom, the skill (its sprite : Sprites/Fight/<id>.png), its hit (the damage, since when)
+	ska::EntityId attacker = 0;
+	ska::EntityId target = 0;
+	int skillSprite = -1;
+	bool contact = false;
+	bool hit = false;
+	unsigned int hitAge = 0;
+	int damage = 0;
+	// The hits in a row of the Pokemon of the player ("2 COUPS !")
+	int combo = 0;
+	// The Pokemon K.O. in the turn
+	ska::EntityId knockedOut = 0;
 	bool active() const { return kind != Kind::None; }
 };
 
@@ -181,6 +226,8 @@ public:
 	int bond = 0;
 	BondCinematic cinematic;
 	BattleTurn turn;
+	// A clash asked by a script (Battle.clash) : ClashSystem starts it
+	bool clashRequested = false;
 	// The last wild Pokemon out of the fight was captured (not K.O.) : the battle is won by a capture, its name
 	bool captured = false;
 	std::string capturedName;

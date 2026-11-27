@@ -310,3 +310,20 @@ bool BattleRules::playerFirst(int speed, int other, int roll) {
 unsigned int BattleRules::turnCooldown() {
 	return static_cast<unsigned int>(std::max(0L, call(m_clashFile, "cooldown", {}, 15000L)));
 }
+
+int BattleRules::clashRounds() {
+	return static_cast<int>(std::clamp(call(m_clashFile, "rounds", {}, 3L), 1L, 9L));
+}
+
+int BattleRules::clashPick(const std::vector<int>& powers, int roll) {
+	if (powers.empty()) {
+		return 0;
+	}
+	auto values = std::make_shared<ska::NodeValueArrayRaw>();
+	for (const auto value : powers) {
+		values->push_back(ska::NodeValue{ static_cast<long>(value) });
+	}
+	const auto best = static_cast<long>(std::max_element(powers.begin(), powers.end()) - powers.begin());
+	const auto index = call(m_clashFile, "pick", { ska::NodeValue{ ska::NodeValueArray{ std::move(values) } }, ska::NodeValue{ static_cast<long>(roll) } }, best);
+	return index >= 0 && index < static_cast<long>(powers.size()) ? static_cast<int>(index) : static_cast<int>(best);
+}

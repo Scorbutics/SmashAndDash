@@ -186,7 +186,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	// The bond between the trainer and its Pokemon : full, it unleashes the strongest skill of the Pokemon (a cinematic)
 	addLogic(std::make_unique<BondSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, battle));
 	// The turns of the classic battles : a clash, an opening (Data/Battle/clash.miniska)
-	addLogic(std::make_unique<ClashSystem>(m_entityManager, m_eventDispatcher, rules, m_stage, blockSize));
+	addLogic(std::make_unique<ClashSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, blockSize));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
@@ -201,7 +201,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 		pokemonFighter.hp = std::max(1, std::min(m_pokemonHp, pokemonFighter.maxHp));
 	}
 	m_loader.setFighters(std::move(pokemonFighter), Fighter(rules, m_opponent, m_opponentScriptId, m_opponentLevel));
-	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_stage, battle, m_worldState.getCamera()));
+	addSubState(std::make_unique<StateGUIBattle>(m_entityManager, m_stage, battle, m_worldState.getCamera(), m_worldState));
 
 	//TODO add IA input context ???
 	//m_iaICM.addContext(ska::InputContextPtr());

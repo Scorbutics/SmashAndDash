@@ -60,7 +60,7 @@ namespace {
 	const auto& White = Ui::White;
 }
 
-GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera) :
+GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera, WorldState& worldState) :
 	m_entities(em),
 	m_stage(stage),
 	m_battle(battle),
@@ -72,7 +72,8 @@ GUIBattle::GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSys
 	m_ringOpponent("./Sprites/Fight/ring-opponent.png"),
 	m_arrow("./Sprites/Fight/arrow-player.png"),
 	m_impact("./Sprites/Fight/impact.png"),
-	m_screenShader("./Shaders/battle", true) {
+	m_screenShader("./Shaders/battle", true),
+	m_arena(em, stage, camera, worldState, [this](int id) -> const ska::Texture& { return skillSprite(id); }, m_impact) {
 	m_groundLayer.setPriority(GroundPriority);
 	m_worldOverlayLayer.setPriority(WorldOverlayPriority);
 	// Under the dialogs (GUI)
@@ -135,6 +136,7 @@ const std::string& GUIBattle::name(ska::EntityId entity) const {
 
 void GUIBattle::graphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	m_time += ellapsedTime;
+	m_arena.update(ellapsedTime);
 	// Before the fight and after its end (back to the map) : nothing
 	if (m_stage.phase() == BattlePhase::Intro || m_stage.phase() == BattlePhase::Over) {
 		return;
@@ -575,51 +577,6 @@ void GUIBattle::renderBond(ska::Renderer& renderer) const {
 	}
 }
 
-void GUIBattle::renderTurn(ska::Renderer& renderer) const {
-	const auto& turn = m_stage.turn;
-	if (!turn.active()) {
-		return;
-	}
-	const auto canvas = Ui::Canvas{ renderer };
-	const auto screen = m_camera.getScreenSize();
-	// As the first games : the world a little darker, the box of the messages at the bottom, the menu of the skills
-	const auto fade = turn.step == BattleTurn::Step::Intro ? std::min(1.F, static_cast<float>(turn.time) / 250.F) :
-		(turn.step == BattleTurn::Step::Outro ? 1.F - std::min(1.F, static_cast<float>(turn.time) / static_cast<float>(BattleTurn::OutroDuration)) : 1.F);
-	canvas.fill(ska::Color{ 0, 0, 0, static_cast<uint8_t>(70.F * fade) }, ska::Rectangle{ 0, 0, screen.x, screen.y });
-	if (turn.step == BattleTurn::Step::Intro) {
-		return;
-	}
-	const auto alpha = static_cast<unsigned char>(255.F * fade);
-	const auto height = 112;
-	const auto y = screen.y - height - 70;
-	const auto menu = turn.step == BattleTurn::Step::Menu;
-	const auto menuWidth = menu ? std::min(320, screen.x / 3) : 0;
-	const auto boxWidth = screen.x - 40 - (menu ? menuWidth + 10 : 0);
-	canvas.panel("panel_small.png", ska::Rectangle{ 20, y, boxWidth, height }, 16, alpha);
-	// The message, letter by letter (UTF-8 : not in the middle of a letter)
-	auto shown = std::min(turn.message.size(), static_cast<std::size_t>(turn.messageAge / 28));
-	while (shown < turn.message.size() && (static_cast<unsigned char>(turn.message[shown]) & 0xC0) == 0x80) {
-		shown++;
-	}
-	canvas.text(turn.message.substr(0, shown), Style(24, Ink, false, 1.F, alpha), 44, y + 22, Ui::Align::Left);
-	if (!menu) {
-		return;
-	}
-	// The skills : W S and Return, or 1 .. 4
-	const auto x = screen.x - 20 - menuWidth;
-	canvas.panel("panel_small.png", ska::Rectangle{ x, y, menuWidth, height }, 16, alpha);
-	const auto rowHeight = (height - 16) / 4;
-	for (auto i = std::size_t{ 0 }; i < turn.skills.size() && i < 4; i++) {
-		const auto rowY = y + 8 + static_cast<int>(i) * rowHeight;
-		const auto selected = i == turn.selected;
-		if (selected) {
-			const auto bob = static_cast<int>(2.F * std::sin(static_cast<float>(m_time) / 120.F));
-			canvas.text(">", Style(18, Ink, false, 1.F, alpha), x + 14 + bob, rowY + 1, Ui::Align::Left);
-		}
-		canvas.text(std::to_string(i + 1) + "  " + Upper(turn.skills[i]), Style(18, selected ? Ink : Ui::Faded, false, 1.F, alpha), x + 36, rowY + 1, Ui::Align::Left);
-	}
-}
-
 void GUIBattle::renderCinematic(ska::Renderer& renderer) const {
 	const auto& cinematic = m_stage.cinematic;
 	if (!cinematic.active) {
@@ -747,6 +704,11 @@ void GUIBattle::renderSpeech(ska::Renderer& renderer) const {
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	const auto canvas = Ui::Canvas{ renderer };
 	updateScreenShader(renderer);
+	// A clash : its own screens (ClashArena) instead of the interface of the battle
+	if (m_stage.turn.active()) {
+		m_arena.render(renderer);
+		return;
+	}
 	if (m_stage.phase() == BattlePhase::Outro) {
 		renderOutro(renderer);
 		renderBanner(renderer);
@@ -767,7 +729,6 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	renderSpeech(renderer);
 	const auto screen = m_camera.getScreenSize();
 	canvas.text("VS", Style(26, ska::Color{ 255, 255, 255, 255 }), screen.x / 2, 28, Ui::Align::Center);
-	renderTurn(renderer);
 	renderBanner(renderer);
 	renderCinematic(renderer);
 }

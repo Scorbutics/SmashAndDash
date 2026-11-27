@@ -145,6 +145,10 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 		break;
 
 	case BattlePhase::Fight:
+		// A clash (ClashSystem) shows its K.O. itself : the battle ends after it
+		if (m_stage.turn.active()) {
+			break;
+		}
 		{
 			// A fighter without hit points is K.O. : it leaves the fight. A side without fighter standing lost
 			std::array<int, 2> standing{ 0, 0 };

@@ -146,6 +146,15 @@ void BattleCameraSystem::refresh(unsigned int ellapsedTime) {
 		zoom = MaxZoom + 0.6F;
 		speed = 6.F;
 	}
+	// A clash (ClashSystem) : it dives on the two Pokemon, the map breaks around them (then the battleground hides the
+	// world), it stays there until the battleground goes away
+	const auto& turn = m_stage.turn;
+	if (turn.active() && turn.step != BattleTurn::Step::Return && phase == BattlePhase::Fight) {
+		const auto impact = turn.step == BattleTurn::Step::Impact;
+		target = turn.center;
+		zoom = impact ? m_zoom + 0.25F : MaxZoom + 1.1F;
+		speed = impact ? 14.F : 5.F;
+	}
 
 	// Smoothly : the point and the zoom follow their targets
 	const auto follow = 1.F - std::exp(-seconds * speed);

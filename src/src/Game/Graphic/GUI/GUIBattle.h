@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include "Canvas.h"
+#include "ClashArena.h"
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 #include "Graphic/Texture.h"
@@ -10,6 +11,7 @@
 #include "../../Gameplay/Fight/BattleStage.h"
 
 class BattleSystem;
+class WorldState;
 class FighterComponent;
 
 namespace ska {
@@ -25,7 +27,7 @@ namespace ska {
 // red : the opponent), an arrow over the Pokemon of the player, the damage and the impacts of the hits.
 class GUIBattle {
 public:
-	GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera);
+	GUIBattle(ska::EntityManager& em, BattleStage& stage, const BattleSystem& battle, ska::CameraSystem& camera, WorldState& worldState);
 	GUIBattle(const GUIBattle&) = delete;
 	GUIBattle& operator=(const GUIBattle&) = delete;
 	~GUIBattle();
@@ -65,8 +67,6 @@ private:
 	// The gauge of the bond between the trainer and its Pokemon, the cinematic of the skill it unleashes
 	void renderBond(ska::Renderer& renderer) const;
 	void renderCinematic(ska::Renderer& renderer) const;
-	// A turn as in the classic battles (BattleStage::turn) : the box of the messages, the menu of the skills
-	void renderTurn(ska::Renderer& renderer) const;
 	// The end of the battle : the experience won (BattleStage::outro)
 	void renderOutro(ska::Renderer& renderer) const;
 	static constexpr unsigned int OutroCardDelay = 350;
@@ -93,5 +93,7 @@ private:
 	// Post-processing of the battle (Shaders/battle) : the colors split on the hits, gray and vignette on a K.O.
 	mutable ska::Shader m_screenShader;
 	mutable ska::Renderer* m_renderer = nullptr;
+	// A clash (BattleStage::turn) : its battleground
+	ClashArena m_arena;
 	unsigned int m_time = 0;
 };

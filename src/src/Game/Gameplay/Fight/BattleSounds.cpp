@@ -2,9 +2,13 @@
 #include "BattleSounds.h"
 
 BattleSounds::BattleSounds() {
-	const char* files[] = { "cast", "hit", "strong_hit", "guard", "status", "dash", "ko" };
+	// In the order of BattleSound (the clash : Sounds/CREDITS.txt)
+	const char* files[] = { "battle_cast.wav", "battle_hit.wav", "battle_strong_hit.wav", "battle_guard.wav", "battle_status.wav", "battle_dash.wav", "battle_ko.wav",
+		"clash_impact.ogg", "clash_woosh.ogg", "clash_shatter.wav", "clash_versus.ogg", "clash_swoosh.wav", "clash_land.wav", "clash_round.wav", "clash_shine.ogg",
+		"clash_attack.ogg", "clash_hit.wav", "clash_ko.ogg", "clash_cursor.wav", "clash_select.wav" };
+	static_assert(sizeof(files) / sizeof(files[0]) == static_cast<std::size_t>(BattleSound::Count), "a file for each sound");
 	for (std::size_t index = 0; index < m_sounds.size(); index++) {
-		m_sounds[index] = std::make_unique<ska::SDLSound>(std::string{ "./Sounds/battle_" } + files[index] + ".wav");
+		m_sounds[index] = std::make_unique<ska::SDLSound>(std::string{ "./Sounds/" } + files[index]);
 	}
 }
 

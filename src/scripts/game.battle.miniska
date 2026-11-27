@@ -26,6 +26,10 @@ message = function(text: string) do end
 # the battles (Data/Battle/steps.miniska)
 announce = function(text: string) do end
 
+# A clash now in the battle going on (as when the two Pokemon attack each other at once, close) : the dev tools, the
+# tests. The script does not wait. False : no battle, or not fighting (its start, its end, a clash already)
+clash = function() : bool do return false end
+
 # The wild Pokemon on the map, one line each : "<monster> <level> <block x> <block y> <attitude>" (attitude : aggressive,
 # fearful, passive : Data/Battle/encounters.miniska)
 wild = function() : string[] do return []: string end

@@ -145,6 +145,11 @@ public:
 	// Name of the current map (its directory in Levels, ex : "w_5_4")
 	std::string getMapName() const;
 	const std::string& getTilesetName() const;
+	// The tiles of the map (their texture, their clips : the battleground of a clash is drawn with them)
+	const ska::Tileset& getTileset() const { return *m_tileset; }
+	// The music of the map (a clash plays its own one, then this one again), the volume of the settings
+	ska::Music& getWorldMusic() { return m_worldBGM; }
+	float getSoundVolume() const;
 
 	bool spawnWildNow(int monster, int level);
 	std::vector<std::pair<int, int>> m_wildToSpawn;
