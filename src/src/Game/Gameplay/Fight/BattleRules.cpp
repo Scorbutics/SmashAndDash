@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
@@ -11,7 +11,8 @@ BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, st
 	m_stagesFile(std::move(stagesFile)),
 	m_encountersFile(std::move(encountersFile)),
 	m_skillsFile(std::move(skillsFile)),
-	m_rewardsFile(std::move(rewardsFile)) {
+	m_rewardsFile(std::move(rewardsFile)),
+	m_linesFile(std::move(linesFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -272,4 +273,12 @@ int BattleRules::rewardExperience(const std::vector<int>& dropped, const std::ve
 		fallback += experience(dropped[i], levels[i]);
 	}
 	return static_cast<int>(std::max(0L, call(m_rewardsFile, "experience", { values(dropped), values(levels), ska::NodeValue{ won }, ska::NodeValue{ fled } }, fallback)));
+}
+
+std::string BattleRules::line(const std::string& event, const std::string& pokemon, const std::string& detail, int roll, int pick) {
+	return callString(m_linesFile, "line", { Text(event), Text(pokemon), Text(detail), ska::NodeValue{ static_cast<long>(roll) }, ska::NodeValue{ static_cast<long>(pick) } }, "");
+}
+
+unsigned int BattleRules::linePause(const std::string& event) {
+	return static_cast<unsigned int>(std::max(0L, call(m_linesFile, "pause", { Text(event) }, 2800L)));
 }

@@ -55,6 +55,13 @@ void BattleCameraSystem::refresh(unsigned int ellapsedTime) {
 			enemyCount++;
 		}
 	}
+	// The trainer, who follows the fight from behind its Pokemon (TrainerCoachSystem), stays in sight too (its head)
+	if (phase == BattlePhase::Fight && m_stage.trainer.has_value() && m_entities.hasComponent<ska::PositionComponent>(*m_stage.trainer) &&
+		m_entities.hasComponent<ska::HitboxComponent>(*m_stage.trainer)) {
+		const auto trainer = ska::PositionComponent::getCenterPosition(m_entities.getComponent<ska::PositionComponent>(*m_stage.trainer), m_entities.getComponent<ska::HitboxComponent>(*m_stage.trainer));
+		low = ska::Point<float>{ std::min(low.x, trainer.x), std::min(low.y, trainer.y - 24.F) };
+		high = ska::Point<float>{ std::max(high.x, trainer.x), std::max(high.y, trainer.y) };
+	}
 	if (enemyCount > 0) {
 		enemies = ska::Point<float>{ enemies.x / static_cast<float>(enemyCount), enemies.y / static_cast<float>(enemyCount) };
 	} else {

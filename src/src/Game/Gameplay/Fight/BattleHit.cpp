@@ -71,6 +71,12 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 			MarkText(entities, stage, hit.target, "PEU EFFICACE...", 1);
 		}
 	}
+	// The trainer of the player comments it
+	if (damage > 0 && fighter.team == 0) {
+		stage.cue(BattleCue{ "hurt", "" });
+	} else if (damage > 0 && attackerFighter != nullptr && attackerFighter->team == 0) {
+		stage.cue(BattleCue{ effectiveness > 100 ? "super" : (effectiveness < 100 ? "weak" : "hit"), "" });
+	}
 	// A hit wakes it up (Data/Battle/status.miniska)
 	if (fighter.status != FighterStatus::None && rules.statusWakes(StatusKey(fighter.status), damage)) {
 		fighter.clearStatus();

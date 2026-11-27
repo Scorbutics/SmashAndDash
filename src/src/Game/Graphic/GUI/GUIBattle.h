@@ -60,6 +60,8 @@ private:
 	const FighterComponent* fighter(ska::EntityId entity) const;
 	void renderSkills(ska::Renderer& renderer) const;
 	void renderBanner(ska::Renderer& renderer) const;
+	// What the trainer says : a speech balloon over it (BattleStage::speech)
+	void renderSpeech(ska::Renderer& renderer) const;
 	// The end of the battle : the experience won (BattleStage::outro)
 	void renderOutro(ska::Renderer& renderer) const;
 	static constexpr unsigned int OutroCardDelay = 350;

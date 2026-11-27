@@ -552,6 +552,41 @@ void GUIBattle::renderOutro(ska::Renderer& renderer) const {
 	}
 }
 
+void GUIBattle::renderSpeech(ska::Renderer& renderer) const {
+	const auto& speech = m_stage.speech();
+	if (speech.empty() || !m_stage.trainer.has_value() || !visible(*m_stage.trainer)) {
+		return;
+	}
+	const auto canvas = Ui::Canvas{ renderer };
+	// Over the head of the trainer : the world is drawn zoomed, the interface is not
+	const auto drawn = sprite(*m_stage.trainer);
+	const auto zoom = m_camera.getZoom();
+	const auto headX = static_cast<int>(std::lround(static_cast<float>(drawn.position.x + drawn.width / 2) * zoom));
+	const auto headY = static_cast<int>(std::lround(static_cast<float>(drawn.position.y) * zoom));
+	// It pops in (it rises a little), it fades out
+	const auto age = m_stage.speechAge();
+	const auto duration = std::max(1U, m_stage.speechDuration());
+	const auto in = std::min(1.F, static_cast<float>(age) / 120.F);
+	const auto out = std::min(1.F, static_cast<float>(duration - std::min(age, duration)) / 250.F);
+	const auto alpha = static_cast<unsigned char>(255.F * std::min(in, out));
+	const auto rise = static_cast<int>(std::lround(6.F * (1.F - in)));
+
+	constexpr auto TextSize = 18U;
+	auto measure = ska::Texture{};
+	measure.loadFromText(TextSize, speech, Ink);
+	const auto textWidth = static_cast<int>(measure.getWidth());
+	const auto textHeight = static_cast<int>(measure.getHeight());
+	// The tail of the balloon (Menu/default_theme/balloon.png, its bottom left) points at the head
+	constexpr auto Tail = 16;
+	const auto width = std::max(60, textWidth + 28);
+	const auto height = std::max(48, textHeight + 26);
+	const auto screen = m_camera.getScreenSize();
+	const auto x = std::clamp(headX - Tail, 4, std::max(4, screen.x - width - 4));
+	const auto y = std::max(4, headY - height - 2 + rise);
+	canvas.panel("balloon.png", ska::Rectangle{ x, y, width, height }, 24, alpha);
+	canvas.text(speech, Style(TextSize, Ink, false, 1.F, alpha), x + width / 2, y + (height - 6 - textHeight) / 2, Ui::Align::Center);
+}
+
 void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	const auto canvas = Ui::Canvas{ renderer };
 	updateScreenShader(renderer);
@@ -571,6 +606,7 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 		renderPanel(renderer, entity, state->team == 0, slots[static_cast<std::size_t>(state->team)]++);
 	}
 	renderSkills(renderer);
+	renderSpeech(renderer);
 	const auto screen = m_camera.getScreenSize();
 	canvas.text("VS", Style(26, ska::Color{ 255, 255, 255, 255 }), screen.x / 2, 28, Ui::Align::Center);
 	renderBanner(renderer);

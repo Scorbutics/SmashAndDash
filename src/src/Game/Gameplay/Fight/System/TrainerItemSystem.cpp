@@ -105,6 +105,7 @@ void TrainerItemSystem::use() {
 	const auto used = data->capture ? throwBall(m_item) : heal(m_item, data->heal);
 	if (used) {
 		m_cooldown = Cooldown;
+		m_stage.cue(BattleCue{ data->capture ? "ball" : "potion", data->name });
 		SLOG(ska::LogLevel::Info) << "Battle : the trainer uses the item " << m_item << " (" << data->name << ")";
 	}
 	updateSlot();

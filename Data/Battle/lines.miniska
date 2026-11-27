@@ -1,0 +1,80 @@
+# The lines of the trainer during a battle (TrainerCoachSystem : a speech balloon over the trainer). The battle asks
+# "line" when something happens (it cannot wait) ; "" : the trainer says nothing. The events :
+#   start : the fight starts                  attack : its Pokemon uses a skill (detail : the name of the skill)
+#   hit : its Pokemon touches its opponent    super, weak : it touches, super effective / not very effective
+#   hurt : its Pokemon is hit                 low : its Pokemon has few hit points left (once a battle)
+#   dodge : its Pokemon dodges                potion, ball : the trainer uses an item (detail : the name of the item)
+#   knockout : the wild Pokemon is K.O.       fainted : the Pokemon of the trainer is K.O.
+# pokemon : the name of the Pokemon of the trainer. The dice are rolled by the battle and given here (the replays of a
+# battle stay the same) : roll (0 .. 99) against the chance of a line, pick (0 .. 999) chooses it.
+
+# One of the lines
+choose = function(lines: string[], pick: int) : string do
+	return lines[pick % lines.size()]
+end
+
+# The chance of a line (percents) : the trainer does not comment everything
+chance = function(event: string) : int do
+	if event == "attack" || event == "hit"
+		return 30
+	end
+	if event == "hurt"
+		return 40
+	end
+	if event == "dodge" || event == "weak"
+		return 60
+	end
+	return 100
+end
+
+# How long after the last line (milliseconds) this one can be said : the trainer does not talk all the time, but the
+# big moments always get their line
+pause = function(event: string) : int do
+	if event == "start" || event == "knockout" || event == "fainted" || event == "potion" || event == "ball" || event == "low" || event == "super"
+		return 0
+	end
+	return 2800
+end
+
+line = function(event: string, pokemon: string, detail: string, roll: int, pick: int) : string do
+	if roll >= chance(event)
+		return ""
+	end
+	if event == "start"
+		return choose([pokemon + ", go !", "En avant, " + pokemon + " !", "À toi de jouer, " + pokemon + " !"], pick)
+	end
+	if event == "attack"
+		return choose([pokemon + ", " + detail + " !", detail + " !", "Utilise " + detail + " !"], pick)
+	end
+	if event == "hit"
+		return choose(["Bien joué !", "Touché !", "Continue comme ça !", "Encore !"], pick)
+	end
+	if event == "super"
+		return choose(["C'est super efficace !", "En plein dans le mille !"], pick)
+	end
+	if event == "weak"
+		return choose(["Ce n'est pas très efficace...", "Ça ne marche pas très bien..."], pick)
+	end
+	if event == "hurt"
+		return choose(["Attention, " + pokemon + " !", "Tiens bon !", "Courage !"], pick)
+	end
+	if event == "low"
+		return choose(["Tiens bon, " + pokemon + " !", "Ne lâche rien, " + pokemon + " !"], pick)
+	end
+	if event == "dodge"
+		return choose(["Esquive !", "Bien esquivé !", "Trop lent !"], pick)
+	end
+	if event == "potion"
+		return choose([detail + " ! Tiens, " + pokemon + " !", "Courage, " + pokemon + ", voilà de l'aide !"], pick)
+	end
+	if event == "ball"
+		return choose([detail + ", go !", "Je te tiens !"], pick)
+	end
+	if event == "knockout"
+		return choose(["Bravo, " + pokemon + " !", "On a gagné !", "Bien joué, " + pokemon + " !"], pick)
+	end
+	if event == "fainted"
+		return choose(["Non, " + pokemon + " !", pokemon + " !"], pick)
+	end
+	return ""
+end

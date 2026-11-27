@@ -66,6 +66,13 @@ struct BattleItemSlot {
 	float cooldown = 0.F;
 };
 
+// Something that happened in a battle, for the trainer who comments it (TrainerCoachSystem, Data/Battle/lines.miniska) :
+// "hit", "super", "weak" (the Pokemon of the player touches), "hurt" (it is hit), "potion", "ball" (an item : its name)
+struct BattleCue {
+	std::string event;
+	std::string detail;
+};
+
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
 // arena, feedbacks, which fighter is the one of the player. The state of each fighter is its FighterComponent.
 class BattleStage {
@@ -94,6 +101,14 @@ public:
 	const std::vector<BattleMark>& marks() const { return m_marks; }
 
 	void shake(unsigned int duration, int intensity);
+	// Something happened (the trainer comments it), the cues not commented yet (they are taken)
+	void cue(BattleCue cue) { m_cues.push_back(std::move(cue)); }
+	std::vector<BattleCue> takeCues() { auto cues = std::move(m_cues); m_cues.clear(); return cues; }
+	// What the trainer says (a speech balloon over it), how long it is shown (real time) and since when
+	void say(std::string text, unsigned int duration);
+	const std::string& speech() const { return m_speech; }
+	unsigned int speechAge() const { return m_speechAge; }
+	unsigned int speechDuration() const { return m_speechDuration; }
 	// A sound of the battle (played by the player given, nothing without one)
 	void sound(BattleSound sound) const { if (m_soundPlayer) { m_soundPlayer(sound); } }
 	void setSoundPlayer(std::function<void(BattleSound)> player) { m_soundPlayer = std::move(player); }
@@ -127,6 +142,10 @@ private:
 	std::string m_banner;
 	unsigned int m_bannerAge = 0;
 	std::vector<BattleMark> m_marks;
+	std::vector<BattleCue> m_cues;
+	std::string m_speech;
+	unsigned int m_speechAge = 0;
+	unsigned int m_speechDuration = 0;
 	ska::CameraSystem* m_camera = nullptr;
 	std::function<void(BattleSound)> m_soundPlayer;
 };

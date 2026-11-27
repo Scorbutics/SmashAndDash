@@ -15,6 +15,7 @@
 #include "../Data/PokemonDescriptor.h"
 #include "Transition/Map/PokeballTransition.h"
 #include "../Fight/System/TrainerItemSystem.h"
+#include "../Fight/System/TrainerCoachSystem.h"
 #include "Transition/Map/DialogTransition.h"
 #include "Transition/Map/LeapTransition.h"
 #include "../Mobs/WildPokemonComponent.h"
@@ -178,6 +179,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	addLogic(std::move(battleSystem));
 	// The items of the trainer (a potion, a pokeball)
 	addLogic(std::make_unique<TrainerItemSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
+	// The trainer follows the fight from behind its Pokemon and comments it (Data/Battle/lines.miniska)
+	addLogic(std::make_unique<TrainerCoachSystem>(m_entityManager, m_worldState, m_stage));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));

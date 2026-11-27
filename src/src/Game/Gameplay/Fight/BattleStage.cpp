@@ -15,6 +15,12 @@ namespace {
 void BattleStage::update(unsigned int ellapsedTime) {
 	m_phaseTime += ellapsedTime;
 	m_bannerAge += ellapsedTime;
+	if (!m_speech.empty()) {
+		m_speechAge += ellapsedTime;
+		if (m_speechAge >= m_speechDuration) {
+			m_speech.clear();
+		}
+	}
 
 	// The feedbacks live in real time (a damage number rises during a hit stop)
 	for (auto& mark : m_marks) {
@@ -46,6 +52,12 @@ void BattleStage::update(unsigned int ellapsedTime) {
 		return;
 	}
 	m_delta = ellapsedTime;
+}
+
+void BattleStage::say(std::string text, unsigned int duration) {
+	m_speech = std::move(text);
+	m_speechAge = 0;
+	m_speechDuration = duration;
 }
 
 void BattleStage::hitStop(unsigned int duration) {
