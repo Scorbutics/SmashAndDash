@@ -1,3 +1,3 @@
 The sounds clash_*.ogg / clash_*.wav and the music Music/clash.ogg (re-encoded, from "wild battle (kanto).ogg")
 come from the Pokémon SDK technical demo (Pokémon Workshop, https://github.com/PokemonWorkshop), its audio/se and
-audio/bgm folders. Some are trimmed.
+audio/bgm folders (clash_ball_* : the sounds of the pokeballs). Some are trimmed.

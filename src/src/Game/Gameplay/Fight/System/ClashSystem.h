@@ -40,6 +40,8 @@ private:
 		ska::EntityId attacker = 0;
 		ska::EntityId target = 0;
 		int skill = -1;
+		// An item of the bag instead of a skill (-1 : none)
+		int item = -1;
 	};
 
 	bool onKeyInputEvent(ska::InputKeyEvent& event);
@@ -54,6 +56,14 @@ private:
 	// The steps before the rounds : their sounds on time
 	void intro(unsigned int before, unsigned int now);
 	void choose(std::size_t index);
+	// The bag of the menu : open (its items), closed (the skills again), an item chosen
+	void openBag();
+	void closeBag();
+	void chooseItem(std::size_t index);
+	// The round : the action of the player, then the one of the opponent
+	void play(const Action& mine, bool first);
+	// An item of the bag played : a healing item, a pokeball (its course, the capture)
+	void actItem(const Action& action, unsigned int before);
 	// The strongest skill that hits (the AI of the player), the skill of the opponent after the first round
 	int strongest(ska::EntityId entity) const;
 	int opponentPick() const;

@@ -117,6 +117,8 @@ private:
 	void renderFighter(Ui::Canvas& canvas, const Fighter& fighter, float build, float scatter, ska::Point<int> offset) const;
 	void renderProjectile(Ui::Canvas& canvas, ska::Point<int> offset) const;
 	void renderHit(Ui::Canvas& canvas, ska::Point<int> offset) const;
+	// An item of the bag in a round : the healing, the pokeball (its course, its shakes, caught or open)
+	void renderItem(Ui::Canvas& canvas, ska::Point<int> offset) const;
 	void renderHud(Ui::Canvas& canvas, float shown) const;
 	void renderBar(Ui::Canvas& canvas, ska::EntityId entity, bool left, float shown) const;
 	void renderRound(Ui::Canvas& canvas) const;
@@ -158,4 +160,7 @@ private:
 	// The tileset without the ground in the tiles that stand (cutGround), when it could be made
 	mutable ska::Texture m_standingTiles;
 	mutable bool m_hasStandingTiles = false;
+	mutable ska::Texture m_ballTexture;
+	mutable ska::Texture m_burstTexture;
+	mutable bool m_ballLoaded = false;
 };

@@ -6,6 +6,7 @@
 #include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 #include "Core/Inputs/InputContextManager.h"
 #include "../BattleEffects.h"
+#include "../BattleItems.h"
 #include "../BattleRules.h"
 #include "../../Data/Bag.h"
 #include "../../Data/EntityLoadEvent.h"
@@ -39,13 +40,7 @@ bool TrainerItemSystem::standing(ska::EntityId entity) const {
 
 void TrainerItemSystem::updateSlot() {
 	auto& bag = m_worldState.getBag();
-	auto usable = std::vector<int>{};
-	for (const auto item : bag.items()) {
-		const auto data = Bag::data(item);
-		if (data.has_value() && data->battle()) {
-			usable.push_back(item);
-		}
-	}
+	const auto usable = BattleItems(bag);
 	if (std::find(usable.begin(), usable.end(), m_item) == usable.end()) {
 		// The item chosen ran out : the first one usable (in the order of the bag)
 		m_item = usable.empty() ? -1 : usable.front();
@@ -57,16 +52,8 @@ void TrainerItemSystem::updateSlot() {
 	slot.name = data.has_value() ? data->name : "";
 	slot.cooldown = m_ball.has_value() ? 1.F : static_cast<float>(m_cooldown) / static_cast<float>(Cooldown);
 }
-
 void TrainerItemSystem::next() {
-	auto& bag = m_worldState.getBag();
-	auto usable = std::vector<int>{};
-	for (const auto item : bag.items()) {
-		const auto data = Bag::data(item);
-		if (data.has_value() && data->battle()) {
-			usable.push_back(item);
-		}
-	}
+	const auto usable = BattleItems(m_worldState.getBag());
 	if (usable.empty()) {
 		return;
 	}
@@ -74,7 +61,6 @@ void TrainerItemSystem::next() {
 	m_item = current == usable.end() || current + 1 == usable.end() ? usable.front() : *(current + 1);
 	updateSlot();
 }
-
 bool TrainerItemSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	const auto& actions = event.icm.getActions();
 	if (m_stage.phase() != BattlePhase::Fight || m_stage.turn.active() || m_stage.cinematic.active) {
@@ -112,23 +98,8 @@ void TrainerItemSystem::use() {
 }
 
 bool TrainerItemSystem::heal(int item, int amount) {
-	const auto player = m_stage.player;
-	if (amount <= 0 || !standing(player)) {
-		return false;
-	}
-	auto& bc = m_componentAccessor.get<BattleComponent>(player);
-	const auto healed = std::min(amount, bc.maxHp - bc.hp);
-	if (healed <= 0) {
-		MarkText(m_entities, m_stage, player, "AUCUN EFFET", 0);
-		return false;
-	}
-	bc.hp += healed;
-	m_worldState.getBag().remove(item, 1);
-	MarkText(m_entities, m_stage, player, "+" + std::to_string(healed) + " PV", 1);
-	m_stage.sound(BattleSound::Status);
-	return true;
+	return standing(m_stage.player) && HealFighter(m_entities, m_stage, m_worldState.getBag(), item, amount, m_stage.player) > 0;
 }
-
 bool TrainerItemSystem::throwBall(int item) {
 	// At the opponent of the Pokemon of the player (else the first wild Pokemon standing)
 	auto target = ska::EntityId{ 0 };
@@ -155,20 +126,15 @@ bool TrainerItemSystem::throwBall(int item) {
 	m_worldState.getBag().remove(item, 1);
 
 	// The dice : the battle rolls them, the rules give the chance. Caught : 3 shakes ; else fewer the further it was
-	const auto& bc = m_componentAccessor.get<BattleComponent>(target);
-	const auto& fighter = m_componentAccessor.get<FighterComponent>(target);
-	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(bc.monster) + ".ini" };
-	const auto rate = data.exists("Description capture_rate") ? data.get<int>("Description capture_rate") : 45;
-	const auto chance = m_worldState.getBattleRules().captureChance(rate, bc.hp, bc.maxHp, StatusKey(fighter.status));
-	const auto roll = ska::NumberUtils::random(0, 99);
-	m_caught = roll < chance;
+	const auto dice = RollCapture(m_entities, m_worldState, target);
+	m_caught = dice.caught;
 	const auto from = center(*trainer);
 	const auto to = center(target);
 	const auto ball = PokeballSystem::Throw(m_entities, from, to, false);
 	auto& component = m_entities.getComponent<PokeballComponent>(ball);
 	component.capture = true;
 	component.caught = m_caught;
-	component.shakes = m_caught ? 3 : (roll - chance < 15 ? 2 : (roll - chance < 40 ? 1 : 0));
+	component.shakes = dice.shakes;
 	m_ball = ball;
 	m_target = target;
 	// The trainer faces where it throws (0 : down, 1 : right, 2 : up, 3 : left)
@@ -178,7 +144,6 @@ bool TrainerItemSystem::throwBall(int item) {
 		m_entities.getComponent<ska::AnimationComponent>(*trainer).state = std::abs(dx) > std::abs(dy) ? (dx > 0.F ? 1 : 3) : (dy > 0.F ? 0 : 2);
 	}
 	m_stage.sound(BattleSound::Cast);
-	SLOG(ska::LogLevel::Info) << "Battle : a pokeball is thrown at the wild pokemon " << bc.monster << " (chance " << chance << "%, roll " << roll << ")";
 	return true;
 }
 
@@ -198,33 +163,8 @@ void TrainerItemSystem::release(ska::EntityId target) {
 }
 
 void TrainerItemSystem::capture(ska::EntityId target) {
-	auto& fighter = m_componentAccessor.get<FighterComponent>(target);
-	const auto& bc = m_componentAccessor.get<BattleComponent>(target);
-	fighter.captured = true;
-	fighter.knockedOut = true;
-	fighter.knockedOutTime = 0;
-
-	// It joins the team : its level (its experience at the start of the level) and its hit points left
-	const auto dataFile = "./Data/Monsters/" + std::to_string(bc.monster) + ".ini";
-	auto data = ska::IniReader{ dataFile };
-	const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
-	auto member = TeamMember{};
-	member.id = bc.monster;
-	member.experience = m_worldState.getBattleRules().levelExperience(bc.level, needed);
-	member.hp = std::max(1, bc.hp);
-	auto team = Team{ m_worldState.getSaveGame().getPathName() };
-	if (team.add(member).has_value()) {
-		auto loadEvent = EntityLoadEvent{ data, static_cast<unsigned int>(bc.monster), static_cast<unsigned int>(member.hp) };
-		m_ged.ska::Observable<EntityLoadEvent>::notifyObservers(loadEvent);
-	}
-	const auto name = data.exists("Description name") ? data.get<std::string>("Description name") : std::string{ "?" };
-	// The battle is won by this capture if no other wild Pokemon stands (BattleDirectorSystem)
-	m_stage.captured = true;
-	m_stage.capturedName = name;
-	m_stage.sound(BattleSound::Status);
-	SLOG(ska::LogLevel::Info) << "Battle : the wild pokemon " << bc.monster << " is captured, level " << bc.level << ", " << member.hp << " hit points";
+	CaptureFighter(m_entities, m_ged, m_worldState, m_stage, target);
 }
-
 void TrainerItemSystem::updateBall() {
 	if (!m_ball.has_value()) {
 		return;

@@ -34,6 +34,8 @@ enum class BattleSound {
 	// rounds, the attacks, the K.O., the menu
 	ClashImpact, ClashWoosh, ClashShatter, ClashVersus, ClashSwoosh, ClashLand, ClashRound, ClashShine, ClashAttack, ClashHit,
 	ClashKnockOut, ClashCursor, ClashSelect,
+	// A pokeball in a clash : thrown, the Pokemon goes in, it drops, it shakes, caught, it breaks free
+	BallThrow, BallIn, BallDrop, BallShake, BallCaught, BallOpen,
 	Count
 };
 
@@ -160,6 +162,24 @@ struct BattleTurn {
 	bool hit = false;
 	unsigned int hitAge = 0;
 	int damage = 0;
+	// The bag of the menu (after the skills : "SAC") : open, its items (the bag : their ids, names, amounts)
+	bool bag = false;
+	std::vector<int> itemIds;
+	std::vector<std::string> items;
+	std::vector<int> itemCounts;
+	// The action played is an item of the bag (-1 : a skill) : a healing item (the hit points given), a pokeball thrown at
+	// the opponent (its shakes, caught). The ball : it flies, the Pokemon goes in, the ball drops, then each shake
+	int item = -1;
+	int healed = 0;
+	bool ball = false;
+	int shakes = 0;
+	bool caught = false;
+	static constexpr unsigned int BallFlight = 550;
+	static constexpr unsigned int BallIn = 900;
+	static constexpr unsigned int BallDrop = 1250;
+	static constexpr unsigned int ShakeTime = 700;
+	// The ball has shaken : caught, or it breaks free
+	unsigned int ballEnd() const { return BallDrop + static_cast<unsigned int>(shakes) * ShakeTime + 350; }
 	// The hits in a row of the Pokemon of the player ("2 COUPS !")
 	int combo = 0;
 	// The Pokemon K.O. in the turn

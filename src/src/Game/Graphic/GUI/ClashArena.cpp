@@ -368,7 +368,7 @@ void ClashArena::layout(int width, int height) const {
 	}
 
 	// The tiles that stand (their depth : the block of their object on the ground, how high they are) : upright, as the
-	// trees and the signs of the racing games, scaled by their distance. Not between the two Pokemon (they see each other)
+	// trees and the signs of the racing games, scaled by their distance
 	// The ground around each tile that stands (its neighbour), to cut it out of the tile
 	auto grounds = std::map<std::pair<int, int>, std::vector<ska::Rectangle>>{};
 	const auto groundsNear = [&](const Cell& c, std::vector<ska::Rectangle>& found) {
@@ -384,42 +384,82 @@ void ClashArena::layout(int width, int height) const {
 			}
 		}
 	};
-	const auto low = std::min(0.F, v.opponentLateral) - 1.5F;
-	const auto high = std::max(0.F, v.opponentLateral) + 1.5F;
+	// The objects : the tiles that stand, side by side, on the same row of the ground (a tree, a house, a row of trees).
+	// An object is drawn whole or not at all : not when it goes beyond the blocks kept, behind the camera or too far
+	struct Node { const Cell* cell; int layer; int baseY; };
+	auto nodes = std::vector<Node>{};
+	auto byCell = std::map<std::pair<int, int>, std::vector<std::size_t>>{};
 	for (const auto& c : m_cells) {
 		for (auto layer = 0; layer < 3; layer++) {
 			const auto index = static_cast<std::size_t>(layer);
-			if (!c.clips[index].has_value() || c.bases[index] < 0) {
-				continue;
+			if (c.clips[index].has_value() && c.bases[index] >= 0) {
+				byCell[{ c.x, c.y }].push_back(nodes.size());
+				nodes.push_back(Node{ &c, layer, c.y + c.bases[index] });
 			}
-			// Its object stands "base" blocks lower on the map
-			const auto baseX = c.x;
-			const auto baseY = c.y + c.bases[index];
-			const auto rx = baseX - m_centerX;
-			const auto ry = baseY - m_centerY;
-			const auto forward = static_cast<float>(rx * m_forward.x + ry * m_forward.y);
-			const auto lateral = static_cast<float>(rx * right.x + ry * right.y);
-			if (forward < -0.5F || forward > static_cast<float>(FarRow)) {
-				continue;
-			}
-			if (forward <= v.opponentForward + 1.5F && lateral >= low && lateral <= high) {
-				continue;
-			}
-			auto piece = Piece{};
-			piece.clip = *c.clips[index];
-			const auto key = std::make_pair(piece.clip.x, piece.clip.y);
-			// The two lowest rows of an object (a trunk and the foliage over it, the base of a wall) : drawn over the ground
-			if (c.bases[index] <= 1) {
-				groundsNear(c, grounds[key]);
-			}
-			piece.forward = forward;
-			piece.lateral = lateral;
-			piece.up = static_cast<float>(c.bases[index]) + 0.5F;
-			piece.shade = shadeOf(forward);
-			piece.seed = Hash(c.x, c.y, layer);
-			piece.delay = 280.F + (1.F - Clamp01(forward / static_cast<float>(FarRow))) * 360.F + piece.seed * 120.F;
-			m_standing.push_back(piece);
 		}
+	}
+	auto parent = std::vector<std::size_t>(nodes.size());
+	for (auto i = std::size_t{ 0 }; i < parent.size(); i++) {
+		parent[i] = i;
+	}
+	const auto root = [&parent](std::size_t i) {
+		while (parent[i] != i) {
+			parent[i] = parent[parent[i]];
+			i = parent[i];
+		}
+		return i;
+	};
+	for (auto i = std::size_t{ 0 }; i < nodes.size(); i++) {
+		const int around[][2] = { { 0, 0 }, { 1, 0 }, { 0, 1 } };
+		for (const auto& d : around) {
+			const auto found = byCell.find({ nodes[i].cell->x + d[0], nodes[i].cell->y + d[1] });
+			if (found == byCell.end()) {
+				continue;
+			}
+			for (const auto j : found->second) {
+				if (j != i && nodes[j].baseY == nodes[i].baseY) {
+					parent[root(j)] = root(i);
+				}
+			}
+		}
+	}
+	auto dropped = std::vector<char>(nodes.size(), 0);
+	for (auto i = std::size_t{ 0 }; i < nodes.size(); i++) {
+		const auto& n = nodes[i];
+		const auto rx = n.cell->x - m_centerX;
+		const auto ry = n.baseY - m_centerY;
+		const auto forward = static_cast<float>(rx * m_forward.x + ry * m_forward.y);
+		const auto border = std::abs(n.cell->x - m_centerX) >= Radius - 1 || std::abs(n.cell->y - m_centerY) >= Radius - 1;
+		if (border || forward < -0.5F || forward > static_cast<float>(FarRow)) {
+			dropped[root(i)] = 1;
+		}
+	}
+	for (auto i = std::size_t{ 0 }; i < nodes.size(); i++) {
+		if (dropped[root(i)] != 0) {
+			continue;
+		}
+		const auto& c = *nodes[i].cell;
+		const auto layer = nodes[i].layer;
+		const auto index = static_cast<std::size_t>(layer);
+		const auto rx = c.x - m_centerX;
+		const auto ry = nodes[i].baseY - m_centerY;
+		const auto forward = static_cast<float>(rx * m_forward.x + ry * m_forward.y);
+		const auto lateral = static_cast<float>(rx * right.x + ry * right.y);
+		auto piece = Piece{};
+		piece.clip = *c.clips[index];
+		const auto key = std::make_pair(piece.clip.x, piece.clip.y);
+		// The two lowest rows of an object (a trunk and the foliage over it, the base of a wall) : drawn over the ground
+		if (c.bases[index] <= 1) {
+			groundsNear(c, grounds[key]);
+		}
+		piece.forward = forward;
+		piece.lateral = lateral;
+		piece.up = static_cast<float>(c.bases[index]) + 0.5F;
+		piece.shade = shadeOf(forward);
+		// The tiles of an object come together
+		piece.seed = Hash(static_cast<int>(root(i)), 3);
+		piece.delay = 280.F + (1.F - Clamp01(forward / static_cast<float>(FarRow))) * 360.F + piece.seed * 120.F;
+		m_standing.push_back(piece);
 	}
 	// The farthest first, the lowest first
 	std::stable_sort(m_standing.begin(), m_standing.end(), [](const Piece& a, const Piece& b) {
@@ -1027,14 +1067,15 @@ void ClashArena::renderPieces(Ui::Canvas& canvas, const std::vector<Piece>& piec
 			const auto centre = project(v, piece.forward, piece.lateral, 0.F, &size);
 			x = centre.x;
 			y = (far.y + near.y) / 2.F;
-			width = size + 1.F;
-			height = near.y - far.y + 1.F;
+			width = size + 2.F;
+			height = near.y - far.y + 2.F;
 		} else {
 			const auto centre = project(v, piece.forward, piece.lateral, piece.up, &size);
 			x = centre.x;
 			y = centre.y;
-			width = size + 1.F;
-			height = size + 1.F;
+			// A pixel over its neighbours : no seam between the columns, whatever the rounding
+			width = size + 2.F;
+			height = size + 2.F;
 		}
 		x += static_cast<float>(offset.x);
 		y += static_cast<float>(offset.y);
@@ -1170,9 +1211,34 @@ void ClashArena::renderFighter(Ui::Canvas& canvas, const Fighter& f, float build
 			alpha *= 1.F - Clamp01((since - 1300.F) / 500.F);
 		}
 	}
+	// In a pokeball : it turns to light and shrinks into it, it stays in it, it comes out if it breaks free ; captured : gone
+	if (m_entities.hasComponent<FighterComponent>(f.entity) && m_entities.getComponent<FighterComponent>(f.entity).captured && turn.step != Step::Acting) {
+		return;
+	}
+	auto shrink = 1.F;
+	if (turn.step == Step::Acting && turn.ball && turn.target == f.entity) {
+		const auto flight = static_cast<float>(BattleTurn::BallFlight);
+		const auto into = static_cast<float>(BattleTurn::BallIn);
+		const auto end = static_cast<float>(turn.ballEnd());
+		if (t >= flight && t < into) {
+			const auto p = (t - flight) / (into - flight);
+			flash = 255.F;
+			shrink = 1.F - EaseIn(p);
+			y -= p * f.scale * 14.F;
+		} else if (t >= into && (turn.caught || t < end)) {
+			return;
+		} else if (t >= end) {
+			// Out again
+			flash = 255.F * (1.F - Clamp01((t - end) / 300.F));
+			shrink = EaseOutBack((t - end) / 300.F);
+		}
+	}
 	// Its shadow
-	Ellipse(canvas, x, f.feet.y + static_cast<float>(offset.y) - f.scale * 2.F, f.scale * 15.F, f.scale * 4.F, Rgba(0, 0, 0, 0.35F * alpha));
-	pokemon(canvas.renderer(), monster(f.entity), f.row, column, x, y + bob, f.scale, Byte(alpha), Byte(flash), sink, Byte(shade));
+	Ellipse(canvas, x, f.feet.y + static_cast<float>(offset.y) - f.scale * 2.F, f.scale * 15.F * shrink, f.scale * 4.F * shrink, Rgba(0, 0, 0, 0.35F * alpha));
+	if (shrink <= 0.01F) {
+		return;
+	}
+	pokemon(canvas.renderer(), monster(f.entity), f.row, column, x, y + bob, f.scale * shrink, Byte(alpha), Byte(flash), sink, Byte(shade));
 }
 
 void ClashArena::renderProjectile(Ui::Canvas& canvas, ska::Point<int> offset) const {
@@ -1220,7 +1286,7 @@ void ClashArena::renderProjectile(Ui::Canvas& canvas, ska::Point<int> offset) co
 
 void ClashArena::renderHit(Ui::Canvas& canvas, ska::Point<int> offset) const {
 	const auto& turn = m_stage.turn;
-	if (turn.step != Step::Acting || !turn.hit || turn.target == 0) {
+	if (turn.step != Step::Acting || !turn.hit || turn.target == 0 || turn.item >= 0) {
 		return;
 	}
 	const auto screen = screenSize();
@@ -1337,22 +1403,155 @@ void ClashArena::renderScene(Ui::Canvas& canvas, float build, float scatter) con
 		const auto y = static_cast<int>(v.horizon) + offset.y + i * static_cast<int>(h * 0.01F);
 		canvas.fill(Rgba(255, 160, 110, 140.F * (1.F - static_cast<float>(i) / 14.F) * haze), ska::Rectangle{ 0, y, screen.x, static_cast<int>(h * 0.01F) + 1 });
 	}
-	// The tiles that stand and the Pokemon, from the farthest : behind the opponent, the opponent, between them, the
-	// Pokemon of the player, beside it
 	const auto player = fighter(turn.player);
 	const auto opponent = fighter(turn.opponent);
 	const auto platformAlpha = scatter < 0.F ? 1.F : 1.F - Clamp01(scatter / 400.F);
 	const auto ox = static_cast<float>(offset.x);
 	const auto oy = static_cast<float>(offset.y);
-	renderPieces(canvas, m_standing, build, scatter, offset, opponent.forward, 1e9F);
+	// The objects in front of the camera first (the two Pokemon are never hidden : the fight is seen), the Pokemon, then the
+	// objects beside the camera
+	renderPieces(canvas, m_standing, build, scatter, offset, 0.F, 1e9F);
 	renderPlatform(canvas, ska::Point<float>{ opponent.feet.x + ox, opponent.feet.y + oy }, opponent.scale * 34.F, opponent.scale * 8.F, Clamp01((build - 720.F) / 140.F), platformAlpha);
 	renderFighter(canvas, opponent, build, scatter, offset);
-	renderPieces(canvas, m_standing, build, scatter, offset, player.forward, opponent.forward);
 	renderPlatform(canvas, ska::Point<float>{ player.feet.x + ox, player.feet.y + oy }, player.scale * 34.F, player.scale * 8.F, Clamp01((build - 560.F) / 140.F), platformAlpha);
 	renderFighter(canvas, player, build, scatter, offset);
-	renderPieces(canvas, m_standing, build, scatter, offset, -1e9F, player.forward);
+	renderPieces(canvas, m_standing, build, scatter, offset, -1e9F, 0.F);
 	renderProjectile(canvas, offset);
 	renderHit(canvas, offset);
+	renderItem(canvas, offset);
+}
+
+void ClashArena::renderItem(Ui::Canvas& canvas, ska::Point<int> offset) const {
+	const auto& turn = m_stage.turn;
+	if (turn.step != Step::Acting || turn.item < 0) {
+		return;
+	}
+	const auto screen = screenSize();
+	const auto w = static_cast<float>(screen.x);
+	const auto h = static_cast<float>(screen.y);
+	const auto t = static_cast<float>(turn.time);
+	const auto ox = static_cast<float>(offset.x);
+	const auto oy = static_cast<float>(offset.y);
+	auto& renderer = canvas.renderer();
+	if (!turn.ball) {
+		// A healing item : green sparkles rise around the Pokemon of the player, its hit points
+		if (!turn.hit || turn.healed <= 0) {
+			return;
+		}
+		const auto age = static_cast<float>(turn.hitAge);
+		const auto who = fighter(turn.attacker);
+		for (auto i = 0; i < 26; i++) {
+			const auto phase = std::fmod(age / 900.F + Hash(i, 90), 1.F);
+			const auto x = who.feet.x + ox + (Hash(i, 91) - 0.5F) * who.scale * 34.F;
+			const auto y = who.feet.y + oy - phase * who.scale * 40.F;
+			const auto size = static_cast<int>(4.F + 4.F * (1.F - phase));
+			canvas.fill(i % 3 == 0 ? Rgba(255, 255, 255, 230.F * (1.F - phase)) : Rgba(120, 255, 150, 230.F * (1.F - phase)), ska::Rectangle{ static_cast<int>(x), static_cast<int>(y), size, size });
+		}
+		const auto alpha = 255.F * (1.F - Clamp01((age - 700.F) / 300.F));
+		Shout(canvas, "+" + std::to_string(turn.healed) + " PV", 44, Rgba(140, 255, 150), Rgba(0, 70, 20), who.feet.x + ox + 60.F, who.feet.y + oy - who.scale * 30.F - age * 0.05F, 1.F + 0.8F * (1.F - EaseOut(age / 140.F)), alpha);
+		return;
+	}
+	// A pokeball : thrown from behind the camera, it swallows the opponent in its light, drops, shakes, then it clicks or
+	// bursts open
+	if (!m_ballLoaded) {
+		m_ballLoaded = true;
+		m_ballTexture = ska::Texture{ "./Sprites/Fight/pokeball.png" };
+		m_burstTexture = ska::Texture{ "./Sprites/Fight/pokeball-burst.png" };
+	}
+	const auto target = fighter(turn.target);
+	const auto frameSize = static_cast<int>(m_ballTexture.getHeight());
+	if (frameSize <= 0) {
+		return;
+	}
+	const auto scale = target.scale * 1.5F;
+	const auto centre = ska::Point<float>{ target.feet.x + ox, target.feet.y + oy - target.scale * 16.F };
+	const auto ground = target.feet.y + oy - static_cast<float>(frameSize) * scale * 0.5F;
+	const auto flight = static_cast<float>(BattleTurn::BallFlight);
+	const auto into = static_cast<float>(BattleTurn::BallIn);
+	const auto drop = static_cast<float>(BattleTurn::BallDrop);
+	const auto end = static_cast<float>(turn.ballEnd());
+	auto x = centre.x;
+	auto y = centre.y;
+	auto frame = 0;
+	auto angle = 0.0;
+	auto shade = 255.F;
+	auto flash = 0.F;
+	if (t < flight) {
+		// Its arc, spinning, a trail
+		const auto p = t / flight;
+		const auto from = ska::Point<float>{ w * 0.08F, h * 1.05F };
+		x = Lerp(from.x, centre.x, p);
+		y = Lerp(from.y, centre.y, p) - std::sin(p * Pi) * h * 0.35F;
+		frame = static_cast<int>(t / 45.F) % 4;
+		angle = static_cast<double>(t * 1.4F);
+		for (auto ghost = 1; ghost <= 4; ghost++) {
+			const auto q = std::max(0.F, p - 0.05F * static_cast<float>(ghost));
+			canvas.fill(Rgba(255, 255, 255, 120.F / static_cast<float>(ghost)), ska::Rectangle{ static_cast<int>(Lerp(from.x, centre.x, q) - std::sin(q * Pi) * 0.F) - 4, static_cast<int>(Lerp(from.y, centre.y, q) - std::sin(q * Pi) * h * 0.35F) - 4, 8, 8 });
+		}
+	} else if (t < into) {
+		// It opens, the light : rays from it
+		const auto p = (t - flight) / (into - flight);
+		for (auto i = 0; i < 12; i++) {
+			const auto a = static_cast<float>(i) * 2.F * Pi / 12.F + p;
+			Line(canvas, Rgba(255, 240, 200, 200.F * (1.F - p)), centre.x, centre.y, centre.x + std::cos(a) * target.scale * 40.F * p, centre.y + std::sin(a) * target.scale * 40.F * p, 3);
+		}
+		flash = 200.F * (1.F - p);
+	} else if (t < drop) {
+		// It drops on the platform, it bounces
+		const auto p = (t - into) / (drop - into);
+		y = Lerp(centre.y, ground, Bounce(p));
+	} else if (t < end) {
+		y = ground;
+		const auto inShake = std::fmod(t - drop, static_cast<float>(BattleTurn::ShakeTime));
+		const auto shake = static_cast<int>((t - drop) / static_cast<float>(BattleTurn::ShakeTime));
+		if (shake < turn.shakes && inShake > 150.F && inShake < 550.F) {
+			const auto p = (inShake - 150.F) / 400.F;
+			angle = static_cast<double>(std::sin(p * 2.F * Pi) * 28.F * (1.F - p * 0.3F));
+			x += std::sin(p * 2.F * Pi) * target.scale * 3.F;
+		}
+	} else {
+		y = ground;
+		const auto since = t - end;
+		if (turn.caught) {
+			// Click : it stays, darker, stars
+			shade = 170.F;
+			flash = 255.F * (1.F - Clamp01(since / 150.F));
+			for (auto i = 0; i < 3; i++) {
+				const auto a = -Pi / 2.F + (static_cast<float>(i) - 1.F) * 0.7F;
+				const auto r = target.scale * (10.F + since * 0.05F);
+				const auto alpha = 255.F * (1.F - Clamp01((since - 500.F) / 400.F));
+				Shout(canvas, "*", 34, Rgba(255, 240, 120), Rgba(120, 80, 0), x + std::cos(a) * r, y + std::sin(a) * r, 1.F, alpha);
+			}
+			const auto pop = 1.F + 2.F * (1.F - EaseOutBack(since / 220.F));
+			Shout(canvas, "GOTCHA !", 80, Rgba(255, 220, 60), Rgba(140, 20, 0), w / 2.F, h * 0.3F, pop, 255.F * (1.F - Clamp01((since - 1300.F) / 300.F)));
+		} else {
+			// It bursts open
+			const auto p = Clamp01(since / 350.F);
+			if (p < 1.F && m_burstTexture.getWidth() > 0) {
+				auto effect = ska::RenderEffect{};
+				effect.scaleX = scale * (0.6F + p);
+				effect.scaleY = scale * (0.6F + p);
+				effect.anchorBottom = false;
+				effect.alpha = Byte(255.F * (1.F - p));
+				renderer.setEffect(&effect);
+				renderer.render(m_burstTexture, static_cast<int>(x) - static_cast<int>(m_burstTexture.getWidth()) / 2, static_cast<int>(y) - static_cast<int>(m_burstTexture.getHeight()) / 2, nullptr, 0., nullptr);
+				renderer.setEffect(nullptr);
+			}
+			return;
+		}
+	}
+	const auto clip = ska::Rectangle{ frame * frameSize, 0, frameSize, frameSize };
+	auto effect = ska::RenderEffect{};
+	effect.scaleX = scale;
+	effect.scaleY = scale;
+	effect.anchorBottom = false;
+	effect.red = Byte(shade);
+	effect.green = Byte(shade);
+	effect.blue = Byte(shade);
+	effect.flash = Byte(flash);
+	renderer.setEffect(&effect);
+	renderer.render(m_ballTexture, static_cast<int>(x) - frameSize / 2, static_cast<int>(y) - frameSize / 2, &clip, angle, nullptr);
+	renderer.setEffect(nullptr);
 }
 void ClashArena::renderBar(Ui::Canvas& canvas, ska::EntityId entity, bool left, float shown) const {
 	if (!m_entities.hasComponent<BattleComponent>(entity)) {
@@ -1499,25 +1698,20 @@ void ClashArena::renderMenu(Ui::Canvas& canvas) const {
 		letters++;
 	}
 	canvas.text(turn.message.substr(0, letters), Style(26, Rgba(255, 255, 255), 2, Rgba(0, 0, 0)), 44, static_cast<int>(y) + 30, Ui::Align::Left);
-	canvas.text("W S Entrée  ou  1 - 4", Style(16, Rgba(190, 190, 220), 2, Rgba(0, 0, 0)), 44, static_cast<int>(y) + 72, Ui::Align::Left);
-	// The skills : two by two, the colour of their type
+	canvas.text(turn.bag ? "W S Entrée" : "W S Entrée  ou  1 - 4", Style(16, Rgba(190, 190, 220), 2, Rgba(0, 0, 0)), 44, static_cast<int>(y) + 72, Ui::Align::Left);
+
+	// A box of the menu : its colour, its key, its name, its detail (the type of a skill, the amount of an item)
 	const auto boxW = std::min(250.F, w * 0.2F);
 	const auto boxH = 58.F;
 	const auto gap = 12.F;
 	const auto x0 = w - 2.F * boxW - gap - 48.F;
-	for (auto i = std::size_t{ 0 }; i < turn.skills.size() && i < 4; i++) {
-		const auto column = static_cast<float>(i % 2);
-		const auto row = static_cast<float>(i / 2);
+	const auto box = [&](std::size_t i, float x, float by, ska::Color color, const std::string& key, const std::string& name, const std::string& detail) {
 		const auto selected = i == turn.selected;
 		const auto pop = EaseOutBack((static_cast<float>(turn.time) - 60.F * static_cast<float>(i)) / 240.F);
-		auto x = x0 + column * (boxW + gap) + (1.F - pop) * 400.F;
-		auto by = y + 20.F + row * (boxH + gap);
+		x += (1.F - pop) * 400.F;
 		if (selected) {
 			by -= 5.F + 2.F * std::sin(static_cast<float>(m_time) / 110.F);
-		}
-		const auto type = i < turn.skillTypes.size() ? turn.skillTypes[i] : std::string{};
-		auto color = TypeColor(type);
-		if (!selected) {
+		} else {
 			color = Rgba(color.r * 6 / 10, color.g * 6 / 10, color.b * 6 / 10);
 		}
 		if (selected) {
@@ -1525,18 +1719,42 @@ void ClashArena::renderMenu(Ui::Canvas& canvas) const {
 		}
 		Slanted(canvas, x, by, boxW, boxH, 14.F, color);
 		canvas.fill(Rgba(255, 255, 255, selected ? 90.F : 40.F), ska::Rectangle{ static_cast<int>(x) + 14, static_cast<int>(by) + 3, static_cast<int>(boxW) - 8, 6 });
-		// Its key
-		canvas.fill(Rgba(10, 10, 20, 230.F), ska::Rectangle{ static_cast<int>(x) + 14, static_cast<int>(by) + 16, 26, 26 });
-		canvas.text(std::to_string(i + 1), Style(18, Rgba(255, 220, 120), 0, Rgba(0, 0, 0)), static_cast<int>(x) + 27, static_cast<int>(by) + 17, Ui::Align::Center);
-		canvas.text(Upper(turn.skills[i]), Style(21, Rgba(255, 255, 255), 2, Rgba(0, 0, 0)), static_cast<int>(x) + 50, static_cast<int>(by) + 8, Ui::Align::Left);
-		canvas.text(Upper(type), Style(13, Rgba(255, 255, 255, 220.F), 1, Rgba(0, 0, 0)), static_cast<int>(x + boxW) - 10, static_cast<int>(by + boxH) - 20, Ui::Align::Right);
+		if (!key.empty()) {
+			canvas.fill(Rgba(10, 10, 20, 230.F), ska::Rectangle{ static_cast<int>(x) + 14, static_cast<int>(by) + 16, 26, 26 });
+			canvas.text(key, Style(18, Rgba(255, 220, 120), 0, Rgba(0, 0, 0)), static_cast<int>(x) + 27, static_cast<int>(by) + 17, Ui::Align::Center);
+		}
+		canvas.text(Upper(name), Style(21, Rgba(255, 255, 255), 2, Rgba(0, 0, 0)), static_cast<int>(x) + (key.empty() ? 24 : 50), static_cast<int>(by) + 8, Ui::Align::Left);
+		canvas.text(Upper(detail), Style(13, Rgba(255, 255, 255, 220.F), 1, Rgba(0, 0, 0)), static_cast<int>(x + boxW) - 10, static_cast<int>(by + boxH) - 20, Ui::Align::Right);
 		if (selected) {
 			const auto nudge = static_cast<int>(4.F * std::sin(static_cast<float>(m_time) / 100.F));
 			Shout(canvas, ">", 30, Rgba(255, 220, 60), Rgba(0, 0, 0), x - 16.F + static_cast<float>(nudge), by + boxH / 2.F, 1.F, 255.F);
 		}
+	};
+	if (turn.bag) {
+		// The items, two by two, then back
+		const auto count = turn.items.size() + 1;
+		const auto rows = (count + 1) / 2;
+		const auto rowH = std::min(boxH + gap, (height - 26.F) / static_cast<float>(std::max<std::size_t>(rows, 2)));
+		for (auto i = std::size_t{ 0 }; i < count; i++) {
+			const auto x = x0 + static_cast<float>(i % 2) * (boxW + gap);
+			const auto by = y + 14.F + static_cast<float>(i / 2) * rowH;
+			if (i < turn.items.size()) {
+				box(i, x, by, Rgba(70, 150, 110), "", turn.items[i], "x" + std::to_string(i < turn.itemCounts.size() ? turn.itemCounts[i] : 0));
+			} else {
+				box(i, x, by, Rgba(110, 110, 130), "", "Retour", "");
+			}
+		}
+		return;
 	}
+	// The skills : two by two, the colour of their type ; the bag after them
+	for (auto i = std::size_t{ 0 }; i < turn.skills.size() && i < 4; i++) {
+		const auto x = x0 + static_cast<float>(i % 2) * (boxW + gap);
+		const auto by = y + 20.F + static_cast<float>(i / 2) * (boxH + gap);
+		const auto type = i < turn.skillTypes.size() ? turn.skillTypes[i] : std::string{};
+		box(i, x, by, TypeColor(type), std::to_string(i + 1), turn.skills[i], type);
+	}
+	box(turn.skills.size(), x0 - boxW * 0.62F - gap - 24.F, y + 20.F + boxH + gap, Rgba(200, 120, 50), "", "Sac", "objets");
 }
-
 void ClashArena::renderKnockOut(Ui::Canvas& canvas) const {
 	const auto& turn = m_stage.turn;
 	const auto screen = screenSize();

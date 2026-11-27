@@ -7,6 +7,9 @@
 #include "Core/Inputs/InputContextManager.h"
 #include "../BattleEffects.h"
 #include "../BattleHit.h"
+#include "../BattleItems.h"
+#include "../../Data/Bag.h"
+#include "../../Data/Team.h"
 #include "../BattleRules.h"
 #include "../SkillsHolderComponent.h"
 #include "../../World/WorldState.h"
@@ -99,16 +102,22 @@ bool ClashSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 		return true;
 	}
 	const auto& actions = event.icm.getActions();
-	const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
-	for (auto index = 0u; index < 4 && index < turn.skills.size(); index++) {
-		if (actions[skillActions[index]]) {
-			choose(index);
-			return true;
+	if (!turn.bag) {
+		const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
+		for (auto index = 0u; index < 4 && index < turn.skills.size(); index++) {
+			if (actions[skillActions[index]]) {
+				choose(index);
+				return true;
+			}
 		}
 	}
 	const auto before = m_choice.selected();
 	if (m_choice.keys(event.icm)) {
-		choose(m_choice.selected());
+		if (turn.bag) {
+			chooseItem(m_choice.selected());
+		} else {
+			choose(m_choice.selected());
+		}
 		return true;
 	}
 	if (m_choice.selected() != before) {
@@ -117,7 +126,6 @@ bool ClashSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	turn.selected = m_choice.selected();
 	return true;
 }
-
 void ClashSystem::watch() {
 	const auto player = m_stage.player;
 	if (!standing(player)) {
@@ -212,7 +220,7 @@ void ClashSystem::start(BattleTurn::Kind kind, ska::EntityId opponent, int oppon
 		}
 	}
 	m_choice = Ui::ChoiceList{};
-	m_choice.setCount(turn.skills.size());
+	m_choice.setCount(turn.skills.size() + 1);
 	step(BattleTurn::Step::Impact);
 	interface(true);
 	m_stage.hitStop(200);
@@ -299,22 +307,83 @@ void ClashSystem::intro(unsigned int before, unsigned int now) {
 
 void ClashSystem::choose(std::size_t index) {
 	auto& turn = m_stage.turn;
-	if (turn.step != BattleTurn::Step::Menu || index >= turn.skills.size()) {
+	if (turn.step != BattleTurn::Step::Menu) {
+		return;
+	}
+	// After the skills : the bag
+	if (index == turn.skills.size()) {
+		openBag();
+		return;
+	}
+	if (index > turn.skills.size()) {
 		return;
 	}
 	turn.selected = index;
+	play(Action{ m_stage.player, m_opponent, static_cast<int>(index), -1 }, false);
+	SLOG(ska::LogLevel::Info) << "Battle : the clash, round " << turn.round << ", the player chooses " << turn.skills[index];
+}
+
+void ClashSystem::openBag() {
+	auto& turn = m_stage.turn;
+	auto& bag = m_worldState.getBag();
+	turn.itemIds.clear();
+	turn.items.clear();
+	turn.itemCounts.clear();
+	for (const auto item : BattleItems(bag)) {
+		const auto data = Bag::data(item);
+		turn.itemIds.push_back(item);
+		turn.items.push_back(data.has_value() ? data->name : "?");
+		turn.itemCounts.push_back(bag.count(item));
+	}
+	turn.bag = true;
+	turn.selected = 0;
+	m_choice = Ui::ChoiceList{};
+	m_choice.setCount(turn.items.size() + 1);
+	turn.message = turn.items.empty() ? "Le sac est vide..." : "Quel objet utiliser ?";
+	turn.messageAge = 0;
 	m_stage.sound(BattleSound::ClashSelect);
-	const auto mine = Action{ m_stage.player, m_opponent, static_cast<int>(index) };
+}
+
+void ClashSystem::closeBag() {
+	auto& turn = m_stage.turn;
+	turn.bag = false;
+	m_choice = Ui::ChoiceList{};
+	m_choice.setCount(turn.skills.size() + 1);
+	turn.selected = turn.skills.size();
+	turn.message = "Que doit faire " + turn.pokemon + " ?";
+	turn.messageAge = 0;
+	m_stage.sound(BattleSound::ClashCursor);
+}
+
+void ClashSystem::chooseItem(std::size_t index) {
+	auto& turn = m_stage.turn;
+	if (turn.step != BattleTurn::Step::Menu || !turn.bag) {
+		return;
+	}
+	// The last choice : back to the skills
+	if (index >= turn.itemIds.size()) {
+		closeBag();
+		return;
+	}
+	turn.bag = false;
+	SLOG(ska::LogLevel::Info) << "Battle : the clash, round " << turn.round << ", the player uses " << turn.items[index];
+	// An item goes first (as in the first games)
+	play(Action{ m_stage.player, m_opponent, -1, turn.itemIds[index] }, true);
+}
+
+void ClashSystem::play(const Action& mine, bool first) {
+	auto& turn = m_stage.turn;
+	m_stage.sound(BattleSound::ClashSelect);
 	// The first round : the skill the opponent was attacking with (a clash), none (an opening) ; then its choice
 	auto theirsSkill = turn.round == 1 ? m_opponentSkill : opponentPick();
 	if (turn.round == 1 && turn.kind == BattleTurn::Kind::Opening) {
 		theirsSkill = -1;
 	}
 	if (theirsSkill >= 0 && standing(m_opponent)) {
-		const auto theirs = Action{ m_opponent, m_stage.player, theirsSkill };
+		const auto theirs = Action{ m_opponent, m_stage.player, theirsSkill, -1 };
 		const auto& speed = m_componentAccessor.get<BattleComponent>(m_stage.player).speed;
 		const auto& other = m_componentAccessor.get<BattleComponent>(m_opponent).speed;
-		if (m_rules.playerFirst(speed, other, ska::NumberUtils::random(0, 99))) {
+		if (first || m_rules.playerFirst(speed, other, ska::NumberUtils::random(0, 99))) {
 			m_actions = { mine, theirs };
 		} else {
 			m_actions = { theirs, mine };
@@ -327,9 +396,103 @@ void ClashSystem::choose(std::size_t index) {
 	turn.message.clear();
 	m_action = 0;
 	m_announced = false;
-	SLOG(ska::LogLevel::Info) << "Battle : the clash, round " << turn.round << ", the player chooses " << turn.skills[index];
 }
 
+void ClashSystem::actItem(const Action& action, unsigned int before) {
+	auto& turn = m_stage.turn;
+	const auto crossed = [before, &turn](unsigned int at) { return before < at && turn.time >= at; };
+	if (!m_announced) {
+		m_announced = true;
+		const auto data = Bag::data(action.item);
+		const auto name = data.has_value() ? data->name : std::string{ "?" };
+		turn.attacker = action.attacker;
+		turn.target = action.target;
+		turn.skillSprite = -1;
+		turn.contact = false;
+		turn.item = action.item;
+		turn.hit = false;
+		turn.damage = 0;
+		turn.healed = 0;
+		turn.ball = data.has_value() && data->capture;
+		turn.caught = false;
+		turn.shakes = 0;
+		turn.messageAge = 0;
+		if (turn.ball) {
+			if (Team{ m_worldState.getSaveGame().getPathName() }.size() >= Team::MaxSize || !standing(action.target)) {
+				turn.ball = false;
+				turn.message = "Ton équipe est pleine !";
+				return;
+			}
+			m_worldState.getBag().remove(action.item, 1);
+			const auto dice = RollCapture(m_entities, m_worldState, action.target);
+			turn.caught = dice.caught;
+			turn.shakes = dice.shakes;
+			turn.message = "Tu lances une " + name + " !";
+			m_stage.sound(BattleSound::BallThrow);
+		} else {
+			turn.message = "Tu utilises " + name + " !";
+			m_stage.sound(BattleSound::Cast);
+		}
+		m_stage.cue(BattleCue{ turn.ball ? "ball" : "potion", name });
+	}
+	auto duration = BattleTurn::ActionDuration;
+	if (turn.ball) {
+		const auto end = turn.ballEnd();
+		duration = end + (turn.caught ? 1700U : 1100U);
+		if (crossed(BattleTurn::BallFlight)) {
+			m_stage.sound(BattleSound::BallIn);
+		}
+		if (crossed(BattleTurn::BallDrop - 120)) {
+			m_stage.sound(BattleSound::BallDrop);
+		}
+		for (auto k = 1; k <= turn.shakes; k++) {
+			if (crossed(BattleTurn::BallDrop + static_cast<unsigned int>(k - 1) * BattleTurn::ShakeTime + 200)) {
+				m_stage.sound(BattleSound::BallShake);
+			}
+		}
+		if (crossed(end)) {
+			turn.hit = true;
+			turn.hitAge = 0;
+			turn.messageAge = 0;
+			const auto name = turn.opponentName;
+			if (turn.caught && standing(action.target)) {
+				CaptureFighter(m_entities, m_ged, m_worldState, m_stage, action.target);
+				turn.message = "Gotcha ! " + name + " est capturé !";
+				m_stage.sound(BattleSound::BallCaught);
+				m_stage.sound(BattleSound::ClashShine);
+			} else {
+				turn.message = "Oh non ! " + name + " s'est libéré !";
+				m_stage.sound(BattleSound::BallOpen);
+			}
+		}
+	} else if (!turn.hit && turn.time >= BattleTurn::HitDelay) {
+		turn.hit = true;
+		turn.hitAge = 0;
+		const auto data = Bag::data(action.item);
+		if (data.has_value() && data->heal > 0 && standing(action.attacker)) {
+			turn.healed = HealFighter(m_entities, m_stage, m_worldState.getBag(), action.item, data->heal, action.attacker);
+		}
+		if (turn.healed <= 0) {
+			turn.message = "Ça n'a aucun effet...";
+			turn.messageAge = 0;
+		}
+	}
+	if (turn.time >= duration) {
+		const auto captured = turn.ball && turn.caught;
+		m_action++;
+		m_announced = false;
+		turn.time = 0;
+		turn.hit = false;
+		turn.attacker = 0;
+		turn.item = -1;
+		turn.ball = false;
+		turn.message.clear();
+		// Captured : the clash is over, the battle is won
+		if (captured) {
+			step(BattleTurn::Step::Return);
+		}
+	}
+}
 void ClashSystem::hit(const Action& action) {
 	auto& turn = m_stage.turn;
 	turn.hit = true;
@@ -381,6 +544,10 @@ void ClashSystem::act(unsigned int before) {
 		return;
 	}
 	const auto& action = m_actions[m_action];
+	if (action.item >= 0) {
+		actItem(action, before);
+		return;
+	}
 	if (!m_announced) {
 		// Its message, a K.O. skips it
 		if (!standing(action.attacker)) {
@@ -448,7 +615,6 @@ void ClashSystem::music(bool clash) {
 		return;
 	}
 	auto& played = clash ? m_music : m_worldState.getWorldMusic();
-	played.setVolume(m_worldState.getSoundVolume());
 	auto event = ska::SoundEvent{ &played, ska::SoundEventType::PLAY_MUSIC };
 	m_ged.ska::Observable<ska::SoundEvent>::notifyObservers(event);
 	m_musicPlayed = clash;
@@ -512,7 +678,9 @@ void ClashSystem::refresh(unsigned int ellapsedTime) {
 		if (ai && turn.time >= 900) {
 			choose(static_cast<std::size_t>(strongest(m_stage.player)));
 		} else if (turn.time >= BattleTurn::MenuDuration) {
-			choose(turn.selected);
+			// The time is up : the skill chosen (in the bag : the first skill)
+			turn.bag = false;
+			choose(turn.selected < turn.skills.size() ? turn.selected : 0);
 		}
 		break;
 	case BattleTurn::Step::Acting:
@@ -523,7 +691,8 @@ void ClashSystem::refresh(unsigned int ellapsedTime) {
 			if (turn.round < turn.rounds && standing(m_stage.player) && standing(m_opponent)) {
 				turn.round++;
 				m_choice = Ui::ChoiceList{};
-				m_choice.setCount(turn.skills.size());
+				m_choice.setCount(turn.skills.size() + 1);
+				turn.bag = false;
 				step(BattleTurn::Step::Round);
 			} else {
 				step(BattleTurn::Step::Return);
