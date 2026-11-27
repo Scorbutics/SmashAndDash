@@ -6,6 +6,7 @@
 #include "AI/System/IAFollowSystem.h"
 #include "../Control/GridMovementSystem.h"
 #include "../Control/WalkFeelSystem.h"
+#include "../Control/FollowerSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../Fight/System/FightStartSystem.h"
@@ -58,6 +59,8 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	auto walkFeel = std::make_unique<WalkFeelSystem>(m_entityManager, m_worldState.getCamera(), m_worldState.getWorld());
 	m_walkFeel = walkFeel.get();
 	addLogic(std::move(walkFeel));
+	// The first Pokemon of the team follows the player
+	addLogic(std::make_unique<FollowerSystem>(m_entityManager, m_worldState));
 	// The legs of the characters in tall grass are not drawn
 	addLogic(std::make_unique<TallGrassSystem>(m_entityManager, m_worldState));
 	// The characters hidden behind the objects of the map : their silhouette

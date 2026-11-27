@@ -26,6 +26,7 @@
 #include "../Fight/BattleRules.h"
 #include "../Control/MovementModeComponent.h"
 #include "../Control/WalkFeelSystem.h"
+#include "../Control/FollowerSystem.h"
 #include "../Fight/System/SkillHitSystem.h"
 #include "../Fight/System/BattleDirectorSystem.h"
 #include "../Fight/System/FighterSystem.h"
@@ -219,6 +220,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	if (m_entityManager.hasComponent<ska::GraphicComponent>(m_trainerId)) {
 		WalkFeelSystem::reset(m_entityManager.getComponent<ska::GraphicComponent>(m_trainerId));
 	}
+	// The Pokemon that follows the trainer comes out of its pokeball in the battle : it comes back after it
+	FollowerSystem::dismiss(m_entityManager, m_worldState);
 	m_ic = &m_input;
 	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 
