@@ -9,6 +9,7 @@
 #include "Core/ECS/Basics/Physic/MovementComponent.h"
 #include "Core/ECS/Basics/Physic/WorldCollisionComponent.h"
 #include "Core/Data/Events/CollisionEvent.h"
+#include "Core/ECS/Basics/Script/ScriptAwareComponent.h"
 #include "World/TileWorld.h"
 #include "World/CollisionProfile.h"
 #include <chipmunk/chipmunk.h>
@@ -49,17 +50,49 @@ bool GridMovementSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	return true;
 }
 
-int GridMovementSystem::heldDirection(int facing) const {
-	const ska::InputToggle keys[] = { ska::MoveDown, ska::MoveRight, ska::MoveUp, ska::MoveLeft };
-	if (facing >= 0 && facing < 4 && m_toggles[keys[facing]]) {
-		return facing;
+bool GridMovementSystem::wallAhead(ska::EntityId entity, int direction, float shift) const {
+	if (!m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		return false;
 	}
-	for (auto direction = 0; direction < 4; direction++) {
-		if (m_toggles[keys[direction]]) {
-			return direction;
+	const auto& space = m_worldState.getSpace();
+	const auto shape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+	// A strip along the side of the shape that faces the direction, "Probe" pixels deep, its ends cut off (a wall along
+	// the shape, touched by its sides, is not in front of it)
+	constexpr auto Probe = 2.;
+	constexpr auto Cut = 2.;
+	const auto vector = DirectionVector(direction);
+	const auto across = ska::Point<double>{ vector.y != 0.F ? shift : 0., vector.x != 0.F ? shift : 0. };
+	auto strip = cpBB{};
+	switch (direction) {
+	case 0: strip = cpBBNew(shape.l + Cut, shape.t, shape.r - Cut, shape.t + Probe); break;
+	case 1: strip = cpBBNew(shape.r, shape.b + Cut, shape.r + Probe, shape.t - Cut); break;
+	case 2: strip = cpBBNew(shape.l + Cut, shape.b - Probe, shape.r - Cut, shape.b); break;
+	default: strip = cpBBNew(shape.l - Probe, shape.b + Cut, shape.l, shape.t - Cut); break;
+	}
+	return space.staticShapeIn(cpBBNew(strip.l + across.x, strip.b + across.y, strip.r + across.x, strip.t + across.y));
+}
+
+int GridMovementSystem::cornerSide(ska::EntityId entity, int direction) const {
+	if (!wallAhead(entity, direction, 0.F)) {
+		return 0;
+	}
+	const auto& space = m_worldState.getSpace();
+	const auto shape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+	const auto vector = DirectionVector(direction);
+	// The nearest side first : the way in front is free there, and the way aside to it too
+	for (auto shift = 1; shift <= CornerSlide; shift++) {
+		for (const auto side : { -1, 1 }) {
+			const auto offset = static_cast<double>(shift * side);
+			const auto across = ska::Point<double>{ vector.y != 0.F ? offset : 0., vector.x != 0.F ? offset : 0. };
+			constexpr auto Inset = 1.;
+			const auto aside = cpBBNew(std::min(shape.l, shape.l + across.x) + Inset, std::min(shape.b, shape.b + across.y) + Inset,
+				std::max(shape.r, shape.r + across.x) - Inset, std::max(shape.t, shape.t + across.y) - Inset);
+			if (!wallAhead(entity, direction, static_cast<float>(offset)) && !space.staticShapeIn(aside)) {
+				return side;
+			}
 		}
 	}
-	return -1;
+	return 0;
 }
 
 std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId entity, int direction) const {
@@ -163,6 +196,10 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			grid.seen += ellapsedTime;
 		}
 		const auto keys = grid.mode == GridMovementComponent::Mode::Keys;
+		// The player touches the walls it pushes against (walkFreely), not the ones it walks along
+		if (keys && m_entities.hasComponent<ska::ScriptAwareComponent>(entity)) {
+			m_entities.getComponent<ska::ScriptAwareComponent>(entity).physicsTouches = false;
+		}
 
 		// The power of the normal walk is kept, the free movement of the keys is disabled
 		auto* mode = m_componentPossibleAccessor.get<MovementModeComponent>(entity);
@@ -247,8 +284,9 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			place(entity, grid.to, { vector.x * speed, vector.y * speed });
 		}
 
-		// Not on a block (moved by a script, by the physics, placed after a battle) : back on the nearest block
-		if (!grid.stepping && !finished) {
+		// Not on a block (moved by a script, by the physics, placed after a battle) : back on the nearest block (the player
+		// walks freely)
+		if (!keys && !grid.stepping && !finished) {
 			const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
 			const auto onBlock = ska::Point<float>{ std::round(static_cast<float>(position.x) / blockSize) * blockSize, std::round(static_cast<float>(position.y) / blockSize) * blockSize };
 			if (onBlock.x != static_cast<float>(position.x) || onBlock.y != static_cast<float>(position.y)) {
@@ -277,13 +315,17 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 			startAutomaticStep(entity, grid, ellapsedTime, finished);
 		} else if (input != nullptr && !m_worldState.getFade().running()) {
 			// Without InputComponent (disabled, ex : during a cutscene), the player does not move ; nor during the fade of a
-			// map change. The jump key : a hop where it stands (not while walking)
-			if (jumpPressed && !locked && mode != nullptr && mode->jumpPower > 0.F && !grid.stepping && !finished && grid.hopDuration == 0) {
+			// map change. The jump key : a hop, standing or walking
+			if (jumpPressed && !locked && mode != nullptr && mode->jumpPower > 0.F && !grid.stepping && grid.hopDuration == 0) {
 				grid.hopDuration = HopDuration;
 				grid.hopElapsed = 0;
 				grid.hopHeight = HopHeight;
 			}
-			startStep(entity, grid, locked, running, ellapsedTime, finished);
+			walkFreely(entity, grid, !locked, running, ellapsedTime);
+		} else {
+			// It stops at once
+			grid.velocity = {};
+			walkFreely(entity, grid, false, false, ellapsedTime);
 		}
 		if (finished && !grid.stepping) {
 			place(entity, grid.to, {});
@@ -291,40 +333,118 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 	}
 }
 
-void GridMovementSystem::startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking) {
-	const auto direction = locked ? -1 : heldDirection(grid.facing);
-	if (direction < 0) {
-		grid.turning = false;
-		grid.heldTime = 0;
-		grid.bumpDirection = -1;
-		return;
+void GridMovementSystem::walkFreely(ska::EntityId entity, GridMovementComponent& grid, bool controlled, bool running, unsigned int ellapsedTime) {
+	const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+	auto dx = 0;
+	auto dy = 0;
+	if (controlled) {
+		dx = (m_toggles[ska::MoveRight] ? 1 : 0) - (m_toggles[ska::MoveLeft] ? 1 : 0);
+		dy = (m_toggles[ska::MoveDown] ? 1 : 0) - (m_toggles[ska::MoveUp] ? 1 : 0);
 	}
-
-	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
-	if (direction != grid.facing) {
-		grid.facing = direction;
-		animation.state = direction;
-		grid.heldTime = 0;
-		// From a stop, a short press only turns ; while walking, it turns and walks
-		if (!walking) {
-			grid.turning = true;
-			return;
+	const auto moving = dx != 0 || dy != 0;
+	// One of the 4 directions : the one it faces while it is still held (a diagonal keeps it), else the one held
+	if (moving) {
+		const auto keeps = (grid.facing == 0 && dy > 0) || (grid.facing == 1 && dx > 0) || (grid.facing == 2 && dy < 0) || (grid.facing == 3 && dx < 0);
+		if (!keeps) {
+			grid.facing = dx != 0 ? (dx > 0 ? 1 : 3) : (dy > 0 ? 0 : 2);
 		}
 	}
-	grid.heldTime += ellapsedTime;
-	if (grid.turning && grid.heldTime < TurnDelay) {
-		return;
-	}
-	grid.turning = false;
-	animation.state = direction;
+	// Along one of the 4 directions only (a diagonal slides along the walls by itself)
+	const auto straight = moving && (dx == 0 || dy == 0);
+	const auto direction = !straight ? -1 : (dx > 0 ? 1 : dx < 0 ? 3 : dy > 0 ? 0 : 2);
 
-	m_bumped = false;
-	if (step(entity, grid, direction, running ? RunStep : WalkStep)) {
+	const auto speed = blockSize * 1000.F / static_cast<float>(running ? RunStep : WalkStep);
+	auto target = ska::Point<float>{ static_cast<float>(dx), static_cast<float>(dy) };
+	if (dx != 0 && dy != 0) {
+		target.x *= 0.7071F;
+		target.y *= 0.7071F;
+	}
+	target.x *= speed;
+	target.y *= speed;
+	// Around the corner of a wall it nearly passes
+	if (straight) {
+		const auto side = cornerSide(entity, direction);
+		if (side != 0) {
+			if (dx == 0) {
+				target.x = static_cast<float>(side) * speed;
+			} else {
+				target.y = static_cast<float>(side) * speed;
+			}
+		}
+	}
+
+	// Its velocity goes towards the one of the keys in a few frames
+	const auto dt = static_cast<float>(ellapsedTime);
+	const auto rate = 1.F - std::exp(-dt / (moving ? Accel : Decel));
+	grid.velocity.x += (target.x - grid.velocity.x) * rate;
+	grid.velocity.y += (target.y - grid.velocity.y) * rate;
+	if (!moving && std::abs(grid.velocity.x) + std::abs(grid.velocity.y) < 8.F) {
+		grid.velocity = {};
+	}
+
+	// It stays on the map (its edges lead to the neighbouring maps by teleports on the edge blocks themselves)
+	if (m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& world = m_worldState.getWorld();
+		const auto shape = m_worldState.getSpace().shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+		const auto width = static_cast<double>(world.getBlocksX()) * blockSize;
+		const auto height = static_cast<double>(world.getBlocksY()) * blockSize;
+		const auto seconds = static_cast<double>(dt) / 1000.;
+		if ((grid.velocity.x < 0.F && shape.l + grid.velocity.x * seconds < 0.) || (grid.velocity.x > 0.F && shape.r + grid.velocity.x * seconds > width)) {
+			grid.velocity.x = 0.F;
+		}
+		if ((grid.velocity.y < 0.F && shape.b + grid.velocity.y * seconds < 0.) || (grid.velocity.y > 0.F && shape.t + grid.velocity.y * seconds > height)) {
+			grid.velocity.y = 0.F;
+		}
+	}
+
+	// The physics body moves at that velocity
+	auto& force = m_entities.getComponent<ska::ForceComponent>(entity);
+	force.x = grid.velocity.x / 10.F;
+	force.y = grid.velocity.y / 10.F;
+	if (grid.velocity.x == 0.F && grid.velocity.y == 0.F && m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& body = m_entities.getComponent<ska::cp::HitboxComponent>(entity);
+		auto& space = m_worldState.getSpace();
+		space.getBody(body.bodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+		space.getBody(body.controlBodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+	}
+
+	// Animated by the keys : a foot forward each half block, in the direction held (8 directions : 4 down right, 5 up
+	// right, 6 up left, 7 down left), facing one of the 4 when still
+	auto& animation = m_componentAccessor.get<ska::AnimationComponent>(entity);
+	const auto current = std::sqrt(grid.velocity.x * grid.velocity.x + grid.velocity.y * grid.velocity.y);
+	animation.drivenUntil = ska::TimeUtils::getTicks() + 200;
+	animation.walking = moving;
+	animation.walkDelay = std::max(60u, static_cast<unsigned int>(blockSize * 1000.F / std::max(current, speed * 0.6F) / 2.F));
+	if (!moving) {
+		animation.state = grid.facing;
+	} else if (dx != 0 && dy != 0) {
+		animation.state = dx > 0 ? (dy > 0 ? 4 : 5) : (dy < 0 ? 6 : 7);
+	} else {
+		animation.state = grid.facing;
+	}
+
+	// Pushing against a wall : it is touched once (its scripts, ex : the water, to surf)
+	if (straight && wallAhead(entity, direction, 0.F)) {
+		if (grid.bumpDirection != direction) {
+			grid.bumpDirection = direction;
+			touch(entity, direction);
+		}
+	} else {
 		grid.bumpDirection = -1;
-	} else if (m_bumped && grid.bumpDirection != direction) {
-		// Against a wall : it is touched once (its scripts, ex : the water, to surf), the character stays on its block
-		grid.bumpDirection = direction;
-		touch(entity, direction);
+	}
+
+	// The character its shape touches (ex : a wild Pokemon, a battle starts)
+	if (m_entities.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& space = m_worldState.getSpace();
+		const auto shape = space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(entity).shapeIndex);
+		constexpr auto Reach = 2.;
+		const auto around = cpBBNew(shape.l - Reach, shape.b - Reach, shape.r + Reach, shape.t + Reach);
+		for (const auto other : m_occupants.getEntities()) {
+			if (other != entity && cpBBIntersects(around, space.shapeBox(m_entities.getComponent<ska::cp::HitboxComponent>(other).shapeIndex))) {
+				grid.touched = other;
+				break;
+			}
+		}
 	}
 }
 

@@ -5,9 +5,9 @@
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
 
-// A character that moves block by block on the map (GridMovementSystem)
+// A character that moves on the map (GridMovementSystem) : block by block, or freely (the player)
 struct GridMovementComponent {
-	// Keys : the player (with an InputComponent). Wander : random steps after random waits. Path : the directions of "path",
+	// Keys : the player (with an InputComponent), freely (in 8 directions, the walls of the physics). Wander : random steps after random waits. Path : the directions of "path",
 	// again and again.
 	enum class Mode { Keys, Wander, Path };
 	Mode mode = Mode::Keys;
@@ -25,9 +25,8 @@ struct GridMovementComponent {
 	ska::Point<float> to;
 	unsigned int elapsed = 0;
 	unsigned int duration = 0;
-	// The key was pressed to turn : it walks once held long enough
-	bool turning = false;
-	unsigned int heldTime = 0;
+	// The player (Keys) walks freely, not block by block : its velocity (pixels per second), towards the keys held
+	ska::Point<float> velocity;
 	// Direction of the wall it walks against (-1 : none) : the wall is touched once (its scripts, ex : the water to surf)
 	int bumpDirection = -1;
 	// The character its last step walked into (refused : that character stands on the block), 0 : none. Set again at each

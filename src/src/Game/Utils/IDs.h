@@ -78,6 +78,8 @@ constexpr int LightMapPriority = WorldOverlayPriority - 3;
 // light
 constexpr int SilhouettePriority = WorldOverlayPriority - 4;
 constexpr int WeatherPriority = WorldOverlayPriority - 1;
+// The dust at the feet of the player (WalkFeelSystem) : over the characters, under their silhouettes and the light
+constexpr int WalkDustPriority = WorldOverlayPriority - 5;
 // The projectiles of the skills : zoomed with the world (under WorldInterfacePriority), over their trails (GUIBattle,
 // WorldOverlayPriority)
 constexpr int SKILLS_DEFAULT_DISPLAY_PRIORITY = WorldOverlayPriority + 1;

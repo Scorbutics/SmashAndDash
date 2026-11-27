@@ -1,3 +1,4 @@
+#include <optional>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "CustomEntityManager.h"
 #include "./Fight/FightComponent.h"
@@ -75,15 +76,23 @@ ska::EntityId CustomEntityManager::createCharacter(const ska::Point<int> startBl
 namespace {
 	// The physics shape of a character (physicsShapeOffset) : on the blocks, it does not touch the walls on their edges ;
 	// its feet (the bottom of the shape : its drawing order, ska GraphicSystem) are never inside a wall under it
-	ska::Rectangle PhysicsBox(const ska::HitboxComponent& hitbox) {
+	ska::Rectangle PhysicsBox(const ska::HitboxComponent& hitbox, std::optional<ska::Point<int>> shapeSize) {
 		constexpr auto blockSize = 48;
-		const auto size = ska::Point<int>{ static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) };
+		const auto size = shapeSize.value_or(ska::Point<int>{ static_cast<int>(hitbox.width), static_cast<int>(hitbox.height) });
 		const auto offset = CustomEntityManager::physicsShapeOffset(size, blockSize);
 		return { offset.x, offset.y, size.x, size.y };
 	}
 }
 
 void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction, float rotationFriction) {
+	fill(em, space, character, friction, rotationFriction, {});
+}
+
+void CustomEntityManager::fillTrainer(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId trainer) {
+	fill(em, space, trainer, DEFAULT_FRICTION, DEFAULT_ROTATION_FRICTION, ska::Point<int>{ TrainerShape, TrainerShape });
+}
+
+void CustomEntityManager::fill(CustomEntityManager& em, ska::cp::Space& space, ska::EntityId character, float friction, float rotationFriction, std::optional<ska::Point<int>> shapeSize) {
 	const auto& hasBeenCreated = em.hasComponent<ska::cp::HitboxComponent>(character);
 	const auto& point = em.getComponent<ska::PositionComponent>(character);
 	
@@ -94,7 +103,7 @@ void CustomEntityManager::fillCharacter(CustomEntityManager& em, ska::cp::Space&
 		hitbox.yOffset += hitbox.height;
 	}
 
-	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, PhysicsBox(hitbox), fc.weight, character);
+	auto bc = ska::cp::BuildControlledRectangleHitbox(space, point, PhysicsBox(hitbox, shapeSize), fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, bc, friction * 50, rotationFriction * 30);
 	
 	hitbox.yOffset -= hitbox.height;
@@ -110,9 +119,7 @@ ska::EntityId CustomEntityManager::createMovingCharacterNG(CustomEntityManager& 
 
 ska::EntityId CustomEntityManager::createTrainerNG(CustomEntityManager & em, ska::cp::Space& space, const ska::Point<int> startBlockPos, const unsigned int worldBlockSize, const std::string& name) {
 	const auto trainer = em.createTrainer(startBlockPos, worldBlockSize);
-	auto& hitbox = em.getComponent<ska::HitboxComponent>(trainer);
-	
-	fillCharacter(em, space, trainer);
+	fillTrainer(em, space, trainer);
 	
 	return trainer;
 }
@@ -142,7 +149,7 @@ ska::EntityId CustomEntityManager::createCharacterNG(CustomEntityManager& em, sk
 	auto& hitbox = em.getComponent<ska::HitboxComponent>(character);
 	auto& fc = em.getComponent<ska::ForceComponent>(character);
 
-	auto bc = ska::cp::BuildRectangleHitbox(space, point, PhysicsBox(hitbox), fc.weight, character);
+	auto bc = ska::cp::BuildRectangleHitbox(space, point, PhysicsBox(hitbox, {}), fc.weight, character);
 	ska::cp::AddTopDownConstraints(space, bc, DEFAULT_FRICTION * 50, DEFAULT_ROTATION_FRICTION * 30);
 
 	hitbox.yOffset -= hitbox.height;

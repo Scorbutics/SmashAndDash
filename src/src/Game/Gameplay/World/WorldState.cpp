@@ -5,7 +5,7 @@
 #include "Graphic/System/ShadowSystem.h"
 #include "Graphic/System/AnimationSystem.h"
 #include "Graphic/System/DeleterSystem.h"
-#include "Graphic/System/CameraFollowStrategy.h"
+#include "../Control/ExploreCameraStrategy.h"
 #include "Base/Values/Strings/StringUtils.h"
 #include "Core/Utils/RectangleUtils.h"
 #include "Core/Rectangle.h"
@@ -244,7 +244,7 @@ bool WorldState::onGameEvent(ska::GameEvent& ge) {
 void WorldState::beforeLoad(ska::State* lastState) {
 	m_firstState = lastState == nullptr;
 
-	auto cameraSystem = std::make_unique<ska::CameraSystem>(m_entityManager, m_eventDispatcher, std::make_unique<ska::CameraFollowStrategy>(m_entityManager), m_screenSize.x, m_screenSize.y);
+	auto cameraSystem = std::make_unique<ska::CameraSystem>(m_entityManager, m_eventDispatcher, std::make_unique<ExploreCameraStrategy>(m_entityManager), m_screenSize.x, m_screenSize.y);
 	m_cameraSystem = cameraSystem.get();
 	addLogic(std::move(cameraSystem));
 
@@ -682,7 +682,7 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 		pShape.setBounciness(0.F);
 	} else {
 		player = *trainer;
-		CustomEntityManager::fillCharacter(m_entityManager, m_spaceSystem->getSpace(), player);
+		CustomEntityManager::fillTrainer(m_entityManager, m_spaceSystem->getSpace(), player);
 	}
 	//FIN PLAYER
 

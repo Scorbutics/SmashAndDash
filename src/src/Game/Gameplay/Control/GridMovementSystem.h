@@ -28,9 +28,19 @@ protected:
 	void refresh(unsigned int) override {}
 };
 
-// Movement of the characters on the map, block by block (as the classic Pokemon games). The player (mode Keys) :
-// - 4 directions : holding a key walks one block after another (a step : WalkStep ms, RunStep ms when running : the run key,
-//   or the "run" movement mode), a short press towards another direction only turns the character
+// Movement of the characters on the map.
+// The player (mode Keys) walks freely :
+// - 8 directions (the diagonal rows of the charsets), at the speed of a block each WalkStep ms (RunStep ms when running :
+//   the run key, or the "run" movement mode), reached in a few frames (Accel), stopped in a few frames (Decel)
+// - its physics body moves (the walls of the map, partial tiles included, and the other characters stop it) ; it does not
+//   leave the map
+// - against a wall that it nearly passes (by CornerSlide pixels), it slides around its corner
+// - it faces one of the 4 directions (GridMovementComponent::facing : the block in front for the action key, the
+//   scripts) : the one held, the one it already faces on a diagonal
+// - pushing against a wall in one of the 4 directions touches it once (its scripts, ex : the water to surf, a ledge) ;
+//   walking along a wall does not (ScriptAwareComponent::physicsTouches)
+// - the character its shape touches is "touched" (GridMovementComponent::touched : a battle starts with a wild Pokemon)
+// The other characters move block by block (as the classic Pokemon games) :
 // - a step starts only when the next block is practicable and free (no character on it, nor going to it) : nothing is pushed
 // - the character is placed at each frame (its physics body follows), exactly on the block at the end of the step
 // The free movement of the keys (InputSystem) is disabled for these characters (their move power is 0 on the map : the
@@ -40,8 +50,9 @@ protected:
 // next block is not free). A wandering character can react to another one in sight (the wild Pokemon and the trainer) :
 // it approaches it (until it walks into it) or runs away from it.
 // A step refused because a character stands on the next block "touches" it (GridMovementComponent::touched).
-// Forced steps (GridMovementComponent::forcedSteps : a script, the player leaving a door) go through the obstacles, the
-// keys are ignored meanwhile ; they wait for the screen to show the map (ScreenFade).
+// Forced steps (GridMovementComponent::forcedSteps : a script, the player leaving a door, a ledge) are block by block for
+// every character, the player too : they go through the obstacles, the keys are ignored meanwhile ; they wait for the
+// screen to show the map (ScreenFade).
 class GridMovementSystem :
 	public ska::System<ska::RequiredComponent<GridMovementComponent, ska::PositionComponent, ska::HitboxComponent, ska::ForceComponent, ska::AnimationComponent>,
 		ska::PossibleComponent<ska::IADefinedMovementComponent, MovementModeComponent, ska::InputComponent>>,
@@ -49,8 +60,11 @@ class GridMovementSystem :
 public:
 	static constexpr unsigned int WalkStep = 250;
 	static constexpr unsigned int RunStep = 130;
-	// A press shorter than this, towards a new direction, only turns the character
-	static constexpr unsigned int TurnDelay = 90;
+	// The free walk of the player : the time (ms) to reach about 2/3 of its speed, to lose 2/3 of it
+	static constexpr float Accel = 45.F;
+	static constexpr float Decel = 35.F;
+	// The free walk slides around the corner of a wall it misses by this much (pixels)
+	static constexpr int CornerSlide = 18;
 	// A character that reacts to another one (GridMovementComponent::reaction) stops this long when it notices it
 	static constexpr unsigned int NoticeDelay = 500;
 	// The hop of the jump key on the map : height (pixels), duration (ms)
@@ -67,13 +81,15 @@ protected:
 
 private:
 	bool onKeyInputEvent(ska::InputKeyEvent& event);
-	// Direction held (-1 : none), the current facing first when it is held
-	int heldDirection(int facing) const;
+	// The free walk of the player (controlled : the keys move it)
+	void walkFreely(ska::EntityId entity, GridMovementComponent& grid, bool controlled, bool running, unsigned int ellapsedTime);
+	// A wall right in front of the physics shape, in a direction (0 : down, 1 : right, 2 : up, 3 : left), "shift" pixels aside
+	bool wallAhead(ska::EntityId entity, int direction, float shift) const;
+	// Against a wall in a direction : the side (-1, 1 : along the axis across) where its corner is near, 0 : none
+	int cornerSide(ska::EntityId entity, int direction) const;
 	// Position (PositionComponent) of the next block in a direction, when it can be walked to
 	std::optional<ska::Point<float>> nextBlock(ska::EntityId entity, int direction) const;
 	void place(ska::EntityId entity, ska::Point<float> position, ska::Point<float> velocity);
-	// Turns or starts a step towards the direction held
-	void startStep(ska::EntityId entity, GridMovementComponent& grid, bool locked, bool running, unsigned int ellapsedTime, bool walking);
 	// The next step of a character not controlled by the player (wander, path)
 	void startAutomaticStep(ska::EntityId entity, GridMovementComponent& grid, unsigned int ellapsedTime, bool walking);
 	// A wandering character with a reaction (approach, avoid) towards a character in sight : its step. False : none in sight

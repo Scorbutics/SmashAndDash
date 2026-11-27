@@ -5,6 +5,7 @@
 #include "AI/System/IADefinedMovementSystem.h"
 #include "AI/System/IAFollowSystem.h"
 #include "../Control/GridMovementSystem.h"
+#include "../Control/WalkFeelSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
 #include "Script/System/ScriptRefreshSystem.h"
 #include "../Fight/System/FightStartSystem.h"
@@ -51,8 +52,12 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::IAFollowSystem>(m_entityManager));
-	// The player moves block by block on the map
+	// The player walks freely on the map, the other characters block by block
 	addLogic(std::make_unique<GridMovementSystem>(m_entityManager, m_eventDispatcher, m_worldState));
+	// The bob, the squash and the dust of the walk of the player
+	auto walkFeel = std::make_unique<WalkFeelSystem>(m_entityManager, m_worldState.getCamera(), m_worldState.getWorld());
+	m_walkFeel = walkFeel.get();
+	addLogic(std::move(walkFeel));
 	// The legs of the characters in tall grass are not drawn
 	addLogic(std::make_unique<TallGrassSystem>(m_entityManager, m_worldState));
 	// The characters hidden behind the objects of the map : their silhouette
@@ -78,6 +83,9 @@ void StateMap::beforeLoad(ska::State* lastState) {
 }
 
 void StateMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) {
+	if (m_walkFeel != nullptr) {
+		m_walkFeel->graphicUpdate(drawables);
+	}
 	if (m_wildMarks != nullptr) {
 		m_wildMarks->graphicUpdate(drawables);
 	}
@@ -89,7 +97,7 @@ void StateMap::afterLoad(ska::State * lastState){
 		m_worldState.reinit(m_fileName, m_tilesetName);
 	}
 	m_worldState.getCamera().setZoom(WorldState::MapZoom);
-	// The player moves block by block on the map (GridMovementSystem)
+	// The player walks on the map (GridMovementSystem)
 	if (auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER); trainer != nullptr) {
 		// A new map : no step in progress (ex : a step interrupted by a cutscene that teleported the player)
 		auto grid = GridMovementComponent{};

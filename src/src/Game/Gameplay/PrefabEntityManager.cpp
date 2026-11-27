@@ -71,6 +71,8 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 
 ska::EntityId ska::PrefabEntityManager::createTrainer(const Point<int> startPos, const unsigned int worldBlockSize) {
 	const auto hero = createCharacter(startPos, 0, worldBlockSize, "trainer");
+	// It walks freely (GridMovementSystem) : sorted by its exact position
+	getComponent<GraphicComponent>(hero).sortStep = 0;
 	addComponent<CameraFocusedComponent>(hero, CameraFocusedComponent());
 	InputComponent ic;
 	ic.movePower = 25;

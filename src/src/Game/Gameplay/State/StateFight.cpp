@@ -25,6 +25,7 @@
 #include "../Fight/System/BattleSystem.h"
 #include "../Fight/BattleRules.h"
 #include "../Control/MovementModeComponent.h"
+#include "../Control/WalkFeelSystem.h"
 #include "../Fight/System/SkillHitSystem.h"
 #include "../Fight/System/BattleDirectorSystem.h"
 #include "../Fight/System/FighterSystem.h"
@@ -214,6 +215,10 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	}
 	// The jump key dodges in a battle (FighterSystem) : the Pokemon does not jump
 	m_input.jumpPower = 0.F;
+	// Its walk on the map is over : its drawing is back to normal (WalkFeelSystem)
+	if (m_entityManager.hasComponent<ska::GraphicComponent>(m_trainerId)) {
+		WalkFeelSystem::reset(m_entityManager.getComponent<ska::GraphicComponent>(m_trainerId));
+	}
 	m_ic = &m_input;
 	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
 

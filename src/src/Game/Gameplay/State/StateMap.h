@@ -6,6 +6,7 @@
 #include "StateFight.h"
 #include "Core/State/StateBase.h"
 #include "../../Graphic/GUI/WildPokemonMarks.h"
+#include "../Control/WalkFeelSystem.h"
 
 struct WorldStateChanger;
 class WorldState;
@@ -54,6 +55,8 @@ private:
 	bool m_resume = false;
 	// The marks over the wild Pokemon that notice the player
 	std::unique_ptr<WildPokemonMarks> m_wildMarks;
+	// Owned by the logic of the state
+	WalkFeelSystem* m_walkFeel = nullptr;
 
 };
 

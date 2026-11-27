@@ -6,7 +6,7 @@
 #include "Core/ECS/EntityLocator.h"
 #include "Graphic/System/CameraSystem.h"
 #include "Graphic/System/CameraFixedStrategy.h"
-#include "Graphic/System/CameraFollowStrategy.h"
+#include "../../Control/ExploreCameraStrategy.h"
 #include "../BattleRules.h"
 #include "../../Data/MapEvent.h"
 #include "../../../Script/ScriptConstants.h"
@@ -320,7 +320,7 @@ void BattleDirectorSystem::end() {
 	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);
 	me.position = pc;
 	me.resume = true;
-	m_worldState.getCamera().changeStrategy(std::make_unique<ska::CameraFollowStrategy>(m_entities));
+	m_worldState.getCamera().changeStrategy(std::make_unique<ExploreCameraStrategy>(m_entities));
 	m_worldState.getCamera().setZoom(WorldState::MapZoom);
 	m_ged.ska::Observable<MapEvent>::notifyObservers(me);
 }
