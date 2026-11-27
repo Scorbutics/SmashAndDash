@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile, std::string bondFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile, std::string bondFile, std::string clashFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
@@ -13,7 +13,8 @@ BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, st
 	m_skillsFile(std::move(skillsFile)),
 	m_rewardsFile(std::move(rewardsFile)),
 	m_linesFile(std::move(linesFile)),
-	m_bondFile(std::move(bondFile)) {
+	m_bondFile(std::move(bondFile)),
+	m_clashFile(std::move(clashFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -291,4 +292,21 @@ int BattleRules::bondGain(const std::string& event) {
 
 int BattleRules::bondPower(bool perfect) {
 	return static_cast<int>(std::max(100L, call(m_bondFile, "power", { ska::NodeValue{ perfect } }, perfect ? 300L : 200L)));
+}
+
+bool BattleRules::clashes(int distance, int roll) {
+	return callBool(m_clashFile, "clash", { ska::NodeValue{ static_cast<long>(distance) }, ska::NodeValue{ static_cast<long>(roll) } }, distance <= 2 && roll < 60);
+}
+
+bool BattleRules::opening(int left) {
+	return callBool(m_clashFile, "opening", { ska::NodeValue{ static_cast<long>(left) } }, left <= 220);
+}
+
+bool BattleRules::playerFirst(int speed, int other, int roll) {
+	return callBool(m_clashFile, "first", { ska::NodeValue{ static_cast<long>(speed) }, ska::NodeValue{ static_cast<long>(other) }, ska::NodeValue{ static_cast<long>(roll) } },
+		speed == other ? roll < 50 : speed > other);
+}
+
+unsigned int BattleRules::turnCooldown() {
+	return static_cast<unsigned int>(std::max(0L, call(m_clashFile, "cooldown", {}, 15000L)));
 }

@@ -6,6 +6,7 @@
 #   dodge : its Pokemon dodges                potion, ball : the trainer uses an item (detail : the name of the item)
 #   knockout : the wild Pokemon is K.O.       fainted : the Pokemon of the trainer is K.O.
 #   bond : the trainer and its Pokemon unleash a skill (detail : the skill, Data/Battle/bond.miniska)
+#   clash, opening : a turn as in the classic battles (Data/Battle/clash.miniska)
 # pokemon : the name of the Pokemon of the trainer. The dice are rolled by the battle and given here (the replays of a
 # battle stay the same) : roll (0 .. 99) against the chance of a line, pick (0 .. 999) chooses it.
 
@@ -50,6 +51,7 @@ lines = function(event: string, pokemon: string, detail: string) : string[] do
 		when "potion" then [detail + " ! Tiens, " + pokemon + " !", "Courage, " + pokemon + ", voilà de l'aide !"]
 		when "ball" then [detail + ", go !", "Je te tiens !"]
 		when "bond" then [pokemon + ", " + detail + " ! De toutes tes forces !", "Ensemble, " + pokemon + " ! " + detail + " !", "C'est le moment, " + pokemon + " ! " + detail + " !"]
+		when "opening" then ["Une ouverture ! Vas-y !"]
 		when "knockout" then ["Bravo, " + pokemon + " !", "On a gagné !", "Bien joué, " + pokemon + " !"]
 		when "fainted" then ["Non, " + pokemon + " !", pokemon + " !"]
 		else []: string

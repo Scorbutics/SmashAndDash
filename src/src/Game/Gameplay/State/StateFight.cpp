@@ -17,6 +17,7 @@
 #include "../Fight/System/TrainerItemSystem.h"
 #include "../Fight/System/TrainerCoachSystem.h"
 #include "../Fight/System/BondSystem.h"
+#include "../Fight/System/ClashSystem.h"
 #include "Transition/Map/DialogTransition.h"
 #include "Transition/Map/LeapTransition.h"
 #include "../Mobs/WildPokemonComponent.h"
@@ -184,6 +185,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	addLogic(std::make_unique<TrainerCoachSystem>(m_entityManager, m_worldState, m_stage));
 	// The bond between the trainer and its Pokemon : full, it unleashes the strongest skill of the Pokemon (a cinematic)
 	addLogic(std::make_unique<BondSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, battle));
+	// The turns of the classic battles : a clash, an opening (Data/Battle/clash.miniska)
+	addLogic(std::make_unique<ClashSystem>(m_entityManager, m_eventDispatcher, rules, m_stage, blockSize));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));

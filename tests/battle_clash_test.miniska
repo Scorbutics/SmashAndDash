@@ -1,0 +1,14 @@
+# The turns of the classic battles in the real time battle (Data/Battle/clash.miniska)
+Test = import "bind:std.native.test"
+Clash = import "wd:Data/Battle/clash"
+
+run = function(args: string[]) do
+	Test.equal((Clash.clash(1, 59): string), "true", "close, under the chance : a clash")
+	Test.equal((Clash.clash(1, 60): string), "false", "at the chance : none")
+	Test.equal((Clash.clash(3, 0): string), "false", "too far : none")
+	Test.equal((Clash.opening(200): string), "true", "a dodge at the last moment")
+	Test.equal((Clash.opening(400): string), "false", "a dodge too early")
+	Test.equal((Clash.first(30, 20, 99): string), "true", "the faster first")
+	Test.equal((Clash.first(20, 30, 0): string), "false", "the slower second")
+	Test.equal((Clash.first(20, 20, 10): string), "true", "a tie : the roll")
+end

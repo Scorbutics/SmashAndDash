@@ -65,6 +65,8 @@ private:
 	// The gauge of the bond between the trainer and its Pokemon, the cinematic of the skill it unleashes
 	void renderBond(ska::Renderer& renderer) const;
 	void renderCinematic(ska::Renderer& renderer) const;
+	// A turn as in the classic battles (BattleStage::turn) : the box of the messages, the menu of the skills
+	void renderTurn(ska::Renderer& renderer) const;
 	// The end of the battle : the experience won (BattleStage::outro)
 	void renderOutro(ska::Renderer& renderer) const;
 	static constexpr unsigned int OutroCardDelay = 350;

@@ -10,6 +10,7 @@ run = function(args: string[]) do
 	Test.equal(Lines.line("super", "Bulbizarre", "", 99, 0), "C'est super efficace !", "a super effective hit")
 	Test.equal(Lines.line("ball", "Bulbizarre", "Poké Ball", 0, 0), "Poké Ball, go !", "the item named")
 	Test.equal(Lines.line("bond", "Bulbizarre", "Charge", 99, 0), "Bulbizarre, Charge ! De toutes tes forces !", "the bond always gets its line")
+	Test.equal(Lines.line("opening", "Bulbizarre", "", 99, 0), "Une ouverture ! Vas-y !", "an opening always gets its line")
 	Test.equal(Lines.line("unknown", "Bulbizarre", "", 0, 0), "", "an unknown event : nothing")
 	Test.equal((Lines.pause("knockout"): string), "0", "a knock out is always commented")
 	Test.equal((Lines.pause("hit"): string), "2800", "a hit waits for the last line")

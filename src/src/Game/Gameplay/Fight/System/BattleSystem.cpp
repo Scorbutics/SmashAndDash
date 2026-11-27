@@ -105,7 +105,8 @@ ska::EntityId BattleSystem::playedByKeys() const {
 
 bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	const auto player = playedByKeys();
-	if (player == 0) {
+	// A turn as in the classic battles : its menu takes the keys (ClashSystem)
+	if (player == 0 || m_stage.turn.active()) {
 		return true;
 	}
 	const auto& actions = event.icm.getActions();

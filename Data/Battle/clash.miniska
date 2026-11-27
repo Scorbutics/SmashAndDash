@@ -1,0 +1,32 @@
+# The turns of the classic battles in the real time battle (ClashSystem) : the battle stops, the menu of the skills, one
+# round played as in the first games ("Bulbizarre utilise Charge !"), then the real time goes on. Two ways to get one :
+#   a clash : the Pokemon of the player and its opponent attack each other at once, close : both act, the faster first
+#   an opening : the Pokemon of the player dodges an attack at the last moment : it acts alone, its hit cannot miss
+# Called by the battle (it cannot wait) ; the dice are rolled by the battle (roll : 0 .. 99).
+
+# Two attacks at once, "distance" blocks apart : a clash ?
+clash = function(distance: int, roll: int) : bool do
+	if distance > 2
+		return false
+	end
+	return roll < 60
+end
+
+# A dodge when the attack of the opponent was "left" milliseconds from going (its startup) : an opening ?
+opening = function(left: int) : bool do
+	return left <= 220
+end
+
+# In a clash, the Pokemon of the player acts first : the faster one (its speed against the speed of its opponent), a tie
+# by the roll
+first = function(speed: int, other: int, roll: int) : bool do
+	if speed == other
+		return roll < 50
+	end
+	return speed > other
+end
+
+# The least time between two turns (milliseconds of battle) : they stay rare
+cooldown = function() : int do
+	return 15000
+end

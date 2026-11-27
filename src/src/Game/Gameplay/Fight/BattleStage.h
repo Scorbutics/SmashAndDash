@@ -96,6 +96,32 @@ struct BondCinematic {
 	bool released = false;
 };
 
+// A turn as in the classic battles in the real time battle (ClashSystem) : the battle stops, the player chooses a skill
+// in a menu, one round is played with its messages ("Bulbizarre utilise Charge !"), then the real time goes on
+struct BattleTurn {
+	// A clash (both attacked at once : both act), an opening (a dodge at the last moment : the player acts alone)
+	enum class Kind { None, Clash, Opening };
+	// Its announce, the menu of the skills, the round, its end
+	enum class Step { Intro, Menu, Acting, Outro };
+	static constexpr unsigned int IntroDuration = 700;
+	static constexpr unsigned int MenuDuration = 10000;
+	// An action : its message, then its hit, then the next one
+	static constexpr unsigned int HitDelay = 650;
+	static constexpr unsigned int ActionDuration = 1500;
+	static constexpr unsigned int OutroDuration = 350;
+	Kind kind = Kind::None;
+	Step step = Step::Intro;
+	// Time in the step (real time, ms)
+	unsigned int time = 0;
+	std::string pokemon;
+	std::vector<std::string> skills;
+	std::size_t selected = 0;
+	// The message of the round (it appears letter by letter), since when
+	std::string message;
+	unsigned int messageAge = 0;
+	bool active() const { return kind != Kind::None; }
+};
+
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
 // arena, feedbacks, which fighter is the one of the player. The state of each fighter is its FighterComponent.
 class BattleStage {
@@ -154,6 +180,7 @@ public:
 	static constexpr int BondFull = 100;
 	int bond = 0;
 	BondCinematic cinematic;
+	BattleTurn turn;
 	// The last wild Pokemon out of the fight was captured (not K.O.) : the battle is won by a capture, its name
 	bool captured = false;
 	std::string capturedName;

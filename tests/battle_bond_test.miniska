@@ -5,6 +5,7 @@ Bond = import "wd:Data/Battle/bond"
 run = function(args: string[]) do
 	Test.equal((Bond.gain("super"): string), "12", "a super effective hit fills more")
 	Test.equal((Bond.gain("hurt"): string), "9", "a hit taken fills it too")
+	Test.equal((Bond.gain("opening"): string), "15", "a dodge at the last moment")
 	Test.equal((Bond.gain("encourage"): string), "5", "the trainer encourages")
 	Test.equal((Bond.gain("start"): string), "0", "the start does not fill it")
 	Test.equal((Bond.power(false): string), "200", "the skill unleashed hits twice as hard")

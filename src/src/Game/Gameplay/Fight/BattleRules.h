@@ -18,7 +18,7 @@ public:
 		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska",
 		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska",
 		std::string rewardsFile = "./Data/Battle/rewards.miniska", std::string linesFile = "./Data/Battle/lines.miniska",
-		std::string bondFile = "./Data/Battle/bond.miniska");
+		std::string bondFile = "./Data/Battle/bond.miniska", std::string clashFile = "./Data/Battle/clash.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -101,6 +101,13 @@ public:
 	// the damage of the skill unleashed (percents), more for a perfect timing
 	int bondGain(const std::string& event);
 	int bondPower(bool perfect);
+	// The turns of the classic battles (Data/Battle/clash.miniska) : two attacks at once "distance" blocks apart make a
+	// clash, a dodge "left" ms before the attack goes makes an opening, the Pokemon of the player acts first in a clash,
+	// the least time between two turns (battle ms)
+	bool clashes(int distance, int roll);
+	bool opening(int left);
+	bool playerFirst(int speed, int other, int roll);
+	unsigned int turnCooldown();
 
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
@@ -119,6 +126,7 @@ private:
 	std::string m_rewardsFile;
 	std::string m_linesFile;
 	std::string m_bondFile;
+	std::string m_clashFile;
 	std::unordered_set<std::string> m_reported;
 	int m_difficulty = Easy;
 };

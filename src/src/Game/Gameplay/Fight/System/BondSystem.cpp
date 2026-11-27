@@ -47,7 +47,7 @@ int BondSystem::strongestSkill() const {
 }
 
 bool BondSystem::ready() const {
-	if (m_stage.phase() != BattlePhase::Fight || m_stage.cinematic.active || m_stage.bond < BattleStage::BondFull || !standing(m_stage.player)) {
+	if (m_stage.phase() != BattlePhase::Fight || m_stage.cinematic.active || m_stage.turn.active() || m_stage.bond < BattleStage::BondFull || !standing(m_stage.player)) {
 		return false;
 	}
 	const auto& fighter = m_componentAccessor.get<FighterComponent>(m_stage.player);

@@ -77,7 +77,7 @@ void TrainerItemSystem::next() {
 
 bool TrainerItemSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	const auto& actions = event.icm.getActions();
-	if (m_stage.phase() != BattlePhase::Fight) {
+	if (m_stage.phase() != BattlePhase::Fight || m_stage.turn.active() || m_stage.cinematic.active) {
 		return true;
 	}
 	// The Pokemon of the player played by the AI (SAD_BATTLE_AUTOPLAY) : the keys do nothing

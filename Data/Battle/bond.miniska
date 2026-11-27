@@ -11,6 +11,7 @@ Gains = [
 	"hurt": 9,
 	"low": 25,
 	"dodge": 10,
+	"opening": 15,
 	"encourage": 5
 ]
 
