@@ -1,6 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "SkillFactory.h"
 #include <algorithm>
+#include <fstream>
 #include <vector>
 #include "Base/IO/Readers/IniReader.h"
 #include "SkillDescriptor.h"
@@ -23,9 +24,9 @@ SkillFactory::SkillFactory(WorldState& ws, unsigned int level):
 }
 
 void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath) const {
-	ska::IniReader skillData(skillPath);
-
-	if (!skillData.isLoaded()) {
+	ska::IniReader skillData;
+	if (!skillData.load(skillPath)) {
+		SLOG(ska::LogLevel::Warn) << "Skill file not found : " << skillPath;
 		return;
 	}
 
@@ -84,12 +85,18 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 }
 
 void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const {
-	// The skills it knows (Data/Battle/skills.miniska) : from the levels its skills are learned at
+	// The skills it knows (Data/Battle/skills.miniska) : from the levels its skills are learned at. A skill
+	// without its file (not written yet) is left out : the Pokemon knows the latest ones that exist
 	auto names = std::vector<std::string>{};
 	auto levels = std::vector<int>{};
 	for (auto i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)); i++) {
 		const auto levelKey = "Skills " + ska::StringUtils::intToStr(i) + "_level";
-		names.push_back(reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i)));
+		const auto name = reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i));
+		if (!std::ifstream{ name }.good()) {
+			SLOG(ska::LogLevel::Warn) << "Skill file not found, left out : " << name;
+			continue;
+		}
+		names.push_back(name);
 		levels.push_back(reader.exists(levelKey) ? reader.get<int>(levelKey) : 1);
 	}
 	const auto known = m_worldState.getBattleRules().knownSkills(levels, static_cast<int>(m_level), static_cast<int>(shc.skills.size()));
