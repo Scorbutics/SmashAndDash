@@ -55,15 +55,29 @@ end
 
 # How a wild Pokemon arrives on the map : "fly" (it flies in from out of the screen and lands on a free block near the
 # player, it flies away after a while), "hideout" (it comes out of a hideout near the player : a bin, a bush, a log, a
-# trunk), "walk" (it appears out of the screen). The flights and the hideouts : Data/Battle/arrivals.miniska.
-# The birds fly : Roucool (16), Roucoups (17), Roucarnage (18), Piafabec (21), Rapasdepic (22) ; the rats hide : Rattata
-# (19), Rattatac (20).
+# trunk), "grass" (out of tall grass), "water" (out of the water), "rock" (from behind a rock), "tree" (down from the
+# leaves of a tree, on a silk thread), "walk" (it appears out of the screen). The flights and the hideouts :
+# Data/Battle/arrivals.miniska. The birds fly : Roucool (16), Roucoups (17), Roucarnage (18), Piafabec (21), Rapasdepic
+# (22) ; the rats hide : Rattata (19), Rattatac (20).
 arrival = function(monster: int) : string do
 	if monster == 16 || monster == 17 || monster == 18 || monster == 21 || monster == 22
 		return "fly"
 	end
 	if monster == 19 || monster == 20
 		return "hideout"
+	end
+	# Bulbizarre in the tall grass, Carapuce in the water, Salameche behind the rocks, Chenipan in the trees
+	if monster == 1
+		return "grass"
+	end
+	if monster == 7
+		return "water"
+	end
+	if monster == 4
+		return "rock"
+	end
+	if monster == 10
+		return "tree"
 	end
 	return "walk"
 end

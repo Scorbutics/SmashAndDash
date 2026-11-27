@@ -660,6 +660,9 @@ bool worldgen::World::treeAt(int x, int y, const std::string& style) {
 				}
 			} else if (!freeCell(cx, cy)) {
 				return false;
+			} else if (part.kind == Part::Canopy && tile(Layer::Top, cx, cy) != NoTile) {
+				// The top of another tree there : its canopy would cut it
+				return false;
 			}
 		}
 	}

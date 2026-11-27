@@ -672,7 +672,10 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		return ska::NodeValue{ worldState.land(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, Int(params[5])) };
 	});
 	m_builder.bindField("emerge", [&worldState](std::vector<ska::NodeValue> params) {
-		return ska::NodeValue{ worldState.emerge(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, { Int(params[5]), Int(params[6]) }, Int(params[7])) };
+		return ska::NodeValue{ worldState.emerge(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, { Int(params[5]), Int(params[6]) }, Int(params[7]), String(params[8])) };
+	});
+	m_builder.bindField("drop", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ worldState.drop(Int(params[0]), Int(params[1]), String(params[2]), { Int(params[3]), Int(params[4]) }, { Int(params[5]), Int(params[6]) }, Int(params[7])) };
 	});
 	m_builder.bindField("walkIn", [&worldState](std::vector<ska::NodeValue> params) {
 		return ska::NodeValue{ worldState.walkIn(Int(params[0]), Int(params[1]), String(params[2])) };

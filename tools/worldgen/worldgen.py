@@ -580,20 +580,32 @@ ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1
 # The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
 # bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk... : the
 # scripts read it, Data/Battle/arrivals.miniska) ; GRASS, tall grass (the legs of a character in it are not drawn :
-# TallGrassSystem)
+# TallGrassSystem ; a Bulbizarre hides in it) ; CANOPY, the leaves of a tree, its top rows too (a Chenipan drops from
+# them, onto a block with no leaves over it) ; ROCK, a
+# boulder (a Salameche hides behind it)
 HIDEOUT = 2
 GRASS = 4
+CANOPY = 8
+ROCK = 16
 HIDEOUTS = {"bin", "barrel", "log seat", "bush"}
 _STAMP_ROWS = {}
 
 
 def tile_flags(key):
-    """The properties of a tile (its key, or the name of an animated tile) for the game : bits (HIDEOUT, GRASS)."""
+    """The properties of a tile (its key, or the name of an animated tile) for the game : bits (HIDEOUT, GRASS, CANOPY,
+    ROCK)."""
     if isinstance(key, str):
         return GRASS if key == TALL_CELL else 0
     if key[0] == "tree":
         style, row, c = key[1:]
-        return HIDEOUT if any(part == "trunk" and part_row == row for _, part_row, part in TREE_SHAPES[style][1]) else 0
+        parts = TREE_SHAPES[style][1]
+        if any(part == "trunk" and part_row == row for _, part_row, part in parts):
+            return HIDEOUT
+        # The leaves : its canopy and its top rows (a Chenipan drops from the canopy, onto a block with no leaves over it)
+        leaves = style != "cactus" and any(part in ("canopy", "top") and part_row == row for _, part_row, part in parts)
+        return CANOPY if leaves else 0
+    if key[0] == "boulder":
+        return ROCK
     return HIDEOUT if key[0] in HIDEOUTS else 0
 
 
@@ -1570,6 +1582,8 @@ class World:
                         return False
                 elif not self.free_cell(cx, cy):
                     return False
+                elif kind == "canopy" and self.layers["T"][cy][cx] is not None:
+                    return False                     # the top of another tree there : its canopy would cut it
         for c in range(w):
             for dy, row, kind in parts:
                 cx, cy = x + c, y + dy

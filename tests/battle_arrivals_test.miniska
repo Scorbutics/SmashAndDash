@@ -20,10 +20,10 @@ run = function(args: string[]) do
 	# A hideout seen : it comes out on its south side when free, else the next free side
 	Map.setProperty(1, 12, 9, 2)
 	Arrivals.run(["hideout", "19", "2", "fearful", "10", "10", "0", "0"])
-	Test.equal(last(), "emerge 19 12 9 12 10", "out of the bin, south")
+	Test.equal(last(), "emerge 19 12 9 12 10 leaves", "out of the bin, south")
 	Map.setWall(12, 10)
 	Arrivals.run(["hideout", "19", "2", "fearful", "10", "10", "0", "0"])
-	Test.equal(last(), "emerge 19 12 9 13 9", "south taken : east")
+	Test.equal(last(), "emerge 19 12 9 13 9 leaves", "south taken : east")
 
 	# A hideout out of sight is not one
 	Map.setProperty(1, 30, 30, 2)
@@ -32,4 +32,26 @@ run = function(args: string[]) do
 	# No hideout seen : it walks in
 	Arrivals.run(["hideout", "19", "2", "fearful", "40", "40", "0", "0"])
 	Test.equal(last(), "walk 19", "nowhere to hide : it walks in")
+
+	# The other hideouts (around the player at 60, 60 : the bin is far) : tall grass, the water, a rock, the leaves of a tree
+	Map.setProperty(1, 62, 59, 4)
+	Arrivals.run(["grass", "1", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "emerge 1 62 59 62 60 leaves", "a Bulbizarre out of the tall grass")
+	Map.setProperty(0, 58, 59, 1)
+	Arrivals.run(["water", "7", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "emerge 7 58 59 58 60 splash", "a Carapuce out of the water, onto the bank")
+	Map.setProperty(1, 63, 61, 16)
+	Arrivals.run(["rock", "4", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "emerge 4 63 61 63 62 dust", "a Salameche from behind a rock")
+	Map.setProperty(2, 57, 58, 8)
+	Arrivals.run(["tree", "10", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "drop 10 57 58 57 60", "a Chenipan down from the leaves, under the trunk")
+	Map.setProperty(2, 57, 60, 8)
+	Arrivals.run(["tree", "10", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "drop 10 57 60 57 62", "under the leaves of another tree : not in sight, it drops from those")
+	Map.setWall(57, 62)
+	Arrivals.run(["tree", "10", "3", "passive", "60", "60", "0", "0"])
+	Test.equal(last(), "walk 10", "no block in sight under the leaves : it walks in")
+	# Each kind its own hideouts : no rock seen for a Bulbizarre
+	Test.equal((Arrivals.hidingPlaces(60, 60, "grass").size() / 4): string, "1", "only the tall grass")
 end

@@ -85,8 +85,12 @@ public:
 	// A bird flies in from out of the screen (beyond the block, seen from the player) and lands on the block ; it flies away
 	// after "stay" ms (0 : it stays)
 	bool land(int monster, int level, const std::string& attitude, ska::Point<int> block, int stay);
-	// The hideout rustles "rustle" ms, then the Pokemon hops out of it onto the block
-	bool emerge(int monster, int level, const std::string& attitude, ska::Point<int> hideout, ska::Point<int> block, int rustle);
+	// The hideout rustles "rustle" ms, then the Pokemon hops out of it onto the block. "effect" : what the hideout throws
+	// while it rustles ("leaves", "dust" : a rock, "splash" : the water)
+	bool emerge(int monster, int level, const std::string& attitude, ska::Point<int> hideout, ska::Point<int> block, int rustle, const std::string& effect);
+	// The leaves of a tree rustle "rustle" ms, then the Pokemon comes down from them on a silk thread onto the block
+	// (under the tree)
+	bool drop(int monster, int level, const std::string& attitude, ska::Point<int> leaves, ska::Point<int> block, int rustle);
 	// It walks in from out of the screen (no room for it : false)
 	bool walkIn(int monster, int level, const std::string& attitude);
 	// The script of the arrivals that do not walk in : the spawner starts it

@@ -458,7 +458,7 @@ bool WorldState::land(const int monster, const int level, const std::string& att
 	return true;
 }
 
-bool WorldState::emerge(const int monster, const int level, const std::string& attitude, const ska::Point<int> hideout, const ska::Point<int> block, const int rustle) {
+bool WorldState::emerge(const int monster, const int level, const std::string& attitude, const ska::Point<int> hideout, const ska::Point<int> block, const int rustle, const std::string& effect) {
 	if (!playerPosition().has_value()) {
 		return false;
 	}
@@ -475,8 +475,34 @@ bool WorldState::emerge(const int monster, const int level, const std::string& a
 	emerge.pathType = 1;
 	emerge.attitude = attitude;
 	emerge.hideout = hideout;
+	emerge.effect = effect == "splash" ? ArrivalComponent::Effect::Splash : (effect == "dust" ? ArrivalComponent::Effect::Dust : ArrivalComponent::Effect::Leaves);
 	arrivalDrawing(monster, std::move(emerge));
-	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " comes out of the hideout at block (" << hideout.x << ", " << hideout.y << ")";
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " comes out of the hideout at block (" << hideout.x << ", " << hideout.y << ") : " << effect;
+	return true;
+}
+
+bool WorldState::drop(const int monster, const int level, const std::string& attitude, const ska::Point<int> leaves, const ska::Point<int> block, const int rustle) {
+	if (!playerPosition().has_value() || block.y <= leaves.y) {
+		return false;
+	}
+	const auto blockSize = static_cast<float>(m_world.getBlockSize());
+	auto drop = ArrivalComponent{};
+	drop.kind = ArrivalComponent::Kind::Drop;
+	drop.to = { static_cast<float>(block.x) * blockSize, static_cast<float>(block.y) * blockSize };
+	// It faces down (its path : from the block above)
+	drop.from = { drop.to.x, drop.to.y - blockSize };
+	// From the height of the leaves over its block
+	drop.fromHeight = static_cast<float>(block.y - leaves.y) * blockSize - 8.F;
+	drop.wait = static_cast<unsigned int>(std::max(0, rustle));
+	drop.duration = 1300;
+	drop.monster = monster;
+	drop.level = level;
+	drop.pathType = 1;
+	drop.attitude = attitude;
+	drop.hideout = leaves;
+	drop.effect = ArrivalComponent::Effect::Leaves;
+	arrivalDrawing(monster, std::move(drop));
+	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " comes down from the leaves at block (" << leaves.x << ", " << leaves.y << ")";
 	return true;
 }
 

@@ -36,8 +36,12 @@ spawnWild = function(monster: int, level: int) : bool do return false end
 # A bird flies in from out of the screen (beyond the block, seen from the player), lands on the block, flies away after
 # "stay" ms (0 : it stays ; a fearful one flies away as soon as it sees the player)
 land = function(monster: int, level: int, attitude: string, x: int, y: int, stay: int) : bool do return false end
-# The hideout (a block) rustles "rustle" ms, then the Pokemon hops out of it onto the block x, y
-emerge = function(monster: int, level: int, attitude: string, hideoutX: int, hideoutY: int, x: int, y: int, rustle: int) : bool do return false end
+# The hideout (a block) rustles "rustle" ms, then the Pokemon hops out of it onto the block x, y. "effect" : what the
+# hideout throws while it rustles ("leaves" : a bush, a bin, tall grass ; "dust" : a rock ; "splash" : the water)
+emerge = function(monster: int, level: int, attitude: string, hideoutX: int, hideoutY: int, x: int, y: int, rustle: int, effect: string) : bool do return false end
+# The leaves of a tree (a block) rustle "rustle" ms, then the Pokemon comes down from them on a silk thread onto the
+# block x, y (under the tree)
+drop = function(monster: int, level: int, attitude: string, leavesX: int, leavesY: int, x: int, y: int, rustle: int) : bool do return false end
 # It walks in from out of the screen (false : no room for it)
 walkIn = function(monster: int, level: int, attitude: string) : bool do return false end
 

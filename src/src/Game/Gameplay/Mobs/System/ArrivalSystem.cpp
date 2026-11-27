@@ -21,7 +21,27 @@ std::vector<ArrivalSystem::Rustle> ArrivalSystem::rustles() const {
 	for (const auto entity : getEntities()) {
 		const auto& arrival = m_componentAccessor.get<ArrivalComponent>(entity);
 		if (arrival.hideout.has_value() && !arrival.moving()) {
-			out.push_back({ *arrival.hideout, arrival.elapsed });
+			out.push_back({ *arrival.hideout, arrival.elapsed, arrival.effect });
+		}
+	}
+	return out;
+}
+
+std::vector<ArrivalSystem::Thread> ArrivalSystem::threads() const {
+	constexpr auto blockSize = 48;
+	auto out = std::vector<Thread>{};
+	for (const auto entity : getEntities()) {
+		const auto& arrival = m_componentAccessor.get<ArrivalComponent>(entity);
+		if (arrival.kind != ArrivalComponent::Kind::Drop || !arrival.moving() || !arrival.hideout.has_value()) {
+			continue;
+		}
+		const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+		// From the bottom of the leaves to the top of its body (its frame has a margin over its head)
+		const auto x = static_cast<int>(position.x) + blockSize / 2;
+		const auto top = arrival.hideout->y * blockSize + blockSize - 8;
+		const auto bottom = static_cast<int>(position.y) + blockSize - static_cast<int>(position.z) - 30;
+		if (bottom > top) {
+			out.push_back({ x, top, bottom });
 		}
 	}
 	return out;
@@ -54,6 +74,11 @@ void ArrivalSystem::refresh(unsigned int ellapsedTime) {
 			ground = t;
 			height = arrival.arc * 4.F * t * (1.F - t);
 			scale = 0.4F + 0.6F * std::min(1.F, t * 1.5F);
+			break;
+		case ArrivalComponent::Kind::Drop:
+			// Down its thread : fast then slower, a small bounce at the end of it
+			ground = 1.F;
+			height = arrival.fromHeight * (1.F - t) * (1.F - t) + 6.F * std::sin(t * 3.1416F) * t;
 			break;
 		case ArrivalComponent::Kind::TakeOff:
 			// Slow then faster, higher and higher

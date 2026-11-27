@@ -19,8 +19,17 @@ public:
 	struct Rustle {
 		ska::Point<int> block;
 		unsigned int age;
+		ArrivalComponent::Effect effect;
 	};
 	std::vector<Rustle> rustles() const;
+	// The silk threads of the Pokemon coming down from the trees : from the leaves to the Pokemon (world pixels : x, the
+	// top and the bottom of the thread)
+	struct Thread {
+		int x;
+		int top;
+		int bottom;
+	};
+	std::vector<Thread> threads() const;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;

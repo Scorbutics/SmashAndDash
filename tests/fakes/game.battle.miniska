@@ -17,8 +17,12 @@ land = function(monster: int, level: int, attitude: string, x: int, y: int, stay
 	arrived = arrived + ("land " + (monster: string) + " " + attitude + " " + (x: string) + " " + (y: string) + " " + (stay: string))
 	return true
 end
-emerge = function(monster: int, level: int, attitude: string, hideoutX: int, hideoutY: int, x: int, y: int, rustle: int) : bool do
-	arrived = arrived + ("emerge " + (monster: string) + " " + (hideoutX: string) + " " + (hideoutY: string) + " " + (x: string) + " " + (y: string))
+emerge = function(monster: int, level: int, attitude: string, hideoutX: int, hideoutY: int, x: int, y: int, rustle: int, effect: string) : bool do
+	arrived = arrived + ("emerge " + (monster: string) + " " + (hideoutX: string) + " " + (hideoutY: string) + " " + (x: string) + " " + (y: string) + " " + effect)
+	return true
+end
+drop = function(monster: int, level: int, attitude: string, leavesX: int, leavesY: int, x: int, y: int, rustle: int) : bool do
+	arrived = arrived + ("drop " + (monster: string) + " " + (leavesX: string) + " " + (leavesY: string) + " " + (x: string) + " " + (y: string))
 	return true
 end
 walkIn = function(monster: int, level: int, attitude: string) : bool do

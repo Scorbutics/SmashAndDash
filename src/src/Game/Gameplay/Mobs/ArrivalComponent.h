@@ -10,9 +10,14 @@
 // the air from a height to another. Arrived (Land, Emerge), it becomes a wild Pokemon on its block (WorldState::wildArrived) ;
 // gone (TakeOff), it is removed. Its shadow stays on the ground, it is sorted by its feet (the depth of the map).
 struct ArrivalComponent {
-	// Land : it flies in from out of the screen and lands ; Emerge : it hops out of a hideout ; TakeOff : it flies away
-	enum class Kind { Land, Emerge, TakeOff };
+	// Land : it flies in from out of the screen and lands ; Emerge : it hops out of a hideout ; Drop : it comes down from
+	// the leaves of a tree on a silk thread ; TakeOff : it flies away
+	enum class Kind { Land, Emerge, Drop, TakeOff };
 	Kind kind = Kind::Land;
+	// What its hideout throws while it rustles (WildPokemonMarks) : leaves (a bush, a bin, tall grass, a tree), dust and
+	// pebbles (a rock), drops (the water)
+	enum class Effect { Leaves, Dust, Splash };
+	Effect effect = Effect::Leaves;
 	ska::Point<float> from;
 	ska::Point<float> to;
 	float fromHeight = 0.F;
@@ -32,7 +37,7 @@ struct ArrivalComponent {
 	std::string attitude = "passive";
 	// A bird : how long it stays on the ground before it flies away (ms, Data/Battle/arrivals.miniska "stay")
 	std::optional<int> stay;
-	// The block of the hideout it comes out of (Emerge)
+	// The block of the hideout it comes out of (Emerge, Drop : the leaves)
 	std::optional<ska::Point<int>> hideout;
 
 	bool moving() const { return elapsed >= wait; }

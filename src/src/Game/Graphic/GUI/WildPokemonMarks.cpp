@@ -31,10 +31,20 @@ void WildPokemonMarks::render(Ui::Canvas& canvas) {
 				const auto side = (i % 2 == 0 ? -1.F : 1.F) * (6.F + static_cast<float>((i * 7) % 13));
 				const auto x = x0 + blockSize / 2 + static_cast<int>(side * phase);
 				const auto y = y0 + 10 - static_cast<int>(22.F * 4.F * phase * (1.F - phase));
-				const auto leaf = i % 3 != 0;
-				const auto colour = leaf ? ska::Color{ 70, 150, 60, 255 } : ska::Color{ 200, 190, 160, 255 };
-				canvas.fill(colour, ska::Rectangle{ x, y, leaf ? 4 : 3, leaf ? 3 : 3 });
+				// Leaves and dust (a bush, a bin, tall grass, a tree) ; dust and pebbles (a rock) ; drops and foam (the water)
+				const auto first = i % 3 != 0;
+				auto colour = first ? ska::Color{ 70, 150, 60, 255 } : ska::Color{ 200, 190, 160, 255 };
+				if (rustle.effect == ArrivalComponent::Effect::Dust) {
+					colour = first ? ska::Color{ 150, 140, 130, 255 } : ska::Color{ 205, 195, 175, 255 };
+				} else if (rustle.effect == ArrivalComponent::Effect::Splash) {
+					colour = first ? ska::Color{ 120, 190, 245, 255 } : ska::Color{ 240, 250, 255, 255 };
+				}
+				canvas.fill(colour, ska::Rectangle{ x, y, first ? 4 : 3, 3 });
 			}
+		}
+		// The silk threads of the Pokemon coming down from the trees
+		for (const auto& thread : m_arrivals->threads()) {
+			canvas.fill(ska::Color{ 235, 235, 225, 220 }, ska::Rectangle{ thread.x - camera.x, thread.top - camera.y, 1, thread.bottom - thread.top });
 		}
 	}
 	for (const auto entity : getEntities()) {

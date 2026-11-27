@@ -1,15 +1,20 @@
 # The arrival of a wild Pokemon near the player, when it does not walk in (Data/Battle/encounters.miniska "arrival") : the
 # spawner of the map starts this script. A bird flies in and lands on a free block on the screen, it flies away after a
-# while ; a Rattata comes out of a hideout on the screen (a bin, a bush, a log, a trunk : a property of its tile in the
-# tileset). Nowhere to arrive : it walks in. The dice are rolled by the game (the replays stay the same).
-# Arguments : the arrival ("fly", "hideout"), the monster, its level, its attitude, the block of the player (x, y), two
-# rolls (0 .. 9999).
+# while ; the others come out of a hideout on the screen (a property of its tile in the tileset) : a Rattata out of a
+# bin, a bush, a log, a trunk ("hideout") ; a Bulbizarre out of tall grass ("grass") ; a Carapuce out of the water
+# ("water") ; a Salameche from behind a rock ("rock") ; a Chenipan down from the leaves of a tree, on a silk thread
+# ("tree"). Nowhere to arrive : it walks in. The dice are rolled by the game (the replays stay the same).
+# Arguments : the arrival ("fly", "hideout", "grass", "water", "rock", "tree"), the monster, its level, its attitude, the
+# block of the player (x, y), two rolls (0 .. 9999).
 Battle = import "bind:game.battle"
 Map = import "bind:game.map"
 
 # The properties of the tiles (the red channel of the .prop of a tileset : tools/worldgen/worldgen.py, tile_flags)
 Water = 1
 Hideout = 2
+Grass = 4
+Canopy = 8
+Rock = 16
 Layers = 3
 # The blocks seen around the player (at the zoom of the map, about 17 x 10 blocks) ; not too close to it
 SeenX = 6
@@ -41,16 +46,48 @@ standable = function(x: int, y: int) : bool do
 	return Map.blockFree(x, y) && !Map.blockHasProperty(0, x, y, Water)
 end
 
-# A tile of a layer of the block is a hideout
-hideout = function(x: int, y: int) : bool do
+# A tile of a layer of the block has the property (a hideout : Hideout, Grass, Water, Rock, Canopy)
+has = function(x: int, y: int, property: int) : bool do
 	layer = 0
 	while layer < Layers do
-		if Map.blockHasProperty(layer, x, y, Hideout)
+		if Map.blockHasProperty(layer, x, y, property)
 			return true
 		end
 		layer = layer + 1
 	end
 	return false
+end
+
+# A tile of a layer of the block is a hideout (a bin, a bush, a log, a trunk)
+hideout = function(x: int, y: int) : bool do
+	return has(x, y, Hideout)
+end
+
+# The property of the hideouts of an arrival, and what they throw while they rustle
+property = function(kind: string) : int do
+	if kind == "grass"
+		return Grass
+	end
+	if kind == "water"
+		return Water
+	end
+	if kind == "rock"
+		return Rock
+	end
+	if kind == "tree"
+		return Canopy
+	end
+	return Hideout
+end
+
+effect = function(kind: string) : string do
+	if kind == "water"
+		return "splash"
+	end
+	if kind == "rock"
+		return "dust"
+	end
+	return "leaves"
 end
 
 # The free blocks seen around the player : x, y, x, y...
@@ -70,22 +107,28 @@ landings = function(px: int, py: int) : int[] do
 	return found
 end
 
-# The hideouts seen around the player, with the free block it comes out on (south first : towards the player's side of
-# the screen) : hideout x, y, then out x, y...
-hideouts = function(px: int, py: int) : int[] do
+# The hideouts of an arrival seen around the player, with the free block it comes out on : hideout x, y, then out x,
+# y... A tree : its leaves, the block under its trunk (2 blocks lower : it comes down there). The others : south first
+# (towards the player's side of the screen), then east, west, north
+hidingPlaces = function(px: int, py: int, kind: string) : int[] do
 	found = []: int
+	wanted = property(kind)
 	# South, east, west, north : dx, dy
 	sides = [0, 1, 1, 0, -1, 0, 0, -1]
+	if kind == "tree"
+		sides = [0, 2]
+	end
 	y = py - SeenY
 	while y <= py + SeenY do
 		x = px - SeenX
 		while x <= px + SeenX do
-			if distance(x, y, px, py) >= Closest && hideout(x, y)
+			if distance(x, y, px, py) >= Closest && has(x, y, wanted)
 				side = 0
 				while side < sides.size() do
 					ox = x + sides[side]
 					oy = y + sides[side + 1]
-					if standable(ox, oy)
+					# Down from a tree : onto a block in sight (no leaves of another tree over it)
+					if standable(ox, oy) && !(kind == "tree" && has(ox, oy, Canopy))
 						found = found + [x, y, ox, oy]
 						side = sides.size()
 					else
@@ -98,6 +141,12 @@ hideouts = function(px: int, py: int) : int[] do
 		y = y + 1
 	end
 	return found
+end
+
+# The hideouts seen around the player (a bin, a bush, a log, a trunk), with the free block it comes out on (south first :
+# towards the player's side of the screen) : hideout x, y, then out x, y...
+hideouts = function(px: int, py: int) : int[] do
+	return hidingPlaces(px, py, "hideout")
 end
 
 run = function(args: string[]) do
@@ -117,11 +166,15 @@ run = function(args: string[]) do
 			return
 		end
 	end
-	if kind == "hideout"
-		found = hideouts(px, py)
+	if kind == "hideout" || kind == "grass" || kind == "water" || kind == "rock" || kind == "tree"
+		found = hidingPlaces(px, py, kind)
 		if found.size() > 0
 			i = (roll % (found.size() / 4)) * 4
-			Battle.emerge(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle)
+			if kind == "tree"
+				Battle.drop(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle)
+			else
+				Battle.emerge(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle, effect(kind))
+			end
 			return
 		end
 	end
