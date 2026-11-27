@@ -14,7 +14,7 @@ sell = function(catalogue: int[:]) : int do
 			if Bag.pay(price)
 				Bag.add(item, 1)
 				bought = bought + 1
-				GameDialog.message(Bag.name(item) + " ajouté au sac.")
+				GameDialog.message(Bag.name(item) + " ajoutÃ© au sac.")
 			else
 				GameDialog.message("Tu n'as pas assez d'argent.")
 			end

@@ -19,7 +19,7 @@
 // 	unsigned int getAmountAtPos(ska::Point<int> relativePos);
 // 	Object* getObjectAtPos(ska::Point<int> relativePos);
 // 	void useObjectAtPos(ska::Point<int> objectPos);
-// 	void useObjectAtPos(ska::Point<int> objectPos, int i); //i = indice du pokémon sur lequel appliquer l'objet
+// 	void useObjectAtPos(ska::Point<int> objectPos, int i); //i = indice du pokÃ©mon sur lequel appliquer l'objet
 //     virtual ~Inventory_Area();
 // 
 //     protected:

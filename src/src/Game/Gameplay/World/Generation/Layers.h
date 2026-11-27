@@ -76,7 +76,7 @@ namespace worldgen {
 		int height = 0;
 		std::vector<TileId> base, middle;
 		std::vector<bool> walk;
-		std::vector<std::string> events; // Latin-1
+		std::vector<std::string> events; // UTF-8
 	};
 
 	struct Item {
@@ -100,7 +100,7 @@ namespace worldgen {
 		const std::map<Block, double>& objects() const { return m_objects; }
 		const std::vector<Item>& items() const { return m_items; }
 		const std::vector<Room>& rooms() const { return m_rooms; }
-		// The events of a chunk (the lines of its <map>E.txt, Latin-1) : the edges to the neighbours, the doors, the rest
+		// The events of a chunk (the lines of its <map>E.txt, UTF-8) : the edges to the neighbours, the doors, the rest
 		std::vector<std::string> chunkEvents(int cx, int cy) const;
 		// The light of a corner of the blocks (i, j : 0 .. width, 0 .. height) : multiplied with the map
 		std::array<std::uint8_t, 3> cornerLight(int i, int j) const;

@@ -57,6 +57,15 @@ struct BattleOutro {
 	bool fromKnockOut = false;
 };
 
+// The item of the trainer in a battle (TrainerItemSystem) : the item chosen among those of the bag usable in a battle
+// (-1 : none), its name, its amount, the cooldown left (1 : just used .. 0 : ready)
+struct BattleItemSlot {
+	int item = -1;
+	std::string name;
+	int amount = 0;
+	float cooldown = 0.F;
+};
+
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
 // arena, feedbacks, which fighter is the one of the player. The state of each fighter is its FighterComponent.
 class BattleStage {
@@ -102,6 +111,10 @@ public:
 	// The trainer of the player (it throws the pokeball, the camera goes back to it at the end)
 	std::optional<ska::EntityId> trainer;
 	BattleOutro outro;
+	BattleItemSlot itemSlot;
+	// The last wild Pokemon out of the fight was captured (not K.O.) : the battle is won by a capture, its name
+	bool captured = false;
+	std::string capturedName;
 
 private:
 	unsigned int m_delta = 0;

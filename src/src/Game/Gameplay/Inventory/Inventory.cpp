@@ -82,7 +82,7 @@ void Inventory::clear()
     m_amountSurface.clear();
 }
 
-//Obtenir l'objet numéro "index" dans l'inventaire
+//Obtenir l'objet numÃ©ro "index" dans l'inventaire
 Object *Inventory::getObjectFromIndex(int index)
 {
 	std::list<std::unique_ptr<Object>>::iterator iter;
@@ -114,7 +114,7 @@ int Inventory::getIndexFromObject(std::list<std::unique_ptr<Object>>::iterator i
         return -1;
 }
 
-//Obtenir la quantité numéro "index" dans l'inventaire
+//Obtenir la quantitÃ© numÃ©ro "index" dans l'inventaire
 std::list<unsigned int>::iterator Inventory::getIteratorAmountFromIndex(int index)
 {
 	std::list<unsigned int>::iterator iter;
@@ -184,7 +184,7 @@ void Inventory::remove(int id, unsigned int amount)
     if(index == -1)
         return;
 
-    //Si on retire une quantité d'objet plus élevée que celle que l'on possède
+    //Si on retire une quantitÃ© d'objet plus Ã©levÃ©e que celle que l'on possÃ¨de
     if((*(this->getIteratorAmountFromIndex(index))) - amount <= 0)
     {
         //On efface l'objet

@@ -16,8 +16,8 @@ namespace worldgen {
 
 	// The format of the generated worlds : a save whose world is older is generated again (the same seed, SaveSlots).
 	// 2 : the depth of the tiles in the properties of the chipsets (.prop) ; 3 : the hideouts of the wild Pokemon there ;
-	// 4 : the front leaves of the tall grass (over the characters in it)
-	constexpr int WorldVersion = 4;
+	// 4 : the front leaves of the tall grass (over the characters in it) ; 5 : the texts of the events in UTF-8
+	constexpr int WorldVersion = 5;
 
 	// Where the player starts : the block below the centre of the first village
 	struct Start {
@@ -46,7 +46,7 @@ namespace worldgen {
 		bool done() const { return m_step >= steps(); }
 		// 0 .. 1
 		double progress() const { return static_cast<double>(m_step) / steps(); }
-		// What the next step does (French, Latin-1 as the texts of the game : the loading screen)
+		// What the next step does (French, UTF-8 as the texts of the game : the loading screen)
 		std::string stage() const;
 		// Where the player starts (once done)
 		const Start& start() const { return m_start; }

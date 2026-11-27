@@ -10,7 +10,7 @@ run = function(args: string[]) do
 	Test.equal((Item.take(1, "item_w_0_0_3_4"): string), "true", "taken")
 	Test.equal((Bag.count(1): string), "1", "the item in the bag")
 	Test.equal((Engine.variable("item_w_0_0_3_4"): string), "1", "its flag set, saved with the game")
-	Test.equal(GameDialog.messages()[0], "Tu as trouvé : Super Potion !", "the message names the item")
+	Test.equal(GameDialog.messages()[0], "Tu as trouvÃ© : Super Potion !", "the message names the item")
 	Test.equal((Item.take(1, "item_w_0_0_3_4"): string), "false", "only once")
 	Test.equal((Bag.count(1): string), "1", "still one in the bag")
 	Test.equal((Item.taken("item_w_0_0_9_9"): string), "false", "the other items are not taken")

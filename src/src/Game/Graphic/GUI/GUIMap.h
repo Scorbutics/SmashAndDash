@@ -13,6 +13,7 @@ class WindowSettings;
 class Settings;
 class WindowTeam;
 class WindowBag;
+class DialogMenu;
 class CustomEntityManager;
 
 using DialogEventObserver = ska::Observer<DialogEvent>;
@@ -45,6 +46,8 @@ public:
 	void bind(Settings& sets);
 
 	void refresh(unsigned int ellapsedTime);
+	// A dialog closed waits this long (ms) before it scrolls out : a dialog that follows in the same box replaces it at once
+	static constexpr unsigned int DialogChainDelay = 150;
 
 	~GUIMap();
 
@@ -60,4 +63,14 @@ private:
 	//Debug
 	ska::DebugWindow m_dbgWindow;
 	std::optional<ska::ScriptSleepComponent> m_dialogScript;
+
+	// The dialog closed last, still shown (DialogChainDelay)
+	struct ClosedDialog {
+		std::string name;
+		ska::Rectangle box;
+		unsigned int time = 0;
+	};
+	std::optional<ClosedDialog> m_closedDialog;
+	void listenDialogKeys(DialogMenu& dialog, ska::Rectangle box, std::function<void(bool)> onClose, bool question);
+	void scrollOutDialog(const std::string& name);
 };

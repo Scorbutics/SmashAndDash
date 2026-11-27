@@ -46,7 +46,7 @@ class Inventory
 		static unsigned int m_fontSize;
 		ska::Color m_color;
 		ska::Rectangle m_rectPos; //Position et dimensions de l'inventaire
-		ska::Texture m_squareSprite, m_squareSpriteHighlight; //apparence des cases où seront affichés les objets
+		ska::Texture m_squareSprite, m_squareSpriteHighlight; //apparence des cases oÃ¹ seront affichÃ©s les objets
 };
 
 #endif

@@ -30,7 +30,8 @@ ska::Point<float> BattleSystem::center(ska::EntityId entity) const {
 
 bool BattleSystem::fighting(ska::EntityId fighter) const {
 	const auto& processed = getEntities();
-	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0 && !m_componentAccessor.get<FighterComponent>(fighter).knockedOut;
+	return processed.find(fighter) != processed.end() && m_componentAccessor.get<BattleComponent>(fighter).hp > 0 && !m_componentAccessor.get<FighterComponent>(fighter).knockedOut &&
+		!m_componentAccessor.get<FighterComponent>(fighter).inBall;
 }
 
 bool BattleSystem::canAct(ska::EntityId fighter) const {
@@ -72,7 +73,7 @@ bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
 	const auto failOdds = fighter.status == FighterStatus::None ? 0 : m_rules.statusFailOdds(StatusKey(fighter.status));
 	if (failOdds > 0 && ska::NumberUtils::random(0, failOdds - 1) == 0) {
 		fighter.stun = std::max(fighter.stun, m_rules.statusStun(StatusKey(fighter.status)));
-		MarkText(m_customEM, m_stage, from, "PARALYS\xC9", 2);
+		MarkText(m_customEM, m_stage, from, "PARALYSÉ", 2);
 		return true;
 	}
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(from).skills[index];
@@ -372,7 +373,7 @@ void BattleSystem::area(unsigned int index, ska::EntityId entity, FighterCompone
 			if (target.invulnerable > 0) {
 				MarkText(m_customEM, m_stage, other, "ESQUIVE", 1);
 			} else if (target.guard > 0) {
-				MarkText(m_customEM, m_stage, other, "BLOQU\xC9", 1);
+				MarkText(m_customEM, m_stage, other, "BLOQUÉ", 1);
 			} else {
 				ApplySkillEffects(m_customEM, m_stage, m_rules, skill, entity, other);
 			}

@@ -18,11 +18,11 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	});
 // 	addWidget(input);
 
-	setTitle("Paramètres");
+	setTitle("ParamÃ¨tres");
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
 	tileSurface.setOpacity(240);
 
-	addWidget<ska::Label>("Météo", 11, ska::Point<int>(40, 32));
+	addWidget<ska::Label>("MÃ©tÃ©o", 11, ska::Point<int>(40, 32));
 
 	m_weatherController = &addWidget<ska::CheckBox>(ska::Point<int>(16, 32), ska::GUI::MENU_DEFAULT_THEME_PATH + "checkbox", nullptr);
 

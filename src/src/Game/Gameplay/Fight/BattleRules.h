@@ -30,6 +30,11 @@ public:
 	int experience(int dropped, int level);
 	// Damage of a skill hitting a Pokemon : "effectiveness" of its type (percents), "stab" : a type of the attacker
 	int damage(int power, int attack, int defense, int level, int effectiveness, bool stab);
+	// Damage of a hit given by a wild Pokemon (the player has one Pokemon against them : softer), from its damage
+	int wildDamage(int damage);
+	// Chance (percents, 1 .. 100) to capture a wild Pokemon with a pokeball : its capture rate, hit points, status
+	// ("none", "poison"...). The battle rolls the dice
+	int captureChance(int rate, int hp, int maxHp, const std::string& status);
 	// Effectiveness of a skill of a type on a Pokemon of two types (percents : 0, 25, 50, 100, 200, 400)
 	int effectiveness(const std::string& skillType, const std::string& type1, const std::string& type2);
 	// A Pokemon played by the AI dodges the attack coming ("startupLeft" : milliseconds before it goes)

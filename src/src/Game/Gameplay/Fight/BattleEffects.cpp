@@ -47,7 +47,7 @@ namespace {
 std::string StatusName(FighterStatus status) {
 	switch (status) {
 	case FighterStatus::Poison: return "POISON";
-	case FighterStatus::Burn: return "BR\xDBLURE";
+	case FighterStatus::Burn: return "BRÛLURE";
 	case FighterStatus::Paralysis: return "PARALYSIE";
 	case FighterStatus::Sleep: return "SOMMEIL";
 	case FighterStatus::Leech: return "VAMPIGRAINE";
@@ -99,7 +99,8 @@ const char* StatusKey(FighterStatus status) {
 }
 
 void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target) {
-	const auto targetFights = target != 0 && entities.hasComponent<FighterComponent>(target) && !entities.getComponent<FighterComponent>(target).knockedOut;
+	const auto targetFights = target != 0 && entities.hasComponent<FighterComponent>(target) && !entities.getComponent<FighterComponent>(target).knockedOut &&
+		!entities.getComponent<FighterComponent>(target).inBall;
 	if (targetFights) {
 		ChangeStages(entities, stage, rules, target, skill.targetStages, skill.effectDuration);
 		auto& fighter = entities.getComponent<FighterComponent>(target);
@@ -111,7 +112,7 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleR
 				fighter.stun = std::max(fighter.stun, rules.statusStun("flinch"));
 				fighter.windUp = 0;
 				fighter.pendingSkill = -1;
-				MarkText(entities, stage, target, "APEUR\xC9", 2);
+				MarkText(entities, stage, target, "APEURÉ", 2);
 			} else {
 				const auto status = StatusFromName(skill.status);
 				// One status at a time

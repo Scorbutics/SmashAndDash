@@ -9,6 +9,10 @@ InputHooks::InputHooks(PokemonGameEventDispatcher& ged, WorldState& worldState) 
 }
 
 bool InputHooks::onKeyInputEvent(ska::InputKeyEvent& event) {
+	// During a battle the keys are the battle's (the action key : the item of the trainer)
+	if (m_worldState.battleStage() != nullptr) {
+		return true;
+	}
 	const auto& actions = event.icm.getActions();
 	if (actions[ska::DoAction]) {
 		m_worldState.emitPlayerHook(Action);

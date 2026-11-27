@@ -67,7 +67,7 @@ Battles are real time (C++), played like a fighting game: the bars of the two fi
 - `Battle.spawnWild(monster, level)`: a wild Pokemon arrives near the player from the next frame, as `encounters.miniska` wants it (`arrival`; then `arrivals.miniska`); false: no player on the map. `Battle.land`, `Battle.emerge`, `Battle.walkIn`: the verbs of `arrivals.miniska` (the script does not wait; the wild Pokemon is in `Battle.wild()` once arrived).
 - Hooks: `Engine.on("battle.won", ...)`, `Engine.on("battle.lost", ...)` and `Engine.on("battle.fled", ...)` (with the player) at the end of each battle, including the random ones. They start during the end of the battle. The scripts keep running during a battle.
 - Every Pokemon has Charge (`Data/Skills/charge.ini`) in its first slot without a usable skill.
-- Skills (`Data/Skills/*.ini`, Latin-1): `style_2=Projectile` throws `[Particle] number` particles towards the opponent; `style_2=Contact` (Charge, Griffe) lunges and hits the opponent when it is in its range (`[Stats] blocks_range`) in front of it, showing the sprite of the skill where it hits (`[Particle] show_sprite=0`: none); `style_2=Area` touches every opponent in its range around the Pokemon (Rugissement); `style_2=Self` acts on the Pokemon itself (Repli, Abri). `[Stats] cooldown`, `startup` and `recovery` (milliseconds), `[Particle] damage` (power, 0: no damage) and `knockback`. A Pokemon has the last 4 skills it learned at its level (`[Description] level`).
+- Skills (`Data/Skills/*.ini`): `style_2=Projectile` throws `[Particle] number` particles towards the opponent; `style_2=Contact` (Charge, Griffe) lunges and hits the opponent when it is in its range (`[Stats] blocks_range`) in front of it, showing the sprite of the skill where it hits (`[Particle] show_sprite=0`: none); `style_2=Area` touches every opponent in its range around the Pokemon (Rugissement); `style_2=Self` acts on the Pokemon itself (Repli, Abri). `[Stats] cooldown`, `startup` and `recovery` (milliseconds), `[Particle] damage` (power, 0: no damage) and `knockback`. A Pokemon has the last 4 skills it learned at its level (`[Description] level`).
 - Effects of a skill, `[Effects]` (all optional):
   - `target_attack`, `target_defense`, `target_speed` (on the Pokemon touched) and `self_attack`, `self_defense`, `self_speed` (on the Pokemon using it): stages, -6 to 6 (a stage multiplies the statistic by (2 + stage) / 2, or 2 / (2 - stage) below 0). They last `duration` milliseconds (6000 by default).
   - `status`: `poison`, `burn` (damage over time; a burn halves the physical damage), `paralysis` (slower, 1 attack in 4 fails), `sleep` (no action, a hit wakes it up), `leech` (damage over time healing the Pokemon that used it), `flinch` (a short stun), `guard` (on itself: blocks the hits). `status_chance` (percentage, 100 by default), for `duration` milliseconds.
@@ -98,9 +98,10 @@ The player is `Engine.entity("trainer")`.
 
 ## Bag and shops
 
-- The bag (items, money) is saved as it changes, in the trainer file of the save (`[Items]`, `[Trainer] money`). The items are `Data/Items/<item>.ini` (name, `[Shop] price`, `[Buffs] hp` of a healing item), in Latin-1.
+- The bag (items, money) is saved as it changes, in the trainer file of the save (`[Items]`, `[Trainer] money`). The items are `Data/Items/<item>.ini` (name, `[Shop] price`, `[Buffs] hp` of a healing item),.
 - `Bag.use(item, pokemon)` uses a healing item on a Pokemon of the team (false when it has no effect: the item is kept).
 - On the map, the bag button shows the bag, and the keys Z, X, C, V, B, N use the items at these places in the bag on the first Pokemon they heal.
+- In a battle, the item slot of the trainer (over the skills) holds one of the items usable in a battle (a healing item, a pokeball: `[Effect] action=capture`): Return (the A of the pad) uses it, Backspace (the B of the pad) chooses the next one, then a pause (`TrainerItemSystem`). A healing item heals the Pokemon fighting; a pokeball is thrown at its opponent: it shakes, then the wild Pokemon is captured (it joins the team, the battle is won by a capture when no other wild Pokemon stands: the steps get `"captured"`) or breaks free. The chance: `captureChance` of `Data/Battle/rules.miniska` (the capture rate of the Pokemon, its hit points, its status).
 - `Levels/shop.miniska`: `Shop.sell(Shop.catalogue([0, 1, 2]))` offers the items one by one (yes / no), the catalogue is a map (item -> price).
 
 ## Tests
@@ -109,4 +110,4 @@ The player is `Engine.entity("trainer")`.
 
 ## Text
 
-Messages are encoded in Latin-1 (the game text rendering), so script files containing accents are saved in Latin-1. In a message, `¤` (byte 0xA4) is a line break.
+The texts are UTF-8 (the scripts, the data files). In a message, `¤` is a line break.

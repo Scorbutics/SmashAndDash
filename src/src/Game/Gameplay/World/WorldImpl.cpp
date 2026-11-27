@@ -18,7 +18,7 @@ WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, con
 	m_weather(*this) {
 	m_fog.setMosaicEffect(true);
 
-	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohérence */
+	/* TODO organisation des "priorities" fixes dans un enum pour mettre de la cohÃ©rence */
 	m_weather.setPriority(WeatherPriority);
 	m_fog.setPriority(FogPriority);
 	m_fog.resetPos();

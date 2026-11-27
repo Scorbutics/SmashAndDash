@@ -24,15 +24,20 @@
 namespace {
 	constexpr int GroundPriority = 9;
 
+	// Upper case (UTF-8) : the ASCII letters and the accented Latin letters (à .. þ : 0xC3 0xA0 .. 0xC3 0xBE)
 	std::string Upper(std::string text) {
-		std::transform(text.begin(), text.end(), text.begin(), [](char c) {
-			const auto u = static_cast<unsigned char>(c);
-			// Latin-1 lower case letters with accents are 0xE0 - 0xFE (except 0xF7)
-			if (u >= 0xE0 && u != 0xF7 && u != 0xFF) {
-				return static_cast<char>(u - 0x20);
+		for (auto i = std::size_t{ 0 }; i < text.size(); i++) {
+			const auto u = static_cast<unsigned char>(text[i]);
+			if (u < 0x80) {
+				text[i] = static_cast<char>(std::toupper(u));
+			} else if (u == 0xC3 && i + 1 < text.size()) {
+				const auto next = static_cast<unsigned char>(text[i + 1]);
+				if (next >= 0xA0 && next <= 0xBE && next != 0xB7) {
+					text[i + 1] = static_cast<char>(next - 0x20);
+				}
+				i++;
 			}
-			return static_cast<char>(std::toupper(u));
-		});
+		}
 		return text;
 	}
 
@@ -94,7 +99,8 @@ void GUIBattle::updateScreenShader(ska::Renderer& renderer) const {
 	}
 	auto gray = 0.F;
 	auto vignette = 0.F;
-	if (m_stage.phase() == BattlePhase::KnockOut) {
+	// (A capture : the colors stay)
+	if (m_stage.phase() == BattlePhase::KnockOut && !(m_stage.winnerTeam == 0 && m_stage.captured)) {
 		const auto progress = std::min(1.F, static_cast<float>(m_stage.phaseTime()) / 500.F);
 		gray = 0.85F * progress;
 		vignette = 0.8F * progress;
@@ -221,7 +227,7 @@ void GUIBattle::renderGround(ska::Renderer& renderer) const {
 	// A ring under each fighter : blue for the player, red for the opponent
 	for (const auto entity : m_stage.fighters) {
 		const auto* state = fighter(entity);
-		if (state == nullptr || !visible(entity) || state->knockedOut) {
+		if (state == nullptr || !visible(entity) || state->knockedOut || state->inBall) {
 			continue;
 		}
 		const auto drawn = sprite(entity);
@@ -254,7 +260,7 @@ void GUIBattle::renderPanel(ska::Renderer& renderer, ska::EntityId entity, bool 
 
 	// Who it is : the tag (a pill of its side) and the name
 	const auto tag = fighter.player ? std::string{ "VOUS" } : std::string{ "SAUVAGE" };
-	const auto label = name(entity) + "  Nv." + std::to_string(bc.level) + (fighter.knockedOut ? "  K.O." : "");
+	const auto label = name(entity) + "  Nv." + std::to_string(bc.level) + (fighter.captured ? "  CAPTURÉ" : (fighter.knockedOut ? "  K.O." : ""));
 	const auto tagWidth = fighter.player ? 62 : 92;
 	const auto tagX = left ? x + 12 : x + width - 12 - tagWidth;
 	canvas.panel(fighter.player ? "panel_small_teal.png" : "panel_small_red.png", ska::Rectangle{ tagX, y + 9, tagWidth, 24 }, 8);
@@ -323,7 +329,8 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 	// Centred in the room left by the action buttons of the map (bottom right)
 	auto x = (screen.x - 300) / 2 - (count * slotWidth + count * gap + 132) / 2;
 	x = std::max(14, x);
-	const auto y = screen.y - slotHeight - 14;
+	const auto rowX = x;
+	auto y = screen.y - slotHeight - 14;
 	// A slot of the theme : a panel, its key in a pill (teal : ready), the cooldown a shade shrinking over it
 	auto slotPanel = [&](int sx, int width, int keyWidth, const std::string& key, const std::string& label, float cooldown) {
 		const auto ready = cooldown <= 0.F;
@@ -343,6 +350,15 @@ void GUIBattle::renderSkills(ska::Renderer& renderer) const {
 	}
 	// The dodge (space key)
 	slotPanel(x, 132, 46, "ESP", "ESQUIVE", static_cast<float>(player->dashCooldown) / static_cast<float>(FighterSystem::DashCooldown));
+	// The item of the trainer (TrainerItemSystem), over the skills : the action key (Entrée, A) uses it, the key of
+	// "delete" (Retour, B) chooses the next one
+	const auto& item = m_stage.itemSlot;
+	if (item.item >= 0) {
+		y -= slotHeight + 10;
+		const auto label = Upper(item.name) + " x" + std::to_string(item.amount);
+		slotPanel(rowX, 214, 46, "ENT", label, item.cooldown);
+		canvas.text("RET : OBJET SUIVANT", Style(13, White, true), rowX + 224, y + 14, Ui::Align::Left);
+	}
 }
 
 void GUIBattle::renderBanner(ska::Renderer& renderer) const {
@@ -532,7 +548,7 @@ void GUIBattle::renderOutro(ska::Renderer& renderer) const {
 		const auto levelUpAt = OutroBarDelay + static_cast<unsigned int>(static_cast<float>(OutroBarDuration) * std::clamp((static_cast<float>(outro.levelBefore + 1) - before) / std::max(0.001F, after - before), 0.F, 1.F));
 		const auto age = time > levelUpAt ? time - levelUpAt : 0u;
 		const auto scale = age < 160 ? 1.8F - 0.8F * static_cast<float>(age) / 160.F : 1.F + 0.04F * std::sin(static_cast<float>(m_time) / 90.F);
-		canvas.text("NIVEAU SUP\xc9""RIEUR !", Style(30, ska::Color{ 255, 215, 60, 255 }, true, scale), screen.x / 2, y + height + 10, Ui::Align::Center);
+		canvas.text("NIVEAU SUPÉRIEUR !", Style(30, ska::Color{ 255, 215, 60, 255 }, true, scale), screen.x / 2, y + height + 10, Ui::Align::Center);
 	}
 }
 

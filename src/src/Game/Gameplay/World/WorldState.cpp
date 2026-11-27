@@ -170,7 +170,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_lightMap.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
-	//TODO enlever la météo de world
+	//TODO enlever la mÃ©tÃ©o de world
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	/*
@@ -719,7 +719,7 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
 
 
-	//Chargement des NPC sur la map (personnages & pokémon)
+	//Chargement des NPC sur la map (personnages & pokÃ©mon)
 }
 
 ska::cp::Space& WorldState::getSpace() {

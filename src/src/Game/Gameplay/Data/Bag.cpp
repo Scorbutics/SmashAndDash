@@ -131,5 +131,6 @@ std::optional<ItemData> Bag::data(int item) {
 	result.price = reader.exists("Shop price") ? reader.get<int>("Shop price") : 0;
 	const auto isBuff = reader.exists("Effect style") && reader.get<std::string>("Effect style") == "Buff";
 	result.heal = isBuff && reader.exists("Buffs hp") ? reader.get<int>("Buffs hp") : 0;
+	result.capture = reader.exists("Effect action") && reader.get<std::string>("Effect action") == "capture";
 	return result;
 }

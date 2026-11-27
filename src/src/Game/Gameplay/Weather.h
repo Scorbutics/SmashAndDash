@@ -6,7 +6,7 @@
 #include "Core/Draw/DrawableFixedPriority.h"
 
 /*Class Weather
- .refresh();                          //Gestion de déplacement du temps + affichage
+ .refresh();                          //Gestion de dÃ©placement du temps + affichage
  .hide();                             //Permet de cacher/afficher le temps
  .modify(SDL_Surface* weatherSprite); //Modifie l'apparence du sprite
 

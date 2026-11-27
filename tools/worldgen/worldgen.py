@@ -1889,7 +1889,7 @@ class World:
                 with open(f"{folder}/{name}.ini", "w") as f:
                     f.write(f"[Chipset]\nfile={chip_path}/chipset_{name}.png\n\n"
                             "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
-                with open(f"{folder}/{name}E.txt", "w", encoding="latin-1") as f:
+                with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
                     f.write("\n".join([header] + self.chunk_events(cx, cy)) + "\n")
                 write_spawns(f"{folder}/Monsters", biome)
                 open(f"{folder}/scripts.data", "w").close()
@@ -1921,7 +1921,7 @@ class World:
             with open(f"{folder}/{name}.ini", "w") as f:
                 f.write(f"[Chipset]\nfile={chip_path}/chipset_rooms.png\n\n"
                         "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
-            with open(f"{folder}/{name}E.txt", "w", encoding="latin-1") as f:
+            with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
                 f.write("\n".join([header] + room["events"]) + "\n")
             open(f"{folder}/scripts.data", "w").close()
 
@@ -1935,7 +1935,7 @@ class World:
                 shutil.rmtree(dest)
             shutil.copytree(f"{root}/Data/Saves/new_game", dest)
         path = f"{dest}/trainer.ini"
-        lines = [l for l in open(path, encoding="latin-1").read().splitlines()]
+        lines = [l for l in open(path, encoding="utf-8").read().splitlines()]
         out, in_world = [], False
         for line in lines:
             if line.startswith("["):
@@ -1953,7 +1953,7 @@ class World:
             out.append(line)
         if name != "new_game":                       # the game generates the world of the save from its seed
             out += ["[World]", "generate=true", f"seed={self.seed}"]
-        open(path, "w", encoding="latin-1").write("\n".join(out) + "\n")
+        open(path, "w", encoding="utf-8").write("\n".join(out) + "\n")
 
     def preview(self, path, scale=1, light=True):
         """The whole world in one image, each block P = T * scale pixels (the tiles shrunk one by one)."""

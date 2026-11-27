@@ -260,7 +260,7 @@ flowchart LR
 |---|---|---|
 | "Add a test with a script change when the script has logic" (`CLAUDE.md`, Build and run) | CI check: a change to `Data/Battle/*.miniska`, `Levels/dialog.miniska` without a change in `tests/` warns | CI |
 | "A script only imported by other scripts (no `run` function) is listed in `GAME_SCRIPT_MODULES`" (`CLAUDE.md`, Scripts) | already enforced by `smash_and_dash_scripts_check` (a module without `run` fails) — confirm, else a check in the build | lint |
-| "Script files with accents are Latin-1" (`CLAUDE.md`, Scripts) | pre-tool hook / build check: reject UTF-8 multibyte sequences in `Levels/**/*.miniska`, `Data/**/*.ini` | hook |
+| "The texts are UTF-8" (`CLAUDE.md`, Scripts) | pre-tool hook / build check: reject the files that are not valid UTF-8 in `Levels/**/*.miniska`, `Data/**/*.ini` | hook |
 | "Change the template with the C++ binding" (`CLAUDE.md`, Scripts) | a build check that each `bindField("x")` of `src/src/Game/Script/GameScriptModule.cpp` has `x = function` in `src/scripts/game.<module>.miniska` | lint |
 | "A missing feature for scripts is a new verb in a game module …, not polling from the script" (`CLAUDE.md`, Boundaries) | review only (no mechanical test) | — |
 | run the game "from the repository root" (`CLAUDE.md`, Build and run) | `ska-run --cwd` sets it; a hook pointing a bare `build/bin/ska_main` launch to `ska-run` | hook |

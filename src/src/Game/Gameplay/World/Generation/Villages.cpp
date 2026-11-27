@@ -233,10 +233,10 @@ worldgen::Village::Village(int cx, int cy, Rng& rng, const std::vector<std::stri
 
 const worldgen::VillageStyle& worldgen::StyleOf(Biome biome) {
 	static const auto styles = std::map<Biome, VillageStyle>{
-		{ Biome::Meadow, VillageStyle{ { "roofr", "roofb", "roofg", "roofo" }, { "Tr\xe8""fle", "Verdure", "Prairie", "Bourgeon", "Coquelicot" }, "Un village paisible au milieu des pr\xe9s." } },
-		{ Biome::Autumn, VillageStyle{ { "roofr", "roofo", "roofg" }, { "Ch\xe2""taigne", "Noisette", "Feuillage", "Brume", "Rousse" }, "Les feuilles y tombent toute l'ann\xe9""e." } },
+		{ Biome::Meadow, VillageStyle{ { "roofr", "roofb", "roofg", "roofo" }, { "Trèfle", "Verdure", "Prairie", "Bourgeon", "Coquelicot" }, "Un village paisible au milieu des prés." } },
+		{ Biome::Autumn, VillageStyle{ { "roofr", "roofo", "roofg" }, { "Châtaigne", "Noisette", "Feuillage", "Brume", "Rousse" }, "Les feuilles y tombent toute l'année." } },
 		{ Biome::Snow, VillageStyle{ { "roofb", "roofr", "roofg" }, { "Givre", "Frimas", "Flocon", "Glace", "Neige" }, "L'hiver ne finit jamais ici." } },
-		{ Biome::Desert, VillageStyle{ { "roofo", "roofr" }, { "Dune", "Sable", "Ocre", "Mirage", "Soleil" }, "La chaleur ne fait pas peur \xe0 ses habitants." } },
+		{ Biome::Desert, VillageStyle{ { "roofo", "roofr" }, { "Dune", "Sable", "Ocre", "Mirage", "Soleil" }, "La chaleur ne fait pas peur à ses habitants." } },
 	};
 	return styles.at(biome);
 }

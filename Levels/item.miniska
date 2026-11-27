@@ -21,7 +21,7 @@ take = function(item: int, flag: string) : bool do
 	end
 	Engine.setVariable(flag, 1)
 	Bag.add(item, 1)
-	GameDialog.message("Tu as trouvé : " + Bag.name(item) + " !")
+	GameDialog.message("Tu as trouvÃ© : " + Bag.name(item) + " !")
 	return true
 end
 

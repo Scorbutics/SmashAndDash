@@ -9,7 +9,7 @@ rest = function() do
 	 i = i + 1) do
 		Party.heal(i, 999)
 	end
-	GameDialog.message("Ton équipe est en pleine forme !")
+	GameDialog.message("Ton Ã©quipe est en pleine forme !")
 end
 
 run = function(args: string[]) do

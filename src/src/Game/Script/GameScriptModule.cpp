@@ -3,6 +3,7 @@
 #include <limits>
 #include <algorithm>
 #include <fstream>
+#include "Base/Values/Strings/StringUtils.h"
 #include <optional>
 #include "Scripting/ScriptVM.h"
 #include "Scripting/EntityHandles.h"
@@ -85,9 +86,9 @@ namespace {
 	// Speed of the "run" movement mode, compared to the walk
 	constexpr auto RunFactor = 1.8F;
 
-	// The old scripts separate the lines of a message with a "\xa4"
+	// The scripts separate the lines of a message with a "¤"
 	std::string MessageText(std::string text) {
-		std::replace(text.begin(), text.end(), '\xa4', '\n');
+		ska::StringUtils::replaceAll(text, "¤", "\n");
 		return text;
 	}
 
@@ -139,7 +140,7 @@ DialogScriptModule::DialogScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 
 	m_builder.bindField("choice", [&vm, &ged](std::vector<ska::NodeValue> params) {
 		auto answer = std::make_shared<std::optional<bool>>();
-		ShowDialog(ged, String(params[0]) + "\n\n(Entr\xe9""e : oui, Retour arri\xe8""re : non)", true, [answer](bool validated) { *answer = validated; });
+		ShowDialog(ged, String(params[0]) + "\n\n(Entrée : oui, Retour arrière : non)", true, [answer](bool validated) { *answer = validated; });
 		vm.suspendUntil([answer]() { return answer->has_value(); }, [answer]() { return ska::NodeValue{ answer->value_or(false) }; });
 		return ska::NodeValue{};
 	});

@@ -4,16 +4,16 @@ Party = import "bind:game.party"
 Save = import "bind:game.save"
 
 run = function(args: string[]) do
-	GameDialog.message("Bienvenue au centre Pokémon !")
-	GameDialog.message("Je vais soigner tes Pokémon.")
+	GameDialog.message("Bienvenue au centre PokÃ©mon !")
+	GameDialog.message("Je vais soigner tes PokÃ©mon.")
 	for(i = 0
 	 i < 6
 	 i = i + 1) do
 		Party.heal(i, 999)
 	end
-	GameDialog.message("Tes Pokémon sont soignés. Merci de ton attente !")
+	GameDialog.message("Tes PokÃ©mon sont soignÃ©s. Merci de ton attente !")
 	# The Pokemon center is where the game is saved
 	if Save.save()
-		GameDialog.message("Ta partie a été sauvegardée.")
+		GameDialog.message("Ta partie a Ã©tÃ© sauvegardÃ©e.")
 	end
 end

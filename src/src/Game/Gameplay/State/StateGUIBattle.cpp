@@ -7,7 +7,7 @@ StateGUIBattle::StateGUIBattle(CustomEntityManager& em, BattleStage& stage, cons
 
 }
 void StateGUIBattle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
-	//Affiche l'UI des combats et les attaques (disposé après le dessin de la Pokéball)
+	//Affiche l'UI des combats et les attaques (disposÃ© aprÃ¨s le dessin de la PokÃ©ball)
 	m_gui.graphicUpdate(ellapsedTime, drawables);
 }
 

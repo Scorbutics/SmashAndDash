@@ -26,7 +26,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	}
 	// Protected : the hit does nothing
 	if (fighter.guard > 0) {
-		MarkText(entities, stage, hit.target, "BLOQU\xC9", 1);
+		MarkText(entities, stage, hit.target, "BLOQUÉ", 1);
 		stage.hitStop(40);
 		stage.sound(BattleSound::Guard);
 		return 0;
@@ -50,8 +50,12 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * fighter.stageMultipliers[StatDefense];
 	const auto effectiveness = rules.effectiveness(skill.type, defender.type1, defender.type2);
 	const auto stab = attacker != nullptr && (skill.type == attacker->type1 || skill.type == attacker->type2);
-	const auto damage = skill.fixedDamage > 0 ? (effectiveness > 0 ? skill.fixedDamage : 0) :
+	auto damage = skill.fixedDamage > 0 ? (effectiveness > 0 ? skill.fixedDamage : 0) :
 		rules.damage(skill.power, std::max(1, static_cast<int>(attack)), std::max(1, static_cast<int>(defense)), attacker == nullptr ? 1 : attacker->level, effectiveness, stab);
+	// A wild Pokemon hits softer (the rules)
+	if (attackerFighter != nullptr && attackerFighter->team != 0 && damage > 0) {
+		damage = rules.wildDamage(damage);
+	}
 	defender.hp -= damage;
 	SLOG_STATIC(ska::LogLevel::Debug, BattleHit) << "Battle : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " is hit, "
 		<< damage << " damage, " << defender.hp << " / " << defender.maxHp << " hit points left (effectiveness " << effectiveness << "%)";

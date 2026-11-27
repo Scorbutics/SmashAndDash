@@ -31,9 +31,9 @@ void StateFightLoading::setFighters(BattleComponent pokemon, BattleComponent opp
 
 std::unique_ptr<ska::Task> StateFightLoading::load() {
 	return std::make_unique<ska::Task>([&](ska::Task&) {
-		/* Ajout InputComponent au Pokémon,
+		/* Ajout InputComponent au PokÃ©mon,
 		Ajout d'un IAMovementComponent au dresseur (m_player),
-		Ajout d'un composant de combat au Pokémon
+		Ajout d'un composant de combat au PokÃ©mon
 		Ajout d'une HP Bar */
 
 		m_entityManager.addComponent<BattleComponent>(m_pokemonId, BattleComponent{ m_pokemonFighter });

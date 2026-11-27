@@ -26,7 +26,7 @@ private:
 	static int m_instanceExists;
 	DialogMenu m_dialog;
 
-	//TODO Image tête PNJ
+	//TODO Image tÃªte PNJ
 	//DialogMenu m_talker;
 
 	const ska::InputContextManager& m_playerICM;

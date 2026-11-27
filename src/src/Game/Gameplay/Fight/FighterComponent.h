@@ -42,6 +42,11 @@ public:
 	// drawn anymore), -1 : not recalled
 	int recall = -1;
 	static constexpr int RecallDuration = 450;
+	// A wild Pokemon in a pokeball thrown by the trainer (it shrinks in it : "recall") : it does not fight, it cannot be
+	// hit, until it breaks free (it comes out : "appear") or it is captured ("captured", with "knockedOut" : out of the
+	// battle, it joined the team of the player)
+	bool inBall = false;
+	bool captured = false;
 
 	FighterIntent intent = FighterIntent::Hold;
 	// Battle time of its next AI decision
@@ -117,7 +122,7 @@ public:
 	bool hasLastFree = false;
 
 	// Busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
-	bool busy() const { return knockedOut || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || status == FighterStatus::Sleep; }
+	bool busy() const { return knockedOut || inBall || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || status == FighterStatus::Sleep; }
 };
 
 SKA_DECLARE_COMPONENT(FighterComponent);

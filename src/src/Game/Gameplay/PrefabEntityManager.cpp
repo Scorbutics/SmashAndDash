@@ -54,6 +54,9 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	const auto block = static_cast<int>(worldBlockSize);
 	const auto placed = gc.spriteOrigin(0, 0, hc);
 	gc.drawOffset = { (block - spriteWidth) / 2 - placed.x, block + 1 - spriteHeight - placed.y };
+	// It walks block by block : the depth of the upper of its two blocks during a step (the leaves of the tall grass
+	// cover it during all of its step). A fighter moves freely : StateFight sorts it by its position
+	gc.sortStep = block;
 	addComponent<HitboxComponent>(hero, std::move(hc));
 
 	addComponent<CollidableComponent>(hero, CollidableComponent());

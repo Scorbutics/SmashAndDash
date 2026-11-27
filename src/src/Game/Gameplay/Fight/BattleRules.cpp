@@ -67,6 +67,18 @@ int BattleRules::damage(int power, int attack, int defense, int level, int effec
 		ska::NodeValue{ static_cast<long>(defense) }, ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(effectiveness) }, ska::NodeValue{ stab } }, fallback)));
 }
 
+int BattleRules::wildDamage(int damage) {
+	const auto fallback = damage <= 0 ? 0 : std::max(1, damage * 3 / 4);
+	return std::max(0, static_cast<int>(call(m_rulesFile, "wildDamage", { ska::NodeValue{ static_cast<long>(damage) } }, fallback)));
+}
+
+int BattleRules::captureChance(int rate, int hp, int maxHp, const std::string& status) {
+	const auto max = std::max(1, maxHp);
+	const auto fallback = std::clamp((3 * max - 2 * std::clamp(hp, 0, max)) * std::clamp(rate, 1, 255) * 100 / (3 * max * 255), 1, 100);
+	return std::clamp(static_cast<int>(call(m_rulesFile, "captureChance", { ska::NodeValue{ static_cast<long>(rate) }, ska::NodeValue{ static_cast<long>(hp) },
+		ska::NodeValue{ static_cast<long>(maxHp) }, ska::NodeValue{ std::make_shared<std::string>(status) } }, fallback)), 0, 100);
+}
+
 int BattleRules::effectiveness(const std::string& skillType, const std::string& type1, const std::string& type2) {
 	return std::max(0, static_cast<int>(call(m_rulesFile, "effectiveness", { ska::NodeValue{ std::make_shared<std::string>(skillType) }, ska::NodeValue{ std::make_shared<std::string>(type1) }, ska::NodeValue{ std::make_shared<std::string>(type2) } }, 100)));
 }

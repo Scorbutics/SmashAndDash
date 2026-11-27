@@ -230,7 +230,7 @@ int worldgen::WorldWriter::steps() const {
 
 std::string worldgen::WorldWriter::stage() const {
 	if (m_step == 0) {
-		return "Pr\xe9""paration";
+		return "Préparation";
 	}
 	if (m_step == 1) {
 		return "Le climat et les villages";
@@ -244,7 +244,7 @@ std::string worldgen::WorldWriter::stage() const {
 	if (m_step < FirstChunkStep + ChunksX * ChunksY) {
 		return "Les cartes (" + std::to_string(m_step - FirstChunkStep + 1) + " / " + std::to_string(ChunksX * ChunksY) + ")";
 	}
-	return done() ? "Termin\xe9""" : "Les int\xe9""rieurs";
+	return done() ? "Terminé" : "Les intérieurs";
 }
 
 bool worldgen::WorldWriter::step() {

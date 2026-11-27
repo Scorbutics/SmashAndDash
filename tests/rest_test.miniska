@@ -8,5 +8,5 @@ run = function(args: string[]) do
 	messages = GameDialog.messages()
 	Test.equal((messages.size(): string), "2", "two messages")
 	Test.equal(messages[0], "Tu te reposes un moment...", "the rest")
-	Test.equal(messages[1], "Ton équipe est en pleine forme !", "the team healed")
+	Test.equal(messages[1], "Ton Ã©quipe est en pleine forme !", "the team healed")
 end

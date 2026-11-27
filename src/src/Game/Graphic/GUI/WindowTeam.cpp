@@ -11,7 +11,7 @@ WindowTeam::WindowTeam(ska::WidgetPanel& parent, WindowMouseCursor* mouseCursor,
 MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * 32, 15 * 32 }),
 m_mouseCursor(mouseCursor) {
 
-	setTitle("Equipe Pokémon");
+	setTitle("Equipe PokÃ©mon");
 	auto& tileSurface = setBackground<ska::TileSurface>(ska::Rectangle{ 0, 0, 1, 1 }, ska::GUI::MENU_DEFAULT_THEME_PATH + "menu.png");
 	tileSurface.setOpacity(240);
 

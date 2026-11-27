@@ -263,7 +263,7 @@ class TileRoom(w.World):
         with open(f"{folder}/{name}.ini", "w") as f:
             f.write(f"[Chipset]\nfile={os.path.abspath(chips)}/{chipset}.png\n\n"
                     "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
-        with open(f"{folder}/{name}E.txt", "w", encoding="latin-1") as f:
+        with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
             f.write("x y declenchement parametresSupplementaires\n")
         open(f"{folder}/scripts.data", "w").close()
 

@@ -53,6 +53,14 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 void GUIMap::refresh(unsigned int ellapsedTime) {
 	GUI::refresh(ellapsedTime);
 	m_dbgWindow.refresh(ellapsedTime);
+	// The dialog closed : no other came in its box, it scrolls out
+	if (m_closedDialog.has_value()) {
+		m_closedDialog->time += ellapsedTime;
+		if (m_closedDialog->time >= DialogChainDelay) {
+			scrollOutDialog(m_closedDialog->name);
+			m_closedDialog.reset();
+		}
+	}
 }
 
 void GUIMap::bind(Settings& sets) {
@@ -67,7 +75,7 @@ void GUIMap::initButtons() {
     buf.x = 0;
     buf.y = 0;
 
-	//TODO widget dans classe à part
+	//TODO widget dans classe Ã  part
 	m_wAction = &addWindow<ska::TimeScrollableWindowIG<>>("actions", ska::Rectangle{ 0, 0, 13 * TAILLEBLOCFENETRE, 2 * TAILLEBLOCFENETRE });
 	m_wAction->setPriority(0);
 
@@ -155,8 +163,28 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
         absoluteRect.y = (de.box.y < 0) ? getMaxHeight() - absoluteRect.h - 1 : (maxLimitY ? (getMaxHeight() - absoluteRect.h) : de.box.y);
         absoluteRect.x = (de.box.x < 0) ? getMaxWidth() - absoluteRect.w - 1 : (maxLimitX ? (getMaxWidth() - absoluteRect.w) : de.box.x);
 
+		// The dialog closed just before, in the same box : this one takes its place, without scrolling (out then in)
+		auto chained = false;
+		if (m_closedDialog.has_value()) {
+			const auto& box = m_closedDialog->box;
+			chained = de.scroll && box.x == absoluteRect.x && box.y == absoluteRect.y && box.w == absoluteRect.w && box.h == absoluteRect.h;
+			if (chained) {
+				if (auto* previous = getWindow(m_closedDialog->name); previous != nullptr) {
+					previous->show(false);
+				}
+				ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
+				ge.windowName = m_closedDialog->name;
+				m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+			} else {
+				scrollOutDialog(m_closedDialog->name);
+			}
+			m_closedDialog.reset();
+		}
+
 		auto startRect = absoluteRect;
-		startRect.y += startRect.h - 1;
+		if (!chained) {
+			startRect.y += startRect.h - 1;
+		}
         auto& dialogWindow = addFocusableWindow<DialogMenu>(de.name, de.message, de.name, startRect, DialogFontSize);
 		
 		m_dialogScript = de.callbackActive ? de.callback : std::optional<ska::ScriptSleepComponent>{};
@@ -164,47 +192,65 @@ bool GUIMap::onDialogEvent(DialogEvent& de) {
 		auto dialogClosed = de.onClose;
 		const auto dialogQuestion = de.question;
 
-        if(de.scroll) {
+        if (chained) {
+			listenDialogKeys(dialogWindow, absoluteRect, dialogClosed, dialogQuestion);
+		} else if(de.scroll) {
             dialogWindow.scrollTo(ska::Point<int>(absoluteRect.x, absoluteRect.y), 8)
-            .then([this, dialogClosed, dialogQuestion](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
-                auto& sdialogWindow = static_cast<DialogMenu&>(caller);
-                // The dialog is closed once (a key pressed again while it scrolls out is ignored)
-                auto closing = std::make_shared<bool>(false);
-                sdialogWindow.addHandler<ska::KeyEventListener>([this, closing, dialogClosed, dialogQuestion] (ska::Widget* tthis, ska::KeyEvent& ke) {
-                    const auto validated = ke.getScanCode() == SDL_SCANCODE_RETURN;
-                    const auto refused = dialogQuestion && ke.getScanCode() == SDL_SCANCODE_BACKSPACE;
-                    if(!*closing && (validated || refused)) {
-                        *closing = true;
-                        auto target = static_cast<DialogMenu*>(tthis);
-
-                        target->scrollTo(ska::Point<int>(target->getRelativePosition().x, getMaxHeight() + 1), 8)
-                        .then([this, validated, dialogClosed](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
-                              // Removing the window destroys this function (and what it captured) : copied before
-                              const auto closed = dialogClosed;
-                              const auto answer = validated;
-                              ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
-                              ge.windowName = static_cast<DialogMenu&>(caller).getName();
-                              m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
-
-							  if (closed) {
-								  closed(answer);
-							  }
-
-							  if (m_dialogScript.has_value()) {
-								  /* triggers callback */
-								  const auto scriptEntity = m_entityManager.createEntity();
-								  auto events = std::vector<ska::ScriptEventType>();
-								  events.push_back(ska::ScriptEventType::ScriptCreate);
-								  auto se = ska::ScriptEvent{ std::move(events), std::move(*m_dialogScript), scriptEntity, {}, {}, {}, {} };
-								  m_ged.Observable<ska::ScriptEvent>::notifyObservers(se);
-							  }
-                        });
-                    }
-                });
+            .then([this, absoluteRect, dialogClosed, dialogQuestion](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
+				listenDialogKeys(static_cast<DialogMenu&>(caller), absoluteRect, dialogClosed, dialogQuestion);
             });
         }
     }
     return true;
+}
+
+void GUIMap::listenDialogKeys(DialogMenu& dialog, const ska::Rectangle box, std::function<void(bool)> onClose, const bool question) {
+	// The dialog is closed once (a key pressed again while it waits or scrolls out is ignored)
+	auto closing = std::make_shared<bool>(false);
+	dialog.addHandler<ska::KeyEventListener>([this, closing, box, onClose, question] (ska::Widget* tthis, ska::KeyEvent& ke) {
+		const auto validated = ke.getScanCode() == SDL_SCANCODE_RETURN;
+		const auto refused = question && ke.getScanCode() == SDL_SCANCODE_BACKSPACE;
+		if (*closing || !(validated || refused)) {
+			return;
+		}
+		*closing = true;
+		// It stays a moment (the next dialog, if any, replaces it) ; then it scrolls out (refresh)
+		if (m_closedDialog.has_value()) {
+			scrollOutDialog(m_closedDialog->name);
+		}
+		m_closedDialog = ClosedDialog{ static_cast<DialogMenu*>(tthis)->getName(), box, 0 };
+
+		// The scripts go on now : the next dialog comes while this one is still shown
+		// (Copied : the script can show a dialog, which removes this window and this function)
+		const auto closed = onClose;
+		auto script = std::move(m_dialogScript);
+		m_dialogScript.reset();
+		if (closed) {
+			closed(validated);
+		}
+		if (script.has_value()) {
+			/* triggers callback */
+			const auto scriptEntity = m_entityManager.createEntity();
+			auto events = std::vector<ska::ScriptEventType>();
+			events.push_back(ska::ScriptEventType::ScriptCreate);
+			auto se = ska::ScriptEvent{ std::move(events), std::move(*script), scriptEntity, {}, {}, {}, {} };
+			m_ged.Observable<ska::ScriptEvent>::notifyObservers(se);
+		}
+	});
+}
+
+void GUIMap::scrollOutDialog(const std::string& name) {
+	auto* window = getWindow(name);
+	if (window == nullptr) {
+		return;
+	}
+	auto& dialog = static_cast<DialogMenu&>(*window);
+	dialog.scrollTo(ska::Point<int>(dialog.getRelativePosition().x, getMaxHeight() + 1), 8)
+	.then([this](ska::TimeScrollableWindowIG<ska::KeyEventListener>& caller) {
+		ska::GUIEvent ge(ska::GUIEventType::REMOVE_WINDOW);
+		ge.windowName = static_cast<DialogMenu&>(caller).getName();
+		m_ged.ska::Observable<ska::GUIEvent>::notifyObservers(ge);
+	});
 }
 
 bool GUIMap::onScreenResized(unsigned int width, unsigned int height) {

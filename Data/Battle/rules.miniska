@@ -117,3 +117,29 @@ damage = function(power: int, attack: int, defense: int, level: int, effectivene
 	end
 	return Math.max(1, base * effectiveness / 100)
 end
+
+# Damage of a hit given by a wild Pokemon (the player has one Pokemon against the wild ones : they hit a little softer)
+wildDamage = function(damage: int) : int do
+	if damage <= 0
+		return 0
+	end
+	return Math.max(1, damage * 3 / 4)
+end
+
+# Chance (percents, 1 .. 100) to capture a wild Pokemon with a pokeball : "rate" its capture rate ([Description]
+# capture_rate of Data/Monsters/<id>.ini, 3 .. 255), its hit points, its status ("none", "poison", "burn", "paralysis",
+# "sleep", "leech"). Easier when it is hurt (from a third at full hit points to all of it near 0, for the highest rate),
+# asleep (x2) or with another status (x1.5)
+captureChance = function(rate: int, hp: int, maxHp: int, status: string) : int do
+	if maxHp < 1
+		maxHp = 1
+	end
+	odds = (3 * maxHp - 2 * Math.clamp(hp, 0, maxHp)) * Math.clamp(rate, 1, 255) * 100 / (3 * maxHp * 255)
+	if status == "sleep"
+		odds = odds * 2
+	end
+	if status == "poison" || status == "burn" || status == "paralysis" || status == "leech"
+		odds = odds * 3 / 2
+	end
+	return Math.clamp(odds, 1, 100)
+end

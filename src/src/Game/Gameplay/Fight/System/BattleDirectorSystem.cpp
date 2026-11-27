@@ -153,6 +153,8 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 				if (!fighter.knockedOut && m_componentAccessor.get<BattleComponent>(entity).hp <= 0) {
 					fighter.knockedOut = true;
 					fighter.knockedOutTime = 0;
+					// The last one out of the fight is K.O., not captured
+					m_stage.captured = false;
 					m_stage.hitStop(180);
 					m_stage.shake(260, 7);
 					m_stage.sound(BattleSound::KnockOut);
@@ -165,11 +167,15 @@ void BattleDirectorSystem::refresh(unsigned int ellapsedTime) {
 			if (standing[0] == 0 || standing[1] == 0) {
 				m_stage.winnerTeam = standing[0] == 0 ? 1 : 0;
 				m_stage.changePhase(BattlePhase::KnockOut);
-				m_stage.hitStop(250);
-				m_stage.slowMotion(0.25F, 1400);
-				m_stage.shake(400, 10);
 				const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
-				runStep({ "knockout", m_stage.winnerTeam == 0 ? "won" : "lost", name(m_stage.player), name(opponent) });
+				const auto byCapture = m_stage.winnerTeam == 0 && m_stage.captured;
+				// A K.O. : a hit stop, a slow motion, a shake (a capture : none, the ball clicked)
+				if (!byCapture) {
+					m_stage.hitStop(250);
+					m_stage.slowMotion(0.25F, 1400);
+					m_stage.shake(400, 10);
+				}
+				runStep({ "knockout", byCapture ? "captured" : (m_stage.winnerTeam == 0 ? "won" : "lost"), name(m_stage.player), byCapture ? m_stage.capturedName : name(opponent) });
 				SLOG(ska::LogLevel::Info) << "Battle : the side " << m_stage.winnerTeam << " won";
 			}
 		}
@@ -205,7 +211,8 @@ void BattleDirectorSystem::outro() {
 	const auto fled = m_stage.phase() == BattlePhase::Fled;
 	const auto won = !fled && m_stage.winnerTeam == 0;
 	m_stage.outro = BattleOutro{};
-	m_stage.outro.fromKnockOut = !fled;
+	// The screen was gray (a K.O., not a capture)
+	m_stage.outro.fromKnockOut = !fled && !(won && m_stage.captured);
 	m_stage.changePhase(BattlePhase::Outro);
 	SLOG(ska::LogLevel::Info) << "Battle " << (fled ? "fled" : (won ? "won" : "lost")) << " : the outro";
 
@@ -259,7 +266,8 @@ void BattleDirectorSystem::outro() {
 	m_stage.sound(BattleSound::Cast);
 
 	const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
-	runStep({ "outro", fled ? "fled" : (won ? "won" : "lost"), name(m_stage.player), name(opponent), std::to_string(m_result.experience),
+	const auto byCapture = won && m_stage.captured;
+	runStep({ "outro", fled ? "fled" : (byCapture ? "captured" : (won ? "won" : "lost")), name(m_stage.player), byCapture ? m_stage.capturedName : name(opponent), std::to_string(m_result.experience),
 		std::to_string(m_stage.outro.levelBefore), std::to_string(m_stage.outro.levelAfter) });
 }
 
@@ -295,7 +303,9 @@ void BattleDirectorSystem::end() {
 
 	// The wild Pokemon of the map is defeated (the others of its group only exist during the battle : StateFight). Its
 	// physics body goes away (the map is not loaded again)
-	if (m_result.won && m_stage.fighters.size() > 1) {
+	// Captured : it is in the team now (the battle can still be lost or fled after)
+	const auto capturedOnMap = m_stage.fighters.size() > 1 && present(m_stage.fighters[1]) && m_componentAccessor.get<FighterComponent>(m_stage.fighters[1]).captured;
+	if ((m_result.won || capturedOnMap) && m_stage.fighters.size() > 1) {
 		CustomEntityManager::place(m_entities, m_worldState.getSpace(), m_stage.fighters[1], ska::Point<float>{ -100000.F, -100000.F });
 		scheduleDeferredRemove(m_stage.fighters[1]);
 	}

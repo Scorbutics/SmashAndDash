@@ -75,7 +75,7 @@ void SkillHitSystem::refresh(unsigned int) {
 				continue;
 			}
 			const auto& fighter = m_entities.getComponent<FighterComponent>(target);
-			if (fighter.team == team || target == skill.dodgedBy || fighter.knockedOut || m_entities.getComponent<BattleComponent>(target).hp <= 0 || !touches(skillEntity, target)) {
+			if (fighter.team == team || target == skill.dodgedBy || fighter.knockedOut || fighter.inBall || m_entities.getComponent<BattleComponent>(target).hp <= 0 || !touches(skillEntity, target)) {
 				continue;
 			}
 			hit(skillEntity, skill, target);

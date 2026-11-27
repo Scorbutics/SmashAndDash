@@ -31,7 +31,7 @@ namespace worldgen {
 		std::int64_t m_n = 0;
 	};
 
-	// The villages of a biome : their roofs, the words of their names, the line of their signs (Latin-1)
+	// The villages of a biome : their roofs, the words of their names, the line of their signs (UTF-8)
 	struct VillageStyle {
 		std::vector<std::string> roofs;
 		std::vector<std::string> words;
@@ -55,7 +55,7 @@ namespace worldgen {
 		Blocks road, footprint, flowers, yard, pond, pondRing, cells;
 		std::vector<Building> buildings;
 		Biome biome = Biome::Meadow;
-		std::string name; // Latin-1
+		std::string name; // UTF-8
 	};
 
 	// The distance (blocks, 4 neighbours) to the nearest of the cells, up to limit

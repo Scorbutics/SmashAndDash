@@ -12,6 +12,7 @@
 #include "../Fight/FightComponent.h"
 #include "../Data/PokemonDescriptor.h"
 #include "Transition/Map/PokeballTransition.h"
+#include "../Fight/System/TrainerItemSystem.h"
 #include "Transition/Map/DialogTransition.h"
 #include "Transition/Map/LeapTransition.h"
 #include "../Mobs/WildPokemonComponent.h"
@@ -152,6 +153,12 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	opponentState.nextDecision = 150;
 	m_entityManager.addComponent<FighterComponent>(m_opponentId, std::move(opponentState));
 	createCompanions(rules);
+	// The fighters move freely : sorted by their position, not by their block
+	for (const auto fighter : m_stage.fighters) {
+		if (m_entityManager.hasComponent<ska::GraphicComponent>(fighter)) {
+			m_entityManager.getComponent<ska::GraphicComponent>(fighter).sortStep = 0;
+		}
+	}
 	m_stage.canFlee = m_canFlee;
 	m_stage.setSoundPlayer([this](BattleSound sound) { m_sounds.play(sound); });
 	trainerBlocks(false);
@@ -161,6 +168,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	auto battleSystem = std::make_unique<BattleSystem>(m_entityManager, m_eventDispatcher, rules, m_stage, blockSize);
 	auto& battle = *battleSystem;
 	addLogic(std::move(battleSystem));
+	// The items of the trainer (a potion, a pokeball)
+	addLogic(std::make_unique<TrainerItemSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
@@ -212,7 +221,7 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	if (gap < IntroGap) {
 		queueTask(std::make_unique<LeapTransition>(m_entityManager, m_worldState, m_opponentId, m_trainerId, IntroGap - gap));
 	}
-	queueTask(std::make_unique<DialogTransition>(0, m_entityManager, m_eventDispatcher, m_trainerId, StepMessage(m_worldState, "intro", m_descriptor.getName(), "Un " + m_descriptor.getName() + " sauvage appara\xee""t !")));
+	queueTask(std::make_unique<DialogTransition>(0, m_entityManager, m_eventDispatcher, m_trainerId, StepMessage(m_worldState, "intro", m_descriptor.getName(), "Un " + m_descriptor.getName() + " sauvage apparaît !")));
 	queueTask(std::make_unique<PokeballTransition>(m_entityManager, [this]() { return throwPath(); }, m_landing));
 	queueTask(m_loader.load());
 }
@@ -264,6 +273,9 @@ void StateFight::beforeUnload() {
 		m_companions.clear();
 		// The wild Pokemon still there (the player fled, or lost) : it stands still, and leaves the player alone a while
 		if (m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId)) {
+			if (m_entityManager.hasComponent<ska::GraphicComponent>(m_opponentId)) {
+				m_entityManager.getComponent<ska::GraphicComponent>(m_opponentId).sortStep = static_cast<int>(m_worldState.getWorld().getBlockSize());
+			}
 			m_entityManager.getComponent<WildPokemonComponent>(m_opponentId).calm = FightStartSystem::CalmAfterBattle;
 			if (m_entityManager.hasComponent<ska::PositionComponent>(m_opponentId)) {
 				const auto& position = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);

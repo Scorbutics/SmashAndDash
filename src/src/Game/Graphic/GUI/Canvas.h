@@ -55,7 +55,7 @@ namespace Ui {
 		ska::Renderer& renderer() const { return m_renderer; }
 		// A rectangle of a colour (blended when it is not opaque)
 		void fill(const ska::Color& color, const ska::Rectangle& box) const;
-		// A text (Latin-1, as the texts of the game) at x (its left, centre or right), y its top ; its width
+		// A text (UTF-8, as the texts of the game) at x (its left, centre or right), y its top ; its width
 		int text(const std::string& value, const TextStyle& style, int x, int y, Align align = Align::Left) const;
 		// A 9-slice panel of the theme (Theme::panel)
 		void panel(const std::string& image, const ska::Rectangle& box, int corner = 16, unsigned char alpha = 255) const;

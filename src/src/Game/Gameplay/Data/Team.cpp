@@ -39,7 +39,8 @@ std::optional<TeamMember> Team::member(int index) const {
 }
 
 void Team::setMember(int index, const TeamMember& member) {
-	auto reader = ska::IniReader{ file(index) };
+	// A new member : its file does not exist yet (the reader of a missing file throws)
+	auto reader = std::ifstream{ file(index) }.good() ? ska::IniReader{ file(index) } : ska::IniReader{};
 	reader.set("Data id", member.id);
 	reader.set("Data experience", member.experience);
 	reader.set("Stats hp", member.hp < 0 ? 0 : member.hp);

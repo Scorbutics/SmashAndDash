@@ -1,12 +1,12 @@
 #include "Core/Utils/SkaConstants.h"
 
-#define ENTITEMAX 151 //Nombre d'entités TOTALES dans le jeu ENTIER
+#define ENTITEMAX 151 //Nombre d'entitÃ©s TOTALES dans le jeu ENTIER
 
 #define TAILLEBLOC 48 //Taille d'un bloc dans le chipset du monde courant
 
 #define BATTLE_START_TICKS 1000
 
-//Types de boutons pouvant composer une fenêtre
+//Types de boutons pouvant composer une fenÃªtre
 #define BUTTON_CLOSE 0
 #define BUTTON_TEXT_AREA 1
 #define BUTTON_IMAGE_AREA 2
@@ -38,9 +38,9 @@
 
 
 
-//nombre de sprites différents dans la fiche d'un personnage sur une même ligne
+//nombre de sprites diffÃ©rents dans la fiche d'un personnage sur une mÃªme ligne
 #define HORIZONTAL_SPRITE_NUMBER_PER_CHAR_SHEET 6
-//idem mais verticalement, sur une même colonne
+//idem mais verticalement, sur une mÃªme colonne
 #define VERTICAL_SPRITE_NUMBER_PER_CHAR_SHEET 8
 
 #define SPAWN_LIMIT_ALLOWED 50

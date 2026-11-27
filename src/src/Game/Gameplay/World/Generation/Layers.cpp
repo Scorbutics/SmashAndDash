@@ -837,7 +837,7 @@ void worldgen::World::placeSigns() {
 					m_walk[index(sx, sy)] = 0;
 					take(sx, sy);
 					m_objects[{ sx, sy }] = 0.4;
-					addEvent(sx, sy, "1 Levels/sign.miniska, " + v.name + "\xa4" + StyleOf(v.biome).line);
+					addEvent(sx, sy, "1 Levels/sign.miniska, " + v.name + "¤" + StyleOf(v.biome).line);
 					break;
 				}
 			}

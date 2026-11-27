@@ -122,7 +122,47 @@ void PokeballSystem::refresh(unsigned int ellapsedTime) {
 			graphic.effect.scaleY = BallScale * (1.F - 0.12F * std::sin(t * 12.F));
 			if (t >= 1.F) {
 				place(entity, ball.to, 0.F, 16, 16);
-				open(entity, ball);
+				if (ball.capture) {
+					// The wild Pokemon goes in : the ball shakes on the ground
+					ball.state = PokeballComponent::State::Shaking;
+					ball.elapsed = 0;
+				} else {
+					open(entity, ball);
+				}
+			}
+			break;
+		}
+		case PokeballComponent::State::Shaking: {
+			// Still while the Pokemon goes in, then each shake : it rocks to one side and back
+			graphic.effect = ska::RenderEffect{};
+			graphic.effect.scaleX = graphic.effect.scaleY = BallScale;
+			const auto rocking = ball.elapsed > ShakeDelay ? ball.elapsed - ShakeDelay : 0u;
+			const auto shake = rocking / ShakeDuration;
+			const auto phase = static_cast<float>(rocking % ShakeDuration) / static_cast<float>(ShakeDuration);
+			auto offset = 0.F;
+			if (static_cast<int>(shake) < ball.shakes && phase < 0.5F) {
+				offset = 4.F * std::sin(phase * 2.F * 3.14159F) * (shake % 2 == 0 ? 1.F : -1.F);
+			}
+			place(entity, ska::Point<float>{ ball.to.x + offset, ball.to.y }, 0.F, 16, 16);
+			if (ball.elapsed >= ShakeDelay + static_cast<unsigned int>(std::max(1, ball.shakes)) * ShakeDuration) {
+				ball.elapsed = 0;
+				if (ball.caught) {
+					ball.state = PokeballComponent::State::Caught;
+				} else {
+					open(entity, ball);
+				}
+			}
+			break;
+		}
+		case PokeballComponent::State::Caught: {
+			// Click : it flashes, stays a moment, then fades
+			const auto t = std::min(1.F, static_cast<float>(ball.elapsed) / static_cast<float>(CaughtDuration));
+			graphic.effect = ska::RenderEffect{};
+			graphic.effect.scaleX = graphic.effect.scaleY = BallScale;
+			graphic.effect.flash = static_cast<unsigned char>(t < 0.25F ? 255.F * (1.F - t / 0.25F) : 0.F);
+			graphic.effect.alpha = static_cast<unsigned char>(255.F * (t < 0.7F ? 1.F : 1.F - (t - 0.7F) / 0.3F));
+			if (t >= 1.F) {
+				ball.state = PokeballComponent::State::Gone;
 			}
 			break;
 		}

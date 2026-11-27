@@ -1,0 +1,299 @@
+#include "Game/__internalConfig/LoggerConfig.h"
+#include "TrainerItemSystem.h"
+#include <algorithm>
+#include "Base/IO/Readers/IniReader.h"
+#include "Base/Values/Numbers/NumberUtils.h"
+#include "Core/ECS/Basics/Graphic/AnimationComponent.h"
+#include "Core/Inputs/InputContextManager.h"
+#include "../BattleEffects.h"
+#include "../BattleRules.h"
+#include "../../Data/Bag.h"
+#include "../../Data/EntityLoadEvent.h"
+#include "../../Data/Team.h"
+#include "../../PokeballComponent.h"
+#include "../../System/PokeballSystem.h"
+#include "../../World/WorldState.h"
+
+TrainerItemSystem::TrainerItemSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, WorldState& worldState, BattleStage& stage) :
+	System(em),
+	SubObserver<ska::InputKeyEvent>(std::bind(&TrainerItemSystem::onKeyInputEvent, this, std::placeholders::_1), ged),
+	m_entities(em),
+	m_ged(ged),
+	m_worldState(worldState),
+	m_stage(stage) {
+	updateSlot();
+}
+
+ska::Point<float> TrainerItemSystem::center(ska::EntityId entity) const {
+	return ska::PositionComponent::getCenterPosition(m_entities.getComponent<ska::PositionComponent>(entity), m_entities.getComponent<ska::HitboxComponent>(entity));
+}
+
+bool TrainerItemSystem::standing(ska::EntityId entity) const {
+	const auto& processed = getEntities();
+	if (processed.find(entity) == processed.end()) {
+		return false;
+	}
+	const auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+	return !fighter.knockedOut && !fighter.inBall && m_componentAccessor.get<BattleComponent>(entity).hp > 0;
+}
+
+void TrainerItemSystem::updateSlot() {
+	auto& bag = m_worldState.getBag();
+	auto usable = std::vector<int>{};
+	for (const auto item : bag.items()) {
+		const auto data = Bag::data(item);
+		if (data.has_value() && data->battle()) {
+			usable.push_back(item);
+		}
+	}
+	if (std::find(usable.begin(), usable.end(), m_item) == usable.end()) {
+		// The item chosen ran out : the first one usable (in the order of the bag)
+		m_item = usable.empty() ? -1 : usable.front();
+	}
+	auto& slot = m_stage.itemSlot;
+	slot.item = m_item;
+	slot.amount = m_item >= 0 ? bag.count(m_item) : 0;
+	const auto data = m_item >= 0 ? Bag::data(m_item) : std::optional<ItemData>{};
+	slot.name = data.has_value() ? data->name : "";
+	slot.cooldown = m_ball.has_value() ? 1.F : static_cast<float>(m_cooldown) / static_cast<float>(Cooldown);
+}
+
+void TrainerItemSystem::next() {
+	auto& bag = m_worldState.getBag();
+	auto usable = std::vector<int>{};
+	for (const auto item : bag.items()) {
+		const auto data = Bag::data(item);
+		if (data.has_value() && data->battle()) {
+			usable.push_back(item);
+		}
+	}
+	if (usable.empty()) {
+		return;
+	}
+	const auto current = std::find(usable.begin(), usable.end(), m_item);
+	m_item = current == usable.end() || current + 1 == usable.end() ? usable.front() : *(current + 1);
+	updateSlot();
+}
+
+bool TrainerItemSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
+	const auto& actions = event.icm.getActions();
+	if (m_stage.phase() != BattlePhase::Fight) {
+		return true;
+	}
+	// The Pokemon of the player played by the AI (SAD_BATTLE_AUTOPLAY) : the keys do nothing
+	const auto& processed = getEntities();
+	if (processed.find(m_stage.player) == processed.end() || m_componentAccessor.get<FighterComponent>(m_stage.player).controlledByAI) {
+		return true;
+	}
+	if (actions[ska::DeleteChar]) {
+		next();
+	}
+	if (actions[ska::DoAction]) {
+		use();
+	}
+	return true;
+}
+
+void TrainerItemSystem::use() {
+	if (m_item < 0 || m_cooldown > 0 || m_ball.has_value()) {
+		return;
+	}
+	const auto data = Bag::data(m_item);
+	if (!data.has_value() || m_worldState.getBag().count(m_item) <= 0) {
+		return;
+	}
+	const auto used = data->capture ? throwBall(m_item) : heal(m_item, data->heal);
+	if (used) {
+		m_cooldown = Cooldown;
+		SLOG(ska::LogLevel::Info) << "Battle : the trainer uses the item " << m_item << " (" << data->name << ")";
+	}
+	updateSlot();
+}
+
+bool TrainerItemSystem::heal(int item, int amount) {
+	const auto player = m_stage.player;
+	if (amount <= 0 || !standing(player)) {
+		return false;
+	}
+	auto& bc = m_componentAccessor.get<BattleComponent>(player);
+	const auto healed = std::min(amount, bc.maxHp - bc.hp);
+	if (healed <= 0) {
+		MarkText(m_entities, m_stage, player, "AUCUN EFFET", 0);
+		return false;
+	}
+	bc.hp += healed;
+	m_worldState.getBag().remove(item, 1);
+	MarkText(m_entities, m_stage, player, "+" + std::to_string(healed) + " PV", 1);
+	m_stage.sound(BattleSound::Status);
+	return true;
+}
+
+bool TrainerItemSystem::throwBall(int item) {
+	// At the opponent of the Pokemon of the player (else the first wild Pokemon standing)
+	auto target = ska::EntityId{ 0 };
+	const auto& processed = getEntities();
+	if (processed.find(m_stage.player) != processed.end() && standing(m_componentAccessor.get<FighterComponent>(m_stage.player).opponent)) {
+		target = m_componentAccessor.get<FighterComponent>(m_stage.player).opponent;
+	}
+	for (const auto entity : m_stage.fighters) {
+		if (target == 0 && standing(entity) && m_componentAccessor.get<FighterComponent>(entity).team != 0) {
+			target = entity;
+		}
+	}
+	if (target == 0 || m_componentAccessor.get<FighterComponent>(target).team == 0) {
+		return false;
+	}
+	if (Team{ m_worldState.getSaveGame().getPathName() }.size() >= Team::MaxSize) {
+		MarkText(m_entities, m_stage, m_stage.player, "ÉQUIPE PLEINE", 2);
+		return false;
+	}
+	const auto trainer = m_stage.trainer;
+	if (!trainer.has_value() || !m_entities.hasComponent<ska::PositionComponent>(*trainer) || !m_entities.hasComponent<ska::HitboxComponent>(*trainer)) {
+		return false;
+	}
+	m_worldState.getBag().remove(item, 1);
+
+	// The dice : the battle rolls them, the rules give the chance. Caught : 3 shakes ; else fewer the further it was
+	const auto& bc = m_componentAccessor.get<BattleComponent>(target);
+	const auto& fighter = m_componentAccessor.get<FighterComponent>(target);
+	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(bc.monster) + ".ini" };
+	const auto rate = data.exists("Description capture_rate") ? data.get<int>("Description capture_rate") : 45;
+	const auto chance = m_worldState.getBattleRules().captureChance(rate, bc.hp, bc.maxHp, StatusKey(fighter.status));
+	const auto roll = ska::NumberUtils::random(0, 99);
+	m_caught = roll < chance;
+	const auto from = center(*trainer);
+	const auto to = center(target);
+	const auto ball = PokeballSystem::Throw(m_entities, from, to, false);
+	auto& component = m_entities.getComponent<PokeballComponent>(ball);
+	component.capture = true;
+	component.caught = m_caught;
+	component.shakes = m_caught ? 3 : (roll - chance < 15 ? 2 : (roll - chance < 40 ? 1 : 0));
+	m_ball = ball;
+	m_target = target;
+	// The trainer faces where it throws (0 : down, 1 : right, 2 : up, 3 : left)
+	if (m_entities.hasComponent<ska::AnimationComponent>(*trainer)) {
+		const auto dx = to.x - from.x;
+		const auto dy = to.y - from.y;
+		m_entities.getComponent<ska::AnimationComponent>(*trainer).state = std::abs(dx) > std::abs(dy) ? (dx > 0.F ? 1 : 3) : (dy > 0.F ? 0 : 2);
+	}
+	m_stage.sound(BattleSound::Cast);
+	SLOG(ska::LogLevel::Info) << "Battle : a pokeball is thrown at the wild pokemon " << bc.monster << " (chance " << chance << "%, roll " << roll << ")";
+	return true;
+}
+
+void TrainerItemSystem::release(ska::EntityId target) {
+	if (!m_entities.hasComponent<FighterComponent>(target)) {
+		return;
+	}
+	auto& fighter = m_entities.getComponent<FighterComponent>(target);
+	if (!fighter.inBall) {
+		return;
+	}
+	fighter.inBall = false;
+	fighter.recall = -1;
+	fighter.appear = 0;
+	MarkText(m_entities, m_stage, target, "LIBÉRÉ !", 1);
+	SLOG(ska::LogLevel::Info) << "Battle : the wild pokemon breaks free";
+}
+
+void TrainerItemSystem::capture(ska::EntityId target) {
+	auto& fighter = m_componentAccessor.get<FighterComponent>(target);
+	const auto& bc = m_componentAccessor.get<BattleComponent>(target);
+	fighter.captured = true;
+	fighter.knockedOut = true;
+	fighter.knockedOutTime = 0;
+
+	// It joins the team : its level (its experience at the start of the level) and its hit points left
+	const auto dataFile = "./Data/Monsters/" + std::to_string(bc.monster) + ".ini";
+	auto data = ska::IniReader{ dataFile };
+	const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+	auto member = TeamMember{};
+	member.id = bc.monster;
+	member.experience = m_worldState.getBattleRules().levelExperience(bc.level, needed);
+	member.hp = std::max(1, bc.hp);
+	auto team = Team{ m_worldState.getSaveGame().getPathName() };
+	if (team.add(member).has_value()) {
+		auto loadEvent = EntityLoadEvent{ data, static_cast<unsigned int>(bc.monster), static_cast<unsigned int>(member.hp) };
+		m_ged.ska::Observable<EntityLoadEvent>::notifyObservers(loadEvent);
+	}
+	const auto name = data.exists("Description name") ? data.get<std::string>("Description name") : std::string{ "?" };
+	// The battle is won by this capture if no other wild Pokemon stands (BattleDirectorSystem)
+	m_stage.captured = true;
+	m_stage.capturedName = name;
+	m_stage.sound(BattleSound::Status);
+	SLOG(ska::LogLevel::Info) << "Battle : the wild pokemon " << bc.monster << " is captured, level " << bc.level << ", " << member.hp << " hit points";
+}
+
+void TrainerItemSystem::updateBall() {
+	if (!m_ball.has_value()) {
+		return;
+	}
+	const auto& processed = getEntities();
+	const auto targetHere = processed.find(m_target) != processed.end();
+	if (!m_entities.hasComponent<PokeballComponent>(*m_ball)) {
+		// The ball is gone (its course is over)
+		if (targetHere && !m_caught) {
+			release(m_target);
+		}
+		m_ball.reset();
+		return;
+	}
+	auto& ball = m_entities.getComponent<PokeballComponent>(*m_ball);
+	if (!targetHere) {
+		ball.capture = false;
+		return;
+	}
+	auto& fighter = m_componentAccessor.get<FighterComponent>(m_target);
+	switch (ball.state) {
+	case PokeballComponent::State::Flying:
+		// It follows the wild Pokemon (it moves during the flight) ; K.O. meanwhile : the ball only opens
+		if (standing(m_target)) {
+			ball.to = center(m_target);
+		} else {
+			ball.capture = false;
+		}
+		break;
+	case PokeballComponent::State::Bouncing:
+	case PokeballComponent::State::Shaking:
+		// It goes in the ball : it shrinks into the light (FighterSystem), it does not fight anymore
+		if (ball.capture && !fighter.inBall && !fighter.knockedOut) {
+			fighter.inBall = true;
+			fighter.recall = 0;
+			fighter.windUp = 0;
+			fighter.lunge = 0;
+			fighter.recovery = 0;
+			fighter.pendingSkill = -1;
+			fighter.dash = 0;
+		}
+		break;
+	case PokeballComponent::State::Caught:
+		if (fighter.inBall && !fighter.captured) {
+			capture(m_target);
+		}
+		break;
+	case PokeballComponent::State::Open:
+	case PokeballComponent::State::Gone:
+		if (!m_caught) {
+			release(m_target);
+		}
+		break;
+	}
+}
+
+void TrainerItemSystem::refresh(unsigned int) {
+	const auto delta = m_stage.delta();
+	m_cooldown = m_cooldown > delta ? m_cooldown - delta : 0;
+	updateBall();
+	// The battle ends during a capture (the Pokemon of the player K.O., or it fled) : the wild Pokemon comes out
+	if (m_stage.phase() != BattlePhase::Fight && m_stage.phase() != BattlePhase::KnockOut && m_ball.has_value() && !m_caught) {
+		const auto& processed = getEntities();
+		if (processed.find(m_target) != processed.end()) {
+			release(m_target);
+		}
+		if (m_entities.hasComponent<PokeballComponent>(*m_ball)) {
+			m_entities.getComponent<PokeballComponent>(*m_ball).capture = false;
+		}
+		m_ball.reset();
+	}
+	updateSlot();
+}

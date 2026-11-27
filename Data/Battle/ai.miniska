@@ -16,13 +16,15 @@ side = SidestepLeft
 # Skill used by the Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.
 # "distance" : distance to its opponent, in blocks. "ready" : the skills it can use now (known, not cooling down, reaching)
 decide = function(monster: int, distance: int, hp: int, maxHp: int, ready: bool[]) : int do
-	# Hesitates sometimes, more when it is hurt
-	hesitation = 4
+	# Hesitates often (a third of the time), more when it is hurt (half of the time) : the player has room to act
 	if hp * 3 < maxHp
-		hesitation = 3
-	end
-	if Engine.random(hesitation) == 0
-		return -1
+		if Engine.random(2) == 0
+			return -1
+		end
+	else
+		if Engine.random(3) == 0
+			return -1
+		end
 	end
 	# One of the skills it can use, at random
 	usable = []: int
@@ -75,15 +77,15 @@ move = function(monster: int, distance: int, reach: int, hp: int, maxHp: int) : 
 	return aside()
 end
 
-# Dodges an attack coming ("startupLeft" : milliseconds before it goes) : sometimes, more often when it is hurt.
-# Too late (less than 80 ms) : it cannot
+# Dodges an attack coming ("startupLeft" : milliseconds before it goes) : rarely (one in five), more often when it is
+# hurt (one in three). Too late (less than 80 ms) : it cannot
 dodge = function(monster: int, startupLeft: int, hp: int, maxHp: int) : bool do
 	if startupLeft < 80
 		return false
 	end
-	chance = 3
+	chance = 5
 	if hp * 3 < maxHp
-		chance = 2
+		chance = 3
 	end
 	return Engine.random(chance) == 0
 end

@@ -46,9 +46,9 @@ StateTitle::StateTitle(PokemonGameEventDispatcher& ged, std::function<void(const
 		if (m_entries.size() >= MaxSaves) {
 			break;
 		}
-		m_entries.push_back(Entry{ "Continuer : " + slot.name, slot.map.empty() ? "Son monde n'est pas encore g\xe9""n\xe9""r\xe9""" : "Sur la carte " + slot.map, slot.name });
+		m_entries.push_back(Entry{ "Continuer : " + slot.name, slot.map.empty() ? "Son monde n'est pas encore généré" : "Sur la carte " + slot.map, slot.name });
 	}
-	m_entries.push_back(Entry{ "Nouvelle partie", "Un nouveau monde, g\xe9""n\xe9""r\xe9"" pour vous", "" });
+	m_entries.push_back(Entry{ "Nouvelle partie", "Un nouveau monde, généré pour vous", "" });
 	m_choices.setCount(m_entries.size());
 }
 
@@ -181,7 +181,7 @@ void StateTitle::renderBackground(Ui::Canvas& canvas) const {
 	canvas.image(m_hero, w / 2 - 250 - 36, h - 210 - bob, &frame, 3.F, 255, true);
 	// The title
 	canvas.text("Smash & Dash", Style(76, Ui::White, 3), w / 2, h * 9 / 100, Ui::Align::Center);
-	canvas.text("Un monde nouveau \xe0"" chaque partie", Style(24, ska::Color{ 255, 244, 200, 255 }, 3), w / 2, h * 9 / 100 + 100, Ui::Align::Center);
+	canvas.text("Un monde nouveau à chaque partie", Style(24, ska::Color{ 255, 244, 200, 255 }, 3), w / 2, h * 9 / 100 + 100, Ui::Align::Center);
 }
 
 void StateTitle::renderMenu(Ui::Canvas& canvas) const {
@@ -195,7 +195,7 @@ void StateTitle::renderMenu(Ui::Canvas& canvas) const {
 			canvas.text(">", Style(24, Ui::White), box.x + box.w - 30, box.y + 12, Ui::Align::Left);
 		}
 	}
-	canvas.text("W / S : choisir    Entr\xe9""e : valider", Style(14, Ui::White, 3), m_screen.x / 2 + 90, m_screen.y - 32, Ui::Align::Center);
+	canvas.text("W / S : choisir    Entrée : valider", Style(14, Ui::White, 3), m_screen.x / 2 + 90, m_screen.y - 32, Ui::Align::Center);
 }
 
 void StateTitle::renderLoading(Ui::Canvas& canvas) const {
@@ -205,14 +205,14 @@ void StateTitle::renderLoading(Ui::Canvas& canvas) const {
 	const auto y = m_screen.y * 50 / 100;
 	canvas.panel("panel_small.png", ska::Rectangle{ x, y, w, h }, 16, 245);
 	if (m_mode == Mode::Failed) {
-		canvas.text("Le monde n'a pas pu \xea""tre g\xe9""n\xe9""r\xe9""", Style(20, ska::Color{ 168, 40, 32, 255 }), x + w / 2, y + 22, Ui::Align::Center);
+		canvas.text("Le monde n'a pas pu être généré", Style(20, ska::Color{ 168, 40, 32, 255 }), x + w / 2, y + 22, Ui::Align::Center);
 		canvas.text(m_error.substr(0, 70), Style(14, Soft), x + w / 2, y + 60, Ui::Align::Center);
 		return;
 	}
 	const auto generating = m_writer != nullptr;
-	canvas.text(generating ? "G\xe9""n\xe9""ration du monde" : "Chargement", Style(22, Ui::Ink), x + w / 2, y + 16, Ui::Align::Center);
+	canvas.text(generating ? "Génération du monde" : "Chargement", Style(22, Ui::Ink), x + w / 2, y + 16, Ui::Align::Center);
 	if (generating) {
-		canvas.text("Graine " + std::to_string(m_seed) + " \xb7"" " + m_writer->stage(), Style(14, Soft), x + w / 2, y + 50, Ui::Align::Center);
+		canvas.text("Graine " + std::to_string(m_seed) + " · " + m_writer->stage(), Style(14, Soft), x + w / 2, y + 50, Ui::Align::Center);
 	}
 	// The progress bar
 	auto bar = Ui::Bar{};

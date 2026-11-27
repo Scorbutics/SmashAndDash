@@ -13,6 +13,10 @@ struct ItemData {
 	int price = 0;
 	// Hit points given to a Pokemon ([Buffs] hp of a "Buff" item), 0 : no healing
 	int heal = 0;
+	// A pokeball ([Effect] action=capture) : thrown at a wild Pokemon in a battle
+	bool capture = false;
+	// Usable by the trainer during a battle (TrainerItemSystem) : a healing item, a pokeball
+	bool battle() const { return heal > 0 || capture; }
 };
 
 // The bag of the player (items, money), saved in the trainer file of the save as it changes :

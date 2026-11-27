@@ -51,7 +51,7 @@ def villages(world):
     world.biome_field()
     out = [f"town {world.seed} {world.town[0]} {world.town[1]}"]
     for i, v in enumerate(world.villages):
-        name = v.name.encode("latin-1").hex()
+        name = v.name.encode("utf-8").hex()
         out.append(f"village {world.seed} {i} {v.center[0]} {v.center[1]} {w.BIOMES.index(v.biome)} {name} "
                    f"{len(v.buildings)} {fnv(repr(v.buildings).encode())} {cells(v.road)} {cells(v.footprint)} "
                    f"{cells(v.flowers)} {cells(v.yard)} {cells(v.pond)} {cells(v.pond_ring)}")
@@ -114,14 +114,14 @@ def layers(world):
     out.append(f"objects {world.seed} {fnv(b''.join(struct.pack('<iid', x, y, v) for (x, y), v in sorted(world.objects.items())))}")
     out.append(f"items {world.seed} {fnv(b''.join(struct.pack('<iii', x, y, i) for x, y, i in world.items))}")
     events = [chr(10).join(world.chunk_events(cx, cy)) for cy in range(world.ch) for cx in range(world.cw)]
-    out.append(f"events {world.seed} {fnv(chr(12).join(events).encode('latin-1'))}")
+    out.append(f"events {world.seed} {fnv(chr(12).join(events).encode('utf-8'))}")
     light = bytes(v for j in range(world.H + 1) for i in range(world.W + 1) for v in world.corner_light(i, j))
     out.append(f"light {world.seed} {fnv(light)}")
     for i, room in enumerate(world.rooms):
         out.append(f"room {world.seed} {i} {room['template']} {fnv(chr(10).join(room['rows']).encode())} "
                    f"{grid(room['layers'][''])} {grid(room['layers']['M'])} "
                    f"{fnv(bytes(int(v) for line in room['walk'] for v in line))} "
-                   f"{fnv(chr(10).join(room['events']).encode('latin-1'))}")
+                   f"{fnv(chr(10).join(room['events']).encode('utf-8'))}")
     return out
 
 

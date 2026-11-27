@@ -26,4 +26,13 @@ run = function(args: string[]) do
 	Test.equal((Rules.effectiveness("Electrique", "Sol", "Aucun"): string), "0", "electric on ground : no effect")
 	Test.equal((Rules.effectiveness("Normal", "Normal", "Aucun"): string), "100", "no relation : normal")
 	Test.equal((Rules.experience(10, 3): string), "30", "experience won")
+	Test.equal((Rules.wildDamage(8): string), "6", "a wild Pokemon hits softer (three quarters)")
+	Test.equal((Rules.wildDamage(1): string), "1", "a wild Pokemon still does 1 damage")
+	Test.equal((Rules.wildDamage(0): string), "0", "no damage stays no damage")
+	Test.equal((Rules.captureChance(255, 30, 30, "none"): string), "33", "full hit points, the highest rate : a third")
+	Test.equal((Rules.captureChance(255, 0, 30, "none"): string), "100", "no hit points left : captured")
+	Test.check(Rules.captureChance(45, 5, 30, "none") > Rules.captureChance(45, 30, 30, "none"), "easier when it is hurt")
+	Test.equal((Rules.captureChance(255, 30, 30, "sleep"): string), "66", "asleep : twice")
+	Test.equal((Rules.captureChance(255, 30, 30, "poison"): string), "49", "another status : one and a half")
+	Test.equal((Rules.captureChance(3, 30, 30, "none"): string), "1", "the lowest rate : 1% at least")
 end
