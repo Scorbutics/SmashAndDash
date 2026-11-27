@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Builds the game (configures it the first time) then starts it, natively.
+#   ./play                       the title screen
+#   ./play save1                 plays the save Data/Saves/save1 directly (it writes it)
+#   SAD_BATTLE_AUTOPLAY=1 ./play  the AI plays the Pokemon of the player too
+set -euo pipefail
+cd "$(dirname "$0")"
+
+# Configure again each time: the new source files are found (the sources are globbed)
+cmake -S . -B build -Wno-dev -Wno-deprecated >/dev/null 2>&1 || cmake -S . -B build
+cmake --build build -j"$(nproc)"
+
+if [ $# -gt 0 ]; then
+	export SAD_SAVE="$1"
+fi
+LD_LIBRARY_PATH=build/lib exec build/bin/ska_main
