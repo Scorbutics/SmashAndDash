@@ -161,7 +161,19 @@
 		button.addEventListener("contextmenu", (event) => event.preventDefault());
 	}
 	dpad.addEventListener("contextmenu", (event) => event.preventDefault());
-	window.addEventListener("error", (event) => { status.textContent = "Erreur : " + event.message; });
+	// An uncaught C++ exception : its type and its message (SkaWeb.cmake : EXCEPTION_STACK_TRACES), its stack in the console
+	const describe = (error) => {
+		if (typeof WebAssembly !== "undefined" && WebAssembly.Exception && error instanceof WebAssembly.Exception && Module.getExceptionMessage) {
+			try {
+				const [type, message] = Module.getExceptionMessage(error);
+				console.error("C++ exception", type, message, error.stack);
+				return type + " : " + message;
+			} catch (e) {}
+		}
+		return error && error.message ? error.message : String(error);
+	};
+	window.addEventListener("error", (event) => { status.textContent = "Erreur : " + (event.error !== undefined ? describe(event.error) : event.message); });
+	window.addEventListener("unhandledrejection", (event) => { status.textContent = "Erreur : " + describe(event.reason); });
 </script>
 {{{ SCRIPT }}}
 </body>
