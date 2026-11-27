@@ -1,4 +1,7 @@
 #include <algorithm>
+#include <chrono>
+#include <cstdint>
+#include <unordered_map>
 #include <SDL3/SDL.h>
 #include "Canvas.h"
 #include "Theme.h"
@@ -7,11 +10,59 @@
 #include "Core/Inputs/InputAction.h"
 #include "Core/Inputs/InputRange.h"
 #include "Graphic/Texture.h"
+#include "Core/Dev/Profiler.h"
+
+namespace {
+	const std::string TextPart = "ui text";
+	const std::string PanelPart = "ui panel";
+	const std::string ImagePart = "ui image";
+	const std::string FillPart = "ui fill";
+
+	// The texts drawn, kept while they are drawn (a text made from the font costs about a millisecond : the screens that
+	// draw themselves each frame show tens of them) ; forgotten 3 s after their last drawing
+	struct TextKey {
+		std::string value;
+		unsigned int size;
+		std::uint32_t color;
+		bool operator==(const TextKey& other) const { return size == other.size && color == other.color && value == other.value; }
+	};
+	struct TextKeyHash {
+		std::size_t operator()(const TextKey& key) const {
+			return std::hash<std::string>{}(key.value) ^ (static_cast<std::size_t>(key.size) * 0x9E3779B1U) ^ (static_cast<std::size_t>(key.color) << 7);
+		}
+	};
+	struct CachedText {
+		ska::Texture texture;
+		std::chrono::steady_clock::time_point used;
+	};
+
+	const ska::Texture& Text(unsigned int size, const std::string& value, const ska::Color& color) {
+		static auto cache = std::unordered_map<TextKey, CachedText, TextKeyHash>{};
+		static auto lastPurge = std::chrono::steady_clock::now();
+		const auto now = std::chrono::steady_clock::now();
+		if (now - lastPurge > std::chrono::seconds(1)) {
+			lastPurge = now;
+			for (auto it = cache.begin(); it != cache.end();) {
+				it = now - it->second.used > std::chrono::seconds(3) ? cache.erase(it) : std::next(it);
+			}
+		}
+		const auto key = TextKey{ value, size, (static_cast<std::uint32_t>(color.r) << 24) | (static_cast<std::uint32_t>(color.g) << 16) | (static_cast<std::uint32_t>(color.b) << 8) | color.a };
+		auto found = cache.find(key);
+		if (found == cache.end()) {
+			auto entry = CachedText{};
+			entry.texture.loadFromText(size, value, color);
+			found = cache.emplace(key, std::move(entry)).first;
+		}
+		found->second.used = now;
+		return found->second.texture;
+	}
+}
 
 void Ui::Canvas::fill(const ska::Color& color, const ska::Rectangle& box) const {
 	if (box.w <= 0 || box.h <= 0) {
 		return;
 	}
+	const auto profiled = ska::Profiler::Scope{ FillPart };
 	if (color.a < 255) {
 		m_renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
 		m_renderer.drawColorRect(color, box);
@@ -25,8 +76,8 @@ int Ui::Canvas::text(const std::string& value, const TextStyle& style, int x, in
 	if (value.empty()) {
 		return 0;
 	}
-	auto texture = ska::Texture{};
-	texture.loadFromText(style.size, value, style.color);
+	const auto profiled = ska::Profiler::Scope{ TextPart };
+	const auto& texture = Text(style.size, value, style.color);
 	const auto width = static_cast<int>(texture.getWidth());
 	const auto left = align == Align::Left ? x : (align == Align::Center ? x - width / 2 : x - width);
 	auto effect = ska::RenderEffect{};
@@ -36,8 +87,7 @@ int Ui::Canvas::text(const std::string& value, const TextStyle& style, int x, in
 	effect.alpha = style.alpha;
 	m_renderer.setEffect(&effect);
 	if (style.outline > 0) {
-		auto outline = ska::Texture{};
-		outline.loadFromText(style.size, value, style.outlineColor);
+		const auto& outline = Text(style.size, value, style.outlineColor);
 		const auto t = style.outline;
 		const int offsets[][2] = { { -t, 0 }, { t, 0 }, { 0, -t }, { 0, t }, { t, t } };
 		for (const auto& offset : offsets) {
@@ -50,6 +100,7 @@ int Ui::Canvas::text(const std::string& value, const TextStyle& style, int x, in
 }
 
 void Ui::Canvas::panel(const std::string& image, const ska::Rectangle& box, int corner, unsigned char alpha) const {
+	const auto profiled = ska::Profiler::Scope{ PanelPart };
 	Theme::panel(m_renderer, image, box, corner, alpha);
 }
 
@@ -69,6 +120,7 @@ void Ui::Canvas::bar(const ska::Rectangle& box, const Bar& bar) const {
 }
 
 void Ui::Canvas::image(const ska::Texture& texture, int x, int y, const ska::Rectangle* clip, float scale, unsigned char alpha, bool anchorBottom) const {
+	const auto profiled = ska::Profiler::Scope{ ImagePart };
 	auto effect = ska::RenderEffect{};
 	effect.scaleX = scale;
 	effect.scaleY = scale;
