@@ -88,6 +88,15 @@ std::optional<ska::Point<float>> GridMovementSystem::nextBlock(ska::EntityId ent
 	const auto margin = 4.;
 	const auto targetBox = cpBBNew(shape.l + shift.x + margin, shape.b + shift.y + margin, shape.r + shift.x - margin, shape.t + shift.y - margin);
 
+	// Out of the map : a wall (its edges lead to the neighbouring maps by teleports on the edge blocks themselves ; an edge
+	// with no way to its neighbour, ex a cliff there, is a dead end)
+	const auto& world = m_worldState.getWorld();
+	const auto next = ska::Point<int>{ static_cast<int>(block.x + vector.x), static_cast<int>(block.y + vector.y) };
+	if (next.x < 0 || next.y < 0 || static_cast<std::size_t>(next.x) >= world.getBlocksX() || static_cast<std::size_t>(next.y) >= world.getBlocksY()) {
+		m_bumped = true;
+		return {};
+	}
+
 	// The walls of the map (the same as the physics) : on the way from the block to the next one (some walls are thin lines
 	// on the edges of the blocks), the sides excepted (the walls along the way)
 	const auto sweptBox = cpBBNew(std::min(shape.l, shape.l + shift.x) + margin, std::min(shape.b, shape.b + shift.y) + margin,

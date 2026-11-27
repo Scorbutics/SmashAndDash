@@ -1,4 +1,5 @@
 #include "Game/__internalConfig/LoggerConfig.h"
+#include "../System/TallGrassSystem.h"
 #include "AI/System/IARandomMovementSystem.h"
 #include "AI/System/IADefinedMovementSystem.h"
 #include "AI/System/IAFollowSystem.h"
@@ -51,6 +52,8 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	addLogic(std::make_unique<ska::IAFollowSystem>(m_entityManager));
 	// The player moves block by block on the map
 	addLogic(std::make_unique<GridMovementSystem>(m_entityManager, m_eventDispatcher, m_worldState));
+	// The legs of the characters in tall grass are not drawn
+	addLogic(std::make_unique<TallGrassSystem>(m_entityManager, m_worldState));
 	m_itemShortcuts = std::make_unique<ItemShortcuts>(m_eventDispatcher, m_worldState);
 	m_inputHooks = std::make_unique<InputHooks>(m_eventDispatcher, m_worldState);
 

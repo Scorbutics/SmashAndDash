@@ -153,7 +153,7 @@ namespace {
 const char* worldgen::AnimatedName(Animated animated) {
 	static const char* names[AnimatedCount] = { "water", "flower", "tall", "campfire", "lamphead", "butterfly",
 		"fountain_0_0", "fountain_0_1", "fountain_1_0", "fountain_1_1",
-		"flowerbed_roofr", "flowerbed_flower", "flowerbed_roofb", "flowerbed_orange", "tallfront" };
+		"flowerbed_roofr", "flowerbed_flower", "flowerbed_roofb", "flowerbed_orange" };
 	return names[static_cast<int>(animated)];
 }
 
@@ -733,11 +733,8 @@ void worldgen::World::placeNature() {
 			}
 			const auto p = nature(x, y);
 			if (Fbm(x / 6.0, y / 6.0, m_seed + 2) > p.tall && Fbm(x / 13.0, y / 13.0, m_seed + 1) < 0.5) {
-				// Its front leaves on the top layer (over the character in the grass), unless a tree top is there
+				// The legs of a character in it are not drawn (the flag of the tile : TallGrassSystem)
 				set(Layer::Middle, x, y, AnimatedTile(Animated::Tall));
-				if (tile(Layer::Top, x, y) == NoTile) {
-					set(Layer::Top, x, y, AnimatedTile(Animated::TallFront));
-				}
 			} else if (H01(x, y, m_seed + 21) < p.boulder) {
 				set(Layer::Middle, x, y, m_tiles.cell(K({ S("boulder") }), false));
 				m_walk[index(x, y)] = 0;

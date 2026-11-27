@@ -1,6 +1,6 @@
 4 -1 0 water
 4 -1 0 flower
-4 -1 0 tall
+4 -1 4 tall
 4 0 0 campfire
 4 1 0 lamphead
 4 -1 0 butterfly
@@ -12,7 +12,6 @@
 4 -1 0 flowerbed_flower
 4 -1 0 flowerbed_roofb
 4 -1 0 flowerbed_orange
-4 1 0 tallfront
 1 -1 0 ('cliff', (False, False, False, False, False, False, False, True), False, False)
 1 -1 0 ('cliff', (False, False, False, False, False, False, False, True), True, False)
 1 -1 0 ('cliff', (False, False, False, False, False, False, True, False), False, False)

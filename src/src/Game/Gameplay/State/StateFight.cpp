@@ -1,6 +1,7 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include <algorithm>
 #include <cmath>
+#include "../System/TallGrassSystem.h"
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Core/ECS/Basics/Physic/PositionComponent.h"
 #include "Graphic/System/CameraFixedStrategy.h"
@@ -131,6 +132,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	m_cameraSystem = cameraSystem.get();
 	addLogic(std::move(cameraSystem));	
 	addLogic(std::make_unique<PokeballSystem>(m_entityManager));
+	// The fighters in tall grass too
+	addLogic(std::make_unique<TallGrassSystem>(m_entityManager, m_worldState));
 	auto& rules = m_worldState.getBattleRules();
 	const auto blockSize = static_cast<unsigned int>(m_worldState.getWorld().getBlockSize());
 

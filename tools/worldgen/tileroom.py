@@ -190,10 +190,9 @@ class TileRoom(w.World):
         return out
 
     def floating_tops(self):
-        """The tiles of the top layer over a walkable block with no blocking base under them (3 blocks down). The front
-        leaves of the tall grass are not a top : they cover the legs of the character in the grass."""
+        """The tiles of the top layer over a walkable block with no blocking base under them (3 blocks down)."""
         return [(x, y) for y in range(H) for x in range(W)
-                if self.layers["T"][y][x] not in (None, w.TALLFRONT_CELL) and self.walk[y][x]
+                if self.layers["T"][y][x] is not None and self.walk[y][x]
                 and not any(0 <= y + k < H and not self.walk[y + k][x] for k in (1, 2, 3))]
 
     def wall_mismatches(self, rows, player=None):

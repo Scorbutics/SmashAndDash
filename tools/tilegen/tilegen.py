@@ -350,11 +350,9 @@ def flowers(frame):
     return s.render()
 
 
-def tall_grass(frame, front=False):
+def tall_grass(frame):
     """Wild grass : two rows of pointed leaves, the back row taller, packed so that the tiles make one field.
-    The leaves wrap at the tile edges ; the tips sway with the frames. front : the lower half of the front row and the
-    roots only, the same voxels : drawn over a character walking in the grass (its legs and its waist in the leaves,
-    its head and its shoulders out of them)."""
+    The leaves wrap at the tile edges ; the tips sway with the frames."""
     s = Scene(N, N)
     sway = (0, 1, 0, -1)[frame]
 
@@ -370,18 +368,14 @@ def tall_grass(frame, front=False):
                     t = 1                           # the shaded side of the leaf
                 s.put(x, y, "tallgrass", 0, 0, t)
 
-    if not front:
-        for cx in (2, 7, 12):                        # back row
-            leaf(cx, 1 + (cx % 3 == 0), 12, sway)
+    for cx in (2, 7, 12):                            # back row
+        leaf(cx, 1 + (cx % 3 == 0), 12, sway)
     for cx in (0, 5, 10):                            # front row, between the back leaves
         leaf(cx, 5, 14, -sway)
     for y in range(12, N):                           # the roots : dense and in the shade
         for x in range(N):
             if s.mat[y][x] is None or y >= 14:
                 s.put(x, y, "tallgrass", 0, 0, 1)
-    if front:
-        for y in range(N // 2):
-            s.mat[y] = [None] * N
     return s.render()
 
 

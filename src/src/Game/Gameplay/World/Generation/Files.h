@@ -16,8 +16,9 @@ namespace worldgen {
 
 	// The format of the generated worlds : a save whose world is older is generated again (the same seed, SaveSlots).
 	// 2 : the depth of the tiles in the properties of the chipsets (.prop) ; 3 : the hideouts of the wild Pokemon there ;
-	// 4 : the front leaves of the tall grass (over the characters in it) ; 5 : the texts of the events in UTF-8
-	constexpr int WorldVersion = 5;
+	// 4 : the front leaves of the tall grass (over the characters in it) ; 5 : the texts of the events in UTF-8 ; 6 : no
+	// front leaves, the tall grass flagged in the chipsets (the legs of the characters in it are not drawn)
+	constexpr int WorldVersion = 6;
 
 	// Where the player starts : the block below the centre of the first village
 	struct Start {

@@ -15,7 +15,8 @@ blockX = function(entity: int) : int do return 0 end
 
 blockY = function(entity: int) : int do return 0 end
 
-# The block of a layer at a block position has a property (bit mask)
+# The block of a layer at a block position has a property (bit mask : 1 water, 2 a hideout of the wild Pokemon, 4 tall
+# grass ; the generated worlds, tools/worldgen tile_flags)
 blockHasProperty = function(layer: int, x: int, y: int, property: int) : bool do return false end
 
 # Nothing at a block position : no wall, no character (the water is free, blockHasProperty tells it). Out of the map : false

@@ -54,9 +54,6 @@ for _c in range(2):
 for _colour in FLOWERBED_COLOURS:
     ANIMATED[f"flowerbed_{_colour}"] = (lambda col: lambda f: g.flowerbed_anim(col, f))(_colour)
     ANIMATED_WALK[f"flowerbed_{_colour}"] = True
-# The front leaves of the tall grass, on the top layer of its block : over the character walking in it (base 1)
-TALLFRONT_CELL = "tallfront"
-ANIMATED[TALLFRONT_CELL], ANIMATED_WALK[TALLFRONT_CELL] = (lambda f: g.tall_grass(f, front=True)), True
 # The cells with a touch script (Resources/Chipsets/tile_scripts/<name>.miniska ; also there : ledge_left, ledge_down,
 # ledge_right, the jumps over a ledge, for when the world has ledges)
 TILE_SCRIPTS = {WATER_CELL: "water"}
@@ -578,20 +575,22 @@ FLAT = -1
 # The objects standing on their block (the posts, the furniture of the villages, the rocks)
 STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "bush", "well", "boulder", "log seat",
             "sign"}
-ANIMATED_BASE = {"lamphead": 1, TALLFRONT_CELL: 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
+ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
                  "fountain_1_1": 0}
 # The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
 # bitMask, 1 is the water of the engine) : HIDEOUT, a wild Pokemon may come out of it (a bin, a bush, a trunk... : the
-# scripts read it, Data/Battle/arrivals.miniska)
+# scripts read it, Data/Battle/arrivals.miniska) ; GRASS, tall grass (the legs of a character in it are not drawn :
+# TallGrassSystem)
 HIDEOUT = 2
+GRASS = 4
 HIDEOUTS = {"bin", "barrel", "log seat", "bush"}
 _STAMP_ROWS = {}
 
 
 def tile_flags(key):
-    """The properties of a tile (its key, or the name of an animated tile) for the game : bits (HIDEOUT)."""
+    """The properties of a tile (its key, or the name of an animated tile) for the game : bits (HIDEOUT, GRASS)."""
     if isinstance(key, str):
-        return 0
+        return GRASS if key == TALL_CELL else 0
     if key[0] == "tree":
         style, row, c = key[1:]
         return HIDEOUT if any(part == "trunk" and part_row == row for _, part_row, part in TREE_SHAPES[style][1]) else 0
@@ -1617,11 +1616,8 @@ class World:
                     self.objects[(x, y)] = 0.4
 
     def tall_grass(self, x, y):
-        """Tall grass : its leaves on the middle layer ; its front leaves on the top layer (base 1 : drawn over a
-        character in the grass, under the ones on the block below), unless something is there (a tree top)."""
+        """Tall grass : its leaves on the middle layer (the legs of a character in it are not drawn : its flag GRASS)."""
         self.set("M", x, y, TALL_CELL)
-        if 0 <= x < self.W and 0 <= y < self.H and self.layers["T"][y][x] is None:
-            self.set("T", x, y, TALLFRONT_CELL)
 
     def lamp(self, x, y):
         """A street lamp : its post on the block (blocks the way), its lantern on the block above (over the characters)."""
