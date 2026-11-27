@@ -42,6 +42,21 @@ bool StartBattle(CustomEntityManager& cem, PokemonGameEventDispatcher& ged, Worl
 	const auto horizontal = std::abs(dx) >= std::abs(dy);
 	fc.pokemonPosition = ska::Point<int>(static_cast<int>(pcPlayer.x) + (horizontal ? (dx >= 0 ? blockSize : -blockSize) : 0),
 		static_cast<int>(pcPlayer.y) + (horizontal ? 0 : (dy >= 0 ? blockSize : -blockSize)));
+	// On a free block (not in a wall, the water, a character : the physics would push it far away, out of the arena) : the
+	// one towards the wild Pokemon first, else another one around the trainer
+	{
+		const auto tx = static_cast<int>(pcPlayer.x) / blockSize;
+		const auto ty = static_cast<int>(pcPlayer.y) / blockSize;
+		const int around[][2] = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 } };
+		if (!ws.freeBlock(fc.pokemonPosition.x / blockSize, fc.pokemonPosition.y / blockSize)) {
+			for (const auto& side : around) {
+				if (ws.freeBlock(tx + side[0], ty + side[1])) {
+					fc.pokemonPosition = ska::Point<int>((tx + side[0]) * blockSize, (ty + side[1]) * blockSize);
+					break;
+				}
+			}
+		}
+	}
 	fc.fighterPokemon = CustomEntityManager::createMovingCharacterNG(cem, ws.getSpace(), ska::Point<int>(fc.pokemonPosition.x / blockSize, fc.pokemonPosition.y / blockSize), fc.pokemonScriptId, blockSize);
 	cem.removeComponent<ska::PositionComponent>(fc.fighterPokemon);
 	fc.fighterOpponent = opponent;

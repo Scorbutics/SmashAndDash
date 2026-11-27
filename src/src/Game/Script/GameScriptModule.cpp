@@ -699,11 +699,28 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 			throw std::runtime_error("a battle needs the player on the map");
 		}
 
-		// The wild Pokemon appears near the player (3 blocks on its right : the Pokemon of the player appears between them)
+		// The wild Pokemon appears near the player (3 blocks on its right : the Pokemon of the player appears between them ;
+		// not free, a wall, the water, a character : on another side, a little nearer or farther)
 		const auto blockSize = static_cast<int>(worldState.getWorld().getBlockSize());
 		const auto& position = entityManager.getComponent<ska::PositionComponent>(*trainer);
 		const auto monster = monsters.front().first;
-		const auto opponent = CustomEntityManager::createMovingCharacterNG(entityManager, worldState.getSpace(), ska::Point<int>( static_cast<int>(position.x) / blockSize + 3, static_cast<int>(position.y) / blockSize ), monster, blockSize);
+		const auto px = static_cast<int>(position.x) / blockSize;
+		const auto py = static_cast<int>(position.y) / blockSize;
+		auto place = ska::Point<int>{ px + 3, py };
+		for (const auto distance : { 3, 2, 4 }) {
+			auto found = false;
+			for (const auto& side : { ska::Point<int>{ 1, 0 }, ska::Point<int>{ -1, 0 }, ska::Point<int>{ 0, 1 }, ska::Point<int>{ 0, -1 } }) {
+				if (worldState.freeBlock(px + side.x * distance, py + side.y * distance)) {
+					place = { px + side.x * distance, py + side.y * distance };
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				break;
+			}
+		}
+		const auto opponent = CustomEntityManager::createMovingCharacterNG(entityManager, worldState.getSpace(), place, monster, blockSize);
 		auto fight = FightComponent{};
 		fight.level = monsters.front().second < 1 ? 1 : monsters.front().second;
 		fight.opponentScriptId = monster;

@@ -232,6 +232,18 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	queueTask(m_loader.load());
 }
 
+ska::Point<int> StateFight::landingBlock() {
+	// The block next to the wild Pokemon, on the side of the trainer (throwPath)
+	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
+	const auto& trainer = m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
+	const auto& opponent = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);
+	const auto dx = trainer.x - opponent.x;
+	const auto dy = trainer.y - opponent.y;
+	const auto horizontal = std::abs(dx) > std::abs(dy);
+	return { static_cast<int>(opponent.x) / blockSize + (horizontal ? (dx >= 0 ? 1 : -1) : 0),
+		static_cast<int>(opponent.y) / blockSize + (horizontal ? 0 : (dy >= 0 ? 1 : -1)) };
+}
+
 std::pair<ska::Point<float>, ska::Point<float>> StateFight::throwPath() {
 	const auto center = [this](ska::EntityId entity) {
 		return ska::PositionComponent::getCenterPosition(m_entityManager.getComponent<ska::PositionComponent>(entity), m_entityManager.getComponent<ska::HitboxComponent>(entity));
@@ -248,6 +260,13 @@ std::pair<ska::Point<float>, ska::Point<float>> StateFight::throwPath() {
 	// Too close to the trainer (the wild Pokemon could not jump back) : between them
 	if (std::abs(to.x - from.x) + std::abs(to.y - from.y) < blockSize * 0.9F) {
 		to = ska::Point<float>{ (from.x + opponent.x) / 2.F, (from.y + opponent.y) / 2.F };
+	}
+	// Not free (a wall, the water, a character) : where its physics body already is (a free block next to the trainer,
+	// FightStartSystem)
+	const auto landing = ska::Point<int>{ static_cast<int>(to.x / blockSize), static_cast<int>(to.y / blockSize) };
+	const auto own = ska::Point<int>{ m_pokemonPosition.x / static_cast<int>(blockSize), m_pokemonPosition.y / static_cast<int>(blockSize) };
+	if (landing != own && !m_worldState.freeBlock(landing.x, landing.y)) {
+		to = ska::Point<float>{ (static_cast<float>(own.x) + 0.5F) * blockSize, (static_cast<float>(own.y) + 0.5F) * blockSize };
 	}
 	// The trainer faces where it throws (0 : down, 1 : right, 2 : up, 3 : left)
 	if (m_entityManager.hasComponent<ska::AnimationComponent>(m_trainerId)) {
@@ -284,6 +303,12 @@ void StateFight::beforeUnload() {
 				m_entityManager.getComponent<ska::GraphicComponent>(fighter).effect = ska::RenderEffect{};
 			}
 		}
+		// A wild Pokemon made for the battle (a script : Battle.start), still there (the player fled, or lost) : gone with it
+		if (!m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId) && m_entityManager.hasComponent<ska::PositionComponent>(m_opponentId) &&
+			m_entityManager.hasComponent<FightComponent>(m_opponentId)) {
+			park(m_opponentId);
+			m_entityManager.removeEntity(m_opponentId);
+		}
 		// The wild Pokemon still there (the player fled, or lost) : it stands still, and leaves the player alone a while
 		if (m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId)) {
 			if (m_entityManager.hasComponent<ska::GraphicComponent>(m_opponentId)) {
@@ -310,11 +335,37 @@ void StateFight::createCompanions(BattleRules& rules) {
 	}
 	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
 	const auto& origin = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);
+	const auto ox = static_cast<int>(origin.x) / blockSize;
+	const auto oy = static_cast<int>(origin.y) / blockSize;
+	// The free blocks around the first wild Pokemon (not in a wall, the water, on a character : the physics would push them
+	// apart, far, the Pokemon of the player out of the arena), the column next to it first, then wider ; not where the
+	// Pokemon of the player lands (the side of the trainer)
+	const auto landing = landingBlock();
+	auto candidates = std::vector<ska::Point<int>>{};
+	for (auto k = 0; k < 6; k++) {
+		candidates.push_back({ ox + 1, oy + (k / 2 + 1) * (k % 2 == 0 ? 1 : -1) });
+	}
+	for (auto radius = 1; radius <= 3; radius++) {
+		for (auto y = oy - radius; y <= oy + radius; y++) {
+			for (auto x = ox - radius; x <= ox + radius; x++) {
+				if (std::max(std::abs(x - ox), std::abs(y - oy)) == radius) {
+					candidates.push_back({ x, y });
+				}
+			}
+		}
+	}
+	auto next = candidates.begin();
 	auto index = 0;
 	for (const auto& [monster, level] : m_companionsData) {
-		const auto offset = (index / 2 + 1) * (index % 2 == 0 ? 1 : -1);
+		while (next != candidates.end() && (*next == landing || !m_worldState.freeBlock(next->x, next->y))) {
+			++next;
+		}
+		if (next == candidates.end()) {
+			SLOG(ska::LogLevel::Info) << "Battle : no room for the other wild pokemon of the group";
+			break;
+		}
 		index++;
-		const auto block = ska::Point<int>{ static_cast<int>(origin.x) / blockSize + 1, static_cast<int>(origin.y) / blockSize + offset };
+		const auto block = *next++;
 		const auto companion = CustomEntityManager::createMovingCharacterNG(m_entityManager, m_worldState.getSpace(), block, monster, blockSize);
 		const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(monster) + ".ini" };
 		const auto companionLevel = static_cast<int>(level < 1 ? 1 : level);

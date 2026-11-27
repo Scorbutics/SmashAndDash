@@ -327,10 +327,12 @@ bool WorldState::freeBlock(const int x, const int y) {
 	if (ground != nullptr && (ground->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) != 0) {
 		return false;
 	}
-	// Nobody there (a character, another wild Pokemon)
+	// Nobody there (a character, another wild Pokemon), no solid part of a tile : where a character stands on the block (the
+	// middle of its lower half : ska CollisionProfile::StandCells)
 	const auto blockSize = static_cast<double>(m_world.getBlockSize());
-	const auto margin = 4.;
-	return !getSpace().shapeIn(cpBBNew(x * blockSize + margin, y * blockSize + margin, (x + 1) * blockSize - margin, (y + 1) * blockSize - margin));
+	const auto margin = 2.;
+	return !getSpace().shapeIn(cpBBNew(x * blockSize + blockSize / 4. + margin, y * blockSize + blockSize / 2. + margin,
+		x * blockSize + 3. * blockSize / 4. - margin, (y + 1) * blockSize - margin));
 }
 
 ska::EntityId WorldState::createWild(const int monster, const int level, const int pathType, const std::string& attitude, const ska::Point<int> block, const std::optional<int> stay) {

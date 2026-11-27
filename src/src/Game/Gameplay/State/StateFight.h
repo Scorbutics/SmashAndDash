@@ -92,6 +92,8 @@ private:
 	// An entity removed after the battle : its physics body goes away first (the space keeps the bodies of the removed
 	// entities, and the map is not loaded again after a battle)
 	void park(ska::EntityId entity);
+	// The block where the Pokemon of the player lands : next to the wild Pokemon, on the side of the trainer
+	ska::Point<int> landingBlock();
 
 
 };
