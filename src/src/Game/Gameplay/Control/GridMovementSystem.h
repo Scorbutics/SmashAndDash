@@ -35,6 +35,7 @@ protected:
 // - its physics body moves (the walls of the map, partial tiles included, and the other characters stop it) ; it does not
 //   leave the map
 // - against a wall that it nearly passes (by CornerSlide pixels), it slides around its corner
+// - its gait (still, walking, running) : the walk, the run, and a pose between them (setting off, pushing off, braking)
 // - it faces one of the 4 directions (GridMovementComponent::facing : the block in front for the action key, the
 //   scripts) : the one held, the one it already faces on a diagonal
 // - pushing against a wall in one of the 4 directions touches it once (its scripts, ex : the water to surf, a ledge) ;
@@ -63,6 +64,11 @@ public:
 	// The free walk of the player : the time (ms) to reach about 2/3 of its speed, to lose 2/3 of it
 	static constexpr float Accel = 45.F;
 	static constexpr float Decel = 35.F;
+	// The poses between the gaits of the free walk (ms) : setting off, pushing off into a run, braking (from a run to a stop ;
+	// 2/3 of it to a walk)
+	static constexpr unsigned int SetOffTime = 90;
+	static constexpr unsigned int PushOffTime = 120;
+	static constexpr unsigned int BrakeTime = 180;
 	// The free walk slides around the corner of a wall it misses by this much (pixels)
 	static constexpr int CornerSlide = 18;
 	// A character that reacts to another one (GridMovementComponent::reaction) stops this long when it notices it

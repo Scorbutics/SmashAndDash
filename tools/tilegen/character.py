@@ -9,9 +9,11 @@ voxels, looking down from the front like the camera of the map. A voxel is shade
 it (its empty neighbours), lit from the top left like the tiles : the round volumes get round gradients. The silhouette
 gets the ink outline of the tiles.
 
-The sheet has the layout of the character sheets (Sprites/Charsets) : 6 x 8 frames of 72 px, 3 animated (a step, the
-standing pose, the other step). Rows : 0 back, 1 right, 2 front, 3 left, 4 back-left, 5 back-right, 6 front-left,
-7 front-right.
+The sheet has the layout of the character sheets (Sprites/Charsets) : frames of 72 px, 8 rows (0 back, 1 right, 2 front,
+3 left, 4 back-left, 5 back-right, 6 front-left, 7 front-right), 3 animated : columns 0 to 2 the walk (a step, the
+standing pose, the other step). The hero has 9 columns : 3 to 5 the run (a stride, in the air, the other stride :
+leaning forward, the arms pumping), then single poses between them (ska PoseAnimationStateMachine) : 6 setting off
+(from standing to walking), 7 pushing off (from walking to running), 8 braking (stopping from a run : leaning back).
 
   tools/tilegen/character.py [sheet.png]     (default Sprites/Charsets/0.png ; then tools/assets/surf_sprite.py
                                               makes the surfing sheet from it)
@@ -58,11 +60,42 @@ def rounded(q, c, r, p=2.6):
     return sum(abs((q[i] - c[i]) / r[i]) ** p for i in range(3)) <= 1.0
 
 
-def material(q, step):
-    """The material at a point of the model (x right, y forward, z up ; the face looks to -y), or None.
-    step : -1, 0, 1, the walk (the left foot forward, standing, the right foot forward)."""
+class Pose:
+    """A pose of the body. swing : the feet forward and back (the right foot back when positive) ; lean : the body
+    turned forward around the feet (degrees, back when negative) ; lift : the body raised (voxels, in the air) ; feet :
+    the left and right boots raised ; arms : how much the hands swing against the feet ; hands_up, hands_forward : the
+    hands raised, held forward."""
+
+    def __init__(self, swing=0.0, lean=0.0, lift=0.0, feet=(0.0, 0.0), arms=0.9, hands_up=0.0, hands_forward=0.0):
+        self.swing, self.lean, self.lift, self.feet = swing, lean, lift, feet
+        self.arms, self.hands_up, self.hands_forward = arms, hands_up, hands_forward
+
+
+def walk(step):
+    """step : -1, 0, 1, the walk (the left foot forward, standing, the right foot forward)."""
+    return Pose(swing=1.1 * step)
+
+
+# The run : a stride, in the air (the right knee up), the other stride ; leaning forward, the back foot kicked up
+RUN = [Pose(swing=-1.9, lean=14, feet=(0.9, 0.0), arms=1.1, hands_up=0.8),
+       Pose(swing=0.3, lean=14, lift=0.8, feet=(0.0, 1.4), arms=1.1, hands_up=0.8),
+       Pose(swing=1.9, lean=14, feet=(0.0, 0.9), arms=1.1, hands_up=0.8)]
+# The poses between : setting off, pushing off into a run, braking
+POSES = [Pose(swing=-0.7, lean=7, feet=(0.5, 0.0)),
+         Pose(swing=2.2, lean=20, lift=0.2, feet=(1.2, 0.0), arms=1.3, hands_up=0.6),
+         Pose(swing=-1.6, lean=-12, arms=0.0, hands_up=1.4, hands_forward=-1.5)]
+
+
+def material(q, pose):
+    """The material at a point of the model (x right, y forward, z up ; the face looks to -y), or None."""
     x, y, z = q
-    swing = 1.1 * step
+    z -= pose.lift
+    if pose.lean:
+        # Back into the body before it leans (turned around the feet : its top goes forward, to -y)
+        a = math.radians(pose.lean)
+        y, z = y * math.cos(a) + z * math.sin(a), -y * math.sin(a) + z * math.cos(a)
+    q = (x, y, z)
+    swing = pose.swing
     # The face : eyes (a highlight on top), blush, a small mouth, on the front of the head
     in_head = rounded(q, (0.0, 0.0, 13.4), (5.3, 4.8, 4.6))
     if in_head and y < -2.4:
@@ -102,19 +135,20 @@ def material(q, step):
         return "belt" if 3.9 <= z <= 4.6 else "tunic"
     # The hands, round, floating at the sides, swinging against the feet
     for side in (-1, 1):
-        if rounded(q, (side * 3.3, -0.5 - swing * side * 0.9, 5.0), (1.2, 1.2, 1.2), 2.0):
+        if rounded(q, (side * 3.3, -0.5 - swing * side * pose.arms + pose.hands_forward, 5.0 + pose.hands_up), (1.2, 1.2, 1.2), 2.0):
             return "skin"
     # Stubby legs and round boots, a step forward and back
     for side in (-1, 1):
         ly = swing * side
-        if 1.6 <= z <= 3.8 and ((x - side * 1.2) / 0.95) ** 2 + ((y - ly) / 0.95) ** 2 <= 1.0:
+        up = pose.feet[0 if side < 0 else 1]
+        if 1.6 + up <= z <= 3.8 + up and ((x - side * 1.2) / 0.95) ** 2 + ((y - ly) / 0.95) ** 2 <= 1.0:
             return "pants"
-        if rounded(q, (side * 1.3, ly - 0.4, 1.05), (1.25, 1.9, 1.15), 2.2):
+        if rounded(q, (side * 1.3, ly - 0.4, 1.05 + up), (1.25, 1.9, 1.15), 2.2):
             return "boots"
     return None
 
 
-def voxels(yaw, step):
+def voxels(yaw, pose):
     """The model turned (yaw in degrees : 0 the face to the camera, 90 to the right), cut into voxels :
     {(x, y, z): material}, x right, y away from the camera, z up."""
     a = math.radians(yaw)
@@ -126,7 +160,7 @@ def voxels(yaw, step):
                 # The centre of the voxel, back into the model space (turned by -yaw)
                 px, py, pz = (x + 0.5) / SCALE, (y + 0.5) / SCALE, (z + 0.5) / SCALE
                 qx, qy = c * px + s * py, -s * px + c * py
-                m = material((qx, qy, pz), step)
+                m = material((qx, qy, pz), pose)
                 if m:
                     grid[(x, y, z)] = m
     return grid
@@ -184,10 +218,11 @@ def render(grid):
 
 
 def sheet():
-    out = Image.new("RGBA", (6 * FRAME, 8 * FRAME), g.KEY + (255,))
+    poses = [walk(-1), walk(0), walk(1)] + RUN + POSES
+    out = Image.new("RGBA", (len(poses) * FRAME, 8 * FRAME), g.KEY + (255,))
     for row, yaw in enumerate(ROWS_YAW):
-        for col, step in enumerate((-1, 0, 1)):
-            out.paste(render(voxels(yaw, step)), (col * FRAME, row * FRAME))
+        for col, pose in enumerate(poses):
+            out.paste(render(voxels(yaw, pose)), (col * FRAME, row * FRAME))
     return out
 
 

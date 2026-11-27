@@ -6,6 +6,9 @@
 #include "Graphic/System/AnimationSystem.h"
 #include "Graphic/System/DeleterSystem.h"
 #include "../Control/ExploreCameraStrategy.h"
+#include "../Control/GridMovementComponent.h"
+#include "../../Graphic/CharsetSheet.h"
+#include "Core/Utils/TimeUtils.h"
 #include "Base/Values/Strings/StringUtils.h"
 #include "Core/Utils/RectangleUtils.h"
 #include "Core/Rectangle.h"
@@ -275,15 +278,48 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	m_walkASM = &animSystem.setup(true, std::make_unique<ska::WalkAnimationStateMachine>(m_entityManager));
 
 	animSystem.setup<ska::JumpAnimationStateMachine>(false, std::make_unique<ska::JumpAnimationStateMachine>(m_entityManager));
+	animSystem.setup<ska::RunAnimationStateMachine>(false, std::make_unique<ska::RunAnimationStateMachine>(m_entityManager, Charset::RunColumn));
+	animSystem.setup<ska::PoseAnimationStateMachine>(false, std::make_unique<ska::PoseAnimationStateMachine>(m_entityManager));
 
-	animSystem.link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>([&](const ska::EntityId& e) {
-		const auto& pc = m_entityManager.getComponent<ska::PositionComponent>(e);
-		return pc.z > 1;
-	});
+	// In the air : the jump ; on the ground, the player walking freely (GridMovementComponent::gait, a sheet with the run :
+	// Charset) runs, and shows a pose between its gaits (setting off, pushing off, braking) ; the others walk
+	const auto inAir = [this](const ska::EntityId& e) {
+		return m_entityManager.getComponent<ska::PositionComponent>(e).z > 1;
+	};
+	const auto gaits = [this, inAir](const ska::EntityId& e) -> const GridMovementComponent* {
+		if (inAir(e) || !m_entityManager.hasComponent<GridMovementComponent>(e)) {
+			return nullptr;
+		}
+		const auto& grid = m_entityManager.getComponent<GridMovementComponent>(e);
+		const auto& animation = m_entityManager.getComponent<ska::AnimationComponent>(e);
+		const auto& graphic = m_entityManager.getComponent<ska::GraphicComponent>(e);
+		// Moved by its keys right now (not a script, not a battle)
+		const auto driven = animation.drivenUntil > ska::TimeUtils::getTicks();
+		return grid.mode == GridMovementComponent::Mode::Keys && driven && !graphic.animatedSprites.empty() && Charset::hasGaits(graphic.animatedSprites[0]) ? &grid : nullptr;
+	};
+	const auto posing = [gaits](const ska::EntityId& e) {
+		const auto* grid = gaits(e);
+		return grid != nullptr && grid->poseUntil > ska::TimeUtils::getTicks();
+	};
+	const auto running = [gaits, posing](const ska::EntityId& e) {
+		const auto* grid = gaits(e);
+		return grid != nullptr && grid->gait == 2 && !posing(e);
+	};
+	const auto walking = [inAir, posing, running](const ska::EntityId& e) {
+		return !inAir(e) && !posing(e) && !running(e);
+	};
 
-	animSystem.link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([&](const ska::EntityId& e) {
-		const auto& pc = m_entityManager.getComponent<ska::PositionComponent>(e);
-		return pc.z <= 1;
+	animSystem.link<ska::WalkAnimationStateMachine, ska::JumpAnimationStateMachine>(inAir);
+	animSystem.link<ska::WalkAnimationStateMachine, ska::RunAnimationStateMachine>(running);
+	animSystem.link<ska::WalkAnimationStateMachine, ska::PoseAnimationStateMachine>(posing);
+	animSystem.link<ska::RunAnimationStateMachine, ska::WalkAnimationStateMachine>(walking);
+	animSystem.link<ska::RunAnimationStateMachine, ska::JumpAnimationStateMachine>(inAir);
+	animSystem.link<ska::RunAnimationStateMachine, ska::PoseAnimationStateMachine>(posing);
+	animSystem.link<ska::PoseAnimationStateMachine, ska::WalkAnimationStateMachine>(walking);
+	animSystem.link<ska::PoseAnimationStateMachine, ska::RunAnimationStateMachine>(running);
+	animSystem.link<ska::PoseAnimationStateMachine, ska::JumpAnimationStateMachine>(inAir);
+	animSystem.link<ska::JumpAnimationStateMachine, ska::WalkAnimationStateMachine>([inAir](const ska::EntityId& e) {
+		return !inAir(e);
 	});
 
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);

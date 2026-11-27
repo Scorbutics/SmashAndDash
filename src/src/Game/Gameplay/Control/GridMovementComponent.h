@@ -27,6 +27,10 @@ struct GridMovementComponent {
 	unsigned int duration = 0;
 	// The player (Keys) walks freely, not block by block : its velocity (pixels per second), towards the keys held
 	ska::Point<float> velocity;
+	// Its gait : 0 still, 1 walking, 2 running ; a pose between two gaits (AnimationComponent::pose : setting off, pushing
+	// off, braking) is shown until "poseUntil" (ticks). The animation follows them (the links of WorldState)
+	int gait = 0;
+	unsigned int poseUntil = 0;
 	// Direction of the wall it walks against (-1 : none) : the wall is touched once (its scripts, ex : the water to surf)
 	int bumpDirection = -1;
 	// The character its last step walked into (refused : that character stands on the block), 0 : none. Set again at each

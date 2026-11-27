@@ -18,6 +18,7 @@
 #include "Physic/Vect.h"
 #include "../World/WorldState.h"
 #include "../CustomEntityManager.h"
+#include "../../Graphic/CharsetSheet.h"
 
 namespace {
 	// 0 : down, 1 : right, 2 : up, 3 : left
@@ -406,6 +407,28 @@ void GridMovementSystem::walkFreely(ska::EntityId entity, GridMovementComponent&
 		auto& space = m_worldState.getSpace();
 		space.getBody(body.bodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
 		space.getBody(body.controlBodyIndex).setVelocity(ska::cp::Vect{ 0., 0. });
+	}
+
+	// Its gait changes : a pose between the two (the run and the poses : the sheets of 9 columns, Charset)
+	const auto gait = !moving ? 0 : running ? 2 : 1;
+	if (gait != grid.gait) {
+		auto pose = -1;
+		auto duration = 0u;
+		if (grid.gait == 0) {
+			pose = Charset::SetOffPose;
+			duration = SetOffTime;
+		} else if (gait == 2) {
+			pose = Charset::PushOffPose;
+			duration = PushOffTime;
+		} else if (grid.gait == 2) {
+			pose = Charset::BrakePose;
+			duration = gait == 0 ? BrakeTime : BrakeTime * 2 / 3;
+		}
+		if (pose >= 0) {
+			m_componentAccessor.get<ska::AnimationComponent>(entity).pose = pose;
+			grid.poseUntil = ska::TimeUtils::getTicks() + duration;
+		}
+		grid.gait = gait;
 	}
 
 	// Animated by the keys : a foot forward each half block, in the direction held (8 directions : 4 down right, 5 up

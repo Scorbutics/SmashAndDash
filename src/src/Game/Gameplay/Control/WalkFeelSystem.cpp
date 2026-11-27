@@ -88,6 +88,12 @@ void WalkFeelSystem::refresh(unsigned int ellapsedTime) {
 			feel.stretch = -0.07F;
 		} else if (!moving && feel.moving) {
 			feel.stretch = -0.05F;
+			// Braking from a run : the feet skid, dust in front of them
+			if (feel.speed > walkSpeed * 1.35F && !onWater) {
+				for (const auto side : { -1.F, 1.F }) {
+					puff({ feet.x + feel.heading.x * 10.F + side * 6.F, feet.y + feel.heading.y * 4.F }, { feel.heading.x * 50.F + side * 15.F, feel.heading.y * 20.F }, false);
+				}
+			}
 		}
 		if (position.z > 0 && feel.z == 0) {
 			feel.stretch = 0.10F;
@@ -98,6 +104,10 @@ void WalkFeelSystem::refresh(unsigned int ellapsedTime) {
 			}
 		}
 		feel.moving = moving;
+		if (moving) {
+			feel.speed = speed;
+			feel.heading = { delta.x / length, delta.y / length };
+		}
 		feel.z = position.z;
 		feel.still = moving ? 0 : feel.still + ellapsedTime;
 

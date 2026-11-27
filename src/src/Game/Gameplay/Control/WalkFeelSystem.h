@@ -20,7 +20,7 @@ namespace ska {
 // - a squash when it starts or stops, a stretch when it hops, a squash when it lands : a spring on the scale of its
 //   drawing (anchored at its feet)
 // - breathing when it stands still a while
-// - dust puffs at its heels when it runs and when it lands (drops on the water)
+// - dust puffs at its heels when it runs, when it brakes from a run and when it lands (drops on the water)
 // It owns the scale and the vertical offset of the drawing effect of the player (GraphicComponent::effect) on the map.
 class WalkFeelSystem :
 	public ska::System<ska::RequiredComponent<GridMovementComponent, ska::PositionComponent, ska::GraphicComponent, ska::AnimationComponent>, ska::PossibleComponent<>> {
@@ -46,6 +46,8 @@ private:
 		ska::Point<long> last;
 		bool known = false;
 		bool moving = false;
+		float speed = 0.F;
+		ska::Point<float> heading;
 		// Distance walked (pixels), for the feet
 		float distance = 0.F;
 		int foot = 0;

@@ -12,6 +12,7 @@
 #include "Graphic/HasShadowComponent.h"
 #include "Core/ECS/Basics/Physic/CollidableComponent.h"
 #include "Core/Utils/SpritePath.h"
+#include "../Graphic/CharsetSheet.h"
 #include "Core/Utils/SkaConstants.h"
 
 ska::PrefabEntityManager::PrefabEntityManager(GameEventDispatcher& ged) :
@@ -39,7 +40,7 @@ ska::EntityId ska::PrefabEntityManager::createCharacter(const Point<int> startPo
 	addComponent<MovementComponent>(hero, std::move(mc));
 	GraphicComponent gc;
 	gc.animatedSprites.resize(1);
-	gc.animatedSprites[0].load(SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, spriteId), 6, 8, 3);
+	Charset::load(gc.animatedSprites[0], spriteId);
 	gc.animatedSprites[0].setDelay(100);
 
 	HitboxComponent hc;

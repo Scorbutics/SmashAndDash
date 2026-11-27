@@ -18,6 +18,7 @@
 #include "Core/ECS/Basics/Script/ScriptSleepComponent.h"
 #include "Core/Utils/PhysicUtils.h"
 #include "Core/Utils/SpritePath.h"
+#include "../Graphic/CharsetSheet.h"
 #include "Core/Utils/SkaConstants.h"
 #include "Graphic/GraphicComponent.h"
 #include "AI/IADefinedMovementComponent.h"
@@ -318,8 +319,8 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		if (graphic.animatedSprites.empty()) {
 			graphic.animatedSprites.resize(1);
 		}
-		// A sheet of the same layout as the characters (6 x 8 frames, 3 animated)
-		graphic.animatedSprites[0].load(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, Int(params[1])), 6, 8, 3);
+		// A sheet of the same layout as the characters (Charset : 6 or 9 x 8 frames, 3 animated)
+		Charset::load(graphic.animatedSprites[0], static_cast<int>(Int(params[1])));
 		graphic.animatedSprites[0].setDelay(100);
 		Require<ska::AnimationComponent>(entityManager, entity, "be animated").animatedWhenStill = params[2].nodeval<bool>();
 		return ska::NodeValue{};
