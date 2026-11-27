@@ -16,69 +16,53 @@ end
 
 # The chance of a line (percents) : the trainer does not comment everything
 chance = function(event: string) : int do
-	if event == "attack" || event == "hit"
-		return 30
+	return match event
+		when "attack", "hit" then 30
+		when "hurt" then 40
+		when "dodge", "weak" then 60
+		else 100
 	end
-	if event == "hurt"
-		return 40
-	end
-	if event == "dodge" || event == "weak"
-		return 60
-	end
-	return 100
 end
+
+# The big moments always get their line
+Always = ["start", "knockout", "fainted", "potion", "ball", "low", "super", "bond"]
 
 # How long after the last line (milliseconds) this one can be said : the trainer does not talk all the time, but the
 # big moments always get their line
 pause = function(event: string) : int do
-	if event == "start" || event == "knockout" || event == "fainted" || event == "potion" || event == "ball" || event == "low" || event == "super" || event == "bond"
+	if Always.contains(event)
 		return 0
 	end
 	return 2800
+end
+
+# The lines the trainer can say for an event (none : it says nothing)
+lines = function(event: string, pokemon: string, detail: string) : string[] do
+	return match event
+		when "start" then [pokemon + ", go !", "En avant, " + pokemon + " !", "À toi de jouer, " + pokemon + " !"]
+		when "attack" then [pokemon + ", " + detail + " !", detail + " !", "Utilise " + detail + " !"]
+		when "hit" then ["Bien joué !", "Touché !", "Continue comme ça !", "Encore !"]
+		when "super" then ["C'est super efficace !", "En plein dans le mille !"]
+		when "weak" then ["Ce n'est pas très efficace...", "Ça ne marche pas très bien..."]
+		when "hurt" then ["Attention, " + pokemon + " !", "Tiens bon !", "Courage !"]
+		when "low" then ["Tiens bon, " + pokemon + " !", "Ne lâche rien, " + pokemon + " !"]
+		when "dodge" then ["Esquive !", "Bien esquivé !", "Trop lent !"]
+		when "potion" then [detail + " ! Tiens, " + pokemon + " !", "Courage, " + pokemon + ", voilà de l'aide !"]
+		when "ball" then [detail + ", go !", "Je te tiens !"]
+		when "bond" then [pokemon + ", " + detail + " ! De toutes tes forces !", "Ensemble, " + pokemon + " ! " + detail + " !", "C'est le moment, " + pokemon + " ! " + detail + " !"]
+		when "knockout" then ["Bravo, " + pokemon + " !", "On a gagné !", "Bien joué, " + pokemon + " !"]
+		when "fainted" then ["Non, " + pokemon + " !", pokemon + " !"]
+		else []: string
+	end
 end
 
 line = function(event: string, pokemon: string, detail: string, roll: int, pick: int) : string do
 	if roll >= chance(event)
 		return ""
 	end
-	if event == "start"
-		return choose([pokemon + ", go !", "En avant, " + pokemon + " !", "À toi de jouer, " + pokemon + " !"], pick)
+	said = lines(event, pokemon, detail)
+	if said.size() == 0
+		return ""
 	end
-	if event == "attack"
-		return choose([pokemon + ", " + detail + " !", detail + " !", "Utilise " + detail + " !"], pick)
-	end
-	if event == "hit"
-		return choose(["Bien joué !", "Touché !", "Continue comme ça !", "Encore !"], pick)
-	end
-	if event == "super"
-		return choose(["C'est super efficace !", "En plein dans le mille !"], pick)
-	end
-	if event == "weak"
-		return choose(["Ce n'est pas très efficace...", "Ça ne marche pas très bien..."], pick)
-	end
-	if event == "hurt"
-		return choose(["Attention, " + pokemon + " !", "Tiens bon !", "Courage !"], pick)
-	end
-	if event == "low"
-		return choose(["Tiens bon, " + pokemon + " !", "Ne lâche rien, " + pokemon + " !"], pick)
-	end
-	if event == "dodge"
-		return choose(["Esquive !", "Bien esquivé !", "Trop lent !"], pick)
-	end
-	if event == "potion"
-		return choose([detail + " ! Tiens, " + pokemon + " !", "Courage, " + pokemon + ", voilà de l'aide !"], pick)
-	end
-	if event == "ball"
-		return choose([detail + ", go !", "Je te tiens !"], pick)
-	end
-	if event == "bond"
-		return choose([pokemon + ", " + detail + " ! De toutes tes forces !", "Ensemble, " + pokemon + " ! " + detail + " !", "C'est le moment, " + pokemon + " ! " + detail + " !"], pick)
-	end
-	if event == "knockout"
-		return choose(["Bravo, " + pokemon + " !", "On a gagné !", "Bien joué, " + pokemon + " !"], pick)
-	end
-	if event == "fainted"
-		return choose(["Non, " + pokemon + " !", pokemon + " !"], pick)
-	end
-	return ""
+	return choose(said, pick)
 end

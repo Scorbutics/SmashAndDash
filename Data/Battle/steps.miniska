@@ -12,51 +12,33 @@ Engine = import "bind:ska.engine"
 
 # The banner of a step : the big text in the middle of the screen ("" : none)
 banner = function(args: string[]) : string do
-	if args[0] == "start"
-		return "COMBAT !"
-	end
-	if args[0] == "knockout"
-		if args[1] == "won"
-			return "VICTOIRE !"
+	return match args[0]
+		when "start" then "COMBAT !"
+		when "knockout" then match args[1]
+			when "won" then "VICTOIRE !"
+			when "captured" then "CAPTURÉ !"
+			else "K.O. !"
 		end
-		if args[1] == "captured"
-			return "CAPTURÉ !"
-		end
-		return "K.O. !"
+		when "fled" then "FUITE !"
+		else ""
 	end
-	if args[0] == "fled"
-		return "FUITE !"
-	end
-	return ""
 end
 
 # The line of a dialog of the battle : "intro" (it appears), "won", "captured", "lost", "fled" ; name : the wild Pokemon
 message = function(step: string, name: string) : string do
-	if step == "intro"
-		return "Un " + name + " sauvage apparaît !"
+	return match step
+		when "intro" then "Un " + name + " sauvage apparaît !"
+		when "won" then "Le " + name + " a été battu."
+		when "captured" then name + " rejoint votre équipe !"
+		when "fled" then "Vous prenez la fuite !"
+		else "Votre Pokémon est K.O."
 	end
-	if step == "won"
-		return "Le " + name + " a été battu."
-	end
-	if step == "captured"
-		return name + " rejoint votre équipe !"
-	end
-	if step == "fled"
-		return "Vous prenez la fuite !"
-	end
-	return "Votre Pokémon est K.O."
 end
 
 # The dialogs of the end of a battle
 outro = function(args: string[]) do
-	if args[1] == "won"
-		Battle.message(message("won", args[3]))
-	end
-	if args[1] == "captured"
-		Battle.message(message("captured", args[3]))
-	end
-	if args[1] == "lost"
-		Battle.message(message("lost", args[3]))
+	if ["won", "captured", "lost"].contains(args[1])
+		Battle.message(message(args[1], args[3]))
 	end
 	if args[4] != "0"
 		Battle.message(args[2] + " gagne " + args[4] + " points d'expérience !")

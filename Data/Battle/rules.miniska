@@ -138,7 +138,7 @@ captureChance = function(rate: int, hp: int, maxHp: int, status: string) : int d
 	if status == "sleep"
 		odds = odds * 2
 	end
-	if status == "poison" || status == "burn" || status == "paralysis" || status == "leech"
+	if ["poison", "burn", "paralysis", "leech"].contains(status)
 		odds = odds * 3 / 2
 	end
 	return Math.clamp(odds, 1, 100)

@@ -20,13 +20,11 @@ Hard = 2
 
 # How long it waits between two decisions (milliseconds) : an easy one thinks slowly, the player has room to act
 pause = function(difficulty: int) : int do
-	if difficulty == Easy
-		return 700
+	return match difficulty
+		when Easy then 700
+		when Normal then 450
+		else 300
 	end
-	if difficulty == Normal
-		return 450
-	end
-	return 300
 end
 
 # Skill used by the Pokemon "monster" (Data/Monsters/<monster>.ini) : its index in the skills it knows, -1 for none.

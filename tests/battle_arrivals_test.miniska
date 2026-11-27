@@ -53,5 +53,5 @@ run = function(args: string[]) do
 	Arrivals.run(["tree", "10", "3", "passive", "60", "60", "0", "0"])
 	Test.equal(last(), "walk 10", "no block in sight under the leaves : it walks in")
 	# Each kind its own hideouts : no rock seen for a Bulbizarre
-	Test.equal((Arrivals.hidingPlaces(60, 60, "grass").size() / 4): string, "1", "only the tall grass")
+	Test.equal((Arrivals.hidingPlaces(60, 60, Arrivals.Arrival.grass).size() / 4): string, "1", "only the tall grass")
 end

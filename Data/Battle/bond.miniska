@@ -3,30 +3,19 @@
 # strongest skill of its Pokemon (a cinematic : the battle stops, the trainer calls the skill, a ring closes on the
 # Pokemon : pressed when it closes, the hit is perfect). Called by the battle (it cannot wait).
 
-# How much an event fills the gauge
+# How much an event fills the gauge (the other events : not at all)
+Gains = [
+	"hit": 6,
+	"super": 12,
+	"weak": 3,
+	"hurt": 9,
+	"low": 25,
+	"dodge": 10,
+	"encourage": 5
+]
+
 gain = function(event: string) : int do
-	if event == "hit"
-		return 6
-	end
-	if event == "super"
-		return 12
-	end
-	if event == "weak"
-		return 3
-	end
-	if event == "hurt"
-		return 9
-	end
-	if event == "low"
-		return 25
-	end
-	if event == "dodge"
-		return 10
-	end
-	if event == "encourage"
-		return 5
-	end
-	return 0
+	return Gains.get(event, 0)
 end
 
 # The damage of the skill unleashed (percents of its usual damage), more for a perfect timing

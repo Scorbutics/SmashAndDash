@@ -3,19 +3,18 @@
 # short stun, at once) ; "guard" is the shield of a skill on its user (not a status). The dice are rolled by the battle
 # and given here (a roll : the replays of a battle stay the same).
 
+# The statuses that last (one at a time on a Pokemon)
+Lasting = ["poison", "burn", "paralysis", "sleep", "leech"]
+# The statuses that hurt over time : every "tickPeriod" milliseconds (0 : never), "tickDamage" hit points
+Hurting = ["poison", "burn", "leech"]
+
 # The status of a skill lands on its target : its chance (percents) against the roll (0 .. 99) ; one lasting status at
 # a time ("current" : the status it has)
 lands = function(status: string, chance: int, roll: int, current: string) : bool do
-	if status == "" || status == "guard" || status == "none"
-		return false
-	end
 	if roll >= chance
 		return false
 	end
-	if status == "flinch"
-		return true
-	end
-	return current == "none"
+	return status == "flinch" || (Lasting.contains(status) && current == "none")
 end
 
 # How long a status lasts (milliseconds), from the duration of the effects of the skill : a sleep is short
@@ -28,27 +27,24 @@ end
 
 # The stun of a status (milliseconds) : a flinch, a paralysis that makes a skill fail
 stun = function(status: string) : int do
-	if status == "flinch"
-		return 450
+	return match status
+		when "flinch" then 450
+		when "paralysis" then 500
+		else 0
 	end
-	if status == "paralysis"
-		return 500
-	end
-	return 0
 end
 
 # After a status, how long (milliseconds) it cannot have it again : a flinch is not chained (a contact skill that
 # flinches, Charge, cannot lock its target)
 immunity = function(status: string) : int do
-	if status == "flinch"
-		return 2500
+	return match status
+		when "flinch" then 2500
+		else 0
 	end
-	return 0
 end
 
-# The statuses that hurt over time : every "tickPeriod" milliseconds (0 : never), "tickDamage" hit points
 hurts = function(status: string) : bool do
-	return status == "poison" || status == "burn" || status == "leech"
+	return Hurting.contains(status)
 end
 
 tickPeriod = function(status: string) : int do
@@ -59,7 +55,7 @@ tickPeriod = function(status: string) : int do
 end
 
 tickDamage = function(status: string, maxHp: int) : int do
-	if hurts(status) == false
+	if !hurts(status)
 		return 0
 	end
 	damage = maxHp / 16
@@ -76,23 +72,23 @@ end
 
 # Its speed (percents) : a paralysis slows down
 speedPercent = function(status: string) : int do
-	if status == "paralysis"
-		return 60
+	return match status
+		when "paralysis" then 60
+		else 100
 	end
-	return 100
 end
 
 # A skill fails sometimes : 1 time in "failOdds" (0 : never). The battle rolls 0 .. failOdds - 1 : 0 fails
 failOdds = function(status: string) : int do
-	if status == "paralysis"
-		return 4
+	return match status
+		when "paralysis" then 4
+		else 0
 	end
-	return 0
 end
 
 # The attack of a Pokemon (percents) for a skill : a burn halves the physical attacks
 attackPercent = function(status: string, special: bool) : int do
-	if status == "burn" && special == false
+	if status == "burn" && !special
 		return 50
 	end
 	return 100

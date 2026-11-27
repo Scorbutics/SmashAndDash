@@ -4,10 +4,13 @@
 # bin, a bush, a log, a trunk ("hideout") ; a Bulbizarre out of tall grass ("grass") ; a Carapuce out of the water
 # ("water") ; a Salameche from behind a rock ("rock") ; a Chenipan down from the leaves of a tree, on a silk thread
 # ("tree"). Nowhere to arrive : it walks in. The dice are rolled by the game (the replays stay the same).
-# Arguments : the arrival ("fly", "hideout", "grass", "water", "rock", "tree"), the monster, its level, its attitude, the
-# block of the player (x, y), two rolls (0 .. 9999).
+# Arguments : the arrival (the name of a value of Arrival), the monster, its level, its attitude, the block of the
+# player (x, y), two rolls (0 .. 9999).
 Battle = import "bind:game.battle"
 Map = import "bind:game.map"
+
+# How a wild Pokemon arrives (Data/Battle/encounters.miniska "arrival" gives the name of one)
+Arrival = enum fly, hideout, grass, water, rock, tree, walk end
 
 # The properties of the tiles (the red channel of the .prop of a tileset : tools/worldgen/worldgen.py, tile_flags)
 Water = 1
@@ -64,30 +67,22 @@ hideout = function(x: int, y: int) : bool do
 end
 
 # The property of the hideouts of an arrival, and what they throw while they rustle
-property = function(kind: string) : int do
-	if kind == "grass"
-		return Grass
+property = function(kind: Arrival) : int do
+	return match kind
+		when Arrival.grass then Grass
+		when Arrival.water then Water
+		when Arrival.rock then Rock
+		when Arrival.tree then Canopy
+		else Hideout
 	end
-	if kind == "water"
-		return Water
-	end
-	if kind == "rock"
-		return Rock
-	end
-	if kind == "tree"
-		return Canopy
-	end
-	return Hideout
 end
 
-effect = function(kind: string) : string do
-	if kind == "water"
-		return "splash"
+effect = function(kind: Arrival) : string do
+	return match kind
+		when Arrival.water then "splash"
+		when Arrival.rock then "dust"
+		else "leaves"
 	end
-	if kind == "rock"
-		return "dust"
-	end
-	return "leaves"
 end
 
 # The free blocks seen around the player : x, y, x, y...
@@ -110,12 +105,12 @@ end
 # The hideouts of an arrival seen around the player, with the free block it comes out on : hideout x, y, then out x,
 # y... A tree : its leaves, the block under its trunk (2 blocks lower : it comes down there). The others : south first
 # (towards the player's side of the screen), then east, west, north
-hidingPlaces = function(px: int, py: int, kind: string) : int[] do
+hidingPlaces = function(px: int, py: int, kind: Arrival) : int[] do
 	found = []: int
 	wanted = property(kind)
 	# South, east, west, north : dx, dy
 	sides = [0, 1, 1, 0, -1, 0, 0, -1]
-	if kind == "tree"
+	if kind == Arrival.tree
 		sides = [0, 2]
 	end
 	y = py - SeenY
@@ -128,7 +123,7 @@ hidingPlaces = function(px: int, py: int, kind: string) : int[] do
 					ox = x + sides[side]
 					oy = y + sides[side + 1]
 					# Down from a tree : onto a block in sight (no leaves of another tree over it)
-					if standable(ox, oy) && !(kind == "tree" && has(ox, oy, Canopy))
+					if standable(ox, oy) && !(kind == Arrival.tree && has(ox, oy, Canopy))
 						found = found + [x, y, ox, oy]
 						side = sides.size()
 					else
@@ -146,11 +141,11 @@ end
 # The hideouts seen around the player (a bin, a bush, a log, a trunk), with the free block it comes out on (south first :
 # towards the player's side of the screen) : hideout x, y, then out x, y...
 hideouts = function(px: int, py: int) : int[] do
-	return hidingPlaces(px, py, "hideout")
+	return hidingPlaces(px, py, Arrival.hideout)
 end
 
 run = function(args: string[]) do
-	kind = args[0]
+	kind = (args[0]: Arrival)
 	monster = (args[1]: int)
 	level = (args[2]: int)
 	attitude = args[3]
@@ -158,7 +153,7 @@ run = function(args: string[]) do
 	py = (args[5]: int)
 	roll = (args[6]: int)
 	stayRoll = (args[7]: int)
-	if kind == "fly"
+	if kind == Arrival.fly
 		found = landings(px, py)
 		if found.size() > 0
 			i = (roll % (found.size() / 2)) * 2
@@ -166,11 +161,11 @@ run = function(args: string[]) do
 			return
 		end
 	end
-	if kind == "hideout" || kind == "grass" || kind == "water" || kind == "rock" || kind == "tree"
+	if kind != Arrival.fly && kind != Arrival.walk
 		found = hidingPlaces(px, py, kind)
 		if found.size() > 0
 			i = (roll % (found.size() / 4)) * 4
-			if kind == "tree"
+			if kind == Arrival.tree
 				Battle.drop(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle)
 			else
 				Battle.emerge(monster, level, attitude, found[i], found[i + 1], found[i + 2], found[i + 3], Rustle, effect(kind))
