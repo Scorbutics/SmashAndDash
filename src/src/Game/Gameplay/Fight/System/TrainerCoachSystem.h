@@ -46,6 +46,8 @@ private:
 	// What the battle did since the last frame : the lines of the trainer
 	void watch();
 	void comment(const std::string& event, const std::string& detail = "");
+	// The bond between the trainer and its Pokemon grows (BattleStage::bond)
+	void feel(const std::string& event);
 	const std::string& monsterName();
 
 	ska::EntityManager& m_entities;

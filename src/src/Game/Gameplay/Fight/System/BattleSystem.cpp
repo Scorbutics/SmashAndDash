@@ -62,15 +62,15 @@ float BattleSystem::cooldown(unsigned int index, ska::EntityId from) const {
 	return 1.F - static_cast<float>(m_time - lastUse) / static_cast<float>(skill.cooldown);
 }
 
-bool BattleSystem::useSkill(unsigned int index, ska::EntityId from) {
-	if (!canAct(from) || !skillReady(index, from)) {
+bool BattleSystem::useSkill(unsigned int index, ska::EntityId from, bool anyway) {
+	if (!canAct(from) || (!anyway && !skillReady(index, from))) {
 		return false;
 	}
 	auto& fighter = m_componentAccessor.get<FighterComponent>(from);
 	// 0 means "never used"
 	fighter.lastUses[index] = m_time == 0 ? 1 : m_time;
 	// A status makes it fail a skill sometimes (the cooldown is lost) : 1 time in "failOdds" (Data/Battle/status.miniska)
-	const auto failOdds = fighter.status == FighterStatus::None ? 0 : m_rules.statusFailOdds(StatusKey(fighter.status));
+	const auto failOdds = fighter.status == FighterStatus::None || anyway ? 0 : m_rules.statusFailOdds(StatusKey(fighter.status));
 	if (failOdds > 0 && ska::NumberUtils::random(0, failOdds - 1) == 0) {
 		fighter.stun = std::max(fighter.stun, m_rules.statusStun(StatusKey(fighter.status)));
 		MarkText(m_customEM, m_stage, from, "PARALYSÉ", 2);

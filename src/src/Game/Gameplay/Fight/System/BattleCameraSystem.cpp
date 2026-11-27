@@ -137,6 +137,15 @@ void BattleCameraSystem::refresh(unsigned int ellapsedTime) {
 		break;
 	}
 	zoom = phase == BattlePhase::Outro ? zoom : std::max(MinZoom, std::min(MaxZoom + 0.3F, zoom)) + m_kick;
+	// The bond unleashes a skill (BondSystem) : close on the Pokemon, until its skill goes
+	const auto& cinematic = m_stage.cinematic;
+	if (cinematic.active && !cinematic.released && phase == BattlePhase::Fight && m_entities.hasComponent<ska::PositionComponent>(cinematic.user) &&
+		m_entities.hasComponent<ska::HitboxComponent>(cinematic.user)) {
+		const auto user = center(cinematic.user);
+		target = ska::Point<float>{ user.x, user.y - 8.F };
+		zoom = MaxZoom + 0.6F;
+		speed = 6.F;
+	}
 
 	// Smoothly : the point and the zoom follow their targets
 	const auto follow = 1.F - std::exp(-seconds * speed);

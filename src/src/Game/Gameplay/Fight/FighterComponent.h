@@ -58,6 +58,10 @@ public:
 	unsigned int stun = 0;
 	// Milliseconds left before it can flinch again (a flinch is not chained : BattleRules::statusImmunity)
 	unsigned int flinchGuard = 0;
+	// A skill unleashed by the bond with its trainer : its hits deal "bondPower" percents of their damage for "bondTime"
+	// milliseconds more (BondSystem)
+	unsigned int bondTime = 0;
+	int bondPower = 100;
 	unsigned int flash = 0;
 	// An attack : the startup (the Pokemon prepares it), the lunge of a contact skill (it hits), the recovery. The
 	// Pokemon cannot move during all of it, it can be hit (a hit during the startup cancels the attack)

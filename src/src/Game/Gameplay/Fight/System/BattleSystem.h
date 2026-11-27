@@ -38,7 +38,8 @@ public:
 	BattleSystem& operator=(const BattleSystem&) = delete;
 
 	// Starts a skill (its wind-up) when it is ready and the fighter can act : returns false otherwise
-	bool useSkill(unsigned int index, ska::EntityId from);
+	// "anyway" : even if it is not ready (the skill unleashed by the bond : BondSystem)
+	bool useSkill(unsigned int index, ska::EntityId from, bool anyway = false);
 	bool skillReady(unsigned int index, ska::EntityId from) const;
 	// Part of the cooldown of a skill left, from 1 (just used) to 0 (ready)
 	float cooldown(unsigned int index, ska::EntityId from) const;

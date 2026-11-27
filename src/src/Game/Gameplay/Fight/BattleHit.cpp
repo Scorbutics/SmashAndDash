@@ -59,6 +59,11 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	if (attackerFighter != nullptr && attackerFighter->team != 0 && damage > 0) {
 		damage = rules.wildDamage(damage);
 	}
+	// A skill unleashed by the bond with its trainer (BondSystem)
+	const auto bonded = attackerFighter != nullptr && attackerFighter->bondTime > 0 && damage > 0;
+	if (bonded) {
+		damage = std::max(1, damage * attackerFighter->bondPower / 100);
+	}
 	defender.hp -= damage;
 	SLOG_STATIC(ska::LogLevel::Debug, BattleHit) << "Battle : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " is hit, "
 		<< damage << " damage, " << defender.hp << " / " << defender.maxHp << " hit points left (effectiveness " << effectiveness << "%)";
@@ -83,7 +88,8 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	}
 
 	// A hit during the startup of an attack cancels it (its cooldown is lost)
-	const auto strong = std::min(damage, 12);
+	// (The skill unleashed by the bond : the strongest feedback)
+	const auto strong = bonded ? 12 : std::min(damage, 12);
 	fighter.flash = FighterSystem::FlashDuration;
 	fighter.hpDelay = 500;
 	fighter.windUp = 0;

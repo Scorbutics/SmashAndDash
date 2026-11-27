@@ -17,7 +17,8 @@ public:
 	explicit BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile = "./Data/Battle/rules.miniska", std::string aiFile = "./Data/Battle/ai.miniska",
 		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska",
 		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska",
-		std::string rewardsFile = "./Data/Battle/rewards.miniska", std::string linesFile = "./Data/Battle/lines.miniska");
+		std::string rewardsFile = "./Data/Battle/rewards.miniska", std::string linesFile = "./Data/Battle/lines.miniska",
+		std::string bondFile = "./Data/Battle/bond.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -96,6 +97,10 @@ public:
 	// nothing ; "roll" 0 .. 99, "pick" 0 .. 999), and how long after its last line it can say it (milliseconds)
 	std::string line(const std::string& event, const std::string& pokemon, const std::string& detail, int roll, int pick);
 	unsigned int linePause(const std::string& event);
+	// The bond between the trainer and its Pokemon (Data/Battle/bond.miniska) : how much an event fills its gauge (0 .. 100),
+	// the damage of the skill unleashed (percents), more for a perfect timing
+	int bondGain(const std::string& event);
+	int bondPower(bool perfect);
 
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
@@ -113,6 +118,7 @@ private:
 	std::string m_skillsFile;
 	std::string m_rewardsFile;
 	std::string m_linesFile;
+	std::string m_bondFile;
 	std::unordered_set<std::string> m_reported;
 	int m_difficulty = Easy;
 };

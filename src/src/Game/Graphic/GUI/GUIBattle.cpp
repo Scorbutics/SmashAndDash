@@ -552,6 +552,118 @@ void GUIBattle::renderOutro(ska::Renderer& renderer) const {
 	}
 }
 
+void GUIBattle::renderBond(ska::Renderer& renderer) const {
+	const auto* player = fighter(m_stage.player);
+	if (player == nullptr || player->knockedOut) {
+		return;
+	}
+	const auto canvas = Ui::Canvas{ renderer };
+	// Under the panel of the Pokemon of the player : the gauge of the bond with its trainer
+	const auto x = 14 + 12;
+	const auto y = 14 + 84 + 8;
+	const auto full = m_stage.bond >= BattleStage::BondFull;
+	const auto pulse = 0.5F + 0.5F * std::sin(static_cast<float>(m_time) / 110.F);
+	canvas.panel(full ? "panel_small_red.png" : "panel_small_teal.png", ska::Rectangle{ x, y, 62, 24 }, 8, 230);
+	canvas.text("LIEN", Style(14, White, false), x + 31, y + 2, Ui::Align::Center);
+	auto bar = Ui::Bar{};
+	bar.ratio = static_cast<float>(m_stage.bond) / static_cast<float>(BattleStage::BondFull);
+	bar.trail = bar.ratio;
+	bar.fill = full ? ska::Color{ 255, static_cast<uint8_t>(150 + 90 * pulse), 60, 255 } : ska::Color{ 255, 180, 70, 255 };
+	canvas.bar(ska::Rectangle{ x + 76, y + 7, 170, 10 }, bar);
+	if (full && !m_stage.cinematic.active) {
+		canvas.text("F : LIEN !", Style(16, ska::Color{ 255, 230, 120, 255 }, true, 1.F + 0.08F * pulse), x + 262, y + 1, Ui::Align::Left);
+	}
+}
+
+void GUIBattle::renderCinematic(ska::Renderer& renderer) const {
+	const auto& cinematic = m_stage.cinematic;
+	if (!cinematic.active) {
+		return;
+	}
+	const auto canvas = Ui::Canvas{ renderer };
+	const auto screen = m_camera.getScreenSize();
+	const auto t = static_cast<float>(cinematic.time);
+	const auto ease = [](float v) { v = std::clamp(v, 0.F, 1.F); return 1.F - (1.F - v) * (1.F - v); };
+	// Everything comes in, then goes away once the skill went
+	const auto in = ease(t / 180.F);
+	const auto out = std::clamp((static_cast<float>(BondCinematic::Duration) - t) / 300.F, 0.F, 1.F);
+	const auto shown = std::min(in, out);
+
+	// The world darker, black bars
+	canvas.fill(ska::Color{ 0, 0, 0, static_cast<uint8_t>(80.F * shown) }, ska::Rectangle{ 0, 0, screen.x, screen.y });
+	const auto bars = static_cast<int>(70.F * shown);
+	canvas.fill(ska::Color{ 0, 0, 0, 255 }, ska::Rectangle{ 0, 0, screen.x, bars });
+	canvas.fill(ska::Color{ 0, 0, 0, 255 }, ska::Rectangle{ 0, screen.y - bars, screen.x, bars });
+
+	// The cut-in : a band slides in, the trainer calls the skill
+	const auto bandIn = ease((t - 120.F) / 260.F);
+	const auto bandOut = std::clamp((static_cast<float>(BondCinematic::Release) + 150.F - t) / 200.F, 0.F, 1.F);
+	if (bandIn > 0.F && bandOut > 0.F) {
+		const auto bandHeight = 120;
+		const auto bandY = screen.y - bars - bandHeight - 30;
+		const auto slide = static_cast<int>(static_cast<float>(screen.x) * (1.F - bandIn)) - static_cast<int>(static_cast<float>(screen.x) * (1.F - bandOut));
+		const auto alpha = static_cast<uint8_t>(225.F * std::min(bandIn, bandOut));
+		const ska::Color gold{ 255, 200, 70, alpha };
+		canvas.fill(ska::Color{ 18, 22, 46, alpha }, ska::Rectangle{ -slide, bandY, screen.x, bandHeight });
+		canvas.fill(gold, ska::Rectangle{ -slide, bandY, screen.x, 3 });
+		canvas.fill(gold, ska::Rectangle{ -slide, bandY + bandHeight - 3, screen.x, 3 });
+		// The trainer, big (its sprite as the map draws it : it faces the camera)
+		if (m_stage.trainer.has_value() && m_entities.hasComponent<ska::GraphicComponent>(*m_stage.trainer)) {
+			const auto& graphic = m_entities.getComponent<ska::GraphicComponent>(*m_stage.trainer);
+			if (!graphic.animatedSprites.empty()) {
+				const auto& sprite = graphic.animatedSprites[0];
+				auto effect = ska::RenderEffect{};
+				effect.scaleX = 2.6F;
+				effect.scaleY = 2.6F;
+				effect.anchorBottom = true;
+				effect.alpha = alpha;
+				renderer.setEffect(&effect);
+				sprite.render(renderer, 90 - slide - static_cast<int>(sprite.getWidth()) / 2, bandY + bandHeight - 6 - static_cast<int>(sprite.getHeight()), nullptr, 0., nullptr);
+				renderer.setEffect(nullptr);
+			}
+		}
+		canvas.text(cinematic.line, Style(22, White, true, 1.F, alpha), 170 - slide, bandY + 18, Ui::Align::Left);
+		canvas.text(Upper(cinematic.skill), Style(40, gold, true, 1.F, alpha), 170 - slide, bandY + 52, Ui::Align::Left);
+	}
+
+	// The ring closes on the Pokemon : F when it reaches the inner ring
+	if (visible(cinematic.user) && t >= static_cast<float>(BondCinematic::RingStart) && !cinematic.released) {
+		const auto drawn = sprite(cinematic.user);
+		const auto zoom = m_camera.getZoom();
+		const auto cx = static_cast<float>(drawn.position.x + drawn.width / 2) * zoom;
+		const auto cy = static_cast<float>(drawn.position.y + drawn.height / 2) * zoom;
+		const auto progress = (t - static_cast<float>(BondCinematic::RingStart)) / static_cast<float>(BondCinematic::RingClose - BondCinematic::RingStart);
+		const auto inner = 42.F;
+		const auto circle = [&](float radius, ska::Color color, int dot) {
+			constexpr auto Dots = 56;
+			for (auto i = 0; i < Dots; i++) {
+				const auto angle = static_cast<float>(i) * 6.2831853F / static_cast<float>(Dots);
+				canvas.fill(color, ska::Rectangle{ static_cast<int>(cx + std::cos(angle) * radius) - dot / 2, static_cast<int>(cy + std::sin(angle) * radius) - dot / 2, dot, dot });
+			}
+		};
+		circle(inner, ska::Color{ 255, 255, 255, 170 }, 4);
+		if (!cinematic.pressed) {
+			const auto radius = std::max(inner * 0.5F, inner + (190.F - inner) * (1.F - progress));
+			circle(radius, ska::Color{ 255, 200, 70, 255 }, 6);
+		} else {
+			const auto age = t - static_cast<float>(cinematic.pressedAt);
+			const auto fade = static_cast<uint8_t>(255.F * std::clamp(1.F - age / 300.F, 0.F, 1.F));
+			const auto color = cinematic.perfect ? ska::Color{ 255, 230, 90, fade } : ska::Color{ 200, 200, 220, fade };
+			circle(inner + age * 0.15F, color, 6);
+			canvas.text(cinematic.perfect ? "PARFAIT !" : "BIEN", Style(30, color, true, 1.F, fade), static_cast<int>(cx), static_cast<int>(cy - inner - 56.F), Ui::Align::Center);
+		}
+	}
+
+	// The skill goes : a flash
+	if (cinematic.released) {
+		const auto age = t - static_cast<float>(BondCinematic::Release);
+		const auto flash = std::clamp(1.F - age / 220.F, 0.F, 1.F);
+		if (flash > 0.F) {
+			canvas.fill(ska::Color{ 255, 255, 255, static_cast<uint8_t>(200.F * flash) }, ska::Rectangle{ 0, 0, screen.x, screen.y });
+		}
+	}
+}
+
 void GUIBattle::renderSpeech(ska::Renderer& renderer) const {
 	const auto& speech = m_stage.speech();
 	if (speech.empty() || !m_stage.trainer.has_value() || !visible(*m_stage.trainer)) {
@@ -606,8 +718,10 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 		renderPanel(renderer, entity, state->team == 0, slots[static_cast<std::size_t>(state->team)]++);
 	}
 	renderSkills(renderer);
+	renderBond(renderer);
 	renderSpeech(renderer);
 	const auto screen = m_camera.getScreenSize();
 	canvas.text("VS", Style(26, ska::Color{ 255, 255, 255, 255 }), screen.x / 2, 28, Ui::Align::Center);
 	renderBanner(renderer);
+	renderCinematic(renderer);
 }

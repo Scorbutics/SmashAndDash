@@ -62,6 +62,9 @@ private:
 	void renderBanner(ska::Renderer& renderer) const;
 	// What the trainer says : a speech balloon over it (BattleStage::speech)
 	void renderSpeech(ska::Renderer& renderer) const;
+	// The gauge of the bond between the trainer and its Pokemon, the cinematic of the skill it unleashes
+	void renderBond(ska::Renderer& renderer) const;
+	void renderCinematic(ska::Renderer& renderer) const;
 	// The end of the battle : the experience won (BattleStage::outro)
 	void renderOutro(ska::Renderer& renderer) const;
 	static constexpr unsigned int OutroCardDelay = 350;

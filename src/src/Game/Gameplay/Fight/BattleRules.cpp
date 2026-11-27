@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile, std::string bondFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
@@ -12,7 +12,8 @@ BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, st
 	m_encountersFile(std::move(encountersFile)),
 	m_skillsFile(std::move(skillsFile)),
 	m_rewardsFile(std::move(rewardsFile)),
-	m_linesFile(std::move(linesFile)) {
+	m_linesFile(std::move(linesFile)),
+	m_bondFile(std::move(bondFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -281,4 +282,13 @@ std::string BattleRules::line(const std::string& event, const std::string& pokem
 
 unsigned int BattleRules::linePause(const std::string& event) {
 	return static_cast<unsigned int>(std::max(0L, call(m_linesFile, "pause", { Text(event) }, 2800L)));
+}
+
+int BattleRules::bondGain(const std::string& event) {
+	const auto fallback = event == "super" ? 12L : (event == "low" ? 25L : (event == "dodge" ? 10L : (event == "hurt" ? 9L : (event == "hit" ? 6L : (event == "encourage" ? 5L : (event == "weak" ? 3L : 0L))))));
+	return static_cast<int>(std::clamp(call(m_bondFile, "gain", { Text(event) }, fallback), 0L, 100L));
+}
+
+int BattleRules::bondPower(bool perfect) {
+	return static_cast<int>(std::max(100L, call(m_bondFile, "power", { ska::NodeValue{ perfect } }, perfect ? 300L : 200L)));
 }

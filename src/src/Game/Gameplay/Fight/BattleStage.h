@@ -73,6 +73,29 @@ struct BattleCue {
 	std::string detail;
 };
 
+// The skill unleashed by the bond between the trainer and its Pokemon (BondSystem) : a cinematic. The battle stops, black
+// bars, the trainer calls the skill, the camera closes on the Pokemon, a ring closes on it (pressed when it closes : a
+// perfect timing), then the skill goes. Its times (real time, ms) :
+struct BondCinematic {
+	static constexpr unsigned int RingStart = 650;
+	static constexpr unsigned int RingClose = 1350;
+	// A press this long around the closing of the ring is perfect
+	static constexpr unsigned int PerfectWindow = 160;
+	static constexpr unsigned int Release = 1450;
+	static constexpr unsigned int Duration = 1900;
+	bool active = false;
+	unsigned int time = 0;
+	ska::EntityId user = 0;
+	std::string pokemon;
+	std::string skill;
+	std::string line;
+	// The player pressed (once : too early, it is not perfect), at this time ; the timing was perfect
+	bool pressed = false;
+	unsigned int pressedAt = 0;
+	bool perfect = false;
+	bool released = false;
+};
+
 // State of a real time battle, shared by the battle systems and the battle interface : time (hit stops, slow motion),
 // arena, feedbacks, which fighter is the one of the player. The state of each fighter is its FighterComponent.
 class BattleStage {
@@ -127,6 +150,10 @@ public:
 	std::optional<ska::EntityId> trainer;
 	BattleOutro outro;
 	BattleItemSlot itemSlot;
+	// The bond between the trainer and its Pokemon (0 .. BondFull : BondSystem), its cinematic
+	static constexpr int BondFull = 100;
+	int bond = 0;
+	BondCinematic cinematic;
 	// The last wild Pokemon out of the fight was captured (not K.O.) : the battle is won by a capture, its name
 	bool captured = false;
 	std::string capturedName;

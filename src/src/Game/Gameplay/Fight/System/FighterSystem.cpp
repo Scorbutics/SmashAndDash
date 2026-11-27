@@ -84,6 +84,7 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 	const auto delta = m_stage.delta();
 	fighter.stun = Decrease(fighter.stun, delta);
 	fighter.flinchGuard = Decrease(fighter.flinchGuard, delta);
+	fighter.bondTime = Decrease(fighter.bondTime, delta);
 	fighter.release = Decrease(fighter.release, delta);
 	fighter.flash = Decrease(fighter.flash, ellapsedTime);
 	fighter.guard = Decrease(fighter.guard, delta);

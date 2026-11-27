@@ -1,0 +1,38 @@
+# The bond between the trainer and its Pokemon during a battle : a gauge (0 .. 100) that fills when something happens
+# (the events of Data/Battle/lines.miniska, and "encourage" : the trainer said a line). Full, the player unleashes the
+# strongest skill of its Pokemon (a cinematic : the battle stops, the trainer calls the skill, a ring closes on the
+# Pokemon : pressed when it closes, the hit is perfect). Called by the battle (it cannot wait).
+
+# How much an event fills the gauge
+gain = function(event: string) : int do
+	if event == "hit"
+		return 6
+	end
+	if event == "super"
+		return 12
+	end
+	if event == "weak"
+		return 3
+	end
+	if event == "hurt"
+		return 9
+	end
+	if event == "low"
+		return 25
+	end
+	if event == "dodge"
+		return 10
+	end
+	if event == "encourage"
+		return 5
+	end
+	return 0
+end
+
+# The damage of the skill unleashed (percents of its usual damage), more for a perfect timing
+power = function(perfect: bool) : int do
+	if perfect
+		return 300
+	end
+	return 200
+end

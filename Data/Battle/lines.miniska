@@ -5,6 +5,7 @@
 #   hurt : its Pokemon is hit                 low : its Pokemon has few hit points left (once a battle)
 #   dodge : its Pokemon dodges                potion, ball : the trainer uses an item (detail : the name of the item)
 #   knockout : the wild Pokemon is K.O.       fainted : the Pokemon of the trainer is K.O.
+#   bond : the trainer and its Pokemon unleash a skill (detail : the skill, Data/Battle/bond.miniska)
 # pokemon : the name of the Pokemon of the trainer. The dice are rolled by the battle and given here (the replays of a
 # battle stay the same) : roll (0 .. 99) against the chance of a line, pick (0 .. 999) chooses it.
 
@@ -30,7 +31,7 @@ end
 # How long after the last line (milliseconds) this one can be said : the trainer does not talk all the time, but the
 # big moments always get their line
 pause = function(event: string) : int do
-	if event == "start" || event == "knockout" || event == "fainted" || event == "potion" || event == "ball" || event == "low" || event == "super"
+	if event == "start" || event == "knockout" || event == "fainted" || event == "potion" || event == "ball" || event == "low" || event == "super" || event == "bond"
 		return 0
 	end
 	return 2800
@@ -69,6 +70,9 @@ line = function(event: string, pokemon: string, detail: string, roll: int, pick:
 	end
 	if event == "ball"
 		return choose([detail + ", go !", "Je te tiens !"], pick)
+	end
+	if event == "bond"
+		return choose([pokemon + ", " + detail + " ! De toutes tes forces !", "Ensemble, " + pokemon + " ! " + detail + " !", "C'est le moment, " + pokemon + " ! " + detail + " !"], pick)
 	end
 	if event == "knockout"
 		return choose(["Bravo, " + pokemon + " !", "On a gagné !", "Bien joué, " + pokemon + " !"], pick)

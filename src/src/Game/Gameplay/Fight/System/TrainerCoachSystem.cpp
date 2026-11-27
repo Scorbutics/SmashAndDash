@@ -147,8 +147,10 @@ void TrainerCoachSystem::walk(ska::EntityId trainer, unsigned int ellapsedTime) 
 	if (animation == nullptr) {
 		return;
 	}
-	// Still : it faces its Pokemon
-	if (!moving && m_stage.phase() == BattlePhase::Fight && standing(m_stage.player)) {
+	// Still : it faces its Pokemon (it calls the skill of the bond : it faces the camera)
+	if (m_stage.cinematic.active) {
+		facing = { 0.F, 1.F };
+	} else if (!moving && m_stage.phase() == BattlePhase::Fight && standing(m_stage.player)) {
 		const auto pokemon = center(m_stage.player);
 		facing = { pokemon.x - here.x, pokemon.y - here.y };
 	}
@@ -161,7 +163,9 @@ void TrainerCoachSystem::walk(ska::EntityId trainer, unsigned int ellapsedTime) 
 }
 
 void TrainerCoachSystem::comment(const std::string& event, const std::string& detail) {
-	if (m_spoke && m_quiet < m_rules.linePause(event)) {
+	// The bond between the trainer and its Pokemon grows with the battle (Data/Battle/bond.miniska)
+	feel(event);
+	if (m_stage.cinematic.active || (m_spoke && m_quiet < m_rules.linePause(event))) {
 		return;
 	}
 	const auto roll = ska::NumberUtils::random(0, 99);
@@ -175,6 +179,18 @@ void TrainerCoachSystem::comment(const std::string& event, const std::string& de
 	m_stage.say(std::move(text), duration);
 	m_quiet = 0;
 	m_spoke = true;
+	// Its words encourage its Pokemon
+	feel("encourage");
+}
+
+void TrainerCoachSystem::feel(const std::string& event) {
+	if (m_stage.phase() != BattlePhase::Fight || m_stage.cinematic.active) {
+		return;
+	}
+	const auto gain = m_rules.bondGain(event);
+	if (gain > 0) {
+		m_stage.bond = std::min(BattleStage::BondFull, m_stage.bond + gain);
+	}
 }
 
 const std::string& TrainerCoachSystem::monsterName() {
@@ -234,7 +250,11 @@ void TrainerCoachSystem::refresh(unsigned int ellapsedTime) {
 		return;
 	}
 	watch();
-	// It walks during the fight only (the intro and the outro place it : the pokeball thrown, recalled)
+	// It walks during the fight only (the intro and the outro place it : the pokeball thrown, recalled), not during the
+	// cinematic of the bond
+	if (m_stage.cinematic.active) {
+		m_target.reset();
+	}
 	if (m_stage.phase() != BattlePhase::Fight) {
 		m_target.reset();
 		return;
