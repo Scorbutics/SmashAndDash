@@ -6,6 +6,7 @@
 #include "WindowMouseCursor.h"
 #include "Core/Rectangle.h"
 #include "GUI/Components/Concrete/TileSurface.h"
+#include "GUI/Components/Concrete/Label.h"
 
 WindowTeam::WindowTeam(ska::WidgetPanel& parent, WindowMouseCursor* mouseCursor, const ska::Point<int>& absolutePos) :
 MoveableWindow<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>(parent, ska::Rectangle{ absolutePos.x, absolutePos.y, 11 * 32, 15 * 32 }),
@@ -32,7 +33,21 @@ m_mouseCursor(mouseCursor) {
 
 	addHandler<ska::ValueChangedEventListener<SlotPokemonDataPtr*>>([this](Widget*, ska::ValueChangedEvent<SlotPokemonDataPtr*>& vce) {
 		if (m_mouseCursor->isLoaded()) {
-			insertPokemon((*vce.getValue())->parent, std::move(m_mouseCursor->unloadPokemon()));
+			// Put down on a Pokemon : it takes its place
+			const auto* target = (*vce.getValue())->parent;
+			auto position = 0;
+			for (const auto* slot : m_visibleSlots) {
+				if (slot == target) {
+					break;
+				}
+				position++;
+			}
+			auto picked = m_mouseCursor->unloadPokemon();
+			const auto from = picked->index;
+			insertPokemon(std::move(picked), position);
+			if (from >= 0 && from != position && m_moved) {
+				m_moved(from, position);
+			}
 		} else if(m_visibleSlots.size() > 1) {
 			auto parent = (*vce.getValue())->parent;
 			m_mouseCursor->loadPokemon(*vce.getValue());
@@ -40,16 +55,21 @@ m_mouseCursor(mouseCursor) {
 			m_mouseCursor->show(true);
 		}
 	});
+	addWidget<ska::Label>("Clic : prendre un Pokémon, clic sur un autre : il prend sa place", 10, ska::Point<int>(14, 15 * 32 - 30));
 }
 
 void WindowTeam::organizeSlots() {
 	unsigned int count = 0;
 	for (auto s : m_visibleSlots) {
-		s->move(ska::Point<int>(14, 20 + (count++)* 2 * 32));
+		s->move(ska::Point<int>(14, 20 + static_cast<int>(count)* 2 * 32));
+		if (s->data() != nullptr) {
+			s->data()->index = static_cast<int>(count);
+		}
+		count++;
 	}
 }
 
-SlotPokemon* WindowTeam::insertPokemon(SlotPokemon*, SlotPokemonDataPtr spd) {
+SlotPokemon* WindowTeam::insertPokemon(SlotPokemonDataPtr spd, int position) {
 	SlotPokemon* place = nullptr;
 	for(auto s : m_slots) {
 		if(!s->isLoaded()) {
@@ -62,7 +82,11 @@ SlotPokemon* WindowTeam::insertPokemon(SlotPokemon*, SlotPokemonDataPtr spd) {
 		place->show(true);
 		spd->parent = place;
 		place->load(spd);
-		m_visibleSlots.push_front(place);
+		auto at = m_visibleSlots.begin();
+		for (auto i = 0; at != m_visibleSlots.end() && (position < 0 || i < position); i++) {
+			++at;
+		}
+		m_visibleSlots.insert(at, place);
 		organizeSlots();
 	}
 	return place;
@@ -79,4 +103,3 @@ void WindowTeam::unloadPokemon(SlotPokemon* slot) {
 	slot->unload();
 	organizeSlots();
 }
-

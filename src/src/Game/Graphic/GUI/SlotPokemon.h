@@ -18,6 +18,7 @@ public:
 	void load(SlotPokemonDataPtr& spd);
 	void unload();
 	bool isLoaded() const;
+	SlotPokemonData* data() const { return m_data.get(); }
 
     virtual ~SlotPokemon() = default;
 

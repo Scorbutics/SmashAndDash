@@ -1,3 +1,5 @@
+#include <vector>
+#include <iterator>
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "Game/Gameplay/Data/SavePaths.h"
 #include "Team.h"
@@ -55,6 +57,30 @@ std::optional<int> Team::add(const TeamMember& member) {
 	ska::FileUtils::createDirectory(m_directory);
 	setMember(index, member);
 	return index;
+}
+
+bool Team::move(int from, int to) {
+	const auto count = size();
+	if (from < 0 || to < 0 || from >= count || to >= count) {
+		return false;
+	}
+	if (from == to) {
+		return true;
+	}
+	// The files as they are (every field of a Pokemon goes with it)
+	auto files = std::vector<std::string>{};
+	for (auto index = 0; index < count; index++) {
+		auto in = std::ifstream{ file(index), std::ios::binary };
+		files.emplace_back(std::istreambuf_iterator<char>{ in }, std::istreambuf_iterator<char>{});
+	}
+	auto moved = std::move(files[static_cast<std::size_t>(from)]);
+	files.erase(files.begin() + from);
+	files.insert(files.begin() + to, std::move(moved));
+	for (auto index = 0; index < count; index++) {
+		auto out = std::ofstream{ file(index), std::ios::binary | std::ios::trunc };
+		out << files[static_cast<std::size_t>(index)];
+	}
+	return true;
 }
 
 std::optional<int> Team::firstAble() const {

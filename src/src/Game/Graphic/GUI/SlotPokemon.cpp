@@ -35,7 +35,7 @@ bool SlotPokemon::onStatisticsChangeEvent(StatisticsChangeEvent&) {
 void SlotPokemon::load(SlotPokemonDataPtr& spd) {
 	m_data = std::move(spd);
 
-	m_sprite->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_data->id), ska::Rectangle{ 1 * 64, 160, 64, 64 });
+	m_sprite->replaceWith(ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, m_data->id), ska::Rectangle{ 0, 2 * 72, 72, 72 });
 	m_name->modifyText("Nom : " + m_data->name);
 	m_level->modifyText("Niveau : " + m_data->level);
 	m_type1->modifyText("Type 1 : " + m_data->type1);

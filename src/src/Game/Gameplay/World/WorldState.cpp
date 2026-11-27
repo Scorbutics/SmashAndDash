@@ -133,10 +133,6 @@ std::string WorldState::getMapName() const {
 	return separator == std::string::npos ? name : name.substr(separator + 1);
 }
 
-float WorldState::getSoundVolume() const {
-	return m_settings.getSoundVolume();
-}
-
 const std::string& WorldState::getTilesetName() const {
 	return m_tileset->getName();
 }
@@ -338,7 +334,6 @@ void WorldState::afterLoad(ska::State* lastState) {
 }
 
 void WorldState::beforeUnload() {
-	m_worldBGM.setVolume(m_settings.getSoundVolume());
 }
 
 int WorldState::teamLevel() {

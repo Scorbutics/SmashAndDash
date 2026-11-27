@@ -577,6 +577,10 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 		});
 	});
 
+	m_builder.bindField("move", [&worldState](std::vector<ska::NodeValue> params) {
+		return ska::NodeValue{ Team{ worldState.getSaveGame().getPathName() }.move(Int(params[0]), Int(params[1])) };
+	});
+
 	m_builder.bindField("size", [&worldState](std::vector<ska::NodeValue>) {
 		return ska::NodeValue{ static_cast<long>(Team{ worldState.getSaveGame().getPathName() }.size()) };
 	});

@@ -27,6 +27,8 @@ public:
 	void setMember(int index, const TeamMember& member);
 	// Adds a Pokemon at the end of the team : its index, or nothing when the team is full
 	std::optional<int> add(const TeamMember& member);
+	// Moves the Pokemon at "from" to "to" (the others follow : 0 1 2 3, move(3, 1) : 0 3 1 2). False : out of the team
+	bool move(int from, int to);
 	// First Pokemon able to fight (hit points left)
 	std::optional<int> firstAble() const;
 

@@ -7,6 +7,8 @@
 #include "DialogMenu.h"
 #include "WindowTeam.h"
 #include "WindowSettings.h"
+#include "../../Gameplay/Data/SavePaths.h"
+#include "../../Gameplay/Data/Team.h"
 #include <GUI/Windows/GUIScrollButtonWindowIG.h>
 #include "FPSLabel.h"
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
@@ -36,6 +38,12 @@ GUIMap::GUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged) :
 
 	m_team = &addFocusableWindow<WindowTeam>("team", m_attachedToCursor, ska::Point<int>(4 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_team->show(false);
+	// The order of the team chosen in its window : the files of the save (the first able to fight follows the player and
+	// fights)
+	m_team->onMove([](int from, int to) {
+		Team{ DefaultSaveName() }.move(from, to);
+		SLOG_STATIC(ska::LogLevel::Info, GUIMap) << "Team : the Pokemon " << from << " goes to the place " << to;
+	});
 	m_bag = &addFocusableWindow<WindowBag>("bag", ska::Point<int>(10 * TAILLEBLOCFENETRE, 4 * TAILLEBLOCFENETRE));
 	m_bag->show(false);
 
@@ -264,7 +272,7 @@ bool GUIMap::onSettingsChange(SettingsChangeEvent& sce) {
 	auto wsettings = m_settings;
 
 	if((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) == static_cast<int>(SettingsChangeEventType::MUSIC_VOLUME)) {
-		wsettings->setMusicVolume(sce.settings.getSoundVolume()/100);
+		wsettings->setVolumes(sce.settings.getMasterVolume() / 100.F, sce.settings.getMusicVolume() / 100.F, sce.settings.getSoundVolume() / 100.F);
 	}
 
 	if ((static_cast<int>(sce.eventType) & static_cast<int>(SettingsChangeEventType::FOG)) == static_cast<int>(SettingsChangeEventType::FOG)) {
@@ -291,7 +299,7 @@ bool GUIMap::onEntityLoad(EntityLoadEvent& ele) {
 	spd1->type1 = ele.description->type1;
 	spd1->type2 = ele.description->type2;
 
-	wTeam.insertPokemon(nullptr, move(spd1));
+	wTeam.insertPokemon(move(spd1));
 
 	return true;
 }

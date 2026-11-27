@@ -11,6 +11,8 @@ struct SlotPokemonData {
 	std::string type2;
 	std::string hp;
 	SlotPokemon* parent;
+	// Its place in the team (Team : the files of the save)
+	int index = -1;
 
 	SlotPokemonData(): id(0), parent(nullptr) {
 

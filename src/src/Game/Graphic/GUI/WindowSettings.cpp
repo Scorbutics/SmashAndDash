@@ -54,18 +54,26 @@ MoveableWindow<ska::KeyEventListener>(parent, ska::Rectangle{ absolutePos.x, abs
 // 	});
 // 	addWidget(listbox);
 
-	addWidget<ska::Label>("Volume", 11, ska::Point<int>(16, 80));
-	m_volController = &addWidget<ska::LabeledHorizontalSlider>(ska::GUI::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160);
+	addWidget<ska::Label>("Volume général", 11, ska::Point<int>(16, 80));
+	m_masterController = &addWidget<ska::LabeledHorizontalSlider>(ska::GUI::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 96), 160);
+	addWidget<ska::Label>("Musique", 11, ska::Point<int>(16, 136));
+	m_musicController = &addWidget<ska::LabeledHorizontalSlider>(ska::GUI::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 152), 160);
+	addWidget<ska::Label>("Effets sonores", 11, ska::Point<int>(16, 192));
+	m_soundController = &addWidget<ska::LabeledHorizontalSlider>(ska::GUI::MENU_DEFAULT_THEME_PATH + "slider", ska::Point<int>(16, 208), 160);
 }
 
 void WindowSettings::bind(Settings& sets) {
-	m_volumeBinder.bind(*m_volController, std::bind(&Settings::setSoundVolume, &sets, std::placeholders::_1));
+	m_masterBinder.bind(*m_masterController, std::bind(&Settings::setMasterVolume, &sets, std::placeholders::_1));
+	m_musicBinder.bind(*m_musicController, std::bind(&Settings::setMusicVolume, &sets, std::placeholders::_1));
+	m_soundBinder.bind(*m_soundController, std::bind(&Settings::setSoundVolume, &sets, std::placeholders::_1));
 	m_fogBinder.bind(*m_fogTController, std::bind(&Settings::setFog, &sets, std::placeholders::_1));
 	m_weatherBinder.bind(*m_weatherController, std::bind(&Settings::setWeather, &sets, std::placeholders::_1));
 }
 
-void WindowSettings::setMusicVolume(float volPcts) {
-	m_volController->forceValue(volPcts);
+void WindowSettings::setVolumes(float master, float music, float sound) {
+	m_masterController->forceValue(master);
+	m_musicController->forceValue(music);
+	m_soundController->forceValue(sound);
 }
 
 void WindowSettings::setWeather(bool b) {
