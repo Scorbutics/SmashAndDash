@@ -211,7 +211,7 @@ void chunks::Generator::startWorker() {
 	const auto world = std::to_string(state.writer->seed()) + "\n" + state.writer->folder();
 	files.emplace_back("world", std::vector<std::uint8_t>(world.begin(), world.end()));
 	for (const auto* path : { "Resources/Worldgen/shapes.txt", "Resources/Worldgen/tiles.txt", "Resources/Worldgen/tiles.png",
-		"Resources/Worldgen/painted.png", "Resources/Worldgen/painted.txt", "Resources/Worldgen/rooms", "Resources/Chipsets/corr.png",
+		"Resources/Worldgen/painted.png", "Resources/Worldgen/painted.txt", "Resources/Worldgen/masks.png", "Resources/Worldgen/masks.txt", "Resources/Worldgen/rooms", "Resources/Chipsets/corr.png",
 		"Resources/Chipsets/tile_scripts" }) {
 		if (std::filesystem::exists(path)) {
 			AddFiles(files, path);

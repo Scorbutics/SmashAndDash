@@ -290,7 +290,12 @@ bool worldgen::WorldWriter::step() {
 		// The painted tiles (tools/render3d), when there are
 		auto paintedIndex = std::ifstream{ data + "/painted.txt" };
 		if (paintedIndex.good()) {
-			s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index, ReadPng(data + "/painted.png"), paintedIndex);
+			auto masksIndex = std::ifstream{ data + "/masks.txt" };
+			if (masksIndex.good()) {
+				s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index, ReadPng(data + "/painted.png"), paintedIndex, ReadPng(data + "/masks.png"), masksIndex);
+			} else {
+				s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index, ReadPng(data + "/painted.png"), paintedIndex);
+			}
 		} else {
 			s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index);
 		}

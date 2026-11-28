@@ -446,7 +446,10 @@ namespace {
 			auto painted = std::ifstream{ "Resources/Worldgen/painted.txt" };
 			REQUIRE(index.good());
 			REQUIRE(painted.good());
-			return worldgen::Atlas{ worldgen::ReadPng("Resources/Worldgen/tiles.png"), index, worldgen::ReadPng("Resources/Worldgen/painted.png"), painted };
+			auto masks = std::ifstream{ "Resources/Worldgen/masks.txt" };
+			REQUIRE(masks.good());
+			return worldgen::Atlas{ worldgen::ReadPng("Resources/Worldgen/tiles.png"), index, worldgen::ReadPng("Resources/Worldgen/painted.png"), painted,
+				worldgen::ReadPng("Resources/Worldgen/masks.png"), masks };
 		}();
 		return atlas;
 	}

@@ -60,7 +60,12 @@ void worldgen::InfiniteWriter::prepare() {
 	data->templates = LoadRoomTemplates(root + "/rooms");
 	auto paintedIndex = std::ifstream{ root + "/painted.txt" };
 	if (paintedIndex.good()) {
-		data->atlas = std::make_unique<Atlas>(ReadPng(root + "/tiles.png"), index, ReadPng(root + "/painted.png"), paintedIndex);
+		auto masksIndex = std::ifstream{ root + "/masks.txt" };
+		if (masksIndex.good()) {
+			data->atlas = std::make_unique<Atlas>(ReadPng(root + "/tiles.png"), index, ReadPng(root + "/painted.png"), paintedIndex, ReadPng(root + "/masks.png"), masksIndex);
+		} else {
+			data->atlas = std::make_unique<Atlas>(ReadPng(root + "/tiles.png"), index, ReadPng(root + "/painted.png"), paintedIndex);
+		}
 	} else {
 		data->atlas = std::make_unique<Atlas>(ReadPng(root + "/tiles.png"), index);
 	}

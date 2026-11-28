@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <istream>
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <utility>
@@ -42,6 +43,10 @@ namespace worldgen {
 		Atlas(RgbImage image, std::istream& index);
 		// With its painted tiles (tools/worldgen/atlas.py : painted.png, cells of 48 px ; painted.txt "<biome> <cell> <key>")
 		Atlas(RgbImage image, std::istream& index, RgbImage painted, std::istream& paintedIndex);
+		// With the masks of the edges of the grounds (masks.png, masks.txt) : the grounds and the banks of the water
+		// composed from the painted grounds ("texture <name>" in painted.txt), as tools/worldgen painted_ground and
+		// water_overlay do, bit for bit
+		Atlas(RgbImage image, std::istream& index, RgbImage painted, std::istream& paintedIndex, RgbImage masks, std::istream& masksIndex);
 		// The frames (1, or 4 for an animated tile) of a tile (its key, the name of an animated tile) in a biome
 		std::vector<TileImage> frames(const std::string& key, Biome biome) const;
 		bool has(const std::string& key) const { return m_rows.count(key) > 0; }
@@ -52,7 +57,15 @@ namespace worldgen {
 		// Its collision mask when it blocks (tools/worldgen tile_mask : 4 x 4 cells, a bit by solid cell)
 		int mask(const std::string& key) const;
 	private:
+		// A painted cell (its first frame) as a tile
+		TileImage paintedCell(int cell) const;
+		std::optional<TileImage> texture(const std::string& name, Biome biome) const;
+		// A ground or a bank composed (none : not painted in this biome, or not such a key)
+		std::optional<TileImage> compose(const std::string& key, Biome biome) const;
+
 		RgbImage m_image;
+		RgbImage m_edgeMasks;
+		std::map<std::pair<bool, std::string>, int> m_maskCells; // (straight, the 8 bits "01001000") -> its cell
 		std::map<std::string, std::pair<int, int>> m_rows; // key -> row, frames
 		std::map<std::string, int> m_bases;
 		std::map<std::string, int> m_flags;

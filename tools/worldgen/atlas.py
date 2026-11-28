@@ -12,7 +12,11 @@ the chipsets), the key of the tile (the text of its Python key,
 World.build and rooms.build_room), or the name of an animated tile.
 The painted tiles (tilegen.painted : rendered by tools/render3d, not voxels) keep their pixels : painted.png, their frames
 packed in cells of 48 px, PAINTED_COLUMNS a row ; painted.txt a line per tile and biome, "<biome> <cell> <key>" : the
-cell of its first frame (the others follow it).
+cell of its first frame (the others follow it). The grounds and the banks of the water painted are not there : the C++
+composes them as worldgen.painted_ground and worldgen.water_overlay do, from the painted grounds of each biome (in
+painted.txt as "texture <name>" : ground_sand, ground_grass_0...) and the masks of their edges (masks.png, a cell of
+48 px a mask, white inside ; masks.txt a line per cell, "<cell> <straight 0/1> <8 bits N E S W NE SE SW NW>" :
+worldgen.smooth_intrusion).
 
   tools/worldgen/atlas.py [folder]      (after a change of the drawings, of the keys or of a room template)
 """
@@ -115,6 +119,26 @@ def voxels(img):
 
 
 PAINTED_COLUMNS = 16
+# The painted grounds the C++ composes the grounds and the banks with (tilegen.ground_texture)
+TEXTURES = [f"ground_grass_{v}" for v in range(g.GRASS_VARIANTS)] + ["ground_sand", "ground_path", "ground_pave"]
+
+
+def texture_of(mat, variant=0):
+    return f"ground_grass_{variant % g.GRASS_VARIANTS}" if mat == "grass" else f"ground_{mat}"
+
+
+def composed(key):
+    """A ground or a bank the C++ composes in the current biome (worldgen.painted_ground, water_overlay) : its painted
+    grounds are there."""
+    if isinstance(key, str) or key[0] not in ("ground", "bank"):
+        return False
+    if key[0] == "bank":
+        mats, variant = [key[1]], 0
+    elif len(key) == 6:
+        mats, variant = [key[1]], key[5]
+    else:
+        mats, variant = [key[1], key[2]], 0
+    return all(g.painted(texture_of(m, variant)) is not None for m in mats)
 
 
 def is_painted(img):
@@ -125,7 +149,7 @@ def is_painted(img):
 
 def main():
     folder = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "Resources", "Worldgen")
-    entries = [(name, 4, (w.tile_base(name), w.tile_flags(name), w.tile_mask(name, False)), lambda f, n=name: w.ANIMATED[n](f))
+    entries = [(name, 4, (w.tile_base(name), w.tile_flags(name), w.tile_mask(name, False)), lambda f, n=name: w.ANIMATED[n](f), None)
                for name in w.ANIMATED]
     seen = set()
     for key, walkable in keys():
@@ -133,17 +157,21 @@ def main():
             raise SystemExit(f"atlas : the key {key!r} twice")
         seen.add(repr(key))
         entries.append((repr(key), 1, (w.tile_base(key), w.tile_flags(key), w.tile_mask(key, False)),
-                        lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
+                        lambda f, k=key, wk=walkable: w.draw_key(k, wk), key))
     atlas = Image.new("RGB", (len(w.BIOMES) * 4 * N, len(entries) * N), g.KEY)
     painted = []
     for b, biome in enumerate(w.BIOMES):
         g.use_biome(biome)
-        for row, (name, frames, _, draw) in enumerate(entries):
+        for row, (name, frames, _, draw, key) in enumerate(entries):
             images = [draw(f) for f in range(frames)]
             for f, img in enumerate(images):
                 atlas.paste(voxels(img), ((b * 4 + f) * N, row * N))
-            if any(is_painted(img) for img in images):
+            if any(is_painted(img) for img in images) and not (key is not None and composed(key)):
                 painted.append((b, name, [img.convert("RGB") for img in images]))
+        for name in TEXTURES:
+            image = g.painted(name)
+            if image is not None:
+                painted.append((b, f"texture {name}", [image.convert("RGB")]))
     g.use_biome("meadow")
     atlas.save(os.path.join(folder, "tiles.png"), optimize=True)
     cells = sum(len(images) for _, _, images in painted)
@@ -158,7 +186,15 @@ def main():
     with open(os.path.join(folder, "painted.txt"), "w") as out:
         out.write("".join(lines))
     with open(os.path.join(folder, "tiles.txt"), "w") as out:
-        out.write("".join(f"{frames} {base} {flags} {mask} {name}\n" for name, frames, (base, flags, mask), _ in entries))
+        out.write("".join(f"{frames} {base} {flags} {mask} {name}\n" for name, frames, (base, flags, mask), _, _ in entries))
+    # The masks of the edges of the grounds (worldgen.smooth_intrusion), rounded and straight (a paving)
+    shapes = [(straight, m) for straight in (False, True) for m in masks()]
+    sheet = Image.new("RGB", (PAINTED_COLUMNS * T, (len(shapes) + PAINTED_COLUMNS - 1) // PAINTED_COLUMNS * T), (0, 0, 0))
+    with open(os.path.join(folder, "masks.txt"), "w") as out:
+        for cell, (straight, m) in enumerate(shapes):
+            sheet.paste(w.smooth_intrusion(m, straight).convert("RGB"), ((cell % PAINTED_COLUMNS) * T, (cell // PAINTED_COLUMNS) * T))
+            out.write(f"{cell} {int(straight)} {''.join('1' if b else '0' for b in m)}\n")
+    sheet.save(os.path.join(folder, "masks.png"), optimize=True)
     print(f"{folder}/tiles.png : {len(entries)} tiles, {len(painted)} painted (painted.png)")
 
 

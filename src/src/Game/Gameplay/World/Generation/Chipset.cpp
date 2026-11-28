@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <optional>
 #include <cmath>
 #include <stdexcept>
 #include <tuple>
@@ -130,12 +131,211 @@ worldgen::Atlas::Atlas(RgbImage image, std::istream& index) : m_image(std::move(
 	}
 }
 
+worldgen::Atlas::Atlas(RgbImage image, std::istream& index, RgbImage painted, std::istream& paintedIndex, RgbImage masks, std::istream& masksIndex) :
+	Atlas(std::move(image), index, std::move(painted), paintedIndex) {
+	m_edgeMasks = std::move(masks);
+	auto cell = 0;
+	auto straight = 0;
+	auto bits = std::string{};
+	while (masksIndex >> cell >> straight >> bits) {
+		m_maskCells[{ straight != 0, bits }] = cell;
+	}
+}
+
+worldgen::TileImage worldgen::Atlas::paintedCell(int cell) const {
+	auto image = TileImage{ TileSize, std::vector<std::uint8_t>(static_cast<std::size_t>(TileSize * TileSize * 3)) };
+	const auto columns = m_painted.width / TileSize;
+	for (auto py = 0; py < TileSize; py++) {
+		const auto* src = m_painted.at((cell % columns) * TileSize, (cell / columns) * TileSize + py);
+		std::copy(src, src + TileSize * 3, image.rgb.begin() + py * TileSize * 3);
+	}
+	return image;
+}
+
+std::optional<worldgen::TileImage> worldgen::Atlas::texture(const std::string& name, Biome biome) const {
+	const auto found = m_paintedRows.find({ static_cast<int>(biome), "texture " + name });
+	if (found == m_paintedRows.end()) {
+		return std::nullopt;
+	}
+	return paintedCell(found->second);
+}
+
+namespace {
+	using Mask = std::vector<std::uint8_t>; // TileSize x TileSize, 0 or 255
+
+	std::string TextureOf(const std::string& mat, int variant) {
+		return mat == "grass" ? "ground_grass_" + std::to_string(variant % 4) : "ground_" + mat;
+	}
+
+	// PIL MinFilter / MaxFilter (a square of "size" pixels, the edges of the image repeated)
+	Mask Rank(const Mask& m, int size, bool max) {
+		const auto r = size / 2;
+		auto out = Mask(m.size());
+		for (auto y = 0; y < TileSize; y++) {
+			for (auto x = 0; x < TileSize; x++) {
+				auto v = max ? 0 : 255;
+				for (auto dy = -r; dy <= r; dy++) {
+					for (auto dx = -r; dx <= r; dx++) {
+						const auto sx = std::clamp(x + dx, 0, TileSize - 1);
+						const auto sy = std::clamp(y + dy, 0, TileSize - 1);
+						const auto s = m[static_cast<std::size_t>(sy * TileSize + sx)];
+						v = max ? std::max<int>(v, s) : std::min<int>(v, s);
+					}
+				}
+				out[static_cast<std::size_t>(y * TileSize + x)] = static_cast<std::uint8_t>(v);
+			}
+		}
+		return out;
+	}
+
+	// ImageChops.subtract (clipped at 0)
+	Mask Subtract(const Mask& a, const Mask& b) {
+		auto out = Mask(a.size());
+		for (auto i = 0u; i < a.size(); i++) {
+			out[i] = static_cast<std::uint8_t>(std::max(0, a[i] - b[i]));
+		}
+		return out;
+	}
+
+	// PIL Image.point(lambda v : int(v * factor)) on each channel, where the mask (0 or 255) is set (worldgen.shaded)
+	void Shaded(std::vector<std::uint8_t>& rgb, const Mask& mask, double factor) {
+		for (auto i = 0u; i < mask.size(); i++) {
+			if (mask[i] != 0) {
+				for (auto c = 0u; c < 3; c++) {
+					auto& v = rgb[i * 3 + c];
+					v = static_cast<std::uint8_t>(static_cast<int>(v * factor));
+				}
+			}
+		}
+	}
+
+	// PIL paste through an L mask (Paste.c BLEND : the division by 255 of PIL)
+	std::uint8_t Blend(int out, int in, int mask) {
+		const auto tmp = out * (255 - mask) + in * mask + 128;
+		return static_cast<std::uint8_t>(((tmp >> 8) + tmp) >> 8);
+	}
+}
+
+std::optional<worldgen::TileImage> worldgen::Atlas::compose(const std::string& key, Biome biome) const {
+	if (m_maskCells.empty() || key.rfind("('ground', ", 0) != 0 && key.rfind("('bank', ", 0) != 0) {
+		return std::nullopt;
+	}
+	// The words of the key : ('ground', 'sand', 'grass', (True, ...), False), ('ground', 'sand', None, None, True, 0),
+	// ('bank', 'sand', (True, ...))
+	auto words = std::vector<std::string>{};
+	auto word = std::string{};
+	for (const auto c : key) {
+		if (c == '(' || c == ')' || c == ',' || c == '\'' || c == ' ') {
+			if (!word.empty()) {
+				words.push_back(word);
+				word.clear();
+			}
+		} else {
+			word += c;
+		}
+	}
+	const auto bitsOf = [&words](std::size_t from) {
+		auto bits = std::string{};
+		for (auto k = from; k < from + 8; k++) {
+			bits += words[k] == "True" ? '1' : '0';
+		}
+		return bits;
+	};
+	const auto maskOf = [this](bool straight, const std::string& bits) -> std::optional<Mask> {
+		const auto found = m_maskCells.find({ straight, bits });
+		if (found == m_maskCells.end()) {
+			return std::nullopt;
+		}
+		const auto columns = m_edgeMasks.width / TileSize;
+		auto m = Mask(static_cast<std::size_t>(TileSize * TileSize));
+		for (auto y = 0; y < TileSize; y++) {
+			for (auto x = 0; x < TileSize; x++) {
+				m[static_cast<std::size_t>(y * TileSize + x)] = m_edgeMasks.at((found->second % columns) * TileSize + x, (found->second / columns) * TileSize + y)[0];
+			}
+		}
+		return m;
+	};
+
+	if (words[0] == "bank" && words.size() == 10) {
+		// worldgen.water_overlay : the bank, its darker rim, a line of foam on the water (the key colour : the water)
+		const auto& over = words[1];
+		auto ground = texture(TextureOf(over, 0), biome);
+		const auto m = maskOf(over == "pave", bitsOf(2));
+		if (!ground || !m) {
+			return std::nullopt;
+		}
+		auto out = TileImage{ TileSize, std::vector<std::uint8_t>(static_cast<std::size_t>(TileSize * TileSize * 3)) };
+		const auto foam = Subtract(Rank(*m, 5, true), *m);
+		const auto rim = Subtract(*m, Rank(*m, 3, false));
+		Shaded(ground->rgb, rim, 0.82);
+		for (auto i = 0u; i < m->size(); i++) {
+			auto* p = &out.rgb[i * 3];
+			p[0] = 190;
+			p[1] = 151;
+			p[2] = 255;
+			if (foam[i] != 0) {
+				p[0] = 236;
+				p[1] = 246;
+				p[2] = 250;
+			}
+			if ((*m)[i] != 0) {
+				std::copy(&ground->rgb[i * 3], &ground->rgb[i * 3] + 3, p);
+			}
+		}
+		return out;
+	}
+	if (words[0] != "ground" || (words.size() != 6 && words.size() != 12)) {
+		return std::nullopt;
+	}
+	// worldgen.painted_ground : the other material reaching in through the mask, a darker rim inside its edge and a thin
+	// shadow outside, the shadow of a cliff to the north
+	const auto& mat = words[1];
+	const auto plain = words.size() == 6;
+	const auto variant = plain ? std::stoi(words[5]) : 0;
+	const auto shade = plain ? words[4] == "True" : words[11] == "True";
+	auto out = texture(TextureOf(mat, variant), biome);
+	if (!out) {
+		return std::nullopt;
+	}
+	if (!plain) {
+		auto over = texture(TextureOf(words[2], variant), biome);
+		const auto m = maskOf(mat == "pave", bitsOf(3));
+		if (!over || !m) {
+			return std::nullopt;
+		}
+		for (auto i = 0u; i < m->size(); i++) {
+			if ((*m)[i] != 0) {
+				std::copy(&over->rgb[i * 3], &over->rgb[i * 3] + 3, &out->rgb[i * 3]);
+			}
+		}
+		const auto rim = Subtract(*m, Rank(*m, 3, false));
+		const auto band = Subtract(Rank(*m, 3, true), *m);
+		Shaded(out->rgb, rim, 0.86);
+		Shaded(out->rgb, band, 0.84);
+	}
+	if (shade) {
+		for (auto y = 0; y < TileSize; y++) {
+			const auto fade = std::max(0, 255 - y * 26);
+			for (auto x = 0; x < TileSize; x++) {
+				for (auto c = 0; c < 3; c++) {
+					auto& v = out->rgb[static_cast<std::size_t>((y * TileSize + x) * 3 + c)];
+					v = Blend(v, static_cast<int>(v * 0.62), fade);
+				}
+			}
+		}
+	}
+	return out;
+}
+
 std::vector<worldgen::TileImage> worldgen::Atlas::frames(const std::string& key, Biome biome) const {
 	const auto found = m_rows.find(key);
 	if (found == m_rows.end()) {
 		throw std::runtime_error{ "worldgen : the tile " + key + " is not in the atlas (tools/worldgen/atlas.py)" };
 	}
 	const auto [row, count] = found->second;
+	if (auto composed = compose(key, biome)) {
+		return { std::move(*composed) };
+	}
 	auto out = std::vector<TileImage>(static_cast<std::size_t>(count));
 	// Painted in this biome : its pixels
 	const auto painted = m_paintedRows.find({ static_cast<int>(biome), key });
