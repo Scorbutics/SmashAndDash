@@ -275,7 +275,7 @@ bool TrainerMenu::onMouse(ska::InputMouseEvent& event) {
 	if (position.x == 0 && position.y == 0) {
 		return true;
 	}
-	const auto at = ska::Point<int>{ position.x, position.y };
+	const auto at = ska::Point<int>{ static_cast<int>(position.x), static_cast<int>(position.y) };
 	auto& prompt = m_worldState.prompt();
 	for (const auto& hit : m_hits) {
 		if (!Inside(hit.box, at)) {

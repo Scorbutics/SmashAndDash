@@ -19,6 +19,11 @@ file(GLOB CHUNK_WORKER_SOURCES CONFIGURE_DEPENDS src/Game/Gameplay/World/ChunkWo
 list(REMOVE_ITEM SOURCES ${CHUNK_WORKER_SOURCES})
 add_library(smash_and_dash_worldgen OBJECT ${WORLDGEN_SOURCES})
 set_target_properties(smash_and_dash_worldgen PROPERTIES POSITION_INDEPENDENT_CODE ON)
+# Optimised in a Debug build too : a world takes about 75 s unoptimised (the painted tiles blended at 48 px), against
+# 60 s for a run of the agent tools (tools/doctor, the Debug CI) to be ready ; its checks are the golden tests
+if(NOT MSVC)
+	target_compile_options(smash_and_dash_worldgen PRIVATE $<$<CONFIG:Debug>:-O2>)
+endif()
 
 # The sources of the game : compiled without waiting for the engine to be linked (the engine headers are on the include
 # path of every target : the root CMakeLists.txt), the game library links them with the engine
