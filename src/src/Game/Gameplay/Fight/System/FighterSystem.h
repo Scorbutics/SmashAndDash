@@ -40,6 +40,8 @@ public:
 	static constexpr unsigned int DashInvulnerability = 160;
 	static constexpr unsigned int DashCooldown = 900;
 	static constexpr float DashSpeed = 620.F;
+	// The afterimages of the dashes of a skill : one every (milliseconds)
+	static constexpr unsigned int GhostPeriod = 35;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;

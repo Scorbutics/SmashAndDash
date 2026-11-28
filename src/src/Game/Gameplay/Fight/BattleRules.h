@@ -18,7 +18,8 @@ public:
 		std::string statusFile = "./Data/Battle/status.miniska", std::string stagesFile = "./Data/Battle/stages.miniska",
 		std::string encountersFile = "./Data/Battle/encounters.miniska", std::string skillsFile = "./Data/Battle/skills.miniska",
 		std::string rewardsFile = "./Data/Battle/rewards.miniska", std::string linesFile = "./Data/Battle/lines.miniska",
-		std::string bondFile = "./Data/Battle/bond.miniska", std::string clashFile = "./Data/Battle/clash.miniska");
+		std::string bondFile = "./Data/Battle/bond.miniska", std::string clashFile = "./Data/Battle/clash.miniska",
+		std::string dashFile = "./Data/Battle/dash.miniska");
 
 	// Statistic of a Pokemon at a level, from its base statistic ([BaseStats] of Data/Monsters/<id>.ini)
 	int stat(int base, int level);
@@ -28,7 +29,11 @@ public:
 	// The experience a Pokemon has when it reaches a level (the start of the level : its progress bar)
 	int levelExperience(int level, int experienceNeeded);
 	// Experience won by defeating a Pokemon ("dropped" : [Experience] level_1_exp_dropped of the defeated Pokemon, "level" : its level)
-	int experience(int dropped, int level);
+	// Experience won against a Pokemon of "level" by a Pokemon of the level "own"
+	int experience(int dropped, int level, int own);
+	// The level of a wild Pokemon on the map (Data/Battle/encounters.miniska) : "level" the one of the data of its biome,
+	// "distance" in blocks from the village where the game starts (the farther, the stronger), "roll" 0 .. 99
+	int wildLevel(int level, int distance, int roll);
 	// Damage of a skill hitting a Pokemon : "effectiveness" of its type (percents), "stab" : a type of the attacker
 	int damage(int power, int attack, int defense, int level, int effectiveness, bool stab);
 	// Damage of a hit given by a wild Pokemon (the player has one Pokemon against them : softer), from its damage
@@ -91,7 +96,7 @@ public:
 
 	// The rewards of a battle (Data/Battle/rewards.miniska) : the experience won by the Pokemon of the player, for the wild
 	// Pokemon K.O. ("dropped" : the experience of their data, their "levels")
-	int rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, bool won, bool fled);
+	int rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, int own, bool won, bool fled);
 
 	// The lines of the trainer during a battle (Data/Battle/lines.miniska) : what it says when "event" happens ("" :
 	// nothing ; "roll" 0 .. 99, "pick" 0 .. 999), and how long after its last line it can say it (milliseconds)
@@ -110,7 +115,14 @@ public:
 	unsigned int turnCooldown();
 	// The rounds of a clash, the skill of the opponent after the first one (the power of each of its skills : its index)
 	int clashRounds();
+	// The battle time a round of a clash stands for (ms) : the statuses and the changes of statistics wear off by it, the
+	// statuses that hurt hurt once at its end
+	unsigned int clashRoundTime();
 	int clashPick(const std::vector<int>& powers, int roll);
+	// The dash skills (Data/Battle/dash.miniska), for the dashes the keys do not aim : the angle of a dash to place itself
+	// (degrees from the opponent), when the AI asks for the next one (milliseconds, within the window)
+	int dashAngle(int roll);
+	unsigned int dashDelay(int roll, unsigned int window);
 
 	static constexpr auto DefaultRulesFile = "./Data/Battle/rules.miniska";
 
@@ -130,6 +142,7 @@ private:
 	std::string m_linesFile;
 	std::string m_bondFile;
 	std::string m_clashFile;
+	std::string m_dashFile;
 	std::unordered_set<std::string> m_reported;
 	int m_difficulty = Easy;
 };

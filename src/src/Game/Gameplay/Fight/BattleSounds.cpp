@@ -7,7 +7,8 @@ namespace {
 		"clash_impact.ogg", "clash_woosh.ogg", "clash_shatter.wav", "clash_versus.ogg", "clash_swoosh.wav", "clash_land.wav", "clash_round.wav", "clash_shine.ogg",
 		"clash_attack.ogg", "clash_hit.wav", "clash_ko.ogg", "clash_cursor.wav", "clash_select.wav",
 		"clash_ball_throw.wav", "clash_ball_in.wav", "clash_ball_drop.wav", "clash_ball_shake.wav", "clash_ball_caught.wav", "clash_ball_open.wav",
-		"battle_encounter.wav", "bond_start.ogg", "bond_charge.ogg", "bond_perfect.ogg", "bond_release.ogg" };
+		"battle_encounter.wav", "bond_start.ogg", "bond_charge.ogg", "bond_perfect.ogg", "bond_release.ogg",
+		"battle_stat_up.wav", "battle_stat_down.wav" };
 	static_assert(sizeof(Files) / sizeof(Files[0]) == static_cast<std::size_t>(BattleSound::Count), "a file for each sound");
 }
 

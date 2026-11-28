@@ -4,6 +4,9 @@ Encounters = import "wd:Data/Battle/encounters"
 Skills = import "wd:Data/Battle/skills"
 
 run = function(args: string[]) do
+	Test.equal((Encounters.wildLevel(3, 0, 50): string), "3", "near the village : the level of its biome")
+	Test.equal((Encounters.wildLevel(3, 120, 50): string), "15", "120 blocks away : 12 levels more")
+	Test.equal((Encounters.wildLevel(3, 120, 2): string), "19", "a leader : 4 levels more")
 	Test.equal(Encounters.attitude(25, 5, 5, 0), "aggressive", "the low rolls : aggressive")
 	Test.equal(Encounters.attitude(25, 5, 5, 45), "fearful", "then fearful")
 	Test.equal(Encounters.attitude(25, 5, 5, 80), "passive", "then passive")

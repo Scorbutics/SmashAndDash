@@ -1,6 +1,7 @@
 # The encounters with the wild Pokemon, asked by the map (they cannot wait). The dice are rolled by the game with the
 # sizes given here (the replays stay the same). A battle starts when the trainer and a wild Pokemon touch : one walks
 # into the other.
+Math = import "bind:std.native.math"
 
 # The attitude of a wild Pokemon on the map, decided when it appears : "aggressive" (it charges the player in sight),
 # "fearful" (it runs away from the player), "passive" (it wanders, the player walks into it to fight). "level" : its
@@ -70,4 +71,16 @@ arrival = function(monster: int) : string do
 		when 10 then "tree"
 		else "walk"
 	end
+end
+
+# The level of a wild Pokemon on the map : "level" the one of the data of its biome (the north and the desert are stronger
+# than the meadows : tools/worldgen SPAWNS), "distance" its blocks from the village where the game starts : a level more
+# every 10 blocks (the world never closes, it gets dangerous), "roll" 0 .. 99 : one time in 20 a leader of its kind, 4
+# levels more (its attitude follows : stronger than the team, it charges more often)
+wildLevel = function(level: int, distance: int, roll: int) : int do
+	value = level + distance / 10
+	if roll < 5
+		value = value + 4
+	end
+	return Math.clamp(value, 1, 100)
 end

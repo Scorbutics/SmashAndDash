@@ -22,6 +22,33 @@ enum class FighterIntent {
 	SidestepRight = 4
 };
 
+// A dash skill going on (SkillKind::Dash) : a dash to place itself (Move), the time to ask for the next one (Wait), the
+// dash that hits (Strike). BattleSystem runs it, FighterSystem moves the Pokemon
+struct DashAttack {
+	enum class Phase { None, Move, Wait, Strike };
+	Phase phase = Phase::None;
+	// The skill used (its index), the dashes left after this one
+	int skill = -1;
+	int next = 0;
+	// Milliseconds left in this phase
+	unsigned int left = 0;
+	// The next dash asked by the keys ; the direction of the dash to be chosen (FighterSystem)
+	bool again = false;
+	bool aim = false;
+	// The AI : the angle of its dashes to place itself (degrees from its opponent), when it asks for the next one
+	// (milliseconds in the Wait) : rolled by the battle
+	int angle = 0;
+	unsigned int delay = 0;
+	// Pixels per second, towards "direction"
+	float speed = 0.F;
+	ska::Point<float> direction;
+	// Milliseconds before its next afterimage
+	unsigned int ghost = 0;
+
+	bool active() const { return phase != Phase::None; }
+	bool moving() const { return (phase == Phase::Move || phase == Phase::Strike) && left > 0; }
+};
+
 // A Pokemon fighting in a battle (with its BattleComponent, its statistics) : who it fights, who plays it, what it does
 // now (an attack, a stun...). Added when the battle starts, removed when it ends (StateFight).
 class FighterComponent {
@@ -85,6 +112,14 @@ public:
 	// speed (every frame)
 	std::array<float, 3> stageMultipliers{ 1.F, 1.F, 1.F };
 	std::array<unsigned int, 3> stageTime{};
+	// A statistic just changed : arrows over it, a tint (up : red rising, down : blue falling, as in the first games),
+	// milliseconds left (real time : shown during a clash too)
+	unsigned int statChange = 0;
+	bool statChangeUp = false;
+	static constexpr unsigned int StatChangeDuration = 1000;
+	// Its status just landed (or hurt it) : its animation is stronger, milliseconds left (real time)
+	unsigned int statusBurst = 0;
+	static constexpr unsigned int StatusBurstDuration = 900;
 	// Its status, the time it lasts, the time until it hurts again, the fighter who gave it (leech)
 	FighterStatus status = FighterStatus::None;
 	unsigned int statusTime = 0;
@@ -113,6 +148,7 @@ public:
 	unsigned int dashCooldown = 0;
 	ska::Point<float> dashDirection;
 	bool dodgeRequested = false;
+	DashAttack dashAttack;
 	// The attack of an opponent the AI already thought about dodging (its startup)
 	ska::EntityId dodgeChecked = 0;
 
@@ -128,7 +164,7 @@ public:
 	bool hasLastFree = false;
 
 	// Busy with an attack (startup, lunge, recovery) or stunned : it cannot move nor attack
-	bool busy() const { return knockedOut || inBall || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || status == FighterStatus::Sleep; }
+	bool busy() const { return knockedOut || inBall || stun > 0 || windUp > 0 || lunge > 0 || recovery > 0 || dash > 0 || dashAttack.active() || status == FighterStatus::Sleep; }
 };
 
 SKA_DECLARE_COMPONENT(FighterComponent);

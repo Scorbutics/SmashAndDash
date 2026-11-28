@@ -38,6 +38,13 @@ rounds = function() : int do
 	return 3
 end
 
+# The battle time (milliseconds) a round stands for : the statuses and the changes of statistics wear off by it (a sleep
+# of 3.5 s : 2 rounds), the statuses that hurt (poison, burn, leech) hurt once at the end of each round, as in the first
+# games
+roundTime = function() : int do
+	return 2000
+end
+
 # After the first round, the skill of the opponent : "powers" the power of each of its skills (0 : one that does not hit),
 # roll : 0 .. 99. Its strongest one time in two, else the first one that hits from the roll on (its index)
 pick = function(powers: int[], roll: int) : int do

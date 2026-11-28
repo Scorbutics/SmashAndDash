@@ -28,20 +28,80 @@ namespace {
 		}
 	}
 
-	void ChangeStages(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, ska::EntityId entity, const std::array<int, 3>& changes, unsigned int duration) {
+	void ChangeStages(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, ska::EntityId entity, const std::array<int, 3>& changes, unsigned int duration,
+		std::vector<SkillEffect>* report) {
 		auto& fighter = entities.getComponent<FighterComponent>(entity);
+		auto rose = false;
+		auto fell = false;
 		for (auto stat = 0; stat < 3; stat++) {
-			if (changes[static_cast<std::size_t>(stat)] == 0) {
+			const auto change = changes[static_cast<std::size_t>(stat)];
+			if (change == 0) {
 				continue;
 			}
 			auto& value = fighter.stages[static_cast<std::size_t>(stat)];
-			value = rules.stage(value, changes[static_cast<std::size_t>(stat)]);
+			const auto before = value;
+			value = rules.stage(value, change);
 			fighter.stageMultipliers[static_cast<std::size_t>(stat)] = rules.stageMultiplier(value);
 			fighter.stageTime[static_cast<std::size_t>(stat)] = rules.stageDuration(duration);
-			const auto up = changes[static_cast<std::size_t>(stat)] > 0;
+			const auto up = change > 0;
 			MarkText(entities, stage, entity, std::string{ StatShortName(stat) } + (up ? " +" : " -"), up ? 1 : 2);
+			if (value != before) {
+				rose = rose || up;
+				fell = fell || !up;
+			}
+			if (report != nullptr) {
+				auto effect = SkillEffect{};
+				effect.kind = SkillEffect::Kind::Stat;
+				effect.fighter = entity;
+				effect.stat = stat;
+				effect.change = change;
+				effect.changed = value != before;
+				report->push_back(effect);
+			}
+		}
+		// The arrows over it, its tint, the sound of the first games (a fall shown over a rise : it is the news)
+		if (rose || fell) {
+			fighter.statChange = FighterComponent::StatChangeDuration;
+			fighter.statChangeUp = !fell;
+			stage.sound(fell ? BattleSound::StatDown : BattleSound::StatUp);
 		}
 	}
+
+	const char* StatFullName(int stat) {
+		switch (stat) {
+		case StatAttack: return "L'Attaque";
+		case StatDefense: return "La Défense";
+		default: return "La Vitesse";
+		}
+	}
+}
+
+std::string SkillEffectMessage(const SkillEffect& effect, const std::string& name) {
+	switch (effect.kind) {
+	case SkillEffect::Kind::Stat: {
+		const auto up = effect.change > 0;
+		const auto subject = std::string{ StatFullName(effect.stat) } + " de " + name;
+		if (!effect.changed) {
+			return subject + (up ? " ne peut plus augmenter !" : " ne peut plus baisser !");
+		}
+		const auto strong = effect.change >= 2 || effect.change <= -2;
+		return subject + (up ? (strong ? " augmente beaucoup !" : " augmente !") : (strong ? " baisse beaucoup !" : " baisse !"));
+	}
+	case SkillEffect::Kind::Status:
+		switch (effect.status) {
+		case FighterStatus::Poison: return name + " est empoisonné !";
+		case FighterStatus::Burn: return name + " est brûlé !";
+		case FighterStatus::Paralysis: return name + " est paralysé ! Il aura du mal à attaquer !";
+		case FighterStatus::Sleep: return name + " s'endort !";
+		case FighterStatus::Leech: return name + " est infecté par Vampigraine !";
+		default: return "";
+		}
+	case SkillEffect::Kind::Flinch:
+		return name + " est apeuré !";
+	case SkillEffect::Kind::Guard:
+		return name + " se protège !";
+	}
+	return "";
 }
 
 std::string StatusName(FighterStatus status) {
@@ -98,11 +158,21 @@ const char* StatusKey(FighterStatus status) {
 	}
 }
 
-void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target) {
+void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleRules& rules, const SkillDescriptor& skill, ska::EntityId user, ska::EntityId target,
+		std::vector<SkillEffect>* report) {
+	const auto reported = [report](SkillEffect::Kind kind, ska::EntityId fighter, FighterStatus status) {
+		if (report != nullptr) {
+			auto effect = SkillEffect{};
+			effect.kind = kind;
+			effect.fighter = fighter;
+			effect.status = status;
+			report->push_back(effect);
+		}
+	};
 	const auto targetFights = target != 0 && entities.hasComponent<FighterComponent>(target) && !entities.getComponent<FighterComponent>(target).knockedOut &&
 		!entities.getComponent<FighterComponent>(target).inBall;
 	if (targetFights) {
-		ChangeStages(entities, stage, rules, target, skill.targetStages, skill.effectDuration);
+		ChangeStages(entities, stage, rules, target, skill.targetStages, skill.effectDuration, report);
 		auto& fighter = entities.getComponent<FighterComponent>(target);
 		// The dice are rolled here, the rules decide (Data/Battle/status.miniska)
 		if (!skill.status.empty() && skill.status != "guard"
@@ -116,6 +186,7 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleR
 					fighter.windUp = 0;
 					fighter.pendingSkill = -1;
 					MarkText(entities, stage, target, "APEURÉ", 2);
+					reported(SkillEffect::Kind::Flinch, target, FighterStatus::None);
 				}
 			} else {
 				const auto status = StatusFromName(skill.status);
@@ -134,19 +205,22 @@ void ApplySkillEffects(ska::EntityManager& entities, BattleStage& stage, BattleR
 						fighter.windUp = 0;
 						fighter.pendingSkill = -1;
 					}
+					fighter.statusBurst = FighterComponent::StatusBurstDuration;
 					MarkText(entities, stage, target, StatusName(status), 2);
 					stage.sound(BattleSound::Status);
+					reported(SkillEffect::Kind::Status, target, status);
 				}
 			}
 		}
 	}
 
 	if (user != 0 && entities.hasComponent<FighterComponent>(user)) {
-		ChangeStages(entities, stage, rules, user, skill.selfStages, skill.effectDuration);
+		ChangeStages(entities, stage, rules, user, skill.selfStages, skill.effectDuration, report);
 		if (skill.status == "guard") {
 			auto& fighter = entities.getComponent<FighterComponent>(user);
 			fighter.guard = std::min(skill.effectDuration, 1500u);
 			MarkText(entities, stage, user, "ABRI", 1);
+			reported(SkillEffect::Kind::Guard, user, FighterStatus::None);
 		}
 	}
 }

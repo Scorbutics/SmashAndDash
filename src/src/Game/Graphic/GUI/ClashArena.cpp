@@ -17,6 +17,8 @@
 #include "World/TileWorld.h"
 #include "World/Tileset.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
+#include "../../Gameplay/Fight/BattleEffects.h"
+#include "BattleAuras.h"
 #include "../../Gameplay/Fight/FighterComponent.h"
 #include "../../Gameplay/World/WorldState.h"
 #include "../../Gameplay/World/Generation/Png.h"
@@ -219,19 +221,10 @@ void ClashArena::capture() const {
 	};
 	const auto middle = ska::Point<float>{ turn.center.x / blockSize, turn.center.y / blockSize };
 	const auto player = block(turn.player, middle);
-	const auto opponent = block(turn.opponent, middle);
 	m_clashX = static_cast<int>(middle.x);
 	m_clashY = static_cast<int>(middle.y);
 	m_centerX = static_cast<int>(player.x);
 	m_centerY = static_cast<int>(player.y);
-	// The camera is behind the Pokemon of the player, it looks at the opponent (the nearest of the four directions)
-	const auto dx = opponent.x - player.x;
-	const auto dy = opponent.y - player.y;
-	if (std::abs(dx) > std::abs(dy)) {
-		m_forward = ska::Point<int>{ dx > 0.F ? 1 : -1, 0 };
-	} else {
-		m_forward = ska::Point<int>{ 0, dy > 0.F ? 1 : -1 };
-	}
 	m_cells.clear();
 	m_sheets.clear();
 	const auto layers = std::min<std::size_t>(3, profile.layers());
@@ -317,9 +310,10 @@ void ClashArena::layout(int width, int height) const {
 	m_standing.clear();
 	m_rows.clear();
 	const auto v = view();
-	const auto right = ska::Point<int>{ -m_forward.y, m_forward.x };
+	// The battleground looks north, as the tiles are drawn, wherever the opponent is : the columns of an object stay side by
+	// side, at the same distance (seen from the side, they would be at different distances : apart by the parallax)
 	const auto at = [&](int forward, int lateral) {
-		return ska::Point<int>{ m_centerX + forward * m_forward.x + lateral * right.x, m_centerY + forward * m_forward.y + lateral * right.y };
+		return ska::Point<int>{ m_centerX + lateral, m_centerY - forward };
 	};
 	// The ground where a tile stands (a wall, a cliff) : the flat ground of the block of the player, else any
 	auto fallback = std::optional<ska::Rectangle>{};
@@ -442,9 +436,7 @@ void ClashArena::layout(int width, int height) const {
 	auto dropped = std::vector<char>(nodes.size(), 0);
 	for (auto i = std::size_t{ 0 }; i < nodes.size(); i++) {
 		const auto& n = nodes[i];
-		const auto rx = n.cell->x - m_centerX;
-		const auto ry = n.baseY - m_centerY;
-		const auto forward = static_cast<float>(rx * m_forward.x + ry * m_forward.y);
+		const auto forward = static_cast<float>(m_centerY - n.baseY);
 		const auto border = std::abs(n.cell->x - m_centerX) >= Radius - 1 || std::abs(n.cell->y - m_centerY) >= Radius - 1;
 		if (border || forward < -0.5F || forward > static_cast<float>(FarRow)) {
 			dropped[root(i)] = 1;
@@ -457,10 +449,8 @@ void ClashArena::layout(int width, int height) const {
 		const auto& c = *nodes[i].cell;
 		const auto layer = nodes[i].layer;
 		const auto index = static_cast<std::size_t>(layer);
-		const auto rx = c.x - m_centerX;
-		const auto ry = nodes[i].baseY - m_centerY;
-		const auto forward = static_cast<float>(rx * m_forward.x + ry * m_forward.y);
-		const auto lateral = static_cast<float>(rx * right.x + ry * right.y);
+		const auto forward = static_cast<float>(m_centerY - nodes[i].baseY);
+		const auto lateral = static_cast<float>(c.x - m_centerX);
 		auto piece = Piece{};
 		piece.clip = *c.clips[index];
 		piece.sheet = c.sheet;
@@ -651,12 +641,13 @@ void ClashArena::tile(ska::Renderer& renderer, int sheet, const ska::Rectangle& 
 	effect.green = shade;
 	effect.blue = shade;
 	effect.flash = flash;
+	effect.pixelArt = true;
 	renderer.setEffect(&effect);
 	renderer.render(texture, static_cast<int>(x) - clip.w / 2, static_cast<int>(y) - clip.h / 2, &clip, angle, nullptr);
 	renderer.setEffect(nullptr);
 }
 
-void ClashArena::pokemon(ska::Renderer& renderer, int id, int row, int column, float x, float y, float scale, unsigned char alpha, unsigned char flash, int sink, unsigned char shade) const {
+void ClashArena::pokemon(ska::Renderer& renderer, int id, int row, int column, float x, float y, float scale, unsigned char alpha, unsigned char flash, int sink, unsigned char shade, ska::Color tint) const {
 	const auto& texture = charset(id);
 	const auto frame = static_cast<int>(texture.getHeight()) / 8;
 	if (frame <= 0 || alpha == 0) {
@@ -669,9 +660,9 @@ void ClashArena::pokemon(ska::Renderer& renderer, int id, int row, int column, f
 	effect.anchorBottom = true;
 	effect.alpha = alpha;
 	effect.flash = flash;
-	effect.red = shade;
-	effect.green = shade;
-	effect.blue = shade;
+	effect.red = static_cast<unsigned char>(shade * tint.r / 255);
+	effect.green = static_cast<unsigned char>(shade * tint.g / 255);
+	effect.blue = static_cast<unsigned char>(shade * tint.b / 255);
 	renderer.setEffect(&effect);
 	renderer.render(texture, static_cast<int>(x) - frame / 2, static_cast<int>(y) - clip.h, &clip, 0., nullptr);
 	renderer.setEffect(nullptr);
@@ -1224,7 +1215,8 @@ void ClashArena::renderFighter(Ui::Canvas& canvas, const Fighter& f, float build
 	if (turn.step == Step::Acting && turn.target == f.entity && turn.hit && turn.damage > 0 && turn.hitAge < 520) {
 		const auto age = static_cast<float>(turn.hitAge);
 		const auto length = std::max(1.F, std::sqrt(toward.x * toward.x + toward.y * toward.y));
-		const auto push = 30.F * f.scale / 3.F * (1.F - EaseOut(age / 520.F));
+		// (Its status hurting it : no push)
+		const auto push = turn.tick ? 0.F : 30.F * f.scale / 3.F * (1.F - EaseOut(age / 520.F));
 		x -= toward.x / length * push;
 		y -= toward.y / length * push * 0.5F;
 		flash = age < 100.F ? 255.F : 0.F;
@@ -1270,7 +1262,28 @@ void ClashArena::renderFighter(Ui::Canvas& canvas, const Fighter& f, float build
 	if (shrink <= 0.01F) {
 		return;
 	}
-	pokemon(canvas.renderer(), monster(f.entity), f.row, column, x, y + bob, f.scale * shrink, Byte(alpha), Byte(flash), sink, Byte(shade));
+	// A statistic just changed : it pulses red (up) or blue (down)
+	const auto* state = m_entities.hasComponent<FighterComponent>(f.entity) ? &m_entities.getComponent<FighterComponent>(f.entity) : nullptr;
+	auto tint = ska::Color{ 255, 255, 255, 255 };
+	if (state != nullptr && state->statChange > 0) {
+		const auto pulse = 0.5F + 0.5F * std::sin(static_cast<float>(state->statChange) / 70.F);
+		const auto strength = Clamp01(static_cast<float>(state->statChange) / 300.F) * (0.45F + 0.35F * pulse);
+		tint = state->statChangeUp ? Rgba(255, static_cast<int>(255.F * (1.F - strength)), static_cast<int>(255.F * (1.F - strength)))
+			: Rgba(static_cast<int>(255.F * (1.F - strength)), static_cast<int>(255.F * (1.F - strength * 0.4F)), 255);
+	}
+	pokemon(canvas.renderer(), monster(f.entity), f.row, column, x, y + bob, f.scale * shrink, Byte(alpha), Byte(flash), sink, Byte(shade), tint);
+	// Its status (its animation), the arrows of a change of its statistics (as on the map : BattleAuras)
+	if (state != nullptr && sink == 0 && shrink > 0.9F && alpha > 128.F) {
+		// The feet in its frame (Sprites/Charsets : 64 of 72 pixels), its body
+		const auto feet = ska::Point<float>{ x, y + bob - 8.F * f.scale * shrink };
+		const auto body = 32.F * f.scale * shrink;
+		if (state->status != FighterStatus::None) {
+			BattleAuras::status(canvas, state->status, feet, body, m_time, static_cast<float>(state->statusBurst) / static_cast<float>(FighterComponent::StatusBurstDuration));
+		}
+		if (state->statChange > 0) {
+			BattleAuras::statChange(canvas, state->statChangeUp, feet, body, 1.F - static_cast<float>(state->statChange) / static_cast<float>(FighterComponent::StatChangeDuration));
+		}
+	}
 }
 
 void ClashArena::renderProjectile(Ui::Canvas& canvas, ska::Point<int> offset) const {
@@ -1329,6 +1342,15 @@ void ClashArena::renderHit(Ui::Canvas& canvas, ska::Point<int> offset) const {
 	const auto cx = target.feet.x + static_cast<float>(offset.x);
 	const auto cy = target.feet.y - 16.F * target.scale + static_cast<float>(offset.y);
 	auto& renderer = canvas.renderer();
+	// Its status hurts it : its animation (BattleAuras, stronger now) and the damage only
+	if (turn.tick) {
+		if (age < 1000.F && turn.damage > 0) {
+			const auto pop = 1.F + 0.6F * (1.F - EaseOut(age / 140.F));
+			const auto alpha = 255.F * (1.F - Clamp01((age - 650.F) / 350.F));
+			Shout(canvas, "-" + std::to_string(turn.damage), 40, Rgba(230, 170, 255), Rgba(60, 10, 80), cx + 40.F, cy - 40.F * target.scale / 3.F - age * 0.06F, pop, alpha);
+		}
+		return;
+	}
 	if (turn.damage <= 0) {
 		// A skill without damage : rings around the one it changes
 		const auto who = fighter(turn.damage == 0 && turn.target != 0 ? turn.attacker : turn.target);
@@ -1631,6 +1653,43 @@ void ClashArena::renderBar(Ui::Canvas& canvas, ska::EntityId entity, bool left, 
 	const auto& name = left ? m_stage.turn.pokemon : m_stage.turn.opponentName;
 	canvas.text(Upper(name), Style(22, Rgba(255, 255, 255), 2, Rgba(0, 0, 0)), static_cast<int>(left ? x0 : x1), static_cast<int>(y + barH + 8.F), left ? Ui::Align::Left : Ui::Align::Right);
 	canvas.text(std::to_string(std::max(0, battle.hp)) + " / " + std::to_string(battle.maxHp), Style(16, Rgba(255, 230, 160), 2, Rgba(0, 0, 0)), static_cast<int>(left ? x1 : x0), static_cast<int>(y + barH + 10.F), left ? Ui::Align::Right : Ui::Align::Left);
+	if (state == nullptr) {
+		return;
+	}
+	// Its status (a pill of its colour, as in the first games) and the changes of its statistics
+	auto tagX = left ? x0 : x1;
+	const auto tagY = y + barH + 40.F;
+	const auto pill = [&](const std::string& text, const ska::Color& color) {
+		const auto width = 12.F + 11.F * static_cast<float>(text.size());
+		const auto from = left ? tagX : tagX - width;
+		canvas.fill(Rgba(10, 10, 20, 220.F), ska::Rectangle{ static_cast<int>(from) - 2, static_cast<int>(tagY) - 2, static_cast<int>(width) + 4, 26 });
+		canvas.fill(color, ska::Rectangle{ static_cast<int>(from), static_cast<int>(tagY), static_cast<int>(width), 22 });
+		canvas.text(text, Style(16, Rgba(255, 255, 255), 2, Rgba(0, 0, 0)), static_cast<int>(from + width / 2.F), static_cast<int>(tagY) + 1, Ui::Align::Center);
+		tagX += left ? width + 8.F : -(width + 8.F);
+	};
+	if (state->status != FighterStatus::None) {
+		const auto color = [&]() {
+			switch (state->status) {
+			case FighterStatus::Poison: return Rgba(160, 70, 200);
+			case FighterStatus::Burn: return Rgba(235, 110, 40);
+			case FighterStatus::Paralysis: return Rgba(220, 180, 20);
+			case FighterStatus::Sleep: return Rgba(110, 120, 160);
+			default: return Rgba(70, 170, 70);
+			}
+		}();
+		pill(StatusShortName(state->status), color);
+	}
+	const char* stats[] = { "ATQ", "DEF", "VIT" };
+	for (std::size_t stat = 0; stat < state->stages.size(); stat++) {
+		const auto stage = state->stages[stat];
+		if (stage != 0) {
+			pill(std::string{ stats[stat] } + (stage > 0 ? std::string(static_cast<std::size_t>(stage), '+') : std::string(static_cast<std::size_t>(-stage), '-')),
+				stage > 0 ? Rgba(200, 70, 60) : Rgba(60, 110, 210));
+		}
+	}
+	if (state->guard > 0) {
+		pill("ABRI", Rgba(70, 150, 220));
+	}
 }
 
 void ClashArena::renderHud(Ui::Canvas& canvas, float shown) const {

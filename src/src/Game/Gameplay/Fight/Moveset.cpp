@@ -74,3 +74,73 @@ std::vector<int> LearnedBetween(const ska::IniReader& data, int from, int to, co
 	}
 	return learned;
 }
+
+namespace {
+	class MovesetLog {};
+
+	int LevelOf(BattleRules& rules, const ska::IniReader& data, int experience) {
+		const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+		return rules.level(experience, needed);
+	}
+
+	int MaxHpOf(BattleRules& rules, const ska::IniReader& data, int level) {
+		return rules.maxHp(data.exists("BaseStats hp") ? data.get<int>("BaseStats hp") : 10, level);
+	}
+}
+
+int TeamEvolution(WorldState& worldState, int teamIndex, int reached) {
+	const auto member = Team{ worldState.getSaveGame().getPathName() }.member(teamIndex);
+	if (!member.has_value()) {
+		return -1;
+	}
+	const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(member->id) + ".ini" };
+	const auto level = data.exists("Evolution level") ? data.get<int>("Evolution level") : -1;
+	const auto into = data.exists("Evolution next_pokemon_id") ? data.get<int>("Evolution next_pokemon_id") : -1;
+	const auto item = data.exists("Evolution item_id") ? data.get<int>("Evolution item_id") : -1;
+	if (level <= 0 || into <= 0 || item >= 0 || reached < level) {
+		return -1;
+	}
+	if (!std::ifstream{ "./Data/Monsters/" + std::to_string(into) + ".ini" }.good() || !std::ifstream{ "./Sprites/Charsets/" + std::to_string(into) + ".png" }.good()) {
+		SLOG_STATIC(ska::LogLevel::Warn, MovesetLog) << "Team : the Pokemon " << teamIndex << " should evolve into " << into << ", which has no data or no sheet";
+		return -1;
+	}
+	return into;
+}
+
+bool EvolveTeamMember(WorldState& worldState, int teamIndex, int into) {
+	const auto known = TeamMoveset(worldState, teamIndex);
+	auto team = Team{ worldState.getSaveGame().getPathName() };
+	auto member = team.member(teamIndex);
+	const auto file = "./Data/Monsters/" + std::to_string(into) + ".ini";
+	if (!member.has_value() || !std::ifstream{ file }.good()) {
+		return false;
+	}
+	auto& rules = worldState.getBattleRules();
+	const auto before = ska::IniReader{ "./Data/Monsters/" + std::to_string(member->id) + ".ini" };
+	const auto after = ska::IniReader{ file };
+	// The skills it knows, found by their file in the data of the new species
+	const auto oldSkills = LearnableSkills(before);
+	const auto newSkills = LearnableSkills(after);
+	auto moveset = std::vector<int>{};
+	for (const auto index : known) {
+		const auto old = std::find_if(oldSkills.begin(), oldSkills.end(), [index](const LearnableSkill& s) { return s.index == index; });
+		if (old == oldSkills.end()) {
+			continue;
+		}
+		const auto found = std::find_if(newSkills.begin(), newSkills.end(), [&old](const LearnableSkill& s) { return s.file == old->file; });
+		if (found != newSkills.end()) {
+			moveset.push_back(found->index);
+		} else {
+			SLOG_STATIC(ska::LogLevel::Warn, MovesetLog) << "Team : the skill " << old->file << " is not in the data of " << into << " : forgotten";
+		}
+	}
+	// The hit points it lost are kept (its maximum grows)
+	const auto lost = std::max(0, MaxHpOf(rules, before, LevelOf(rules, before, member->experience)) - member->hp);
+	const auto maxHp = MaxHpOf(rules, after, LevelOf(rules, after, member->experience));
+	member->hp = member->hp <= 0 ? 0 : std::max(1, maxHp - lost);
+	member->id = into;
+	member->skills = moveset;
+	team.setMember(teamIndex, *member);
+	SLOG_STATIC(ska::LogLevel::Info, MovesetLog) << "Team : the Pokemon " << teamIndex << " evolves into " << into << " (" << member->hp << " / " << maxHp << " hit points)";
+	return true;
+}

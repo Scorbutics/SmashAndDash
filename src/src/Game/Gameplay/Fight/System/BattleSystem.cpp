@@ -111,7 +111,13 @@ bool BattleSystem::onKeyInputEvent(ska::InputKeyEvent& event) {
 	}
 	const auto& actions = event.icm.getActions();
 	const ska::InputAction skillActions[] = { ska::InputAction::ShotSkill1, ska::InputAction::ShotSkill2, ska::InputAction::ShotSkill3, ska::InputAction::ShotSkill4 };
+	auto& dash = m_componentAccessor.get<FighterComponent>(player).dashAttack;
 	for (auto index = 0u; index < 4; index++) {
+		// The key of the dash skill going on, again : its next dash (at the end of this one)
+		if (actions[skillActions[index]] && dash.active() && dash.skill == static_cast<int>(index)) {
+			dash.again = dash.phase != DashAttack::Phase::Strike;
+			continue;
+		}
 		if (actions[skillActions[index]] && !useSkill(index, player) && m_stage.phase() == BattlePhase::Fight) {
 			m_bufferedSkill = static_cast<int>(index);
 			m_bufferedUntil = m_time + InputBuffer;
@@ -244,6 +250,10 @@ void BattleSystem::updateAttack(ska::EntityId entity, FighterComponent& fighter,
 	if (delta == 0) {
 		return;
 	}
+	if (fighter.dashAttack.active()) {
+		updateDash(entity, fighter, delta);
+		return;
+	}
 	// Recovery, then free
 	if (fighter.recovery > 0) {
 		fighter.recovery = fighter.recovery > delta ? fighter.recovery - delta : 0;
@@ -271,7 +281,17 @@ void BattleSystem::updateAttack(ska::EntityId entity, FighterComponent& fighter,
 		return;
 	}
 	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[index];
-	if (skill.kind == SkillKind::Area || skill.kind == SkillKind::Self) {
+	if (skill.kind == SkillKind::Dash) {
+		auto dash = DashAttack{};
+		dash.skill = static_cast<int>(index);
+		dash.next = skill.dash.count - 1;
+		dash.speed = skill.dash.speed;
+		// The dice of the dashes the keys do not aim
+		dash.angle = m_rules.dashAngle(ska::NumberUtils::random(0, 99));
+		dash.delay = m_rules.dashDelay(ska::NumberUtils::random(0, 99), skill.dash.window);
+		fighter.dashAttack = dash;
+		startDash(entity, fighter);
+	} else if (skill.kind == SkillKind::Area || skill.kind == SkillKind::Self) {
 		area(index, entity, fighter);
 		fighter.release = FighterSystem::ReleaseDuration;
 		fighter.recovery = fighter.recoveryDuration;
@@ -283,6 +303,105 @@ void BattleSystem::updateAttack(ska::EntityId entity, FighterComponent& fighter,
 		fighter.release = FighterSystem::ReleaseDuration;
 		fighter.recovery = fighter.recoveryDuration;
 	}
+}
+
+void BattleSystem::startDash(ska::EntityId entity, FighterComponent& fighter) {
+	auto& dash = fighter.dashAttack;
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[static_cast<std::size_t>(dash.skill)];
+	const auto strike = dash.next == 0;
+	dash.phase = strike ? DashAttack::Phase::Strike : DashAttack::Phase::Move;
+	dash.left = strike ? skill.dash.strikeDuration : skill.dash.duration;
+	dash.again = false;
+	dash.aim = true;
+	dash.ghost = 0;
+	if (!strike) {
+		fighter.invulnerable = std::max(fighter.invulnerable, DashAttackInvulnerability);
+	}
+	m_stage.sound(BattleSound::Dash);
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon")
+		<< (strike ? " strikes (" : " dashes (") << skill.name << ")";
+}
+
+void BattleSystem::updateDash(ska::EntityId entity, FighterComponent& fighter, unsigned int delta) {
+	auto& dash = fighter.dashAttack;
+	if (m_stage.phase() != BattlePhase::Fight || !fighting(entity) || !fighting(fighter.opponent)) {
+		dash = DashAttack{};
+		return;
+	}
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[static_cast<std::size_t>(dash.skill)];
+	// The strike : it hits what it touches on its way (its direction chosen : FighterSystem)
+	if (dash.phase == DashAttack::Phase::Strike && !dash.aim && dashHit(entity, fighter)) {
+		dash = DashAttack{};
+		fighter.recovery = fighter.recoveryDuration;
+		return;
+	}
+	dash.left = dash.left > delta ? dash.left - delta : 0;
+	switch (dash.phase) {
+	case DashAttack::Phase::Move:
+		if (dash.left == 0) {
+			dash.phase = DashAttack::Phase::Wait;
+			dash.left = skill.dash.window;
+			if (dash.again) {
+				dash.next--;
+				startDash(entity, fighter);
+			}
+		}
+		break;
+	case DashAttack::Phase::Wait:
+		// The next dash : asked by the keys or the AI, by itself at the end of the window
+		if (dash.left == 0 || dash.again || (fighter.controlledByAI && skill.dash.window - dash.left >= dash.delay)) {
+			dash.next--;
+			startDash(entity, fighter);
+		}
+		break;
+	case DashAttack::Phase::Strike:
+		if (dash.left == 0) {
+			SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " misses (" << skill.name << ")";
+			dash = DashAttack{};
+			fighter.recovery = skill.dash.missRecovery;
+			fighter.recoveryDuration = skill.dash.missRecovery;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+bool BattleSystem::dashHit(ska::EntityId entity, FighterComponent& fighter) {
+	const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(entity).skills[static_cast<std::size_t>(fighter.dashAttack.skill)];
+	const auto direction = fighter.dashAttack.direction;
+	const auto origin = center(entity);
+	const auto radius = [this](ska::EntityId id) {
+		const auto& hitbox = m_componentAccessor.get<ska::HitboxComponent>(id);
+		return static_cast<float>(std::max(hitbox.width, hitbox.height)) / 2.F;
+	};
+	// The nearest fighter of the other side it touches, in front of it
+	auto target = ska::EntityId{ 0 };
+	auto nearest = -1.F;
+	for (const auto other : getEntities()) {
+		if (!fighting(other) || m_componentAccessor.get<FighterComponent>(other).team == fighter.team) {
+			continue;
+		}
+		const auto toOther = center(other) - origin;
+		const auto distance = std::sqrt(toOther.x * toOther.x + toOther.y * toOther.y);
+		if (distance <= radius(entity) + radius(other) + DashReach && toOther.x * direction.x + toOther.y * direction.y >= 0.F && (nearest < 0.F || distance < nearest)) {
+			nearest = distance;
+			target = other;
+		}
+	}
+	if (target == 0) {
+		return false;
+	}
+	SLOG(ska::LogLevel::Debug) << "Battle t=" << m_time << " : " << (fighter.player ? "the pokemon of the player" : "the wild pokemon") << " touches (" << skill.name << ")";
+	auto hit = BattleHit{};
+	hit.attacker = entity;
+	hit.target = target;
+	hit.skill = &skill;
+	hit.direction = direction;
+	const auto targetCenter = center(target);
+	hit.impact = ska::Point<float>{ targetCenter.x - direction.x * radius(target), targetCenter.y - direction.y * radius(target) };
+	ApplyBattleHit(m_customEM, m_ged, m_rules, m_stage, hit);
+	return true;
 }
 
 void BattleSystem::contact(unsigned int index, ska::EntityId entity, FighterComponent& fighter) {
@@ -397,10 +516,13 @@ void BattleSystem::considerDodging(ska::EntityId entity, FighterComponent& fight
 			continue;
 		}
 		const auto& enemy = m_componentAccessor.get<FighterComponent>(other);
-		if (enemy.team == fighter.team || enemy.windUp == 0 || enemy.pendingSkill < 0 || enemy.opponent != entity || fighter.dodgeChecked == other) {
+		// The startup of a skill, the time before the next dash of a dash skill
+		const auto waiting = enemy.dashAttack.phase == DashAttack::Phase::Wait;
+		const auto coming = waiting ? enemy.dashAttack.skill : (enemy.windUp > 0 ? enemy.pendingSkill : -1);
+		if (enemy.team == fighter.team || coming < 0 || enemy.opponent != entity || fighter.dodgeChecked == other) {
 			continue;
 		}
-		const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(other).skills[static_cast<std::size_t>(enemy.pendingSkill)];
+		const auto& skill = m_componentAccessor.get<SkillsHolderComponent>(other).skills[static_cast<std::size_t>(coming)];
 		const auto toEnemy = center(other) - center(entity);
 		const auto distance = std::sqrt(toEnemy.x * toEnemy.x + toEnemy.y * toEnemy.y);
 		if (skill.kind == SkillKind::Self || distance > static_cast<float>(skill.range) + 60.F) {
@@ -408,12 +530,13 @@ void BattleSystem::considerDodging(ska::EntityId entity, FighterComponent& fight
 		}
 		fighter.dodgeChecked = other;
 		const auto& bc = m_componentAccessor.get<BattleComponent>(entity);
-		if (m_rules.dodge(bc.monster, static_cast<int>(enemy.windUp), bc.hp, bc.maxHp)) {
+		if (m_rules.dodge(bc.monster, static_cast<int>(waiting ? enemy.dashAttack.left : enemy.windUp), bc.hp, bc.maxHp)) {
 			fighter.dodgeRequested = true;
 		}
 	}
 	// The attack is over : the next one of this enemy will be considered
-	if (fighter.dodgeChecked != 0 && (!fighting(fighter.dodgeChecked) || m_componentAccessor.get<FighterComponent>(fighter.dodgeChecked).windUp == 0)) {
+	if (fighter.dodgeChecked != 0 && (!fighting(fighter.dodgeChecked) || m_componentAccessor.get<FighterComponent>(fighter.dodgeChecked).windUp == 0 &&
+		!m_componentAccessor.get<FighterComponent>(fighter.dodgeChecked).dashAttack.active())) {
 		fighter.dodgeChecked = 0;
 	}
 }

@@ -1,0 +1,16 @@
+# The dash skills (Vive-Attaque) : dashes to place itself, then one that hits. The keys aim the dashes of the player ; these
+# rules aim those they do not (the AI, no key held). The battle rolls the dice ("roll" 0 .. 99) and gives them.
+
+# A dash to place itself : its angle from the direction of the opponent (degrees), to one side or the other
+angle = function(roll: int) : int do
+	if roll < 50
+		return -60
+	end
+	return 60
+end
+
+# When the AI asks for its next dash : milliseconds after the end of the last one, from a quarter of the window to three
+# quarters of it
+delay = function(roll: int, window: int) : int do
+	return window / 4 + window * roll / 200
+end

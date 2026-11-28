@@ -227,6 +227,8 @@ void BattleDirectorSystem::outro() {
 	m_result.teamIndex = m_teamIndex;
 	const auto& pokemon = m_componentAccessor.get<BattleComponent>(m_stage.player);
 	m_result.hpLeft = std::max(0, pokemon.hp);
+	m_result.monster = pokemon.monster;
+	m_result.maxHp = pokemon.maxHp;
 	// The rewards (Data/Battle/rewards.miniska) : for the wild Pokemon K.O.
 	auto dropped = std::vector<int>{};
 	auto levels = std::vector<int>{};
@@ -240,7 +242,7 @@ void BattleDirectorSystem::outro() {
 		levels.push_back(static_cast<int>(opponent.level));
 	}
 	auto& rules = m_worldState.getBattleRules();
-	m_result.experience = rules.rewardExperience(dropped, levels, won, fled);
+	m_result.experience = rules.rewardExperience(dropped, levels, static_cast<int>(pokemon.level), won, fled);
 
 	// The experience bar of the outro : the level and its progress, before and after
 	m_stage.outro.pokemon = name(m_stage.player);

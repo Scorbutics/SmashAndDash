@@ -18,6 +18,7 @@ class WorldState;
 class FightComponent;
 class SkillDescriptor;
 class SkillsHolderComponent;
+class ClashSystem;
 
 namespace ska {
 	class Window;
@@ -51,6 +52,8 @@ private:
 	PokemonDescriptor m_descriptor;
 
 	ska::CameraSystem* m_cameraSystem;
+	// Owned by the logics of the state
+	ClashSystem* m_clash = nullptr;
 
 	const int m_opponentScriptId;
 	const int m_pokemonScriptId;

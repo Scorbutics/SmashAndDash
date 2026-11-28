@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "Scripting/ScriptVM.h"
 
-BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile, std::string bondFile, std::string clashFile) :
+BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, std::string aiFile, std::string statusFile, std::string stagesFile, std::string encountersFile, std::string skillsFile, std::string rewardsFile, std::string linesFile, std::string bondFile, std::string clashFile, std::string dashFile) :
 	m_vm(vm),
 	m_rulesFile(std::move(rulesFile)),
 	m_aiFile(std::move(aiFile)),
@@ -14,7 +14,8 @@ BattleRules::BattleRules(ska::scripting::ScriptVM& vm, std::string rulesFile, st
 	m_rewardsFile(std::move(rewardsFile)),
 	m_linesFile(std::move(linesFile)),
 	m_bondFile(std::move(bondFile)),
-	m_clashFile(std::move(clashFile)) {
+	m_clashFile(std::move(clashFile)),
+	m_dashFile(std::move(dashFile)) {
 }
 
 long BattleRules::call(const std::string& file, const std::string& function, std::vector<ska::NodeValue> arguments, long fallback) {
@@ -50,18 +51,35 @@ int BattleRules::maxHp(int baseHp, int level) {
 }
 
 int BattleRules::level(int experience, int experienceNeeded) {
+	// (The fallback : the curve of Data/Battle/rules.miniska)
+	auto fallback = 1L;
+	while (experienceNeeded > 0 && fallback < 100) {
+		const auto steps = fallback;
+		if (static_cast<long>(experienceNeeded) * steps * steps * steps / 8 > experience) {
+			break;
+		}
+		fallback++;
+	}
 	return std::max(1, static_cast<int>(call(m_rulesFile, "level", { ska::NodeValue{ static_cast<long>(experience) }, ska::NodeValue{ static_cast<long>(experienceNeeded) } },
-		1 + (experienceNeeded > 0 ? experience / experienceNeeded : 0))));
+		fallback)));
 }
 
 int BattleRules::levelExperience(int level, int experienceNeeded) {
 	return std::max(0, static_cast<int>(call(m_rulesFile, "levelExperience", { ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(experienceNeeded) } },
-		std::max(0, level - 1) * std::max(0, experienceNeeded))));
+		static_cast<long>(std::max(0, experienceNeeded)) * std::max(0, level - 1) * std::max(0, level - 1) * std::max(0, level - 1) / 8)));
 }
 
-int BattleRules::experience(int dropped, int level) {
-	return std::max(0, static_cast<int>(call(m_rulesFile, "experience", { ska::NodeValue{ static_cast<long>(dropped) }, ska::NodeValue{ static_cast<long>(level) } },
-		dropped * level)));
+int BattleRules::experience(int dropped, int level, int own) {
+	const auto numerator = 2L * level + 10;
+	const auto denominator = std::max(1L, static_cast<long>(level) + own + 10);
+	const auto fallback = std::max(1L, 4L * dropped * level * numerator * numerator / (denominator * denominator));
+	return std::max(0, static_cast<int>(call(m_rulesFile, "experience", { ska::NodeValue{ static_cast<long>(dropped) }, ska::NodeValue{ static_cast<long>(level) },
+		ska::NodeValue{ static_cast<long>(own) } }, fallback)));
+}
+
+int BattleRules::wildLevel(int level, int distance, int roll) {
+	return std::clamp(static_cast<int>(call(m_encountersFile, "wildLevel", { ska::NodeValue{ static_cast<long>(level) }, ska::NodeValue{ static_cast<long>(distance) },
+		ska::NodeValue{ static_cast<long>(roll) } }, level + distance / 12)), 1, 100);
 }
 
 int BattleRules::damage(int power, int attack, int defense, int level, int effectiveness, bool stab) {
@@ -261,7 +279,7 @@ std::vector<int> BattleRules::knownSkills(const std::vector<int>& levels, int le
 	return known;
 }
 
-int BattleRules::rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, bool won, bool fled) {
+int BattleRules::rewardExperience(const std::vector<int>& dropped, const std::vector<int>& levels, int own, bool won, bool fled) {
 	auto values = [](const std::vector<int>& list) {
 		auto array = std::make_shared<ska::NodeValueArrayRaw>();
 		for (const auto value : list) {
@@ -272,9 +290,10 @@ int BattleRules::rewardExperience(const std::vector<int>& dropped, const std::ve
 	// The fallback : the experience rule for each wild Pokemon K.O.
 	auto fallback = 0L;
 	for (auto i = 0u; i < dropped.size() && i < levels.size(); i++) {
-		fallback += experience(dropped[i], levels[i]);
+		fallback += experience(dropped[i], levels[i], own);
 	}
-	return static_cast<int>(std::max(0L, call(m_rewardsFile, "experience", { values(dropped), values(levels), ska::NodeValue{ won }, ska::NodeValue{ fled } }, fallback)));
+	return static_cast<int>(std::max(0L, call(m_rewardsFile, "experience", { values(dropped), values(levels), ska::NodeValue{ static_cast<long>(own) }, ska::NodeValue{ won },
+		ska::NodeValue{ fled } }, fallback)));
 }
 
 std::string BattleRules::line(const std::string& event, const std::string& pokemon, const std::string& detail, int roll, int pick) {
@@ -298,6 +317,15 @@ bool BattleRules::clashes(int distance, int roll) {
 	return callBool(m_clashFile, "clash", { ska::NodeValue{ static_cast<long>(distance) }, ska::NodeValue{ static_cast<long>(roll) } }, distance <= 2 && roll < 60);
 }
 
+int BattleRules::dashAngle(int roll) {
+	return static_cast<int>(std::clamp(call(m_dashFile, "angle", { ska::NodeValue{ static_cast<long>(roll) } }, roll < 50 ? -60L : 60L), -180L, 180L));
+}
+
+unsigned int BattleRules::dashDelay(int roll, unsigned int window) {
+	return static_cast<unsigned int>(std::clamp(call(m_dashFile, "delay", { ska::NodeValue{ static_cast<long>(roll) }, ska::NodeValue{ static_cast<long>(window) } },
+		static_cast<long>(window / 2)), 0L, static_cast<long>(window)));
+}
+
 bool BattleRules::opening(int left) {
 	return callBool(m_clashFile, "opening", { ska::NodeValue{ static_cast<long>(left) } }, left <= 220);
 }
@@ -313,6 +341,10 @@ unsigned int BattleRules::turnCooldown() {
 
 int BattleRules::clashRounds() {
 	return static_cast<int>(std::clamp(call(m_clashFile, "rounds", {}, 3L), 1L, 9L));
+}
+
+unsigned int BattleRules::clashRoundTime() {
+	return static_cast<unsigned int>(std::clamp(call(m_clashFile, "roundTime", {}, 2000L), 0L, 60000L));
 }
 
 int BattleRules::clashPick(const std::vector<int>& powers, int roll) {

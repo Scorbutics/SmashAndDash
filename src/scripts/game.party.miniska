@@ -33,6 +33,15 @@ skillName = function(index: int, skill: int) : string do return "" end
 # (It uses the battle rules, scripts : the script waits for the next update.)
 learn = function(index: int, skill: int, slot: int) : bool do return false end
 
+# The species a Pokemon of the team evolves into at "level" (the level it reached : in the outro of a battle, its
+# experience is saved after it), from its data ([Evolution] of Data/Monsters/<id>.ini ; its new species has its data and its
+# sheet) : its id, -1 : none
+evolution = function(index: int, level: int) : int do return -1 end
+# A Pokemon of the team becomes the species "into" : its experience (its level), its moveset and the hit points it lost are
+# kept. False : no Pokemon at this index, no data for that species
+# (It uses the battle rules, scripts : the script waits for the next update.)
+evolve = function(index: int, into: int) : bool do return false end
+
 # Gives hit points to a Pokemon of the team, up to its hit points at its level (nothing when there is no Pokemon at this index)
 # (It uses the battle rules, scripts : the script waits for the next update.)
 heal = function(index: int, value: int) do end

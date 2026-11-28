@@ -81,6 +81,20 @@ learn = function(name: string, index: int, from: int, to: int) do
 	end
 end
 
+# Its new level makes it evolve (its data : Party.evolution) : the scene over the battle, then it becomes its new species,
+# as in the first games
+evolve = function(name: string, index: int, level: int) do
+	into = Party.evolution(index, level)
+	if into < 0
+		return
+	end
+	Battle.message("Quoi ? " + name + " évolue !")
+	Battle.evolve(index, into)
+	if Party.evolve(index, into)
+		Battle.message("Félicitations ! Votre " + name + " a évolué en " + Party.species(index) + " !")
+	end
+end
+
 # The dialogs of the end of a battle
 outro = function(args: string[]) do
 	if ["won", "captured", "lost"].contains(args[1])
@@ -93,6 +107,7 @@ outro = function(args: string[]) do
 		Battle.message(args[2] + " monte au niveau " + args[6] + " !")
 		if args.size() > 7 && args[7] != "-1"
 			learn(args[2], (args[7]: int), (args[5]: int), (args[6]: int))
+			evolve(args[2], (args[7]: int), (args[6]: int))
 		end
 	end
 end

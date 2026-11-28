@@ -30,7 +30,11 @@ public:
 	ClashSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged, WorldState& worldState, BattleStage& stage, unsigned int blockSize);
 	ClashSystem(const ClashSystem&) = delete;
 	ClashSystem& operator=(const ClashSystem&) = delete;
-	~ClashSystem() override;
+	~ClashSystem() override = default;
+
+	// The battle is left during a clash : it ends (the interface, the music of the map again). Not in the destructor : when
+	// the game quits, what it uses (the map, the state of the battle) is destroyed before the systems
+	void leave();
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;
@@ -42,6 +46,10 @@ private:
 		int skill = -1;
 		// An item of the bag instead of a skill (-1 : none)
 		int item = -1;
+		// Its status hurts the attacker at the end of the round (poison, burn, leech : "target" its source), or a message
+		// only (a status that wears off : "notice")
+		bool tick = false;
+		std::string notice;
 	};
 
 	bool onKeyInputEvent(ska::InputKeyEvent& event);
@@ -70,7 +78,16 @@ private:
 	std::string who(ska::EntityId entity) const;
 	void act(unsigned int before);
 	void hit(const Action& action);
+	// Its status hurts it (an action of the end of the round)
+	void tick(const Action& action);
+	// What keeps the attacker from acting (asleep, flinched, paralysed : the message), "" : it acts
+	std::string blocked(ska::EntityId attacker);
+	// The name of a fighter in the messages ("Rattata sauvage")
+	std::string named(ska::EntityId entity) const;
+	// The end of the actions of a round : the statuses hurt, then the time of the round passes (statuses and changes of
+	// statistics wear off : their messages), then the next round
 	void endRound();
+	void passRound();
 	void end();
 	// The music of the clash, the music of the map again
 	void music(bool clash);
@@ -99,5 +116,17 @@ private:
 	std::vector<Action> m_actions;
 	std::size_t m_action = 0;
 	bool m_announced = false;
+	// The action played cannot act (its message only)
+	bool m_blocked = false;
+	// The messages after the hit of the action (its effectiveness, its effects : "L'Attaque de Rattata baisse !") and the
+	// time they add to it
+	std::vector<std::string> m_followUps;
+	unsigned int m_extra = 0;
+	static constexpr unsigned int FollowUpDuration = 1300;
+	static constexpr unsigned int NoticeDuration = 1300;
+	// The fighter flinched in this round (it loses its action)
+	ska::EntityId m_flinched = 0;
+	// The end of the round : 0 the actions, 1 the statuses hurt, 2 the time passed
+	int m_roundEnd = 0;
 	Ui::ChoiceList m_choice;
 };

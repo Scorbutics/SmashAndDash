@@ -12,6 +12,8 @@
 #include "Core/ECS/Basics/Physic/HitboxComponent.h"
 #include "Graphic/GraphicComponent.h"
 #include "Graphic/System/CameraSystem.h"
+#include "Core/Utils/SpritePath.h"
+#include "Core/Utils/SkaConstants.h"
 #include "../../Gameplay/Fight/BattleComponent.h"
 #include "../../Gameplay/Fight/FighterComponent.h"
 #include "../../Gameplay/Fight/BattleEffects.h"
@@ -19,6 +21,7 @@
 #include "../../Gameplay/Fight/SkillsHolderComponent.h"
 #include "../../Gameplay/Fight/System/BattleSystem.h"
 #include "../../Utils/IDs.h"
+#include "BattleAuras.h"
 #include "Canvas.h"
 
 namespace {
@@ -401,6 +404,28 @@ void GUIBattle::renderMarks(ska::Renderer& renderer) const {
 	const auto canvas = Ui::Canvas{ renderer };
 	for (const auto& mark : m_stage.marks()) {
 		const auto position = toScreen(mark.position);
+		if (mark.kind == BattleMark::Kind::Ghost) {
+			// The Pokemon as it is drawn, bluish and fading, where it was
+			const auto entity = static_cast<ska::EntityId>(mark.value);
+			if (!visible(entity)) {
+				continue;
+			}
+			auto& graphic = m_entities.getComponent<ska::GraphicComponent>(entity);
+			if (graphic.animatedSprites.empty()) {
+				continue;
+			}
+			const auto drawn = sprite(entity);
+			const auto& positionComponent = m_entities.getComponent<ska::PositionComponent>(entity);
+			const auto now = toScreen(ska::PositionComponent::getCenterPosition(positionComponent, m_entities.getComponent<ska::HitboxComponent>(entity)));
+			auto effect = ska::RenderEffect{};
+			effect.red = 130;
+			effect.green = 200;
+			effect.alpha = static_cast<unsigned char>(130.F * std::max(0.F, 1.F - static_cast<float>(mark.age) / static_cast<float>(BattleStage::GhostMarkLife)));
+			renderer.setEffect(&effect);
+			renderer.render(graphic.animatedSprites[0], drawn.position.x + position.x - now.x, drawn.position.y + position.y - now.y, nullptr);
+			renderer.setEffect(nullptr);
+			continue;
+		}
 		if (mark.kind == BattleMark::Kind::Trail) {
 			// A faded, smaller copy of the projectile (its first frame)
 			const auto& sheet = skillSprite(mark.value);
@@ -499,6 +524,26 @@ void GUIBattle::renderWorldOverlay(ska::Renderer& renderer) const {
 		const auto drawn = sprite(entity);
 		const auto progress = state->windUpDuration == 0 ? 1.F : 1.F - static_cast<float>(state->windUp) / static_cast<float>(state->windUpDuration);
 		canvas.text("!", Style(30, ska::Color{ 255, static_cast<uint8_t>(220 - 160 * progress), 60, 255 }, true, 0.8F + 0.5F * progress, 255), drawn.position.x + drawn.width / 2, drawn.position.y - 34, Ui::Align::Center);
+	}
+	// The status of each fighter (its animation), a change of its statistics (the arrows)
+	if (m_stage.phase() != BattlePhase::Outro) {
+		for (const auto entity : m_stage.fighters) {
+			const auto* state = fighter(entity);
+			if (state == nullptr || state->knockedOut || state->inBall || !visible(entity)) {
+				continue;
+			}
+			const auto drawn = sprite(entity);
+			// The feet of the Pokemon in its frame (Sprites/Charsets : 64 of 72 pixels, tools/assets/align_feet.py), its body
+			const auto feet = ska::Point<float>{ static_cast<float>(drawn.position.x) + static_cast<float>(drawn.width) / 2.F,
+				static_cast<float>(drawn.position.y) + static_cast<float>(drawn.height) * 64.F / 72.F };
+			const auto body = static_cast<float>(drawn.height) * 0.45F;
+			if (state->status != FighterStatus::None) {
+				BattleAuras::status(canvas, state->status, feet, body, m_time, static_cast<float>(state->statusBurst) / static_cast<float>(FighterComponent::StatusBurstDuration));
+			}
+			if (state->statChange > 0) {
+				BattleAuras::statChange(canvas, state->statChangeUp, feet, body, 1.F - static_cast<float>(state->statChange) / static_cast<float>(FighterComponent::StatChangeDuration));
+			}
+		}
 	}
 	renderMarks(renderer);
 }
@@ -712,6 +757,7 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	if (m_stage.phase() == BattlePhase::Outro) {
 		renderOutro(renderer);
 		renderBanner(renderer);
+		renderEvolution(renderer);
 		return;
 	}
 
@@ -731,4 +777,107 @@ void GUIBattle::renderOverlay(ska::Renderer& renderer) const {
 	canvas.text("VS", Style(26, ska::Color{ 255, 255, 255, 255 }), screen.x / 2, 28, Ui::Align::Center);
 	renderBanner(renderer);
 	renderCinematic(renderer);
+}
+
+const ska::Texture& GUIBattle::charset(int monster) const {
+	auto found = m_charsets.find(monster);
+	if (found == m_charsets.end()) {
+		found = m_charsets.emplace(monster, ska::Texture{ ska::SpritePath::getInstance().getPath(SPRITEBANK_CHARSET, monster) }).first;
+	}
+	return found->second;
+}
+
+void GUIBattle::renderEvolution(ska::Renderer& renderer) const {
+	const auto& evolution = m_stage.evolution;
+	if (!evolution.active) {
+		return;
+	}
+	const auto canvas = Ui::Canvas{ renderer };
+	const auto screen = m_camera.getScreenSize();
+	const auto w = static_cast<float>(screen.x);
+	const auto h = static_cast<float>(screen.y);
+	const auto t = static_cast<float>(evolution.time);
+	const auto clamp01 = [](float v) { return std::max(0.F, std::min(1.F, v)); };
+	const auto byte = [](float v) { return static_cast<uint8_t>(std::max(0.F, std::min(255.F, v))); };
+	const auto cx = w / 2.F;
+	const auto cy = h * 0.46F;
+
+	// The night falls on the battle ; rays of light turn around the Pokemon
+	const auto dark = clamp01(t / 500.F);
+	canvas.fill(ska::Color{ 8, 10, 30, byte(235.F * dark) }, ska::Rectangle{ 0, 0, screen.x, screen.y });
+	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_BLEND);
+	const auto charge = clamp01((t - static_cast<float>(BattleEvolution::Glow)) / 3000.F);
+	for (auto ray = 0; ray < 16; ray++) {
+		const auto angle = static_cast<float>(ray) * 6.2832F / 16.F + t / 2400.F;
+		const auto length = h * (0.3F + 0.4F * charge);
+		const auto color = ska::Color{ 255, 240, 200, byte(40.F * dark + 50.F * charge) };
+		for (auto k = -2; k <= 2; k++) {
+			const auto side = 0.012F * static_cast<float>(k);
+			renderer.drawColorLine(color, ska::Point<int>{ static_cast<int>(cx), static_cast<int>(cy) },
+				ska::Point<int>{ static_cast<int>(cx + std::cos(angle + side) * length), static_cast<int>(cy + std::sin(angle + side) * length) });
+		}
+	}
+	// Sparkles : drawn towards it while it charges, thrown away when it is revealed
+	const auto revealed = t >= static_cast<float>(BattleEvolution::Reveal);
+	for (auto i = 0; i < 40; i++) {
+		const auto seed = static_cast<float>((i * 7919) % 997) / 997.F;
+		const auto angle = static_cast<float>(i) * 2.39996F;
+		const auto period = 900.F + 500.F * seed;
+		auto progress = std::fmod(t + seed * period, period) / period;
+		auto distance = revealed ? (t - static_cast<float>(BattleEvolution::Reveal)) * (0.25F + 0.3F * seed) : h * 0.45F * (1.F - progress);
+		const auto alpha = revealed ? 255.F * clamp01(1.F - (t - static_cast<float>(BattleEvolution::Reveal)) / 1300.F) : 220.F * dark * clamp01(progress * 3.F);
+		const auto size = revealed ? 6 : 3 + static_cast<int>(3.F * progress);
+		canvas.fill(ska::Color{ 255, 255, static_cast<uint8_t>(180 + 70 * seed), byte(alpha) }, ska::Rectangle{ static_cast<int>(cx + std::cos(angle) * distance) - size / 2, static_cast<int>(cy + std::sin(angle) * distance) - size / 2, size, size });
+	}
+	renderer.setRenderDrawBlendMode(SDL_BLENDMODE_NONE);
+
+	// The Pokemon : facing the player (the front of its sheet), big. It turns white, the two forms alternate faster and
+	// faster, a flash, the new form
+	auto shown = evolution.from;
+	auto flash = 0.F;
+	auto scale = h / 150.F;
+	if (t < static_cast<float>(BattleEvolution::Glow)) {
+		flash = 0.F;
+	} else if (t < static_cast<float>(BattleEvolution::Morph)) {
+		flash = 255.F * clamp01((t - static_cast<float>(BattleEvolution::Glow)) / 500.F);
+	} else if (t < static_cast<float>(BattleEvolution::Flash)) {
+		flash = 255.F;
+		// The time between two changes : 600 ms, then 60
+		const auto p = (t - static_cast<float>(BattleEvolution::Morph)) / static_cast<float>(BattleEvolution::Flash - BattleEvolution::Morph);
+		// The changes so far : the integral of 1 / period, period = 600 - 540 p ms (p over the time of the morph, D ms) :
+		// D / 540 * ln(600 / (600 - 540 p))
+		const auto morph = static_cast<float>(BattleEvolution::Flash - BattleEvolution::Morph);
+		const auto changes = static_cast<int>(morph / 540.F * std::log(600.F / (600.F - 540.F * p)));
+		shown = changes % 2 == 0 ? evolution.from : evolution.to;
+		scale *= 1.F + 0.08F * std::sin(t / 40.F) * p;
+	} else if (t < static_cast<float>(BattleEvolution::Reveal)) {
+		shown = evolution.to;
+		flash = 255.F;
+	} else {
+		shown = evolution.to;
+		flash = 255.F * (1.F - clamp01((t - static_cast<float>(BattleEvolution::Reveal)) / 500.F));
+	}
+	const auto& texture = charset(shown);
+	const auto frame = static_cast<int>(texture.getHeight()) / 8;
+	if (frame > 0) {
+		// The front of its sheet (row 2), its walk slowly once revealed
+		const auto column = revealed ? static_cast<int>(t / 260.F) % 3 : 0;
+		const auto clip = ska::Rectangle{ column * frame, 2 * frame, frame, frame };
+		auto effect = ska::RenderEffect{};
+		effect.scaleX = scale;
+		effect.scaleY = scale;
+		effect.anchorBottom = false;
+		effect.flash = byte(flash);
+		effect.pixelArt = true;
+		effect.alpha = byte(255.F * dark);
+		renderer.setEffect(&effect);
+		renderer.render(texture, static_cast<int>(cx) - frame / 2, static_cast<int>(cy) - frame / 2, &clip);
+		renderer.setEffect(nullptr);
+	}
+	// The flash fills the screen
+	if (t >= static_cast<float>(BattleEvolution::Flash)) {
+		const auto f = t < static_cast<float>(BattleEvolution::Reveal) ? clamp01((t - static_cast<float>(BattleEvolution::Flash)) / 250.F) :
+			1.F - clamp01((t - static_cast<float>(BattleEvolution::Reveal)) / 700.F);
+		canvas.fill(ska::Color{ 255, 255, 255, byte(255.F * f) }, ska::Rectangle{ 0, 0, screen.x, screen.y });
+	}
 }

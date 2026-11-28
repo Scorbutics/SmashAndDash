@@ -12,6 +12,7 @@ run = function(args: string[]) do
 	Test.equal((Clash.first(20, 30, 0): string), "false", "the slower second")
 	Test.equal((Clash.first(20, 20, 10): string), "true", "a tie : the roll")
 	Test.equal((Clash.rounds(): string), "3", "three rounds")
+	Test.equal((Clash.roundTime(): string), "2000", "a round stands for 2 s of battle (the statuses wear off by it)")
 	Test.equal((Clash.pick([10, 40, 0, 20], 10): string), "1", "under half : the strongest")
 	Test.equal((Clash.pick([10, 40, 0, 20], 62): string), "3", "else from the roll on : 62 % 4 = 2 does not hit, then 3")
 	Test.equal((Clash.pick([10, 40, 0, 20], 60): string), "0", "60 % 4 = 0 hits")

@@ -5,10 +5,11 @@ Rules = import "wd:Data/Battle/rules"
 run = function(args: string[]) do
 	Test.equal((Rules.stat(55, 5): string), "10", "a statistic at a level")
 	Test.equal((Rules.maxHp(35, 5): string), "36", "hit points at a level (twice the usual value : real time battles)")
-	Test.equal((Rules.level(41, 13): string), "4", "level from the experience")
+	Test.equal((Rules.level(41, 13): string), "3", "level from the experience (13 * 2^3 / 8 = 13, 13 * 3^3 / 8 = 43)")
 	Test.equal((Rules.level(0, 0): string), "1", "no experience needed : level 1")
-	Test.equal((Rules.level(99999, 1): string), "100", "level 100 at most")
-	Test.equal((Rules.levelExperience(4, 13): string), "39", "the experience at the start of a level")
+	Test.equal((Rules.level(99999999, 1): string), "100", "level 100 at most")
+	Test.equal((Rules.levelExperience(4, 13): string), "43", "the experience at the start of a level : a curve in cubes")
+	Test.equal((Rules.levelExperience(16, 10): string), "4218", "level 16 at a pace of 10")
 	Test.equal((Rules.level(Rules.levelExperience(4, 13), 13): string), "4", "it is that level")
 	Test.equal((Rules.levelExperience(1, 13): string), "0", "level 1 : no experience")
 	Test.equal((Rules.damage(0, 50, 5, 10, 100, false): string), "0", "a skill without power does no damage")
@@ -25,7 +26,18 @@ run = function(args: string[]) do
 	Test.equal((Rules.effectiveness("Plante", "Feu", "Aucun"): string), "50", "grass on fire : not very effective")
 	Test.equal((Rules.effectiveness("Electrique", "Sol", "Aucun"): string), "0", "electric on ground : no effect")
 	Test.equal((Rules.effectiveness("Normal", "Normal", "Aucun"): string), "100", "no relation : normal")
-	Test.equal((Rules.experience(10, 3): string), "30", "experience won")
+	Test.equal((Rules.experience(10, 3, 3): string), "120", "experience won against its level")
+	Test.check(Rules.experience(10, 8, 5) > Rules.experience(10, 8, 8), "a stronger Pokemon gives more")
+	Test.check(Rules.experience(10, 3, 12) < Rules.experience(10, 3, 3) / 2, "a much weaker one gives much less")
+	# About 25 battles from level 5 to 16 against Pokemon of its level (a Pokemon that gives 5)
+	experience = Rules.levelExperience(5, 10)
+	battles = 0
+	while Rules.level(experience, 10) < 16 do
+		own = Rules.level(experience, 10)
+		experience = experience + Rules.experience(5, own, own)
+		battles = battles + 1
+	end
+	Test.check(battles >= 18 && battles <= 32, "about 25 battles to the first evolution (" + (battles: string) + ")")
 	Test.equal((Rules.wildDamage(8): string), "6", "a wild Pokemon hits softer (three quarters)")
 	Test.equal((Rules.wildDamage(1): string), "1", "a wild Pokemon still does 1 damage")
 	Test.equal((Rules.wildDamage(0): string), "0", "no damage stays no damage")

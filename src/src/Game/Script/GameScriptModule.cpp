@@ -708,6 +708,18 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 		});
 	});
 
+	m_builder.bindField("evolution", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		const auto level = Int(params[1]);
+		return ska::NodeValue{ static_cast<long>(TeamEvolution(worldState, index, level)) };
+	});
+
+	m_builder.bindField("evolve", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		const auto into = Int(params[1]);
+		return AfterStep(vm, [&worldState, index, into]() { return ska::NodeValue{ EvolveTeamMember(worldState, index, into) }; });
+	});
+
 	m_builder.bindField("pokemonOut", [](std::vector<ska::NodeValue>) { NotAvailable("pokemonOut"); return ska::NodeValue{}; });
 
 	m_builder.generate();
@@ -890,6 +902,24 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		if (auto* stage = worldState.battleStage(); stage != nullptr) {
 			stage->announce(String(params[0]));
 		}
+		return ska::NodeValue{};
+	});
+
+	// The scene of an evolution : the script waits for its end
+	m_builder.bindField("evolve", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		auto* stage = worldState.battleStage();
+		const auto member = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
+		if (stage == nullptr || !member.has_value()) {
+			return ska::NodeValue{ false };
+		}
+		stage->evolution = BattleEvolution{};
+		stage->evolution.active = true;
+		stage->evolution.from = member->id;
+		stage->evolution.to = Int(params[1]);
+		vm.suspendUntil([&worldState]() {
+			const auto* current = worldState.battleStage();
+			return current == nullptr || current->evolution.time >= BattleEvolution::Duration;
+		}, []() { return ska::NodeValue{ true }; });
 		return ska::NodeValue{};
 	});
 

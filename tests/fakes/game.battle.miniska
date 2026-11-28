@@ -10,6 +10,11 @@ end
 message = function(text: string) do
 	said = said + text
 end
+scenes = []: int
+evolve = function(index: int, into: int) : bool do
+	scenes = scenes + into
+	return true
+end
 wild = function() : string[] do return []: string end
 spawnWild = function(monster: int, level: int) : bool do return false end
 arrived = []: string
@@ -40,6 +45,10 @@ announced = function() : string[] do
 end
 messages = function() : string[] do
 	return said
+end
+# The evolutions shown (their species)
+evolutions = function() : int[] do
+	return scenes
 end
 # The arrivals asked (land, emerge, walkIn), as texts
 arrivals = function() : string[] do

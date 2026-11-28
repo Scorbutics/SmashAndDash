@@ -26,12 +26,10 @@ ClashSystem::ClashSystem(ska::EntityManager& em, PokemonGameEventDispatcher& ged
 	m_music("./Music/clash.ogg") {
 }
 
-ClashSystem::~ClashSystem() {
-	// The battle ended during a clash : the music of the map again
+void ClashSystem::leave() {
 	if (m_stage.turn.active()) {
-		interface(false);
+		end();
 	}
-	music(false);
 }
 
 bool ClashSystem::standing(ska::EntityId entity) const {
@@ -51,6 +49,10 @@ int ClashSystem::attacking(ska::EntityId entity) const {
 	const auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
 	if (fighter.windUp > 0 && fighter.pendingSkill >= 0) {
 		return fighter.pendingSkill;
+	}
+	// The strike of a dash skill (its dashes before only place it)
+	if (fighter.dashAttack.phase == DashAttack::Phase::Strike) {
+		return fighter.dashAttack.skill;
 	}
 	if (fighter.lunge > 0) {
 		// The skill used last
@@ -196,6 +198,7 @@ void ClashSystem::start(BattleTurn::Kind kind, ska::EntityId opponent, int oppon
 		fighter.pendingSkill = -1;
 		fighter.lunge = 0;
 		fighter.dash = 0;
+		fighter.dashAttack = {};
 		fighter.dodgeRequested = false;
 		fighter.knockback = {};
 	}
@@ -396,6 +399,8 @@ void ClashSystem::play(const Action& mine, bool first) {
 	turn.message.clear();
 	m_action = 0;
 	m_announced = false;
+	m_roundEnd = 0;
+	m_flinched = 0;
 }
 
 void ClashSystem::actItem(const Action& action, unsigned int before) {
@@ -505,36 +510,116 @@ void ClashSystem::hit(const Action& action) {
 	auto skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
 	skill.particleNumber = 1;
 	m_stage.sound(BattleSound::ClashHit);
+	// What it did, said after the hit as in the first games
+	auto effects = std::vector<SkillEffect>{};
+	auto effectiveness = 100;
+	const auto damaging = skill.power > 0 || skill.fixedDamage > 0;
 	if (skill.kind == SkillKind::Self) {
-		ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, 0);
+		ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, 0, &effects);
+	} else if (standing(action.target)) {
+		auto& hp = m_componentAccessor.get<BattleComponent>(action.target).hp;
+		const auto before = hp;
+		auto& target = m_componentAccessor.get<FighterComponent>(action.target);
+		target.invulnerable = 0;
+		const auto guarded = target.guard > 0;
+		if (damaging) {
+			auto battleHit = BattleHit{};
+			battleHit.attacker = action.attacker;
+			battleHit.target = action.target;
+			battleHit.skill = &skill;
+			const auto toTarget = center(action.target) - center(action.attacker);
+			const auto length = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
+			battleHit.direction = length < 0.001F ? ska::Point<float>{ 1.F, 0.F } : ska::Point<float>{ toTarget.x / length, toTarget.y / length };
+			battleHit.impact = center(action.target);
+			battleHit.effects = &effects;
+			battleHit.effectiveness = &effectiveness;
+			ApplyBattleHit(m_entities, m_ged, m_rules, m_stage, battleHit);
+		} else if (guarded) {
+			MarkText(m_entities, m_stage, action.target, "BLOQUÉ", 1);
+			m_stage.sound(BattleSound::Guard);
+		} else {
+			ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, action.target, &effects);
+		}
+		turn.damage = std::max(0, before - hp);
+		if (turn.damage > 0) {
+			turn.combo = action.attacker == m_stage.player ? turn.combo + 1 : 0;
+		}
+		if (hp <= 0) {
+			turn.knockedOut = action.target;
+		}
+		if (guarded) {
+			m_followUps.push_back(named(action.target) + " est protégé !");
+		} else if (damaging && effectiveness == 0) {
+			m_followUps.push_back("Ça n'affecte pas " + named(action.target) + "...");
+		} else if (damaging && effectiveness > 100) {
+			m_followUps.push_back("C'est super efficace !");
+		} else if (damaging && effectiveness < 100) {
+			m_followUps.push_back("Ce n'est pas très efficace...");
+		}
+	}
+	for (const auto& effect : effects) {
+		if (effect.kind == SkillEffect::Kind::Flinch) {
+			// It loses its action of this round (when it has not played yet)
+			m_flinched = effect.fighter;
+			continue;
+		}
+		const auto message = SkillEffectMessage(effect, named(effect.fighter));
+		if (!message.empty()) {
+			m_followUps.push_back(message);
+		}
+	}
+	// A skill that only changes things and changed nothing
+	if (!damaging && effects.empty() && m_followUps.empty()) {
+		m_followUps.push_back("Mais cela échoue !");
+	}
+}
+
+std::string ClashSystem::named(ska::EntityId entity) const {
+	const auto wild = m_componentAccessor.get<FighterComponent>(entity).team != 0;
+	return who(entity) + (wild ? " sauvage" : "");
+}
+
+std::string ClashSystem::blocked(ska::EntityId attacker) {
+	auto& fighter = m_componentAccessor.get<FighterComponent>(attacker);
+	if (fighter.status == FighterStatus::Sleep) {
+		return named(attacker) + " dort profondément...";
+	}
+	if (m_flinched == attacker) {
+		return named(attacker) + " a peur ! Il ne peut pas attaquer !";
+	}
+	// A status makes it fail sometimes : 1 time in "failOdds" (Data/Battle/status.miniska), as in the real time battle
+	const auto failOdds = fighter.status == FighterStatus::None ? 0 : m_rules.statusFailOdds(StatusKey(fighter.status));
+	if (failOdds > 0 && ska::NumberUtils::random(0, failOdds - 1) == 0) {
+		return named(attacker) + " est paralysé ! Il ne peut pas attaquer !";
+	}
+	return "";
+}
+
+void ClashSystem::tick(const Action& action) {
+	auto& turn = m_stage.turn;
+	turn.hit = true;
+	turn.hitAge = 0;
+	turn.damage = 0;
+	if (!standing(action.attacker)) {
 		return;
 	}
-	if (!standing(action.target)) {
-		return;
+	auto& fighter = m_componentAccessor.get<FighterComponent>(action.attacker);
+	auto& battle = m_componentAccessor.get<BattleComponent>(action.attacker);
+	const auto damage = std::min(battle.hp, fighter.statusDamage);
+	battle.hp -= damage;
+	fighter.hpDelay = 300;
+	fighter.statusBurst = FighterComponent::StatusBurstDuration;
+	turn.damage = damage;
+	m_stage.sound(BattleSound::Status);
+	// Leech : the hit points heal the one who gave it
+	if (fighter.statusLeech && standing(fighter.statusSource)) {
+		auto& source = m_componentAccessor.get<BattleComponent>(fighter.statusSource);
+		source.hp = std::min(source.maxHp, source.hp + damage);
 	}
-	auto& hp = m_componentAccessor.get<BattleComponent>(action.target).hp;
-	const auto before = hp;
-	m_componentAccessor.get<FighterComponent>(action.target).invulnerable = 0;
-	if (skill.power > 0 || skill.fixedDamage > 0) {
-		auto battleHit = BattleHit{};
-		battleHit.attacker = action.attacker;
-		battleHit.target = action.target;
-		battleHit.skill = &skill;
-		const auto toTarget = center(action.target) - center(action.attacker);
-		const auto length = std::sqrt(toTarget.x * toTarget.x + toTarget.y * toTarget.y);
-		battleHit.direction = length < 0.001F ? ska::Point<float>{ 1.F, 0.F } : ska::Point<float>{ toTarget.x / length, toTarget.y / length };
-		battleHit.impact = center(action.target);
-		ApplyBattleHit(m_entities, m_ged, m_rules, m_stage, battleHit);
-	} else {
-		ApplySkillEffects(m_entities, m_stage, m_rules, skill, action.attacker, action.target);
+	if (battle.hp <= 0) {
+		turn.knockedOut = action.attacker;
 	}
-	turn.damage = std::max(0, before - hp);
-	if (turn.damage > 0) {
-		turn.combo = action.attacker == m_stage.player ? turn.combo + 1 : 0;
-	}
-	if (hp <= 0) {
-		turn.knockedOut = action.target;
-	}
+	SLOG(ska::LogLevel::Info) << "Battle : the clash, round " << turn.round << ", its status hurts " << who(action.attacker) << " (" << damage << ")";
 }
 
 void ClashSystem::act(unsigned int before) {
@@ -543,7 +628,7 @@ void ClashSystem::act(unsigned int before) {
 		endRound();
 		return;
 	}
-	const auto& action = m_actions[m_action];
+	const auto action = m_actions[m_action];
 	if (action.item >= 0) {
 		actItem(action, before);
 		return;
@@ -556,42 +641,167 @@ void ClashSystem::act(unsigned int before) {
 			return;
 		}
 		m_announced = true;
-		const auto& skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
-		const auto wild = m_componentAccessor.get<FighterComponent>(action.attacker).team != 0;
-		turn.message = who(action.attacker) + (wild ? " sauvage" : "") + " utilise " + skill.name + " !";
-		turn.messageAge = 0;
-		turn.attacker = action.attacker;
-		turn.target = action.target;
-		turn.skillSprite = skill.id;
-		turn.contact = skill.contact;
+		m_blocked = false;
+		m_followUps.clear();
+		m_extra = 0;
+		turn.attacker = 0;
+		turn.target = 0;
+		turn.skillSprite = -1;
+		turn.contact = false;
 		turn.hit = false;
+		turn.tick = false;
 		turn.damage = 0;
-		m_stage.sound(BattleSound::ClashAttack);
-		m_stage.sound(BattleSound::Cast);
-	}
-	// The wind up, then it charges
-	if (before < 420 && turn.time >= 420) {
-		m_stage.sound(BattleSound::Dash);
-	}
-	if (!turn.hit && turn.time >= BattleTurn::HitDelay) {
-		hit(action);
-	}
-	if (turn.time >= BattleTurn::ActionDuration) {
-		if (turn.knockedOut != 0) {
-			step(BattleTurn::Step::KnockOut);
-			return;
+		turn.messageAge = 0;
+		if (!action.notice.empty()) {
+			// A message only (a status wears off)
+			turn.message = action.notice;
+			m_blocked = true;
+		} else if (action.tick) {
+			const auto status = m_componentAccessor.get<FighterComponent>(action.attacker).status;
+			const auto name = named(action.attacker);
+			turn.message = status == FighterStatus::Leech ? "Vampigraine draine l'énergie de " + name + " !" :
+				(status == FighterStatus::Burn ? name + " souffre de sa brûlure !" : name + " souffre du poison !");
+			turn.target = action.attacker;
+			turn.tick = true;
+		} else {
+			const auto stopped = blocked(action.attacker);
+			if (!stopped.empty()) {
+				turn.message = stopped;
+				m_blocked = true;
+				m_componentAccessor.get<FighterComponent>(action.attacker).statusBurst = FighterComponent::StatusBurstDuration;
+				m_stage.sound(BattleSound::Status);
+			} else {
+				const auto& skill = m_entities.getComponent<SkillsHolderComponent>(action.attacker).skills[static_cast<std::size_t>(action.skill)];
+				turn.message = named(action.attacker) + " utilise " + skill.name + " !";
+				turn.attacker = action.attacker;
+				turn.target = action.target;
+				turn.skillSprite = skill.id;
+				turn.contact = skill.contact;
+				m_stage.sound(BattleSound::ClashAttack);
+				m_stage.sound(BattleSound::Cast);
+			}
 		}
+	}
+	const auto next = [&]() {
 		m_action++;
 		m_announced = false;
 		turn.time = 0;
 		turn.hit = false;
+		turn.tick = false;
 		turn.attacker = 0;
+		turn.target = 0;
 		turn.message.clear();
+	};
+	if (m_blocked) {
+		if (turn.time >= NoticeDuration) {
+			next();
+		}
+		return;
+	}
+	if (action.tick) {
+		if (!turn.hit && turn.time >= BattleTurn::HitDelay / 2) {
+			tick(action);
+		}
+	} else {
+		// The wind up, then it charges
+		if (before < 420 && turn.time >= 420) {
+			m_stage.sound(BattleSound::Dash);
+		}
+		if (!turn.hit && turn.time >= BattleTurn::HitDelay) {
+			hit(action);
+		}
+	}
+	if (turn.time >= BattleTurn::ActionDuration + m_extra) {
+		// Its effectiveness, its effects : a message each
+		if (!m_followUps.empty()) {
+			turn.message = m_followUps.front();
+			turn.messageAge = 0;
+			m_followUps.erase(m_followUps.begin());
+			m_extra += FollowUpDuration;
+			return;
+		}
+		if (turn.knockedOut != 0) {
+			step(BattleTurn::Step::KnockOut);
+			return;
+		}
+		next();
 	}
 }
 
 void ClashSystem::endRound() {
+	// The statuses that hurt : an action each (poison, burn, leech)
+	if (m_roundEnd == 0) {
+		m_roundEnd = 1;
+		for (const auto entity : { m_stage.player, m_opponent }) {
+			if (!standing(entity)) {
+				continue;
+			}
+			const auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+			if (fighter.status != FighterStatus::None && fighter.statusDamage > 0) {
+				auto action = Action{ entity, fighter.statusSource, -1, -1 };
+				action.tick = true;
+				m_actions.push_back(action);
+			}
+		}
+		if (m_action < m_actions.size()) {
+			return;
+		}
+	}
+	// The time of the round passes : what wears off (its message)
+	if (m_roundEnd == 1) {
+		m_roundEnd = 2;
+		passRound();
+		if (m_action < m_actions.size()) {
+			return;
+		}
+	}
 	step(BattleTurn::Step::RoundEnd);
+}
+
+void ClashSystem::passRound() {
+	const auto time = m_rules.clashRoundTime();
+	const auto wear = [time](unsigned int& left) {
+		const auto before = left;
+		left = left > time ? left - time : 0;
+		return before > 0 && left == 0;
+	};
+	for (const auto entity : { m_stage.player, m_opponent }) {
+		if (!standing(entity)) {
+			continue;
+		}
+		auto& fighter = m_componentAccessor.get<FighterComponent>(entity);
+		const auto name = named(entity);
+		auto notice = [this, entity](std::string text) {
+			auto action = Action{ entity, 0, -1, -1 };
+			action.notice = std::move(text);
+			m_actions.push_back(action);
+		};
+		// Protected for its round only
+		fighter.guard = 0;
+		if (fighter.status != FighterStatus::None && wear(fighter.statusTime)) {
+			const auto status = fighter.status;
+			fighter.clearStatus();
+			switch (status) {
+			case FighterStatus::Sleep: notice(name + " se réveille !"); break;
+			case FighterStatus::Poison: notice(name + " n'est plus empoisonné."); break;
+			case FighterStatus::Burn: notice("La brûlure de " + name + " est guérie."); break;
+			case FighterStatus::Paralysis: notice(name + " n'est plus paralysé."); break;
+			case FighterStatus::Leech: notice("Vampigraine se dissipe."); break;
+			default: break;
+			}
+		}
+		auto reset = false;
+		for (std::size_t stat = 0; stat < fighter.stages.size(); stat++) {
+			if (wear(fighter.stageTime[stat])) {
+				fighter.stages[stat] = 0;
+				fighter.stageMultipliers[stat] = 1.F;
+				reset = true;
+			}
+		}
+		if (reset) {
+			notice("Les statistiques de " + name + " reviennent à la normale.");
+		}
+	}
 }
 
 void ClashSystem::end() {

@@ -26,6 +26,11 @@ message = function(text: string) do end
 # the battles (Data/Battle/steps.miniska)
 announce = function(text: string) do end
 
+# The evolution of the Pokemon of the team at "index" into the species "into", shown over the battle as in the first games
+# (the light, the two forms that alternate, the flash, the new form) : the script waits for its end (7 s). Only the scene :
+# Party.evolve changes the Pokemon. False at once : no battle. For the outro of the battles (Data/Battle/steps.miniska)
+evolve = function(index: int, into: int) : bool do return false end
+
 # A clash now in the battle going on (as when the two Pokemon attack each other at once, close) : the dev tools, the
 # tests. The script does not wait. False : no battle, or not fighting (its start, its end, a clash already)
 clash = function() : bool do return false end

@@ -122,6 +122,10 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 			CustomEntityManager::place(m_entities, m_worldState.getSpace(), entity, fighter.lastFree);
 			fighter.knockback = {};
 			fighter.dash = 0;
+			// A dash of a skill stops there
+			if (fighter.dashAttack.moving()) {
+				fighter.dashAttack.left = 0;
+			}
 			position = center(entity);
 		}
 	} else {
@@ -200,6 +204,33 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 		velocity = ska::Point<float>{ fighter.dashDirection.x * DashSpeed * scale, fighter.dashDirection.y * DashSpeed * scale };
 	}
 
+	// The dashes of a skill : aimed by the keys, else beside the opponent to place itself, at it to strike
+	auto& attack = fighter.dashAttack;
+	if (attack.aim) {
+		attack.aim = false;
+		auto direction = fighter.player && !fighter.controlledByAI ? keysDirection() : ska::Point<float>{};
+		if (direction.x == 0.F && direction.y == 0.F) {
+			const auto radians = attack.phase == DashAttack::Phase::Strike ? 0.F : static_cast<float>(attack.angle) * 3.14159265F / 180.F;
+			const auto cosine = std::cos(radians);
+			const auto sine = std::sin(radians);
+			direction = ska::Point<float>{ toOpponent.x * cosine - toOpponent.y * sine, toOpponent.x * sine + toOpponent.y * cosine };
+		}
+		attack.direction = direction;
+		fighter.attackDirection = direction;
+	}
+	if (attack.active()) {
+		velocity = attack.moving() ? ska::Point<float>{ attack.direction.x * attack.speed * scale, attack.direction.y * attack.speed * scale } : ska::Point<float>{};
+		attack.ghost = Decrease(attack.ghost, delta);
+		if (attack.moving() && attack.ghost == 0 && delta > 0) {
+			attack.ghost = GhostPeriod;
+			auto mark = BattleMark{};
+			mark.kind = BattleMark::Kind::Ghost;
+			mark.position = position;
+			mark.value = static_cast<int>(entity);
+			m_stage.mark(mark);
+		}
+	}
+
 	// Pushed back after a hit : the push slows down quickly
 	if (std::abs(fighter.knockback.x) > 1.F || std::abs(fighter.knockback.y) > 1.F) {
 		velocity.x += fighter.knockback.x * scale;
@@ -214,9 +245,9 @@ void FighterSystem::control(ska::EntityId entity, FighterComponent& fighter, uns
 
 	// It faces its opponent : always during an attack (the direction it committed to), else when it does not walk
 	if (fighting) {
-		if (fighter.windUp > 0 || fighter.lunge > 0 || fighter.recovery > 0) {
+		if (fighter.windUp > 0 || fighter.lunge > 0 || fighter.recovery > 0 || fighter.dashAttack.moving()) {
 			face(entity, fighter.attackDirection);
-		} else if (move.x == 0.F && move.y == 0.F) {
+		} else if (fighter.dashAttack.active() || (move.x == 0.F && move.y == 0.F)) {
 			face(entity, toOpponent);
 		}
 	}
@@ -275,6 +306,19 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 	case FighterStatus::Leech: effect.red = 170; effect.green = 255; effect.blue = 150; break;
 	default: break;
 	}
+	// A statistic just changed : it pulses red (up) or blue (down), as in the first games
+	if (fighter.statChange > 0) {
+		const auto pulse = 0.5F + 0.5F * std::sin(static_cast<float>(fighter.statChange) / 70.F);
+		const auto strength = std::min(1.F, static_cast<float>(fighter.statChange) / 300.F) * (0.45F + 0.35F * pulse);
+		const auto keep = static_cast<unsigned char>(255.F * (1.F - strength));
+		if (fighter.statChangeUp) {
+			effect.green = std::min(effect.green, keep);
+			effect.blue = std::min(effect.blue, keep);
+		} else {
+			effect.red = std::min(effect.red, keep);
+			effect.green = std::min(effect.green, static_cast<unsigned char>(255.F * (1.F - strength * 0.4F)));
+		}
+	}
 	if (fighter.guard > 0) {
 		// Protected : a blue glow
 		effect.red = 160;
@@ -292,6 +336,12 @@ void FighterSystem::draw(ska::EntityId entity, FighterComponent& fighter) {
 		effect.alpha = 150;
 		effect.scaleX = 1.F + 0.15F * std::abs(fighter.dashDirection.x);
 		effect.scaleY = 1.F + 0.15F * std::abs(fighter.dashDirection.y);
+	}
+
+	if (fighter.dashAttack.moving()) {
+		// A dash of a skill : stretched along it
+		effect.scaleX = 1.F + 0.25F * std::abs(fighter.dashAttack.direction.x);
+		effect.scaleY = 1.F + 0.25F * std::abs(fighter.dashAttack.direction.y);
 	}
 
 	const auto& direction = fighter.attackDirection;
@@ -356,6 +406,7 @@ void FighterSystem::updateEffects(ska::EntityId entity, FighterComponent& fighte
 			mark.onPlayer = fighter.player;
 			m_stage.mark(mark);
 			fighter.hpDelay = 300;
+			fighter.statusBurst = std::max(fighter.statusBurst, FighterComponent::StatusBurstDuration / 2);
 			if (fighter.statusLeech && m_entities.hasComponent<BattleComponent>(fighter.statusSource)) {
 				auto& source = m_entities.getComponent<BattleComponent>(fighter.statusSource);
 				if (source.hp > 0) {
@@ -395,6 +446,9 @@ void FighterSystem::refresh(unsigned int ellapsedTime) {
 		if (fighter.appear < FighterComponent::AppearDuration) {
 			fighter.appear = std::min(FighterComponent::AppearDuration, fighter.appear + ellapsedTime);
 		}
+		// The animations of a change of statistics, of a status : real time (shown during a clash too)
+		fighter.statChange = Decrease(fighter.statChange, ellapsedTime);
+		fighter.statusBurst = Decrease(fighter.statusBurst, ellapsedTime);
 		if (fighter.recall >= 0 && fighter.recall < FighterComponent::RecallDuration) {
 			fighter.recall = std::min(FighterComponent::RecallDuration, fighter.recall + static_cast<int>(ellapsedTime));
 		}

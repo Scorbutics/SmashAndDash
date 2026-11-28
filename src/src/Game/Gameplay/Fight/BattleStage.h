@@ -39,6 +39,8 @@ enum class BattleSound {
 	// A battle starts (the encounter) ; the bond (BondSystem) : the cut-in, the ring that closes, a perfect press, the skill
 	// that goes
 	Encounter, BondStart, BondCharge, BondPerfect, BondRelease,
+	// A statistic rises, falls (Sounds/battle_stat_up.wav, battle_stat_down.wav : tools/assets/battle_sounds.py)
+	StatUp, StatDown,
 	Count
 };
 
@@ -46,8 +48,9 @@ enum class BattleSound {
 struct BattleMark {
 	// Slash : the sprite of a contact skill where it hits ; Trail : where a projectile passed ("value" : the id of the
 	// sprite of the skill) ; Text : a word over a fighter ("value" : 0 neutral, 1 good for it, 2 bad for it) ; Wave : an
-	// area skill ("value" : its radius)
-	enum class Kind { Damage, Impact, Slash, Trail, Text, Wave };
+	// area skill ("value" : its radius) ; Ghost : an afterimage of a Pokemon dashing ("value" : its entity, "position" :
+	// where its center was)
+	enum class Kind { Damage, Impact, Slash, Trail, Text, Wave, Ghost };
 	Kind kind = Kind::Impact;
 	ska::Point<float> position;
 	int value = 0;
@@ -106,6 +109,22 @@ struct BondCinematic {
 	unsigned int pressedAt = 0;
 	bool perfect = false;
 	bool released = false;
+};
+
+// The evolution of a Pokemon of the team at the end of a battle (Battle.evolve, the outro of Data/Battle/steps.miniska),
+// drawn over the battle by GUIBattle as in the first games : the light gathers on it, it turns white, the two forms
+// alternate faster and faster, a white flash, the new form. Its times (real time, ms) :
+struct BattleEvolution {
+	static constexpr unsigned int Glow = 900;
+	static constexpr unsigned int Morph = 1500;
+	static constexpr unsigned int Flash = 5200;
+	static constexpr unsigned int Reveal = 5600;
+	static constexpr unsigned int Duration = 7000;
+	bool active = false;
+	unsigned int time = 0;
+	// The species before and after (Data/Monsters, Sprites/Charsets)
+	int from = 0;
+	int to = 0;
 };
 
 // A clash as in a cross-over of the classic battles and the fighting games (ClashSystem, drawn by ClashArena) : the battle
@@ -183,6 +202,9 @@ struct BattleTurn {
 	static constexpr unsigned int ShakeTime = 700;
 	// The ball has shaken : caught, or it breaks free
 	unsigned int ballEnd() const { return BallDrop + static_cast<unsigned int>(shakes) * ShakeTime + 350; }
+	// The action played is its status hurting the target (poison, burn, leech : at the end of a round) : no attack, a
+	// small hit
+	bool tick = false;
 	// The hits in a row of the Pokemon of the player ("2 COUPS !")
 	int combo = 0;
 	// The Pokemon K.O. in the turn
@@ -214,6 +236,8 @@ public:
 	const std::string& banner() const { return m_banner; }
 	unsigned int bannerAge() const { return m_bannerAge; }
 
+	// How long an afterimage stays (milliseconds)
+	static constexpr unsigned int GhostMarkLife = 220;
 	void mark(BattleMark mark);
 	const std::vector<BattleMark>& marks() const { return m_marks; }
 
@@ -248,6 +272,8 @@ public:
 	static constexpr int BondFull = 100;
 	int bond = 0;
 	BondCinematic cinematic;
+	// An evolution shown over the battle (the outro)
+	BattleEvolution evolution;
 	BattleTurn turn;
 	// A clash asked by a script (Battle.clash) : ClashSystem starts it
 	bool clashRequested = false;

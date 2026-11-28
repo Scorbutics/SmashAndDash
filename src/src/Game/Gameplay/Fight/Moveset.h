@@ -32,3 +32,12 @@ std::vector<int> TeamMoveset(WorldState& worldState, int teamIndex);
 
 // The skills learned at the levels after "from" up to "to" that it does not know yet (their indexes in its data)
 std::vector<int> LearnedBetween(const ska::IniReader& data, int from, int to, const std::vector<int>& known);
+
+// The species a Pokemon of the team evolves into now : its level reached the level of its data ([Evolution] level,
+// next_pokemon_id of Data/Monsters/<id>.ini ; no item needed), that species has its data and its sheet. -1 : none
+// ("level" : the level it reached, its experience may not be saved yet)
+int TeamEvolution(WorldState& worldState, int teamIndex, int level);
+// A Pokemon of the team becomes the species "into" : its experience is kept (the same curve : the same level), its moveset
+// (the skills found again in the data of the new species, by their file), the hit points it lost. False : no Pokemon,
+// no data
+bool EvolveTeamMember(WorldState& worldState, int teamIndex, int into);

@@ -8,6 +8,7 @@
 #include "SavePaths.h"
 #include "Base/IO/Readers/IniReader.h"
 #include "Game/Gameplay/World/Generation/Files.h"
+#include "Game/Gameplay/World/Generation/Climate.h"
 
 namespace {
 	namespace fs = std::filesystem;
@@ -118,6 +119,13 @@ void SaveSlots::WorldGenerated(const std::string& name, std::int64_t seed, const
 	reader.set("World directory", WorldPath(name));
 	reader.set("World generate", false);
 	reader.set("World version", worldgen::WorldVersion);
+	// The village where the game starts (its block of the world) : the wild Pokemon are stronger far from it
+	const auto chunk = start.map.size() > 2 ? start.map.substr(2) : std::string{};
+	const auto separator = chunk.find('_');
+	if (separator != std::string::npos) {
+		reader.set("World town_x", std::atoi(chunk.substr(0, separator).c_str()) * worldgen::Chunk + start.x);
+		reader.set("World town_y", std::atoi(chunk.substr(separator + 1).c_str()) * worldgen::Chunk + start.y - 1);
+	}
 	// The entities of the chunks were of the world before
 	std::remove((SaveDirectory() + name + "/Chunks.txt").c_str());
 	if (fresh) { // a world generated again (the same seed, the same world) : the trainer stays where it was

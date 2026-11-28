@@ -49,6 +49,9 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	}
 	const auto defense = static_cast<float>(skill.special ? defender.speDefense : defender.defense) * fighter.stageMultipliers[StatDefense];
 	const auto effectiveness = rules.effectiveness(skill.type, defender.type1, defender.type2);
+	if (hit.effectiveness != nullptr) {
+		*hit.effectiveness = effectiveness;
+	}
 	const auto stab = attacker != nullptr && (skill.type == attacker->type1 || skill.type == attacker->type2);
 	// The power of a skill is shared by its particles (Bulles d'O : 3 bubbles, each a third of it)
 	const auto particles = std::max(1, skill.particleNumber);
@@ -94,6 +97,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 	fighter.hpDelay = 500;
 	fighter.windUp = 0;
 	fighter.pendingSkill = -1;
+	fighter.dashAttack = {};
 	if (damage > 0) {
 		stage.sound(strong >= 6 || effectiveness > 100 ? BattleSound::StrongHit : BattleSound::Hit);
 		fighter.stun = static_cast<unsigned int>(260 + strong * 15);
@@ -127,7 +131,7 @@ int ApplyBattleHit(ska::EntityManager& entities, PokemonGameEventDispatcher& ged
 
 	// The effects of the skill (statistics, status) when it touched
 	if (effectiveness > 0) {
-		ApplySkillEffects(entities, stage, rules, skill, hit.attacker, hit.target);
+		ApplySkillEffects(entities, stage, rules, skill, hit.attacker, hit.target, hit.effects);
 	}
 
 	StatisticsChangeEvent event(hit.target, defender, hit.attacker);

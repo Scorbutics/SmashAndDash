@@ -43,6 +43,9 @@ struct BattleResult {
 	// The Pokemon of the player : its index in the team (-1 : not from the team), its hit points left
 	int teamIndex = -1;
 	int hpLeft = 0;
+	// Its species and its maximum of hit points in the battle (it may evolve in the outro : the hit points it lost are kept)
+	int monster = 0;
+	int maxHp = 0;
 	// Experience won
 	int experience = 0;
 };
@@ -127,6 +130,9 @@ public:
 	BattleRules& getBattleRules();
 	// The level of the first Pokemon of the team able to fight (1 : none)
 	int teamLevel();
+	// The block of the world of the village where the game starts ([World] town_x, town_y of the save, written when its
+	// world is generated ; an older save : the middle of the world) : the farther from it, the stronger the wild Pokemon
+	ska::Point<int> townBlock();
 	// The battle going on (StateFight), else nullptr : the scripts act on it (Battle.announce)
 	void setBattleStage(BattleStage* stage) { m_battleStage = stage; }
 	BattleStage* battleStage() { return m_battleStage; }

@@ -48,6 +48,10 @@ public:
 	// (The delay between two decisions of the AI : BattleRules::pause, by the difficulty of the battle)
 	// The active part of a contact skill : the Pokemon lunges forward (it hits at its start)
 	static constexpr unsigned int LungeDuration = 140;
+	// A dash to place itself cannot be hit at its start
+	static constexpr unsigned int DashAttackInvulnerability = 100;
+	// How far from touching the strike of a dash hits (pixels)
+	static constexpr float DashReach = 12.F;
 
 protected:
 	void refresh(unsigned int ellapsedTime) override;
@@ -60,6 +64,10 @@ private:
 	void contact(unsigned int index, ska::EntityId entity, FighterComponent& fighter);
 	// An area skill (the fighters of the other side around it) or a self skill (itself)
 	void area(unsigned int index, ska::EntityId entity, FighterComponent& fighter);
+	// A dash skill : its dashes, one after the other, the last one hits what it touches
+	void startDash(ska::EntityId entity, FighterComponent& fighter);
+	void updateDash(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);
+	bool dashHit(ska::EntityId entity, FighterComponent& fighter);
 	// The AI may dodge an attack coming (its script decides)
 	void considerDodging(ska::EntityId entity, FighterComponent& fighter);
 	void updateAttack(ska::EntityId entity, FighterComponent& fighter, unsigned int delta);

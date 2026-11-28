@@ -205,6 +205,7 @@ void TrainerItemSystem::updateBall() {
 			fighter.recovery = 0;
 			fighter.pendingSkill = -1;
 			fighter.dash = 0;
+			fighter.dashAttack = {};
 		}
 		break;
 	case PokeballComponent::State::Caught:

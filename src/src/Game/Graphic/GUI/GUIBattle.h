@@ -69,6 +69,9 @@ private:
 	void renderCinematic(ska::Renderer& renderer) const;
 	// The end of the battle : the experience won (BattleStage::outro)
 	void renderOutro(ska::Renderer& renderer) const;
+	// The evolution of a Pokemon of the team over the battle (BattleStage::evolution)
+	void renderEvolution(ska::Renderer& renderer) const;
+	const ska::Texture& charset(int monster) const;
 	static constexpr unsigned int OutroCardDelay = 350;
 	static constexpr unsigned int OutroBarDelay = 750;
 	static constexpr unsigned int OutroBarDuration = 1100;
@@ -90,6 +93,7 @@ private:
 	ska::Texture m_impact;
 	// The sprites of the contact skills (Sprites/Fight/<id>.png : 2 x 2 frames), loaded when used
 	mutable std::map<int, ska::Texture> m_skillSprites;
+	mutable std::map<int, ska::Texture> m_charsets;
 	// Post-processing of the battle (Shaders/battle) : the colors split on the hits, gray and vignette on a K.O.
 	mutable ska::Shader m_screenShader;
 	mutable ska::Renderer* m_renderer = nullptr;

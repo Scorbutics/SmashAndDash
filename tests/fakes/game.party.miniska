@@ -8,7 +8,8 @@ learning = []: int
 addPokemon = function(id: int) : bool do return false end
 size = function() : int do return 1 end
 move = function(from: int, to: int) : bool do return false end
-species = function(index: int) : string do return "Bulbizarre" end
+speciesName = "Bulbizarre"
+species = function(index: int) : string do return speciesName end
 hp = function(index: int) : int do return 10 end
 level = function(index: int) : int do return 5 end
 
@@ -55,6 +56,17 @@ learn = function(index: int, skill: int, slot: int) : bool do
 	return true
 end
 
+# The species it evolves into (set by the test), the evolutions done
+evolvesInto = -1
+evolutions = []: int
+evolution = function(index: int, level: int) : int do return evolvesInto end
+evolve = function(index: int, into: int) : bool do
+	evolutions = evolutions + into
+	speciesName = "Herbizarre"
+	evolvesInto = -1
+	return true
+end
+
 heal = function(index: int, value: int) do end
 pokemonOut = function(index: int) do end
 
@@ -64,4 +76,10 @@ setKnown = function(skills: int[]) do
 end
 setLearning = function(skills: int[]) do
 	learning = skills
+end
+setEvolution = function(into: int) do
+	evolvesInto = into
+end
+evolved = function() : int[] do
+	return evolutions
 end

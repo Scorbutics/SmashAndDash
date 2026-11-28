@@ -64,8 +64,23 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 	}
 
 	sd.power = skillData.exists("Particle damage") ? skillData.get<int>("Particle damage") : -sd.buffEnemy.hp;
-	sd.contact = sd.style1 == "Contact" || sd.style2 == "Contact";
-	sd.kind = sd.contact ? SkillKind::Contact : (sd.style2 == "Area" ? SkillKind::Area : (sd.style2 == "Self" ? SkillKind::Self : SkillKind::Projectile));
+	// A dash skill touches as a contact one (its drawing in a clash)
+	const auto dash = sd.style2 == "Dash";
+	sd.contact = dash || sd.style1 == "Contact" || sd.style2 == "Contact";
+	sd.kind = dash ? SkillKind::Dash : (sd.contact ? SkillKind::Contact : (sd.style2 == "Area" ? SkillKind::Area : (sd.style2 == "Self" ? SkillKind::Self : SkillKind::Projectile)));
+	if (dash) {
+		const auto value = [&skillData](const std::string& key, int fallback) {
+			return skillData.exists("Dash " + key) ? std::max(0, skillData.get<int>("Dash " + key)) : fallback;
+		};
+		const auto defaults = DashDescriptor{};
+		sd.dash.count = std::max(1, value("count", defaults.count));
+		sd.dash.speed = static_cast<float>(value("speed", static_cast<int>(defaults.speed)));
+		sd.dash.duration = static_cast<unsigned int>(value("duration", static_cast<int>(defaults.duration)));
+		sd.dash.strikeDuration = static_cast<unsigned int>(value("strike_duration", static_cast<int>(defaults.strikeDuration)));
+		sd.dash.window = static_cast<unsigned int>(value("window", static_cast<int>(defaults.window)));
+		sd.dash.missRecovery = static_cast<unsigned int>(value("miss_recovery", static_cast<int>(defaults.missRecovery)));
+		sd.particleNumber = std::max(sd.particleNumber, 1);
+	}
 	// An area or self skill has no particle : it can be used all the same
 	if (sd.kind == SkillKind::Area || sd.kind == SkillKind::Self) {
 		sd.particleNumber = std::max(sd.particleNumber, 1);

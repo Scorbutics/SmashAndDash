@@ -1,0 +1,10 @@
+# The dash skills (Data/Battle/dash.miniska)
+Test = import "bind:std.native.test"
+Dash = import "wd:Data/Battle/dash"
+
+run = function(args: string[]) do
+	Test.equal((Dash.angle(0): string), "-60", "under half : to a side")
+	Test.equal((Dash.angle(50): string), "60", "else to the other")
+	Test.equal((Dash.delay(0, 200): string), "50", "the soonest : a quarter of the window")
+	Test.equal((Dash.delay(99, 200): string), "149", "the latest : almost three quarters")
+end

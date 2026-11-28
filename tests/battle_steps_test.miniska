@@ -64,4 +64,24 @@ run = function(args: string[]) do
 	said = Battle.messages()
 	Test.equal(said[said.size() - 1], "BULBIZARRE n'apprend pas Poudre Toxik.", "not learned")
 	Test.equal((Party.skills(0).size(): string), "4", "the moveset is the same")
+
+	# No evolution at this level : nothing more
+	Party.setLearning([]: int)
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "30", "9", "10", "0"])
+	Test.equal((Battle.evolutions().size(): string), "0", "no evolution")
+	Test.equal(Battle.messages()[Battle.messages().size() - 1], "BULBIZARRE monte au niveau 10 !", "the level only")
+
+	# Its level reached the one of its evolution : the scene, then the new species
+	Party.setEvolution(2)
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "60", "15", "16", "0"])
+	said = Battle.messages()
+	Test.equal(said[said.size() - 2], "Quoi ? BULBIZARRE évolue !", "it evolves")
+	Test.equal((Battle.evolutions()[0]: string), "2", "the scene of its evolution into Herbizarre")
+	Test.equal((Party.evolved()[0]: string), "2", "it became Herbizarre")
+	Test.equal(said[said.size() - 1], "Félicitations ! Votre BULBIZARRE a évolué en Herbizarre !", "congratulations")
+
+	# Not the Pokemon of the team (a level up without its place) : no evolution
+	Party.setEvolution(3)
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "60", "16", "17", "-1"])
+	Test.equal((Party.evolved().size(): string), "1", "no evolution without its place in the team")
 end

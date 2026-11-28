@@ -4,8 +4,20 @@
 #include "../Data/RawStatistics.h"
 
 // How a skill reaches : particles thrown towards the opponent, a lunge hitting in front, an area around the Pokemon, the
-// Pokemon itself ([Description] style_2 : Projectile, Contact, Area, Self)
-enum class SkillKind { Projectile, Contact, Area, Self };
+// Pokemon itself, dashes of which the last one strikes ([Description] style_2 : Projectile, Contact, Area, Self, Dash)
+enum class SkillKind { Projectile, Contact, Area, Self, Dash };
+
+// A dash skill ([Dash]) : how many dashes (the last one strikes, the others place the Pokemon), their speed (pixels per
+// second), the time of a dash and of the strike, the time to ask for the next one (else it goes by itself), the recovery
+// after a strike that touched nothing (milliseconds)
+struct DashDescriptor {
+	int count = 2;
+	float speed = 640.F;
+	unsigned int duration = 160;
+	unsigned int strikeDuration = 220;
+	unsigned int window = 250;
+	unsigned int missRecovery = 420;
+};
 
 class SkillDescriptor {
 public:
@@ -38,6 +50,7 @@ public:
 	// Else the skill throws its particles (style Projectile)
 	bool contact = false;
 	SkillKind kind = SkillKind::Projectile;
+	DashDescriptor dash;
 	// Effects ([Effects]) : changes of the statistics of the target and of the Pokemon (attack, defense, speed : -3 to 3),
 	// a status given to the target ("poison", "burn", "paralysis", "sleep", "leech", "flinch") or to the Pokemon ("guard")
 	// with a chance (percents), their duration (milliseconds), a fixed damage instead of the damage rule

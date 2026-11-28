@@ -187,7 +187,9 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	// The bond between the trainer and its Pokemon : full, it unleashes the strongest skill of the Pokemon (a cinematic)
 	addLogic(std::make_unique<BondSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, battle));
 	// The turns of the classic battles : a clash, an opening (Data/Battle/clash.miniska)
-	addLogic(std::make_unique<ClashSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, blockSize));
+	auto clashSystem = std::make_unique<ClashSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage, blockSize);
+	m_clash = clashSystem.get();
+	addLogic(std::move(clashSystem));
 	addLogic(std::make_unique<FighterSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_stage));
 	addLogic(std::make_unique<BattleCameraSystem>(m_entityManager, m_worldState.getCamera(), m_stage));
 	addLogic(std::make_unique<SkillRefreshSystem>(m_entityManager, m_stage));
@@ -306,6 +308,9 @@ void StateFight::park(ska::EntityId entity) {
 }
 
 void StateFight::beforeUnload() {
+	if (m_clash != nullptr) {
+		m_clash->leave();
+	}
 	// The end of the battle was played in the battle (BattlePhase::Outro) : the player plays again, on the map as it is
 	auto finalTask = std::make_unique<ska::Task>([&](ska::Task&) {
 		m_loadState = 0;

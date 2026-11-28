@@ -27,8 +27,8 @@ namespace ska {
 //   Zoom     (the camera dives : BattleCameraSystem) black bars, the vignette, a heartbeat
 //   Shatter  the tiles of the map around them break away, from the middle outwards, to the night behind
 //   Versus   the screen "VS" : the two sides slide in, the two Pokemon big, their names, "VS" lands
-//   Rebuild  a battleground of those tiles flies in : the sky, the scenery (the trees, the houses of the map behind the
-//            opponent), the ground in perspective (seen from behind the Pokemon of the player), the two platforms land
+//   Rebuild  a battleground of those tiles flies in : the sky, the scenery (the trees, the houses of the map north of
+//            the Pokemon of the player), the ground in perspective (seen from behind the Pokemon of the player), the two platforms land
 //   Round    the Pokemon of the player from behind, the opponent in front, the bars of the fighting games, "ROUND 1",
 //            "FIGHT !"
 //   Menu     the skills as in the first games, a timer as in the fighting games
@@ -133,7 +133,7 @@ private:
 	// A tile of the tileset, its centre at x y, its size, turned, faded, tinted
 	void tile(ska::Renderer& renderer, int sheet, const ska::Rectangle& clip, float x, float y, float width, float height, double angle, unsigned char alpha, unsigned char shade = 255, unsigned char flash = 0, bool standing = false) const;
 	// A frame of the character sheet of a Pokemon (Sprites/Charsets), its feet at x y
-	void pokemon(ska::Renderer& renderer, int monster, int row, int column, float x, float y, float scale, unsigned char alpha, unsigned char flash = 0, int sink = 0, unsigned char shade = 255) const;
+	void pokemon(ska::Renderer& renderer, int monster, int row, int column, float x, float y, float scale, unsigned char alpha, unsigned char flash = 0, int sink = 0, unsigned char shade = 255, ska::Color tint = ska::Color{ 255, 255, 255, 255 }) const;
 	const ska::Texture& charset(int monster) const;
 	int monster(ska::EntityId entity) const;
 	// Where a Pokemon stands on the battleground
@@ -154,7 +154,6 @@ private:
 	mutable int m_centerY = 0;
 	mutable int m_clashX = 0;
 	mutable int m_clashY = 0;
-	mutable ska::Point<int> m_forward{ 0, -1 };
 	mutable std::vector<Cell> m_cells;
 	// The battleground laid out for this screen size
 	mutable ska::Point<int> m_laidOut{};

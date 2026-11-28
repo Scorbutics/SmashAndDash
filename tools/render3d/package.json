@@ -1,0 +1,10 @@
+{
+  "name": "smash-and-dash-render3d",
+  "private": true,
+  "description": "tools/render3d : 3D scenes pre-rendered to the sprites of the game (toon shading, ink outlines, watercolour), in headless Chromium (npm install --prefix tools/render3d)",
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.62.1",
+    "three": "0.187.0"
+  }
+}

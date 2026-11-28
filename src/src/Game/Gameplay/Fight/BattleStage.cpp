@@ -22,6 +22,26 @@ void BattleStage::update(unsigned int ellapsedTime) {
 		}
 	}
 
+	// An evolution : its light gathers, then the flash (its sounds on time)
+	if (evolution.active) {
+		const auto before = evolution.time;
+		evolution.time += ellapsedTime;
+		const auto crossed = [before, this](unsigned int at) { return before < at && evolution.time >= at; };
+		if (crossed(1)) {
+			sound(BattleSound::BondCharge);
+		}
+		if (crossed(BattleEvolution::Morph)) {
+			sound(BattleSound::BondStart);
+		}
+		if (crossed(BattleEvolution::Flash)) {
+			sound(BattleSound::BondRelease);
+		}
+		if (crossed(BattleEvolution::Reveal)) {
+			sound(BattleSound::ClashShine);
+			sound(BattleSound::BallCaught);
+		}
+	}
+
 	// The feedbacks live in real time (a damage number rises during a hit stop)
 	for (auto& mark : m_marks) {
 		mark.age += ellapsedTime;
@@ -34,6 +54,7 @@ void BattleStage::update(unsigned int ellapsedTime) {
 		case BattleMark::Kind::Trail: life = TrailMarkLife; break;
 		case BattleMark::Kind::Text: life = TextMarkLife; break;
 		case BattleMark::Kind::Wave: life = WaveMarkLife; break;
+		case BattleMark::Kind::Ghost: life = GhostMarkLife; break;
 		default: break;
 		}
 		return mark.age >= life;

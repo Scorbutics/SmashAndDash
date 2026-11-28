@@ -1,7 +1,9 @@
 #pragma once
 #include "Core/ECS/ECSDefines.h"
 #include "Core/Point.h"
+#include <vector>
 #include "../PokemonGameEventDispatcher.h"
+#include "BattleEffects.h"
 
 namespace ska {
 	class EntityManager;
@@ -19,6 +21,9 @@ struct BattleHit {
 	// Normalized direction of the hit (it pushes the target that way), where it touched (world pixels)
 	ska::Point<float> direction;
 	ska::Point<float> impact;
+	// Filled when given : what the effects of the skill did, its effectiveness (percents) (the messages of a clash)
+	std::vector<SkillEffect>* effects = nullptr;
+	int* effectiveness = nullptr;
 };
 
 // Applies a hit : damage (battle rules : statistics and their changes, types), the effects of the skill, and its feel

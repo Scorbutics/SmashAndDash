@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "Game/Gameplay/Data/SavePaths.h"
+#include <cmath>
 #include "Graphic/System/GraphicSystem.h"
 #include "Graphic/Texture.h"
 #include "Graphic/System/ShadowSystem.h"
@@ -356,6 +357,15 @@ int WorldState::teamLevel() {
 	return m_battleRules->level(pokemon->experience, needed);
 }
 
+ska::Point<int> WorldState::townBlock() {
+	const auto reader = ska::IniReader{ SaveDirectory() + m_saveManager.getPathName() + "/trainer.ini" };
+	if (reader.exists("World town_x") && reader.exists("World town_y")) {
+		return { reader.get<int>("World town_x"), reader.get<int>("World town_y") };
+	}
+	// The worlds are 8 x 8 chunks of 40 blocks
+	return { 160, 160 };
+}
+
 bool WorldState::freeBlock(const int x, const int y) {
 	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= m_world.getBlocksX() || static_cast<std::size_t>(y) >= m_world.getBlocksY()) {
 		return false;
@@ -658,11 +668,18 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 	const auto pathType = dataSpawn->get<int>("Data path_type");
 	auto successfulSpawns = 0;
 	auto angle = static_cast<float>((2 * M_PI* (rand() % 360)) / 360);
+	// The farther from the village where the game starts, the stronger (Data/Battle/encounters.miniska)
+	const auto blockSize = static_cast<int>(m_world.getBlockSize());
+	// (The chunks are played as one map : its pixels are those of the world)
+	const auto town = townBlock();
+	const auto dx = pos.x / blockSize - town.x;
+	const auto dy = pos.y / blockSize - town.y;
+	const auto distance = static_cast<int>(std::sqrt(static_cast<double>(dx * dx + dy * dy)));
 	for (unsigned int i = 0; i < nbrSpawns; i++) {
 		// Between the minimum and the maximum level of the area
 		const auto levelMin = dataSpawn->get<int>("Data level_min");
 		const auto levelMax = std::max(levelMin, dataSpawn->get<int>("Data level_max"));
-		const auto level = rand() % (levelMax - levelMin + 1) + levelMin;
+		const auto level = m_battleRules->wildLevel(rand() % (levelMax - levelMin + 1) + levelMin, distance, rand() % 100);
 		successfulSpawns += spawnOne(idMob, level, pathType, { pos.x, pos.y }, angle, rmin, rmax, idBlocks) ? 1 : 0;
 		angle += static_cast<float>((2.0 * M_PI) / nbrSpawns);
 	}
@@ -772,6 +789,13 @@ void WorldState::battleEnded(const BattleResult& result) {
 		if (pokemon.has_value()) {
 			pokemon->hp = result.hpLeft;
 			pokemon->experience += result.experience;
+			// It evolved in the outro (Party.evolve) : the hit points it lost in the battle, out of its new maximum
+			if (result.monster != 0 && pokemon->id != result.monster && result.hpLeft > 0) {
+				const auto data = ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" };
+				const auto needed = data.exists("Experience level_1_exp_needed") ? data.get<int>("Experience level_1_exp_needed") : 0;
+				const auto maxHp = m_battleRules->maxHp(data.exists("BaseStats hp") ? data.get<int>("BaseStats hp") : 10, m_battleRules->level(pokemon->experience, needed));
+				pokemon->hp = std::max(1, maxHp - std::max(0, result.maxHp - result.hpLeft));
+			}
 			team.setMember(result.teamIndex, *pokemon);
 			SLOG(ska::LogLevel::Info) << "Battle : the pokemon " << pokemon->id << " of the team has " << pokemon->hp << " hit points, " << pokemon->experience << " experience (+" << result.experience << ")";
 		}

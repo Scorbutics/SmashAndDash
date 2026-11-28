@@ -1,0 +1,3 @@
+The sheets of the Pokemon (1.png to 151.png) come from "Kanto Pokemon overworlds", ripped by -Dragoon for TSR (V3.0,
+pkmnKanto.png : "credit wanted, but not needed"). Extracted by tools/assets/kanto_charsets.py (pixels doubled, the layout
+of Graphic/CharsetSheet.h, the feet aligned).
