@@ -33,7 +33,7 @@ namespace {
 
 
 worldgen::Terrain::Terrain(const WorldPlan& plan) :
-	m_plan(plan) {
+	m_plan(plan), m_width(plan.climate().width()), m_height(plan.climate().height()) {
 	planRoutes();
 	for (const auto& v : m_plan.villages()) {
 		for (const auto* set : { &v.yard, &v.pond, &v.pondRing }) {
@@ -80,14 +80,14 @@ double worldgen::Terrain::heightAt(int x, int y) const {
 }
 
 worldgen::Ground worldgen::Terrain::ground(int x, int y) const {
-	if (x < 0 || x >= width() || y < 0 || y >= height()) {
+	if (!inside(x, y)) {
 		return Ground::Water;
 	}
 	return m_terrain[index(x, y)].ground;
 }
 
 int worldgen::Terrain::level(int x, int y) const {
-	if (x < 0 || x >= width() || y < 0 || y >= height()) {
+	if (!inside(x, y)) {
 		return 0;
 	}
 	return m_terrain[index(x, y)].level;
@@ -244,11 +244,11 @@ std::array<bool, 8> worldgen::Terrain::lowMask(int x, int y) const {
 }
 
 bool worldgen::Terrain::isFoot(int x, int y) const {
-	return 0 <= x && x < width() && 0 <= y && y < height() && ground(x, y) != Ground::Water && level(x, y - 1) > level(x, y);
+	return inside(x, y) && ground(x, y) != Ground::Water && level(x, y - 1) > level(x, y);
 }
 
 bool worldgen::Terrain::flat(int x, int y) const {
-	if (!(0 <= x && x < width() && 0 <= y && y < height()) || ground(x, y) == Ground::Water) {
+	if (!inside(x, y) || ground(x, y) == Ground::Water) {
 		return false;
 	}
 	const auto low = lowMask(x, y);
@@ -390,7 +390,7 @@ bool worldgen::Terrain::placeStairs() {
 }
 
 bool worldgen::Terrain::poiBlockOk(int x, int y) const {
-	if (!(0 <= x && x < width() && 0 <= y && y < height())) {
+	if (!inside(x, y)) {
 		return false;
 	}
 	const auto mx = x % Chunk;

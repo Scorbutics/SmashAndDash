@@ -72,6 +72,9 @@ namespace {
 		return AnimatedTile(static_cast<Animated>(static_cast<int>(Animated::FlowerbedRoofr) + static_cast<int>(colour)));
 	}
 
+	int FloorDivide(int a, int b) { return a / b - ((a % b != 0) && ((a < 0) != (b < 0)) ? 1 : 0); }
+	int FloorModulo(int a, int b) { return a - FloorDivide(a, b) * b; }
+
 	// The trees : their width, their rows (dy from the block of the canopy bottom, row of the image, kind)
 	enum class Part { Top, Canopy, Trunk };
 	struct TreePart { int dy, row; Part kind; };
@@ -189,6 +192,14 @@ worldgen::TileId worldgen::Tiles::cell(const std::string& key, bool walkable) {
 	return tile;
 }
 
+std::string worldgen::Tiles::sortName(TileId tile) const {
+	if (!m_stable || tile == NoTile || IsAnimated(tile)) {
+		return TileName(tile);
+	}
+	const auto& [key, walkable] = m_keys[static_cast<std::size_t>(tile)];
+	return "(" + key + ", " + (walkable ? "True" : "False") + ")";
+}
+
 worldgen::Shapes worldgen::Shapes::Parse(std::istream& in) {
 	auto shapes = Shapes{};
 	auto line = std::string{};
@@ -244,14 +255,39 @@ std::vector<worldgen::RoomTemplate> worldgen::LoadRoomTemplates(const std::strin
 	return out;
 }
 
-worldgen::World::World(const Terrain& terrain, const Shapes& shapes, const std::vector<RoomTemplate>& rooms) :
-	m_terrain(terrain), m_shapes(shapes), m_seed(terrain.plan().climate().seed()) {
-	const auto size = static_cast<std::size_t>(width() * height());
+worldgen::World::World(const Terrain& terrain, const Shapes& shapes, const std::vector<RoomTemplate>& rooms, const RegionOptions* region) :
+	m_terrain(terrain), m_shapes(shapes), m_seed(terrain.plan().seed()), m_tiles(region != nullptr) {
+	if (region != nullptr) {
+		m_x0 = region->x0;
+		m_y0 = region->y0;
+		m_width = region->width;
+		m_height = region->height;
+		m_chunks = region->chunks;
+		m_region = true;
+		m_regionX0 = region->regionX0;
+		m_regionY0 = region->regionY0;
+		m_regionSize = region->regionSize;
+		m_sea = region->sea;
+	} else {
+		m_x0 = terrain.x0();
+		m_y0 = terrain.y0();
+		m_width = terrain.width();
+		m_height = terrain.height();
+		for (auto cy = 0; cy < m_height / Chunk; cy++) {
+			for (auto cx = 0; cx < m_width / Chunk; cx++) {
+				m_chunks.push_back({ cx, cy });
+			}
+		}
+	}
+	const auto size = static_cast<std::size_t>(width()) * static_cast<std::size_t>(height());
 	for (auto& layer : m_layers) {
 		layer.assign(size, NoTile);
 	}
 	m_walk.assign(size, 1);
 	build();
+	if (m_region) {
+		placeSea();
+	}
 	placeTown();
 	placePois();
 	for (const auto& [x, y] : m_terrain.stairs()) { // nothing in the way of the stairs (trees, boulders)
@@ -283,8 +319,8 @@ bool worldgen::World::plain(int x, int y) const {
 
 void worldgen::World::build() {
 	const auto& stairs = m_terrain.stairs();
-	for (auto y = 0; y < height(); y++) {
-		for (auto x = 0; x < width(); x++) {
+	for (auto y = m_y0; y < m_y0 + height(); y++) {
+		for (auto x = m_x0; x < m_x0 + width(); x++) {
 			const auto m = mat(x, y);
 			const auto lv = level(x, y);
 			const auto low = m_terrain.lowMask(x, y);
@@ -293,12 +329,12 @@ void worldgen::World::build() {
 				const auto foot = low[2] && m_terrain.isFoot(x, y + 1);
 				const auto walk = onStairs || !(low[0] || low[1] || low[2] || low[3]);
 				set(Layer::Base, x, y, m_tiles.cell(K({ S("cliff"), M(low), B(onStairs), B(foot) }), walk));
-				m_walk[index(x, y)] = walk;
+				setWalk(x, y, walk);
 				continue;
 			}
 			if (m == Ground::Water) {
 				set(Layer::Base, x, y, AnimatedTile(Animated::Water));
-				m_walk[index(x, y)] = 0;
+				setWalk(x, y, 0);
 				const auto mk = Mask8([this](int a, int b) { return mat(a, b) != Ground::Water; }, x, y);
 				if (Any(mk)) {
 					auto over = Ground::Water;
@@ -320,7 +356,7 @@ void worldgen::World::build() {
 				const auto west = m_terrain.isFoot(x - 1, y);
 				const auto east = m_terrain.isFoot(x + 1, y);
 				set(Layer::Base, x, y, m_tiles.cell(K({ S("foot"), S(GroundName(m)), B(west), B(east), B(onStairs) }), onStairs));
-				m_walk[index(x, y)] = onStairs;
+				setWalk(x, y, onStairs);
 				m_objects[{ x, y }] = 0.5;
 				continue;
 			}
@@ -354,6 +390,24 @@ void worldgen::World::build() {
 	}
 }
 
+void worldgen::World::placeSea() {
+	// The sea of a region of the infinite world (infinite.py RegionWorld.ground) : where nothing is on the water (its banks)
+	for (auto y = m_y0; y < m_y0 + height(); y++) {
+		for (auto x = m_x0; x < m_x0 + width(); x++) {
+			if (mat(x, y) != Ground::Water || tile(Layer::Middle, x, y) != NoTile || m_sea.empty()) {
+				continue;
+			}
+			const auto sea = m_sea[index(x, y)];
+			if (sea == RegionOptions::SeaReef) {
+				set(Layer::Middle, x, y, m_tiles.cell(K({ S("reef") }), false));
+				m_objects[{ x, y }] = 0.4;
+			} else if (sea == RegionOptions::SeaDeep) {
+				set(Layer::Middle, x, y, m_tiles.cell(K({ S("deep"), I(static_cast<int>(H01(x, y, m_seed + 541) * 3)) }), true));
+			}
+		}
+	}
+}
+
 void worldgen::World::stamp(const std::string& name, int x0, int y0, std::optional<std::pair<int, int>> door) {
 	const auto& shape = m_shapes.stamps.at(name);
 	for (auto r = 0; r < shape.h; r++) {
@@ -371,7 +425,7 @@ void worldgen::World::stamp(const std::string& name, int x0, int y0, std::option
 			} else {
 				const auto walk = door.has_value() && *door == std::make_pair(c, r);
 				set(Layer::Base, x, y, m_tiles.cell(key, walk));
-				m_walk[index(x, y)] = walk;
+				setWalk(x, y, walk);
 				set(Layer::Middle, x, y, NoTile);
 			}
 		}
@@ -409,7 +463,7 @@ bool worldgen::World::decoOk(int x, int y) const {
 
 void worldgen::World::putObject(Layer layer, int x, int y, TileId tile, double height) {
 	set(layer, x, y, tile);
-	m_walk[index(x, y)] = 0;
+	setWalk(x, y, 0);
 	take(x, y);
 	m_objects[{ x, y }] = height;
 }
@@ -426,7 +480,7 @@ void worldgen::World::decorate(const Village& v) {
 				const auto y = cy - 1 + r;
 				if (fountain) {
 					set(Layer::Middle, x, y, AnimatedTile(static_cast<Animated>(static_cast<int>(Animated::Fountain00) + c * 2 + r)));
-					m_walk[index(x, y)] = 0;
+					setWalk(x, y, 0);
 					take(x, y);
 					m_objects[{ x, y }] = 0.4;
 				} else {
@@ -454,7 +508,7 @@ void worldgen::World::decorate(const Village& v) {
 				const auto post = m_tiles.cell(K({ S("lamp"), I(1) }), false);
 				set(Layer::Top, lx, ly - 1, AnimatedTile(Animated::LampHead));
 				set(Layer::Middle, lx, ly, post);
-				m_walk[index(lx, ly)] = 0;
+				setWalk(lx, ly, 0);
 				take(lx, ly);
 				m_objects[{ lx, ly }] = 0.6;
 				lamps.push_back({ lx, ly });
@@ -486,7 +540,7 @@ void worldgen::World::decorate(const Village& v) {
 			const auto my = b.y0 + b.h;
 			if (decoOk(mx, my)) {
 				set(Layer::Middle, mx, my, m_tiles.cell(K({ S("mailbox") }), false));
-				m_walk[index(mx, my)] = 0;
+				setWalk(mx, my, 0);
 				take(mx, my);
 			}
 			if (decoOk(b.x0 + b.door - 1, my)) {
@@ -501,7 +555,7 @@ void worldgen::World::decorate(const Village& v) {
 			for (auto y = b.y0 + 1; y < b.y0 + b.h; y++) {
 				if (decoOk(side, y)) {
 					set(Layer::Middle, side, y, m_tiles.cell(K({ S("bush") }), false));
-					m_walk[index(side, y)] = 0;
+					setWalk(side, y, 0);
 					take(side, y);
 					m_objects[{ side, y }] = 0.5;
 				}
@@ -528,12 +582,12 @@ void worldgen::World::decorate(const Village& v) {
 		for (auto k = 0; k < 6; k++) {
 			const auto kind = k == 0 ? S("tl") : k == 5 ? S("tr") : None;
 			set(Layer::Middle, gx + k, gy, m_tiles.cell(K({ S("fence"), kind }), false));
-			m_walk[index(gx + k, gy)] = 0;
+			setWalk(gx + k, gy, 0);
 		}
 		for (const auto j : { 1, 2 }) {
 			for (const auto k : { 0, 5 }) {
 				set(Layer::Middle, gx + k, gy + j, m_tiles.cell(K({ S("fence"), S("v") }), false));
-				m_walk[index(gx + k, gy + j)] = 0;
+				setWalk(gx + k, gy + j, 0);
 			}
 			for (auto k = 1; k < 5; k++) {
 				set(Layer::Middle, gx + k, gy + j, m_tiles.cell(K({ S("crops") }), true));
@@ -684,7 +738,7 @@ bool worldgen::World::treeAt(int x, int y, const std::string& style) {
 			}
 			take(cx, cy);
 			m_objects[{ cx, cy }] = 1.6;
-			m_walk[index(cx, cy)] = 0;
+			setWalk(cx, cy, 0);
 		}
 	}
 	return true;
@@ -711,9 +765,10 @@ void worldgen::World::placeNature() {
 	// Forests : packed, every 2 blocks, the rows shifted by one (a wall of trees), their edges a bit ragged ; groves :
 	// small packed clumps ; a few lone trees. The broadleaf trees (3 wide), then the others (2 wide)
 	for (const auto& [wide, step] : { std::pair<bool, int>{ true, 3 }, { false, 2 } }) {
-		for (auto y = 2; y < height() - 2; y += step) {
-			for (auto x0 = 0; x0 < width() - step; x0 += step) {
-				const auto x = x0 + (y / step) % step;
+		// (the lattice on the blocks of the world : a window from anywhere has the same trees)
+		for (auto y = m_y0 + 2 + FloorModulo(-m_y0, step); y < m_y0 + height() - 2; y += step) {
+			for (auto x0 = m_x0 + FloorModulo(-m_x0, step); x0 < m_x0 + width() - step; x0 += step) {
+				const auto x = x0 + FloorModulo(FloorDivide(y, step), step);
 				if (m_terrain.inTown(x, y, 4) || (treeStyle(x, y) == "round") != wide) {
 					continue;
 				}
@@ -729,8 +784,8 @@ void worldgen::World::placeNature() {
 			}
 		}
 	}
-	for (auto y = 0; y < height(); y++) {
-		for (auto x = 0; x < width(); x++) {
+	for (auto y = m_y0; y < m_y0 + height(); y++) {
+		for (auto x = m_x0; x < m_x0 + width(); x++) {
 			if (!freeCell(x, y) || m_terrain.inTown(x, y, 2)) {
 				continue;
 			}
@@ -740,7 +795,7 @@ void worldgen::World::placeNature() {
 				set(Layer::Middle, x, y, AnimatedTile(Animated::Tall));
 			} else if (H01(x, y, m_seed + 21) < p.boulder) {
 				set(Layer::Middle, x, y, m_tiles.cell(K({ S("boulder") }), false));
-				m_walk[index(x, y)] = 0;
+				setWalk(x, y, 0);
 				m_objects[{ x, y }] = 0.4;
 			}
 		}
@@ -835,7 +890,7 @@ void worldgen::World::placeSigns() {
 			for (const auto& [sx, sy] : { Block{ x + ax, y + ay }, Block{ x - ax, y - ay }, Block{ x + ax * 2, y + ay * 2 }, Block{ x - ax * 2, y - ay * 2 } }) {
 				if (inMap(sx, sy) && !taken(sx, sy) && walk(sx, sy) && tile(Layer::Middle, sx, sy) == NoTile && m_terrain.flat(sx, sy)) {
 					set(Layer::Middle, sx, sy, m_tiles.cell(K({ S("sign") }), false));
-					m_walk[index(sx, sy)] = 0;
+					setWalk(sx, sy, 0);
 					take(sx, sy);
 					m_objects[{ sx, sy }] = 0.4;
 					addEvent(sx, sy, "1 Levels/sign.miniska, " + v.name + "¤" + StyleOf(v.biome).line);
@@ -847,6 +902,45 @@ void worldgen::World::placeSigns() {
 }
 
 std::vector<char> worldgen::World::reachable() const {
+	if (m_region) {
+		// The walkable patches of the window of ReachSize blocks or more, or cut by its edges (infinite.py)
+		constexpr auto ReachSize = std::size_t{ 150 };
+		auto seen = std::vector<char>(static_cast<std::size_t>(width()) * static_cast<std::size_t>(height()), 0);
+		auto reach = seen;
+		auto front = std::vector<Block>{};
+		for (auto y0 = m_y0; y0 < m_y0 + height(); y0++) {
+			for (auto x0 = m_x0; x0 < m_x0 + width(); x0++) {
+				if (seen[index(x0, y0)] || !walk(x0, y0)) {
+					continue;
+				}
+				auto patch = std::vector<Block>{ { x0, y0 } };
+				front.assign(1, Block{ x0, y0 });
+				auto edge = false;
+				seen[index(x0, y0)] = 1;
+				while (!front.empty()) {
+					const auto [x, y] = front.back();
+					front.pop_back();
+					for (auto k = 0u; k < 4; k++) {
+						const auto nx = x + D8[k][0];
+						const auto ny = y + D8[k][1];
+						if (!inMap(nx, ny)) {
+							edge = true;
+						} else if (!seen[index(nx, ny)] && walk(nx, ny)) {
+							seen[index(nx, ny)] = 1;
+							patch.push_back({ nx, ny });
+							front.push_back({ nx, ny });
+						}
+					}
+				}
+				if (edge || patch.size() >= ReachSize) {
+					for (const auto& [x, y] : patch) {
+						reach[index(x, y)] = 1;
+					}
+				}
+			}
+		}
+		return reach;
+	}
 	auto seen = std::vector<char>(static_cast<std::size_t>(width() * height()), 0);
 	const auto start = Block{ m_terrain.plan().town().first, m_terrain.plan().town().second + 1 };
 	seen[index(start.first, start.second)] = 1;
@@ -869,8 +963,8 @@ std::vector<char> worldgen::World::reachable() const {
 void worldgen::World::placeItems() {
 	const auto reach = reachable();
 	const auto& nearRoute = m_terrain.nearRoute();
-	for (auto cy = 0; cy < height() / Chunk; cy++) {
-		for (auto cx = 0; cx < width() / Chunk; cx++) {
+	for (const auto& [cx, cy] : m_chunks) {
+		{
 			auto cands = std::vector<std::tuple<double, int, int>>{};
 			for (auto y = cy * Chunk + 3; y < cy * Chunk + Chunk - 3; y++) {
 				for (auto x = cx * Chunk + 3; x < cx * Chunk + Chunk - 3; x++) {
@@ -937,13 +1031,21 @@ void worldgen::World::placeRooms(const std::vector<RoomTemplate>& templates) {
 	for (auto i = 0; i < static_cast<int>(buildings.size()); i++) {
 		const auto& building = buildings[static_cast<std::size_t>(i)];
 		const auto& kind = building.kind;
+		const auto doorX = building.x0 + building.door;
+		const auto doorY = building.y0 + building.doorRow;
+		// A region : the rooms of its doors, named by them, their template and furniture from them (infinite.py)
+		if (m_region && !(m_regionX0 <= doorX && doorX < m_regionX0 + m_regionSize && m_regionY0 <= doorY && doorY < m_regionY0 + m_regionSize)) {
+			continue;
+		}
 		auto choices = std::vector<const RoomTemplate*>{};
 		for (const auto& t : templates) {
 			if (t.name.rfind(kind + "_", 0) == 0) {
 				choices.push_back(&t);
 			}
 		}
-		const auto& chosen = *choices[static_cast<std::size_t>(H01(i, m_seed, 31) * static_cast<double>(choices.size()))];
+		const auto pick = m_region ? H01(doorX, doorY, m_seed + 31) : H01(i, m_seed, 31);
+		const auto& chosen = *choices[static_cast<std::size_t>(pick * static_cast<double>(choices.size()))];
+		const auto furniture = m_region ? static_cast<std::int64_t>(H01(doorX, doorY, m_seed + 32) * 1e6) : m_seed + i;
 		const auto& rows = chosen.rows;
 		const auto rw = static_cast<int>(rows[0].size());
 		const auto rh = static_cast<int>(rows.size());
@@ -989,7 +1091,7 @@ void worldgen::World::placeRooms(const std::vector<RoomTemplate>& templates) {
 			}
 		}
 		static const std::array<std::string, 3> blankets{ "roofb", "roofr", "roofg" };
-		const auto blanket = blankets[static_cast<std::size_t>(H01(m_seed + i, 1, 7) * 3)];
+		const auto blanket = blankets[static_cast<std::size_t>(H01(furniture, 1, 7) * 3)];
 		auto counter = std::vector<Block>{};
 		for (const auto c : std::string{ "BTcPSKC" }) {
 			for (const auto& [x0, y0, cw, ch] : Rects(rows, c)) {
@@ -1055,10 +1157,8 @@ void worldgen::World::placeRooms(const std::vector<RoomTemplate>& templates) {
 			}
 			room.rows.push_back(line);
 		}
-		room.name = "w_room_" + std::to_string(i);
+		room.name = m_region ? "w_room_" + std::to_string(doorX) + "_" + std::to_string(doorY) : "w_room_" + std::to_string(i);
 		room.templateName = chosen.name;
-		const auto doorX = building.x0 + building.door;
-		const auto doorY = building.y0 + building.doorRow;
 		const auto cx = doorX / Chunk;
 		const auto cy = doorY / Chunk;
 		const auto lx = doorX - cx * Chunk;

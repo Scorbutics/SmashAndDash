@@ -82,8 +82,10 @@ def keys():
         out.append((("fence", kind), False))
     for colour in w.FLOWERBED_COLOURS:
         out.append((("flowerpot", colour), False))
-    for kind in ("bench", "bin", "mailbox", "barrel", "bush", "well", "lily", "boulder", "log seat", "sign"):
+    for kind in ("bench", "bin", "mailbox", "barrel", "bush", "well", "lily", "boulder", "log seat", "sign", "reef"):
         out.append(((kind,), False))
+    for v in range(3):
+        out.append((("deep", v), True))
     out.append((("crops",), True))
     for kind in ("house", "center", "rest"):
         out.append((("room floor", kind), True))

@@ -116,6 +116,9 @@ void SaveSlots::WorldGenerated(const std::string& name, std::int64_t seed, const
 	auto reader = ska::IniReader{ Trainer(name) };
 	reader.set("World seed", static_cast<long long>(seed));
 	const auto fresh = reader.exists("World generate") && reader.get<bool>("World generate");
+	// A finite world before (WorldVersion 10 and older) : the infinite world is another world, the trainer at its start
+	const auto before = reader.exists("World version") ? reader.get<int>("World version") : 1;
+	const auto other = before < worldgen::InfiniteWorldVersion;
 	reader.set("World directory", WorldPath(name));
 	reader.set("World generate", false);
 	reader.set("World version", worldgen::WorldVersion);
@@ -128,7 +131,7 @@ void SaveSlots::WorldGenerated(const std::string& name, std::int64_t seed, const
 	}
 	// The entities of the chunks were of the world before
 	std::remove((SaveDirectory() + name + "/Chunks.txt").c_str());
-	if (fresh) { // a world generated again (the same seed, the same world) : the trainer stays where it was
+	if (fresh || other) { // a world generated again (the same seed, the same world) : the trainer stays where it was
 		reader.set("Trainer start_map_name", start.map);
 		reader.set("Trainer start_posx", start.x);
 		reader.set("Trainer start_posy", start.y);

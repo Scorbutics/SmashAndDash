@@ -23,6 +23,12 @@ namespace {
 		return spawns[static_cast<std::size_t>(biome)];
 	}
 
+	// The chunks mostly sea (the infinite world : SPAWNS "ocean") : on their islands and sand bars
+	const std::vector<Spawn>& OceanSpawns() {
+		static const std::vector<Spawn> spawns{ { 7, 4, 8, 1, 70 }, { 16, 4, 8, 2, 60 } };
+		return spawns;
+	}
+
 	void WriteText(const fs::path& path, const std::string& text) {
 		auto file = std::ofstream{ path, std::ios::binary | std::ios::trunc };
 		if (!file) {
@@ -110,6 +116,9 @@ namespace {
 		const auto colour = [&corr](const Block& cell) { return corr.at(cell.first, cell.second); };
 		const auto name = "w_" + std::to_string(cx) + "_" + std::to_string(cy);
 		const auto map = root / name;
+		if (fs::exists(map)) { // a region written again
+			fs::remove_all(map);
+		}
 		fs::create_directories(map / "Monsters");
 		const auto chip = Chipset{ images, ChunkTiles(world, cx, cy) };
 		SaveChipset(chip, chips, "chipset_" + name, tileScripts);
@@ -138,7 +147,7 @@ namespace {
 		WriteFile((map / (name + "L.png")).string(), EncodePng(light));
 		WriteText(map / (name + ".ini"), MapIniText(chipPath + "/chipset_" + name + ".png"));
 		WriteText(map / (name + "E.txt"), EventsText(world.chunkEvents(cx, cy)));
-		const auto& spawns = SpawnsOf(plan.climate().chunkBiome(cx, cy));
+		const auto& spawns = plan.seaChunk(cx, cy) ? OceanSpawns() : SpawnsOf(plan.chunkBiome(cx, cy));
 		for (auto i = 0u; i < spawns.size(); i++) {
 			const auto& s = spawns[i];
 			WriteText(map / "Monsters" / (std::to_string(i) + ".ini"), "[Data]\nid=" + std::to_string(s.id) + "\nlevel_min=" + std::to_string(s.levelMin)
@@ -148,16 +157,19 @@ namespace {
 		WriteText(map / "scripts.data", "");
 	}
 
-	// The rooms : one chipset for all (chipset_rooms)
+	// The rooms : one chipset for all (chipset_rooms ; a region of the infinite world : chipset_rooms_<rx>_<ry>)
 	void WriteRooms(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts, const fs::path& root,
-		const std::string& worldPath) {
+		const std::string& worldPath, const std::string& chipset = "chipset_rooms") {
 		const auto chipPath = worldPath + "Chipsets";
 		const auto colour = [&corr](const Block& cell) { return corr.at(cell.first, cell.second); };
 		const auto roomChip = Chipset{ images, RoomTiles(world) };
-		SaveChipset(roomChip, root / "Chipsets", "chipset_rooms", tileScripts);
+		SaveChipset(roomChip, root / "Chipsets", chipset, tileScripts);
 		const auto meadow = PureMix(Biome::Meadow);
 		for (const auto& room : world.rooms()) {
 			const auto map = root / room.name;
+			if (fs::exists(map)) {
+				fs::remove_all(map);
+			}
 			fs::create_directories(map);
 			const std::pair<const std::vector<TileId>*, const char*> layers[] = { { &room.base, "" }, { &room.middle, "M" }, { nullptr, "T" } };
 			for (const auto& [grid, suffix] : layers) {
@@ -175,7 +187,7 @@ namespace {
 				WriteFile((map / (room.name + suffix + ".bmp")).string(), EncodeBmp(image));
 			}
 			WriteFile((map / (room.name + "L.png")).string(), EncodePng(RoomLight(room)));
-			WriteText(map / (room.name + ".ini"), MapIniText(chipPath + "/chipset_rooms.png"));
+			WriteText(map / (room.name + ".ini"), MapIniText(chipPath + "/" + chipset + ".png"));
 			WriteText(map / (room.name + "E.txt"), EventsText(room.events));
 			WriteText(map / "scripts.data", "");
 		}
@@ -186,12 +198,22 @@ void worldgen::WriteWorld(const World& world, TileImages& images, const RgbImage
 	const std::string& folder, const std::string& worldPath) {
 	const auto root = fs::path{ folder };
 	PrepareFolder(root);
-	for (auto cy = 0; cy < world.height() / Chunk; cy++) {
-		for (auto cx = 0; cx < world.width() / Chunk; cx++) {
-			WriteChunk(world, images, corr, tileScripts, root, worldPath, cx, cy);
-		}
+	for (const auto& [cx, cy] : world.chunks()) {
+		WriteChunk(world, images, corr, tileScripts, root, worldPath, cx, cy);
 	}
 	WriteRooms(world, images, corr, tileScripts, root, worldPath);
+}
+
+void worldgen::WriteRegionChunk(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
+	const std::string& folder, const std::string& worldPath, int cx, int cy) {
+	fs::create_directories(fs::path{ folder } / "Chipsets");
+	WriteChunk(world, images, corr, tileScripts, folder, worldPath, cx, cy);
+}
+
+void worldgen::WriteRegionRooms(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
+	const std::string& folder, const std::string& worldPath, const std::string& chipset) {
+	fs::create_directories(fs::path{ folder } / "Chipsets");
+	WriteRooms(world, images, corr, tileScripts, folder, worldPath, chipset);
 }
 
 worldgen::Start worldgen::StartOf(const WorldPlan& plan) {

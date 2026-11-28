@@ -20,8 +20,10 @@ namespace worldgen {
 	// front leaves, the tall grass flagged in the chipsets (the legs of the characters in it are not drawn) ; 7 : no tree
 	// canopy over the top of another tree ; 8 : the canopies and the boulders flagged (hideouts) ; 9 : the collision masks of
 	// the tiles (.png.mask : the walls are the solid parts of the tiles, not their whole blocks) ; 10 : the maps of the
-	// outdoors played as one (no teleport on their edges, the items placed on their blocks of the world)
-	constexpr int WorldVersion = 10;
+	// outdoors played as one (no teleport on their edges, the items placed on their blocks of the world) ; 11 : the infinite
+	// world (InfiniteFiles.h : its chunks written as the player comes near them)
+	constexpr int WorldVersion = 11;
+	constexpr int InfiniteWorldVersion = 11;
 
 	// Where the player starts : the block below the centre of the first village
 	struct Start {
@@ -36,6 +38,13 @@ namespace worldgen {
 	// Writes the world in folder (replaced) ; worldPath : the folder as the maps name it (the "file" of their chipset)
 	void WriteWorld(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
 		const std::string& folder, const std::string& worldPath);
+
+	// A chunk of a region of the infinite world (Region.h), its rooms (their chipset : chipset_rooms_<rx>_<ry>), written in
+	// folder (kept : the other regions are there)
+	void WriteRegionChunk(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
+		const std::string& folder, const std::string& worldPath, int cx, int cy);
+	void WriteRegionRooms(const World& world, TileImages& images, const RgbImage& corr, const std::string& tileScripts,
+		const std::string& folder, const std::string& worldPath, const std::string& chipset);
 
 	Start StartOf(const WorldPlan& plan);
 

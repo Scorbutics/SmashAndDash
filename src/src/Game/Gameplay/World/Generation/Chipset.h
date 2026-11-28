@@ -68,6 +68,8 @@ namespace worldgen {
 		const std::vector<TileImage>& frames(TileId tile, const Mix& mix);
 		bool walkable(TileId tile) const { return IsAnimated(tile) ? AnimatedWalkable(AnimatedOf(tile)) : m_tiles.walkable(tile); }
 		std::string key(TileId tile) const { return IsAnimated(tile) ? AnimatedName(AnimatedOf(tile)) : m_tiles.key(tile); }
+		// The order of the tiles in a chipset (Tiles::sortName)
+		std::string sortName(TileId tile) const { return m_tiles.sortName(tile); }
 		int base(TileId tile) const { return m_atlas.base(key(tile)); }
 		int flags(TileId tile) const { return m_atlas.flags(key(tile)); }
 		// Walked on : no solid part

@@ -6,7 +6,8 @@
 #include "Core/Draw/Renderer.h"
 #include "../../Utils/IDs.h"
 #include "../Data/SaveSlots.h"
-#include "../World/Generation/Files.h"
+#include "../World/Generation/InfiniteFiles.h"
+#include "../World/Chunks/ChunkGenerator.h"
 
 namespace {
 	const ska::Color Soft{ 92, 98, 118, 255 };
@@ -99,7 +100,7 @@ void StateTitle::play(const std::string& save) {
 	m_framesShown = 0;
 	if (seed) {
 		m_seed = *seed;
-		m_writer = std::make_unique<worldgen::WorldWriter>(*seed, SaveSlots::WorldPath(save), SaveSlots::WorldPath(save));
+		m_writer = std::make_unique<worldgen::InfiniteWorldWriter>(*seed, SaveSlots::WorldPath(save), SaveSlots::WorldPath(save));
 		SLOG(ska::LogLevel::Info) << "Title : the world of " << save << " (seed " << *seed << ") is generated";
 	}
 }
@@ -115,6 +116,8 @@ void StateTitle::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 			}
 			if (m_writer != nullptr) {
 				SaveSlots::WorldGenerated(m_save, m_seed, m_writer->start());
+				// The game writes the chunks further, from the region planned here
+				chunks::HandOver(m_writer->release());
 				SLOG(ska::LogLevel::Info) << "Title : the world of " << m_save << " is generated";
 			}
 			m_mode = Mode::Started;

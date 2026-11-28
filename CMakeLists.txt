@@ -53,3 +53,7 @@ add_subdirectory(src)
 # Shaders (src/shaders/*.frag), compiled for the renderer in Shaders/ : loaded as "./Shaders/<name>"
 file(GLOB SAD_SHADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.frag)
 ska_compile_shaders(smash_and_dash_shaders OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/Shaders SOURCES ${SAD_SHADERS})
+if(EMSCRIPTEN)
+	# Packed in the page (src/CMakeLists.txt ASSETS) : made before it
+	add_dependencies(smash_and_dash_web smash_and_dash_shaders)
+endif()

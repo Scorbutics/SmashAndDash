@@ -33,13 +33,14 @@ namespace {
 
 	constexpr std::array<std::array<int, 2>, 8> D8{ { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } } };
 
-	std::string NameForm(std::size_t form, const std::string& word) {
-		switch (form) {
-		case 0: return "Bourg-" + word;
-		case 1: return word + "ville";
-		case 2: return "Village " + word;
-		default: return "Hameau " + word;
-		}
+}
+
+std::string worldgen::NameForm(std::size_t form, const std::string& word) {
+	switch (form) {
+	case 0: return "Bourg-" + word;
+	case 1: return word + "ville";
+	case 2: return "Village " + word;
+	default: return "Hameau " + word;
 	}
 }
 
@@ -278,7 +279,9 @@ std::map<worldgen::Block, int> worldgen::DistanceTo(const Blocks& cells, int lim
 
 worldgen::WorldPlan::WorldPlan(std::int64_t seed, int chunksX, int chunksY) :
 	m_seed(seed),
-	m_climate(seed, chunksX, chunksY) {
+	m_climate(std::in_place, seed, chunksX, chunksY),
+	m_width(chunksX * Chunk),
+	m_height(chunksY * Chunk) {
 	m_town = villageSite();
 	planVillages();
 	auto all = Blocks{};
@@ -290,8 +293,8 @@ worldgen::WorldPlan::WorldPlan(std::int64_t seed, int chunksX, int chunksY) :
 }
 
 worldgen::Block worldgen::WorldPlan::villageSite() const {
-	const auto W = m_climate.width();
-	const auto H = m_climate.height();
+	const auto W = m_climate->width();
+	const auto H = m_climate->height();
 	const auto cx = W / 2;
 	const auto cy = H / 2;
 	auto best = Block{ cx / Chunk * Chunk + Chunk / 2, cy / Chunk * Chunk + Chunk / 2 };
@@ -299,18 +302,18 @@ worldgen::Block worldgen::WorldPlan::villageSite() const {
 	auto bestScore = 0.0;
 	for (auto y = 25; y < H - 25; y += 2) {
 		for (auto x = 25; x < W - 25; x += 2) {
-			if (std::abs(x % Chunk - Chunk / 2) > 6 || std::abs(y % Chunk - Chunk / 2) > 6 || m_climate.rawHeight(x, y) < 0.45) {
+			if (std::abs(x % Chunk - Chunk / 2) > 6 || std::abs(y % Chunk - Chunk / 2) > 6 || m_climate->rawHeight(x, y) < 0.45) {
 				continue;
 			}
 			auto meadow = 0;
 			auto count = 0;
 			for (auto dx = -20; dx < 21; dx += 4) {
 				for (auto dy = -18; dy < 19; dy += 4) {
-					meadow += m_climate.label(x + dx, y + dy) == Biome::Meadow ? 1 : 0;
+					meadow += m_climate->label(x + dx, y + dy) == Biome::Meadow ? 1 : 0;
 					count++;
 				}
 			}
-			const auto score = static_cast<double>(meadow) / static_cast<double>(count) - Hypot(x - cx, y - cy) / (W + H) - 2 * m_climate.relief(x, y);
+			const auto score = static_cast<double>(meadow) / static_cast<double>(count) - Hypot(x - cx, y - cy) / (W + H) - 2 * m_climate->relief(x, y);
 			if (!hasBest || score > bestScore) {
 				best = Block{ x, y };
 				bestScore = score;
@@ -321,9 +324,17 @@ worldgen::Block worldgen::WorldPlan::villageSite() const {
 	return best;
 }
 
+worldgen::Biome worldgen::WorldPlan::chunkBiome(int cx, int cy) const {
+	if (m_climate) {
+		return m_climate->chunkBiome(cx, cy);
+	}
+	const auto found = m_chunkBiomes.find({ cx, cy });
+	return found == m_chunkBiomes.end() ? Biome::Meadow : found->second;
+}
+
 void worldgen::WorldPlan::planVillages() {
-	const auto W = m_climate.width();
-	const auto H = m_climate.height();
+	const auto W = m_climate->width();
+	const auto H = m_climate->height();
 	auto sites = std::vector<std::pair<Block, Biome>>{ { m_town, Biome::Meadow } };
 	for (const auto biome : { Biome::Desert, Biome::Snow, Biome::Autumn, Biome::Meadow, Biome::Desert, Biome::Snow, Biome::Autumn }) {
 		auto best = Block{};
@@ -336,7 +347,7 @@ void worldgen::WorldPlan::planVillages() {
 						if (!(25 <= x && x < W - 25 && 25 <= y && y < H - 25)) {
 							continue;
 						}
-						if (m_climate.relief(x, y) > 0.55 || m_climate.rawHeight(x, y) < 0.45) {
+						if (m_climate->relief(x, y) > 0.55 || m_climate->rawHeight(x, y) < 0.45) {
 							continue;
 						}
 						if (std::any_of(sites.begin(), sites.end(), [x, y](const auto& site) { return Hypot(x - site.first.first, y - site.first.second) < VillageSpacing; })) {
@@ -346,7 +357,7 @@ void worldgen::WorldPlan::planVillages() {
 						auto count = 0;
 						for (auto dx = -20; dx < 21; dx += 5) {
 							for (auto dy = -18; dy < 19; dy += 6) {
-								inside += m_climate.label(x + dx, y + dy) == biome ? 1 : 0;
+								inside += m_climate->label(x + dx, y + dy) == biome ? 1 : 0;
 								count++;
 							}
 						}
@@ -354,7 +365,7 @@ void worldgen::WorldPlan::planVillages() {
 						if (share < 0.7) {
 							continue;
 						}
-						const auto score = share - m_climate.relief(x, y) + 0.05 * H01(x, y, m_seed + 7);
+						const auto score = share - m_climate->relief(x, y) + 0.05 * H01(x, y, m_seed + 7);
 						if (!hasBest || score > bestScore) {
 							best = Block{ x, y };
 							bestScore = score;
@@ -397,13 +408,13 @@ void worldgen::WorldPlan::planVillages() {
 }
 
 void worldgen::WorldPlan::biomeField() {
-	const auto W = m_climate.width();
-	const auto H = m_climate.height();
+	const auto W = m_climate->width();
+	const auto H = m_climate->height();
 	auto label = std::vector<Biome>(static_cast<std::size_t>(W * H));
 	for (auto y = 0; y < H; y++) {
 		for (auto x = 0; x < W; x++) {
 			const auto found = m_villageBiome.find({ x, y });
-			label[index(x, y)] = found != m_villageBiome.end() ? found->second : m_climate.label(x, y);
+			label[index(x, y)] = found != m_villageBiome.end() ? found->second : m_climate->label(x, y);
 		}
 	}
 	const auto r = 5;

@@ -433,6 +433,31 @@ def boulder():
     return s.render()
 
 
+def reef():
+    """A reef : rocks out of the sea, foam around them (over the water)."""
+    s = Scene(N, N)
+    s.ellipsoid(8, 10, 6.5, 3.5, "white", 0.0)
+    for y in range(N):
+        for x in range(N):
+            if s.mat[y][x] and (x - 8) ** 2 / 20 + (y - 10) ** 2 / 6 < 1:
+                s.mat[y][x] = None
+    s.ellipsoid(7, 8, 4.5, 4.0, "stone", 4.0, 0.5)
+    s.ellipsoid(11.5, 10, 2.6, 2.2, "stone", 2.5, 0.5)
+    return s.render()
+
+
+def deep(v=0):
+    """The deep water : darker strokes of waves (over the water), 3 variants."""
+    s = Scene(N, N)
+    strokes = (((4, 3, 3.0), (11, 6, 3.4), (5, 9, 3.2), (12, 13, 2.6)), ((10, 2, 2.6), (4, 7, 3.4), (11, 10, 3.0), (6, 14, 2.2)),
+               ((3, 2, 1.8), (9, 5, 3.4), (4, 10, 2.4), (12, 12, 3.2)))
+    for cx, cy, r in strokes[v]:
+        for x in range(int(cx - r), int(cx + r) + 1):
+            if 0 <= x < N:
+                s.put(x, cy, "water", 0.0, 0, 0)
+    return s.render()
+
+
 def sign():
     s = Scene(N, N)
     s.box(7, 9, 9, 15, "wood", 0, None)
@@ -1270,8 +1295,9 @@ def _painted_or(name):
 
 
 # The objects, the posts, the animated tiles (tools/render3d scenes/tiles_objects.js)
-for _name in ("bench", "mailbox", "barrel", "bush", "well", "lily", "boulder", "log_seat", "sign", "crops"):
+for _name in ("bench", "mailbox", "barrel", "bush", "well", "lily", "boulder", "log_seat", "sign", "crops", "reef"):
     globals()[_name] = _painted_or(lambda n=_name: f"obj_{n}")(globals()[_name])
+deep = _painted_or(lambda v=0: f"obj_deep_{v}")(deep)
 bin_ = _painted_or(lambda: "obj_bin")(bin_)
 lamp = _painted_or(lambda: "lamp")(lamp)
 lamp_head = _painted_or(lambda f: f"lamphead_{f}")(lamp_head)

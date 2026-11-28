@@ -35,13 +35,19 @@ namespace worldgen {
 	// The tiles of a world : an id per key and walkability, in the order they are first used
 	class Tiles {
 	public:
+		// Stable : the tiles of a region of the infinite world, their order in a chipset by their keys (infinite.py
+		// StableTiles), not by their ids (the order they were first used in : another window, other ids)
+		explicit Tiles(bool stable = false) : m_stable(stable) {}
 		TileId cell(const std::string& key, bool walkable);
+		// The text a chipset sorts the tile by (the str of its Python id)
+		std::string sortName(TileId tile) const;
 		std::size_t size() const { return m_keys.size(); }
 		const std::string& key(TileId tile) const { return m_keys[static_cast<std::size_t>(tile)].first; }
 		bool walkable(TileId tile) const { return m_keys[static_cast<std::size_t>(tile)].second; }
 	private:
 		std::map<std::pair<std::string, bool>, TileId> m_ids;
 		std::vector<std::pair<std::string, bool>> m_keys;
+		bool m_stable = false;
 	};
 
 	// Which tiles of a drawn structure are not empty
@@ -85,15 +91,33 @@ namespace worldgen {
 
 	enum class Layer : std::size_t { Base = 0, Middle = 1, Top = 2 };
 
+	// A region of the infinite world built as a world (infinite.py RegionWorld) : the blocks built (a window around the
+	// region, inside the blocks of its terrain), its chunks (written, their items placed), the region (the rooms of the
+	// buildings whose door is in it, named by their door)
+	struct RegionOptions {
+		int x0 = 0, y0 = 0, width = 0, height = 0;
+		std::vector<std::pair<int, int>> chunks;
+		int regionX0 = 0, regionY0 = 0, regionSize = 0;
+		// The sea of the blocks built, by rows : SeaNone, SeaReef (a rock out of the water), SeaDeep (darker waves)
+		std::vector<std::uint8_t> sea;
+		static constexpr std::uint8_t SeaNone = 0, SeaReef = 1, SeaDeep = 2;
+	};
+
 	class World {
 	public:
-		World(const Terrain& terrain, const Shapes& shapes, const std::vector<RoomTemplate>& rooms);
+		World(const Terrain& terrain, const Shapes& shapes, const std::vector<RoomTemplate>& rooms, const RegionOptions* region = nullptr);
 
 		const Terrain& terrain() const { return m_terrain; }
-		int width() const { return m_terrain.width(); }
-		int height() const { return m_terrain.height(); }
-		TileId tile(Layer layer, int x, int y) const { return m_layers[static_cast<std::size_t>(layer)][index(x, y)]; }
-		bool walk(int x, int y) const { return m_walk[index(x, y)] != 0; }
+		// The blocks built : the world, or the window of a region
+		int x0() const { return m_x0; }
+		int y0() const { return m_y0; }
+		int width() const { return m_width; }
+		int height() const { return m_height; }
+		// The chunks written
+		const std::vector<std::pair<int, int>>& chunks() const { return m_chunks; }
+		bool region() const { return m_region; }
+		TileId tile(Layer layer, int x, int y) const { return inMap(x, y) ? m_layers[static_cast<std::size_t>(layer)][index(x, y)] : NoTile; }
+		bool walk(int x, int y) const { return inMap(x, y) && m_walk[index(x, y)] != 0; }
 		const Tiles& tiles() const { return m_tiles; }
 		const Blocks& taken() const { return m_taken; }
 		// The height of what stands on a block (the light)
@@ -106,8 +130,14 @@ namespace worldgen {
 		std::array<std::uint8_t, 3> cornerLight(int i, int j) const;
 
 	private:
-		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y) * static_cast<std::size_t>(width()) + static_cast<std::size_t>(x); }
-		bool inMap(int x, int y) const { return 0 <= x && x < width() && 0 <= y && y < height(); }
+		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y - m_y0) * static_cast<std::size_t>(m_width) + static_cast<std::size_t>(x - m_x0); }
+		bool inMap(int x, int y) const { return m_x0 <= x && x < m_x0 + m_width && m_y0 <= y && y < m_y0 + m_height; }
+		// Off the blocks built : lost (a village or a tree cut by the edge of the window)
+		void setWalk(int x, int y, bool walk) {
+			if (inMap(x, y)) {
+				m_walk[index(x, y)] = walk ? 1 : 0;
+			}
+		}
 		Ground mat(int x, int y) const { return m_terrain.ground(x, y); }
 		int level(int x, int y) const { return m_terrain.level(x, y); }
 		void set(Layer layer, int x, int y, TileId tile);
@@ -118,6 +148,7 @@ namespace worldgen {
 		double weight(int x, int y, Biome biome) const { return m_terrain.plan().weight(x, y, biome); }
 
 		void build();
+		void placeSea();
 		void stamp(const std::string& name, int x0, int y0, std::optional<std::pair<int, int>> door);
 		void placeTown();
 		bool decoOk(int x, int y) const;
@@ -139,6 +170,11 @@ namespace worldgen {
 		const Terrain& m_terrain;
 		const Shapes& m_shapes;
 		std::int64_t m_seed;
+		int m_x0 = 0, m_y0 = 0, m_width = 0, m_height = 0;
+		std::vector<std::pair<int, int>> m_chunks;
+		bool m_region = false;
+		int m_regionX0 = 0, m_regionY0 = 0, m_regionSize = 0;
+		std::vector<std::uint8_t> m_sea;
 		std::array<std::vector<TileId>, 3> m_layers;
 		std::vector<char> m_walk;
 		Blocks m_taken;

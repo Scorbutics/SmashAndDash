@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <utility>
@@ -38,6 +39,8 @@ namespace worldgen {
 		std::string line;
 	};
 	const VillageStyle& StyleOf(Biome biome);
+	// The name of a village : a form of NAME_FORMS (0 .. 3) and a word
+	std::string NameForm(std::size_t form, const std::string& word);
 
 	struct Building {
 		std::string kind;   // "center", "house"
@@ -61,28 +64,42 @@ namespace worldgen {
 	// The distance (blocks, 4 neighbours) to the nearest of the cells, up to limit
 	std::map<Block, int> DistanceTo(const Blocks& cells, int limit);
 
-	// The plan of a world before its terrain : its climate, its villages, the biomes of its blocks blended
+	class RegionBuilder;
+
+	// The plan of a world before its terrain : its climate, its villages, the biomes of its blocks blended (a region of
+	// the infinite world : the plan of a window of its blocks, RegionBuilder, no climate)
 	class WorldPlan {
 	public:
 		WorldPlan(std::int64_t seed, int chunksX, int chunksY);
 
-		const Climate& climate() const { return m_climate; }
+		std::int64_t seed() const { return m_seed; }
+		const Climate& climate() const { return *m_climate; }
+		// The biome of a chunk (the one most of its blocks have)
+		Biome chunkBiome(int cx, int cy) const;
+		// A chunk mostly sea (the infinite world) : the wild Pokemon of the ocean
+		bool seaChunk(int cx, int cy) const { return m_seaChunks.count({ cx, cy }) > 0; }
 		Block town() const { return m_town; }
 		const std::vector<Village>& villages() const { return m_villages; }
 		const std::map<Block, int>& nearVillage() const { return m_nearVillage; }
 		// The weight of a biome on a block (0 .. 1)
 		double weight(int x, int y, Biome biome) const { return m_weights[index(x, y) * BiomeCount + static_cast<std::size_t>(biome)]; }
 		// The mix of the biomes at a corner of the blocks (i, j : 0 .. width, 0 .. height) : MixSteps shares
-		const std::array<std::uint8_t, BiomeCount>& corner(int i, int j) const { return m_corners[static_cast<std::size_t>(j) * static_cast<std::size_t>(m_climate.width() + 1) + static_cast<std::size_t>(i)]; }
+		const std::array<std::uint8_t, BiomeCount>& corner(int i, int j) const { return m_corners[static_cast<std::size_t>(j - m_y0) * static_cast<std::size_t>(m_width + 1) + static_cast<std::size_t>(i - m_x0)]; }
 
 	private:
-		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y) * static_cast<std::size_t>(m_climate.width()) + static_cast<std::size_t>(x); }
+		friend class RegionBuilder;
+		explicit WorldPlan(std::int64_t seed) : m_seed(seed) {}
+		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y - m_y0) * static_cast<std::size_t>(m_width) + static_cast<std::size_t>(x - m_x0); }
 		Block villageSite() const;
 		void planVillages();
 		void biomeField();
 
 		std::int64_t m_seed;
-		Climate m_climate;
+		std::optional<Climate> m_climate;
+		// The blocks of the weights and the corners
+		int m_x0 = 0, m_y0 = 0, m_width = 0, m_height = 0;
+		std::map<std::pair<int, int>, Biome> m_chunkBiomes;
+		std::set<std::pair<int, int>> m_seaChunks;
 		Block m_town;
 		std::vector<Village> m_villages;
 		std::map<Block, int> m_nearVillage;

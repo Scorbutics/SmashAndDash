@@ -650,3 +650,310 @@ TEST_CASE("the files of a world are those of the Python generator (seed 7)") {
 	}
 	std::filesystem::remove_all(folder);
 }
+
+// ---------------------------------------------------------------- a region of the infinite world (Region.h)
+
+#include "Game/Gameplay/World/Generation/Region.h"
+
+namespace {
+	std::vector<std::vector<std::string>> InfiniteGolden() {
+		auto file = std::ifstream{ "tests/worldgen/infinite.txt" };
+		REQUIRE(file.good());
+		auto lines = std::vector<std::vector<std::string>>{};
+		auto line = std::string{};
+		while (std::getline(file, line)) {
+			auto words = std::vector<std::string>{};
+			auto stream = std::istringstream{ line };
+			auto word = std::string{};
+			while (stream >> word) {
+				words.push_back(word);
+			}
+			static const auto kinds = std::set<std::string>{ "rsea", "rwindow", "rterrain", "rvillages", "rroutes", "rroute", "rnearroute", "rnearvillage",
+				"rpoi", "rweights", "rmixes", "rchunks", "rtiles", "rlayer", "rwalk", "rtaken", "robjects", "ritems", "revents", "rlight", "rroom", "rfile" };
+			if (!words.empty() && kinds.count(words[0]) > 0) {
+				lines.push_back(std::move(words));
+			}
+		}
+		return lines;
+	}
+
+	// A grid of tiles named as a region names them (their keys : infinite.py StableTiles)
+	std::string StableGrid(const worldgen::Tiles& tiles, const std::vector<worldgen::TileId>& grid, int width) {
+		auto text = std::string{};
+		for (auto i = 0u; i < grid.size(); i++) {
+			if (i > 0) {
+				text += i % static_cast<unsigned>(width) == 0 ? ";" : ",";
+			}
+			text += tiles.sortName(grid[i]);
+		}
+		return Text(text);
+	}
+
+	std::string Triples(const std::vector<std::array<std::int32_t, 3>>& values) {
+		auto data = std::vector<unsigned char>{};
+		for (const auto& v : values) {
+			for (const auto n : v) {
+				AppendInt(data, n);
+			}
+		}
+		return std::to_string(Fnv(data));
+	}
+}
+
+namespace {
+	void CheckRegion(const std::vector<std::vector<std::string>>& golden);
+}
+
+TEST_CASE("the regions of the infinite world are the regions of infinite.py (seed 7)") {
+	const auto all = InfiniteGolden();
+	REQUIRE(!all.empty());
+	auto regions = 0;
+	for (const auto& head : all) {
+		if (head[0] != "rwindow") {
+			continue;
+		}
+		auto golden = std::vector<std::vector<std::string>>{};
+		for (const auto& words : all) {
+			if (words.size() > 3 && words[1] == head[1] && words[2] == head[2] && words[3] == head[3]) {
+				golden.push_back(words);
+			}
+		}
+		INFO("region " << head[2] << " " << head[3]);
+		CheckRegion(golden);
+		regions++;
+	}
+	CHECK(regions >= 2);
+}
+
+namespace {
+void CheckRegion(const std::vector<std::vector<std::string>>& golden) {
+	REQUIRE(golden[0][0] == "rwindow");
+	const auto seed = std::stoll(golden[0][1]);
+	const auto rx = std::stoi(golden[0][2]);
+	const auto ry = std::stoi(golden[0][3]);
+	auto infinite = worldgen::Infinite{ seed };
+	auto begin = std::chrono::steady_clock::now();
+	const auto region = worldgen::RegionBuilder{ infinite, rx, ry };
+	MESSAGE("region planned in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms");
+	const auto& plan = region.plan();
+	const auto& terrain = region.terrain();
+	const auto& o = region.options();
+	auto shapesFile = std::ifstream{ "Resources/Worldgen/shapes.txt" };
+	const auto shapes = worldgen::Shapes::Parse(shapesFile);
+	const auto templates = worldgen::LoadRoomTemplates("Resources/Worldgen/rooms");
+	begin = std::chrono::steady_clock::now();
+	const auto world = region.build(shapes, templates);
+	MESSAGE("region built in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms");
+	const auto X0 = o.x0, Y0 = o.y0, W = o.width, H = o.height;
+	auto routes = 0u;
+	auto pois = 0u;
+	auto expectedFiles = std::map<std::string, std::string>{};
+	for (const auto& words : golden) {
+		const auto& kind = words[0];
+		INFO(kind);
+		if (kind == "rwindow") {
+			CHECK(std::to_string(X0) == words[4]);
+			CHECK(std::to_string(Y0) == words[5]);
+			CHECK(std::to_string(W) == words[6]);
+			CHECK(std::to_string(terrain.x0()) == words[8]);
+			CHECK(std::to_string(terrain.y0()) == words[9]);
+			CHECK(std::to_string(terrain.width()) == words[10]);
+		} else if (kind == "rterrain") {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = terrain.y0(); y < terrain.y0() + terrain.height(); y++) {
+				for (auto x = terrain.x0(); x < terrain.x0() + terrain.width(); x++) {
+					data.push_back(static_cast<unsigned char>(terrain.cell(x, y).ground));
+					data.push_back(static_cast<unsigned char>(terrain.cell(x, y).level));
+				}
+			}
+			CHECK(std::to_string(Fnv(data)) == words[4]);
+		} else if (kind == "rvillages") {
+			auto cells = std::string{ std::to_string(region.villageCells().size()) };
+			for (const auto& [i, j] : region.villageCells()) {
+				cells += " " + std::to_string(i) + "," + std::to_string(j);
+			}
+			auto expected = std::string{};
+			for (auto k = 4u; k < words.size(); k++) {
+				expected += (k > 4 ? " " : "") + words[k];
+			}
+			CHECK(cells == expected);
+		} else if (kind == "rroutes") {
+			CHECK(Cells(terrain.routes()) == words[4]);
+			CHECK(std::to_string(terrain.routePaths().size()) == words[5]);
+		} else if (kind == "rroute") {
+			REQUIRE(routes < terrain.routePaths().size());
+			const auto& route = terrain.routePaths()[routes++];
+			CHECK(std::to_string(route.from) == words[4]);
+			CHECK(std::to_string(route.to) == words[5]);
+			CHECK(std::to_string(route.path.size()) == words[6]);
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [x, y] : route.path) {
+				AppendInt(data, x);
+				AppendInt(data, y);
+			}
+			CHECK(std::to_string(Fnv(data)) == words[7]);
+		} else if (kind == "rnearroute" || kind == "rnearvillage") {
+			const auto& near = kind == "rnearroute" ? terrain.nearRoute() : plan.nearVillage();
+			auto values = std::vector<std::array<std::int32_t, 3>>{};
+			for (const auto& [c, d] : near) {
+				values.push_back({ c.first, c.second, d });
+			}
+			CHECK(Triples(values) == words[4]);
+		} else if (kind == "rpoi") {
+			REQUIRE(pois < terrain.pois().size());
+			const auto& p = terrain.pois()[pois++];
+			CHECK(p.kind == words[4]);
+			CHECK(std::to_string(p.x) == words[5]);
+			CHECK(std::to_string(p.y) == words[6]);
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [x, y] : p.spur) {
+				AppendInt(data, x);
+				AppendInt(data, y);
+			}
+			CHECK(std::to_string(Fnv(data)) == words[9]);
+			CHECK(std::to_string(static_cast<int>(p.biome)) == words[10]);
+		} else if (kind == "rweights") {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = Y0; y < Y0 + H; y++) {
+				for (auto x = X0; x < X0 + W; x++) {
+					for (auto b = 0; b < worldgen::BiomeCount; b++) {
+						Append(data, plan.weight(x, y, static_cast<worldgen::Biome>(b)));
+					}
+				}
+			}
+			CHECK(std::to_string(Fnv(data)) == words[4]);
+		} else if (kind == "rmixes") {
+			auto data = std::vector<unsigned char>{};
+			for (auto y = Y0; y < Y0 + H; y++) {
+				for (auto x = X0; x < X0 + W; x++) {
+					for (const auto& corner : worldgen::BlockMix(plan, x, y)) {
+						data.insert(data.end(), corner.begin(), corner.end());
+					}
+				}
+			}
+			CHECK(std::to_string(Fnv(data)) == words[4]);
+		} else if (kind == "rchunks") {
+			auto text = std::string{};
+			for (const auto& [cx, cy] : o.chunks) {
+				text += std::to_string(static_cast<int>(plan.chunkBiome(cx, cy)));
+			}
+			CHECK(text == words[4]);
+		} else if (kind == "rtiles") {
+			auto keys = std::vector<std::string>{};
+			for (auto t = 0; t < static_cast<int>(world->tiles().size()); t++) {
+				keys.push_back(world->tiles().sortName(t));
+			}
+			CHECK(std::to_string(keys.size()) == words[4]);
+			CHECK(Text(Lines(keys)) == words[5]);
+		} else if (kind == "rlayer") {
+			const auto layer = words[4] == "base" ? worldgen::Layer::Base : words[4] == "middle" ? worldgen::Layer::Middle : worldgen::Layer::Top;
+			auto grid = std::vector<worldgen::TileId>{};
+			for (auto y = Y0; y < Y0 + H; y++) {
+				for (auto x = X0; x < X0 + W; x++) {
+					grid.push_back(world->tile(layer, x, y));
+				}
+			}
+			CHECK_MESSAGE(StableGrid(world->tiles(), grid, W) == words[5], "layer " << words[4]);
+		} else if (kind == "rwalk") {
+			auto walk = std::vector<bool>{};
+			for (auto y = Y0; y < Y0 + H; y++) {
+				for (auto x = X0; x < X0 + W; x++) {
+					walk.push_back(world->walk(x, y));
+				}
+			}
+			CHECK(Bools(walk) == words[4]);
+		} else if (kind == "rtaken") {
+			CHECK(Cells(world->taken()) == words[4]);
+		} else if (kind == "robjects") {
+			auto data = std::vector<unsigned char>{};
+			for (const auto& [c, v] : world->objects()) {
+				AppendInt(data, c.first);
+				AppendInt(data, c.second);
+				Append(data, v);
+			}
+			CHECK(std::to_string(Fnv(data)) == words[4]);
+		} else if (kind == "ritems") {
+			auto values = std::vector<std::array<std::int32_t, 3>>{};
+			for (const auto& item : world->items()) {
+				values.push_back({ item.x, item.y, item.item });
+			}
+			CHECK(Triples(values) == words[4]);
+		} else if (kind == "revents") {
+			auto chunks = std::vector<std::string>{};
+			for (const auto& [cx, cy] : o.chunks) {
+				chunks.push_back(Lines(world->chunkEvents(cx, cy)));
+			}
+			CHECK(Text(Lines(chunks, '\f')) == words[4]);
+		} else if (kind == "rlight") {
+			auto data = std::vector<unsigned char>{};
+			for (auto j = 0; j <= H; j++) {
+				for (auto i = 0; i <= W; i++) {
+					const auto c = world->cornerLight(X0 + i, Y0 + j);
+					data.insert(data.end(), c.begin(), c.end());
+				}
+			}
+			CHECK(std::to_string(Fnv(data)) == words[4]);
+		} else if (kind == "rroom") {
+			const auto found = std::find_if(world->rooms().begin(), world->rooms().end(), [&words](const worldgen::Room& r) { return r.name == words[4]; });
+			REQUIRE_MESSAGE(found != world->rooms().end(), words[4]);
+			const auto& room = *found;
+			CHECK(room.templateName == words[5]);
+			CHECK(Text(Lines(room.rows)) == words[6]);
+			CHECK(StableGrid(world->tiles(), room.base, room.width) == words[7]);
+			CHECK(StableGrid(world->tiles(), room.middle, room.width) == words[8]);
+			CHECK(Bools(room.walk) == words[9]);
+			CHECK(Text(Lines(room.events)) == words[10]);
+		} else if (kind == "rfile") {
+			expectedFiles[words[4]] = words[5];
+		} else if (kind == "rsea") {
+			auto text = std::string{};
+			for (const auto& [cx, cy] : o.chunks) {
+				text += plan.seaChunk(cx, cy) ? "1" : "0";
+			}
+			CHECK(std::to_string(region.reefs()) == words[4]);
+			CHECK(text == words[5]);
+		}
+	}
+	CHECK(routes == terrain.routePaths().size());
+	CHECK(pois == terrain.pois().size());
+
+	// The files of the region
+	const auto folder = std::filesystem::temp_directory_path() / "sad_worldgen_test_region";
+	std::filesystem::remove_all(folder);
+	auto images = worldgen::TileImages{ TheAtlas(), world->tiles() };
+	const auto corr = worldgen::ReadPng("Resources/Chipsets/corr.png");
+	begin = std::chrono::steady_clock::now();
+	for (const auto& [cx, cy] : world->chunks()) {
+		worldgen::WriteRegionChunk(*world, images, corr, "Resources/Chipsets/tile_scripts", folder.string(), "./World/", cx, cy);
+	}
+	worldgen::WriteRegionRooms(*world, images, corr, "Resources/Chipsets/tile_scripts", folder.string(), "./World/",
+		"chipset_rooms_" + std::to_string(rx) + "_" + std::to_string(ry));
+	MESSAGE("region written in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms");
+	const auto files = FilesOf(folder);
+	CHECK(files.size() == expectedFiles.size());
+	auto wrong = 0;
+	for (const auto& file : files) {
+		INFO(file);
+		const auto found = expectedFiles.find(file);
+		REQUIRE(found != expectedFiles.end());
+		auto bytes = FileBytes(folder / file);
+		const auto ext = std::filesystem::path{ file }.extension().string();
+		auto sum = std::string{};
+		if (ext == ".bmp" || ext == ".png" || ext == ".col" || ext == ".prop" || ext == ".mask") {
+			const auto image = ext == ".bmp" ? DecodeBmp(bytes) : worldgen::DecodePng(bytes);
+			auto data = std::vector<unsigned char>{};
+			AppendInt(data, image.width);
+			AppendInt(data, image.height);
+			data.insert(data.end(), image.rgb.begin(), image.rgb.end());
+			sum = std::to_string(Fnv(data));
+		} else {
+			sum = Bytes(bytes);
+		}
+		if (sum != found->second && wrong++ < 10) {
+			CHECK(sum == found->second);
+		}
+	}
+	CHECK(wrong == 0);
+	std::filesystem::remove_all(folder);
+}
+}

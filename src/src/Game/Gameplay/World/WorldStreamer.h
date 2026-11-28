@@ -19,6 +19,9 @@ namespace ska {
 }
 class WorldImpl;
 class ChunkEntities;
+namespace chunks {
+	class Generator;
+}
 
 // The chunks of the world loaded around the player : their images are prepared away from the game (a thread, a web
 // worker), their map made from them (a step for its tileset, a step for the rest : one chunk at a time), with their
@@ -77,6 +80,10 @@ private:
 	void commit(Staged staged);
 	void unload(chunks::Coordinates c);
 	void loadNow(chunks::Coordinates c);
+	// An infinite world : its chunks written as the player comes near them
+	void openGenerator();
+	bool generating() const { return m_generator != nullptr && m_grid.single.empty(); }
+	bool ready(chunks::Coordinates c);
 	void buildWalls(chunks::Coordinates c, Chunk& chunk);
 	// The outline of the water of a chunk (the player surfs in it : touching it starts or stops surfing), on the edges
 	// between water and ground, the ones with the chunks around too : made again when they come or leave
@@ -101,4 +108,5 @@ private:
 	// The files of the chunks of this world
 	std::map<chunks::Coordinates, chunks::Paths> m_paths;
 	std::optional<chunks::Coordinates> m_current;
+	std::unique_ptr<chunks::Generator> m_generator;
 };

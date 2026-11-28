@@ -12,7 +12,8 @@
 #include "../../Gameplay/Data/Statistics.h"
 #include "Logging/Logger.h"
 #include "Core/ECS/EntityManager.h"
-#include "Game/Gameplay/World/Generation/Files.h"
+#include "Game/Gameplay/World/Generation/InfiniteFiles.h"
+#include "Game/Gameplay/World/Chunks/ChunkGenerator.h"
 #include "SaveSlots.h"
 
 SavegameManager::SavegameManager(ska::EntityManager& em, PokemonGameEventDispatcher& ged, const std::string& filename):
@@ -168,7 +169,7 @@ void SavegameManager::prepareSave() {
 		return;
 	}
 	const auto begin = std::chrono::steady_clock::now();
-	const auto start = worldgen::GenerateWorld(*seed, SaveSlots::WorldPath(m_pathname), SaveSlots::WorldPath(m_pathname));
+	const auto start = worldgen::GenerateInfiniteWorld(*seed, SaveSlots::WorldPath(m_pathname), SaveSlots::WorldPath(m_pathname));
 	SLOG(ska::LogLevel::Info) << "Savegame : the world of seed " << *seed << " generated in "
 		<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms (" << SaveSlots::WorldPath(m_pathname) << ")";
 	SaveSlots::WorldGenerated(m_pathname, *seed, start);
@@ -185,6 +186,19 @@ void SavegameManager::loadTrainer() {
 		world += '/';
 	}
 	WorldDirectoryRef() = world;
+	// An infinite world : the chunk of the trainer written (the game reads its map now ; a world written again keeps the
+	// trainer where it was)
+	if (const auto seed = worldgen::InfiniteSeed(world)) {
+		const auto chunk = chunks::Parse(m_startMapName);
+		auto writer = chunks::TakeOver(world);
+		if (writer == nullptr) {
+			writer = std::make_unique<worldgen::InfiniteWriter>(*seed, world, world);
+		}
+		if (chunk && !writer->written(chunk->x, chunk->y)) {
+			writer->write(chunk->x, chunk->y);
+		}
+		chunks::HandOver(std::move(writer));
+	}
 
 	ska::IniReader mapReader(MapIni(m_startMapName));
 	m_startMapChipsetName = mapReader.get<std::string>("Chipset file");

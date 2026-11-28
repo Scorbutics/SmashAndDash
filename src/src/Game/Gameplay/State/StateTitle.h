@@ -15,7 +15,7 @@
 #include "../PokemonGameEventDispatcher.h"
 
 namespace worldgen {
-	class WorldWriter;
+	class InfiniteWorldWriter;
 }
 
 // The title screen : continue a save (the most recent first) or start a new game ; the loading screen of a world being
@@ -61,7 +61,7 @@ private:
 
 	std::string m_save;
 	long long m_seed = 0;
-	std::unique_ptr<worldgen::WorldWriter> m_writer;
+	std::unique_ptr<worldgen::InfiniteWorldWriter> m_writer;
 	int m_framesShown = 0;
 	std::string m_error;
 

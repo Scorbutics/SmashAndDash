@@ -1,3 +1,5 @@
+#include "Game/Gameplay/World/Chunks/ChunkGrid.h"
+#include "Game/Gameplay/World/Generation/InfiniteFiles.h"
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GameScriptModule.h"
 #include "../Gameplay/World/ChunkOwnedComponent.h"
@@ -472,7 +474,10 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
 		// A map that is not there : an error of the script
-		if (!std::ifstream{ MapIni(mapName) }.good()) {
+		// (a chunk of an infinite world : written when the player comes)
+		const auto chunk = chunks::Parse(mapName);
+		const auto infinite = chunk && chunk->x < worldgen::WorldChunks && chunk->y < worldgen::WorldChunks && worldgen::InfiniteSeed(WorldDirectory());
+		if (!infinite && !std::ifstream{ MapIni(mapName) }.good()) {
 			throw std::runtime_error("no map " + std::string{ mapName });
 		}
 		auto mapEvent = MapEvent{ MapEventType::Switch_Map };

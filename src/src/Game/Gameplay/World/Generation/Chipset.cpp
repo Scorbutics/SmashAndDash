@@ -250,7 +250,7 @@ worldgen::Chipset::Chipset(TileImages& images, const std::set<TileUse>& usedTile
 	// The order of the Python generator : by the text of the tile, then by the mix
 	auto order = std::vector<std::tuple<std::string, Mix, TileId>>{};
 	for (const auto& [tile, mix] : usedTiles) {
-		order.emplace_back(TileName(tile), mix, tile);
+		order.emplace_back(images.sortName(tile), mix, tile);
 	}
 	std::sort(order.begin(), order.end());
 	// The animated tiles first : 4 cells in a column

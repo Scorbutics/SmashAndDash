@@ -105,6 +105,8 @@ SPAWNS = {
     "autumn": [(10, 3, 6, 1, 80, []), (16, 3, 6, 2, 100, []), (1, 3, 5, 1, 30, []), (19, 3, 5, 1, 40, [])],
     "snow": [(7, 4, 7, 1, 60, []), (19, 4, 6, 1, 50, []), (25, 4, 7, 1, 25, [])],
     "desert": [(4, 4, 7, 1, 60, []), (19, 4, 6, 1, 60, []), (16, 4, 6, 2, 50, [])],
+    # The chunks mostly sea (infinite.py) : on their islands and sand bars
+    "ocean": [(7, 4, 8, 1, 70, []), (16, 4, 8, 2, 60, [])],
 }
 WALK, BLOCK = (255, 255, 255), (0, 0, 0)
 WALK_ANIMATED, BLOCK_ANIMATED = (0xAA, 0xAA, 0xAA), (0x46, 0x46, 0x46)
@@ -671,7 +673,9 @@ def draw_key(key, walkable):
         return g.flowerpot(key[1])
     simple = {"bench": g.bench, "bin": g.bin_, "mailbox": g.mailbox, "barrel": g.barrel, "bush": g.bush,
               "crops": g.crops, "well": g.well, "lily": g.lily, "boulder": g.boulder, "log seat": g.log_seat,
-              "sign": g.sign}
+              "sign": g.sign, "reef": g.reef}
+    if kind == "deep":
+        return g.deep(key[1])
     if kind in simple:
         return simple[kind]()
     return rooms.draw_key(key)
@@ -683,7 +687,7 @@ def draw_key(key, walkable):
 FLAT = -1
 # The objects standing on their block (the posts, the furniture of the villages, the rocks)
 STANDING = {"lamp", "fence", "flowerpot", "bench", "bin", "mailbox", "barrel", "bush", "well", "boulder", "log seat",
-            "sign"}
+            "sign", "reef"}
 ANIMATED_BASE = {"lamphead": 1, CAMPFIRE_CELL: 0, "fountain_0_0": 1, "fountain_1_0": 1, "fountain_0_1": 0,
                  "fountain_1_1": 0}
 # The properties of the tiles for the game (the bits of the red of the .prop of the chipsets : ska TileProperties
@@ -989,6 +993,8 @@ class Village:
 
 
 class World:
+    X0 = Y0 = 0                                      # the first block (infinite.py builds a window anywhere)
+
     def __init__(self, seed, cw, ch):
         self.seed, self.cw, self.ch = seed, cw, ch
         self.W, self.H = cw * CHUNK, ch * CHUNK
@@ -1336,13 +1342,13 @@ class World:
 
     def is_foot(self, x, y):
         """The block under a rock face : the lower part of the face (not on the water)."""
-        return 0 <= x < self.W and 0 <= y < self.H and self.mat(x, y) != "water" \
+        return self.inside(x, y) and self.mat(x, y) != "water" \
             and self.level(x, y - 1) > self.level(x, y)
 
     def flat(self, x, y):
         """A block one walks on without a cliff in the way : on the map, not water, no cliff face or side, not the
         foot of a face."""
-        return 0 <= x < self.W and 0 <= y < self.H and self.mat(x, y) != "water" \
+        return self.inside(x, y) and self.mat(x, y) != "water" \
             and not any(self.low_mask(x, y)[:4]) and not self.is_foot(x, y)
 
     def stair_ok(self, x, y):
@@ -1357,7 +1363,7 @@ class World:
     def poi_block_ok(self, x, y):
         """A block for a place or its path : on the map, away from the edges of the chunks (their teleports), low flat
         grass, not a road, not a village, no stairs."""
-        return 0 <= x < self.W and 0 <= y < self.H and 1 < x % CHUNK < CHUNK - 2 and 1 < y % CHUNK < CHUNK - 2 \
+        return self.inside(x, y) and 1 < x % CHUNK < CHUNK - 2 and 1 < y % CHUNK < CHUNK - 2 \
             and self.terrain[y][x] == ("grass", 0) and self.flat(x, y) and (x, y) not in self.routes \
             and self.near_village.get((x, y), 99) > 6 and (x, y) not in self.stairs
 
@@ -1509,14 +1515,22 @@ class World:
         return ("grass", max(1 if plateau else 0, min(MAX_LEVEL, int(max(0.0, m)))))
 
     def mat(self, x, y):
-        if not (0 <= x < self.W and 0 <= y < self.H):
+        if not self.inside(x, y):
             return "water"
         return self.terrain[y][x][0]
 
     def level(self, x, y):
-        if not (0 <= x < self.W and 0 <= y < self.H):
+        if not self.inside(x, y):
             return 0
         return self.terrain[y][x][1]
+
+    def inside(self, x, y):
+        """A block of the arrays (the world, or the window of the infinite world : infinite.py)."""
+        return self.X0 <= x < self.X0 + self.W and self.Y0 <= y < self.Y0 + self.H
+
+    def chunks(self):
+        """The chunks written (their items placed), by rows."""
+        return [(cx, cy) for cy in range(self.ch) for cx in range(self.cw)]
 
     def in_town(self, x, y, r=3):
         d = self.near_village.get((x, y))
@@ -1531,7 +1545,7 @@ class World:
 
     # Building the layers -------------------------------------------------------------------------------
     def set(self, layer, x, y, cell):
-        if 0 <= x < self.W and 0 <= y < self.H:
+        if self.inside(x, y):
             self.layers[layer][y][x] = cell
 
     def build(self):
@@ -1551,8 +1565,8 @@ class World:
         """The tiles of the terrain : grounds, cliffs and their feet, the water and its banks (tools/worldgen/tileroom.py
         uses it alone)."""
         chip = self.chip
-        for y in range(self.H):
-            for x in range(self.W):
+        for y in range(self.Y0, self.Y0 + self.H):
+            for x in range(self.X0, self.X0 + self.W):
                 m, lv = self.terrain[y][x]
                 low = mask8(lambda a, b: self.level(a, b) < lv, x, y) if lv > 0 else None
                 if low and any(low):
@@ -1635,7 +1649,7 @@ class World:
 
     def deco_ok(self, x, y):
         """A block for a decoration of a village : free, low flat ground (grass or sand), nothing on it."""
-        return 0 <= x < self.W and 0 <= y < self.H and (x, y) not in self.taken and self.walk[y][x] \
+        return self.inside(x, y) and (x, y) not in self.taken and self.walk[y][x] \
             and self.terrain[y][x] in (("grass", 0), ("sand", 0)) and self.flat(x, y) \
             and self.layers["M"][y][x] is None and 1 < x % CHUNK < CHUNK - 2 and 1 < y % CHUNK < CHUNK - 2
 
@@ -1770,7 +1784,7 @@ class World:
         for c in range(w):
             for dy, row, kind in parts:
                 cx, cy = x + c, y + dy
-                if not (0 <= cx < self.W and 0 <= cy < self.H):
+                if not self.inside(cx, cy):
                     return False
                 if kind == "top":
                     if self.layers["T"][cy][cx] is not None or not self.plain(cx, cy):
@@ -1799,8 +1813,9 @@ class World:
         # Forests : packed, every 2 blocks, the rows shifted by one (a wall of trees), their edges a bit ragged ;
         # groves : small packed clumps ; a few lone trees
         for wide, step in ((True, 3), (False, 2)):  # the broadleaf trees (3 wide), the others (2 wide)
-          for y in range(2, self.H - 2, step):
-            for x0 in range(0, self.W - step, step):
+          # (the lattice on the blocks of the world : a window from anywhere has the same trees)
+          for y in range(self.Y0 + 2 + (-self.Y0) % step, self.Y0 + self.H - 2, step):
+            for x0 in range(self.X0 + (-self.X0) % step, self.X0 + self.W - step, step):
                 x = x0 + (y // step) % step
                 if self.in_town(x, y, 4) or (self.tree_style(x, y) == "round") != wide:
                     continue
@@ -1812,8 +1827,8 @@ class World:
                     or (grove > p["grove"] and r < 0.9) or r < p["lone"]
                 if dense:
                     self.tree_at(x, y)
-        for y in range(self.H):
-            for x in range(self.W):
+        for y in range(self.Y0, self.Y0 + self.H):
+            for x in range(self.X0, self.X0 + self.W):
                 if not self.free_cell(x, y) or self.in_town(x, y, 2):
                     continue
                 p = self.nature(x, y)
@@ -1898,7 +1913,7 @@ class World:
                 nx, ny = out[min(1, len(out) - 1)]
                 for sx, sy in ((x + (ny - y), y + (nx - x)), (x - (ny - y), y - (nx - x)),
                                (x + (ny - y) * 2, y + (nx - x) * 2), (x - (ny - y) * 2, y - (nx - x) * 2)):
-                    if 0 <= sx < self.W and 0 <= sy < self.H and (sx, sy) not in self.taken \
+                    if self.inside(sx, sy) and (sx, sy) not in self.taken \
                             and self.walk[sy][sx] and self.layers["M"][sy][sx] is None and self.flat(sx, sy):
                         self.set("M", sx, sy, self.chip.cell(("sign",), False))
                         self.walk[sy][sx] = False
@@ -1916,7 +1931,7 @@ class World:
             x, y = front.pop()
             for dx, dy in D8[:4]:
                 c = (x + dx, y + dy)
-                if c not in seen and 0 <= c[0] < self.W and 0 <= c[1] < self.H and self.walk[c[1]][c[0]]:
+                if c not in seen and self.inside(*c) and self.walk[c[1]][c[0]]:
                     seen.add(c)
                     front.append(c)
         return seen
@@ -1925,8 +1940,7 @@ class World:
         """Items to find (Levels/item.miniska), ITEMS_PER_CHUNK at most : on open ground the player can walk to, far
         from the roads, rather on the mountains and in the forest clearings."""
         reach = self.reachable()
-        for cy in range(self.ch):
-            for cx in range(self.cw):
+        for cx, cy in self.chunks():
                 cands = []
                 for y in range(cy * CHUNK + 3, cy * CHUNK + CHUNK - 3):
                     for x in range(cx * CHUNK + 3, cx * CHUNK + CHUNK - 3):
@@ -1999,7 +2013,7 @@ class World:
     # Light -----------------------------------------------------------------------------------------------
     def top(self, x, y):
         """How high a block stands : its ground (a plateau : 1) and what is on it."""
-        if not (0 <= x < self.W and 0 <= y < self.H):
+        if not self.inside(x, y):
             return 0.0
         return self.level(x, y) + self.objects.get((x, y), 0.0)
 
@@ -2035,7 +2049,7 @@ class World:
 
     # Output ----------------------------------------------------------------------------------------------
     def walkable(self, x, y):
-        return 0 <= x < self.W and 0 <= y < self.H and self.walk[y][x]
+        return self.inside(x, y) and self.walk[y][x]
 
     def chunk_events(self, cx, cy):
         return self.door_events.get((cx, cy), []) + self.events.get((cx, cy), [])
@@ -2057,39 +2071,49 @@ class World:
         g.item_ball_charset().convert("RGB").save(f"{root}/Sprites/Charsets/pnj{BALL_SPRITE}.png")
         header = "x y declenchement(1:presser espace||2:sous le hero||0:automatique au chargement de la map) " \
                  "parametresSupplementaires"
-        for cy in range(self.ch):
-            for cx in range(self.cw):
-                name = f"w_{cx}_{cy}"
-                folder = f"{levels}/{name}"
-                os.makedirs(folder)
-                blocks = [(cx * CHUNK + x, cy * CHUNK + y) for y in range(CHUNK) for x in range(CHUNK)]
-                used = {(self.layers[l][y][x], self.pal[y][x]) for l in ("", "M", "T") for x, y in blocks
-                        if self.layers[l][y][x] is not None}
-                chip = Chipset(self.chip, used)
-                chip.save(chips, f"chipset_{name}", scripts)
-                self.stats[name] = (len(used), chip.used)
-                for l in ("", "M", "T"):
-                    im = Image.new("RGB", (CHUNK, CHUNK))
-                    for y in range(CHUNK):
-                        for x in range(CHUNK):
-                            wx, wy = cx * CHUNK + x, cy * CHUNK + y
-                            c = self.layers[l][wy][wx]
-                            im.putpixel((x, y), colour[chip.cells[(c, self.pal[wy][wx])]] if c is not None else EMPTY)
-                    im.save(f"{folder}/{name}{l}.bmp")
-                self.light_image(cx, cy).save(f"{folder}/{name}L.png")
-                biome = self.biome[(cx, cy)]
-                with open(f"{folder}/{name}.ini", "w") as f:
-                    f.write(f"[Chipset]\nfile={chip_path}/chipset_{name}.png\n\n"
-                            "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
-                with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
-                    f.write("\n".join([header] + self.chunk_events(cx, cy)) + "\n")
-                write_spawns(f"{folder}/Monsters", biome)
-                open(f"{folder}/scripts.data", "w").close()
-        # The rooms : one chipset for all (chipset_rooms)
+        for cx, cy in self.chunks():
+            self.write_chunk(levels, chips, chip_path, scripts, colour, header, cx, cy)
+        self.write_rooms(levels, chips, chip_path, scripts, colour, header)
+
+    def write_chunk(self, levels, chips, chip_path, scripts, colour, header, cx, cy):
+        """A chunk : its folder (its layers, light, events, wild Pokemon) and its chipset (chips)."""
+        name = f"w_{cx}_{cy}"
+        folder = f"{levels}/{name}"
+        os.makedirs(folder)
+        blocks = [(cx * CHUNK + x, cy * CHUNK + y) for y in range(CHUNK) for x in range(CHUNK)]
+        used = {(self.layers[l][y][x], self.pal[y][x]) for l in ("", "M", "T") for x, y in blocks
+                if self.layers[l][y][x] is not None}
+        chip = Chipset(self.chip, used)
+        chip.save(chips, f"chipset_{name}", scripts)
+        self.stats[name] = (len(used), chip.used)
+        for l in ("", "M", "T"):
+            im = Image.new("RGB", (CHUNK, CHUNK))
+            for y in range(CHUNK):
+                for x in range(CHUNK):
+                    wx, wy = cx * CHUNK + x, cy * CHUNK + y
+                    c = self.layers[l][wy][wx]
+                    im.putpixel((x, y), colour[chip.cells[(c, self.pal[wy][wx])]] if c is not None else EMPTY)
+            im.save(f"{folder}/{name}{l}.bmp")
+        self.light_image(cx, cy).save(f"{folder}/{name}L.png")
+        biome = self.spawn_kind(cx, cy)
+        with open(f"{folder}/{name}.ini", "w") as f:
+            f.write(f"[Chipset]\nfile={chip_path}/chipset_{name}.png\n\n"
+                    "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
+        with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
+            f.write("\n".join([header] + self.chunk_events(cx, cy)) + "\n")
+        write_spawns(f"{folder}/Monsters", biome)
+        open(f"{folder}/scripts.data", "w").close()
+
+    def spawn_kind(self, cx, cy):
+        """The wild Pokemon of a chunk (SPAWNS) : those of its biome."""
+        return self.biome[(cx, cy)]
+
+    def write_rooms(self, levels, chips, chip_path, scripts, colour, header, chipset="chipset_rooms"):
+        """The rooms : their folders, one chipset for all."""
         used = {(c, MEADOW) for room in self.rooms for grid in room["layers"].values() for line in grid for c in line
                 if c is not None}
         room_chip = Chipset(self.chip, used)
-        room_chip.save(chips, "chipset_rooms", scripts)
+        room_chip.save(chips, chipset, scripts)
         self.stats["rooms"] = (len(used), room_chip.used)
         for room in self.rooms:
             name, rows = room["name"], room["rows"]
@@ -2111,7 +2135,7 @@ class World:
                     light.putpixel((i, j), c)
             light.save(f"{folder}/{name}L.png")
             with open(f"{folder}/{name}.ini", "w") as f:
-                f.write(f"[Chipset]\nfile={chip_path}/chipset_rooms.png\n\n"
+                f.write(f"[Chipset]\nfile={chip_path}/{chipset}.png\n\n"
                         "[Bgm]\nfile=./Music/Greencity.mp3\nvolume=1\n")
             with open(f"{folder}/{name}E.txt", "w", encoding="utf-8") as f:
                 f.write("\n".join([header] + room["events"]) + "\n")
@@ -2147,34 +2171,37 @@ class World:
             out += ["[World]", "generate=true", f"seed={self.seed}"]
         open(path, "w", encoding="utf-8").write("\n".join(out) + "\n")
 
-    def preview(self, path, scale=1, light=True):
-        """The whole world in one image, each block P = T * scale pixels (the tiles shrunk one by one)."""
+    def preview(self, path, scale=1, light=True, box=None):
+        """The world (or the blocks of box : x0, y0, x1, y1) in one image, each block P = T * scale pixels (the tiles
+        shrunk one by one)."""
         P = max(1, int(round(T * scale)))
-        img = Image.new("RGBA", (self.W * P, self.H * P), (0, 0, 0, 255))
+        x0, y0, x1, y1 = box or (self.X0, self.Y0, self.X0 + self.W, self.Y0 + self.H)
+        W, H = x1 - x0, y1 - y0
+        img = Image.new("RGBA", (W * P, H * P), (0, 0, 0, 255))
         cache = {}
         for l in ("", "M", "T"):
-            for y in range(self.H):
-                for x in range(self.W):
+            for y in range(y0, y1):
+                for x in range(x0, x1):
                     c = self.layers[l][y][x]
                     if c is not None:
                         key = (c, self.pal[y][x])
                         if key not in cache:
                             tile = self.chip.frames(*key)[0].convert("RGBA")
                             px = tile.load()
-                            for j in range(T):
-                                for i in range(T):
+                            for j in range(tile.height):
+                                for i in range(tile.width):
                                     if px[i, j][:3] == KEY:
                                         px[i, j] = (0, 0, 0, 0)
-                            cache[key] = tile.resize((P, P), Image.LANCZOS) if P != T else tile
-                        img.alpha_composite(cache[key], (x * P, y * P))
+                            cache[key] = tile.resize((P, P), Image.LANCZOS) if P != tile.width else tile
+                        img.alpha_composite(cache[key], ((x - x0) * P, (y - y0) * P))
         if light:
             from PIL import ImageChops
-            full = Image.new("RGB", (self.W + 1, self.H + 1))
-            for j in range(self.H + 1):
-                for i in range(self.W + 1):
-                    full.putpixel((i, j), self.corner_light(i, j))
-            big = full.resize(((self.W + 1) * P, (self.H + 1) * P), Image.BILINEAR)
-            big = big.crop((P // 2, P // 2, P // 2 + self.W * P, P // 2 + self.H * P))
+            full = Image.new("RGB", (W + 1, H + 1))
+            for j in range(H + 1):
+                for i in range(W + 1):
+                    full.putpixel((i, j), self.corner_light(x0 + i, y0 + j))
+            big = full.resize(((W + 1) * P, (H + 1) * P), Image.BILINEAR)
+            big = big.crop((P // 2, P // 2, P // 2 + W * P, P // 2 + H * P))
             img = ImageChops.multiply(img.convert("RGB"), big).convert("RGBA")
         img.convert("RGB").save(path)
 

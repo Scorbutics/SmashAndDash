@@ -47,20 +47,21 @@ check "eval expression" '"value": "4"' ska-console --run $RUN eval '2 + 2'
 check "eval statements that wait" '"value": "waited"' ska-console --run $RUN eval 'Engine.wait(200)
 Dev.reply("waited")'
 check_fails "eval compile error (line of the code)" 'l.1, c.6) Symbol not found : Nope' ska-console --run $RUN eval 'Nope.call()'
-check "map name (game prelude)" '"value": "w_5_4"' ska-console --run $RUN eval 'Map.name()'
+check "map name (game prelude)" '"value": "w_253_247"' ska-console --run $RUN eval 'Map.name()'
 check "state" 'states=WorldState' ska-console --run $RUN run external/ska/tools/agent/state.miniska
 check "entities" 'trainer' ska-console --run $RUN run external/ska/tools/agent/entities.miniska trainer
 check "party" 'pokemon' ska-console --run $RUN run tools/agent/party.miniska
 check "variables" '"ok": true' ska-console --run $RUN run tools/agent/variables.miniska
 check "spawn (a wild Pokemon arrives)" 'arriving' ska-console --run $RUN run tools/agent/spawn.miniska 19 3
 check "wild" 'wild pokemon' ska-console --run $RUN run tools/agent/wild.miniska
-check "warp" 'w_room_0 (11,8)' ska-console --run $RUN run tools/agent/warp.miniska w_room_0 11 8
-# Outdoors the chunks are one map : walking east from w_5_4 into w_6_4, no transition, nothing stops the player
-check "warp by a chunk border" 'w_5_4 (38,20) world (238,180)' ska-console --run $RUN run tools/agent/warp.miniska w_5_4 38 20
+check "warp" 'w_room_10127_9882 (11,8)' ska-console --run $RUN run tools/agent/warp.miniska w_room_10127_9882 11 8
+# Outdoors the chunks are one map : walking east from w_253_247 (the village of save1, seed 7) into w_254_247, no
+# transition, nothing stops the player
+check "warp by a chunk border" 'w_253_247 (38,20) world (10158,9900)' ska-console --run $RUN run tools/agent/warp.miniska w_253_247 38 20
 check "walk across it" '"pressed"' ska-console --run $RUN press D 60
-check "in the next chunk" '"value": "w_6_4 ' ska-console --run $RUN eval 'p = Engine.entity("trainer")
+check "in the next chunk" '"value": "w_254_247 ' ska-console --run $RUN eval 'p = Engine.entity("trainer")
 Dev.reply(Map.name() + " " + (Map.blockX(p): string))'
-check "chunks come" 'Chunk load w_6_4' ska-run logs $RUN --grep 'Chunk load w_6_4'
+check "chunks come" 'Chunk load w_254_247' ska-run logs $RUN --grep 'Chunk load w_254_247'
 # The tile room (tools/worldgen/tileroom.py) : every tile of the generator on a map of the run, its walls in the game
 WORLD="${SKA_RUNS_DIR:-/tmp/ska-runs-$(id -u)}/$RUN/Saves/save1/World"
 check "tile room : every kind of tile" 'w_tiles : ' python3 tools/worldgen/tileroom.py "$WORLD"
@@ -89,12 +90,12 @@ check "title : sad-run down" '"exit": 0' tools/sad-run down $TITLE
 trap - EXIT
 tools/sad-run rm $TITLE >/dev/null 2>&1 || true
 
-# A new game : a save that is not there, its world generated in it (seed 42 : the world of save2, w_0_4)
+# A new game : a save that is not there, its world generated in it (seed 42 : the world of save2, w_253_256)
 NEW=doctor-new-$$
 trap 'tools/sad-run down $NEW >/dev/null 2>&1 || true' EXIT
 check "sad-run up (a new game, seed 42)" '"ready_ms"' tools/sad-run up $NEW --save doctor_new_game --build "$BUILD" --env SAD_WORLD_SEED=42
 check "new game : its world generated (loading screen)" 'is generated' ska-run logs $NEW --grep 'world of doctor_new_game is generated'
-check "new game : it starts in the village" '"value": "w_0_4"' ska-console --run $NEW eval 'Map.name()'
+check "new game : it starts in the village" '"value": "w_253_256"' ska-console --run $NEW eval 'Map.name()'
 check "new game : sad-run down" '"exit": 0' tools/sad-run down $NEW
 trap - EXIT
 tools/sad-run rm $NEW >/dev/null 2>&1 || true

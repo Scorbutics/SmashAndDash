@@ -19,10 +19,15 @@
 #include "World/TilesetEventLoaderText.h"
 #include "World/TileWorldPhysics.h"
 #include "Physic/Space.h"
+#include "Chunks/ChunkGenerator.h"
+#include "Generation/InfiniteFiles.h"
 
 namespace {
 	// Chunks being prepared at once
 	constexpr auto PendingMax = 2;
+	// An infinite world : its chunks written ahead of the player, within this many blocks (on a thread ; else only the
+	// ones to load)
+	constexpr auto GenerateRadius = chunks::LoadRadius + 60;
 
 	ska::SDLSurface Surface(const worldgen::RgbImage& image, const ska::Color* key = nullptr) {
 		auto surface = ska::SDLSurface{};
@@ -51,9 +56,13 @@ namespace {
 	}
 
 	chunks::Grid GridOf(const std::string& map) {
+		const auto chunk = chunks::Parse(map);
+		// The outdoors of an infinite world : WorldChunks x WorldChunks chunks, written as the player comes near them
+		if (chunk && worldgen::InfiniteSeed(WorldDirectory())) {
+			return chunks::Grid{ worldgen::WorldChunks, worldgen::WorldChunks, worldgen::Chunk, worldgen::Chunk, {} };
+		}
 		const auto size = MapSize(map);
 		auto grid = chunks::Grid{ 1, 1, size.x, size.y, {} };
-		const auto chunk = chunks::Parse(map);
 		if (!chunk) {
 			grid.single = map;
 			return grid;
@@ -126,6 +135,7 @@ std::vector<std::pair<std::string, ska::Rectangle>> WorldStreamer::loaded() cons
 ska::Point<int> WorldStreamer::enter(const std::string& map, const ska::Point<int> localBlock, ska::cp::Space& space) {
 	m_space = &space;
 	m_grid = GridOf(map);
+	openGenerator();
 	m_paths.clear();
 	m_current = std::nullopt;
 	m_world.reset(WorldDirectory() + (m_grid.single.empty() ? "outdoors" : m_grid.single), m_grid.width, m_grid.height, m_grid.chunkWidth, m_grid.chunkHeight, 3);
@@ -181,9 +191,25 @@ void WorldStreamer::update(const ska::Point<int> block) {
 			busy = true;
 		}
 	}
+	// An infinite world : the chunks to write, the nearest first
+	if (generating()) {
+		auto wishes = std::vector<chunks::Coordinates>{};
+		const auto radius = m_generator->synchronous() ? chunks::LoadRadius : GenerateRadius;
+		for (const auto& c : m_grid.around(block.x, block.y, radius)) {
+			if (m_chunks.count(c) == 0 && !m_generator->written(c)) {
+				wishes.push_back(c);
+			}
+		}
+		m_generator->wish(std::move(wishes));
+		m_generator->step();
+	}
 	// To come, the nearest first
 	for (const auto& c : m_grid.around(block.x, block.y, chunks::LoadRadius)) {
 		if (m_chunks.count(c) != 0) {
+			continue;
+		}
+		// (an infinite world : once written, but the ones the player would see missing)
+		if (m_grid.distance(c, block.x, block.y) > chunks::VisibleRadius && !ready(c)) {
 			continue;
 		}
 		if (m_grid.distance(c, block.x, block.y) <= chunks::VisibleRadius) {
@@ -214,7 +240,37 @@ void WorldStreamer::update(const ska::Point<int> block) {
 	settings(block);
 }
 
+void WorldStreamer::openGenerator() {
+	const auto seed = m_grid.single.empty() ? worldgen::InfiniteSeed(WorldDirectory()) : std::nullopt;
+	if (!seed) {
+		return;
+	}
+	if (m_generator != nullptr && m_generator->folder() == WorldDirectory()) {
+		return;
+	}
+	auto writer = chunks::TakeOver(WorldDirectory());
+	if (writer == nullptr) {
+		writer = std::make_unique<worldgen::InfiniteWriter>(*seed, WorldDirectory(), WorldDirectory());
+	}
+	m_generator = std::make_unique<chunks::Generator>(std::move(writer), ska::TimeUtils::fixedStep());
+	SLOG(ska::LogLevel::Info) << "Chunks : the infinite world of seed " << *seed << " (" << WorldDirectory() << ")"
+		<< (m_generator->synchronous() ? ", written in the steps of the game" : ", written on a thread");
+}
+
+bool WorldStreamer::ready(const chunks::Coordinates c) {
+	if (!generating()) {
+		return true;
+	}
+	return m_generator->written(c);
+}
+
 void WorldStreamer::loadNow(const chunks::Coordinates c) {
+	if (generating() && !m_generator->written(c)) {
+		const auto begin = std::chrono::steady_clock::now();
+		m_generator->now(c);
+		SLOG(ska::LogLevel::Info) << "Chunk " << m_grid.name(c) << " written at once in "
+			<< std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count() << " ms";
+	}
 	if (m_staged && m_staged->at == c) {
 		auto staged = std::move(*m_staged);
 		m_staged = std::nullopt;

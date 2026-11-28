@@ -97,6 +97,10 @@ class TileRoom(w.World):
             self.show(name, x, y)
         for x, y in ((19, 38), (23, 40)):
             self.set("M", x, y, self.chip.cell(("lily",), False))
+        # The sea of the infinite world (infinite.py) : a reef, deep water
+        self.set("M", 20, 39, self.chip.cell(("reef",), False))
+        for v in range(3):
+            self.set("M", 21 + v, 38, self.chip.cell(("deep", v), True))
 
         # The objects of the villages and of the places, one block apart
         x = 3

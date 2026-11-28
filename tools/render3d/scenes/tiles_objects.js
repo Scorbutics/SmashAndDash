@@ -7,7 +7,7 @@
 // and thin white ripples ; cast shadows (on the objects themselves : no ground in a keyed tile ; on the ground of the
 // opaque tiles), few large shapes, subtle patterns.
 //   obj_<name>        the furniture of the villages and the rocks (key) : bench, bin, mailbox, barrel, bush, well, lily
-//                     (over the water), boulder, log_seat, sign ; crops (opaque, tiles)
+//                     (over the water), boulder, log_seat, sign, reef and deep_<v> (the sea, over the water) ; crops (opaque, tiles)
 //   lamp              48 x 96 : the street lamp (the generator keeps its bottom row, the post) ; lamphead_<f> its lantern
 //   fence, fence_tl, fence_tr, fence_v   a garden fence (rendered with its neighbours : the rails go on across the tiles)
 //   flowerpot_<c>, emblem_<c>_<r> (the 2 x 2 round sign on the pavement)
@@ -243,6 +243,43 @@ export function build(THREE, S, options = {}) {
 		S.ink(g);
 		object("obj_boulder", "boulder");
 	}
+
+	// The reef : wet rocks out of the sea (the pale rock darkened by the water), a ring of foam around their foot (over
+	// the water : the key around it)
+	{
+		const g = group("reef");
+		const wet = soft(ROCK, WATER.deep, 0.3);
+		const big = clump(0.3, wet, 11, 0);
+		big.scale.set(1.05, 0.72, 0.7);
+		add(g, big, -0.07, 0.11, 0.02);
+		const small = clump(0.17, soft(ROCK, WATER.deep, 0.18), 12, 0);
+		small.scale.set(1, 0.8, 0.85);
+		add(g, small, 0.23, 0.07, 0.17);
+		for (let i = 0; i < 11; i++) {
+			const a = i * Math.PI * 2 / 11 + 0.2;
+			const r = 0.34 + 0.05 * Math.sin(i * 2.3);
+			disc(g, Math.cos(a) * r + 0.03, Math.sin(a) * r * 0.8 + 0.08, 0.07, 0.03, WATER.ripple, 0.004);
+		}
+		S.ink(g);
+		object("obj_reef", "reef");
+	}
+
+	// The deep water : darker strokes of waves over the water (the open sea ; the key around them : the water under), 3
+	// variants (the generator picks one per block : no grid)
+	const DEEP = [
+		[[-0.24, -0.3, 0.2], [0.2, -0.08, 0.24], [-0.14, 0.22, 0.18], [0.3, 0.38, 0.1]],
+		[[0.1, -0.34, 0.16], [-0.26, -0.06, 0.22], [0.22, 0.16, 0.2], [-0.1, 0.4, 0.12]],
+		[[-0.3, -0.36, 0.1], [0.04, -0.18, 0.22], [-0.22, 0.12, 0.14], [0.24, 0.3, 0.2]],
+	];
+	DEEP.forEach((strokes, v) => {
+		const g = group(`deep_${v}`);
+		for (const [x, z, rx] of strokes) {
+			disc(g, x, z, rx, 0.045, "#3a76bc", 0.002);
+			disc(g, x - 0.01, z + 0.015, rx * 0.75, 0.025, "#2c63a6", 0.003);
+			disc(g, x + 0.03, z - 0.035, rx * 0.45, 0.01, WATER.sheen, 0.004);
+		}
+		object(`obj_deep_${v}`, `deep_${v}`);
+	});
 
 	// The log to sit on : lying across the block, faceted bark, its cut end lighter
 	{

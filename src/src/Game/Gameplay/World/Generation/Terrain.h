@@ -13,7 +13,8 @@
 // the stairs, the places beside the roads.
 namespace worldgen {
 	// The grounds (the order of the reference values : tools/worldgen/golden.py MATS)
-	enum class Ground : std::uint8_t { Water = 0, Sand = 1, Path = 2, Grass = 3, Pave = 4 };
+	// (Reef : the rocks in the shallows of the infinite world, Infinite.h)
+	enum class Ground : std::uint8_t { Water = 0, Sand = 1, Path = 2, Grass = 3, Pave = 4, Reef = 5 };
 	constexpr int MaxLevel = 4;
 	constexpr int PoiSpacing = 35;
 
@@ -61,14 +62,18 @@ namespace worldgen {
 		explicit Terrain(const WorldPlan& plan);
 
 		const WorldPlan& plan() const { return m_plan; }
-		int width() const { return m_plan.climate().width(); }
-		int height() const { return m_plan.climate().height(); }
+		// The blocks of the terrain : the world, or a window of the infinite world (RegionBuilder)
+		int x0() const { return m_x0; }
+		int y0() const { return m_y0; }
+		int width() const { return m_width; }
+		int height() const { return m_height; }
+		bool inside(int x, int y) const { return m_x0 <= x && x < m_x0 + m_width && m_y0 <= y && y < m_y0 + m_height; }
 		// The height of a block (the noise, the biomes, the mountains, the island, the levelled villages)
 		double heightAt(int x, int y) const;
 		const Blocks& routes() const { return m_routes; }
 		const std::vector<Route>& routePaths() const { return m_routePaths; }
 		const std::map<Block, int>& nearRoute() const { return m_nearRoute; }
-		Cell cell(int x, int y) const { return m_terrain[index(x, y)]; }
+		Cell cell(int x, int y) const { return inside(x, y) ? m_terrain[index(x, y)] : Cell{ Ground::Water, 0 }; }
 		// The ground and the level of a block, out of the map : water, level 0
 		Ground ground(int x, int y) const;
 		int level(int x, int y) const;
@@ -83,7 +88,9 @@ namespace worldgen {
 		bool inTown(int x, int y, int r) const;
 
 	private:
-		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y) * static_cast<std::size_t>(width()) + static_cast<std::size_t>(x); }
+		friend class RegionBuilder;
+		Terrain(const WorldPlan& plan, int x0, int y0, int width, int height) : m_plan(plan), m_x0(x0), m_y0(y0), m_width(width), m_height(height) {}
+		std::size_t index(int x, int y) const { return static_cast<std::size_t>(y - m_y0) * static_cast<std::size_t>(m_width) + static_cast<std::size_t>(x - m_x0); }
 		void planRoutes();
 		std::optional<std::vector<Block>> astar(const std::vector<double>& cost, Block start, Block goal) const;
 		Cell classify(int x, int y) const;
@@ -94,6 +101,7 @@ namespace worldgen {
 		void planPois();
 
 		const WorldPlan& m_plan;
+		int m_x0 = 0, m_y0 = 0, m_width = 0, m_height = 0;
 		Blocks m_routes;
 		std::vector<Route> m_routePaths;
 		std::map<Block, int> m_nearRoute;
