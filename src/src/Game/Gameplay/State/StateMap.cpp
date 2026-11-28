@@ -97,7 +97,8 @@ void StateMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) 
 }
 
 void StateMap::afterLoad(ska::State * lastState){
-	// Back from a battle : the map goes on as it is (its characters, its wild Pokemon, its scripts)
+	// Back from a battle : the map goes on as it is (its characters, its wild Pokemon, its scripts). Its systems are new :
+	// they learn its entities (a system only hears of an entity when its components change), else they all stay inert
 	if (!m_resume) {
 		const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
 		auto local = std::optional<ska::Point<int>>{};
@@ -108,6 +109,8 @@ void StateMap::afterLoad(ska::State * lastState){
 		if (m_trainerPosition.has_value()) {
 			m_trainerPosition = ska::Point<int>{ block.x * blockSize, block.y * blockSize };
 		}
+	} else {
+		m_entityManager.refreshEntities();
 	}
 	m_worldState.getCamera().setZoom(WorldState::MapZoom);
 	// The player walks on the map (GridMovementSystem)
