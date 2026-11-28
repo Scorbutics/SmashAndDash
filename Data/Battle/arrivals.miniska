@@ -3,14 +3,15 @@
 # while ; the others come out of a hideout on the screen (a property of its tile in the tileset) : a Rattata out of a
 # bin, a bush, a log, a trunk ("hideout") ; a Bulbizarre out of tall grass ("grass") ; a Carapuce out of the water
 # ("water") ; a Salameche from behind a rock ("rock") ; a Chenipan down from the leaves of a tree, on a silk thread
-# ("tree"). Nowhere to arrive : it walks in. The dice are rolled by the game (the replays stay the same).
+# ("tree") ; a Tentacool surfaces in the water, a splash, and stays in it ("swim" : the edge of the water is a wall for
+# it). Nowhere to arrive : it walks in (a swimmer : it does not come). The dice are rolled by the game (the replays stay the same).
 # Arguments : the arrival (the name of a value of Arrival), the monster, its level, its attitude, the block of the
 # player (x, y), two rolls (0 .. 9999).
 Battle = import "bind:game.battle"
 Map = import "bind:game.map"
 
 # How a wild Pokemon arrives (Data/Battle/encounters.miniska "arrival" gives the name of one)
-Arrival = enum fly, hideout, grass, water, rock, tree, walk end
+Arrival = enum fly, hideout, grass, water, rock, tree, walk, swim end
 
 # The properties of the tiles (the red channel of the .prop of a tileset : tools/worldgen/worldgen.py, tile_flags)
 Water = 1
@@ -47,6 +48,28 @@ end
 # A block a wild Pokemon can stand on : no wall, nobody there, no water
 standable = function(x: int, y: int) : bool do
 	return Map.blockFree(x, y) && !Map.blockHasProperty(0, x, y, Water)
+end
+
+# A block a swimmer can surface on : free water (no rock in it, nobody there)
+swimmable = function(x: int, y: int) : bool do
+	return Map.blockFree(x, y) && Map.blockHasProperty(0, x, y, Water)
+end
+
+# The free water blocks seen around the player : x, y, x, y...
+surfaces = function(px: int, py: int) : int[] do
+	found = []: int
+	y = py - SeenY
+	while y <= py + SeenY do
+		x = px - SeenX
+		while x <= px + SeenX do
+			if distance(x, y, px, py) >= Closest && swimmable(x, y)
+				found = found + [x, y]
+			end
+			x = x + 1
+		end
+		y = y + 1
+	end
+	return found
 end
 
 # A tile of a layer of the block has the property (a hideout : Hideout, Grass, Water, Rock, Canopy)
@@ -160,6 +183,14 @@ run = function(args: string[]) do
 			Battle.land(monster, level, attitude, found[i], found[i + 1], stay(monster, stayRoll % 100))
 			return
 		end
+	end
+	if kind == Arrival.swim
+		found = surfaces(px, py)
+		if found.size() > 0
+			i = (roll % (found.size() / 2)) * 2
+			Battle.emerge(monster, level, attitude, found[i], found[i + 1], found[i], found[i + 1], Rustle, "splash")
+		end
+		return
 	end
 	if kind != Arrival.fly && kind != Arrival.walk
 		found = hidingPlaces(px, py, kind)

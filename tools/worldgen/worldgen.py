@@ -105,8 +105,10 @@ SPAWNS = {
     "autumn": [(10, 3, 6, 1, 80, []), (16, 3, 6, 2, 100, []), (1, 3, 5, 1, 30, []), (19, 3, 5, 1, 40, [])],
     "snow": [(7, 4, 7, 1, 60, []), (19, 4, 6, 1, 50, []), (25, 4, 7, 1, 25, [])],
     "desert": [(4, 4, 7, 1, 60, []), (19, 4, 6, 1, 60, []), (16, 4, 6, 2, 50, [])],
-    # The chunks mostly sea (infinite.py) : on their islands and sand bars
-    "ocean": [(7, 4, 8, 1, 70, []), (16, 4, 8, 2, 60, [])],
+    # The chunks mostly sea (infinite.py) : the swimmers in the water (met surfing), the crabs and Carapuce out of the
+    # water onto the beaches, the birds on the islands and the sand bars (Data/Battle/encounters.miniska "arrival")
+    "ocean": [(72, 6, 10, 1, 70, []), (129, 4, 9, 1, 80, []), (120, 7, 11, 1, 35, []), (98, 6, 10, 1, 45, []),
+              (7, 5, 9, 1, 25, []), (16, 4, 8, 2, 40, [])],
 }
 WALK, BLOCK = (255, 255, 255), (0, 0, 0)
 WALK_ANIMATED, BLOCK_ANIMATED = (0xAA, 0xAA, 0xAA), (0x46, 0x46, 0x46)

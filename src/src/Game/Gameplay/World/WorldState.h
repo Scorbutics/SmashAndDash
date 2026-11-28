@@ -189,8 +189,9 @@ public:
 	bool spawnOne(int idMob, int level, int pathType, ska::Point<int> near, float angle, unsigned int rmin, unsigned int rmax, const std::vector<unsigned int>& idBlocks);
 	bool walkInAt(int idMob, int level, int pathType, const std::string& attitude, ska::Point<int> near, float angle, unsigned int rmin, unsigned int rmax, const std::vector<unsigned int>& idBlocks);
 	std::optional<ska::Point<float>> playerPosition();
-	// A block a wild Pokemon can stand on : on the map, no wall, no water, nobody there
-	bool freeBlock(int x, int y);
+	// A block a wild Pokemon can stand on : no wall, nobody there, on land (water : the water, a swimmer)
+	bool freeBlock(int x, int y, bool water = false);
+	bool waterBlock(int x, int y) const;
 	// The drawing of a wild Pokemon arriving or leaving (no physics body)
 	ska::EntityId arrivalDrawing(int monster, ArrivalComponent arrival);
 	// Another world (the outdoors from a door, a room) : the map, the block of the player in it (none : the one of the

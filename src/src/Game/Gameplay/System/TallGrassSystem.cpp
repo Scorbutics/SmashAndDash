@@ -18,6 +18,15 @@ bool TallGrassSystem::grass(int x, int y) const {
 	return block != nullptr && (block->properties.bitMask & TilePropertyGrass) == TilePropertyGrass;
 }
 
+bool TallGrassSystem::water(int x, int y) const {
+	const auto& world = m_worldState.getWorld();
+	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= world.getBlocksX() || static_cast<std::size_t>(y) >= world.getBlocksY()) {
+		return false;
+	}
+	const auto* block = world.getCollisionProfile().getBlock(0, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+	return block != nullptr && (block->properties.bitMask & TilePropertyWater) == TilePropertyWater;
+}
+
 void TallGrassSystem::refresh(unsigned int) {
 	const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
 	if (blockSize <= 0) {
@@ -33,6 +42,7 @@ void TallGrassSystem::refresh(unsigned int) {
 		// Its footprint : a block wide and high, its bottom where its drawing ends (its feet), centred on its drawing. From
 		// its logic position (drawnPosition belongs to the drawing : sampled here, it would break its smoothing)
 		const auto& position = m_componentAccessor.get<ska::PositionComponent>(entity);
+		const auto swims = m_componentPossibleAccessor.get<WildPokemonComponent>(entity) != nullptr;
 		const auto origin = graphic.spriteOrigin(position.x, position.y, hitbox);
 		const auto width = static_cast<int>(graphic.animatedSprites[0].getWidth());
 		const auto height = static_cast<int>(graphic.animatedSprites[0].getHeight());
@@ -43,7 +53,7 @@ void TallGrassSystem::refresh(unsigned int) {
 		auto covered = 0;
 		for (auto by = top / blockSize; by * blockSize < bottom; by++) {
 			for (auto bx = left / blockSize; bx * blockSize < left + blockSize; bx++) {
-				if (!grass(bx, by)) {
+				if (!grass(bx, by) && !(swims && water(bx, by))) {
 					continue;
 				}
 				const auto w = std::min(left + blockSize, (bx + 1) * blockSize) - std::max(left, bx * blockSize);

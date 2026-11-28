@@ -52,6 +52,17 @@ run = function(args: string[]) do
 	Map.setWall(57, 62)
 	Arrivals.run(["tree", "10", "3", "passive", "60", "60", "0", "0"])
 	Test.equal(last(), "walk 10", "no block in sight under the leaves : it walks in")
+	# A swimmer surfaces on free water seen from the player (around 100, 100 : the first one, the top left), and stays in it ;
+	# no water seen : it does not come (not walking in from out of the screen)
+	Map.setProperty(0, 97, 98, 1)
+	Map.setProperty(0, 103, 101, 1)
+	Map.setWall(97, 98)
+	Arrivals.run(["swim", "72", "5", "passive", "100", "100", "0", "0"])
+	Test.equal(last(), "emerge 72 103 101 103 101 splash", "a Tentacool surfaces on the free water (a rock on the other)")
+	Test.equal((Arrivals.surfaces(100, 100).size() / 2): string, "1", "the free water seen")
+	before = Battle.arrivals().size()
+	Arrivals.run(["swim", "129", "5", "passive", "140", "140", "0", "0"])
+	Test.equal((Battle.arrivals().size() - before): string, "0", "no water seen : no Magicarpe")
 	# Each kind its own hideouts : no rock seen for a Bulbizarre
 	Test.equal((Arrivals.hidingPlaces(60, 60, Arrivals.Arrival.grass).size() / 4): string, "1", "only the tall grass")
 end

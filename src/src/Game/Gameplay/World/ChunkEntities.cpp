@@ -171,7 +171,8 @@ void ChunkEntities::arrive(const std::string& name, const ska::Rectangle& blocks
 
 void ChunkEntities::restore(const chunks::EntityRecord& e, ska::Point<int> block) {
 	if (e.kind == chunks::EntityRecord::Kind::Wild) {
-		if (!m_worldState.freeBlock(block.x, block.y)) {
+		// (a swimmer back in its water : it stays there, as a Pokemon on land stays on land)
+		if (!m_worldState.freeBlock(block.x, block.y, m_worldState.waterBlock(block.x, block.y)) && !m_worldState.waterBlock(block.x, block.y)) {
 			const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
 			const auto target = m_worldState.getWorld().getCollisionProfile().placeOnNearestPracticableBlock(1,
 				ska::Rectangle{ block.x * blockSize, block.y * blockSize, blockSize, blockSize }, 2);

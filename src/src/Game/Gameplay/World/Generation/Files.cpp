@@ -23,9 +23,11 @@ namespace {
 		return spawns[static_cast<std::size_t>(biome)];
 	}
 
-	// The chunks mostly sea (the infinite world : SPAWNS "ocean") : on their islands and sand bars
+	// The chunks mostly sea (the infinite world : SPAWNS "ocean") : the swimmers, the crabs and Carapuce out of the water,
+	// the birds
 	const std::vector<Spawn>& OceanSpawns() {
-		static const std::vector<Spawn> spawns{ { 7, 4, 8, 1, 70 }, { 16, 4, 8, 2, 60 } };
+		static const std::vector<Spawn> spawns{ { 72, 6, 10, 1, 70 }, { 129, 4, 9, 1, 80 }, { 120, 7, 11, 1, 35 }, { 98, 6, 10, 1, 45 },
+			{ 7, 5, 9, 1, 25 }, { 16, 4, 8, 2, 40 } };
 		return spawns;
 	}
 

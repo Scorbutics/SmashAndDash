@@ -366,16 +366,29 @@ ska::Point<int> WorldState::townBlock() {
 	return { 160, 160 };
 }
 
-bool WorldState::freeBlock(const int x, const int y) {
+bool WorldState::waterBlock(const int x, const int y) const {
 	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= m_world.getBlocksX() || static_cast<std::size_t>(y) >= m_world.getBlocksY()) {
 		return false;
 	}
-	const auto& collisions = m_world.getCollisionProfile();
-	if (collisions.collide(1, static_cast<std::size_t>(x), static_cast<std::size_t>(y))) {
+	const auto* ground = m_world.getCollisionProfile().getBlock(0, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+	return ground != nullptr && (ground->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) != 0;
+}
+
+bool WorldState::freeBlock(const int x, const int y, const bool water) {
+	if (x < 0 || y < 0 || static_cast<std::size_t>(x) >= m_world.getBlocksX() || static_cast<std::size_t>(y) >= m_world.getBlocksY()) {
 		return false;
 	}
-	const auto* ground = collisions.getBlock(0, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
-	if (ground != nullptr && (ground->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) != 0) {
+	if (waterBlock(x, y) != water) {
+		return false;
+	}
+	// (the water itself blocks the walk : in the water, only what stands in it does, a reef)
+	const auto& collisions = m_world.getCollisionProfile();
+	if (water) {
+		const auto* middle = collisions.getBlock(1, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
+		if (middle != nullptr && (middle->solidCells() & ska::CollisionProfile::StandCells) != 0) {
+			return false;
+		}
+	} else if (collisions.collide(1, static_cast<std::size_t>(x), static_cast<std::size_t>(y))) {
 		return false;
 	}
 	// Nobody there (a character, another wild Pokemon), no solid part of a tile : where a character stands on the block (the
@@ -433,6 +446,28 @@ ska::EntityId WorldState::arrivalDrawing(const int monster, ArrivalComponent arr
 void WorldState::wildArrived(const ArrivalComponent& arrival) {
 	const auto blockSize = static_cast<int>(m_world.getBlockSize());
 	auto block = ska::Point<int>{ static_cast<int>(std::lround(arrival.to.x)) / blockSize, static_cast<int>(std::lround(arrival.to.y)) / blockSize };
+	// A swimmer (it surfaced in the water) : someone came there meanwhile, the nearest free water (2 blocks at most), else it
+	// does not come
+	if (waterBlock(block.x, block.y)) {
+		if (!freeBlock(block.x, block.y, true)) {
+			auto found = std::optional<ska::Point<int>>{};
+			for (auto r = 1; r <= 2 && !found; r++) {
+				for (auto dy = -r; dy <= r && !found; dy++) {
+					for (auto dx = -r; dx <= r && !found; dx++) {
+						if (std::max(std::abs(dx), std::abs(dy)) == r && freeBlock(block.x + dx, block.y + dy, true)) {
+							found = ska::Point<int>{ block.x + dx, block.y + dy };
+						}
+					}
+				}
+			}
+			if (!found) {
+				return;
+			}
+			block = *found;
+		}
+		createWild(arrival.monster, arrival.level, arrival.pathType, arrival.attitude, block, arrival.stay);
+		return;
+	}
 	// Someone came there meanwhile : the nearest free block
 	if (!freeBlock(block.x, block.y)) {
 		const auto& hc = ska::Rectangle{ block.x * blockSize, block.y * blockSize, blockSize, blockSize };
