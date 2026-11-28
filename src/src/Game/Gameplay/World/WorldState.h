@@ -10,7 +10,8 @@
 #include "../Data/SavegameManager.h"
 #include "../Mobs/MobSpawner.h"
 #include "WorldImpl.h"
-#include "World/LightMap.h"
+#include "WorldStreamer.h"
+#include "ChunkEntities.h"
 #include "Core/Rectangle.h"
 #include "Audio/Music.h"
 #include "../../Gameplay/PokemonGameEventDispatcher.h"
@@ -141,12 +142,25 @@ public:
 	bool loadedOnce() const;
 	std::vector<ska::IniReader>& getMobSettings() override;
 
-	const std::string& getFileName() const;
-	// Name of the current map (its directory in Levels, ex : "w_5_4")
+	// Name of the current map (the chunk of the player outdoors, ex : "w_5_4")
 	std::string getMapName() const;
-	const std::string& getTilesetName() const;
-	// The tiles of the map (their texture, their clips : the battleground of a clash is drawn with them)
-	const ska::Tileset& getTileset() const { return *m_tileset; }
+	// The tiles of the chunk of a block (their texture, their clips : the battleground of a clash is drawn with them)
+	const ska::Tileset& getTileset(ska::Point<int> block) const { return m_streamer->tilesetAt(block); }
+	// The block of the world of the first block of a map of the world the player is in ((0, 0) for another map)
+	ska::Point<int> originOf(const std::string& map) const { return m_streamer->originOf(map); }
+	// A step of the chunks around the player (StateMap) : the ones to come, the ones to leave
+	void updateStreaming(unsigned int ellapsedTime);
+	// Saves the game : the player (its map, its block in it), the variables, the entities of the chunks
+	void saveGame();
+
+	// A character of the map (Character.addCharacter) : it belongs to its chunk (ChunkEntities)
+	ska::EntityId addCharacter(int sprite, ska::Point<int> block, const std::string& name, const std::string& script, std::vector<std::string> arguments);
+	// Nothing pushes it any more (Character.anchor)
+	void anchor(ska::EntityId entity);
+	// An entity leaves the map, its physics bodies freed
+	void removeCharacter(ska::EntityId entity);
+	// Its physics bodies leave the map (freed at a next step, once no system has it) : for an entity about to be removed
+	void releaseBodies(ska::EntityId entity);
 	// The music of the map (a clash plays its own one, then this one again)
 	ska::Music& getWorldMusic() { return m_worldBGM; }
 
@@ -161,7 +175,9 @@ public:
 	bool freeBlock(int x, int y);
 	// The drawing of a wild Pokemon arriving or leaving (no physics body)
 	ska::EntityId arrivalDrawing(int monster, ArrivalComponent arrival);
-	void reinit(const std::string& fileName, const std::string& chipsetName);
+	// Another world (the outdoors from a door, a room) : the map, the block of the player in it (none : the one of the
+	// save). The block of the player in the world is given
+	ska::Point<int> reinit(const std::string& map, std::optional<ska::Point<int>> localBlock);
 
 protected:
     virtual void afterLoad(ska::State* scene) override;
@@ -193,21 +209,24 @@ private:
 	ska::scripting::EntityHandles m_entityHandles;
 
 	ska::TilesetCorrespondanceMapper m_correspondanceMapper;
-	ska::TilesetPtr m_tileset;
 	ScreenFade m_fade;
-	std::string m_worldFileName;
+	// The map the world was entered by (then the map of the player : getMapName)
+	std::string m_mapName;
 	
 	WorldImpl m_world;
-	// The light of the map (Levels/<map>/<map>L.png, made by tools/worldgen) : soft shade and light over it
-	ska::LightMap m_lightMap;
+	std::unique_ptr<ChunkEntities> m_chunkEntities;
+	std::unique_ptr<WorldStreamer> m_streamer;
+	// The records of the entities were read from the save
+	bool m_recordsLoaded = false;
+	// The bodies to free : queued at this step, at the step before
+	std::vector<std::size_t> m_released;
+	std::vector<std::size_t> m_releasing;
 
 	ska::CameraSystem* m_cameraSystem{};
 	ska::Rectangle m_screenSize{};
 	bool m_firstState{};
 
 	ska::cp::SpaceSystem* m_spaceSystem = nullptr;
-	std::vector<ska::Polygon<int>> m_layerContours{};
-	std::vector<ska::Polygon<int>> m_layerContoursWater{};
 	std::unique_ptr<ska::cp::SpaceCollisionEventSender> m_collisionEventSender;
 	
 	ska::Polygon<int> m_posHeroPolygon;
@@ -225,7 +244,5 @@ private:
 	bool m_lastBattleFled = false;
 
 	BattleStage* m_battleStage = nullptr;
-	// The map was loaded by reinit (its data with it)
-	bool m_worldLoaded = false;
 };
 

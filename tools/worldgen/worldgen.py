@@ -1757,8 +1757,9 @@ class World:
     def item_event(self, x, y, item):
         cx, cy = x // CHUNK, y // CHUNK
         lx, ly = x - cx * CHUNK, y - cy * CHUNK
+        # The ball goes on its block of the world (the maps of the outdoors are played as one)
         self.add_event(cx * CHUNK, cy * CHUNK,
-                       f"0 Levels/item.miniska, place, {item}, {lx}, {ly}, item_w_{cx}_{cy}_{lx}_{ly}")
+                       f"0 Levels/item.miniska, place, {item}, {x}, {y}, item_w_{cx}_{cy}_{lx}_{ly}")
         self.taken.add((x, y))
         self.items.append((x, y, item))
 
@@ -1865,7 +1866,7 @@ class World:
                         r -= chance
                     lx, ly = x - cx * CHUNK, y - cy * CHUNK
                     flag = f"item_w_{cx}_{cy}_{lx}_{ly}"
-                    self.add_event(cx * CHUNK, cy * CHUNK, f"0 Levels/item.miniska, place, {item}, {lx}, {ly}, {flag}")
+                    self.add_event(cx * CHUNK, cy * CHUNK, f"0 Levels/item.miniska, place, {item}, {x}, {y}, {flag}")
                     self.taken.add((x, y))
                     self.items.append((x, y, item))
 
@@ -1948,21 +1949,7 @@ class World:
         return 0 <= x < self.W and 0 <= y < self.H and self.walk[y][x]
 
     def chunk_events(self, cx, cy):
-        lines = []
-        x0, y0 = cx * CHUNK, cy * CHUNK
-        for i in range(CHUNK):
-            # (edge block, the block of the neighbour where the player arrives, map, x, y in the neighbour)
-            for (ex, ey), (dx, dy), (ncx, ncy), (ax, ay) in (
-                    ((0, i), (-2, 0), (cx - 1, cy), (CHUNK - 2, i)),
-                    ((CHUNK - 1, i), (2, 0), (cx + 1, cy), (1, i)),
-                    ((i, 0), (0, -2), (cx, cy - 1), (i, CHUNK - 2)),
-                    ((i, CHUNK - 1), (0, 2), (cx, cy + 1), (i, 1))):
-                if not (0 <= ncx < self.cw and 0 <= ncy < self.ch):
-                    continue
-                wx, wy = x0 + ex, y0 + ey
-                if self.walkable(wx, wy) and self.walkable(wx + dx, wy + dy):
-                    lines.append(f"{ex} {ey} 2 Levels/teleport.miniska, w_{ncx}_{ncy}, {ax}, {ay}")
-        return lines + self.door_events.get((cx, cy), []) + self.events.get((cx, cy), [])
+        return self.door_events.get((cx, cy), []) + self.events.get((cx, cy), [])
 
     def write(self, root, world):
         """The world in Data/Worlds/<world> : a folder per map (chunks and rooms), Chipsets (a chipset per map). The

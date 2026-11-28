@@ -118,6 +118,8 @@ void SaveSlots::WorldGenerated(const std::string& name, std::int64_t seed, const
 	reader.set("World directory", WorldPath(name));
 	reader.set("World generate", false);
 	reader.set("World version", worldgen::WorldVersion);
+	// The entities of the chunks were of the world before
+	std::remove((SaveDirectory() + name + "/Chunks.txt").c_str());
 	if (fresh) { // a world generated again (the same seed, the same world) : the trainer stays where it was
 		reader.set("Trainer start_map_name", start.map);
 		reader.set("Trainer start_posx", start.x);

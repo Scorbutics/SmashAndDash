@@ -305,12 +305,10 @@ void StateFight::beforeUnload() {
 		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ska::InputComponent{ *m_ic });
 		SLOG(ska::LogLevel::Info) << "Battle over : the player controls the trainer again";
 		m_ic = nullptr;
-		park(m_pokemonId);
-		m_entityManager.removeEntity(m_pokemonId);
+		m_worldState.removeCharacter(m_pokemonId);
 		// The other wild Pokemon of the group existed for the battle only
 		for (const auto companion : m_companions) {
-			park(companion);
-			m_entityManager.removeEntity(companion);
+			m_worldState.removeCharacter(companion);
 		}
 		m_companions.clear();
 		// The fighters still on the map are drawn as they are : the effects of the battle are over (a flash, a shrink into a
@@ -323,8 +321,7 @@ void StateFight::beforeUnload() {
 		// A wild Pokemon made for the battle (a script : Battle.start), still there (the player fled, or lost) : gone with it
 		if (!m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId) && m_entityManager.hasComponent<ska::PositionComponent>(m_opponentId) &&
 			m_entityManager.hasComponent<FightComponent>(m_opponentId)) {
-			park(m_opponentId);
-			m_entityManager.removeEntity(m_opponentId);
+			m_worldState.removeCharacter(m_opponentId);
 		}
 		// The wild Pokemon still there (the player fled, or lost) : it stands still, and leaves the player alone a while
 		if (m_entityManager.hasComponent<WildPokemonComponent>(m_opponentId)) {

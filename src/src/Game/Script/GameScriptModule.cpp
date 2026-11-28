@@ -1,5 +1,6 @@
 #include "Game/__internalConfig/LoggerConfig.h"
 #include "GameScriptModule.h"
+#include "../Gameplay/World/ChunkOwnedComponent.h"
 #include <limits>
 #include <algorithm>
 #include <fstream>
@@ -85,7 +86,6 @@ namespace {
 	}
 
 	// The mass of an anchored character (Character.anchor) : the others (about 1) do not push it
-	constexpr auto AnchoredMass = 1.0e15;
 
 	// Speed of the "run" movement mode, compared to the walk
 	constexpr auto RunFactor = 1.8F;
@@ -263,25 +263,15 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		return ska::NodeValue{};
 	});
 
-	m_builder.bindField("addCharacter", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
-		auto& space = worldState.getSpace();
-		const auto& world = worldState.getWorld();
-		const auto character = CustomEntityManager::createMovingCharacterNG(entityManager, space, ska::Point<int>{ Int(params[1]), Int(params[2]) },
-			Int(params[0]), static_cast<unsigned int>(world.getBlockSize()), String(params[3]));
-		const auto& script = String(params[4]);
-		if (!script.empty()) {
-			auto sleeping = ska::ScriptSleepComponent{};
-			sleeping.name = script;
-			sleeping.triggeringType = ska::ScriptTriggerType::ACTION;
-			sleeping.period = 1000;
-			const auto& arguments = params[5].nodeval<ska::NodeValueArray>();
-			if (arguments != nullptr) {
-				for (const auto& argument : *arguments) {
-					sleeping.args.push_back(argument.convertString());
-				}
+	m_builder.bindField("addCharacter", [&worldState, &handles](std::vector<ska::NodeValue> params) {
+		auto arguments = std::vector<std::string>{};
+		const auto& values = params[5].nodeval<ska::NodeValueArray>();
+		if (values != nullptr) {
+			for (const auto& argument : *values) {
+				arguments.push_back(argument.convertString());
 			}
-			entityManager.addComponent<ska::ScriptSleepComponent>(character, std::move(sleeping));
 		}
+		const auto character = worldState.addCharacter(Int(params[0]), ska::Point<int>{ Int(params[1]), Int(params[2]) }, String(params[3]), String(params[4]), std::move(arguments));
 		return ska::NodeValue{ handles.handle(character) };
 	});
 
@@ -323,6 +313,11 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 		Charset::load(graphic.animatedSprites[0], static_cast<int>(Int(params[1])));
 		graphic.animatedSprites[0].setDelay(100);
 		Require<ska::AnimationComponent>(entityManager, entity, "be animated").animatedWhenStill = params[2].nodeval<bool>();
+		if (entityManager.hasComponent<ChunkOwnedComponent>(entity)) {
+			auto& owned = entityManager.getComponent<ChunkOwnedComponent>(entity);
+			owned.sprite = Int(params[1]);
+			owned.animatedWhenStill = params[2].nodeval<bool>();
+		}
 		return ska::NodeValue{};
 	});
 
@@ -351,25 +346,12 @@ CharacterScriptModule::CharacterScriptModule(ska::scripting::ScriptVM& vm, Custo
 	});
 
 	m_builder.bindField("remove", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(handles, entityManager, params[0]);
-		// Removing the entity does not remove its physics body : the body is moved away from the map
-		Place(entityManager, worldState.getSpace(), entity, ska::Point<float>{ -100000.F, -100000.F });
-		entityManager.removeEntity(entity);
+		worldState.removeCharacter(Entity(handles, entityManager, params[0]));
 		return ska::NodeValue{};
 	});
 
 	m_builder.bindField("anchor", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
-		const auto entity = Entity(handles, entityManager, params[0]);
-		// Its physics body is too heavy to be pushed (a fighter in a battle, a wild Pokemon charging) : it stays on its
-		// block (the action key finds it in front of the player). Not kinematic : the constraint that ties it to its
-		// control body would join two bodies of infinite mass (the solver divides by zero : its position is lost)
-		if (entityManager.hasComponent<ska::cp::HitboxComponent>(entity)) {
-			const auto& hitbox = entityManager.getComponent<ska::cp::HitboxComponent>(entity);
-			auto& body = worldState.getSpace().getBody(hitbox.bodyIndex);
-			cpBodySetMass(&body.body(), AnchoredMass);
-			cpBodySetMoment(&body.body(), INFINITY);
-			body.setVelocity(ska::cp::Vect{ 0.F, 0.F });
-		}
+		worldState.anchor(Entity(handles, entityManager, params[0]));
 		return ska::NodeValue{};
 	});
 
@@ -472,9 +454,11 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		}
 		const auto& world = worldState.getWorld();
 		const auto& mapName = String(params[0]);
-		const auto mapReader = ska::IniReader{ MapIni(mapName) };
+		// A map that is not there : an error of the script
+		if (!std::ifstream{ MapIni(mapName) }.good()) {
+			throw std::runtime_error("no map " + std::string{ mapName });
+		}
 		auto mapEvent = MapEvent{ MapEventType::Switch_Map };
-		mapEvent.chipsetName = mapReader.get<std::string>("Chipset file");
 		mapEvent.mapName = mapName;
 		const auto blockSize = static_cast<int>(world.getBlockSize());
 		mapEvent.position.x = blockSize * Int(params[1]);
@@ -482,6 +466,15 @@ MapScriptModule::MapScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManag
 		mapEvent.walkIn = true;
 		ged.ska::Observable<MapEvent>::notifyObservers(mapEvent);
 		return ska::NodeValue{};
+	});
+
+	// The block of the world of the first block of the map of the player (a block of it : the block of the world minus this)
+	m_builder.bindField("originX", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ static_cast<long>(worldState.originOf(worldState.getMapName()).x) };
+	});
+
+	m_builder.bindField("originY", [&worldState](std::vector<ska::NodeValue>) {
+		return ska::NodeValue{ static_cast<long>(worldState.originOf(worldState.getMapName()).y) };
 	});
 
 	m_builder.bindField("blockX", [&entityManager, &worldState, &handles](std::vector<ska::NodeValue> params) {
@@ -741,7 +734,7 @@ BattleScriptModule::BattleScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 		const auto battles = worldState.battles();
 		if (!StartBattle(entityManager, ged, worldState, *trainer, opponent)) {
 			// No Pokemon of the team can fight : no battle, lost
-			entityManager.removeEntity(opponent);
+			worldState.removeCharacter(opponent);
 			return ska::NodeValue{ false };
 		}
 		vm.suspendUntil([&worldState, battles]() { return worldState.battles() != battles; },
@@ -827,13 +820,7 @@ SaveScriptModule::SaveScriptModule(ska::scripting::ScriptVM& vm, CustomEntityMan
 		if (trainer == nullptr || !entityManager.hasComponent<ska::PositionComponent>(*trainer)) {
 			return ska::NodeValue{ false };
 		}
-		// The block of the player, as it is placed when the game is loaded (its position)
-		const auto blockSize = static_cast<int>(worldState.getWorld().getBlockSize());
-		const auto& position = entityManager.getComponent<ska::PositionComponent>(*trainer);
-		const auto blockX = static_cast<int>(position.x + blockSize / 2) / blockSize;
-		const auto blockY = static_cast<int>(position.y + blockSize / 2) / blockSize;
-		worldState.getSaveGame().saveGame(worldState.getMapName(), blockX, blockY);
-		SLOG_STATIC(ska::LogLevel::Info, GameScriptModule) << "Game saved (" << worldState.getMapName() << ", " << blockX << ", " << blockY << ")";
+		worldState.saveGame();
 		return ska::NodeValue{ true };
 	});
 

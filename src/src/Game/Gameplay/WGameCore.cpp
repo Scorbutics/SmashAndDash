@@ -44,8 +44,7 @@ void WGameCore::startWorld(const std::string& save) {
 	m_worldState = &navigateToState<WorldState>(m_entityManager, m_eventDispatcher, m_settings);
 
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
-	const auto pathStartMapName = MapDirectory(startMapName);
-	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, pathStartMapName, m_worldState->getSaveGame().getStartChipsetName())));
+	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, startMapName)));
 
 	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
 	guiState.bindGUI(m_settings);
@@ -103,7 +102,7 @@ void WGameCore::switchState(const MapEvent& me) {
 				resetAccumulator();
 			});
 		} else {
-			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, MapDirectory(me.mapName), me.chipsetName, me.position, me.walkIn, me.resume);
+			m_nextState = std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, me.mapName, me.position, me.walkIn, me.resume);
 			wn.then([&](ska::StateBase& worldState) {
 				m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::move(m_nextState)));
 				resetAccumulator();

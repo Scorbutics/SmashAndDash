@@ -310,7 +310,7 @@ void BattleDirectorSystem::end() {
 	// Captured : it is in the team now (the battle can still be lost or fled after)
 	const auto capturedOnMap = m_stage.fighters.size() > 1 && present(m_stage.fighters[1]) && m_componentAccessor.get<FighterComponent>(m_stage.fighters[1]).captured;
 	if ((m_result.won || capturedOnMap) && m_stage.fighters.size() > 1) {
-		CustomEntityManager::place(m_entities, m_worldState.getSpace(), m_stage.fighters[1], ska::Point<float>{ -100000.F, -100000.F });
+		m_worldState.releaseBodies(m_stage.fighters[1]);
 		scheduleDeferredRemove(m_stage.fighters[1]);
 	}
 	m_worldState.battleEnded(m_result);
@@ -320,8 +320,6 @@ void BattleDirectorSystem::end() {
 	// Back to the map, as it is : no fade, no loading (the camera already went back to the trainer)
 	MapEvent me(MapEventType::Switch_Map);
 	me.mapName = m_worldState.getMapName();
-	const auto mapReader = ska::IniReader{ MapIni(me.mapName) };
-	me.chipsetName = mapReader.get<std::string>("Chipset file");
 	const auto* trainer = m_worldState.getEntityLocator().getEntityId(SCRIPT_ENTITY_TRAINER);
 	const auto& pc = m_entities.getComponent<ska::PositionComponent>(trainer != nullptr && m_entities.hasComponent<ska::PositionComponent>(*trainer) ? *trainer : m_stage.player);
 	me.position = pc;

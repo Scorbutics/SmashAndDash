@@ -1,5 +1,6 @@
 # An item to find on the map, in an item ball (placed by tools/worldgen).
-# Map event, when the map is loaded : Levels/item.miniska, place, <item>, <x>, <y>, <flag> : the ball on the block,
+# Map event, the first time the map is loaded : Levels/item.miniska, place, <item>, <x>, <y>, <flag> : the ball on the
+# block of the world (outdoors the maps make one world : Map.originX),
 # unless the item was taken (the game variable <flag> is set).
 # The ball, when the player talks to it : take, <item>, <flag> : the item goes in the bag, once.
 Engine = import "bind:ska.engine"

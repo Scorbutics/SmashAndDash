@@ -29,8 +29,8 @@ protected:
 	void refresh(unsigned int) override {}
 };
 
-// Wild Pokemon appear around the spawn areas from time to time, up to a number of them on the map (the ones still there, and
-// the ones arriving : a map left and found again after a battle keeps its wild Pokemon)
+// Wild Pokemon appear around the spawn areas from time to time, up to a number of them around each (the ones still there,
+// and the ones arriving : a map left and found again after a battle keeps its wild Pokemon)
 class MobSpawningSystem : public ska::System< ska::RequiredComponent<ska::PositionComponent, MobSpawnAreaComponent>, ska::PossibleComponent<>> {
 public:
 	MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay);
@@ -38,7 +38,11 @@ public:
 	virtual void refresh(unsigned int ellapsedTime) override;
 
 private:
+	// The wild Pokemon around the spawn areas, and the ones arriving
+	int around();
+
 	unsigned int m_t0, m_duration, m_rmin, m_rmax, m_spawnNum;
+	ska::EntityManager& m_entities;
 	WildPokemons m_wild;
 	ArrivingPokemons m_arriving;
 	MobSpawner& m_mobSpawner;

@@ -17,6 +17,7 @@ class WorldState;
 namespace ska {
 	class CameraSystem;
 	class EntityManager;
+	class Tileset;
 	class Renderer;
 }
 
@@ -49,12 +50,13 @@ public:
 	void render(ska::Renderer& renderer) const;
 
 private:
-	// A block of the map around the clash : its tiles (ground, middle, top : their clips in the tileset)
-	// A block of the map : its tiles (ground, middle, top : their clips in the tileset) and their depth (Tile properties :
-	// -1 flat, n standing on an object n blocks lower)
+	// A block of the map around the clash : its tiles (ground, middle, top : their clips in the tileset of its chunk) and
+	// their depth (Tile properties : -1 flat, n standing on an object n blocks lower)
 	struct Cell {
 		int x = 0;
 		int y = 0;
+		// Its tileset (m_sheets)
+		int sheet = 0;
 		std::array<std::optional<ska::Rectangle>, 3> clips;
 		std::array<int, 3> bases{ -1, -1, -1 };
 	};
@@ -62,6 +64,7 @@ private:
 	// flat on the ground or standing, its clip, its tint, when it comes
 	struct Piece {
 		ska::Rectangle clip{};
+		int sheet = 0;
 		float forward = 0.F;
 		float lateral = 0.F;
 		float up = 0.F;
@@ -99,7 +102,8 @@ private:
 	void layout(int width, int height) const;
 	// The tiles that stand without the ground drawn in them (the bottom of a trunk, of a wall : the ground and the shadow
 	// around them, as their neighbour shows it) : a copy of the tileset, those pixels transparent
-	void cutGround(const std::map<std::pair<int, int>, std::vector<ska::Rectangle>>& grounds) const;
+	void cutGround(const std::map<std::array<int, 3>, std::vector<ska::Rectangle>>& grounds) const;
+	void cutGround(int sheet, const std::map<std::array<int, 3>, std::vector<ska::Rectangle>>& grounds) const;
 
 	ska::Point<int> screenSize() const;
 	ska::Point<float> toScreen(ska::Point<float> world) const;
@@ -127,7 +131,7 @@ private:
 	void renderKnockOut(Ui::Canvas& canvas) const;
 
 	// A tile of the tileset, its centre at x y, its size, turned, faded, tinted
-	void tile(ska::Renderer& renderer, const ska::Rectangle& clip, float x, float y, float width, float height, double angle, unsigned char alpha, unsigned char shade = 255, unsigned char flash = 0, bool standing = false) const;
+	void tile(ska::Renderer& renderer, int sheet, const ska::Rectangle& clip, float x, float y, float width, float height, double angle, unsigned char alpha, unsigned char shade = 255, unsigned char flash = 0, bool standing = false) const;
 	// A frame of the character sheet of a Pokemon (Sprites/Charsets), its feet at x y
 	void pokemon(ska::Renderer& renderer, int monster, int row, int column, float x, float y, float scale, unsigned char alpha, unsigned char flash = 0, int sink = 0, unsigned char shade = 255) const;
 	const ska::Texture& charset(int monster) const;
@@ -157,9 +161,10 @@ private:
 	mutable std::vector<Piece> m_rows;
 	mutable std::vector<Piece> m_ground;
 	mutable std::vector<Piece> m_standing;
-	// The tileset without the ground in the tiles that stand (cutGround), when it could be made
-	mutable ska::Texture m_standingTiles;
-	mutable bool m_hasStandingTiles = false;
+	// The tilesets of the chunks of the blocks kept
+	mutable std::vector<const ska::Tileset*> m_sheets;
+	// The tilesets without the ground in the tiles that stand (cutGround), when they could be made
+	mutable std::map<int, ska::Texture> m_standingTiles;
 	mutable ska::Texture m_ballTexture;
 	mutable ska::Texture m_burstTexture;
 	mutable bool m_ballLoaded = false;

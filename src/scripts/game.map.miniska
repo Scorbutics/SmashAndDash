@@ -1,14 +1,19 @@
 # Maps : teleportation, blocks, map effects : Map = import "bind:game.map"
 # Directions : 0 down, 1 right, 2 up, 3 left (4 to 7 : diagonals)
 
-# Name of the current map (ex : "Town")
+# Name of the map the player is in (ex : "w_5_4" ; walking outdoors changes it)
 name = function() : string do return "" end
 
-# Goes to a map, at a block position (the map changes during a screen transition : waitTransition waits for its end).
+# Goes to a map, at a block position in this map (the map changes during a screen transition : waitTransition waits for its end).
 # During a battle : an error of the script (the map does not change under a battle)
 teleport = function(map: string, x: int, y: int) do end
 # Waits until the screen transition (a map change) is over
 waitTransition = function() do end
+
+# The blocks are those of the world the player is in : outdoors, all the maps "w_<x>_<y>" make one world (the first block
+# of "w_5_4" is 200, 160). originX, originY : the block of the world of the first block of the map of the player
+originX = function() : int do return 0 end
+originY = function() : int do return 0 end
 
 # Block an entity is on
 blockX = function(entity: int) : int do return 0 end

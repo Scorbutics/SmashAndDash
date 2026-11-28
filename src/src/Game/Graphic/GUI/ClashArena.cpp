@@ -210,7 +210,6 @@ void ClashArena::capture() const {
 	auto& world = m_worldState.getWorld();
 	const auto blockSize = static_cast<float>(world.getBlockSize());
 	const auto& profile = world.getCollisionProfile();
-	const auto& tileset = m_worldState.getTileset();
 	const auto block = [&](ska::EntityId entity, ska::Point<float> fallback) {
 		if (!m_entities.hasComponent<ska::PositionComponent>(entity) || !m_entities.hasComponent<ska::HitboxComponent>(entity)) {
 			return fallback;
@@ -234,6 +233,7 @@ void ClashArena::capture() const {
 		m_forward = ska::Point<int>{ 0, dy > 0.F ? 1 : -1 };
 	}
 	m_cells.clear();
+	m_sheets.clear();
 	const auto layers = std::min<std::size_t>(3, profile.layers());
 	for (auto y = m_centerY - Radius; y <= m_centerY + Radius; y++) {
 		for (auto x = m_centerX - Radius; x <= m_centerX + Radius; x++) {
@@ -241,6 +241,13 @@ void ClashArena::capture() const {
 			cell.x = x;
 			cell.y = y;
 			if (x >= 0 && y >= 0 && static_cast<std::size_t>(x) < profile.getBlocksX() && static_cast<std::size_t>(y) < profile.getBlocksY()) {
+				// The tileset of its chunk
+				const auto& tileset = m_worldState.getTileset({ x, y });
+				const auto known = std::find(m_sheets.begin(), m_sheets.end(), &tileset);
+				cell.sheet = static_cast<int>(known - m_sheets.begin());
+				if (known == m_sheets.end()) {
+					m_sheets.push_back(&tileset);
+				}
 				for (auto layer = std::size_t{ 0 }; layer < layers; layer++) {
 					const auto* tile = profile.getBlock(layer, static_cast<std::size_t>(x), static_cast<std::size_t>(y));
 					if (tile != nullptr) {
@@ -316,12 +323,15 @@ void ClashArena::layout(int width, int height) const {
 	};
 	// The ground where a tile stands (a wall, a cliff) : the flat ground of the block of the player, else any
 	auto fallback = std::optional<ska::Rectangle>{};
+	auto fallbackSheet = 0;
 	if (const auto* own = cell(m_centerX, m_centerY); own != nullptr && own->clips[0].has_value() && own->bases[0] < 0) {
 		fallback = own->clips[0];
+		fallbackSheet = own->sheet;
 	}
 	for (const auto& c : m_cells) {
 		if (!fallback.has_value() && c.clips[0].has_value() && c.bases[0] < 0) {
 			fallback = c.clips[0];
+			fallbackSheet = c.sheet;
 		}
 	}
 	const auto shadeOf = [](float forward) { return Byte(255.F - Clamp01(forward / static_cast<float>(FarRow)) * 135.F); };
@@ -332,6 +342,7 @@ void ClashArena::layout(int width, int height) const {
 		if (fallback.has_value()) {
 			auto row = Piece{};
 			row.clip = *fallback;
+			row.sheet = fallbackSheet;
 			row.forward = static_cast<float>(forward);
 			row.floor = true;
 			row.shade = shadeOf(static_cast<float>(forward));
@@ -351,9 +362,11 @@ void ClashArena::layout(int width, int height) const {
 			piece.shade = shadeOf(piece.forward);
 			piece.seed = Hash(block.x, block.y, 7);
 			piece.delay = delayOf(piece.forward) + piece.seed * 60.F;
-			const auto ground = c->clips[0].has_value() && c->bases[0] < 0 ? c->clips[0] : fallback;
+			const auto own = c->clips[0].has_value() && c->bases[0] < 0;
+			const auto ground = own ? c->clips[0] : fallback;
 			if (ground.has_value()) {
 				piece.clip = *ground;
+				piece.sheet = own ? c->sheet : fallbackSheet;
 				m_ground.push_back(piece);
 			}
 			// The flat tiles over it (a carpet, a path)
@@ -361,6 +374,7 @@ void ClashArena::layout(int width, int height) const {
 				const auto index = static_cast<std::size_t>(layer);
 				if (c->clips[index].has_value() && c->bases[index] < 0) {
 					piece.clip = *c->clips[index];
+					piece.sheet = c->sheet;
 					m_ground.push_back(piece);
 				}
 			}
@@ -370,12 +384,14 @@ void ClashArena::layout(int width, int height) const {
 	// The tiles that stand (their depth : the block of their object on the ground, how high they are) : upright, as the
 	// trees and the signs of the racing games, scaled by their distance
 	// The ground around each tile that stands (its neighbour), to cut it out of the tile
-	auto grounds = std::map<std::pair<int, int>, std::vector<ska::Rectangle>>{};
+	// By tile : its sheet, its place in it
+	auto grounds = std::map<std::array<int, 3>, std::vector<ska::Rectangle>>{};
 	const auto groundsNear = [&](const Cell& c, std::vector<ska::Rectangle>& found) {
 		for (auto dy = -2; dy <= 2; dy++) {
 			for (auto dx = -2; dx <= 2; dx++) {
 				const auto* n = cell(c.x + dx, c.y + dy);
-				if (n != nullptr && n->clips[0].has_value() && n->bases[0] < 0) {
+				// (Of the same tileset)
+				if (n != nullptr && n->sheet == c.sheet && n->clips[0].has_value() && n->bases[0] < 0) {
 					const auto& clip = *n->clips[0];
 					if (std::none_of(found.begin(), found.end(), [&clip](const ska::Rectangle& r) { return r.x == clip.x && r.y == clip.y; })) {
 						found.push_back(clip);
@@ -447,7 +463,8 @@ void ClashArena::layout(int width, int height) const {
 		const auto lateral = static_cast<float>(rx * right.x + ry * right.y);
 		auto piece = Piece{};
 		piece.clip = *c.clips[index];
-		const auto key = std::make_pair(piece.clip.x, piece.clip.y);
+		piece.sheet = c.sheet;
+		const auto key = std::array<int, 3>{ c.sheet, piece.clip.x, piece.clip.y };
 		// The two lowest rows of an object (a trunk and the foliage over it, the base of a wall) : drawn over the ground
 		if (c.bases[index] <= 1) {
 			groundsNear(c, grounds[key]);
@@ -468,14 +485,26 @@ void ClashArena::layout(int width, int height) const {
 	cutGround(grounds);
 }
 
-void ClashArena::cutGround(const std::map<std::pair<int, int>, std::vector<ska::Rectangle>>& grounds) const {
-	m_hasStandingTiles = false;
+void ClashArena::cutGround(const std::map<std::array<int, 3>, std::vector<ska::Rectangle>>& grounds) const {
+	m_standingTiles.clear();
+	for (auto sheet = 0; sheet < static_cast<int>(m_sheets.size()); sheet++) {
+		cutGround(sheet, grounds);
+	}
+}
+
+void ClashArena::cutGround(int sheet, const std::map<std::array<int, 3>, std::vector<ska::Rectangle>>& grounds) const {
+	const auto first = grounds.lower_bound({ sheet, 0, 0 });
+	if (first == grounds.end() || first->first[0] != sheet) {
+		return;
+	}
 	// The transparent colour of the tilesets (the colour key of the textures)
 	constexpr std::uint8_t Key[] = { ska::Texture::DEFAULT_T_RED, ska::Texture::DEFAULT_T_GREEN, ska::Texture::DEFAULT_T_BLUE };
 	try {
-		auto image = worldgen::ReadPng(m_worldState.getTileset().getName() + ".png");
+		auto image = worldgen::ReadPng(m_sheets[static_cast<std::size_t>(sheet)]->getName() + ".png");
 		const auto isKey = [&](const std::uint8_t* p) { return p[0] == Key[0] && p[1] == Key[1] && p[2] == Key[2]; };
-		for (const auto& [at, near] : grounds) {
+		for (auto it = first; it != grounds.end() && it->first[0] == sheet; ++it) {
+			const auto at = std::make_pair(it->first[1], it->first[2]);
+			const auto& near = it->second;
 			if (near.empty()) {
 				continue;
 			}
@@ -556,8 +585,10 @@ void ClashArena::cutGround(const std::map<std::pair<int, int>, std::vector<ska::
 		static auto made = 0U;
 		const auto path = (std::filesystem::temp_directory_path() / ("sad_clash_tiles_" + std::to_string(++made) + ".bmp")).string();
 		worldgen::WriteFile(path, worldgen::EncodeBmp(image));
-		m_standingTiles = ska::Texture{ path };
-		m_hasStandingTiles = m_standingTiles.getWidth() > 0;
+		auto texture = ska::Texture{ path };
+		if (texture.getWidth() > 0) {
+			m_standingTiles.insert_or_assign(sheet, std::move(texture));
+		}
 		std::remove(path.c_str());
 	} catch (const std::exception& e) {
 		SLOG(ska::LogLevel::Warn) << "Clash : the tiles that stand keep their ground (" << e.what() << ")";
@@ -605,11 +636,12 @@ int ClashArena::monster(ska::EntityId entity) const {
 	return m_entities.hasComponent<BattleComponent>(entity) ? m_entities.getComponent<BattleComponent>(entity).monster : 0;
 }
 
-void ClashArena::tile(ska::Renderer& renderer, const ska::Rectangle& clip, float x, float y, float width, float height, double angle, unsigned char alpha, unsigned char shade, unsigned char flash, bool standing) const {
-	if (alpha == 0 || clip.w <= 0 || clip.h <= 0) {
+void ClashArena::tile(ska::Renderer& renderer, int sheet, const ska::Rectangle& clip, float x, float y, float width, float height, double angle, unsigned char alpha, unsigned char shade, unsigned char flash, bool standing) const {
+	if (alpha == 0 || clip.w <= 0 || clip.h <= 0 || sheet < 0 || sheet >= static_cast<int>(m_sheets.size())) {
 		return;
 	}
-	const auto& texture = standing && m_hasStandingTiles ? m_standingTiles : m_worldState.getTileset().getTexture();
+	const auto cut = standing ? m_standingTiles.find(sheet) : m_standingTiles.end();
+	const auto& texture = cut != m_standingTiles.end() ? cut->second : m_sheets[static_cast<std::size_t>(sheet)]->getTexture();
 	auto effect = ska::RenderEffect{};
 	effect.scaleX = width / static_cast<float>(clip.w);
 	effect.scaleY = height / static_cast<float>(clip.h);
@@ -868,7 +900,7 @@ void ClashArena::renderShatter(Ui::Canvas& canvas) const {
 		const auto flash = Byte(p < 0.12F ? 200.F * (1.F - p / 0.12F) : 0.F);
 		for (const auto& clip : f.cell->clips) {
 			if (clip.has_value()) {
-				tile(renderer, *clip, x, y, size * scale, size * scale, static_cast<double>(spin * 320.F * p), alpha, 255, flash);
+				tile(renderer, f.cell->sheet, *clip, x, y, size * scale, size * scale, static_cast<double>(spin * 320.F * p), alpha, 255, flash);
 			}
 		}
 		// Dust
@@ -1112,7 +1144,7 @@ void ClashArena::renderPieces(Ui::Canvas& canvas, const std::vector<Piece>& piec
 		if (alpha <= 0.F || x + width < -20.F || x - width > w + 20.F || y + height < -20.F || y - height > h + 20.F) {
 			continue;
 		}
-		tile(renderer, piece.clip, x, y, width, height, static_cast<double>(angle), Byte(255.F * alpha), piece.shade, Byte(flash), !piece.floor);
+		tile(renderer, piece.sheet, piece.clip, x, y, width, height, static_cast<double>(angle), Byte(255.F * alpha), piece.shade, Byte(flash), !piece.floor);
 	}
 }
 void ClashArena::renderPlatform(Ui::Canvas& canvas, ska::Point<float> center, float rx, float ry, float drop, float alpha) const {
@@ -1394,7 +1426,7 @@ void ClashArena::renderScene(Ui::Canvas& canvas, float build, float scatter) con
 		}
 		const auto far = row.forward >= static_cast<float>(FarRow) ? v.horizon : project(v, row.forward + 0.5F, 0.F, 0.F).y;
 		const auto near = project(v, row.forward - 0.5F, 0.F, 0.F).y;
-		tile(renderer, row.clip, w / 2.F + static_cast<float>(offset.x), (far + near) / 2.F + static_cast<float>(offset.y), w + 80.F, near - far + 1.F, 0., Byte(255.F * alpha), row.shade);
+		tile(renderer, row.sheet, row.clip, w / 2.F + static_cast<float>(offset.x), (far + near) / 2.F + static_cast<float>(offset.y), w + 80.F, near - far + 1.F, 0., Byte(255.F * alpha), row.shade);
 	}
 	renderPieces(canvas, m_ground, build, scatter, offset, -1e9F, 1e9F);
 	// The haze of the horizon

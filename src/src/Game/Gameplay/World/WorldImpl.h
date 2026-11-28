@@ -15,11 +15,12 @@ class WorldImpl :
 	public ska::SubObserver<SettingsChangeEvent> {
 
 public:
-	WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, const ska::TileWorldLoader& loader);
+	WorldImpl(PokemonGameEventDispatcher& ged, unsigned int blockSize);
 	~WorldImpl() = default;
 
 	WorldImpl& operator=(const WorldImpl&) = delete;
-	void load(const ska::TilesetCorrespondanceMapper& mapper, const std::string& fileName, ska::Tileset* tileset);
+	// The map the player is on ("<world>/w_5_4") : its wild Pokemon, its weather, its fog
+	void setMap(const std::string& mapDirectory);
 
 	void loadWeatherFromData(const std::string& stringDataFile);
 	void loadFogFromData(const std::string& stringDataFile);
@@ -34,6 +35,9 @@ public:
 
 private:
 	std::vector<ska::IniReader> m_mobSettings;
+	// The weather and the fog shown : loaded again only when another map has others
+	std::string m_weatherShown;
+	std::string m_fogShown;
 	Weather m_fog;
 	Weather m_weather;
 };

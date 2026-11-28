@@ -55,6 +55,12 @@ check "variables" '"ok": true' ska-console --run $RUN run tools/agent/variables.
 check "spawn (a wild Pokemon arrives)" 'arriving' ska-console --run $RUN run tools/agent/spawn.miniska 19 3
 check "wild" 'wild pokemon' ska-console --run $RUN run tools/agent/wild.miniska
 check "warp" 'w_room_0 (11,8)' ska-console --run $RUN run tools/agent/warp.miniska w_room_0 11 8
+# Outdoors the chunks are one map : walking east from w_5_4 into w_6_4, no transition, nothing stops the player
+check "warp by a chunk border" 'w_5_4 (38,20) world (238,180)' ska-console --run $RUN run tools/agent/warp.miniska w_5_4 38 20
+check "walk across it" '"pressed"' ska-console --run $RUN press D 60
+check "in the next chunk" '"value": "w_6_4 ' ska-console --run $RUN eval 'p = Engine.entity("trainer")
+Dev.reply(Map.name() + " " + (Map.blockX(p): string))'
+check "chunks come" 'Chunk load w_6_4' ska-run logs $RUN --grep 'Chunk load w_6_4'
 # The tile room (tools/worldgen/tileroom.py) : every tile of the generator on a map of the run, its walls in the game
 WORLD="${SKA_RUNS_DIR:-/tmp/ska-runs-$(id -u)}/$RUN/Saves/save1/World"
 check "tile room : every kind of tile" 'w_tiles : ' python3 tools/worldgen/tileroom.py "$WORLD"

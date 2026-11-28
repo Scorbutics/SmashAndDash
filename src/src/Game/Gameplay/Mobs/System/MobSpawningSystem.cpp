@@ -5,9 +5,12 @@
 #include "../../World/WorldImpl.h"
 #include "Core/Utils/TimeUtils.h"
 #include "../MobSpawner.h"
+#include "../../World/Chunks/DespawnRules.h"
+#include <cmath>
 
 MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawner& ms, const unsigned int delay) :
 	System(entityManager),
+	m_entities(entityManager),
 	m_wild(entityManager),
 	m_arriving(entityManager),
 	m_mobSpawner(ms) {
@@ -20,7 +23,7 @@ MobSpawningSystem::MobSpawningSystem(ska::EntityManager& entityManager, MobSpawn
 }
 
 void MobSpawningSystem::refresh(unsigned int) {
-	if (m_wild.getEntities().size() + m_arriving.getEntities().size() < SPAWN_LIMIT_ALLOWED && ska::TimeUtils::getTicks() - m_t0 >= m_duration) {
+	if (ska::TimeUtils::getTicks() - m_t0 >= m_duration && around() < chunks::SpawnCap) {
 		ska::IniReader* reader = GetRandomMobSettings(m_mobSpawner);
 		if (reader != nullptr) {
 			const auto& processed = getEntities();
@@ -34,4 +37,22 @@ void MobSpawningSystem::refresh(unsigned int) {
 }
 
 MobSpawningSystem::~MobSpawningSystem() {
+}
+
+int MobSpawningSystem::around() {
+	auto count = static_cast<int>(m_arriving.getEntities().size());
+	const auto radius = chunks::SpawnRadius * TAILLEBLOC;
+	for (const auto area : getEntities()) {
+		const auto& center = m_componentAccessor.get<ska::PositionComponent>(area);
+		for (const auto wild : m_wild.getEntities()) {
+			if (!m_entities.hasComponent<ska::PositionComponent>(wild)) {
+				continue;
+			}
+			const auto& position = m_entities.getComponent<ska::PositionComponent>(wild);
+			if (std::hypot(static_cast<float>(position.x - center.x), static_cast<float>(position.y - center.y)) <= radius) {
+				count++;
+			}
+		}
+	}
+	return count;
 }

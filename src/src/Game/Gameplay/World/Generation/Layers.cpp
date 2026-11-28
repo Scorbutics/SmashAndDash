@@ -758,7 +758,8 @@ void worldgen::World::itemEvent(int x, int y, int item) {
 	const auto cy = y / Chunk;
 	const auto lx = x - cx * Chunk;
 	const auto ly = y - cy * Chunk;
-	addEvent(cx * Chunk, cy * Chunk, "0 Levels/item.miniska, place, " + std::to_string(item) + ", " + std::to_string(lx) + ", " + std::to_string(ly)
+	// The ball goes on its block of the world (the maps of the outdoors are played as one)
+	addEvent(cx * Chunk, cy * Chunk, "0 Levels/item.miniska, place, " + std::to_string(item) + ", " + std::to_string(x) + ", " + std::to_string(y)
 		+ ", item_w_" + std::to_string(cx) + "_" + std::to_string(cy) + "_" + std::to_string(lx) + "_" + std::to_string(ly));
 	take(x, y);
 	m_items.push_back({ x, y, item });
@@ -1123,32 +1124,6 @@ std::array<std::uint8_t, 3> worldgen::World::cornerLight(int i, int j) const {
 
 std::vector<std::string> worldgen::World::chunkEvents(int cx, int cy) const {
 	auto lines = std::vector<std::string>{};
-	const auto x0 = cx * Chunk;
-	const auto y0 = cy * Chunk;
-	const auto chunksX = width() / Chunk;
-	const auto chunksY = height() / Chunk;
-	const auto walkable = [this](int x, int y) { return inMap(x, y) && walk(x, y); };
-	for (auto i = 0; i < Chunk; i++) {
-		// (edge block, the block of the neighbour where the player arrives, map, x, y in the neighbour)
-		struct Edge { int ex, ey, dx, dy, ncx, ncy, ax, ay; };
-		const Edge edges[] = {
-			{ 0, i, -2, 0, cx - 1, cy, Chunk - 2, i },
-			{ Chunk - 1, i, 2, 0, cx + 1, cy, 1, i },
-			{ i, 0, 0, -2, cx, cy - 1, i, Chunk - 2 },
-			{ i, Chunk - 1, 0, 2, cx, cy + 1, i, 1 },
-		};
-		for (const auto& e : edges) {
-			if (!(0 <= e.ncx && e.ncx < chunksX && 0 <= e.ncy && e.ncy < chunksY)) {
-				continue;
-			}
-			const auto wx = x0 + e.ex;
-			const auto wy = y0 + e.ey;
-			if (walkable(wx, wy) && walkable(wx + e.dx, wy + e.dy)) {
-				lines.push_back(std::to_string(e.ex) + " " + std::to_string(e.ey) + " 2 Levels/teleport.miniska, w_" + std::to_string(e.ncx) + "_"
-					+ std::to_string(e.ncy) + ", " + std::to_string(e.ax) + ", " + std::to_string(e.ay));
-			}
-		}
-	}
 	for (const auto* events : { &m_doorEvents, &m_events }) {
 		const auto found = events->find({ cx, cy });
 		if (found != events->end()) {

@@ -5,6 +5,8 @@
 #include "AI/System/IADefinedMovementSystem.h"
 #include "AI/System/IAFollowSystem.h"
 #include "../Control/GridMovementSystem.h"
+#include "../System/ChunkStreamingSystem.h"
+#include "../Mobs/System/DespawnSystem.h"
 #include "../Control/WalkFeelSystem.h"
 #include "../Control/FollowerSystem.h"
 #include "../Mobs/System/MobSpawningSystem.h"
@@ -24,19 +26,15 @@
 
 #define MOB_SPAWNING_DELAY 5000
 
-StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string worldFileName, std::string worldChipsetName, std::optional<ska::Point<int>> trainerPosition, bool walkIn, bool resume) :
+StateMap::StateMap(CustomEntityManager& em, PokemonGameEventDispatcher& pged, WorldState& ws, std::string map, std::optional<ska::Point<int>> trainerPosition, bool walkIn, bool resume) :
 	ska::SubObserver<ska::GameEvent>(std::bind(&StateMap::onGameEvent, this, std::placeholders::_1), pged),
 	m_eventDispatcher(pged),
 	m_entityManager(em),
 	m_worldState(ws),
-	m_fileName(std::move(worldFileName)),
-	m_tilesetName(std::move(worldChipsetName)),
+	m_map(std::move(map)),
 	m_trainerPosition(trainerPosition),
 	m_walkIn(walkIn),
 	m_resume(resume) {
-
-	const auto tilesetFnData = ska::FileNameData{ m_tilesetName };
-	m_tilesetName = tilesetFnData.path + "/" + tilesetFnData.name;
 }
 
 bool StateMap::onGameEvent(ska::GameEvent& ge) {
@@ -50,6 +48,8 @@ bool StateMap::onGameEvent(ska::GameEvent& ge) {
 void StateMap::beforeLoad(ska::State* lastState) {
 	SLOG(ska::LogLevel::Info) << "State Map initialization";
 
+	// First : the chunks around the player, before anything moves on them
+	addLogic(std::make_unique<ChunkStreamingSystem>(m_entityManager, m_worldState));
 	addLogic(std::make_unique<ska::IARandomMovementSystem>(m_entityManager));
 	addLogic(std::make_unique<ska::IADefinedMovementSystem>(m_worldState.getSpace(), m_entityManager, m_eventDispatcher));
 	addLogic(std::make_unique<ska::IAFollowSystem>(m_entityManager));
@@ -77,6 +77,8 @@ void StateMap::beforeLoad(ska::State* lastState) {
 	m_scriptSystem->addScriptRunner(".miniska", m_worldState.getScriptRunner());
 	addLogic(std::move(scriptSystem));
 	addLogic(std::make_unique<MobSpawningSystem>(m_entityManager, m_worldState, MOB_SPAWNING_DELAY));
+	// The wild Pokemon far from the player leave
+	addLogic(std::make_unique<DespawnSystem>(m_entityManager, m_worldState));
 	addLogic(std::make_unique<FightStartSystem>(m_entityManager, m_eventDispatcher, m_worldState, m_worldState.getEntityLocator()));
 	// The wild Pokemon arriving (flying in, out of a hideout) or flying away
 	auto arrivals = std::make_unique<ArrivalSystem>(m_entityManager, [this](const ArrivalComponent& arrival) { m_worldState.wildArrived(arrival); });
@@ -97,7 +99,15 @@ void StateMap::onGraphicUpdate(unsigned int, ska::DrawableContainer& drawables) 
 void StateMap::afterLoad(ska::State * lastState){
 	// Back from a battle : the map goes on as it is (its characters, its wild Pokemon, its scripts)
 	if (!m_resume) {
-		m_worldState.reinit(m_fileName, m_tilesetName);
+		const auto blockSize = static_cast<int>(m_worldState.getWorld().getBlockSize());
+		auto local = std::optional<ska::Point<int>>{};
+		if (m_trainerPosition.has_value()) {
+			local = ska::Point<int>{ m_trainerPosition->x / blockSize, m_trainerPosition->y / blockSize };
+		}
+		const auto block = m_worldState.reinit(m_map, local);
+		if (m_trainerPosition.has_value()) {
+			m_trainerPosition = ska::Point<int>{ block.x * blockSize, block.y * blockSize };
+		}
 	}
 	m_worldState.getCamera().setZoom(WorldState::MapZoom);
 	// The player walks on the map (GridMovementSystem)

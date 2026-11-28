@@ -12,5 +12,12 @@ run = function(args: string[]) do
 	Map.teleport(map, (args[1]: int), (args[2]: int))
 	Map.waitTransition()
 	player = Engine.entity("trainer")
-	Dev.reply(Map.name() + " (" + (Map.blockX(player): string) + "," + (Map.blockY(player): string) + ")")
+	x = Map.blockX(player)
+	y = Map.blockY(player)
+	# The block in the map (as the arguments), then in the world when it is another one
+	reply = Map.name() + " (" + ((x - Map.originX()): string) + "," + ((y - Map.originY()): string) + ")"
+	if Map.originX() != 0 || Map.originY() != 0
+		reply = reply + " world (" + (x: string) + "," + (y: string) + ")"
+	end
+	Dev.reply(reply)
 end

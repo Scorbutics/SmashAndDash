@@ -6,13 +6,12 @@
 #include "Core/Draw/DrawableContainer.h"
 #include "Base/IO/Readers/IniReader.h"
 #include "Base/IO/Files/FileUtils.h"
-#include "WorldLoader.h"
 #include "../../Utils/IDs.h"
 
 #define WEATHER_ALPHA_LVL 85
 
-WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, ska::Tileset& tileset, const ska::TileWorldLoader& loader) :
-	TileWorld(ged, tileset, loader),
+WorldImpl::WorldImpl(PokemonGameEventDispatcher& ged, const unsigned int blockSize) :
+	TileWorld(ged, blockSize),
 	SubObserver<SettingsChangeEvent>(std::bind(&WorldImpl::onSettingsChange, this, std::placeholders::_1), ged) ,
 	m_fog(*this),
 	m_weather(*this) {
@@ -37,18 +36,37 @@ Weather& WorldImpl::getWeather() {
 	return m_weather;
 }
 
-void WorldImpl::load(const ska::TilesetCorrespondanceMapper& mapper, const std::string& fileName, ska::Tileset* tileset) {
-	TileWorld::load(BuildWorldLoader(mapper, fileName), tileset);
-	const ska::FileNameData fndata(fileName);
-	
-	const auto& dataFile = fndata.path + "/" + fndata.name + "/" + fndata.name + ".ini";
-	loadWeatherFromData(dataFile);
-	loadFogFromData(dataFile);
+namespace {
+	// The values of the keys of a section of a map .ini, to compare two maps
+	std::string Values(const ska::IniReader& reader, const std::string& section, std::initializer_list<const char*> keys) {
+		auto result = std::string{};
+		for (const auto* key : keys) {
+			const auto name = section + " " + key;
+			result += (reader.exists(name) ? reader.get<std::string>(name) : std::string{ "-" }) + ";";
+		}
+		return result;
+	}
+}
 
-	// The wild Pokemon of the map : Levels/<map>/Monsters/0.ini, 1.ini... (MobSpawningSystem)
+void WorldImpl::setMap(const std::string& mapDirectory) {
+	const ska::FileNameData fndata(mapDirectory);
+	const auto& dataFile = mapDirectory + "/" + fndata.name + ".ini";
+	const auto reader = ska::IniReader{ dataFile };
+	const auto weather = Values(reader, "Weather", { "sprite", "transparency", "xintensity", "yintensity", "number" });
+	if (weather != m_weatherShown) {
+		m_weatherShown = weather;
+		loadWeatherFromData(dataFile);
+	}
+	const auto fog = Values(reader, "Fog", { "sprite", "transparency", "xintensity", "yintensity", "number" });
+	if (fog != m_fogShown) {
+		m_fogShown = fog;
+		loadFogFromData(dataFile);
+	}
+
+	// The wild Pokemon of the map : <map>/Monsters/0.ini, 1.ini... (MobSpawningSystem)
 	m_mobSettings.clear();
 	for (auto index = 0;; index++) {
-		const auto file = fndata.path + "/" + fndata.name + "/Monsters/" + std::to_string(index) + ".ini";
+		const auto file = mapDirectory + "/Monsters/" + std::to_string(index) + ".ini";
 		if (!std::ifstream{ file }) {
 			break;
 		}

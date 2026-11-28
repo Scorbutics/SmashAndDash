@@ -26,11 +26,7 @@
 #include "Core/Draw/DrawableContainer.h"
 #include "../../Graphic/PokemonAnimationSystem.h"
 #include "../../Script/ScriptConstants.h"
-#include "World/TileWorldLoaderAggregate.h"
-#include "World/LayerLoaderImage.h"
-#include "World/TilesetLoaderImage.h"
 #include "Base/IO/Files/FileUtils.h"
-#include "World/TilesetEventLoaderText.h"
 #include "Scripting/ScriptVM.h"
 #include "Scripting/EngineModule.h"
 #include "../Fight/BattleRules.h"
@@ -38,8 +34,8 @@
 #include "../Control/InputHooks.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../Script/GameScriptModule.h"
-#include "World/TileWorldPhysics.h"
-#include "WorldLoader.h"
+#include "ChunkOwnedComponent.h"
+#include "Core/ECS/Basics/Script/ScriptSleepComponent.h"
 #include "Physic/SpaceSystem.h"
 #include "Physic/MovementSystem.h"
 #include "Core/CodeDebug/CodeDebug.h"
@@ -48,32 +44,6 @@
 #include "Core/ECS/Basics/Graphic/AnimationComponent.h"
 
 //#define PKMN_DRAW_DBG_SHAPES
-
-static constexpr auto CHIPMUNK_COLLISION_TYPE_WATER = 1;
-
-ska::TilesetLoaderImage BuildTilesetLoader(const std::string& tilesetName) {
-	return { tilesetName };
-}
-
-ska::TilesetEventLoaderText BuildTilesetEventLoader(const std::string& tilesetName) {
-	return { tilesetName };
-}
-
-ska::TilesetPtr BuildTileset(unsigned int tileSize, const ska::TilesetLoader& loader, const ska::TilesetEventLoader& eventLoader) {
-	auto tileset = std::make_unique<ska::Tileset>(48, loader, eventLoader);
-	for (auto y = 0u; y < 4u; y++) {
-		for (auto x = 0u; x < 6u; x++) {
-			tileset->setPropertiesBitMask(x, y, ska::TilePropertiesType::TILE_PROPERTY_WATER);
-		}
-	}
-	
-	for (auto y = 4u; y < 8u; y++) {
-		for (auto x = 0u; x < 3u; x++) {
-			tileset->setPropertiesBitMask(x, y, ska::TilePropertiesType::TILE_PROPERTY_WATER);
-		}
-	}
-	return tileset;
-}
 
 WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, Settings& settings) :
 	SubObserver<ska::GameEvent>(std::bind(&WorldState::onGameEvent, this, std::placeholders::_1), ed),
@@ -86,11 +56,12 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 	m_entityLocator(ed),
 	m_entityHandles(ed),
 	m_correspondanceMapper("Resources/Chipsets/corr.png"),
-	// The tileset of the start map of the save (its world is known once the save is loaded)
-	m_tileset(BuildTileset(48, BuildTilesetLoader(TilesetName(m_saveManager.getStartChipsetName())), BuildTilesetEventLoader(TilesetName(m_saveManager.getStartChipsetName())))),
-	m_worldFileName(MapDirectory(m_saveManager.getStartMapName())),
-	m_world(ed, *m_tileset, BuildWorldLoader(m_correspondanceMapper, m_worldFileName)),
-	m_debugDrawer(ed, em, m_entityLocator, m_tileset->getTileSize()) {
+	m_mapName(m_saveManager.getStartMapName()),
+	m_world(ed, WorldStreamer::BlockSize),
+	m_debugDrawer(ed, em, m_entityLocator, WorldStreamer::BlockSize) {
+
+	m_chunkEntities = std::make_unique<ChunkEntities>(m_entityManager, *this);
+	m_streamer = std::make_unique<WorldStreamer>(m_world, m_correspondanceMapper, *m_chunkEntities);
 
 	m_scripts = std::make_unique<ska::scripting::ScriptVM>();
 	m_engineScriptModule = std::make_unique<ska::scripting::EngineModule>(*m_scripts, m_entityManager, m_entityLocator, m_entityHandles, &m_saveManager);
@@ -114,27 +85,16 @@ WorldState::WorldState(CustomEntityManager& em, PokemonGameEventDispatcher& ed, 
 
 	m_posHero.x = reader.get<int>("Trainer start_posx");
 	m_posHero.y = reader.get<int>("Trainer start_posy");
-	auto startMapName = reader.get<std::string>("Trainer start_map_name");
-
-	ska::IniReader mapReader(MapIni(startMapName));
-	mapReader.get<std::string>("Chipset file");
-}
-
-const std::string& WorldState::getFileName() const {
-	return m_worldFileName;
 }
 
 std::string WorldState::getMapName() const {
-	auto name = m_worldFileName;
-	while (!name.empty() && (name.back() == '/' || name.back() == '\\')) {
-		name.pop_back();
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	if (trainer == nullptr || !m_streamer->entered()) {
+		return m_mapName;
 	}
-	const auto separator = name.find_last_of("/\\");
-	return separator == std::string::npos ? name : name.substr(separator + 1);
-}
-
-const std::string& WorldState::getTilesetName() const {
-	return m_tileset->getName();
+	const auto& position = const_cast<CustomEntityManager&>(m_entityManager).getComponent<ska::PositionComponent>(*trainer);
+	const auto size = static_cast<float>(WorldStreamer::BlockSize);
+	return m_streamer->mapAt({ static_cast<int>((static_cast<float>(position.x) + size / 2.F) / size), static_cast<int>((static_cast<float>(position.y) + size / 2.F) / size) });
 }
 
 bool WorldState::loadedOnce() const{
@@ -144,23 +104,6 @@ bool WorldState::loadedOnce() const{
 std::vector<ska::IniReader>& WorldState::getMobSettings() {
 	return m_world.getMobSettings();
 }
-
-#ifdef PKMN_DRAW_DBG_SHAPES
-#ifdef PKMN_DRAW_CONTROL_BODY
-void DisplayPlayerControlBody(const ska::cp::Body& controlBody, std::vector<ska::Polygon<int>>& layerContours) {
-	static bool emplaced = false;
-	auto pos = ska::Point<int>{ controlBody.getPosition() };
-	auto ttttt = std::vector<ska::Point<int>>{ pos, pos + ska::Point<int>{0, 10}, pos + ska::Point<int>{10, 10}, pos + ska::Point<int>{10, 0}, pos };
-	if (!emplaced) {
-		layerContours.emplace_back(std::move(ttttt));
-		emplaced = true;
-	}
-	else {
-		layerContours[layerContours.size() - 1] = std::move(ttttt);
-	}
-}
-#endif
-#endif
 
 void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContainer& drawables) {
 	m_debugDrawer.graphicUpdate(ellapsedTime);
@@ -172,7 +115,7 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 
 	/* Hello, world */
 	m_world.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
-	m_lightMap.graphicUpdate(m_cameraSystem->getDisplay(), drawables);
+	m_streamer->graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	//TODO enlever la météo de world
 	m_world.getWeather().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
 	m_world.getFog().graphicUpdate(m_cameraSystem->getDisplay(), drawables);
@@ -188,29 +131,6 @@ void WorldState::onGraphicUpdate(unsigned int ellapsedTime, ska::DrawableContain
 			drawables.add(m_posHeroPolygon);
 		}
 	}*/
-	
-#ifdef PKMN_DRAW_DBG_SHAPES
-#ifdef PKMN_DRAW_CONTROL_BODY
-	if (m_spaceSystem == nullptr) return;
-	const auto& hc = m_entityManager.getComponent < ska::cp::HitboxComponent>(*trainer);
-	const auto& controlBody = m_spaceSystem->getSpace().getBody(hc.controlBodyIndex);
-
-	DisplayPlayerControlBody(controlBody, m_layerContours);
-	auto& ctrlBdyDrawable = m_layerContours[m_layerContours.size() - 1];
-	ctrlBdyDrawable.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
-	drawables.add(ctrlBdyDrawable);
-#endif
-
-	for (auto& l : m_layerContours) {
-		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
-		drawables.add(l);
-	}
-
-	for (auto& l : m_layerContoursWater) {
-		l.setOffset(ska::Point<int> { -m_cameraSystem->getDisplay().x, -m_cameraSystem->getDisplay().y});
-		drawables.add(l);
-	}
-#endif
 }
 
 void WorldState::onEventUpdate(const unsigned int timeStep) {
@@ -220,7 +140,7 @@ void WorldState::onEventUpdate(const unsigned int timeStep) {
 	for (const auto& [monster, level] : wild) {
 		spawnWildNow(monster, level);
 	}
-	m_tileset->update();
+	m_streamer->updateAnimations();
 	m_fade.update(timeStep);
 	m_debugDrawer.eventUpdate(timeStep);
 }
@@ -325,12 +245,96 @@ void WorldState::beforeLoad(ska::State* lastState) {
 	SettingsChangeEvent sce(SettingsChangeEventType::ALL, m_settings);
 	m_eventDispatcher.ska::Observable<SettingsChangeEvent>::notifyObservers(sce);
 
-	m_collisionEventSender = std::make_unique<ska::cp::SpaceCollisionEventSender>(m_entityManager, m_spaceSystem->getSpace(), m_eventDispatcher, m_tileset->getTileSize());
+	m_collisionEventSender = std::make_unique<ska::cp::SpaceCollisionEventSender>(m_entityManager, m_spaceSystem->getSpace(), m_eventDispatcher, WorldStreamer::BlockSize);
 }
 
 void WorldState::afterLoad(ska::State* lastState) {
 	m_saveManager.loadGame(DefaultSaveName());
 	m_bag.load(m_saveManager.getPathName());
+}
+
+void WorldState::updateStreaming(const unsigned int ellapsedTime) {
+	// The bodies released two steps ago : no system has their entities any more
+	for (const auto body : m_releasing) {
+		getSpace().removeBody(body);
+	}
+	m_releasing = std::move(m_released);
+	m_released.clear();
+	m_chunkEntities->tick(ellapsedTime);
+	const auto position = playerPosition();
+	if (!position.has_value() || !m_streamer->entered()) {
+		return;
+	}
+	const auto size = static_cast<float>(WorldStreamer::BlockSize);
+	m_streamer->update({ static_cast<int>((position->x + size / 2.F) / size), static_cast<int>((position->y + size / 2.F) / size) });
+}
+
+void WorldState::saveGame() {
+	const auto position = playerPosition();
+	if (!position.has_value()) {
+		return;
+	}
+	const auto size = static_cast<int>(WorldStreamer::BlockSize);
+	const auto block = ska::Point<int>{ (static_cast<int>(position->x) + size / 2) / size, (static_cast<int>(position->y) + size / 2) / size };
+	const auto map = getMapName();
+	const auto origin = originOf(map);
+	m_saveManager.saveGame(map, block.x - origin.x, block.y - origin.y);
+	m_chunkEntities->save(SaveDirectory() + m_saveManager.getPathName(), m_streamer->loaded());
+	SLOG(ska::LogLevel::Info) << "Game saved (" << map << ", " << block.x - origin.x << ", " << block.y - origin.y << ")";
+}
+
+ska::EntityId WorldState::addCharacter(const int sprite, const ska::Point<int> block, const std::string& name, const std::string& script, std::vector<std::string> arguments) {
+	const auto character = CustomEntityManager::createMovingCharacterNG(m_entityManager, getSpace(), block, sprite, WorldStreamer::BlockSize, name);
+	if (!script.empty()) {
+		auto sleeping = ska::ScriptSleepComponent{};
+		sleeping.name = script;
+		sleeping.triggeringType = ska::ScriptTriggerType::ACTION;
+		sleeping.period = 1000;
+		sleeping.args = arguments;
+		m_entityManager.addComponent<ska::ScriptSleepComponent>(character, std::move(sleeping));
+	}
+	auto owned = ChunkOwnedComponent{};
+	owned.sprite = sprite;
+	owned.name = name;
+	owned.script = script;
+	owned.arguments = std::move(arguments);
+	m_entityManager.addComponent<ChunkOwnedComponent>(character, std::move(owned));
+	return character;
+}
+
+void WorldState::anchor(const ska::EntityId entity) {
+	// Its physics body is too heavy to be pushed (a fighter in a battle, a wild Pokemon charging) : it stays on its
+	// block (the action key finds it in front of the player). Not kinematic : the constraint that ties it to its
+	// control body would join two bodies of infinite mass (the solver divides by zero : its position is lost)
+	constexpr auto AnchoredMass = 1e9;
+	if (m_entityManager.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		const auto& hitbox = m_entityManager.getComponent<ska::cp::HitboxComponent>(entity);
+		auto& body = getSpace().getBody(hitbox.bodyIndex);
+		cpBodySetMass(&body.body(), AnchoredMass);
+		cpBodySetMoment(&body.body(), INFINITY);
+		body.setVelocity(ska::cp::Vect{ 0.F, 0.F });
+	}
+	if (m_entityManager.hasComponent<ChunkOwnedComponent>(entity)) {
+		m_entityManager.getComponent<ChunkOwnedComponent>(entity).anchored = true;
+	}
+}
+
+void WorldState::releaseBodies(const ska::EntityId entity) {
+	if (!m_entityManager.hasComponent<ska::cp::HitboxComponent>(entity)) {
+		return;
+	}
+	// Away from the map until then
+	CustomEntityManager::place(m_entityManager, getSpace(), entity, ska::Point<float>{ -100000.F, -100000.F });
+	const auto& hitbox = m_entityManager.getComponent<ska::cp::HitboxComponent>(entity);
+	m_released.push_back(hitbox.bodyIndex);
+	if (hitbox.controlBodyIndex != hitbox.bodyIndex) {
+		m_released.push_back(hitbox.controlBodyIndex);
+	}
+}
+
+void WorldState::removeCharacter(const ska::EntityId entity) {
+	releaseBodies(entity);
+	m_entityManager.removeEntity(entity);
 }
 
 void WorldState::beforeUnload() {
@@ -456,9 +460,8 @@ void WorldState::takeOff(const ska::EntityId wild) {
 	arrival.duration = 2200;
 	SLOG(ska::LogLevel::Info) << "Wild pokemon " << monster << " flies away from block (" << position.x / static_cast<long>(blockSize) << ", " << position.y / static_cast<long>(blockSize) << ")";
 	arrivalDrawing(monster, std::move(arrival));
-	// The wild Pokemon leaves : its body parked out of the physics space (it keeps it), then removed
-	CustomEntityManager::place(m_entityManager, getSpace(), wild, ska::Point<float>{ -100000.F, -100000.F });
-	m_entityManager.removeEntity(wild);
+	// The wild Pokemon leaves
+	removeCharacter(wild);
 }
 
 std::optional<ska::Point<float>> WorldState::playerPosition() {
@@ -666,15 +669,19 @@ int WorldState::spawnMob(ska::Rectangle pos, unsigned int rmin, unsigned int rma
 }
 
 //TODO SRP
-void WorldState::reinit(const std::string& fileName, const std::string& chipsetName) {
+ska::Point<int> WorldState::reinit(const std::string& map, const std::optional<ska::Point<int>> localBlock) {
+	if (!m_recordsLoaded) {
+		m_chunkEntities->load(SaveDirectory() + m_saveManager.getPathName());
+		m_recordsLoaded = true;
+	}
 	//DEBUT CLEAN UP
-#ifdef PKMN_DRAW_DBG_SHAPES
-	m_layerContours.clear();
-	m_layerContoursWater.clear();
-#endif
-
+	// The chunks of the world left keep their entities
+	m_streamer->leave();
 	m_spaceSystem->reset();
-	
+	// The bodies went with the space
+	m_released.clear();
+	m_releasing.clear();
+
 	auto trainer = m_entityLocator.getEntityId("trainer");
 	if (trainer != nullptr) {
 		auto donotDelete = std::unordered_set<ska::EntityId>{};
@@ -686,97 +693,35 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	//FIN CLEAN UP
 
 	//DEBUT WORLD
-	// The previous tileset lives until the world has loaded the new one : the world still points to it (it compares
-	// the names to know whether the tileset changed)
-	auto previousTileset = ska::TilesetPtr{};
-	if (getTilesetName() != chipsetName) {
-		previousTileset = std::move(m_tileset);
-		m_tileset = BuildTileset(previousTileset->getTileSize(), BuildTilesetLoader(chipsetName), BuildTilesetEventLoader(chipsetName));
-	}
-
-	// Loaded again even when it is the same map (a teleport on the map the player is on) : its entities were removed
-	// above, its loading events (its characters, its item balls) run again. The first map too : the world built with the
-	// state did not load its data (wild Pokemon, weather, fog : WorldImpl)
-	{
-		m_world.load(m_correspondanceMapper, fileName, m_tileset.get());
-		m_worldLoaded = true;
-		// The map the player is on (the return from a battle, the saves)
-		m_worldFileName = fileName;
-	}
-	// Its light, when it has one : "<world>/<map>" -> "<world>/<map>/<map>L.png"
-	const auto mapName = ska::FileNameData{ fileName }.name;
-	m_lightMap.setPriority(LightMapPriority);
-	m_lightMap.load(fileName + "/" + mapName + "L.png", static_cast<unsigned int>(m_world.getBlockSize()), static_cast<unsigned int>(m_world.getBlocksX()), static_cast<unsigned int>(m_world.getBlocksY()));
-	//FIN WORLD
+	m_mapName = map;
+	const auto size = static_cast<int>(WorldStreamer::BlockSize);
+	// No block given : the player is where it was (the same map again), else where the save left it
+	auto block = localBlock.value_or(m_posHero);
+	const auto trainerId = trainer == nullptr ? std::optional<ska::EntityId>{} : std::optional<ska::EntityId>{ *trainer };
 
 	//DEBUT PLAYER
+	// Before the chunks : their entities react to it
 	auto player = ska::EntityId{};
-	if (trainer == nullptr) {
-		player = CustomEntityManager::createTrainerNG(m_entityManager, m_spaceSystem->getSpace(), m_posHero, m_world.getBlockSize());
+	if (!trainerId.has_value()) {
+		player = CustomEntityManager::createTrainerNG(m_entityManager, m_spaceSystem->getSpace(), block, WorldStreamer::BlockSize);
 		auto& pShape = m_spaceSystem->getSpace().getShape(m_entityManager.getComponent<ska::cp::HitboxComponent>(player).shapeIndex);
 		pShape.setBounciness(0.F);
 	} else {
-		player = *trainer;
+		player = *trainerId;
 		CustomEntityManager::fillTrainer(m_entityManager, m_spaceSystem->getSpace(), player);
 	}
 	//FIN PLAYER
+
+	const auto worldBlock = m_streamer->enter(map, block, m_spaceSystem->getSpace());
+	CustomEntityManager::place(m_entityManager, m_spaceSystem->getSpace(), player,
+		ska::Point<float>{ static_cast<float>(worldBlock.x * size), static_cast<float>(worldBlock.y * size) });
 
 	auto hitboxHero = std::vector<ska::Rectangle> {};
 	const auto& hcHero = m_entityManager.getComponent<ska::HitboxComponent>(player);
 	hitboxHero.push_back({ hcHero.xOffset, hcHero.yOffset, static_cast<int>(hcHero.width), static_cast<int>(hcHero.height) });
 	m_posHeroPolygon = ska::Polygon<int>{ std::move(hitboxHero) };
+	//FIN WORLD
 
-	//DEBUT Tile map
-	// The walls are filled (nothing can stand inside a wall, ex : after leaving the water) ; the water is only its outline :
-	// the player surfs inside it, and touching the outline starts or stops surfing (Levels/surf.miniska)
-	const auto isWater = [](const ska::Tile* b) {
-		return b != nullptr && (b->properties.bitMask & ska::TilePropertiesType::TILE_PROPERTY_WATER) == ska::TilePropertiesType::TILE_PROPERTY_WATER;
-	};
-	const auto contourRectangleTile = GenerateFilledTileMap(1, m_world.getCollisionProfile(), [&isWater](const ska::Tile* b) {
-		if (b == nullptr || isWater(b)) {
-			return ska::TileCollision::No;
-		}
-		return b->collision;
-	});
-
-	const auto agglomeratedTilesWater = GenerateAgglomeratedTileMap(1, m_world.getCollisionProfile(), [&isWater](const ska::Tile* b) {
-		return isWater(b) ? ska::TileCollision::Yes : ska::TileCollision::No;
-	});
-	const auto contourRectangleTileWater = GenerateContourTileMap(agglomeratedTilesWater);
-
-	for (const auto& r : contourRectangleTile) {
-		const auto shIndex = m_spaceSystem->getSpace().addShape(nullptr, ska::cp::Shape::fromBox(m_spaceSystem->getSpace().getStaticBody(), r));
-		auto& sh = m_spaceSystem->getSpace().getShape(shIndex);
-		sh.setBounciness(1.F);
-		sh.setFriction(1.F);
-	}
-
-	for (const auto& r : contourRectangleTileWater) {
-		const auto shIndex = m_spaceSystem->getSpace().addShape(nullptr, ska::cp::Shape::fromBox(m_spaceSystem->getSpace().getStaticBody(), r));
-		auto& sh = m_spaceSystem->getSpace().getShape(shIndex);
-		sh.setBounciness(1.F);
-		sh.setFriction(1.F);
-		sh.setCollisionType(CHIPMUNK_COLLISION_TYPE_WATER);
-	}
-
-#ifdef PKMN_DRAW_DBG_SHAPES
-	m_layerContours.emplace_back(contourRectangleTile);
-	m_layerContoursWater.emplace_back(contourRectangleTileWater);
-#endif
-
-	auto i = 0u;
-	for (auto& c : m_layerContours) {
-		c.setPriority(90000 + i);
-		i++;
-	}
-
-	for (auto& c : m_layerContoursWater) {
-		c.setPriority(90000 + i);
-		c.setColor({ 0, 0, 255, 255 });
-		i++;
-	}
-
-	//FIN Tile map
 	const auto wet = m_firstState ? ska::WorldEventType::WORLD_CREATE : ska::WorldEventType::WORLD_CHANGE;
 	// With the music of the world : the sound module plays it
 	auto we = ska::WorldEvent{ wet, m_worldBGM };
@@ -784,9 +729,7 @@ void WorldState::reinit(const std::string& fileName, const std::string& chipsetN
 	we.blocksHeight = m_world.getBlocksY();
 	we.blockSize = m_world.getBlockSize();
 	m_eventDispatcher.ska::Observable<ska::WorldEvent>::notifyObservers(we);
-
-
-	//Chargement des NPC sur la map (personnages & pokémon)
+	return worldBlock;
 }
 
 ska::cp::Space& WorldState::getSpace() {
