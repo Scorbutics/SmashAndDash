@@ -239,6 +239,10 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 
 		// The hop : the height follows its arc, then the character is back on the ground
 		if (grid.hopDuration > 0) {
+			// The player jumps (the jump key, a ledge), it lands
+			if (keys && grid.hopElapsed == 0 && grid.hopHeight > 0.F) {
+				m_sounds.play(MapSound::Jump, 0.7F);
+			}
 			grid.hopElapsed += ellapsedTime;
 			const auto progress = std::min(1.F, static_cast<float>(grid.hopElapsed) / static_cast<float>(grid.hopDuration));
 			auto& position = m_entities.getComponent<ska::PositionComponent>(entity);
@@ -247,6 +251,9 @@ void GridMovementSystem::refresh(unsigned int ellapsedTime) {
 				m_entities.getComponent<ska::MovementComponent>(entity).vz = 0.F;
 			}
 			if (progress >= 1.F) {
+				if (keys && grid.hopHeight > 0.F) {
+					m_sounds.play(MapSound::Land, 0.6F);
+				}
 				position.z = 0;
 				grid.hopDuration = 0;
 				grid.hopElapsed = 0;
@@ -363,8 +370,9 @@ void GridMovementSystem::walkFreely(ska::EntityId entity, GridMovementComponent&
 	target.x *= speed;
 	target.y *= speed;
 	// Around the corner of a wall it nearly passes
+	auto side = 0;
 	if (straight) {
-		const auto side = cornerSide(entity, direction);
+		side = cornerSide(entity, direction);
 		if (side != 0) {
 			if (dx == 0) {
 				target.x = static_cast<float>(side) * speed;
@@ -447,13 +455,21 @@ void GridMovementSystem::walkFreely(ska::EntityId entity, GridMovementComponent&
 	}
 
 	// Pushing against a wall : it is touched once (its scripts, ex : the water, to surf)
-	if (straight && wallAhead(entity, direction, 0.F)) {
+	const auto againstWall = straight && wallAhead(entity, direction, 0.F);
+	if (againstWall) {
 		if (grid.bumpDirection != direction) {
 			grid.bumpDirection = direction;
 			touch(entity, direction);
 		}
 	} else {
 		grid.bumpDirection = -1;
+	}
+	if (controlled) {
+		// Stuck : against the wall, not sliding around its corner, on the ground
+		walkSounds(entity, gait == 2, againstWall && side == 0 && grid.hopDuration == 0, ellapsedTime);
+	} else {
+		m_runDistance = -1.F;
+		m_stuckTime = -1;
 	}
 
 	// The character its shape touches (ex : a wild Pokemon, a battle starts)
@@ -468,6 +484,41 @@ void GridMovementSystem::walkFreely(ska::EntityId entity, GridMovementComponent&
 				break;
 			}
 		}
+	}
+}
+
+void GridMovementSystem::walkSounds(ska::EntityId entity, bool running, bool stuck, unsigned int ellapsedTime) {
+	// The bump of the wall, again and again while it pushes
+	if (!stuck) {
+		m_stuckTime = -1;
+	} else if (m_stuckTime < 0) {
+		m_stuckTime = static_cast<int>(BumpRepeat - BumpDelay);
+	} else {
+		m_stuckTime += static_cast<int>(ellapsedTime);
+		if (m_stuckTime >= static_cast<int>(BumpRepeat)) {
+			m_stuckTime -= static_cast<int>(BumpRepeat);
+			m_sounds.play(MapSound::Bump, 0.8F);
+		}
+	}
+
+	// Its steps when it runs on the ground (not surfing : layer 0, Levels/surf.miniska ; not in the air) : a soft one each
+	// block, the first one soon after it sets off
+	const auto& grid = m_componentAccessor.get<GridMovementComponent>(entity);
+	const auto onGround = m_componentAccessor.get<ska::PositionComponent>(entity).layer > 0 && grid.hopDuration == 0;
+	if (!running || stuck || !onGround) {
+		m_runDistance = -1.F;
+		return;
+	}
+	const auto blockSize = static_cast<float>(m_worldState.getWorld().getBlockSize());
+	const auto speed = std::sqrt(grid.velocity.x * grid.velocity.x + grid.velocity.y * grid.velocity.y);
+	if (m_runDistance < 0.F) {
+		m_runDistance = blockSize * 0.6F;
+	}
+	m_runDistance += speed * static_cast<float>(ellapsedTime) / 1000.F;
+	if (m_runDistance >= blockSize) {
+		m_runDistance -= blockSize;
+		m_runFoot = !m_runFoot;
+		m_sounds.play(m_runFoot ? MapSound::RunStep : MapSound::RunStepOther, m_runFoot ? RunStepGain : RunStepGain * 0.8F);
 	}
 }
 

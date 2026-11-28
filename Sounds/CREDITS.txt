@@ -1,3 +1,8 @@
 The sounds clash_*.ogg / clash_*.wav and the music Music/clash.ogg (re-encoded, from "wild battle (kanto).ogg")
 come from the Pokémon SDK technical demo (Pokémon Workshop, https://github.com/PokemonWorkshop), its audio/se and
 audio/bgm folders (clash_ball_* : the sounds of the pokeballs). Some are trimmed.
+
+The sounds map_*.wav (the steps of the run, the bump of a wall, the jump and its landing), battle_encounter.wav and
+bond_*.ogg (the bond cinematic) come from the same demo, its audio/se folder ("se_step_run_dirt", "se_step_road",
+"player bump", "se_jump", "se_jump (landing)", "se_gui_battle_ready", "in-battle_ability_activate", "136-light02",
+"se_shiny", "141-burst01").

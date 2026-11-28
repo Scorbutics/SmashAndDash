@@ -84,7 +84,7 @@ void BondSystem::start() {
 	}
 	m_stage.bond = 0;
 	m_stage.hitStop(BondCinematic::Release);
-	m_stage.sound(BattleSound::Cast);
+	m_stage.sound(BattleSound::BondStart);
 	SLOG(ska::LogLevel::Info) << "Battle : the bond unleashes " << cinematic.skill << " (\"" << cinematic.line << "\")";
 }
 
@@ -93,7 +93,7 @@ void BondSystem::press(bool perfect) {
 	cinematic.pressed = true;
 	cinematic.pressedAt = cinematic.time;
 	cinematic.perfect = perfect;
-	m_stage.sound(perfect ? BattleSound::StrongHit : BattleSound::Guard);
+	m_stage.sound(perfect ? BattleSound::BondPerfect : BattleSound::Guard);
 }
 
 void BondSystem::release() {
@@ -111,6 +111,7 @@ void BondSystem::release() {
 		MarkText(m_entities, m_stage, m_stage.player, "PARFAIT !", 1);
 	}
 	m_stage.shake(260, 6);
+	m_stage.sound(BattleSound::BondRelease);
 	SLOG(ska::LogLevel::Info) << "Battle : the bond skill goes, " << fighter.bondPower << "% damage" << (cinematic.perfect ? " (perfect)" : "");
 }
 
@@ -125,7 +126,16 @@ void BondSystem::refresh(unsigned int ellapsedTime) {
 		}
 		return;
 	}
+	// The cut-in slides in (GUIBattle::renderCinematic), then the ring closes on the Pokemon
+	const auto before = cinematic.time;
 	cinematic.time += ellapsedTime;
+	const auto reached = [&](unsigned int time) { return before < time && cinematic.time >= time; };
+	if (reached(120)) {
+		m_stage.sound(BattleSound::ClashSwoosh);
+	}
+	if (reached(BondCinematic::RingStart) && !cinematic.pressed) {
+		m_stage.sound(BattleSound::BondCharge);
+	}
 	if (m_stage.phase() != BattlePhase::Fight || !standing(cinematic.user)) {
 		cinematic.active = false;
 		return;

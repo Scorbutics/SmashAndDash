@@ -15,6 +15,7 @@
 #include "GridMovementComponent.h"
 #include "MovementModeComponent.h"
 #include "../PokemonGameEventDispatcher.h"
+#include "../../Audio/MapSounds.h"
 
 class WorldState;
 
@@ -78,6 +79,11 @@ public:
 	static constexpr unsigned int HopDuration = 280;
 	// The jump over a ledge : height (pixels) of its arc, over all its steps
 	static constexpr float LedgeHopHeight = 24.F;
+	// The sounds of the player (MapSounds) : against a wall, the bump comes after BumpDelay ms (a ledge, the water : their
+	// scripts take the player first), then again each BumpRepeat ms, as the classic games ; running, a soft step each block
+	static constexpr unsigned int BumpDelay = 90;
+	static constexpr unsigned int BumpRepeat = 420;
+	static constexpr float RunStepGain = 0.3F;
 
 	GridMovementSystem(ska::EntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState);
 	~GridMovementSystem() override = default;
@@ -103,6 +109,8 @@ private:
 	// The wall in a direction is touched (as the physics does : the touch scripts of its block)
 	void touch(ska::EntityId entity, int direction);
 	bool step(ska::EntityId entity, GridMovementComponent& grid, int direction, unsigned int duration);
+	// The sounds of the free walk of the player : its steps when it runs, the bump of the wall it is stuck against
+	void walkSounds(ska::EntityId entity, bool running, bool stuck, unsigned int ellapsedTime);
 	// The next forced step (GridMovementComponent::forcedSteps), through the obstacles
 	void forcedStep(ska::EntityId entity, GridMovementComponent& grid);
 
@@ -118,6 +126,12 @@ private:
 	mutable bool m_bumped = false;
 	mutable std::optional<ska::EntityId> m_blockedBy;
 	BlockOccupants m_occupants;
+	MapSounds m_sounds;
+	// The player : the distance run since its last step (pixels, -1 : not running), its foot (the two sounds of the steps alternate), how long it
+	// has been stuck against a wall since the last bump (ms, -1 : not stuck)
+	float m_runDistance = -1.F;
+	bool m_runFoot = false;
+	int m_stuckTime = -1;
 	// Seeded from the engine seed (SKA_SEED : the same moves at each run)
 	std::mt19937 m_random { ska::NumberUtils::newSeed() };
 };

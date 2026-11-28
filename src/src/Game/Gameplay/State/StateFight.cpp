@@ -246,6 +246,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	const auto& trainerPosition = m_entityManager.getComponent<ska::PositionComponent>(m_trainerId);
 	const auto& opponentPosition = m_entityManager.getComponent<ska::PositionComponent>(m_opponentId);
 	const auto gap = static_cast<int>(std::lround((std::abs(static_cast<float>(trainerPosition.x - opponentPosition.x)) + std::abs(static_cast<float>(trainerPosition.y - opponentPosition.y))) / blockPixels));
+	// The encounter : its sound, as the battle starts
+	m_sounds.play(BattleSound::Encounter);
 	if (gap < IntroGap) {
 		queueTask(std::make_unique<LeapTransition>(m_entityManager, m_worldState, m_opponentId, m_trainerId, IntroGap - gap));
 	}

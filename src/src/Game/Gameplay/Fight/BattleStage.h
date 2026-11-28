@@ -36,6 +36,9 @@ enum class BattleSound {
 	ClashKnockOut, ClashCursor, ClashSelect,
 	// A pokeball in a clash : thrown, the Pokemon goes in, it drops, it shakes, caught, it breaks free
 	BallThrow, BallIn, BallDrop, BallShake, BallCaught, BallOpen,
+	// A battle starts (the encounter) ; the bond (BondSystem) : the cut-in, the ring that closes, a perfect press, the skill
+	// that goes
+	Encounter, BondStart, BondCharge, BondPerfect, BondRelease,
 	Count
 };
 
