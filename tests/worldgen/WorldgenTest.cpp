@@ -443,8 +443,10 @@ namespace {
 	const worldgen::Atlas& TheAtlas() {
 		static const auto atlas = [] {
 			auto index = std::ifstream{ "Resources/Worldgen/tiles.txt" };
+			auto painted = std::ifstream{ "Resources/Worldgen/painted.txt" };
 			REQUIRE(index.good());
-			return worldgen::Atlas{ worldgen::ReadPng("Resources/Worldgen/tiles.png"), index };
+			REQUIRE(painted.good());
+			return worldgen::Atlas{ worldgen::ReadPng("Resources/Worldgen/tiles.png"), index, worldgen::ReadPng("Resources/Worldgen/painted.png"), painted };
 		}();
 		return atlas;
 	}

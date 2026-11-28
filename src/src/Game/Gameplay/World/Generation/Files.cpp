@@ -263,7 +263,13 @@ bool worldgen::WorldWriter::step() {
 		}
 		s.shapes = Shapes::Parse(shapesFile);
 		s.templates = LoadRoomTemplates(data + "/rooms");
-		s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index);
+		// The painted tiles (tools/render3d), when there are
+		auto paintedIndex = std::ifstream{ data + "/painted.txt" };
+		if (paintedIndex.good()) {
+			s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index, ReadPng(data + "/painted.png"), paintedIndex);
+		} else {
+			s.atlas = std::make_unique<Atlas>(ReadPng(data + "/tiles.png"), index);
+		}
 		s.corr = ReadPng(m_resources.root + "/Chipsets/corr.png");
 		PrepareFolder(m_folder);
 	} else if (m_step == 1) {

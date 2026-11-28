@@ -10,6 +10,9 @@ flat, n a part of an object standing n blocks lower), its properties for the gam
 written in the .prop of the chipsets), its collision mask when it blocks (worldgen.tile_mask : 16 bits, the .png.mask of
 the chipsets), the key of the tile (the text of its Python key,
 World.build and rooms.build_room), or the name of an animated tile.
+The painted tiles (tilegen.painted : rendered by tools/render3d, not voxels) keep their pixels : painted.png, their frames
+packed in cells of 48 px, PAINTED_COLUMNS a row ; painted.txt a line per tile and biome, "<biome> <cell> <key>" : the
+cell of its first frame (the others follow it).
 
   tools/worldgen/atlas.py [folder]      (after a change of the drawings, of the keys or of a room template)
 """
@@ -109,6 +112,15 @@ def voxels(img):
     return img.convert("RGB").resize((N, N), Image.NEAREST)
 
 
+PAINTED_COLUMNS = 16
+
+
+def is_painted(img):
+    """Not a voxel drawing : its pixels are not the same in each voxel (a painted tile, tilegen.painted)."""
+    img = img.convert("RGB")
+    return img.tobytes() != voxels(img).resize((T, T), Image.NEAREST).tobytes()
+
+
 def main():
     folder = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "Resources", "Worldgen")
     entries = [(name, 4, (w.tile_base(name), w.tile_flags(name), w.tile_mask(name, False)), lambda f, n=name: w.ANIMATED[n](f))
@@ -121,16 +133,31 @@ def main():
         entries.append((repr(key), 1, (w.tile_base(key), w.tile_flags(key), w.tile_mask(key, False)),
                         lambda f, k=key, wk=walkable: w.draw_key(k, wk)))
     atlas = Image.new("RGB", (len(w.BIOMES) * 4 * N, len(entries) * N), g.KEY)
+    painted = []
     for b, biome in enumerate(w.BIOMES):
         g.use_biome(biome)
-        for row, (_, frames, _, draw) in enumerate(entries):
-            for f in range(frames):
-                atlas.paste(voxels(draw(f)), ((b * 4 + f) * N, row * N))
+        for row, (name, frames, _, draw) in enumerate(entries):
+            images = [draw(f) for f in range(frames)]
+            for f, img in enumerate(images):
+                atlas.paste(voxels(img), ((b * 4 + f) * N, row * N))
+            if any(is_painted(img) for img in images):
+                painted.append((b, name, [img.convert("RGB") for img in images]))
     g.use_biome("meadow")
     atlas.save(os.path.join(folder, "tiles.png"), optimize=True)
+    cells = sum(len(images) for _, _, images in painted)
+    sheet = Image.new("RGB", (PAINTED_COLUMNS * T, max(1, (cells + PAINTED_COLUMNS - 1) // PAINTED_COLUMNS) * T), g.KEY)
+    lines, cell = [], 0
+    for b, name, images in painted:
+        lines.append(f"{b} {cell} {name}\n")
+        for img in images:
+            sheet.paste(img, ((cell % PAINTED_COLUMNS) * T, (cell // PAINTED_COLUMNS) * T))
+            cell += 1
+    sheet.save(os.path.join(folder, "painted.png"), optimize=True)
+    with open(os.path.join(folder, "painted.txt"), "w") as out:
+        out.write("".join(lines))
     with open(os.path.join(folder, "tiles.txt"), "w") as out:
         out.write("".join(f"{frames} {base} {flags} {mask} {name}\n" for name, frames, (base, flags, mask), _ in entries))
-    print(f"{folder}/tiles.png : {len(entries)} tiles")
+    print(f"{folder}/tiles.png : {len(entries)} tiles, {len(painted)} painted (painted.png)")
 
 
 if __name__ == "__main__":

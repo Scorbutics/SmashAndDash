@@ -17,6 +17,8 @@ namespace ska {
 	class CameraSystem;
 }
 
+class PaperLook;
+
 class StateMap :
 	public ska::StateBase,
 	public ska::SubObserver<ska::GameEvent> {
@@ -55,6 +57,9 @@ private:
 	bool m_resume = false;
 	// The marks over the wild Pokemon that notice the player
 	std::unique_ptr<WildPokemonMarks> m_wildMarks;
+	// The world painted on paper (Shaders/paper)
+	// (shared : its deleter is made where it is complete, StateMap.cpp)
+	std::shared_ptr<PaperLook> m_paper;
 	// Owned by the logic of the state
 	WalkFeelSystem* m_walkFeel = nullptr;
 

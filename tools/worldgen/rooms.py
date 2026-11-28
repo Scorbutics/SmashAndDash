@@ -280,3 +280,13 @@ def light(rows, walk):
             line.append((int(255 * l * 0.98), int(255 * l * 0.99), int(255 * l)))
         out.append(line)
     return out
+
+
+# ---------------------------------------------------------------- the painted tiles (tools/render3d scenes/tiles_rooms.js)
+
+floor_tile = g._painted_or(lambda kind: f"room_floor_{kind}")(floor_tile)
+wall_top = g._painted_or(lambda: "room_wall_top")(wall_top)
+wall_face = g._painted_or(lambda item, paper: f"room_wall_{item}_{paper}")(wall_face)
+rug = g._painted_or(lambda mask: "room_rug_" + "".join("1" if m else "0" for m in mask))(rug)
+mat = g._painted_or(lambda: "room_mat")(mat)
+furniture = g._painted_or(lambda kind, w, h, extra=None: f"furniture_{kind}_{w}_{h}_{extra}")(furniture)

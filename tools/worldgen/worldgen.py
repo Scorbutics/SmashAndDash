@@ -28,7 +28,7 @@ import math
 import os
 import shutil
 import sys
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tilegen"))
 import tilegen as g  # noqa: E402
@@ -207,10 +207,51 @@ def fill(s, mat, seed, speckles=4):
         s.put(x, y, mat, 0, 1, 3 if i % 2 else 1)
 
 
+def smooth_intrusion(mask, straight):
+    """The intrusion of a mask at one pixel per pixel (L, 255 inside) : rounded edges (a paving keeps its square ones)."""
+    inside = intrusion(mask, straight)
+    m = Image.new("L", (N, N))
+    m.putdata([255 if inside[y][x] else 0 for y in range(N) for x in range(N)])
+    if straight:
+        return m.resize((T, T), Image.NEAREST)
+    return m.resize((T, T), Image.BICUBIC).point(lambda v: 255 if v >= 128 else 0)
+
+
+def shaded(image, mask, factor):
+    """The image darker (times factor) where the mask is set."""
+    dark = image.point(lambda v: int(v * factor))
+    return Image.composite(dark, image, mask)
+
+
+def painted_ground(mat, over_mat, mask, shade_north, variant):
+    """A ground tile from the painted grounds (tilegen.ground_texture) : the other material reaching into it through the
+    mask, a darker rim inside its edge and a thin shadow outside, the shadow of a cliff to the north. None : not
+    painted."""
+    base = g.ground_texture(mat, variant)
+    over = g.ground_texture(over_mat, variant) if over_mat else None
+    if base is None or (over_mat and over is None):
+        return None
+    out = base.convert("RGB")
+    if over_mat:
+        m = smooth_intrusion(mask, straight=mat == "pave")
+        out.paste(over.convert("RGB"), (0, 0), m)
+        rim = ImageChops.subtract(m, m.filter(ImageFilter.MinFilter(3)))
+        band = ImageChops.subtract(m.filter(ImageFilter.MaxFilter(3)), m)
+        out = shaded(shaded(out, rim, 0.86), band, 0.84)
+    if shade_north:                                  # the foot of a cliff face, to the north : its shadow fades
+        fade = Image.new("L", (T, T), 0)
+        fade.putdata([max(0, 255 - y * 26) for y in range(T) for _ in range(T)])
+        out = Image.composite(out.point(lambda v: int(v * 0.62)), out, fade)
+    return out.convert("RGBA")
+
+
 def ground(mat, over_mat=None, mask=None, shade_north=False, variant=0):
     """A ground tile : its material, the neighbours of another material reaching into it, the shadow of a cliff."""
     if mat == "grass" and over_mat is None and not shade_north:
         return g.grass(variant)
+    image = painted_ground(mat, over_mat, mask, shade_north, variant)
+    if image is not None:
+        return image
     s = Scene(N, N)
     if mat == "grass":
         g.grass_field(s, variant)
@@ -247,6 +288,15 @@ def ground(mat, over_mat=None, mask=None, shade_north=False, variant=0):
 
 def water_overlay(over_mat, mask):
     """Over the water (the animated cell under it) : the bank reaching into the water, a foam line along it."""
+    over = g.ground_texture(over_mat)
+    if over is not None:                             # painted : the bank, its darker rim, a line of foam on the water
+        m = smooth_intrusion(mask, straight=over_mat == "pave")
+        out = Image.new("RGB", (T, T), KEY)
+        foam = ImageChops.subtract(m.filter(ImageFilter.MaxFilter(5)), m)
+        out.paste((236, 246, 250), (0, 0), foam)
+        rim = ImageChops.subtract(m, m.filter(ImageFilter.MinFilter(3)))
+        out.paste(shaded(over.convert("RGB"), rim, 0.82), (0, 0), m)
+        return out.convert("RGBA")
     s = Scene(N, N)
     inside = intrusion(mask, straight=over_mat == "pave")
     for y in range(N):
@@ -259,9 +309,45 @@ def water_overlay(over_mat, mask):
     return s.render()
 
 
-def scene_image(s):
-    """The image of a scene, the scene kept with it (tile_mask reads the materials of its voxels)."""
-    img = s.render()
+# The light of a voxel tone on a painted material (tone 2 : the material as painted) : the bands, the lips, the shadows of
+# a voxel scene kept, its colours and its grain painted (repaint)
+TONE_LIGHT = (0.6, 0.8, 1.0, 1.14)
+
+
+def repaint(s, variant=0):
+    """A voxel scene (a tile) in the painted materials (tilegen.ground_texture : grass, path, sand, pave, rock, stone) :
+    each voxel the painted texture of its material, lighter or darker by its tone. None : a material not painted."""
+    textures = {}
+    for row in s.mat:
+        for m in row:
+            if m and m not in textures:
+                texture = g.ground_texture(m, variant)
+                if texture is None:
+                    return None
+                textures[m] = texture.convert("RGB").load()
+    out = Image.new("RGB", (T, T), KEY)
+    po = out.load()
+    for vy in range(N):
+        for vx in range(N):
+            m = s.mat[vy][vx]
+            if not m:
+                continue
+            t = 2.0 if s.tone[vy][vx] is None else max(0.0, min(3.0, float(s.tone[vy][vx])))
+            k = min(2, int(t))
+            light = TONE_LIGHT[k] + (TONE_LIGHT[k + 1] - TONE_LIGHT[k]) * (t - k)
+            tex = textures[m]
+            for y in range(vy * V, vy * V + V):
+                for x in range(vx * V, vx * V + V):
+                    r, gr, b = tex[x, y]
+                    po[x, y] = (min(255, int(r * light)), min(255, int(gr * light)), min(255, int(b * light)))
+    return out.convert("RGBA")
+
+
+def scene_image(s, variant=2, name=None):
+    """The image of a scene : its painted image ("name" : tools/render3d scenes/tiles_cliffs.js), else repainted when
+    its materials are (repaint), else rendered ; the scene kept with it (tile_mask reads the materials of its voxels :
+    the layout of the painted cliffs is the one of the voxel ones)."""
+    img = (g.painted(name) if name else None) or repaint(s, variant) or s.render()
     img.info["scene"] = s
     return img
 
@@ -318,7 +404,8 @@ def cliff(low, stairs=False, foot=False):
                     s.put(x, y, "stone", 0, 1, 3 if step == 0 else 2 if step == 1 else 1)
                 s.put(3, y, "rock", 0, 1, 0)
                 s.put(12, y, "rock", 0, 1, 0)
-    return scene_image(s)
+    bits = "".join("1" if v else "0" for v in low)
+    return scene_image(s, name=f"cliff_{bits}_{int(bool(stairs))}_{int(bool(foot))}")
 
 
 def cliff_foot(mat, west, east, stairs=False):
@@ -353,7 +440,7 @@ def cliff_foot(mat, west, east, stairs=False):
             if y < bottom:
                 s.put(3, y, "rock", 0, 1, 0)
                 s.put(12, y, "rock", 0, 1, 0)
-    return scene_image(s)
+    return scene_image(s, name=f"foot_{mat}_{int(bool(west))}_{int(bool(east))}_{int(bool(stairs))}")
 
 
 # ---------------------------------------------------------------- the tiles of the world
@@ -743,7 +830,9 @@ def stamp_image(name, make):
     """The image of a structure in the current palette (drawn once per palette)."""
     key = (name, tuple(map(tuple, g.PAL["path"])), tuple(map(tuple, g.PAL["grass"])))
     if key not in _STAMPS:
-        _STAMPS[key] = make()
+        # Painted (tools/render3d scenes/tiles_village.js) : stamp_<name>
+        image = g.painted(f"stamp_{name}")
+        _STAMPS[key] = image if image is not None else make()
     return _STAMPS[key]
 
 

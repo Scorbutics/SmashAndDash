@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""ui : the interface of the game in the style of the tiles (tilegen) : chunky pixels, an ink outline, soft light from
-the top left, warm cream panels framed in teal.
+"""ui : the interface of the game, in the Okami look of the painted tiles (tools/render3d) : panels of warm parchment
+(its fibres, soft stains, aged towards its edges) framed by a sumi brush stroke that swells and tapers ; the coloured
+pills are washes of their colour (teal, cinnabar, sumi) on the same paper.
 
 Writes the theme of the GUI (Menu/default_theme : the windows and dialogs are a 9-slice of menu.png, 32 px parts ;
 buttons, fields, boxes, sliders, slots, hit point bar, cursors), at the sizes the game expects, and the icons of the
@@ -18,7 +19,7 @@ import tilegen as g
 
 KEY = g.KEY + (255,)
 CLEAR = (0, 0, 0, 0)
-INK = (34, 40, 54, 255)
+INK = (27, 23, 18, 255)                              # sumi
 RAMPS = {
     "frame": [(26, 92, 108), (42, 136, 148), (84, 186, 188), (156, 228, 218)],
     "body": [(206, 196, 176), (232, 226, 208), (248, 244, 232), (255, 254, 248)],
@@ -45,40 +46,99 @@ def rounded_mask(w, h, r):
     return inside
 
 
+# The washes of the panels (their body) and the inks of their border, after the names of the ramps
+WASH = {"body": (243, 230, 200), "frame": (112, 190, 184), "red": (198, 58, 46), "dark": (54, 46, 38),
+        "gold": (236, 196, 96), "white": (250, 246, 236)}
+BORDER_INK = {"frame": (27, 23, 18), "dark": (20, 16, 12), "red": (27, 23, 18), "gold": (160, 104, 20),
+              "body": (27, 23, 18), "white": (27, 23, 18)}
+SS = 4                                               # supersampling of the brush
+
+
+def _lattice(seed, n):
+    """A periodic value noise of n x n cells (a function of 0 .. 1 x 0 .. 1)."""
+    rng = __import__("random").Random(seed)
+    grid = [[rng.random() for _ in range(n)] for _ in range(n)]
+
+    def at(u, v):
+        x, y = u * n, v * n
+        i, j = int(math.floor(x)) % n, int(math.floor(y)) % n
+        fx, fy = x - math.floor(x), y - math.floor(y)
+        fx, fy = fx * fx * (3 - 2 * fx), fy * fy * (3 - 2 * fy)
+        a, b = grid[j][i], grid[j][(i + 1) % n]
+        c, d = grid[(j + 1) % n][i], grid[(j + 1) % n][(i + 1) % n]
+        return (a + (b - a) * fx) * (1 - fy) + (c + (d - c) * fx) * fy
+    return at
+
+
 def panel(w, h, px=3, frame="frame", body="body", radius=3, border=2, light=0.0, background=CLEAR):
-    """A panel of w x h pixels drawn in cells of px pixels : an ink outline, a frame (lit from the top left), a body
-    lighter at its top. light : shifts all the tones (hover, pressed)."""
-    cw, ch = w // px, h // px
-    shape = rounded_mask(cw, ch, radius)
-    inner = {(x, y) for x, y in shape if all((x + dx, y + dy) in shape for dx in range(-border, border + 1)
-                                              for dy in range(-border, border + 1) if abs(dx) + abs(dy) <= border)}
-    img = Image.new("RGBA", (w, h), background)
+    """A panel of w x h pixels : a wash of parchment (or of the colour of "body") with its fibres and stains, darker
+    towards its edges, framed by a brush stroke of sumi (its width : "border" cells of "px" pixels, swelling and tapering
+    along it, heavier at the corners). light : lighter (hover) or darker (pressed). (The cells of the voxel panels are
+    gone : px, radius and border only give the sizes.)"""
+    W, H = w * SS, h * SS
+    r = max(2.0, radius * px) * SS
+    stroke = max(1.6, border * px * 0.9) * SS
+    inset = stroke * 0.55
+    seed = hash((w, h, frame, body, radius, border)) & 0xFFFF
+    paper = _lattice(seed, 5)
+    stains = _lattice(seed + 7, 3)
+    fibre = _lattice(seed + 13, 23)
+    wash = WASH.get(body, WASH["body"])
+    k = 1.0 + 0.07 * light
+    img = Image.new("RGBA", (W, H), background)
     pix = img.load()
-    for y in range(ch):
-        for x in range(cw):
-            if (x, y) not in shape:
+
+    def inside(x, y, shrink):
+        # the distance out of the rounded rectangle inset by "shrink" (< 0 : inside)
+        cx = min(max(x, r + shrink), W - r - shrink)
+        cy = min(max(y, r + shrink), H - r - shrink)
+        return math.hypot(x - cx, y - cy) - (r)
+
+    for y in range(H):
+        for x in range(W):
+            d = inside(x + 0.5, y + 0.5, inset)
+            if d > stroke * 0.6:
                 continue
-            edge = any((x + dx, y + dy) not in shape for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
-            if edge:
-                c = INK
-            elif (x, y) in inner:
-                t = 2.3 - 0.9 * y / max(1, ch - 1) + light
-                if y <= border + 1:
-                    t += 0.5                         # the light on the top of the body
-                c = tone(body, t)
-            else:
-                lit = x < cw / 2 and y < ch / 2
-                t = 2.0 + light + (0.7 if (x + y) < (cw + ch) / 3 else -0.5 if (x + y) > 2 * (cw + ch) / 3 else 0.0)
-                c = tone(frame, t if lit or True else t)
-            for j in range(px):
-                for i in range(px):
-                    pix[x * px + i, y * px + j] = c
-    # the pixels left by the division (w, h not multiples of px) : the last cells stretched
-    for y in range(h):
-        for x in range(w):
-            if x >= cw * px or y >= ch * px:
-                pix[x, y] = pix[min(x, cw * px - 1), min(y, ch * px - 1)]
-    return img
+            u, v = x / W, y / H
+            tone_ = 0.94 + 0.08 * paper(u, v) - 0.06 * stains(u * 1.3, v * 1.3) + 0.03 * (fibre(u * 3, v) - 0.5)
+            edge = max(0.0, min(1.0, (d + 6 * SS) / (6 * SS)))   # aged towards the edge
+            tone_ *= 1.0 - 0.1 * edge
+            c = tuple(max(0, min(255, int(ch * tone_ * k))) for ch in wash)
+            pix[x, y] = c + (255,)
+    # The brush : around the shape, its width swelling and tapering (a periodic noise along it), heavier at the corners
+    ink = BORDER_INK.get(frame, BORDER_INK["frame"])
+    along = _lattice(seed + 29, 7)
+    left, top, right, bottom = inset, inset, W - inset, H - inset
+    rr = max(1.0, min(r - inset, (right - left) / 2, (bottom - top) / 2))
+    step = SS * 0.5
+    points = []                                      # (x, y, at a corner)
+
+    def line(x0, y0, x1, y1):
+        n = max(1, int(math.hypot(x1 - x0, y1 - y0) / step))
+        points.extend((x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n, False) for i in range(n))
+
+    def arc(cx, cy, a0):
+        n = max(2, int(math.pi * rr / 2 / step))
+        points.extend((cx + rr * math.cos(a0 + math.pi / 2 * i / n), cy + rr * math.sin(a0 + math.pi / 2 * i / n), True)
+                      for i in range(n))
+
+    line(left + rr, top, right - rr, top)
+    arc(right - rr, top + rr, -math.pi / 2)
+    line(right, top + rr, right, bottom - rr)
+    arc(right - rr, bottom - rr, 0.0)
+    line(right - rr, bottom, left + rr, bottom)
+    arc(left + rr, bottom - rr, math.pi / 2)
+    line(left, bottom - rr, left, top + rr)
+    arc(left + rr, top + rr, math.pi)
+    path = [(x, y, stroke * (0.5 + 0.95 * along(i / len(points), 0.5)) * (1.25 if corner else 1.0))
+            for i, (x, y, corner) in enumerate(points)]
+    from PIL import ImageDraw
+    draw = ImageDraw.Draw(img)
+    for x, y, width in path:
+        rad = width / 2
+        draw.ellipse((x - rad, y - rad, x + rad, y + rad), fill=ink + (255,))
+    out = img.resize((w, h), Image.LANCZOS)
+    return out
 
 
 def balloon():
@@ -96,12 +156,7 @@ def balloon():
 
 def field(w, h, border="frame", light=0.0):
     """A text field, a list : a cream body sunk in a frame (the shade at its top)."""
-    img = panel(w, h, px=1, radius=3, border=2, light=light, frame=border)
-    pix = img.load()
-    for x in range(4, w - 4):                        # the shade of the frame on the top of the body
-        if pix[x, 3][3] and pix[x, 3] != INK:
-            pix[x, 3] = tone("body", 1.2 + light)
-    return img
+    return panel(w, h, px=1, radius=3, border=2, light=light, frame=border)
 
 
 def listbox(w, h, light=0.0):

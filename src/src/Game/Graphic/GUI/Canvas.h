@@ -21,7 +21,7 @@ namespace ska {
 // (DebugPanel) too : the game uses no ska_gui window.
 namespace Ui {
 	// The colours of the theme : the ink of the tiles on the light panels, white on the coloured pills
-	const ska::Color Ink{ 34, 40, 54, 255 };
+	const ska::Color Ink{ 27, 23, 18, 255 };
 	const ska::Color White{ 255, 255, 255, 255 };
 	const ska::Color Faded{ 130, 134, 144, 255 };
 	const ska::Color Teal{ 72, 190, 170, 255 };

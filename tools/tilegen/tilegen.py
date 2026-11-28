@@ -8,6 +8,7 @@ Structures (bridge, houses, trees) are drawn whole, several tiles wide ; tools/w
 its chipset. A library : tools/worldgen imports it.
 """
 import math
+import os
 from PIL import Image
 
 T = 48          # tile size (px)
@@ -20,7 +21,9 @@ KEY = (190, 151, 255)
 # Saturated, but the hue moves only a little along a ramp (warmer in the light)
 PAL = {
     "ink": [(28, 40, 26)] * 4,
-    "grass": [(44, 128, 58), (74, 166, 72), (106, 198, 90), (156, 226, 126)],
+    # (the grass : its middle tone the painted grass of the meadow, tools/render3d tiles.js : the voxel drawings not
+    # painted yet stand on the same ground)
+    "grass": [(78, 138, 40), (110, 168, 48), (140, 198, 58), (188, 226, 98)],
     "grass2": [(34, 122, 26), (60, 152, 34), (104, 194, 54), (168, 232, 80)],
     "water": [(22, 74, 150), (32, 112, 196), (58, 152, 224), (156, 212, 244)],
     "rock": [(92, 70, 52), (150, 116, 76), (196, 162, 106), (232, 210, 150)],
@@ -95,6 +98,24 @@ def use_mix(a, b, t):
     for mat in BASE_PAL:
         PAL[mat] = [tuple(int(round(ca[i] + (cb[i] - ca[i]) * t)) for i in range(3)) for ca, cb in zip(pa[mat], pb[mat])]
     BIOME = a if t < 0.5 else b
+
+
+# The painted tiles (tools/render3d : 3D models rendered in the look of the game, Resources/Worldgen/painted/<biome>/<name>.png)
+# replace the voxel drawings of their biome, tile by tile as they are made (tools/worldgen/paint.sh)
+PAINTED = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "Resources", "Worldgen", "painted")
+_PAINTED = {}
+
+
+def painted(name):
+    """The painted image of a drawing (RGBA on the colour key) in the current biome, None : not painted (or the
+    palette is a mix of biomes : the voxel drawing)."""
+    if PAL != biome_palette(BIOME):
+        return None
+    path = os.path.join(PAINTED, BIOME, name + ".png")
+    if path not in _PAINTED:
+        _PAINTED[path] = Image.open(path).convert("RGBA") if os.path.exists(path) else None
+    image = _PAINTED[path]
+    return image.copy() if image is not None else None
 
 
 def use_biome(name):
@@ -308,7 +329,16 @@ def tuft_at(s, x, y, flip=False):
 GRASS_VARIANTS = 4
 
 
+def ground_texture(mat, variant=0):
+    """The painted ground of a material in the current biome (tools/render3d tiles.js : ground_<mat>, the grass in its
+    variants), None : not painted."""
+    return painted(f"ground_grass_{variant % GRASS_VARIANTS}" if mat == "grass" else f"ground_{mat}")
+
+
 def grass(variant=0):
+    image = ground_texture("grass", variant)
+    if image is not None:
+        return image
     s = Scene(N, N)
     grass_field(s, variant)
     if variant == 1:
@@ -353,6 +383,9 @@ def flowers(frame):
 def tall_grass(frame):
     """Wild grass : two rows of pointed leaves, the back row taller, packed so that the tiles make one field.
     The leaves wrap at the tile edges ; the tips sway with the frames."""
+    image = painted(f"tall_{frame}")
+    if image is not None:
+        return image
     s = Scene(N, N)
     sway = (0, 1, 0, -1)[frame]
 
@@ -479,7 +512,14 @@ def tree_image(style=None):
     (by default the tree of the biome)."""
     style = style or BIOMES[BIOME]["tree"]
     if style == "round":
-        return round_tree().render()
+        image = painted("tree_round")
+        return image if image is not None else round_tree().render()
+    small = painted(f"tree_{style}")
+    if small is not None:                            # painted : its 3 rows (tip, canopy, trunk) in the rows 0, 1, 3
+        img = Image.new("RGBA", (2 * T, 4 * T), KEY + (255,))
+        for row, src in enumerate((0, 1, 1, 2)):
+            img.paste(small.crop((0, src * T, 2 * T, src * T + T)), (0, row * T))
+        return img
     if style != "cactus":
         return tree_scene(snow=style == "snowpine").render()
     small = cactus_scene().render()
@@ -1214,3 +1254,34 @@ def over(tile, ground):
 def blank(tile):
     p = tile.load()
     return all(p[x, y][:3] == KEY for y in range(T) for x in range(T))
+
+
+# ---------------------------------------------------------------- the painted drawings
+
+def _painted_or(name):
+    """A drawing replaced by its painted image when it is there (painted : name(*args), the arguments of the drawing)."""
+    def wrap(draw):
+        def drawing(*args):
+            image = painted(name(*args))
+            return image if image is not None else draw(*args)
+        drawing.__doc__ = draw.__doc__
+        return drawing
+    return wrap
+
+
+# The objects, the posts, the animated tiles (tools/render3d scenes/tiles_objects.js)
+for _name in ("bench", "mailbox", "barrel", "bush", "well", "lily", "boulder", "log_seat", "sign", "crops"):
+    globals()[_name] = _painted_or(lambda n=_name: f"obj_{n}")(globals()[_name])
+bin_ = _painted_or(lambda: "obj_bin")(bin_)
+lamp = _painted_or(lambda: "lamp")(lamp)
+lamp_head = _painted_or(lambda f: f"lamphead_{f}")(lamp_head)
+fence = _painted_or(lambda: "fence")(fence)
+fence_post = _painted_or(lambda kind: f"fence_{kind}")(fence_post)
+flowerpot = _painted_or(lambda colour="roofr": f"flowerpot_{colour}")(flowerpot)
+emblem = _painted_or(lambda c, r: f"emblem_{c}_{r}")(emblem)
+water = _painted_or(lambda f: f"water_{f}")(water)
+flowers = _painted_or(lambda f: f"flower_{f}")(flowers)
+campfire = _painted_or(lambda f: f"campfire_{f}")(campfire)
+butterfly = _painted_or(lambda f: f"butterfly_{f}")(butterfly)
+fountain = _painted_or(lambda c, r, f: f"fountain_{c}_{r}_{f}")(fountain)
+flowerbed_anim = _painted_or(lambda colour, f: f"flowerbed_{colour}_{f}")(flowerbed_anim)

@@ -25,15 +25,25 @@ namespace worldgen {
 	using Mix = std::array<Corner, 4>;
 	Mix PureMix(Biome biome);
 
-	// A tile at one pixel per voxel
-	using TileVoxels = std::array<std::uint8_t, Voxels * Voxels * 3>;
+	// A tile : at one pixel per voxel (Voxels a side : the drawings of tools/tilegen), or at one pixel per pixel (TileSize
+	// a side : a painted tile, tools/render3d)
+	struct TileImage {
+		int side = Voxels;
+		std::vector<std::uint8_t> rgb;
+		bool operator<(const TileImage& other) const { return side != other.side ? side < other.side : rgb < other.rgb; }
+		bool operator==(const TileImage& other) const { return side == other.side && rgb == other.rgb; }
+		// At one pixel per pixel (a voxel : 3 x 3 pixels)
+		TileImage full() const;
+	};
 
 	// The tiles drawn in each biome : a row per tile, its frames in each biome
 	class Atlas {
 	public:
 		Atlas(RgbImage image, std::istream& index);
+		// With its painted tiles (tools/worldgen/atlas.py : painted.png, cells of 48 px ; painted.txt "<biome> <cell> <key>")
+		Atlas(RgbImage image, std::istream& index, RgbImage painted, std::istream& paintedIndex);
 		// The frames (1, or 4 for an animated tile) of a tile (its key, the name of an animated tile) in a biome
-		std::vector<TileVoxels> frames(const std::string& key, Biome biome) const;
+		std::vector<TileImage> frames(const std::string& key, Biome biome) const;
 		bool has(const std::string& key) const { return m_rows.count(key) > 0; }
 		// The depth of a tile (tools/worldgen tile_base : -1 flat, n a part of an object standing n blocks lower)
 		int base(const std::string& key) const;
@@ -47,13 +57,15 @@ namespace worldgen {
 		std::map<std::string, int> m_bases;
 		std::map<std::string, int> m_flags;
 		std::map<std::string, int> m_masks;
+		RgbImage m_painted;
+		std::map<std::pair<int, std::string>, int> m_paintedRows; // (biome, key) -> the cell of its first frame
 	};
 
 	// The frames of the tiles of a world in the mixes of the biomes (cached)
 	class TileImages {
 	public:
 		TileImages(const Atlas& atlas, const Tiles& tiles) : m_atlas(atlas), m_tiles(tiles) {}
-		const std::vector<TileVoxels>& frames(TileId tile, const Mix& mix);
+		const std::vector<TileImage>& frames(TileId tile, const Mix& mix);
 		bool walkable(TileId tile) const { return IsAnimated(tile) ? AnimatedWalkable(AnimatedOf(tile)) : m_tiles.walkable(tile); }
 		std::string key(TileId tile) const { return IsAnimated(tile) ? AnimatedName(AnimatedOf(tile)) : m_tiles.key(tile); }
 		int base(TileId tile) const { return m_atlas.base(key(tile)); }
@@ -61,12 +73,12 @@ namespace worldgen {
 		// Walked on : no solid part
 		int mask(TileId tile) const { return walkable(tile) ? 0 : m_atlas.mask(key(tile)); }
 	private:
-		const std::vector<TileVoxels>& pure(TileId tile, Biome biome);
+		const std::vector<TileImage>& pure(TileId tile, Biome biome);
 
 		const Atlas& m_atlas;
 		const Tiles& m_tiles;
-		std::map<std::pair<TileId, Biome>, std::vector<TileVoxels>> m_pure;
-		std::map<std::pair<TileId, Mix>, std::vector<TileVoxels>> m_cache;
+		std::map<std::pair<TileId, Biome>, std::vector<TileImage>> m_pure;
+		std::map<std::pair<TileId, Mix>, std::vector<TileImage>> m_cache;
 	};
 
 	using TileUse = std::pair<TileId, Mix>;

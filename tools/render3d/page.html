@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="importmap">
+{ "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }
+</script>
+</head>
+<body style="margin:0;background:#888">
+<script type="module">
+// The renderer of tools/render3d : a scene (scenes/<name>.js : build(THREE, S) -> { root, views }) rendered for each of its
+// views, supersampled, washed (style.js), then scaled down : PNGs (data URLs) for render.mjs
+import * as THREE from "three";
+import * as S from "./style.js";
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, premultipliedAlpha: false });
+renderer.setPixelRatio(1);
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
+const wash = S.makeWash();
+
+// The projection of the map of the game (the tiles) : the ground seen from straight above, the heights rising straight up
+// the screen ("oblique" : the screen units of a world unit of height). "tile" : the pixels of a block (a world unit) ;
+// "target" : the point of the ground [x, z] at the middle of the picture
+function oblique(view) {
+	const [w, h] = view.size;
+	const unit = view.tile ?? 48;
+	const [cx, cz] = view.target ?? [0, 0];
+	const halfW = w / unit / 2, halfH = h / unit / 2;
+	// Looking down -y, the top of the screen towards -z
+	const cam = new THREE.OrthographicCamera(cx - halfW, cx + halfW, -cz + halfH, -cz - halfH, 0.1, 200);
+	const height = 50;
+	cam.position.set(0, height, 0);
+	cam.up.set(0, 0, -1);
+	cam.lookAt(0, 0, 0);
+	cam.updateMatrixWorld();
+	// The shear : the screen y of a point rises by "oblique" times its height (its view z + the height of the camera)
+	const k = view.oblique;
+	const shear = new THREE.Matrix4().set(1, 0, 0, 0, 0, 1, k, k * height, 0, 0, 1, 0, 0, 0, 0, 1);
+	cam.projectionMatrix.multiply(shear);
+	// The depth along the view (the height plus "oblique" times the depth towards the camera : what stands in front hides
+	// what stands behind ; the height alone would let a high point hide a lower one in front of it)
+	const e = cam.projectionMatrix.elements;
+	e[6] = -k * e[10];
+	cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert();
+	return cam;
+}
+
+function camera(view) {
+	if (view.oblique !== undefined) return oblique(view);
+	const [w, h] = view.size;
+	let cam;
+	if (view.perspective) {
+		cam = new THREE.PerspectiveCamera(view.fov ?? 40, w / h, 0.05, 200);
+	} else {
+		// "span" : the world units across the height of the picture
+		const span = view.span ?? 2;
+		cam = new THREE.OrthographicCamera(-span * w / h / 2, span * w / h / 2, span / 2, -span / 2, -100, 100);
+	}
+	// Looking at "target", from "elevation" degrees above the horizon, turned by "yaw" (0 : from the front, +z)
+	const target = new THREE.Vector3(...(view.target ?? [0, 0, 0]));
+	const elevation = THREE.MathUtils.degToRad(view.elevation ?? 28);
+	const yaw = THREE.MathUtils.degToRad(view.yaw ?? 0);
+	const distance = view.distance ?? 20;
+	cam.position.set(target.x + Math.sin(yaw) * Math.cos(elevation) * distance, target.y + Math.sin(elevation) * distance, target.z + Math.cos(yaw) * Math.cos(elevation) * distance);
+	cam.lookAt(target);
+	return cam;
+}
+
+window.renderScene = async (name, options = {}) => {
+	const module = await import(`./scenes/${name}.js`);
+	const built = module.build(THREE, S, options);
+	const scene = new THREE.Scene();
+	scene.add(built.root);
+	const results = [];
+	for (const view of built.views) {
+		const [w, h] = view.size;
+		const ss = view.supersample ?? 3;
+		const W = w * ss, H = h * ss;
+		renderer.setSize(W, H, false);
+		// The model in the pose of the view (a frame of the walk), turned to the direction of the view
+		if (built.pose) built.pose(view);
+		S.setInkWidth(built.root, (view.ink ?? 1.4) * ss, new THREE.Vector2(W, H));
+		// The brush of Okami (view.brush 0 .. 1) : strokes that swell and taper, sumi ink, parchment
+		// (the option "brush" : every view of the scene, tools/worldgen/paint.sh renders the tiles with it)
+		const brush = view.brush ?? Number(options.brush ?? 0);
+		S.inkUniforms.brush.value = brush;
+		wash.material.uniforms.brush.value = brush;
+		// Cast shadows (view.shadows : the half size of the area they fall on, around view.shadowCenter) : a light from the
+		// direction of the toon light (style.js LIGHT), the shade tone where it does not reach
+		let sun = null;
+		renderer.shadowMap.enabled = !!view.shadows;
+		if (view.shadows) {
+			renderer.shadowMap.type = THREE.PCFShadowMap;
+			const centre = new THREE.Vector3(...(view.shadowCenter ?? [0, 0, 0]));
+			sun = new THREE.DirectionalLight(0xffffff, 1);
+			sun.position.copy(centre).addScaledVector(S.LIGHT, 60);
+			sun.target.position.copy(centre);
+			sun.castShadow = true;
+			sun.shadow.mapSize.set(4096, 4096);
+			sun.shadow.bias = -0.0015;
+			sun.shadow.normalBias = 0.02;
+			const half = view.shadows;
+			Object.assign(sun.shadow.camera, { left: -half, right: half, top: half, bottom: -half, near: 1, far: 140 });
+			sun.shadow.camera.updateProjectionMatrix();
+			scene.add(sun, sun.target);
+			built.root.traverse((child) => {
+				if (child.isMesh) {
+					child.castShadow = !child.userData.hull && !child.userData.noShadow;
+					child.receiveShadow = !child.userData.hull;
+				}
+			});
+		}
+		const target = new THREE.WebGLRenderTarget(W, H, { samples: 4, colorSpace: THREE.LinearSRGBColorSpace });
+		renderer.setRenderTarget(target);
+		renderer.setClearColor(view.background ? new THREE.Color(view.background) : 0x000000, view.background ? 1 : 0);
+		renderer.clear();
+		if (view.backdrop) view.backdrop(renderer, THREE);
+		renderer.render(scene, camera(view));
+		renderer.setRenderTarget(null);
+		renderer.setClearColor(0x000000, 0);
+		renderer.clear();
+		wash.material.uniforms.picture.value = target.texture;
+		wash.material.uniforms.resolution.value.set(W, H);
+		wash.material.uniforms.strength.value = view.wash ?? 1;
+		// (A tile that tiles : the wash repeats with it, "period" its pixels in the picture rendered)
+		wash.material.uniforms.period.value = (view.period ?? 0) * ss;
+		renderer.render(wash.scene, wash.camera);
+		// Scaled down (a smooth filter : the supersampling)
+		const small = document.createElement("canvas");
+		small.width = w;
+		small.height = h;
+		const context = small.getContext("2d");
+		context.imageSmoothingEnabled = true;
+		context.imageSmoothingQuality = "high";
+		context.drawImage(renderer.domElement, 0, 0, w, h);
+		// A tile of the game : its colour key (the chipsets have no half transparent pixel : a pixel is drawn or not)
+		if (view.key) {
+			const image = context.getImageData(0, 0, w, h);
+			const d = image.data;
+			for (let i = 0; i < d.length; i += 4) {
+				if (d[i + 3] < 128) { d[i] = 190; d[i + 1] = 151; d[i + 2] = 255; }
+				d[i + 3] = 255;
+			}
+			context.putImageData(image, 0, 0);
+		}
+		// A part of it only ("crop" : x, y, w, h in its pixels : the middle of a field rendered with its neighbours)
+		if (view.crop) {
+			const [x, y, cw, ch] = view.crop;
+			const part = document.createElement("canvas");
+			part.width = cw;
+			part.height = ch;
+			part.getContext("2d").drawImage(small, x, y, cw, ch, 0, 0, cw, ch);
+			results.push({ name: view.name, data: part.toDataURL("image/png"), canvas: null, view });
+			target.dispose();
+			if (sun) { scene.remove(sun, sun.target); sun.shadow.dispose(); }
+			continue;
+		}
+		results.push({ name: view.name, data: small.toDataURL("image/png"), canvas: view.frame ? small : null, view });
+		target.dispose();
+		if (sun) { scene.remove(sun, sun.target); sun.shadow.dispose(); }
+	}
+	// A character sheet of the game : the frames at their row and column (6 columns : the walk then nothing)
+	const frames = results.filter((r) => r.canvas);
+	if (frames.length > 0) {
+		const sheet = document.createElement("canvas");
+		sheet.width = 72 * (built.sheetColumns ?? 6);
+		sheet.height = 72 * 8;
+		const context = sheet.getContext("2d");
+		for (const f of frames) context.drawImage(f.canvas, f.view.column * 72, f.view.row * 72);
+		results.push({ name: "sheet", data: sheet.toDataURL("image/png") });
+	}
+	return results.map((r) => ({ name: r.name, data: r.data }));
+};
+window.ready = true;
+</script>
+</body>
+</html>
