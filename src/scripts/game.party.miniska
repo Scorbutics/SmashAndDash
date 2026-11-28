@@ -18,6 +18,21 @@ hp = function(index: int) : int do return 0 end
 # (It uses the battle rules, scripts : the script waits for the next update.)
 level = function(index: int) : int do return 0 end
 
+# The skills of a Pokemon of the team (its moveset : 4 at most) : their names. Its moveset is saved from its first battle
+# (or from this call) : the skills it learns at its next levels are chosen (learn)
+# (It uses the battle rules, scripts : the script waits for the next update.)
+skills = function(index: int) : string[] do return []: string end
+# The skills a Pokemon of the team learns at the levels after "from" up to "to", that it does not know : their numbers
+# (their place in its data)
+# (It uses the battle rules, scripts : the script waits for the next update.)
+learnable = function(index: int, from: int, to: int) : int[] do return []: int end
+# The name of a skill of a Pokemon of the team (its number : learnable)
+skillName = function(index: int, skill: int) : string do return "" end
+# A Pokemon of the team learns a skill (its number : learnable) : "slot" the skill of its moveset it forgets (0 .. 3),
+# -1 : added (false when it knows 4 skills already)
+# (It uses the battle rules, scripts : the script waits for the next update.)
+learn = function(index: int, skill: int, slot: int) : bool do return false end
+
 # Gives hit points to a Pokemon of the team, up to its hit points at its level (nothing when there is no Pokemon at this index)
 # (It uses the battle rules, scripts : the script waits for the next update.)
 heal = function(index: int, value: int) do end

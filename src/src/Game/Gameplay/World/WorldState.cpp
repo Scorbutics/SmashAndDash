@@ -32,6 +32,7 @@
 #include "../Fight/BattleRules.h"
 #include "../Data/Team.h"
 #include "../Control/InputHooks.h"
+#include "../Control/PlayerControls.h"
 #include "Graphic/GraphicComponent.h"
 #include "../../Script/GameScriptModule.h"
 #include "ChunkOwnedComponent.h"
@@ -783,4 +784,9 @@ WorldState::~WorldState() = default;
 
 SavegameManager& WorldState::getSaveGame() {
 	return m_saveManager;
+}
+
+bool WorldState::trainerControlled() {
+	const auto* trainer = m_entityLocator.getEntityId(SCRIPT_ENTITY_TRAINER);
+	return trainer != nullptr && HasPlayerControls(m_entityManager, *trainer);
 }

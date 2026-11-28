@@ -18,6 +18,7 @@
 #include "../Fight/System/TrainerCoachSystem.h"
 #include "../Fight/System/BondSystem.h"
 #include "../Fight/System/ClashSystem.h"
+#include "../Fight/Moveset.h"
 #include "Transition/Map/DialogTransition.h"
 #include "Transition/Map/LeapTransition.h"
 #include "../Mobs/WildPokemonComponent.h"
@@ -207,7 +208,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	//m_iaICM.addContext(ska::InputContextPtr());
 
 	SkillsHolderComponent shc;
-	SkillFactory{ m_worldState, static_cast<unsigned int>(pokemonLevel) }.loadSkills(m_pokemon, m_pokemonId, shc);
+	const auto moveset = m_pokemonTeamIndex >= 0 ? TeamMoveset(m_worldState, m_pokemonTeamIndex) : std::vector<int>{};
+	SkillFactory{ m_worldState, static_cast<unsigned int>(pokemonLevel) }.loadSkills(m_pokemon, m_pokemonId, shc, &moveset);
 	m_entityManager.addComponent<SkillsHolderComponent>(m_pokemonId, std::move(shc));
 
 	SkillsHolderComponent shcOpponent;
@@ -216,8 +218,10 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	m_entityManager.addComponent<SkillsHolderComponent>(m_opponentId, std::move(shcOpponent));
 	m_descriptor.load(m_opponent, "Description");
 
-	// A copy : the storage of a removed component is reset
-	m_input = m_entityManager.getComponent<ska::InputComponent>(m_trainerId);
+	// A copy for the Pokemon (the input of the trainer is held during the battle, maybe by a dialog already)
+	if (const auto* input = m_entityManager.find<ska::InputComponent>(m_trainerId); input != nullptr) {
+		m_input = *input;
+	}
 	// The Pokemon moves with the normal walk of the trainer (not its movement mode : ex "locked" during a cutscene)
 	if (m_entityManager.hasComponent<MovementModeComponent>(m_trainerId)) {
 		const auto& movementMode = m_entityManager.getComponent<MovementModeComponent>(m_trainerId);
@@ -232,7 +236,8 @@ void StateFight::beforeLoad(ska::State* lastScene) {
 	// The Pokemon that follows the trainer comes out of its pokeball in the battle : it comes back after it
 	FollowerSystem::dismiss(m_entityManager, m_worldState);
 	m_ic = &m_input;
-	m_entityManager.removeComponent<ska::InputComponent>(m_trainerId);
+	// The keys move the Pokemon : the input of the trainer is held until the end of the battle (as it was)
+	m_entityManager.hold<ska::InputComponent>(m_trainerId);
 
 
 	// The intro : the wild Pokemon touched jumps back (the room of the battle), it appears (a dialog), the trainer throws
@@ -302,7 +307,7 @@ void StateFight::beforeUnload() {
 	// The end of the battle was played in the battle (BattlePhase::Outro) : the player plays again, on the map as it is
 	auto finalTask = std::make_unique<ska::Task>([&](ska::Task&) {
 		m_loadState = 0;
-		m_entityManager.addComponent<ska::InputComponent>(m_trainerId, ska::InputComponent{ *m_ic });
+		m_entityManager.release<ska::InputComponent>(m_trainerId);
 		SLOG(ska::LogLevel::Info) << "Battle over : the player controls the trainer again";
 		m_ic = nullptr;
 		m_worldState.removeCharacter(m_pokemonId);

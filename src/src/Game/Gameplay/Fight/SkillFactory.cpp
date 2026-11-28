@@ -6,6 +6,7 @@
 #include "Base/IO/Readers/IniReader.h"
 #include "SkillDescriptor.h"
 #include "SkillsHolderComponent.h"
+#include "Moveset.h"
 #include "Game/Gameplay/Fight/BattleRules.h"
 
 void LoadRawStatistics(RawStatistics<int>& stats, ska::IniReader& data, const std::string& block) {
@@ -84,24 +85,17 @@ void SkillFactory::createSkill(SkillDescriptor& sd, const std::string& skillPath
 	sd.special = skillData.exists("Description class") && skillData.get<std::string>("Description class") == "Speciale";
 }
 
-void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc) const {
-	// The skills it knows (Data/Battle/skills.miniska) : from the levels its skills are learned at. A skill
-	// without its file (not written yet) is left out : the Pokemon knows the latest ones that exist
-	auto names = std::vector<std::string>{};
-	auto levels = std::vector<int>{};
-	for (auto i = 0; reader.exists("Skills " + ska::StringUtils::intToStr(i)); i++) {
-		const auto levelKey = "Skills " + ska::StringUtils::intToStr(i) + "_level";
-		const auto name = reader.get<std::string>("Skills " + ska::StringUtils::intToStr(i));
-		if (!std::ifstream{ name }.good()) {
-			SLOG(ska::LogLevel::Warn) << "Skill file not found, left out : " << name;
-			continue;
+void SkillFactory::loadSkills(const ska::IniReader& reader, const ska::EntityId, SkillsHolderComponent& shc, const std::vector<int>* moveset) const {
+	// The skills it knows : its moveset, else those of its level (Data/Battle/skills.miniska). A skill without its file
+	// (not written yet) is left out
+	const auto learnable = LearnableSkills(reader);
+	const auto known = moveset != nullptr && !moveset->empty() ? *moveset : DefaultMoveset(m_worldState.getBattleRules(), reader, static_cast<int>(m_level));
+	auto slot = std::size_t{ 0 };
+	for (const auto index : known) {
+		const auto found = std::find_if(learnable.begin(), learnable.end(), [index](const LearnableSkill& s) { return s.index == index; });
+		if (found != learnable.end() && slot < shc.skills.size()) {
+			createSkill(shc.skills[slot++], found->file);
 		}
-		names.push_back(name);
-		levels.push_back(reader.exists(levelKey) ? reader.get<int>(levelKey) : 1);
-	}
-	const auto known = m_worldState.getBattleRules().knownSkills(levels, static_cast<int>(m_level), static_cast<int>(shc.skills.size()));
-	for (auto k = 0u; k < known.size() && k < shc.skills.size(); k++) {
-		createSkill(shc.skills[k], names[static_cast<std::size_t>(known[k])]);
 	}
 
 	// Every Pokemon has Charge (the basic attack) : in the first slot that cannot be used in a battle

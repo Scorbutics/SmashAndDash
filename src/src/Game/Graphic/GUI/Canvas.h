@@ -17,8 +17,8 @@ namespace ska {
 // The screens that draw themselves each frame (the title, the battle) : immediate drawing with the theme of the
 // interface (Theme : the images of Menu/default_theme), no widget tree. What changes every frame (bars, shakes, banners
 // that scale and fade, marks that follow the fighters, the render effects) is drawn from the state as it is now.
-// The windows the player opens over the map (the team, the bag, the settings, the dialogs) stay ska_gui windows
-// (GUIMap : retained widgets, the mouse, movable windows).
+// The menu of the trainer (TrainerMenu : the team, the bag, the options), the dialogs (DialogBox) and the debug panel
+// (DebugPanel) too : the game uses no ska_gui window.
 namespace Ui {
 	// The colours of the theme : the ink of the tiles on the light panels, white on the coloured pills
 	const ska::Color Ink{ 34, 40, 54, 255 };
@@ -68,6 +68,9 @@ namespace Ui {
 		ska::Renderer& m_renderer;
 	};
 
+	// The lines of a text ("\n" : a new line) cut to "width" letters (UTF-8 : a letter is not cut)
+	std::vector<std::string> Wrap(const std::string& text, std::size_t width);
+
 	// A drawing at a fixed priority (DrawableContainer) : it draws with a canvas when the frame is drawn
 	class Layer : public ska::DrawableFixedPriority {
 	public:
@@ -83,6 +86,7 @@ namespace Ui {
 	public:
 		void setCount(std::size_t count);
 		std::size_t selected() const { return m_selected; }
+		void select(std::size_t index) { if (index < m_count) { m_selected = index; } }
 		// The keys of a frame (InputKeyEvent) : true when the selected choice is chosen
 		bool keys(const ska::InputContextManager& icm);
 		// The mouse of a frame (InputMouseEvent) over the boxes of the choices : true when one is clicked (selected)

@@ -37,6 +37,9 @@ std::optional<TeamMember> Team::member(int index) const {
 	member.id = reader.get<int>("Data id");
 	member.experience = reader.exists("Data experience") ? reader.get<int>("Data experience") : 0;
 	member.hp = reader.exists("Stats hp") ? reader.get<int>("Stats hp") : 0;
+	for (auto slot = 0; reader.exists("Skills " + std::to_string(slot)); slot++) {
+		member.skills.push_back(reader.get<int>("Skills " + std::to_string(slot)));
+	}
 	return member;
 }
 
@@ -46,6 +49,9 @@ void Team::setMember(int index, const TeamMember& member) {
 	reader.set("Data id", member.id);
 	reader.set("Data experience", member.experience);
 	reader.set("Stats hp", member.hp < 0 ? 0 : member.hp);
+	for (auto slot = std::size_t{ 0 }; slot < member.skills.size(); slot++) {
+		reader.set("Skills " + std::to_string(slot), member.skills[slot]);
+	}
 	reader.save(file(index));
 }
 

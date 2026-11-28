@@ -46,8 +46,7 @@ void WGameCore::startWorld(const std::string& save) {
 	const auto& startMapName = m_worldState->getSaveGame().getStartMapName();
 	m_currentState = &static_cast<StateMap&>(m_worldState->addSubState(std::make_unique<StateMap>(m_entityManager, m_eventDispatcher, *m_worldState, startMapName)));
 
-	auto& guiState = static_cast<StateGUIMap&>(m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher)));
-	guiState.bindGUI(m_settings);
+	m_worldState->addSubState(std::make_unique<StateGUIMap>(m_entityManager, m_eventDispatcher, *m_worldState, m_settings));
 
 	m_settings.load();
 }

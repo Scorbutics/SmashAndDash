@@ -23,6 +23,7 @@
 #include "Scripting/EntityHandles.h"
 #include "Graphic/SDLSurface.h"
 #include "../Data/Bag.h"
+#include "../Data/ChoicePrompt.h"
 
 namespace ska {
 	namespace scripting {
@@ -129,6 +130,17 @@ public:
 	// The battle going on (StateFight), else nullptr : the scripts act on it (Battle.announce)
 	void setBattleStage(BattleStage* stage) { m_battleStage = stage; }
 	BattleStage* battleStage() { return m_battleStage; }
+	// A choice asked by a script (GameDialog.select), drawn by the menu of the trainer
+	ChoicePrompt& prompt() { return m_prompt; }
+	Settings& getSettings() { return m_settings; }
+	// The menu of the trainer is open (TrainerMenu), a dialog is shown (DialogBox) : they hold the controls of the trainer
+	// (HoldPlayerControls)
+	void setMenuOpen(bool open) { m_menuOpen = open; }
+	bool menuOpen() const { return m_menuOpen; }
+	void setDialogOpen(bool open) { m_dialogOpen = open; }
+	bool dialogOpen() const { return m_dialogOpen; }
+	// The keys move the trainer (its controls are not held : no menu, no dialog, no battle)
+	bool trainerControlled();
 
 	// End of a battle : its result is given to the scripts waiting for it (Battle.start), and to the hooks
 	// ("battle.won", "battle.lost", with the player)
@@ -244,5 +256,8 @@ private:
 	bool m_lastBattleFled = false;
 
 	BattleStage* m_battleStage = nullptr;
+	ChoicePrompt m_prompt;
+	bool m_menuOpen = false;
+	bool m_dialogOpen = false;
 };
 

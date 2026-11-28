@@ -15,7 +15,8 @@ public:
 	static constexpr auto BasicAttack = "./Data/Skills/charge.ini";
 
 	SkillFactory(WorldState& ws, unsigned int level);
-	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc) const;
+	// Its skills : "moveset" (their indexes in its data : a Pokemon of the team), else those of its level
+	void loadSkills(const ska::IniReader& reader, const ska::EntityId m_pokemonId, SkillsHolderComponent& shc, const std::vector<int>* moveset = nullptr) const;
 	~SkillFactory() = default;
 
 private:

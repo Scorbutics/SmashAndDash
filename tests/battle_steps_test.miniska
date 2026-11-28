@@ -1,6 +1,8 @@
 # The steps of a battle (Data/Battle/steps.miniska)
 Test = import "bind:std.native.test"
 Battle = import "bind:game.battle"
+GameDialog = import "bind:game.dialog"
+Party = import "bind:game.party"
 Steps = import "wd:Data/Battle/steps"
 
 run = function(args: string[]) do
@@ -36,4 +38,30 @@ run = function(args: string[]) do
 	Steps.run(["outro", "captured", "PIKACHU", "Roucool", "9", "5", "5"])
 	Test.equal(Battle.messages()[4], "Roucool rejoint votre équipe !", "it joins the team")
 	Test.equal(Battle.messages()[5], "PIKACHU gagne 9 points d'expérience !", "the experience of a capture")
+
+	# A level up : the skills learned at the new levels. Room in the moveset : learned at once
+	Party.setKnown([0, 1])
+	Party.setLearning([2])
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "30", "6", "7", "0"])
+	said = Battle.messages()
+	Test.equal(said[said.size() - 1], "BULBIZARRE apprend Fouet Lianes !", "a skill learned in a free slot")
+	Test.equal(Party.skills(0)[2], "Fouet Lianes", "it is in the moveset")
+
+	# 4 skills already : the player forgets one (the second), the new one takes its place
+	Party.setKnown([0, 1, 2, 3])
+	Party.setLearning([4])
+	GameDialog.answer(true)
+	GameDialog.choose(1)
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "30", "7", "8", "0"])
+	said = Battle.messages()
+	Test.equal(said[said.size() - 1], "BULBIZARRE oublie Rugissement et apprend Tranch'Herbe !", "the skill forgotten for the new one")
+	Test.equal(Party.skills(0)[1], "Tranch'Herbe", "in the place of the one forgotten")
+
+	# The player does not want it
+	Party.setLearning([5])
+	GameDialog.answer(false)
+	Steps.run(["outro", "won", "BULBIZARRE", "Rattata", "30", "8", "9", "0"])
+	said = Battle.messages()
+	Test.equal(said[said.size() - 1], "BULBIZARRE n'apprend pas Poudre Toxik.", "not learned")
+	Test.equal((Party.skills(0).size(): string), "4", "the moveset is the same")
 end

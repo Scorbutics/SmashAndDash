@@ -6,5 +6,9 @@ message = function(text: string) do end
 # Asks a yes / no question : the script waits for the answer of the player
 choice = function(question: string) : bool do return false end
 
+# Asks the player to choose among "choices" (a list : W S and Return, Backspace or Escape cancels) : the script waits for
+# the index of the choice, -1 when the player cancels
+select = function(question: string, choices: string[]) : int do return 0 end
+
 # Cinematic : an animation with a text (only the text is shown in this version)
 cinematic = function(animation: int, text: string) do end

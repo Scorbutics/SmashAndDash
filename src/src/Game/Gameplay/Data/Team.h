@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include <string>
+#include <vector>
 
 // A Pokemon of the team of the player, saved in Data/Saves/<save>/Team/<index>.ini
 struct TeamMember {
@@ -8,6 +9,9 @@ struct TeamMember {
 	int experience = 0;
 	// Hit points left
 	int hp = 0;
+	// Its moveset : the skills it knows (their index in its data, [Skills] of Data/Monsters/<id>.ini), saved once chosen
+	// (empty : not saved yet, the skills of its level : Moveset)
+	std::vector<int> skills;
 };
 
 class BattleRules;

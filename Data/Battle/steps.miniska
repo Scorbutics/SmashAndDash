@@ -5,10 +5,12 @@
 #   fled : the name of the Pokemon of the player
 #   outro : "won", "captured", "lost" or "fled", the name of the Pokemon of the player, the name of the (first) wild Pokemon, the
 #           experience won, the level of the Pokemon of the player before and after (it goes back in its pokeball, its
-#           experience bar fills meanwhile : the battle waits for the dialogs)
+#           experience bar fills meanwhile : the battle waits for the dialogs), its place in the team (-1 : none)
 # The dialog before the battle comes from "message" (called by the battle : it cannot wait).
 Battle = import "bind:game.battle"
 Engine = import "bind:ska.engine"
+GameDialog = import "bind:game.dialog"
+Party = import "bind:game.party"
 
 # The banner of a step : the big text in the middle of the screen ("" : none)
 banner = function(args: string[]) : string do
@@ -35,6 +37,50 @@ message = function(step: string, name: string) : string do
 	end
 end
 
+replace = function(name: string, index: int, skill: int, skillName: string) do
+	Battle.message(name + " veut apprendre " + skillName + ".")
+	Battle.message("Mais " + name + " connaît déjà 4 capacités.")
+	if !GameDialog.choice("Oublier une capacité pour apprendre " + skillName + " ?")
+		Battle.message(name + " n'apprend pas " + skillName + ".")
+		return
+	end
+	known = Party.skills(index)
+	choices = []: string
+	for(k = 0
+	 k < known.size()
+	 k = k + 1) do
+		choices = choices + known[k]
+	end
+	choices = choices + "Ne pas apprendre"
+	slot = GameDialog.select("Quelle capacité doit oublier " + name + " ?", choices)
+	if slot < 0 || slot >= known.size()
+		Battle.message(name + " n'apprend pas " + skillName + ".")
+		return
+	end
+	forgotten = known[slot]
+	if Party.learn(index, skill, slot)
+		Battle.message("1, 2 et... Tadaa !")
+		Battle.message(name + " oublie " + forgotten + " et apprend " + skillName + " !")
+	end
+end
+
+# The skills a Pokemon of the team learns at its new levels : at once while it knows fewer than 4, else the player
+# chooses the one it forgets (or it does not learn it), as in the first games
+learn = function(name: string, index: int, from: int, to: int) do
+	learned = Party.learnable(index, from, to)
+	for(k = 0
+	 k < learned.size()
+	 k = k + 1) do
+		skill = learned[k]
+		skillName = Party.skillName(index, skill)
+		if Party.learn(index, skill, -1)
+			Battle.message(name + " apprend " + skillName + " !")
+		else
+			replace(name, index, skill, skillName)
+		end
+	end
+end
+
 # The dialogs of the end of a battle
 outro = function(args: string[]) do
 	if ["won", "captured", "lost"].contains(args[1])
@@ -45,8 +91,12 @@ outro = function(args: string[]) do
 	end
 	if args[6] != args[5]
 		Battle.message(args[2] + " monte au niveau " + args[6] + " !")
+		if args.size() > 7 && args[7] != "-1"
+			learn(args[2], (args[7]: int), (args[5]: int), (args[6]: int))
+		end
 	end
 end
+
 
 run = function(args: string[]) do
 	if args[0] == "outro"

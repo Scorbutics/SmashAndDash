@@ -183,3 +183,45 @@ bool Ui::ChoiceList::mouse(const ska::InputContextManager& icm, const std::vecto
 	m_lastClick = click;
 	return chosen;
 }
+
+std::vector<std::string> Ui::Wrap(const std::string& text, std::size_t width) {
+	auto lines = std::vector<std::string>{};
+	const auto letters = [](const std::string& s) {
+		return static_cast<std::size_t>(std::count_if(s.begin(), s.end(), [](char c) { return (static_cast<unsigned char>(c) & 0xC0) != 0x80; }));
+	};
+	auto paragraph = std::string{};
+	const auto wrapParagraph = [&](const std::string& p) {
+		auto line = std::string{};
+		auto word = std::string{};
+		const auto flush = [&]() {
+			if (word.empty()) {
+				return;
+			}
+			if (!line.empty() && letters(line) + 1 + letters(word) > width) {
+				lines.push_back(line);
+				line.clear();
+			}
+			line += (line.empty() ? "" : " ") + word;
+			word.clear();
+		};
+		for (const auto c : p) {
+			if (c == ' ') {
+				flush();
+			} else {
+				word += c;
+			}
+		}
+		flush();
+		lines.push_back(line);
+	};
+	for (const auto c : text) {
+		if (c == '\n') {
+			wrapParagraph(paragraph);
+			paragraph.clear();
+		} else {
+			paragraph += c;
+		}
+	}
+	wrapParagraph(paragraph);
+	return lines;
+}

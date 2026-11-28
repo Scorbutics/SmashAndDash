@@ -2,15 +2,19 @@
 #include "Core/State/StateBase.h"
 #include "../CustomEntityManager.h"
 #include "../PokemonGameEventDispatcher.h"
-#include "../../Graphic/GUI/GUIMap.h"
+#include "../../Graphic/GUI/DebugPanel.h"
+#include "../../Graphic/GUI/DialogBox.h"
+#include "../../Graphic/GUI/TrainerMenu.h"
 
 class Settings;
+class WorldState;
 
-class StateGUIMap : 
+// The interface over the map and the battles, drawn with Ui::Canvas : the dialogs (DialogBox), the menu of the trainer
+// (TrainerMenu), the panel of the developers (DebugPanel)
+class StateGUIMap :
 	public ska::StateBase {
 public:
-	StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged);
-    void bindGUI(Settings& s);
+	StateGUIMap(CustomEntityManager& em, PokemonGameEventDispatcher& ged, WorldState& worldState, Settings& settings);
     virtual ~StateGUIMap() = default;
 
 protected:
@@ -18,5 +22,7 @@ protected:
 	virtual void onEventUpdate(unsigned int ellapsedTime) override;
 
 private:
-    GUIMap m_gui;
+	DialogBox m_dialogs;
+	TrainerMenu m_menu;
+	DebugPanel m_debug;
 };

@@ -16,7 +16,6 @@
 #include "Gameplay/Mobs/WildPokemonComponent.h"
 #include "Gameplay/World/ChunkOwnedComponent.h"
 #include "Gameplay/Mobs/ArrivalComponent.h"
-#include "Graphic/GUI/SlotPokemon.h"
 
 SKA_DEFINE_COMPONENT(SkillsHolderComponent);
 SKA_DEFINE_COMPONENT(SkillComponent);
@@ -33,5 +32,4 @@ SKA_DEFINE_COMPONENT(ArrivalComponent);
 
 namespace ska {
 	SKA_DEFINE_GUI_EVENT(ska::ValueChangedEventListener<int>);
-	SKA_DEFINE_GUI_EVENT(ska::ValueChangedEventListener<SlotPokemonDataPtr*>);
 }

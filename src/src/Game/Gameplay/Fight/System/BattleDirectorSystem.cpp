@@ -272,7 +272,7 @@ void BattleDirectorSystem::outro() {
 	const auto opponent = m_stage.fighters.size() > 1 ? m_stage.fighters[1] : m_stage.player;
 	const auto byCapture = won && m_stage.captured;
 	runStep({ "outro", fled ? "fled" : (byCapture ? "captured" : (won ? "won" : "lost")), name(m_stage.player), byCapture ? m_stage.capturedName : name(opponent), std::to_string(m_result.experience),
-		std::to_string(m_stage.outro.levelBefore), std::to_string(m_stage.outro.levelAfter) });
+		std::to_string(m_stage.outro.levelBefore), std::to_string(m_stage.outro.levelAfter), std::to_string(m_teamIndex) });
 }
 
 void BattleDirectorSystem::updateOutro() {

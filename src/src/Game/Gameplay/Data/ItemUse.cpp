@@ -34,7 +34,7 @@ void ItemShortcuts::message(const std::string& text) {
 
 bool ItemShortcuts::onKeyInputEvent(ska::InputKeyEvent& event) {
 	// During a battle the items are used by the trainer in the battle (TrainerItemSystem : on the Pokemon fighting)
-	if (m_worldState.battleStage() != nullptr) {
+	if (m_worldState.battleStage() != nullptr || !m_worldState.trainerControlled()) {
 		return true;
 	}
 	const auto& actions = event.icm.getActions();

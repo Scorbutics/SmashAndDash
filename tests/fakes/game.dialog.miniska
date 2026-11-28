@@ -19,6 +19,19 @@ choice = function(question: string) : bool do
 	return answer
 end
 
+picks = []: int
+nextPick = 0
+
+select = function(question: string, choices: string[]) : int do
+	shown = shown + question
+	pick = -1
+	if nextPick < picks.size()
+		pick = picks[nextPick]
+	end
+	nextPick = nextPick + 1
+	return pick
+end
+
 cinematic = function(animation: int, text: string) do
 	shown = shown + text
 end
@@ -26,6 +39,9 @@ end
 # Test controls (only in the fake)
 answer = function(value: bool) do
 	answers = answers + value
+end
+choose = function(index: int) do
+	picks = picks + index
 end
 
 messages = function() : string[] do

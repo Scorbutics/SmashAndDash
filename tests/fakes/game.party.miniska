@@ -1,0 +1,67 @@
+# Fake of the team for the headless script tests : one Pokemon, its moveset and the skills it learns are given by the test
+# (the skills : their numbers in a list of names)
+
+names = ["Charge", "Rugissement", "Fouet Lianes", "Vampigraine", "Tranch'Herbe", "Poudre Toxik"]
+known = [0, 1]
+learning = []: int
+
+addPokemon = function(id: int) : bool do return false end
+size = function() : int do return 1 end
+move = function(from: int, to: int) : bool do return false end
+species = function(index: int) : string do return "Bulbizarre" end
+hp = function(index: int) : int do return 10 end
+level = function(index: int) : int do return 5 end
+
+skills = function(index: int) : string[] do
+	result = []: string
+	for(k = 0
+	 k < known.size()
+	 k = k + 1) do
+		result = result + names[known[k]]
+	end
+	return result
+end
+
+learnable = function(index: int, from: int, to: int) : int[] do
+	return learning
+end
+
+skillName = function(index: int, skill: int) : string do
+	return names[skill]
+end
+
+learn = function(index: int, skill: int, slot: int) : bool do
+	if slot < 0
+		if known.size() >= 4
+			return false
+		end
+		known = known + skill
+		return true
+	end
+	if slot >= known.size()
+		return false
+	end
+	changed = []: int
+	for(k = 0
+	 k < known.size()
+	 k = k + 1) do
+		if k == slot
+			changed = changed + skill
+		else
+			changed = changed + known[k]
+		end
+	end
+	known = changed
+	return true
+end
+
+heal = function(index: int, value: int) do end
+pokemonOut = function(index: int) do end
+
+# Test controls (only in the fake)
+setKnown = function(skills: int[]) do
+	known = skills
+end
+setLearning = function(skills: int[]) do
+	learning = skills
+end

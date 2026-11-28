@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include "../Gameplay/Mobs/System/MobSpawningSystem.h"
 #include "../Gameplay/Fight/FightComponent.h"
+#include "../Gameplay/Fight/Moveset.h"
 #include "Core/Utils/TimeUtils.h"
 #include "Core/Dev/DevConsole.h"
 #include "../Gameplay/Data/SavegameManager.h"
@@ -133,7 +134,23 @@ GameScriptModule::GameScriptModule(ska::scripting::ScriptVM& vm, const std::stri
 DialogScriptModule::DialogScriptModule(ska::scripting::ScriptVM& vm, CustomEntityManager& entityManager, PokemonGameEventDispatcher& ged, WorldState& worldState) :
 	GameScriptModule(vm, "dialog") {
 	(void) entityManager;
-	(void) worldState;
+
+	m_builder.bindField("select", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		auto& prompt = worldState.prompt();
+		prompt = ChoicePrompt{};
+		prompt.active = true;
+		prompt.question = String(params[0]);
+		for (const auto& choice : *params[1].nodeval<ska::NodeValueArray>()) {
+			prompt.choices.push_back(String(choice));
+		}
+		auto* asked = &prompt;
+		vm.suspendUntil([asked]() { return asked->answer.has_value(); }, [asked]() {
+			const auto answer = asked->answer.value_or(-1);
+			*asked = ChoicePrompt{};
+			return ska::NodeValue{ static_cast<long>(answer) };
+		});
+		return ska::NodeValue{};
+	});
 
 	m_builder.bindField("message", [&vm, &ged](std::vector<ska::NodeValue> params) {
 		auto closed = std::make_shared<bool>(false);
@@ -144,7 +161,7 @@ DialogScriptModule::DialogScriptModule(ska::scripting::ScriptVM& vm, CustomEntit
 
 	m_builder.bindField("choice", [&vm, &ged](std::vector<ska::NodeValue> params) {
 		auto answer = std::make_shared<std::optional<bool>>();
-		ShowDialog(ged, String(params[0]) + "\n\n(Entrée : oui, Retour arrière : non)", true, [answer](bool validated) { *answer = validated; });
+		ShowDialog(ged, String(params[0]), true, [answer](bool validated) { *answer = validated; });
 		vm.suspendUntil([answer]() { return answer->has_value(); }, [answer]() { return ska::NodeValue{ answer->value_or(false) }; });
 		return ska::NodeValue{};
 	});
@@ -590,6 +607,83 @@ PartyScriptModule::PartyScriptModule(ska::scripting::ScriptVM& vm, CustomEntityM
 	m_builder.bindField("hp", [&worldState](std::vector<ska::NodeValue> params) {
 		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
 		return ska::NodeValue{ static_cast<long>(pokemon.has_value() ? pokemon->hp : 0) };
+	});
+
+	m_builder.bindField("skills", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		return AfterStep(vm, [&worldState, index]() {
+			auto names = std::make_shared<ska::NodeValueArrayRaw>();
+			const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(index);
+			if (pokemon.has_value()) {
+				const auto learnable = LearnableSkills(ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" });
+				for (const auto skill : TeamMoveset(worldState, index)) {
+					const auto found = std::find_if(learnable.begin(), learnable.end(), [skill](const LearnableSkill& s) { return s.index == skill; });
+					names->push_back(ska::NodeValue{ std::make_shared<std::string>(found != learnable.end() ? found->name : "?") });
+				}
+			}
+			return ska::NodeValue{ ska::NodeValueArray{ std::move(names) } };
+		});
+	});
+
+	m_builder.bindField("learnable", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		const auto from = Int(params[1]);
+		const auto to = Int(params[2]);
+		return AfterStep(vm, [&worldState, index, from, to]() {
+			auto skills = std::make_shared<ska::NodeValueArrayRaw>();
+			const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(index);
+			if (pokemon.has_value()) {
+				const auto known = TeamMoveset(worldState, index);
+				for (const auto skill : LearnedBetween(ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" }, from, to, known)) {
+					skills->push_back(ska::NodeValue{ static_cast<long>(skill) });
+				}
+			}
+			return ska::NodeValue{ ska::NodeValueArray{ std::move(skills) } };
+		});
+	});
+
+	m_builder.bindField("skillName", [&worldState](std::vector<ska::NodeValue> params) {
+		const auto pokemon = Team{ worldState.getSaveGame().getPathName() }.member(Int(params[0]));
+		const auto skill = Int(params[1]);
+		auto name = std::string{};
+		if (pokemon.has_value()) {
+			for (const auto& s : LearnableSkills(ska::IniReader{ "./Data/Monsters/" + std::to_string(pokemon->id) + ".ini" })) {
+				if (s.index == skill) {
+					name = s.name;
+				}
+			}
+		}
+		return ska::NodeValue{ std::make_shared<std::string>(name) };
+	});
+
+	m_builder.bindField("learn", [&vm, &worldState](std::vector<ska::NodeValue> params) {
+		const auto index = Int(params[0]);
+		const auto skill = Int(params[1]);
+		const auto slot = Int(params[2]);
+		return AfterStep(vm, [&worldState, index, skill, slot]() {
+			auto team = Team{ worldState.getSaveGame().getPathName() };
+			auto pokemon = team.member(index);
+			if (!pokemon.has_value()) {
+				return ska::NodeValue{ false };
+			}
+			pokemon->skills = TeamMoveset(worldState, index);
+			if (std::find(pokemon->skills.begin(), pokemon->skills.end(), skill) != pokemon->skills.end()) {
+				return ska::NodeValue{ false };
+			}
+			if (slot < 0) {
+				if (static_cast<int>(pokemon->skills.size()) >= MovesetSize) {
+					return ska::NodeValue{ false };
+				}
+				pokemon->skills.push_back(skill);
+			} else if (slot < static_cast<int>(pokemon->skills.size())) {
+				pokemon->skills[static_cast<std::size_t>(slot)] = skill;
+			} else {
+				return ska::NodeValue{ false };
+			}
+			team.setMember(index, *pokemon);
+			SLOG_STATIC(ska::LogLevel::Info, GameScriptModule) << "Team : the Pokemon " << index << " learns the skill " << skill << (slot >= 0 ? " instead of the slot " + std::to_string(slot) : std::string{});
+			return ska::NodeValue{ true };
+		});
 	});
 
 	m_builder.bindField("level", [&vm, &worldState](std::vector<ska::NodeValue> params) {
